@@ -1,0 +1,21 @@
+{
+    "name": "auth0/auth0-php-sdk",
+    "version": "1.0.0",
+    "description": "Auth0 PHP SDK.",
+    "type": "library",
+    "authors": [
+        {
+            "name":"Sergio Daniel Lepore",
+            "email":"sergio.d.lepore@gmail.com",
+            "homepage":"http://www.auth0.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "classmap": ["src"]
+    }
+}
