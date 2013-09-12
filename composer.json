@@ -1,6 +1,6 @@
 {
     "name": "auth0/auth0-php-sdk",
-    "version": "1.0.0",
+    "version": "0.5.2",
     "description": "Auth0 PHP SDK.",
     "type": "library",
     "authors": [
