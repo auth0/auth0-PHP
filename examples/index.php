@@ -22,7 +22,7 @@ $token = $auth0->getAccessToken();
 </head>
 <body>
 <?php if(!$token): ?>
-    <!-- PUT HERE YOUR Auth0 LOGIN BUTTON -->
+    <!-- PUT YOUR Auth0 HTML/JS CODE HERE -->
 <?php else: ?>
     <?php var_dump($auth0->getUserInfo()) ?>
 <?php endif ?>
