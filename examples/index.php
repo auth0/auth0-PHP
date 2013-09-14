@@ -5,7 +5,7 @@ require_once 'config.php';
 use Auth0SDK\Auth0;
 
 $auth0 = new Auth0(array(
-    'username'      => $auth0_cfg['username'],
+    'domain'        => $auth0_cfg['domain'],
     'client_id'     => $auth0_cfg['client_id'],
     'client_secret' => $auth0_cfg['client_secret'],
     'redirect_uri'  => $auth0_cfg['redirect_uri']

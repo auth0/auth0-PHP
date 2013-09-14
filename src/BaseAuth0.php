@@ -28,7 +28,7 @@ abstract class BaseAuth0
     /**
      * SDK Version.
      */
-    const VERSION = "0.6.0"; // Not ready for production yet :(
+    const VERSION = "0.6.1"; // Not ready for production yet :(
 
     /**
      * SDK Codename.
@@ -50,18 +50,18 @@ abstract class BaseAuth0
      * @var array
      */
     public static $URL_MAP = array(
-        'api'           => 'https://{username}.auth0.com/api',
-        'authorize'     => 'https://{username}.auth0.com/authorize',
-        'token'         => 'https://{username}.auth0.com/oauth/token',
-        'user_info'     => 'https://{username}.auth0.com/userInfo',
+        'api'           => 'https://{domain}/api',
+        'authorize'     => 'https://{domain}/authorize',
+        'token'         => 'https://{domain}/oauth/token',
+        'user_info'     => 'https://{domain}/userInfo',
     );
 
     /**
-     * Auth0 Username.
+     * Auth0 Domain.
      * 
      * @var string
      */
-    protected $username;
+    protected $domain;
 
     /**
      * Auth0 Client ID
@@ -115,7 +115,7 @@ abstract class BaseAuth0
      * BaseAuth0 Constructor.
      *
      * Configuration:
-     *     - username (String) Required
+     *     - domain (String) Required
      *     - client_id (string) Required
      *     - client_secret (string) Required
      *     - redirect_uri (string) Required
@@ -131,10 +131,10 @@ abstract class BaseAuth0
         $this->checkRequirements();
 
         // now we are ready to go on...
-        if (isset($config['username'])) {
-            $this->username = $config['username'];
+        if (isset($config['domain'])) {
+            $this->domain = $config['domain'];
         } else {
-            throw new CoreException('Invalid username');
+            throw new CoreException('Invalid domain');
         }
 
         if (isset($config['client_id'])) {
@@ -164,16 +164,16 @@ abstract class BaseAuth0
         $this->oauth_client = new OAuth2\Client($this->client_id, $this->client_secret);
     }
 
-    final public function setUsername($username)
+    final public function setDomain($domain)
     {
-        $this->username = $username;
+        $this->domain = $domain;
 
         return $this;
     }
 
-    final public function getUsername()
+    final public function getDomain()
     {
-        return $this->username;
+        return $this->domain;
     }
 
     final public function setClientId($client_id)
@@ -311,7 +311,7 @@ abstract class BaseAuth0
     final protected function generateUrl($domain_key, $path = '/') 
     {
         $base_domain = self::$URL_MAP[$domain_key];
-        $base_domain = str_replace('{username}', $this->username, $base_domain);
+        $base_domain = str_replace('{domain}', $this->domain, $base_domain);
 
         if ($path[0] === '/') {
             $path = substr($path, 1);
