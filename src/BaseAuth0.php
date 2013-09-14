@@ -11,13 +11,15 @@ namespace Auth0SDK;
  * that was distributed with this source code.
  */
 
+use OAuth2;
 use \Exception;
+use \Closure;
 
 /**
  * This class provides access to Auth0 Platform.
  * 
  * @author Sergio Daniel Lepore
- * @todo Logout, getUserInfo and other useful proxies. See <https://app.auth0.com/#/sdk/api> 
+ * @todo Logout and other useful proxies. See <https://app.auth0.com/#/sdk/api> 
  *       and <https://docs.auth0.com/api-reference>
  */
 abstract class BaseAuth0
@@ -25,7 +27,7 @@ abstract class BaseAuth0
     /**
      * SDK Version.
      */
-    const VERSION = "0.5.2"; // Not ready for production yet :(
+    const VERSION = "0.6.0"; // Not ready for production yet :(
 
     /**
      * SDK Codename.
@@ -33,35 +35,11 @@ abstract class BaseAuth0
     const CODENAME = "Abyssinian"; // Yup, a cat breed :)
 
     /**
-     * CURL Options.
-     * 
-     * @var array
-     */
-    public static $CURL_OPTS = array(
-        CURLOPT_CONNECTTIMEOUT => 10,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => 60,
-        CURLOPT_USERAGENT      => 'auth0-php-abyssinian',
-    );
-
-    /**
-     * HTTP Methods for CURL.
-     * 
-     * @var array
-     */
-    public static $CURL_METHOD_MAP = array(
-        'POST' => array(CURLOPT_POST, true),
-        'PUT' => array(CURLOPT_PUT, true),
-        'DELETE' => array(CURLOPT_CUSTOMREQUEST, 'DELETE'),
-    );
-
-    /**
      * Available keys to persist data.
      * 
      * @var array
      */
     public static $PERSISTANCE_MAP = array(
-        'token_type',
         'access_token'
     );
 
@@ -71,25 +49,18 @@ abstract class BaseAuth0
      * @var array
      */
     public static $URL_MAP = array(
-        'api'           => 'https://{domain}/api',
-        'authorization' => 'https://{domain}/authorize',
-        'token'         => 'https://{domain}/oauth/token',
-        'user_info'     => 'https://{domain}/userInfo',
+        'api'           => 'https://{username}.auth0.com/api',
+        'authorize'     => 'https://{username}.auth0.com/authorize',
+        'token'         => 'https://{username}.auth0.com/oauth/token',
+        'user_info'     => 'https://{username}.auth0.com/userInfo',
     );
 
     /**
-     * Debug mode flag.
-     * 
-     * @var Boolean
-     */
-    protected $debug_mode;
-
-    /**
-     * Base domain.
+     * Auth0 Username.
      * 
      * @var string
      */
-    protected $domain;
+    protected $username;
 
     /**
      * Auth0 Client ID
@@ -105,19 +76,22 @@ abstract class BaseAuth0
      */
     protected $client_secret;
 
-    /**
-     * Auth0 Access Type
-     * 
-     * @var string
-     */
-    protected $access_type;
+    protected $redirect_uri;
 
     /**
-     * Auth0 Grant Type
+     * Debug mode flag.
      * 
-     * @var string
+     * @var Boolean
      */
-    protected $grant_type;
+    protected $debug_mode;
+
+    /**
+     * Debugger function.
+     * Will be called only if $debug_mode is true.
+     * 
+     * @var \Closure
+     */
+    protected $debugger;
 
     /**
      * The access token retrieved after authorization.
@@ -127,14 +101,24 @@ abstract class BaseAuth0
      */
     protected $access_token;
 
-    protected $token_type;
+    /**
+     * OAuth2 Client.
+     * 
+     * @var OAuth2\Client
+     */
+    protected $oauth_client;
+
+
 
     /**
      * BaseAuth0 Constructor.
      *
      * Configuration:
-     *     - domain (String)
-     *     - debug (Boolean)
+     *     - username (String) Required
+     *     - client_id (string) Required
+     *     - client_secret (string) Required
+     *     - redirect_uri (string) Required
+     *     - debug (Boolean) Optional. Default false
      *     
      * @param array $config Required
      *
@@ -146,42 +130,49 @@ abstract class BaseAuth0
         $this->checkRequirements();
 
         // now we are ready to go on...
-        if (isset($config['domain'])) {
-            $this->domain = $config['domain'];
+        if (isset($config['username'])) {
+            $this->username = $config['username'];
         } else {
-            throw new CoreException('Invalid domain');
+            throw new CoreException('Invalid username');
+        }
+
+        if (isset($config['client_id'])) {
+            $this->client_id = $config['client_id'];
+        } else {
+            throw new CoreException('Invalid client_id');
+        }
+
+        if (isset($config['client_secret'])) {
+            $this->client_secret = $config['client_secret'];
+        } else {
+            throw new CoreException('Invalid client_secret');
+        }
+
+        if (isset($config['redirect_uri'])) {
+            $this->redirect_uri = $config['redirect_uri'];
+        } else {
+            throw new CoreException('Invalid redirect_uri');
         }
 
         if (isset($config['debug'])) {
             $this->debug_mode = $config['debug'];
+        } else {
+            $this->debug_mode = false;
         }
 
-        $this->access_type  = 'web_server';
-        $this->grant_type   = 'client_credentials';
+        $this->oauth_client = new OAuth2\Client($this->client_id, $this->client_secret);
     }
 
-    final public function setDebugMode($debug_mode)
+    final public function setUsername($username)
     {
-        $this->debug_mode = $debug_mode;
+        $this->username = $username;
 
         return $this;
     }
 
-    final public function getDebugMode()
+    final public function getUsername()
     {
-        return $this->debug_mode;
-    }
-
-    final public function setDomain($domain)
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    final public function getDomain()
-    {
-        return $this->domain;
+        return $this->username;
     }
 
     final public function setClientId($client_id)
@@ -208,14 +199,40 @@ abstract class BaseAuth0
         return $this->client_secret;
     }
 
-    final public function getAccessType()
+    final public function setRedirectUri($redirect_uri)
     {
-        return $this->access_type;
+        $this->redirect_uri = $redirect_uri;
+
+        return $this;
     }
 
-    final public function getGrantType()
+    final public function getRedirectUri()
     {
-        return $this->grant_type;
+        return $this->redirect_uri;
+    }
+
+    final public function setDebugMode($debug_mode)
+    {
+        $this->debug_mode = $debug_mode;
+
+        return $this;
+    }
+
+    final public function getDebugMode()
+    {
+        return $this->debug_mode;
+    }
+
+    final public function setDebugger(Closure $debugger)
+    {
+        $this->debugger = $debugger;
+
+        return $this;
+    }
+
+    final public function getDebugger()
+    {
+        return $this->debugger;
     }
 
     final public function setAccessToken($access_token)
@@ -230,137 +247,76 @@ abstract class BaseAuth0
     {
         if (!$this->access_token) {
             $this->access_token = $this->getPersistentData('access_token');
-        }
-
-        return $this->access_token;
-    }
-
-    final public function setTokenType($token_type)
-    {
-        $this->setPersistentData('token_type', $token_type);
-        $this->token_type = $token_type;
-
-        return $this;
-    }
-
-    final public function getTokenType()
-    {
-        if (!$this->token_type) {
-            $this->token_type = $this->getPersistentData('token_type');
-        }
-
-        return $this->token_type;
-    }
-
-
-
-    final public function login($client_id, $client_secret)
-    {
-        $this->client_id     = $client_id;
-        $this->client_secret = $client_secret;
-
-        $post_params = array(
-            'client_id'         => $client_id,
-            'client_secret'     => $client_secret,
-            'type'              => $this->access_type,
-            'grant_type'        => $this->grant_type,
-            'auth0_domain_key'  => 'token'
-        );
-
-        $response = $this->api('/', 'POST', $post_params);
-
-        if (!isset($response['access_token']) || !isset($response['token_type'])) {
-            throw new ApiException('Error');
-        }
-
-        $this->setAccessToken($response['access_token']);
-        $this->setTokenType($response['token_type']);
-
-        return $this->access_token;
-    }
-
-
-    final public function api($path, $method = 'GET', array $params = array())
-    {
-        if (is_array($method) && !$params) {
-            $params = $method;
-            $method = 'GET';
-        }
-
-        if (isset($params['auth0_domain_key'])) {
-            $domain_key = $params['auth0_domain_key'];
-
-            unset($params['auth0_domain_key']);
-        } else {
-            $domain_key = 'api';
-        }
-
-        $url = $this->generateUrl($domain_key, $path);
-
-        $response = json_decode($this->makeRequest(
-            $url,
-            $method,
-            $params
-        ), true);
-
-        return $response;
-    }
-
-    
-    final protected function makeRequest($url, $method, array $params = array())
-    {
-        $data_type = 'json';
-        $ch = curl_init();
-
-        $opts = self::$CURL_OPTS;
-        $query_params = http_build_query($params);
-        
-        if ($method == 'POST') {
-            $opts[CURLOPT_POSTFIELDS] = $query_params;
-        } else {
-            $url .= '?' . $query_params;
-        }
-
-        $opts[CURLOPT_URL] = $url;
-
-        if ($method != 'GET') {
-            if (!array_key_exists($method, self::$CURL_METHOD_MAP)) {
-                throw new CoreException(sprintf('Method %s not allowed', $method));        
+            if (!$this->access_token) {
+                if (isset($_REQUEST['code'])) {
+                    $this->access_token = $this->getTokenFromCode($_REQUEST['code']);
+                } else {
+                    return;
+                }
             }
-
-            $method_array = self::$CURL_METHOD_MAP[$method];
-
-            $opts[$method_array[0]] = $method_array[1];
         }
 
-        curl_setopt_array($ch, $opts);
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        return $result;
+        return $this->access_token;
     }
 
-
-    final protected function generateUrl($domain_key, $path = '/')
+    final protected function getTokenFromCode($code)
     {
-        $base_domain = self::$URL_MAP[$domain_key];
-        $base_domain = str_replace('{domain}', $this->domain, $base_domain);
+        $this->debugInfo("Code: ".$code);
+        $auth_url = $this->generateUrl('token');
 
-        if ($path[0] == '/') {
-            $path = substr($path, 1);
-        }
+        $auth0_response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
+            "code" => $code,
+            "redirect_uri" => $this->redirect_uri
+        ));
 
-        return $base_domain.$path;
+        $auth0_response = $auth0_response['result'];
+        $this->debugInfo(json_encode($auth0_response));
+        $access_token = (isset($auth0_response['access_token']))? $auth0_response['access_token'] : false;
+
+        if (!$access_token)
+            throw new ApiException('Invalid access_token - Retry login.');
+
+        $this->oauth_client->setAccessToken($access_token);
+        $this->oauth_client->setAccessTokenType(OAuth2\Client::ACCESS_TOKEN_BEARER);
+        $this->setAccessToken($access_token);
+
+        return $access_token;
     }
 
+    final public function getUserInfo()
+    {
+        $userinfo_url = $this->generateUrl('user_info');
+
+        return $this->oauth_client->fetch($userinfo_url, array(
+            'access_token' => $this->access_token
+        ));
+    }
 
     public function deleteAllPersistentData()
     {
         foreach (self::$PERSISTANCE_MAP as $key) {
             $this->deletePersistentData($key);
         }
+    }
+
+    /**
+     * Constructs an API URL.
+     * 
+     * @param  string $domain_key
+     * @param  string $path
+     * 
+     * @return string
+     */
+    final protected function generateUrl($domain_key, $path = '/') 
+    {
+        $base_domain = self::$URL_MAP[$domain_key];
+        $base_domain = str_replace('{username}', $this->username, $base_domain);
+
+        if ($path[0] === '/') {
+            $path = substr($path, 1);
+        }
+
+        return $base_domain.$path;
     }
 
 
@@ -372,7 +328,7 @@ abstract class BaseAuth0
      * 
      * @return void
      */
-    public function checkRequirements() 
+    final public function checkRequirements() 
     {
         if (!function_exists('curl_version')) {
             throw new CoreException('CURL extension is needed to use Auth0 SDK. Not found.');
@@ -380,6 +336,18 @@ abstract class BaseAuth0
 
         if (!function_exists('json_decode')) {
             throw new CoreException('JSON extension is needed to use Auth0 SDK. Not found.');
+        }
+    }
+
+    public function debugInfo($info)
+    {
+        if ($this->debug_mode && (is_object($this->debugger) && ($this->debugger instanceof Closure))) {
+            list(, $caller) = debug_backtrace(false);
+
+            $caller_function = $caller['function'];
+            $caller_class = $caller['class'];
+
+            $this->debugger->__invoke($caller_class.'::'.$caller_function. ' > '.$info);
         }
     }
 

@@ -31,7 +31,7 @@ class Auth0 extends BaseAuth0
         $_SESSION[$key_name] = $value;
     }
 
-    protected function getPersistentData($key)
+    protected function getPersistentData($key, $default=false)
     {
         $this->validateKey($key);
         $key_name = $this->getSessionKeyName($key);

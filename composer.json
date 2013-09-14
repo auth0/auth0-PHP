@@ -13,7 +13,8 @@
     "require": {
         "php": ">=5.3.0",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "adoy/oauth2": "dev-master"
     },
     "autoload": {
         "classmap": ["src"]
