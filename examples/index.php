@@ -22,8 +22,7 @@ $token = $auth0->getAccessToken();
 </head>
 <body>
 <?php if(!$token): ?>
-    <script id="auth0" src="https://sdk.auth0.com/auth0.js#client=N2UVfwZga4aZlHwXpZHPrFHIKK3vDgoi"></script>
-    <button onclick="window.Auth0.signIn({onestep: true})">Login</button>
+    <!-- PUT HERE YOUR Auth0 LOGIN BUTTON -->
 <?php else: ?>
     <?php var_dump($auth0->getUserInfo()) ?>
 <?php endif ?>

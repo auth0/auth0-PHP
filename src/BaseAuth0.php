@@ -21,6 +21,7 @@ use \Closure;
  * @author Sergio Daniel Lepore
  * @todo Logout and other useful proxies. See <https://app.auth0.com/#/sdk/api> 
  *       and <https://docs.auth0.com/api-reference>
+ * @todo Lots of code documentation.
  */
 abstract class BaseAuth0
 {
