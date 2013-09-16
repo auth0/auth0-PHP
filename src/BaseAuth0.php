@@ -77,6 +77,11 @@ abstract class BaseAuth0
      */
     protected $client_secret;
 
+    /**
+     * Redirect URI needed on OAuth2 requests.
+     * 
+     * @var string
+     */
     protected $redirect_uri;
 
     /**
@@ -110,6 +115,8 @@ abstract class BaseAuth0
     protected $oauth_client;
 
 
+    // -------------------------------------------------------------------------------------------------------------- //
+
 
     /**
      * BaseAuth0 Constructor.
@@ -124,6 +131,9 @@ abstract class BaseAuth0
      * @param array $config Required
      *
      * @throws CoreException If `domain` is not provided.
+     * @throws CoreExcaption If `client_id` is not provided.
+     * @throws CoreException If `client_secret` is not provided.
+     * @throws CoreException If `redirect_uri` is not provided.
      */
     public function __construct(array $config)
     {
@@ -164,6 +174,13 @@ abstract class BaseAuth0
         $this->oauth_client = new OAuth2\Client($this->client_id, $this->client_secret);
     }
 
+    /**
+     * Sets $domain.
+     * 
+     * @param string $domain
+     * 
+     * @return Auth0SDK\BaseAuth0
+     */
     final public function setDomain($domain)
     {
         $this->domain = $domain;
@@ -171,11 +188,23 @@ abstract class BaseAuth0
         return $this;
     }
 
+    /**
+     * Gets $domain
+     * 
+     * @return string
+     */
     final public function getDomain()
     {
         return $this->domain;
     }
 
+    /**
+     * Sets $client_id.
+     * 
+     * @param string $client_id
+     *
+     * @return Auth0SDK\BaseAuth0
+     */
     final public function setClientId($client_id)
     {
         $this->client_id = $client_id;
@@ -183,11 +212,23 @@ abstract class BaseAuth0
         return $this;
     }
 
+    /**
+     * Gets $client_id.
+     * 
+     * @return string
+     */
     final public function getClientId()
     {
         return $this->client_id;
     }
 
+    /**
+     * Sets $client_secret.
+     * 
+     * @param string $client_secret
+     *
+     * @return Auth0SDK\BaseAuth0
+     */
     final public function setClientSecret($client_secret)
     {
         $this->client_secret = $client_secret;
@@ -195,11 +236,23 @@ abstract class BaseAuth0
         return $this;
     }
 
+    /**
+     * Gets $client_secret.
+     * 
+     * @return string
+     */
     final public function getClientSecret()
     {
         return $this->client_secret;
     }
 
+    /**
+     * Sets $redirect_uri.
+     * 
+     * @param string $redirect_uri
+     *
+     * @return Auth0SDK\BaseAuth0
+     */
     final public function setRedirectUri($redirect_uri)
     {
         $this->redirect_uri = $redirect_uri;
@@ -207,11 +260,23 @@ abstract class BaseAuth0
         return $this;
     }
 
+    /**
+     * Gets $redirect_uri.
+     * 
+     * @return string
+     */
     final public function getRedirectUri()
     {
         return $this->redirect_uri;
     }
 
+    /**
+     * Sets $debug_mode.
+     * 
+     * @param boolean $debug_mode
+     *
+     * @return Auth0SDK\BaseAuth0
+     */
     final public function setDebugMode($debug_mode)
     {
         $this->debug_mode = $debug_mode;
@@ -219,11 +284,23 @@ abstract class BaseAuth0
         return $this;
     }
 
+    /**
+     * Gets $debug_mode.
+     * 
+     * @return boolean
+     */
     final public function getDebugMode()
     {
         return $this->debug_mode;
     }
 
+    /**
+     * Sets $debugger.
+     * 
+     * @param \Closure $debugger
+     *
+     * @return Auth0SDK\BaseAuth0
+     */
     final public function setDebugger(Closure $debugger)
     {
         $this->debugger = $debugger;
@@ -231,11 +308,23 @@ abstract class BaseAuth0
         return $this;
     }
 
+    /**
+     * Gets $debugger.
+     * 
+     * @return \Closure
+     */
     final public function getDebugger()
     {
         return $this->debugger;
     }
 
+    /**
+     * Sets and persists $access_token.
+     * 
+     * @param string $access_token
+     *
+     * @return Auth0SDK\BaseAuth0
+     */
     final public function setAccessToken($access_token)
     {
         $this->setPersistentData('access_token', $access_token);
@@ -244,6 +333,22 @@ abstract class BaseAuth0
         return $this;
     }
 
+    /**
+     * Gets $access_token.
+     *
+     * If instance access_token is found
+     *     return instance access_token
+     * Else if persisted access_token is found
+     *     make persisted access_token an instance access_token
+     *     return instance access_token
+     * Else if server access_token is found
+     *     make server access_token  an instance access_token
+     *     return instance access_token
+     * Else
+     *     return null
+     * 
+     * @return string
+     */
     final public function getAccessToken()
     {
         if (!$this->access_token) {
@@ -260,6 +365,13 @@ abstract class BaseAuth0
         return $this->access_token;
     }
 
+    /**
+     * Requests access token to Auth0 server, using authorization code.
+     * 
+     * @param  string $code Authorization code
+     * 
+     * @return string
+     */
     final protected function getTokenFromCode($code)
     {
         $this->debugInfo("Code: ".$code);
@@ -284,6 +396,11 @@ abstract class BaseAuth0
         return $access_token;
     }
 
+    /**
+     * Requests user info to Auth0 server.
+     * 
+     * @return array
+     */
     final public function getUserInfo()
     {
         $userinfo_url = $this->generateUrl('user_info');
@@ -291,13 +408,6 @@ abstract class BaseAuth0
         return $this->oauth_client->fetch($userinfo_url, array(
             'access_token' => $this->access_token
         ));
-    }
-
-    public function deleteAllPersistentData()
-    {
-        foreach (self::$PERSISTANCE_MAP as $key) {
-            $this->deletePersistentData($key);
-        }
     }
 
     /**
@@ -320,14 +430,11 @@ abstract class BaseAuth0
         return $base_domain.$path;
     }
 
-
     /**
      * Checks for all dependencies of SDK or API.
      *
      * @throws CoreException If CURL extension is not found.
      * @throws CoreException If JSON extension is not found.
-     * 
-     * @return void
      */
     final public function checkRequirements() 
     {
@@ -340,6 +447,11 @@ abstract class BaseAuth0
         }
     }
 
+    /**
+     * If debug mode is set, sends $info to debugger Closure.
+     * 
+     * @param  mixed $info  Info to debug. It will be converted to string.
+     */
     public function debugInfo($info)
     {
         if ($this->debug_mode && (is_object($this->debugger) && ($this->debugger instanceof Closure))) {
@@ -352,14 +464,59 @@ abstract class BaseAuth0
         }
     }
 
-
+    /**
+     * This SDK persists volatile data using this method.
+     * Volatile data can be the access_token, that's used on every API call.
+     * You MUST implement this method to persist data, for example,
+     * on $_SESSION, $_COOKIE or Database.
+     * 
+     * @see Auth0SDK\Auth0
+     * 
+     * @param string $key
+     * @param mixed $value
+     */
     abstract protected function setPersistentData($key, $value);
 
+    /**
+     * Gets persisted data using setPersistentData method.
+     *
+     * @see Auth0SDK\Auth0
+     * 
+     * @param  string $key
+     * @return mixed
+     */
     abstract protected function getPersistentData($key);
 
+    /**
+     * Removes persisted value for $key.
+     *
+     * @see Auth0SDK\Auth0
+     * 
+     * @param  string $key
+     */
     abstract protected function deletePersistentData($key);
+
+    /**
+     * Deletes all persistent data, for every mapped key.
+     */
+    public function deleteAllPersistentData()
+    {
+        foreach (self::$PERSISTANCE_MAP as $key) {
+            $this->deletePersistentData($key);
+        }
+    }
 }
 
+/**
+ * Represents all errors returned by the server
+ *
+ * @author Sergio Daniel Lepore
+ */
 class ApiException extends Exception { }
 
+/**
+ * Represents all errors generated by SDK itself.
+ *
+ * @author Sergio Daniel Lepore
+ */
 class CoreException extends Exception { }
