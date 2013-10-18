@@ -405,9 +405,7 @@ abstract class BaseAuth0
     {
         $userinfo_url = $this->generateUrl('user_info');
 
-        return $this->oauth_client->fetch($userinfo_url, array(
-            'access_token' => $this->access_token
-        ));
+        return $this->oauth_client->fetch($userinfo_url);
     }
 
     /**
