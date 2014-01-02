@@ -33,7 +33,7 @@ abstract class BaseAuth0
     /**
      * SDK Codename.
      */
-    const CODENAME = "Abyssinian"; // Yup, a cat breed :)
+    const CODENAME = "Auth0-PHP-SDK";
 
     /**
      * Available keys to persist data.
@@ -53,7 +53,7 @@ abstract class BaseAuth0
         'api'           => 'https://{domain}/api',
         'authorize'     => 'https://{domain}/authorize',
         'token'         => 'https://{domain}/oauth/token',
-        'user_info'     => 'https://{domain}/userInfo',
+        'user_info'     => 'https://{domain}/userinfo',
     );
 
     /**
@@ -362,6 +362,7 @@ abstract class BaseAuth0
             }
         }
 
+        $this->oauth_client->setAccessToken($this->access_token);
         return $this->access_token;
     }
 
@@ -404,7 +405,7 @@ abstract class BaseAuth0
     final public function getUserInfo()
     {
         $userinfo_url = $this->generateUrl('user_info');
-
+        
         return $this->oauth_client->fetch($userinfo_url);
     }
 
