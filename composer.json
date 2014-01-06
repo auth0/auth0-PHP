@@ -19,5 +19,6 @@
     "autoload": {
         "classmap": ["src"]
     },
-    "license": "MIT"
+    "license": "MIT",
+    "minimum-stability": "dev"
 }
