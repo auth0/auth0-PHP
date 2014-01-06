@@ -1,6 +1,6 @@
 {
     "name": "auth0/auth0-php",
-    "version": "1.0.0",
+    "version": "v1.0.0",
     "description": "Auth0 PHP SDK.",
     "type": "library",
     "authors": [
@@ -19,6 +19,5 @@
     "autoload": {
         "classmap": ["src"]
     },
-    "license": "MIT",
-    "minimum-stability": "dev"
+    "license": "MIT"
 }
