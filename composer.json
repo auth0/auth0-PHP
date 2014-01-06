@@ -1,12 +1,12 @@
 {
-    "name": "auth0/auth0-php-sdk",
+    "name": "auth0/auth0-php",
     "version": "0.6.3",
     "description": "Auth0 PHP SDK.",
     "type": "library",
     "authors": [
         {
             "name":"Sergio Daniel Lepore",
-            "email":"sergio.d.lepore@gmail.com",
+            "email":"support@auth0.com",
             "homepage":"http://www.auth0.com/"
         }
     ],

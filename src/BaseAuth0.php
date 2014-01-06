@@ -3,7 +3,7 @@
 namespace Auth0SDK;
 
 /*
- * This file is part of Auth0-PHP-SDK package.
+ * This file is part of Auth0-PHP package.
  * 
  * (c) Auth0
  * 
@@ -25,16 +25,6 @@ use \Closure;
  */
 abstract class BaseAuth0
 {
-    /**
-     * SDK Version.
-     */
-    const VERSION = "0.6.1"; // Not ready for production yet :(
-
-    /**
-     * SDK Codename.
-     */
-    const CODENAME = "Auth0-PHP-SDK";
-
     /**
      * Available keys to persist data.
      * 

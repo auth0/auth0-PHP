@@ -3,7 +3,7 @@
 namespace Auth0SDK;
 
 /*
- * This file is part of Auth0-PHP-SDK package.
+ * This file is part of Auth0-PHP package.
  * 
  * (c) Auth0
  * 
