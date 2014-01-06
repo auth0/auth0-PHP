@@ -17,7 +17,7 @@ require_once 'BaseAuth0.php';
  * Basic implementation of Auth0 SDK. This class provides
  * a layer to persist user access using PHP Sessions.
  * 
- * @author Sergio Daniel Lepore
+ * @author Auth0
  */
 class Auth0 extends BaseAuth0
 {

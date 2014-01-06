@@ -5,7 +5,7 @@
     "type": "library",
     "authors": [
         {
-            "name":"Sergio Daniel Lepore",
+            "name":"Auth0",
             "email":"support@auth0.com",
             "homepage":"http://www.auth0.com/"
         }
