@@ -17,7 +17,7 @@ Using [Composer](http://getcomposer.org/doc/01-basic-usage.md):
 ~~~html
 <a href="javascript:widget.signin();">Login</a>
 
-<script src="https://d19p4zemcycm7a.cloudfront.net/w2/auth0-widget-2.3.min.js"></script>
+<script src="https://d19p4zemcycm7a.cloudfront.net/w2/auth0-widget-2.4.min.js"></script>
 <script type="text/javascript">
     var widget = new Auth0Widget({
         domain:       'YOUR_AUTH0_DOMAIN',
