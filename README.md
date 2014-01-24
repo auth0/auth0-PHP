@@ -7,11 +7,8 @@ Using [Composer](http://getcomposer.org/doc/01-basic-usage.md):
 ~~~js
 {
     "require": {
-        "auth0/auth0-php": "0.6.*",
-        // other dependencies
-    },
-    
-    // ...
+        "auth0/auth0-php": "0.6.*"
+    }
 }
 ~~~
 
