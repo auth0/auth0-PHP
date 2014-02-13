@@ -357,6 +357,15 @@ abstract class BaseAuth0
     }
 
     /**
+     * Logout (removes all persisten data)
+     */
+    final public function logout()
+    {
+        $this->deleteAllPersistentData();
+        $this->access_token = NULL;
+    }
+
+    /**
      * Requests access token to Auth0 server, using authorization code.
      * 
      * @param  string $code Authorization code
