@@ -1,5 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 require_once 'config.php';
 
 use Auth0SDK\Auth0;
