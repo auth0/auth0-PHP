@@ -67,8 +67,16 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
   'Authorization: ' . $result['header']
 ));
 
+//TODO: don't use this option in production. (see: http://stackoverflow.com/questions/6400300/php-curl-https-causing-exception-ssl-certificate-problem-verify-that-the-ca-cer)
+curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0); 
+
 // Make the call and interpret the result (we are not checking for errors here)
-$r = json_decode(curl_exec($ch));
+$response = curl_exec ($ch);
+if($response === FALSE) {
+    die(curl_error($ch));
+}
+
+$r = json_decode($response);
 
 ?>
 <h1>Fitbit result</h1>
