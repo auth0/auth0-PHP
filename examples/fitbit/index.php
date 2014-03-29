@@ -1,18 +1,5 @@
 <?php
-require_once '../../vendor/autoload.php';
 require_once 'config.php';
-
-use Auth0SDK\Auth0;
-
-$auth0 = new Auth0(array(
-    'domain'        => $auth0_cfg['domain'],
-    'client_id'     => $auth0_cfg['client_id'],
-    'client_secret' => $auth0_cfg['client_secret'],
-    'redirect_uri'  => $auth0_cfg['redirect_uri']
-));
-
-$access_token = $auth0->getAccessToken();
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -21,15 +8,15 @@ $access_token = $auth0->getAccessToken();
     <title>Testing Auth0 PHP with fitbit provider</title>
 </head>
 <body>
-	<h1>Fitbit Test</h1>
+    <h1>Fitbit Test</h1>
     <script src="https://d19p4zemcycm7a.cloudfront.net/w2/auth0-widget-2.3.min.js"></script>
-	<script type="text/javascript">
-  		var widget = new Auth0Widget({
-	    	domain:         "<?php echo $auth0->getDomain() ?>",
-	    	clientID:       "<?php echo $auth0->getClientId() ?>",
-	    	callbackURL:    "<?php echo $auth0->getRedirectUri() ?>"
-	  	});
-	</script>
-	<button onclick="widget.signin()">Login</button>
+    <script type="text/javascript">
+        var widget = new Auth0Widget({
+            domain:         "<?php echo $auth0_cfg['domain'] ?>",
+            clientID:       "<?php echo $auth0_cfg['client_id'] ?>",
+            callbackURL:    "<?php echo $auth0_cfg['redirect_uri'] ?>"
+        });
+    </script>
+    <button onclick="widget.signin()">Login</button>
 </body>
 </html>

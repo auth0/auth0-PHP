@@ -1,0 +1,107 @@
+<?php
+
+namespace Auth0SDK;
+
+/*
+ * This file is part of Auth0-PHP package.
+ *
+ * (c) Auth0
+ *
+ * For the full copyright and license information, please view the LICENSE file
+ * that was distributed with this source code.
+ */
+
+
+/**
+ * This class provides a layer to persist user access using PHP Sessions.
+ *
+ * @author Auth0
+ */
+class SessionStore
+{
+    const BASE_NAME = 'auth0_';
+
+    /**
+     * @see Auth0SDK\BaseAuth0
+     */
+    public function __construct() {
+
+        $this->initSession();
+    }
+
+    /**
+     * This basic implementation of BaseAuth0 SDK uses
+     * PHP Sessions to store volatile data.
+     *
+     * @return void
+     */
+    private function initSession() {
+        if (!session_id()) {
+            session_set_cookie_params(60 * 60 * 24 * 7); //seven days
+            session_start();
+        }
+    }
+
+
+
+    /**
+     * Persists $value on $_SESSION, idetified by $key.
+     *
+     * @see Auth0SDK\BaseAuth0
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    public function set($key, $value) {
+        $key_name = $this->getSessionKeyName($key);
+
+        $_SESSION[$key_name] = $value;
+    }
+
+    /**
+     * Gets persisted values idetified by $key.
+     * If the value is not setted, returns $default.
+     *
+     * @see Auth0SDK\BaseAuth0
+     *
+     * @param  string  $key
+     * @param  mixed   $default
+     *
+     * @return mixed
+     */
+    public function get($key, $default=false) {
+        $key_name = $this->getSessionKeyName($key);
+
+        if (isset($_SESSION[$key_name])) {
+            return $_SESSION[$key_name];
+        } else {
+            return $default;
+        }
+    }
+
+    /**
+     * Removes a persisted value identified by $key.
+     *
+     * @see Auth0SDK\BaseAuth0
+     *
+     * @param  string $key
+     */
+    public function delete($key) {
+        $key_name = $this->getSessionKeyName($key);
+
+        unset($_SESSION[$key_name]);
+    }
+
+
+
+    /**
+     * Constructs a session var name.
+     *
+     * @param  strign $key
+     *
+     * @return string
+     */
+    public function getSessionKeyName($key) {
+        return self::BASE_NAME . '_' . $key;
+    }
+}

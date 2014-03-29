@@ -13,14 +13,15 @@ $auth0 = new Auth0(array(
     'client_id'     => $auth0_cfg['client_id'],
     'client_secret' => $auth0_cfg['client_secret'],
     'redirect_uri'  => $auth0_cfg['redirect_uri'],
+    'store'         => false,
     'debug'         => true
 ));
 
 $auth0->setDebugger(function($info) {
     file_put_contents("php://stdout", sprintf("\n[%s] %s:%s [%s]: %s\n",
-        date("D M j H:i:s Y"), 
+        date("D M j H:i:s Y"),
         $_SERVER["REMOTE_ADDR"],
-        $_SERVER["REMOTE_PORT"], 
+        $_SERVER["REMOTE_PORT"],
         "---",
         $info
     ));
@@ -30,6 +31,7 @@ $token = $auth0->getAccessToken();
 
 // Get the user info from auth0
 $userInfo = $auth0->getUserInfo();
+
 $fitbitIdentity = $userInfo['result']['identities'][0];
 if ($fitbitIdentity['provider'] != 'fitbit')
    die('The provider is not fitbit');
@@ -48,8 +50,8 @@ $oauthObject = new OAuthSimple();
 // we get from auth0
 $signatures = array( 'consumer_key'     => $fitbit_cfg['consumer_key'],
                      'shared_secret'    => $fitbit_cfg['consumer_secret'],
-		     'oauth_secret'     => $fitbitIdentity['access_token_secret'],
-		     'oauth_token'      => $fitbitIdentity['access_token']);
+             'oauth_secret'     => $fitbitIdentity['access_token_secret'],
+             'oauth_token'      => $fitbitIdentity['access_token']);
 
 // Url to the fitbit API to get the logged in user activities for the 26 of march of 2014
 $url = 'https://api.fitbit.com/1/user/'.$fitbitIdentity['user_id'].'/activities/date/2014-03-26.json';
