@@ -63,10 +63,10 @@ This SDK uses [Composer](http://getcomposer.org/doc/01-basic-usage.md) to manage
 ## Configure example
 
 1. Install dependencies
-2. Start your web server on `examples` folder.
+2. Start your web server on `examples/{example-name}` folder.
 3. Create an OpenID Connect Application on Auth0.
-4. Configure the callback url to point `examples\callback.php`.
-5. Open `examples\config.php` and replace all placeholder parameters.
+4. Configure the callback url to point `{your-base-url}\callback.php`.
+5. Open `examples/{example-name}/config.php` and replace all placeholder parameters.
 6. On your browser, open the Auth0 example project. Make sure `index.php` is being loaded.
 
 #### Enjoy

@@ -44,10 +44,10 @@ class Auth0
      * @var array
      */
     public static $URL_MAP = array(
-        'api'           => 'https://{domain}/api',
-        'authorize'     => 'https://{domain}/authorize',
-        'token'         => 'https://{domain}/oauth/token',
-        'user_info'     => 'https://{domain}/userinfo',
+        'api'           => 'https://{domain}/api/',
+        'authorize'     => 'https://{domain}/authorize/',
+        'token'         => 'https://{domain}/oauth/token/',
+        'user_info'     => 'https://{domain}/userinfo/',
     );
 
     /**
