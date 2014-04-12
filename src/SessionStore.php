@@ -47,8 +47,6 @@ class SessionStore
     /**
      * Persists $value on $_SESSION, idetified by $key.
      *
-     * @see Auth0SDK\BaseAuth0
-     *
      * @param string $key
      * @param mixed $value
      */
@@ -61,8 +59,6 @@ class SessionStore
     /**
      * Gets persisted values idetified by $key.
      * If the value is not setted, returns $default.
-     *
-     * @see Auth0SDK\BaseAuth0
      *
      * @param  string  $key
      * @param  mixed   $default
@@ -81,8 +77,6 @@ class SessionStore
 
     /**
      * Removes a persisted value identified by $key.
-     *
-     * @see Auth0SDK\BaseAuth0
      *
      * @param  string $key
      */

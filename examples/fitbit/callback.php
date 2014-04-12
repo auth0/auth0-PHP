@@ -27,12 +27,10 @@ $auth0->setDebugger(function($info) {
     ));
 });
 
-$token = $auth0->getAccessToken();
-
 // Get the user info from auth0
 $userInfo = $auth0->getUserInfo();
 
-$fitbitIdentity = $userInfo['result']['identities'][0];
+$fitbitIdentity = $userInfo['identities'][0];
 if ($fitbitIdentity['provider'] != 'fitbit')
    die('The provider is not fitbit');
 
@@ -41,6 +39,10 @@ if ($fitbitIdentity['provider'] != 'fitbit')
 <pre>
 <?php var_dump($userInfo); ?>
 </pre>
+Access Token: <?php echo $auth0->getAccessToken(); ?><br/>
+Id Token: <?php var_dump($auth0->getIdToken()); ?><br/>
+
+
 
 <?php
 require_once 'OAuthSimple.php';
@@ -70,7 +72,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 ));
 
 //TODO: don't use this option in production. (see: http://stackoverflow.com/questions/6400300/php-curl-https-causing-exception-ssl-certificate-problem-verify-that-the-ca-cer)
-curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0); 
+curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
 // Make the call and interpret the result (we are not checking for errors here)
 $response = curl_exec ($ch);

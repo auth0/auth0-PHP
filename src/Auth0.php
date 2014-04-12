@@ -35,7 +35,8 @@ class Auth0
      */
     public $persistantMap = array(
         'access_token',
-        'user_info'
+        'user_info',
+        'id_token'
     );
 
     /**
@@ -116,11 +117,18 @@ class Auth0
      * BaseAuth0 Constructor.
      *
      * Configuration:
-     *     - domain (String) Required
-     *     - client_id (string) Required
-     *     - client_secret (string) Required
-     *     - redirect_uri (string) Required
-     *     - debug (Boolean) Optional. Default false
+     *     - domain                 (String)  Required. Should match your Auth0 domain
+     *     - client_id              (String)  Required. The id of the application, you can get this in the
+     *                                                  auth0 console
+     *     - client_secret          (String)  Required. The application secret, same comment as above
+     *     - redirect_uri           (String)  Required. The uri of the auth callback, used as a security method
+     *     - persist_user_info      (Boolean) Optional. Indicates if you want to persist the user info, default true
+     *     - persist_access_token   (Boolean) Optional. Indicates if you want to persist the access token, default false
+     *     - persist_id_token       (Boolean) Optional. Indicates if you want to persist the id token, default false
+     *     - store                  (Mixed)   Optional. Indicates how we store the persisting methods, default is session
+     *                                                  store, you can pass false to avoid storing it or a class that
+     *                                                  implements a store (get, set, delete). TODO: add a proper interface
+     *     - debug                  (Boolean) Optional. Default false
      *
      * @param array $config Required
      *
@@ -165,11 +173,24 @@ class Auth0
             $this->debug_mode = false;
         }
 
-        if (isset($config['persist_access_token']) && $config['persist_access_token'] === false) {
-            $key = array_search('access_token',$this->persistantMap);
-            if ($key !== false) {
-                unset($this->persistantMap[$key]);
-            }
+
+        // User info is persisted unless said otherwise
+        if (isset($config['persist_user_info']) && $config['persist_user_info'] === false) {
+            $this->dontPersist('user_info');
+        }
+
+
+        // Access token is not persisted unless said otherwise
+        if (!isset($config['persist_access_token']) || (isset($config['persist_access_token']) &&
+                                                        $config['persist_access_token'] === false)) {
+            $this->dontPersist('access_token');
+        }
+
+        // Id token is not per persisted unless said otherwise
+        if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
+                                                        $config['persist_id_token'] === false)) {
+
+            $this->dontPersist('id_token');
         }
 
         if (isset($config['store'])) {
@@ -186,21 +207,66 @@ class Auth0
 
         $this->user_info = $this->store->get("user_info");
         $this->access_token = $this->store->get("access_token");
+        $this->id_token = $this->store->get("id_token");
 
         if (!$this->access_token) {
             $this->oauth_client->setAccessToken($this->access_token);
         }
     }
 
+    /**
+     * Removes $name from the persistantMap, thus not persisting it when we set the value
+     * @param  String $name The value to remove
+     */
+    private function dontPersist($name) {
+        $key = array_search($name,$this->persistantMap);
+        if ($key !== false) {
+            unset($this->persistantMap[$key]);
+        }
+    }
+
+    /**
+     * Exchanges the code from the URI parameters for an access token, id token and user info
+     * @return Boolean Wheter it exchanged the code or not correctly
+     */
     private function exchangeCode() {
 
         if (!isset($_REQUEST['code'])) {
             return false;
         }
-        $access_token = $this->getTokenFromCode($_REQUEST['code']);
+        $code = $_REQUEST['code'];
 
+        $this->debugInfo("Code: ".$code);
+
+        // Generate the url to the API that will give us the access token and id token
+        $auth_url = $this->generateUrl('token');
+
+        // Make the call
+        $auth0_response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
+            "code" => $code,
+            "redirect_uri" => $this->redirect_uri
+        ));
+
+        // Parse it
+        $auth0_response = $auth0_response['result'];
+        $this->debugInfo(json_encode($auth0_response));
+        $access_token = (isset($auth0_response['access_token']))? $auth0_response['access_token'] : false;
+        $id_token = (isset($auth0_response['id_token']))? $auth0_response['id_token'] : false;
+
+        if (!$access_token) {
+            throw new ApiException('Invalid access_token - Retry login.');
+        }
+        // Set the access token in the oauth client for future calls to the Auth0 API
+        $this->oauth_client->setAccessToken($access_token);
+        $this->oauth_client->setAccessTokenType(OAuth2\Client::ACCESS_TOKEN_BEARER);
+
+        // Set it and persist it, if needed
+        $this->setAccessToken($access_token);
+        $this->setIdToken($id_token);
+
+        // Get the User info from a different Auth0 API endpoint
         $user_info = $this->oauth_client->fetch($this->generateUrl('user_info'));
-
+        // Set it and persist it
         $this->setUserInfo($user_info);
         return true;
     }
@@ -211,10 +277,20 @@ class Auth0
      * @return array
      */
     public function getUserInfo() {
+        // Ensure we have the user info
         if ($this->user_info === false) {
             $this->exchangeCode();
         }
-        return $this->user_info;
+
+        if (!is_array($this->user_info)) {
+            return null;
+        }
+        // user_info should now be an array
+        if ($this->user_info["code"] !== 200) {
+            throw new CoreException("There was a problem getting the user info");
+        }
+
+        return $this->user_info["result"];
     }
 
     private function setUserInfo($user_info) {
@@ -249,8 +325,6 @@ class Auth0
 
     /**
      * Gets $access_token.
-     *
-     *
      * @return string
      */
     final public function getAccessToken() {
@@ -261,6 +335,35 @@ class Auth0
     }
 
     /**
+     * Sets and persists $id_token.
+     *
+     * @param string $id_token
+     *
+     * @return Auth0SDK\BaseAuth0
+     */
+    public function setIdToken($id_token) {
+        $key = array_search('id_token',$this->persistantMap);
+        if ($key !== false) {
+            $this->store->set('id_token', $id_token);
+        }
+
+        $this->id_token = $id_token;
+
+        return $this;
+    }
+
+    /**
+     * Gets the id token
+     * @return string
+     */
+    final public function getIdToken() {
+        if ($this->id_token === false) {
+            $this->exchangeCode();
+        }
+        return $this->id_token;
+    }
+
+    /**
      * Logout (removes all persisten data)
      */
     final public function logout()
@@ -268,40 +371,6 @@ class Auth0
         $this->deleteAllPersistentData();
         $this->access_token = NULL;
     }
-
-
-
-    /**
-     * Requests access token to Auth0 server, using authorization code.
-     *
-     * @param  string $code Authorization code
-     *
-     * @return string
-     */
-    final protected function getTokenFromCode($code) {
-        $this->debugInfo("Code: ".$code);
-        $auth_url = $this->generateUrl('token');
-
-        $auth0_response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
-            "code" => $code,
-            "redirect_uri" => $this->redirect_uri
-        ));
-
-        $auth0_response = $auth0_response['result'];
-        $this->debugInfo(json_encode($auth0_response));
-        $access_token = (isset($auth0_response['access_token']))? $auth0_response['access_token'] : false;
-
-        if (!$access_token) {
-            throw new ApiException('Invalid access_token - Retry login.');
-        }
-
-        $this->oauth_client->setAccessToken($access_token);
-        $this->oauth_client->setAccessTokenType(OAuth2\Client::ACCESS_TOKEN_BEARER);
-        $this->setAccessToken($access_token);
-
-        return $access_token;
-    }
-
 
 
     /**
