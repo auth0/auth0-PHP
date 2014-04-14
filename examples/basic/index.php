@@ -11,7 +11,7 @@ $auth0 = new Auth0(array(
     'redirect_uri'  => $auth0_cfg['redirect_uri']
 ));
 
-$access_token = $auth0->getAccessToken();
+$userInfo = $auth0->getUserInfo();
 
 ?>
 <!doctype html>
@@ -21,18 +21,18 @@ $access_token = $auth0->getAccessToken();
     <title>Testing Auth0 PHP</title>
 </head>
 <body>
-<?php if(!$access_token): ?>
+<?php if(!$userInfo): ?>
     <script src="https://d19p4zemcycm7a.cloudfront.net/w2/auth0-widget-2.3.min.js"></script>
-	<script type="text/javascript">
-  		var widget = new Auth0Widget({
-	    	domain:         "<?php echo $auth0->getDomain() ?>",
-	    	clientID:       "<?php echo $auth0->getClientId() ?>",
-	    	callbackURL:    "<?php echo $auth0->getRedirectUri() ?>"
-	  	});
-	</script>
-	<button onclick="widget.signin()">Login</button>
+    <script type="text/javascript">
+        var widget = new Auth0Widget({
+            domain:         "<?php echo $auth0->getDomain() ?>",
+            clientID:       "<?php echo $auth0->getClientId() ?>",
+            callbackURL:    "<?php echo $auth0->getRedirectUri() ?>"
+        });
+    </script>
+    <button onclick="widget.signin()">Login</button>
 <?php else: ?>
-    <?php var_dump($auth0->getUserInfo()) ?>
+    <?php var_dump($userInfo) ?>
 <?php endif ?>
 </body>
 </html>
