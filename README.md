@@ -61,22 +61,22 @@ After authenticating the user on Auth0, we will do a GET to a URL on your web si
 
 You can trigger the login in different ways, like redirecting to a login link or using the [Login Widget](https://docs.auth0.com/login-widget2), by adding the following javascript into your page
 
+~~~html
+<a href="javascript:widget.signin();">Login</a>
 
-    <a href="javascript:widget.signin();">Login</a>
-
-    <script src="https://cdn.auth0.com/w2/auth0-widget-3.0.min.js"></script>
-    <script type="text/javascript">
-        var widget = new Auth0Widget({
-            domain:       'YOUR_AUTH0_DOMAIN',
-            clientID:     'YOUR_AUTH0_CLIENT_ID',
-            callbackURL:  'http://<name>/callback.php'
-        });
-    </script>
-
+<script src="https://cdn.auth0.com/w2/auth0-widget-3.0.min.js"></script>
+<script type="text/javascript">
+    var widget = new Auth0Widget({
+        domain:       'YOUR_AUTH0_DOMAIN',
+        clientID:     'YOUR_AUTH0_CLIENT_ID',
+        callbackURL:  'http://<name>/callback.php'
+    });
+</script>
+~~~
 
 ### 5. (Optional) Configure session data
 
-By default, the SDK will store the [user information](https://docs.auth0.com/user-profile) in the `PHP Session` and it will discard the access token and the id token. If you like to persist them as well, you can pass `persist_access_token => true` and `persist_id_token => true` to the SDK configuration in step 2. You can also disable session all together by passing `store => false`.
+By default, the SDK will store the [user information](https://docs.auth0.com/user-profile) in the `PHP Session` and it will discard the access token and the id token. If you like to persist them as well, you can pass `'persist_access_token' => true` and `'persist_id_token' => true` to the SDK configuration in step 2. You can also disable session all together by passing `'store' => false`.
 
 If you want to change `PHP Session` and use Laravel, Zend, Symfony or other abstraction to the session, you can create a class that implements `get`, `set`, `delete` and pass it to the SDK as following.
 
@@ -125,4 +125,5 @@ This SDK uses [Composer](http://getcomposer.org/doc/01-basic-usage.md) to manage
 
 - Better code documentation
 - Better user guide
+- Create an interface for the store
 - Drink coffee
