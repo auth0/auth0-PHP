@@ -33,7 +33,11 @@
   require __DIR__ . '/vendor/autoload.php';
 
   // Read .env
-  Dotenv::load(__DIR__);
+  try {
+    Dotenv::load(__DIR__);
+  } catch(InvalidArgumentException $ex) {
+    // Ignore if no dotenv
+  }
 
   // Create Router instance
   $router = new \Bramus\Router\Router();
