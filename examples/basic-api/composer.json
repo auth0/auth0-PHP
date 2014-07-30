@@ -1,0 +1,16 @@
+{
+    "name": "auth0/basic-api-sample",
+    "description": "Basic sample for securing an API",
+    "require": {
+        "bramus/router": "dev-master",
+        "firebase/php-jwt": "dev-master",
+        "vlucas/phpdotenv": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin Gontovnikas",
+            "email": "martin@gon.to"
+        }
+    ]
+}
