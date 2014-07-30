@@ -4,7 +4,7 @@ This is the seed project you need to use if you're going to create a PHP API. Yo
 This example is deployed at Heroku at http://auth0-php-sample.herokuapp.com/ping
 
 #Running the example
-In order to run the example you need to have npm and nodejs installed.
+In order to run the example you need to have `composer` and `php` installed.
 
 You also need to set the ClientSecret and ClientId for your Auth0 app as enviroment variables with the following names respectively: `AUTH0_CLIENT_SECRET` and `AUTH0_CLIENT_ID`.
 
@@ -16,4 +16,11 @@ AUTH0_CLIENT_SECRET=myCoolSecret
 AUTH0_CLIENT_ID=myCoolClientId
 ````
 
-Once you've set those 2 enviroment variables, just run `node server.js` and try calling [http://localhost:3000/ping](http://localhost:3000/ping)
+Once you've set those 2 enviroment variables, just run the following to get the app started:
+
+````bash
+composer install
+php -S localhost:30001
+````
+
+Now, try calling [http://localhost:3001/ping](http://localhost:3001/ping)
