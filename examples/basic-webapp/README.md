@@ -1,5 +1,5 @@
-# Auth0 + PHP API Seed
-This is the seed project you need to use if you're going to create a PHP Regular WebApp. If you want to build an API to use with a SPA or a Mobile app, you should check [this other seed project]()
+# Auth0 + PHP WebApp Seed
+This is the seed project you need to use if you're going to create a PHP Regular WebApp. If you want to build an API to use with a SPA or a Mobile app, you should check [this other seed project](https://github.com/auth0/auth0-PHP/tree/master/examples/basic-api)
 
 This example is deployed at Heroku at [http://php-webapp.herokuapp.com/](http://php-webapp.herokuapp.com/)
 
