@@ -1,0 +1,16 @@
+{
+    "name": "auth0/basic-webapp-sample",
+    "description": "Basic sample for securing a WebApp with Auth0",
+    "require": {
+        "auth0/auth0-php": "0.6.*",
+         "adoy/oauth2": "dev-master",
+         "vlucas/phpdotenv": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin Gontovnikas",
+            "email": "martin@gon.to"
+        }
+    ]
+}
