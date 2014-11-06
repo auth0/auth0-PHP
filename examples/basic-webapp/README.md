@@ -22,7 +22,7 @@ Once you've set those 4 enviroment variables, just run the following to get the 
 
 ````bash
 composer install
-php -S localhost:30000
+php -S localhost:3000
 ````
 
 Now, try calling [http://localhost:3000/](http://localhost:3000/)
