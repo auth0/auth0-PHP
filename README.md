@@ -107,25 +107,35 @@ This SDK uses [Composer](http://getcomposer.org/doc/01-basic-usage.md) to manage
 5. Open `examples/{example-name}/config.php` and replace all placeholder parameters.
 6. On your browser, open the Auth0 example project. Make sure `index.php` is being loaded.
 
-#### Enjoy
+## What is Auth0?
+
+Auth0 helps you to:
+
+* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
+* Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
+* Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
+* Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
+* Analytics of how, when and where users are logging in.
+* Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
+
+## Create a free account in Auth0
+
+1. Go to [Auth0](https://auth0.com) and click Sign Up.
+2. Use Google, GitHub or Microsoft Account to login.
 
 ## Issue Reporting
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
-# CHANGELOG
+## Author
 
-## 0.6.6
+[Auth0](auth0.com)
 
-- Internal change, instead of using inheritance to change how we persist user data we now use composition
-- API change, now getUserInfo returns the user info directly, so if you want the user name you use $userInfo['name'] instead of $userInfo['results']['name']
+## License
 
-## 0.6.5
+This project is licensed under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
 
-- Added fitbit example
-- Fix base url bug
-
-# TODO
+## TODO
 
 - Better code documentation
 - Better user guide
