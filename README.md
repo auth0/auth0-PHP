@@ -9,7 +9,7 @@ Modify your `composer.json` to add the following dependencies and run `composer 
 ~~~js
 {
     "require": {
-        "auth0/auth0-php": "0.6.*",
+        "auth0/auth0-php": "~0.7",
         "adoy/oauth2": "dev-master"
     }
 }
