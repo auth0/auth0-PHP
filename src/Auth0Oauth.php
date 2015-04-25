@@ -7,6 +7,10 @@
  */
 
 namespace Auth0\SDK;
+use Auth0\SDK\API\Auth0Api;
+use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 
@@ -18,7 +22,7 @@ use Auth0\SDK\Store\SessionStore;
  *       and <https://docs.auth0.com/api-reference>
  * @todo Lots of code documentation.
  */
-class OauthClient {
+class Auth0Oauth {
 
     /**
      * Available keys to persist data.
@@ -216,7 +220,6 @@ class OauthClient {
      * @return Boolean Wheter it exchanged the code or not correctly
      */
     private function exchangeCode() {
-
         if (!isset($_REQUEST['code'])) {
             return false;
         }
@@ -226,7 +229,6 @@ class OauthClient {
 
         // Generate the url to the API that will give us the access token and id token
         $auth_url = $this->generateUrl('token');
-
         // Make the call
         $auth0_response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
             "code" => $code,
@@ -250,9 +252,18 @@ class OauthClient {
         $this->setAccessToken($access_token);
         $this->setIdToken($id_token);
 
-        // Get the User info from a different Auth0 API endpoint
-        $user_info = $this->oauth_client->fetch($this->generateUrl('user_info'));
-        // Set it and persist it
+        $auth0 = new Auth0Api([
+            'domain' => 'https://login.auth0.com',
+            'basePath' => '/api/v2',
+        ]);
+
+        $token = Auth0JWT::decode($id_token, $this->client_id, $this->client_secret);
+
+        $user_info = $auth0->get()
+            ->users($token->user_id)
+            ->withHeader(new AuthorizationBearer($id_token))
+            ->call();
+
         $this->setUserInfo($user_info);
 
         return true;
@@ -268,16 +279,11 @@ class OauthClient {
         if ($this->user_info === false) {
             $this->exchangeCode();
         }
-
         if (!is_array($this->user_info)) {
             return null;
         }
-        // user_info should now be an array
-        if ($this->user_info["code"] !== 200) {
-            throw new CoreException("There was a problem getting the user info");
-        }
 
-        return $this->user_info["result"];
+        return $this->user_info;
     }
 
     private function setUserInfo($user_info) {

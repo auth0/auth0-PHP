@@ -9,7 +9,7 @@
 namespace Auth0\Tests;
 
 
-use Auth0\SDK\API\Api;
+use Auth0\SDK\API\Auth0Api;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 
 class UsersTest extends \PHPUnit_Framework_TestCase {
@@ -17,7 +17,7 @@ class UsersTest extends \PHPUnit_Framework_TestCase {
     protected $token = '';
 
     public function testList() {
-        $auth0 = new Api([
+        $auth0 = new Auth0Api([
             'domain' => 'https://login.auth0.com',
             'basePath' => '/api/v2',
         ]);

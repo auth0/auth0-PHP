@@ -64,7 +64,7 @@ class RequestBuilder {
                 'body' => $this->body
             ]);
 
-            return $response->json(['object' => true]);
+            return $response->json(['object' => false]);
 
         } catch (RequestException $e) {
             throw $e;

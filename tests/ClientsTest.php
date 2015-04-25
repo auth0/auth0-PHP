@@ -1,9 +1,8 @@
 <?php namespace Auth0\Tests;
 
-use Auth0\SDK\API\Api;
+use Auth0\SDK\API\Auth0Api;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
-use Auth0\SDK\API\Header\Header;
 
 class ClientsTest extends \PHPUnit_Framework_TestCase {
 
@@ -12,7 +11,7 @@ class ClientsTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetAll() {
 
-        $auth0 = new Api([
+        $auth0 = new Auth0Api([
             'domain' => 'https://login.auth0.com',
             'basePath' => '/api/v2',
         ]);
@@ -28,7 +27,7 @@ class ClientsTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreateOne() {
 
-        $auth0 = new Api([
+        $auth0 = new Auth0Api([
             'domain' => 'https://login.auth0.com',
             'basePath' => '/api/v2',
         ]);
@@ -63,7 +62,7 @@ class ClientsTest extends \PHPUnit_Framework_TestCase {
 
         $id = $this->getIdByName(['TestApp', 'THIS WAS UPDATED']);
 
-        $auth0 = new Api([
+        $auth0 = new Auth0Api([
             'domain' => 'https://login.auth0.com',
             'basePath' => '/api/v2',
         ]);
@@ -86,7 +85,7 @@ class ClientsTest extends \PHPUnit_Framework_TestCase {
 
         $id = $this->getIdByName(['TestApp', 'THIS WAS UPDATED']);
 
-        $auth0 = new Api([
+        $auth0 = new Auth0Api([
             'domain' => 'https://login.auth0.com',
             'basePath' => '/api/v2',
         ]);
@@ -118,7 +117,7 @@ class ClientsTest extends \PHPUnit_Framework_TestCase {
 
         $id = $this->getIdByName(['TestApp', 'THIS WAS UPDATED', 'My application', 'asdf']);
 
-        $auth0 = new Api([
+        $auth0 = new Auth0Api([
             'domain' => 'https://login.auth0.com',
             'basePath' => '/api/v2',
         ]);
@@ -131,7 +130,7 @@ class ClientsTest extends \PHPUnit_Framework_TestCase {
     }
 
     protected function getIdByName($names) {
-        $auth0 = new Api([
+        $auth0 = new Auth0Api([
             'domain' => 'https://login.auth0.com',
             'basePath' => '/api/v2',
         ]);

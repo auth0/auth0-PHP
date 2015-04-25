@@ -9,7 +9,7 @@
 namespace Auth0\SDK\API;
 
 
-class Api {
+class Auth0Api {
 
     protected $domain;
     protected $basePath;
