@@ -9,7 +9,7 @@
 namespace Auth0\SDK;
 
 
-class JWT {
+class Auth0JWT {
 
     public static function decode($jwt, $client_id, $client_secret) {
 
