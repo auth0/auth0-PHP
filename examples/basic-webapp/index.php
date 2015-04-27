@@ -1,9 +1,4 @@
 <?php
-  // In case one is using PHP 5.4's built-in server
-  $filename = __DIR__ . preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
-  if (php_sapi_name() === 'cli-server' && is_file($filename)) {
-      return false;
-  }
 
   // Require composer autoloader
   require __DIR__ . '/vendor/autoload.php';
@@ -26,7 +21,7 @@
 <html>
     <head>
         <script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-        <script src="https://cdn.auth0.com/w2/auth0-widget-5.js"></script>
+        <script src="https://cdn.auth0.com/js/lock-7.min.js"></script>
 
         <script type="text/javascript" src="//use.typekit.net/iws6ohy.js"></script>
         <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
@@ -43,8 +38,13 @@
           var AUTH0_CALLBACK_URL = '<?php echo is_null(getenv("AUTH0_CALLBACK_URL")) ?
             "http://localhost:3000/index.php" : getenv("AUTH0_CALLBACK_URL") ?>';
         </script>
+
+
         <script src="/public/app.js"> </script>
         <link href="/public/app.css" rel="stylesheet">
+
+
+
     </head>
     <body class="home">
         <div class="container">
@@ -61,20 +61,9 @@
                 <h1 id="logo"><img src="//cdn.auth0.com/samples/auth0_logo_final_blue_RGB.png" /></h1>
                 <img class="avatar" src="<?php echo $userInfo['picture'] ?>"/>
                 <h2>Welcome <span class="nickname"><?php echo $userInfo['nickname'] ?></span></h2>
-                <button class="btn btn-lg btn-primary btn-api">Call API</button>
               </div>
               <?php endif ?>
             </div>
         </div>
     </body>
 </html>
-
-
-
-
-
-
-
-
-
-
