@@ -3,3 +3,5 @@ composer.phar
 vendor
 .idea
 .DS_Store
+.env
+examples/basic-oauth/.env
