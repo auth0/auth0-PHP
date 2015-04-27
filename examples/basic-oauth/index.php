@@ -16,10 +16,10 @@ $userInfo = $auth0Oauth->getUserInfo();
 if (isset($_REQUEST['logout'])) {
     $auth0Oauth->logout();
     session_destroy();
-    die('LOGGED OUT');
+    header("Location: /");
 }
 
-if ($userInfo) dd($userInfo);
+if ($userInfo) require 'logeduser.php';
 
 
 require 'login.php';
