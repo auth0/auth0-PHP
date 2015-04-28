@@ -76,6 +76,11 @@
       header('HTTP/1.0 401 Unauthorized');
       echo "Invalid token";
       exit();
+    } catch(Exception $e) {
+      header('HTTP/1.0 500 Internal Server Error');
+      echo $e->getMessage();
+      echo "\n\nMost likely thrown because configured client secret must be public signing key, not client secret";
+      exit();
     }
 
 
