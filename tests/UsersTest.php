@@ -18,8 +18,8 @@ class UsersTest extends \PHPUnit_Framework_TestCase {
 
     public function testList() {
         $auth0 = new Auth0Api([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
+                'domain' => 'https://login.auth0.com',
+                'basePath' => '/api/v2',
         ]);
 
         $response = $auth0->get()

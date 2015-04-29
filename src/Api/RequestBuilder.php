@@ -52,6 +52,22 @@ class RequestBuilder {
         return '?' . implode('&',$params);
     }
 
+    public function dump() {
+        echo "<pre>";
+        echo "METHOD: {$this->method}\n";
+        echo "URL: {$this->getUrl()}\n";
+        
+        echo "HEADERS:\n\t";
+        echo implode("\n\t",$this->headers);
+        echo "\n";
+        
+        echo "BODY: {$this->body}\n";
+        
+        echo "</pre>";
+        
+        return $this;
+    }
+
     public function call() {
 
         $client = new Client();

@@ -9,6 +9,7 @@
 namespace Auth0\SDK;
 use Auth0\SDK\API\Auth0Api;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Store\EmptyStore;
@@ -284,6 +285,31 @@ class Auth0Oauth {
         }
 
         return $this->user_info;
+    }
+    
+    public function updateUserMetadata($metadata) {
+        
+        $auth0 = new Auth0Api([
+            'domain' => 'https://login.auth0.com',
+            'basePath' => '/api/v2',
+        ]);
+        
+        $user_info = $auth0->patch()
+            ->users($this->user_info["user_id"])
+            ->withHeader(new AuthorizationBearer($this->getIdToken()))
+            ->withHeader(new ContentType('application/json'))
+            ->withBody(json_encode(array('user_metadata' =>  $metadata)))
+            ->call();
+        
+        $this->setUserInfo($user_info);
+    }
+    
+    public function getUserMetadata() {
+        return $this->user_info["user_metadata"];
+    }
+    
+    public function getAppMetadata() {
+        return $this->user_info["app_metadata"];
     }
 
     private function setUserInfo($user_info) {
