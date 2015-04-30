@@ -1,22 +1,19 @@
 <?php
-
-namespace Auth0\SDK;
-
-/*
- * This file is part of Auth0-PHP package.
- *
- * (c) Auth0
- *
- * For the full copyright and license information, please view the LICENSE file
- * that was distributed with this source code.
+/**
+ * Created by PhpStorm.
+ * User: germanlena
+ * Date: 4/23/15
+ * Time: 11:58 AM
  */
 
-use OAuth2;
-use \Exception;
-use \Closure;
-
-require_once 'SessionStore.php';
-require_once 'EmptyStore.php';
+namespace Auth0\SDK;
+use Auth0\SDK\API\Auth0Api;
+use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Store\EmptyStore;
+use Auth0\SDK\Store\SessionStore;
 
 /**
  * This class provides access to Auth0 Platform.
@@ -26,8 +23,8 @@ require_once 'EmptyStore.php';
  *       and <https://docs.auth0.com/api-reference>
  * @todo Lots of code documentation.
  */
-class Auth0
-{
+class Auth0 {
+
     /**
      * Available keys to persist data.
      *
@@ -109,10 +106,6 @@ class Auth0
      */
     protected $oauth_client;
 
-
-    // -------------------------------------------------------------------------------------------------------------- //
-
-
     /**
      * BaseAuth0 Constructor.
      *
@@ -173,22 +166,20 @@ class Auth0
             $this->debug_mode = false;
         }
 
-
         // User info is persisted unless said otherwise
         if (isset($config['persist_user_info']) && $config['persist_user_info'] === false) {
             $this->dontPersist('user_info');
         }
 
-
         // Access token is not persisted unless said otherwise
         if (!isset($config['persist_access_token']) || (isset($config['persist_access_token']) &&
-                                                        $config['persist_access_token'] === false)) {
+                $config['persist_access_token'] === false)) {
             $this->dontPersist('access_token');
         }
 
         // Id token is not per persisted unless said otherwise
         if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
-                                                        $config['persist_id_token'] === false)) {
+                $config['persist_id_token'] === false)) {
 
             $this->dontPersist('id_token');
         }
@@ -203,7 +194,7 @@ class Auth0
             $this->store = new SessionStore();
         }
 
-        $this->oauth_client = new OAuth2\Client($this->client_id, $this->client_secret);
+        $this->oauth_client = new \OAuth2\Client($this->client_id, $this->client_secret);
 
         $this->user_info = $this->store->get("user_info");
         $this->access_token = $this->store->get("access_token");
@@ -230,7 +221,6 @@ class Auth0
      * @return Boolean Wheter it exchanged the code or not correctly
      */
     private function exchangeCode() {
-
         if (!isset($_REQUEST['code'])) {
             return false;
         }
@@ -240,7 +230,6 @@ class Auth0
 
         // Generate the url to the API that will give us the access token and id token
         $auth_url = $this->generateUrl('token');
-
         // Make the call
         $auth0_response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
             "code" => $code,
@@ -258,16 +247,26 @@ class Auth0
         }
         // Set the access token in the oauth client for future calls to the Auth0 API
         $this->oauth_client->setAccessToken($access_token);
-        $this->oauth_client->setAccessTokenType(OAuth2\Client::ACCESS_TOKEN_BEARER);
+        $this->oauth_client->setAccessTokenType(\OAuth2\Client::ACCESS_TOKEN_BEARER);
 
         // Set it and persist it, if needed
         $this->setAccessToken($access_token);
         $this->setIdToken($id_token);
 
-        // Get the User info from a different Auth0 API endpoint
-        $user_info = $this->oauth_client->fetch($this->generateUrl('user_info'));
-        // Set it and persist it
+        $auth0 = new Auth0Api([
+            'domain' => 'https://login.auth0.com',
+            'basePath' => '/api/v2',
+        ]);
+
+        $token = Auth0JWT::decode($id_token, $this->client_id, $this->client_secret);
+
+        $user_info = $auth0->get()
+            ->users($token->user_id)
+            ->withHeader(new AuthorizationBearer($id_token))
+            ->call();
+
         $this->setUserInfo($user_info);
+
         return true;
     }
 
@@ -281,16 +280,36 @@ class Auth0
         if ($this->user_info === false) {
             $this->exchangeCode();
         }
-
         if (!is_array($this->user_info)) {
             return null;
         }
-        // user_info should now be an array
-        if ($this->user_info["code"] !== 200) {
-            throw new CoreException("There was a problem getting the user info");
-        }
 
-        return $this->user_info["result"];
+        return $this->user_info;
+    }
+    
+    public function updateUserMetadata($metadata) {
+        
+        $auth0 = new Auth0Api([
+            'domain' => 'https://login.auth0.com',
+            'basePath' => '/api/v2',
+        ]);
+        
+        $user_info = $auth0->patch()
+            ->users($this->user_info["user_id"])
+            ->withHeader(new AuthorizationBearer($this->getIdToken()))
+            ->withHeader(new ContentType('application/json'))
+            ->withBody(json_encode(array('user_metadata' =>  $metadata)))
+            ->call();
+        
+        $this->setUserInfo($user_info);
+    }
+    
+    public function getUserMetadata() {
+        return $this->user_info["user_metadata"];
+    }
+    
+    public function getAppMetadata() {
+        return $this->user_info["app_metadata"];
     }
 
     private function setUserInfo($user_info) {
@@ -440,7 +459,7 @@ class Auth0
     }
 
     // -------------------------------------------------------------------------------------------------------------- //
-        /**
+    /**
      * Sets $domain.
      *
      * @param string $domain
@@ -584,5 +603,6 @@ class Auth0
         return $this->debugger;
     }
 }
+
 
 
