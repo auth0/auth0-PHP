@@ -12,7 +12,7 @@ $auth0Oauth = new \Auth0\SDK\Auth0(array(
   'persist_id_token' => true,
 ));
 
-$userInfo = $auth0Oauth->getUserInfo();
+$userInfo = $auth0Oauth->getUser();
 
 if (isset($_REQUEST['logout'])) {
     $auth0Oauth->logout();
