@@ -4,7 +4,7 @@ require_once 'vendor/autoload.php';
 require_once 'helpers.php';
 require_once 'dotenv-loader.php';
 
-$auth0Oauth = new \Auth0\SDK\Auth0Oauth(array(
+$auth0Oauth = new \Auth0\SDK\Auth0(array(
   'domain'        => getenv('AUTH0_DOMAIN'),
   'client_id'     => getenv('AUTH0_CLIENT_ID'),
   'client_secret' => getenv('AUTH0_CLIENT_SECRET'),
