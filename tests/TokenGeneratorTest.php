@@ -1,6 +1,6 @@
 <?php namespace Auth0\Tests;
 
-use Auth0\SDK\API\Auth0Api;
+use Auth0\SDK\API\Client;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\TokenGenerator;
 
@@ -18,7 +18,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testList() {
-        $auth0 = new Auth0Api([
+        $auth0 = new Client([
                 'domain' => 'https://login.auth0.com',
                 'basePath' => '/api/v2',
         ]);

@@ -38,6 +38,10 @@ class RequestBuilder {
         return $this;
     }
 
+    public function addPathVariable($variable) {
+        $this->path[] = $variable;
+    }
+
     public function getUrl() {
         return $this->domain . '/' . trim(implode('/',$this->path), '/') . $this->getParams();
     }
@@ -56,15 +60,15 @@ class RequestBuilder {
         echo "<pre>";
         echo "METHOD: {$this->method}\n";
         echo "URL: {$this->getUrl()}\n";
-        
+
         echo "HEADERS:\n\t";
         echo implode("\n\t",$this->headers);
         echo "\n";
-        
+
         echo "BODY: {$this->body}\n";
-        
+
         echo "</pre>";
-        
+
         return $this;
     }
 

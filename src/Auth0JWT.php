@@ -8,6 +8,8 @@
 
 namespace Auth0\SDK;
 
+use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\ApiException;
 
 class Auth0JWT {
 
@@ -27,6 +29,47 @@ class Auth0JWT {
         }
 
         return $decodedToken;
+    }
+
+    /**
+     * $scopes: should be an array with the follow structure:
+     *
+     *          'scope' => [
+     *              'actions' => ['action1', 'action2']
+     *          ],
+     *          'scope2' => [
+     *              'actions' => ['action1', 'action2']
+     *          ]
+     */
+    public static function encode($client_id, $client_secret, $scopes = null, $custom_payload = null, $lifetime = 36000) {
+
+            $time = time();
+
+            $payload = array(
+                "iat" => $time,
+            );
+
+            if ($scopes) {
+                $payload["scopes"] = $scopes;
+            }
+
+            if ($scopes) {
+                $custom_payload = array_merge($custom_payload, $payload);
+            }
+
+            $jti = md5(json_encode($payload));
+
+            $payload['jti'] = $jti;
+            $payload["exp"] = $time + $lifetime;
+            $payload["aud"] = $client_id;
+
+            $secret = base64_decode(strtr($client_secret, '-_', '+/'));
+
+            $jwt = \JWT::encode($payload, $secret);
+
+            return $jwt;
+
+
     }
 
 }

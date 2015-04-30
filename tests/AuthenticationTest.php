@@ -9,14 +9,14 @@
 namespace Auth0\Tests;
 
 
-use Auth0\SDK\API\Auth0Api;
+use Auth0\SDK\API\Client;
 use Auth0\SDK\Header\ContentType;
 
 class AuthenticationTest extends \PHPUnit_Framework_TestCase {
 
     public function testRo() {
 
-        $auth0 = new Auth0Api([
+        $auth0 = new Client([
             'domain' => 'https://wptest.auth0.com',
             'basePath' => '/',
         ]);

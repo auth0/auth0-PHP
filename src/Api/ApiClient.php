@@ -8,8 +8,7 @@
 
 namespace Auth0\SDK\API;
 
-
-class Auth0Api {
+class ApiClient {
 
     protected $domain;
     protected $basePath;
