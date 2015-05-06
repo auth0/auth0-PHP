@@ -126,4 +126,43 @@ class ApiUsers {
             ->call();
     }
 
+    public static function createEmailVerificationTicket($token, $user_id, $result_url = null) {
+
+        $request = self::getApiV2Client()->post()
+            ->users($user_id)
+            ->tickets()
+            ->email_verification()
+            ->withHeader(new AuthorizationBearer($token));
+
+        if ($result_url) {
+            $body = json_encode(array(
+                'result_url' => $result_url
+            ));
+            $request->withBody($body);
+        }
+
+        return $request->call();
+
+    }
+
+    public static function createPasswordChangeTicket($token, $user_id, $new_password, $result_url = null) {
+
+        $body = array(
+            'new_password' => $new_password
+        );
+
+        if ($result_url) {
+            $body = ['result_url'] = $result_url;
+        }
+
+        return self::getApiV2Client()->post()
+            ->users($user_id)
+            ->tickets()
+            ->email_verification()
+            ->withHeader(new AuthorizationBearer($token))
+            ->withBody(json_encode($body))
+            ->call();
+
+    }
+
 }
