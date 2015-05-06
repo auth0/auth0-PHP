@@ -4,13 +4,19 @@
     "require": {
         "bramus/router": "dev-master",
         "firebase/php-jwt": "dev-master",
-        "vlucas/phpdotenv": "dev-master"
+        "adoy/oauth2": "dev-master",
+        "vlucas/phpdotenv": "dev-master",
+        "auth0/auth0-php": "dev-1.x.x-dev"
     },
     "license": "MIT",
     "authors": [
         {
             "name": "Martin Gontovnikas",
             "email": "martin@gon.to"
+        },
+        {
+            "name": "Germán Lena",
+            "email": "german.lena@gmail.com"
         }
     ]
 }

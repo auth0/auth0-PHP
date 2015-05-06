@@ -21,7 +21,7 @@
             foreach($rx_matches as $ak_key => $ak_val) $rx_matches[$ak_key] = ucfirst($ak_val);
             $arh_key = implode('-', $rx_matches);
           }
-          $arh[$arh_key] = $val;
+          $arh[ucfirst(strtolower($arh_key))] = $val;
         }
       }
       return( $arh );
@@ -58,7 +58,14 @@
   $router->before('GET', '/secured/.*', function() {
 
     $requestHeaders = apache_request_headers();
-    $authorizationHeader = $requestHeaders['AUTHORIZATION'];
+
+    if (!isset($requestHeaders['Authorization'])) {
+        header('HTTP/1.0 401 Unauthorized');
+        echo "No token provided.";
+        exit();
+    }
+
+    $authorizationHeader = $requestHeaders['Authorization'];
 
     if ($authorizationHeader == null) {
       header('HTTP/1.0 401 Unauthorized');
@@ -66,21 +73,12 @@
       exit();
     }
 
-    // // validate the token
     $token = str_replace('Bearer ', '', $authorizationHeader);
-    $secret = getenv('AUTH0_CLIENT_SECRET');
-    $decoded_token = null;
+
     try {
-      $decoded_token = JWT::decode($token, base64_decode(strtr($secret, '-_', '+/')) );
-    } catch(UnexpectedValueException $ex) {
-      header('HTTP/1.0 401 Unauthorized');
-      echo "Invalid token";
-      exit();
+        \Auth0\SDK\Auth0JWT::decode($token, getenv('AUTH0_CLIENT_ID'), getenv('AUTH0_CLIENT_SECRET'));
     }
-
-
-    // // validate that this token was made for us
-    if ($decoded_token->aud != getenv('AUTH0_CLIENT_ID')) {
+    catch(\Auth0\SDK\Exception\CoreException $e) {
       header('HTTP/1.0 401 Unauthorized');
       echo "Invalid token";
       exit();
@@ -103,9 +101,3 @@
 
   // Run the Router
   $router->run();
-
-
-
-
-
-
