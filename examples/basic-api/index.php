@@ -39,23 +39,27 @@
     // Ignore if no dotenv
   }
 
+  $app = new \App\Main();
+
   // Create Router instance
   $router = new \Bramus\Router\Router();
 
   // Activate CORS
-  function setCorsHeaders() {
+  function sendCorsHeaders() {
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Headers: Authorization");
     header("Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE");
   }
+
   $router->options('/.*', function() {
-    setCorsHeaders();
+      sendCorsHeaders();
   });
-  setCorsHeaders();
+
+  sendCorsHeaders();
 
 
   // Check JWT on /secured routes
-  $router->before('GET', '/secured/.*', function() {
+  $router->before('GET', '/secured/.*', function() use ($app) {
 
     $requestHeaders = apache_request_headers();
 
@@ -76,7 +80,7 @@
     $token = str_replace('Bearer ', '', $authorizationHeader);
 
     try {
-        \Auth0\SDK\Auth0JWT::decode($token, getenv('AUTH0_CLIENT_ID'), getenv('AUTH0_CLIENT_SECRET'));
+        $app->setCurrentToken($token);
     }
     catch(\Auth0\SDK\Exception\CoreException $e) {
       header('HTTP/1.0 401 Unauthorized');
@@ -86,12 +90,12 @@
 
   });
 
-  $router->get('/ping', function() {
-    echo "All good. You don't need to be authenticated to call this";
+  $router->get('/ping', function() use ($app){
+      echo json_encode($app->publicPing());
   });
 
-  $router->get('/secured/ping', function() {
-    echo "All good. You only get this message if you're authenticated";
+  $router->get('/secured/ping', function() use ($app){
+      echo json_encode($app->privatePing());
   });
 
   $router->set404(function() {

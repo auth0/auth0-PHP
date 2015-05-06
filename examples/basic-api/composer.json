@@ -8,6 +8,11 @@
         "vlucas/phpdotenv": "dev-master",
         "auth0/auth0-php": "dev-1.x.x-dev"
     },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
     "license": "MIT",
     "authors": [
         {
