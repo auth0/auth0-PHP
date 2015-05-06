@@ -152,7 +152,7 @@ class ApiUsers {
         );
 
         if ($result_url) {
-            $body = ['result_url'] = $result_url;
+            $body['result_url'] = $result_url;
         }
 
         return self::getApiV2Client()->post()
