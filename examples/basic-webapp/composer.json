@@ -2,9 +2,10 @@
     "name": "auth0/basic-webapp-sample",
     "description": "Basic sample for securing a WebApp with Auth0",
     "require": {
-        "auth0/auth0-php": "0.6.*",
+         "firebase/php-jwt": "dev-master",
          "adoy/oauth2": "dev-master",
-         "vlucas/phpdotenv": "dev-master"
+         "vlucas/phpdotenv": "dev-master",
+         "auth0/auth0-php": "dev-1.x.x-dev"
     },
     "license": "MIT",
     "authors": [

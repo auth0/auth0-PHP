@@ -5,9 +5,7 @@
 
   require __DIR__ . '/dotenv-loader.php';
 
-  use Auth0SDK\Auth0;
-
-  $auth0 = new Auth0(array(
+  $auth0 = new \Auth0\SDK\Auth0(array(
     'domain'        => getenv('AUTH0_DOMAIN'),
     'client_id'     => getenv('AUTH0_CLIENT_ID'),
     'client_secret' => getenv('AUTH0_CLIENT_SECRET'),
