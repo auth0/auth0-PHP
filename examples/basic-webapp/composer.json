@@ -5,7 +5,7 @@
          "firebase/php-jwt": "dev-master",
          "adoy/oauth2": "dev-master",
          "vlucas/phpdotenv": "dev-master",
-         "auth0/auth0-php": "dev-1.x.x-dev"
+         "auth0/auth0-php": "~1.0"
     },
     "license": "MIT",
     "authors": [
