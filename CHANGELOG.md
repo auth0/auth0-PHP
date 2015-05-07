@@ -1,8 +1,8 @@
 # Change Log
 
-## [Unreleased](https://github.com/auth0/auth0-PHP/tree/HEAD)
+## [1.0.0](https://github.com/auth0/auth0-PHP/tree/1.0.0) (2015-05-07)
 
-[Full Changelog](https://github.com/auth0/auth0-PHP/compare/0.6.6...HEAD)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/0.6.6...1.0.0)
 
 **Closed issues:**
 
