@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0SDK;
+namespace Auth0\SDK\Store;
 
 /*
  * This file is part of Auth0-PHP package.

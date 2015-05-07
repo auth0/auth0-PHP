@@ -1,22 +1,11 @@
 <?php
-
-namespace Auth0SDK;
-
-/*
- * This file is part of Auth0-PHP package.
- *
- * (c) Auth0
- *
- * For the full copyright and license information, please view the LICENSE file
- * that was distributed with this source code.
- */
-
-use OAuth2;
-use \Exception;
-use \Closure;
-
-require_once 'SessionStore.php';
-require_once 'EmptyStore.php';
+namespace Auth0\SDK;
+use Auth0\SDK\API\ApiUsers;
+use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Store\EmptyStore;
+use Auth0\SDK\Store\SessionStore;
+use OAuth2\Client;
 
 /**
  * This class provides access to Auth0 Platform.
@@ -26,8 +15,8 @@ require_once 'EmptyStore.php';
  *       and <https://docs.auth0.com/api-reference>
  * @todo Lots of code documentation.
  */
-class Auth0
-{
+class Auth0 {
+
     /**
      * Available keys to persist data.
      *
@@ -35,7 +24,7 @@ class Auth0
      */
     public $persistantMap = array(
         'access_token',
-        'user_info',
+        'user',
         'id_token'
     );
 
@@ -48,7 +37,6 @@ class Auth0
         'api'           => 'https://{domain}/api/',
         'authorize'     => 'https://{domain}/authorize/',
         'token'         => 'https://{domain}/oauth/token/',
-        'user_info'     => 'https://{domain}/userinfo/',
     );
 
     /**
@@ -103,15 +91,18 @@ class Auth0
     protected $access_token;
 
     /**
+     * The user object
+     *
+     * @var string
+     */
+    protected $user;
+
+    /**
      * OAuth2 Client.
      *
-     * @var OAuth2\Client
+     * @var \OAuth2\Client
      */
     protected $oauth_client;
-
-
-    // -------------------------------------------------------------------------------------------------------------- //
-
 
     /**
      * BaseAuth0 Constructor.
@@ -122,7 +113,7 @@ class Auth0
      *                                                  auth0 console
      *     - client_secret          (String)  Required. The application secret, same comment as above
      *     - redirect_uri           (String)  Required. The uri of the auth callback, used as a security method
-     *     - persist_user_info      (Boolean) Optional. Indicates if you want to persist the user info, default true
+     *     - persist_user      (Boolean) Optional. Indicates if you want to persist the user info, default true
      *     - persist_access_token   (Boolean) Optional. Indicates if you want to persist the access token, default false
      *     - persist_id_token       (Boolean) Optional. Indicates if you want to persist the id token, default false
      *     - store                  (Mixed)   Optional. Indicates how we store the persisting methods, default is session
@@ -173,22 +164,20 @@ class Auth0
             $this->debug_mode = false;
         }
 
-
         // User info is persisted unless said otherwise
-        if (isset($config['persist_user_info']) && $config['persist_user_info'] === false) {
-            $this->dontPersist('user_info');
+        if (isset($config['persist_user']) && $config['persist_user'] === false) {
+            $this->dontPersist('user');
         }
-
 
         // Access token is not persisted unless said otherwise
         if (!isset($config['persist_access_token']) || (isset($config['persist_access_token']) &&
-                                                        $config['persist_access_token'] === false)) {
+                $config['persist_access_token'] === false)) {
             $this->dontPersist('access_token');
         }
 
         // Id token is not per persisted unless said otherwise
         if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
-                                                        $config['persist_id_token'] === false)) {
+                $config['persist_id_token'] === false)) {
 
             $this->dontPersist('id_token');
         }
@@ -203,9 +192,9 @@ class Auth0
             $this->store = new SessionStore();
         }
 
-        $this->oauth_client = new OAuth2\Client($this->client_id, $this->client_secret);
+        $this->oauth_client = new Client($this->client_id, $this->client_secret);
 
-        $this->user_info = $this->store->get("user_info");
+        $this->user = $this->store->get("user");
         $this->access_token = $this->store->get("access_token");
         $this->id_token = $this->store->get("id_token");
 
@@ -230,7 +219,6 @@ class Auth0
      * @return Boolean Wheter it exchanged the code or not correctly
      */
     private function exchangeCode() {
-
         if (!isset($_REQUEST['code'])) {
             return false;
         }
@@ -240,7 +228,6 @@ class Auth0
 
         // Generate the url to the API that will give us the access token and id token
         $auth_url = $this->generateUrl('token');
-
         // Make the call
         $auth0_response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
             "code" => $code,
@@ -258,16 +245,18 @@ class Auth0
         }
         // Set the access token in the oauth client for future calls to the Auth0 API
         $this->oauth_client->setAccessToken($access_token);
-        $this->oauth_client->setAccessTokenType(OAuth2\Client::ACCESS_TOKEN_BEARER);
+        $this->oauth_client->setAccessTokenType(Client::ACCESS_TOKEN_BEARER);
 
         // Set it and persist it, if needed
         $this->setAccessToken($access_token);
         $this->setIdToken($id_token);
 
-        // Get the User info from a different Auth0 API endpoint
-        $user_info = $this->oauth_client->fetch($this->generateUrl('user_info'));
-        // Set it and persist it
-        $this->setUserInfo($user_info);
+        $token = Auth0JWT::decode($id_token, $this->client_id, $this->client_secret);
+
+        $user = ApiUsers::get($id_token, $token->user_id);
+
+        $this->setUser($user);
+
         return true;
     }
 
@@ -276,31 +265,60 @@ class Auth0
      *
      * @return array
      */
-    public function getUserInfo() {
+    public function getUser() {
         // Ensure we have the user info
-        if ($this->user_info === false) {
+        if ($this->user === false) {
             $this->exchangeCode();
         }
-
-        if (!is_array($this->user_info)) {
+        if (!is_array($this->user)) {
             return null;
         }
-        // user_info should now be an array
-        if ($this->user_info["code"] !== 200) {
-            throw new CoreException("There was a problem getting the user info");
-        }
 
-        return $this->user_info["result"];
+        return $this->user;
     }
 
-    private function setUserInfo($user_info) {
+    /**
+     * Requests user info to Auth0 server.
+     *
+     * @deprecated Use getUser instead
+     * @return array
+     */
+    public function getUserInfo() {
+        return $this->getUser();
+    }
 
-        $key = array_search('user_info',$this->persistantMap);
+    /**
+     * Updathes the user metadata. This end up calling the path /users/{id_user}
+     * To delete an attribute, just set it null. ie: [ 'old_attr' => null ]
+     * It will only update the existing attrs and keep the others untouch
+     * for more info:
+     *       https://auth0.com/docs/apiv2#!/users/patch_users_by_id
+     *
+     * @return User data
+     */
+    public function updateUserMetadata($metadata) {
+
+        $user = ApiUsers::update($this->getIdToken(), $this->user["user_id"], array('user_metadata' =>  $metadata));
+
+        $this->setUser($user);
+    }
+
+    public function getUserMetadata() {
+        return $this->user["user_metadata"];
+    }
+
+    public function getAppMetadata() {
+        return $this->user["app_metadata"];
+    }
+
+    private function setUser($user) {
+
+        $key = array_search('user',$this->persistantMap);
         if ($key !== false) {
-            $this->store->set('user_info', $user_info);
+            $this->store->set('user', $user);
         }
 
-        $this->user_info = $user_info;
+        $this->user = $user;
 
         return $this;
     }
@@ -427,8 +445,6 @@ class Auth0
         }
     }
 
-
-
     /**
      * Deletes all persistent data, for every mapped key.
      */
@@ -440,7 +456,7 @@ class Auth0
     }
 
     // -------------------------------------------------------------------------------------------------------------- //
-        /**
+    /**
      * Sets $domain.
      *
      * @param string $domain
@@ -584,17 +600,3 @@ class Auth0
         return $this->debugger;
     }
 }
-
-/**
- * Represents all errors returned by the server
- *
- * @author Auth0
- */
-class ApiException extends Exception { }
-
-/**
- * Represents all errors generated by SDK itself.
- *
- * @author Auth0
- */
-class CoreException extends Exception { }

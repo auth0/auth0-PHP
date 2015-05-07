@@ -21,7 +21,7 @@
             foreach($rx_matches as $ak_key => $ak_val) $rx_matches[$ak_key] = ucfirst($ak_val);
             $arh_key = implode('-', $rx_matches);
           }
-          $arh[$arh_key] = $val;
+          $arh[ucfirst(strtolower($arh_key))] = $val;
         }
       }
       return( $arh );
@@ -39,26 +39,37 @@
     // Ignore if no dotenv
   }
 
+  $app = new \App\Main();
+
   // Create Router instance
   $router = new \Bramus\Router\Router();
 
   // Activate CORS
-  function setCorsHeaders() {
+  function sendCorsHeaders() {
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Headers: Authorization");
     header("Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE");
   }
+
   $router->options('/.*', function() {
-    setCorsHeaders();
+      sendCorsHeaders();
   });
-  setCorsHeaders();
+
+  sendCorsHeaders();
 
 
   // Check JWT on /secured routes
-  $router->before('GET', '/secured/.*', function() {
+  $router->before('GET', '/secured/.*', function() use ($app) {
 
     $requestHeaders = apache_request_headers();
-    $authorizationHeader = $requestHeaders['AUTHORIZATION'];
+
+    if (!isset($requestHeaders['Authorization'])) {
+        header('HTTP/1.0 401 Unauthorized');
+        echo "No token provided.";
+        exit();
+    }
+
+    $authorizationHeader = $requestHeaders['Authorization'];
 
     if ($authorizationHeader == null) {
       header('HTTP/1.0 401 Unauthorized');
@@ -66,21 +77,12 @@
       exit();
     }
 
-    // // validate the token
     $token = str_replace('Bearer ', '', $authorizationHeader);
-    $secret = getenv('AUTH0_CLIENT_SECRET');
-    $decoded_token = null;
+
     try {
-      $decoded_token = JWT::decode($token, base64_decode(strtr($secret, '-_', '+/')) );
-    } catch(UnexpectedValueException $ex) {
-      header('HTTP/1.0 401 Unauthorized');
-      echo "Invalid token";
-      exit();
+        $app->setCurrentToken($token);
     }
-
-
-    // // validate that this token was made for us
-    if ($decoded_token->aud != getenv('AUTH0_CLIENT_ID')) {
+    catch(\Auth0\SDK\Exception\CoreException $e) {
       header('HTTP/1.0 401 Unauthorized');
       echo "Invalid token";
       exit();
@@ -88,12 +90,12 @@
 
   });
 
-  $router->get('/ping', function() {
-    echo "All good. You don't need to be authenticated to call this";
+  $router->get('/ping', function() use ($app){
+      echo json_encode($app->publicPing());
   });
 
-  $router->get('/secured/ping', function() {
-    echo "All good. You only get this message if you're authenticated";
+  $router->get('/secured/ping', function() use ($app){
+      echo json_encode($app->privatePing());
   });
 
   $router->set404(function() {
@@ -103,9 +105,3 @@
 
   // Run the Router
   $router->run();
-
-
-
-
-
-

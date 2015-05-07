@@ -1,5 +1,37 @@
 # Auth0 PHP SDK
 
+## News
+
+The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of new [features and changes](https://auth0.com/docs/apiv2Changes).
+
+### Backward compatibility breaks
+
+- Now, all the SDK is under the namespace `\Auth0\SDK`
+- The exceptions were moved to the namespace `\Auth0\SDK\Exceptions`
+- The method `Auth0::getUserInfo` is deprecated and soon to be removed. We encourage to use `Auth0::getUser` to enforce the adoption of the API v2
+
+
+### New features
+
+- The Auth0 class, now provides two methods to access the user metadata, `getUserMetadata` and `getAppMetadata`. For more info, check the [API v2 changes](https://auth0.com/docs/apiv2Changes)
+- The Auth0 class, now provides a way to update the UserMetadata with the method `updateUserMetadata`. Internally, it uses the [update user endpoint](https://auth0.com/docs/apiv2#!/users/patch_users_by_id), check the method documentation for more info.
+- The new service `\Auth0\SDK\API\ApiUsers` provides an easy way to consume the API v2 Users endpoints.
+- A simple API client (`\Auth0\SDK\API\ApiClient`) is also available to use.
+- A JWT generator and decoder is also available (`\Auth0\SDK\Auth0JWT`)
+
+>***Note:*** API V2 restrict the access to the endpoints via scopes. By default, the user token has granted certain scopes that let update the user metadata but not the root attributes nor app_metadata. To update this information and access another endpoints, you need an special token with this scopes granted. For more information about scopes, check [the API v2 docs](https://auth0.com/docs/apiv2Changes#6).
+
+## Migration guide from 0.6.6
+
+1. First is important to read the [API v2 changes document](https://auth0.com/docs/apiv2Changes) to catch up the latest changes to the API.
+2. Update your composer.json file.
+ - change the version "auth0/auth0-php": "~1.0"
+ - add the new dependency "firebase/php-jwt" : "dev-master"
+3. Now the SDK is PSR-4 compliant so you will need to change the namespaces (sorry **:(** ) to `\Auth0\SDK`
+4. The method `getUserInfo` is deprecated and candidate to be removed on the next release. User `getUser` instead. `getUser` returns an User object compliant with API v2 which is a `stdClass` (check the schema [here](https://auth0.com/docs/apiv2#!/users/get_users_by_id))
+
+## Installation
+
 ### 1. Install the SDK
 
 We recommend using [Composer](http://getcomposer.org/doc/01-basic-usage.md) to install the library.
@@ -9,7 +41,7 @@ Modify your `composer.json` to add the following dependencies and run `composer 
 ~~~js
 {
     "require": {
-        "auth0/auth0-php": "0.6.*",
+        "auth0/auth0-php": "~1.0",
         "adoy/oauth2": "dev-master"
     }
 }
@@ -30,10 +62,10 @@ $auth0 = new Auth0(array(
     'redirect_uri'  => 'http://<name>/callback.php'
 ));
 
-$userInfo = $auth0->getUserInfo();
+$userInfo = $auth0->getUser();
 ~~~
 
-If the user was already logged in, `getUserInfo()` will retrieve that [user information](https://docs.auth0.com/user-profile) from the `PHP Session`. If not, it will try to exchange the code given to the callback to get an access token, id token and the [user information](https://docs.auth0.com/user-profile) from auth0.
+If the user was already logged in, `getUser()` will retrieve that [user information](https://docs.auth0.com/user-profile) from the `PHP Session`. If not, it will try to exchange the code given to the callback to get an access token, id token and the [user information](https://docs.auth0.com/user-profile) from auth0.
 
 This makes it possible to use the same code in the callback action and any other page, so to see if there is a logged in user, you can call
 
@@ -59,18 +91,24 @@ After authenticating the user on Auth0, we will do a GET to a URL on your web si
 
 ### 4. Triggering login manually or integrating the Auth0 widget
 
-You can trigger the login in different ways, like redirecting to a login link or using the [Login Widget](https://docs.auth0.com/login-widget2), by adding the following javascript into your page
+You can trigger the login in different ways, like redirecting to a login link or using [Lock](https://docs.auth0.com/lock), by adding the following javascript into your page
 
 ~~~html
-<a href="javascript:widget.signin();">Login</a>
+<button onclick="login()">Login</button>
 
-<script src="https://cdn.auth0.com/w2/auth0-widget-3.0.min.js"></script>
+<script src="https://cdn.auth0.com/js/lock-7.min.js"></script>
 <script type="text/javascript">
-    var widget = new Auth0Widget({
-        domain:       'YOUR_AUTH0_DOMAIN',
-        clientID:     'YOUR_AUTH0_CLIENT_ID',
-        callbackURL:  'http://<name>/callback.php'
-    });
+    var lock = new Auth0Lock(AUTH0_CLIENT_ID, AUTH0_DOMAIN);
+
+    function login() {
+      lock.show({
+          callbackURL: AUTH0_CALLBACK_URL
+          , responseType: 'code'
+          , authParams: {
+              scope: 'openid profile'
+          }
+      });
+    }
 </script>
 ~~~
 

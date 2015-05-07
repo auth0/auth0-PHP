@@ -1,17 +1,11 @@
 {
-    "name": "auth0/basic-api-sample",
-    "description": "Basic sample for securing an API",
+    "name": "auth0/basic-webapp-sample",
+    "description": "Basic sample for securing a WebApp with Auth0",
     "require": {
-        "bramus/router": "dev-master",
         "firebase/php-jwt": "dev-master",
         "adoy/oauth2": "dev-master",
         "vlucas/phpdotenv": "dev-master",
         "auth0/auth0-php": "dev-1.x.x-dev"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
     },
     "license": "MIT",
     "authors": [
