@@ -19,11 +19,11 @@ class ApiClient {
     }
 
     public function __call($name, $arguments) {
-        return new RequestBuilder([
+        return new RequestBuilder(array(
             'domain' => $this->domain,
             'method' => $name,
             'path' => array( $this->basePath )
-        ]);
+        ));
     }
 
 }

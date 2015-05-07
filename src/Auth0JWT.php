@@ -19,7 +19,7 @@ class Auth0JWT {
 
         try {
             // Decode the user
-            $decodedToken = \JWT::decode($jwt, $secret, ['HS256']);
+            $decodedToken = \JWT::decode($jwt, $secret, array('HS256'));
             // validate that this JWT was made for us
             if ($decodedToken->aud != $client_id) {
                 throw new CoreException("This token is not intended for us.");

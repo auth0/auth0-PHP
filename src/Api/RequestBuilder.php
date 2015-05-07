@@ -79,12 +79,12 @@ class RequestBuilder {
 
         try {
 
-            $response = $client->$method($this->getUrl(), [
+            $response = $client->$method($this->getUrl(), array(
                 'headers' => $this->headers,
                 'body' => $this->body
-            ]);
+            ));
 
-            return $response->json(['object' => false]);
+            return $response->json(array('object' => false));
 
         } catch (RequestException $e) {
             throw $e;

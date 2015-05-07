@@ -9,10 +9,10 @@ use Auth0\SDK\API\Header\ContentType;
 class ApiUsers {
 
     protected static function getApiV2Client() {
-        return new ApiClient([
+        return new ApiClient(array(
             'domain' => 'https://login.auth0.com',
             'basePath' => '/api/v2',
-        ]);
+        ));
     }
 
     public static function get($token, $user_id) {
