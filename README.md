@@ -21,6 +21,17 @@ The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of
 
 >***Note:*** API V2 restrict the access to the endpoints via scopes. By default, the user token has granted certain scopes that let update the user metadata but not the root attributes nor app_metadata. To update this information and access another endpoints, you need an special token with this scopes granted. For more information about scopes, check [the API v2 docs](https://auth0.com/docs/apiv2Changes#6).
 
+## Migration guide from 0.6.6
+
+1. First is important to read the [API v2 changes document](https://auth0.com/docs/apiv2Changes) to catch up the latest changes to the API.
+2. Update your composer.json file.
+ - change the version "auth0/auth0-php": "~1.0"
+ - add the new dependency "firebase/php-jwt" : "dev-master"
+3. Now the SDK is PSR-4 compliant so you will need to change the namespaces (sorry **:(** ) to `\Auth0\SDK`
+4. The method `getUserInfo` is deprecated and candidate to be removed on the next release. User `getUser` instead. `getUser` returns an User object compliant with API v2 which is a `stdClass` (check the schema [here](https://auth0.com/docs/apiv2#!/users/get_users_by_id))
+
+## Installation
+
 ### 1. Install the SDK
 
 We recommend using [Composer](http://getcomposer.org/doc/01-basic-usage.md) to install the library.
