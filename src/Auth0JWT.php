@@ -24,7 +24,7 @@ class Auth0JWT {
             if ($decodedToken->aud != $client_id) {
                 throw new CoreException("This token is not intended for us.");
             }
-        } catch(\UnexpectedValueException $e) {
+        } catch(\Exception $e) {
             throw new CoreException($e->getMessage());
         }
 

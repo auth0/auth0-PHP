@@ -7,9 +7,9 @@
  */
 
 namespace Auth0\SDK\API;
-use Auth0\SDK\API\Header\Header;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use \Auth0\SDK\API\Header\Header;
+use \GuzzleHttp\Client;
+use \GuzzleHttp\Exception\RequestException;
 
 class RequestBuilder {
 

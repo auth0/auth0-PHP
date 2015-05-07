@@ -91,6 +91,13 @@ class Auth0 {
     protected $access_token;
 
     /**
+     * The user object
+     *
+     * @var string
+     */
+    protected $user;
+
+    /**
      * OAuth2 Client.
      *
      * @var \OAuth2\Client
