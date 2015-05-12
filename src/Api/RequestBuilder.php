@@ -23,6 +23,7 @@ class RequestBuilder {
 
         $this->method = $config['method'];
         $this->domain = $config['domain'];
+        $this->headers = isset($config['headers']) ? $config['headers'] : array();
         if (array_key_exists('path', $config)) $this->path = $config['path'];
 
     }
@@ -62,7 +63,7 @@ class RequestBuilder {
         echo "URL: {$this->getUrl()}\n";
 
         echo "HEADERS:\n\t";
-        echo implode("\n\t",$this->headers);
+        echo implode("\n\t",array_map(function($k,$v){ return "$k: $v";}, array_keys($this->headers), $this->headers));
         echo "\n";
 
         echo "BODY: {$this->body}\n";
@@ -90,6 +91,15 @@ class RequestBuilder {
             throw $e;
         }
 
+    }
+
+    public function withHeaders($headers) {
+
+        foreach ($headers as $header) {
+            $this->withHeader($header);
+        }
+
+        return $this;
     }
 
     public function withHeader($header, $value = null) {
