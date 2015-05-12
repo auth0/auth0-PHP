@@ -1,5 +1,19 @@
 # Change Log
 
+## [1.0.1](https://github.com/auth0/auth0-PHP/tree/1.0.1) (2015-05-12)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.0...1.0.1)
+
+**Closed issues:**
+
+- SDK Client headers spec compliant [\#7](https://github.com/auth0/auth0-PHP/issues/7)
+
+- Example is out of date [\#5](https://github.com/auth0/auth0-PHP/issues/5)
+
+**Merged pull requests:**
+
+- SDK Client headers spec compliant \#7 [\#8](https://github.com/auth0/auth0-PHP/pull/8) ([glena](https://github.com/glena))
+
 ## [1.0.0](https://github.com/auth0/auth0-PHP/tree/1.0.0) (2015-05-07)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/0.6.6...1.0.0)
