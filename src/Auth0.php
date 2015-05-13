@@ -253,7 +253,7 @@ class Auth0 {
 
         $token = Auth0JWT::decode($id_token, $this->client_id, $this->client_secret);
 
-        $user = ApiUsers::get($id_token, $token->user_id);
+        $user = ApiUsers::get($this->domain, $id_token, $token->user_id);
 
         $this->setUser($user);
 
@@ -298,7 +298,7 @@ class Auth0 {
      */
     public function updateUserMetadata($metadata) {
 
-        $user = ApiUsers::update($this->getIdToken(), $this->user["user_id"], array('user_metadata' =>  $metadata));
+        $user = ApiUsers::update($this->domain, $this->getIdToken(), $this->user["user_id"], array('user_metadata' =>  $metadata));
 
         $this->setUser($user);
     }
