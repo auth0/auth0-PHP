@@ -1,5 +1,19 @@
 # Change Log
 
+## [1.0.2](https://github.com/auth0/auth0-PHP/tree/1.0.2) (2015-05-13)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.1...1.0.2)
+
+**Closed issues:**
+
+- EU tenants are getting Unauthorize on api calls [\#10](https://github.com/auth0/auth0-PHP/issues/10)
+
+- PHP Fatal error:  Class 'Auth0\SDK\API\ApiUsers' not found in vendor/auth0/auth0-php/src/Auth0.php on line 256 [\#9](https://github.com/auth0/auth0-PHP/issues/9)
+
+**Merged pull requests:**
+
+- Fix EU api calls and autoloading issue [\#11](https://github.com/auth0/auth0-PHP/pull/11) ([glena](https://github.com/glena))
+
 ## [1.0.1](https://github.com/auth0/auth0-PHP/tree/1.0.1) (2015-05-12)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.0...1.0.1)
