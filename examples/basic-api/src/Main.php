@@ -27,7 +27,7 @@ class Main {
 
     public function privatePing(){
 
-        $userData = \Auth0\SDK\Api\ApiUsers::get($this->token, $this->tokenInfo->sub);
+        $userData = \Auth0\SDK\Api\ApiUsers::get(getenv('AUTH0_DOMAIN'),$this->token, $this->tokenInfo->sub);
 
         return array(
             "status" => 'ok',
