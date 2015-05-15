@@ -17,13 +17,13 @@ class ApiClient {
     protected static $infoHeadersDataEnabled = true;
     protected static $infoHeadersData;
 
-    protected static function setInfoHeadersData(InformationHeaders $infoHeadersData) {
+    public static function setInfoHeadersData(InformationHeaders $infoHeadersData) {
         if (!self::$infoHeadersDataEnabled) return null;
 
         self::$infoHeadersData = $infoHeadersData;
     }
 
-    protected static function getInfoHeadersData() {
+    public static function getInfoHeadersData() {
         if (!self::$infoHeadersDataEnabled) return null;
 
         if (self::$infoHeadersData === null) {
