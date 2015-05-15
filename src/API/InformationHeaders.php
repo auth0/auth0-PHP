@@ -37,6 +37,10 @@ class InformationHeaders {
     	return $this->data;
     }
 
+    public function build() {
+    	return base64_encode(json_encode($this->get()));
+    }
+
     public static function Extend(InformationHeaders $headers) {
 
     	$newHeaders = new InformationHeaders;

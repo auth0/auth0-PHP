@@ -14,13 +14,18 @@ class ApiClient {
     
     const API_VERSION  = "1.0.3";
 
+    protected static $infoHeadersDataEnabled = true;
     protected static $infoHeadersData;
 
     protected static function setInfoHeadersData(InformationHeaders $infoHeadersData) {
+        if (!self::$infoHeadersDataEnabled) return null;
+
         self::$infoHeadersData = $infoHeadersData;
     }
 
     protected static function getInfoHeadersData() {
+        if (!self::$infoHeadersDataEnabled) return null;
+
         if (self::$infoHeadersData === null) {
             self::$infoHeadersData = new InformationHeaders;
 
@@ -28,6 +33,10 @@ class ApiClient {
             self::$infoHeadersData->setEnvironment('PHP', phpversion());
         }
         return self::$infoHeadersData;
+    }
+
+    public static function disableInfoHeaders(){
+        self::$infoHeadersDataEnabled = false;
     }
 
     protected $domain;
@@ -39,7 +48,9 @@ class ApiClient {
         $this->domain = $config['domain'];
         $this->headers = isset($config['headers']) ? $config['headers'] : array();
 
-        $this->headers[] = new Header('Auth0-Client', base64_encode(json_encode(self::getInfoHeadersData()->get())));
+        if (self::$infoHeadersDataEnabled) {
+            $this->headers[] = new Header('Auth0-Client', self::getInfoHeadersData()->build());
+        }
     }
 
     public function __call($name, $arguments) {
