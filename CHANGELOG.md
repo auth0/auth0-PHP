@@ -1,5 +1,13 @@
 # Change Log
 
+## [1.0.3](https://github.com/auth0/auth0-PHP/tree/1.0.3) (2015-05-15)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.2...1.0.3)
+
+**Merged pull requests:**
+
+- Applied the new Info Headers schema [\#12](https://github.com/auth0/auth0-PHP/pull/12) ([glena](https://github.com/glena))
+
 ## [1.0.2](https://github.com/auth0/auth0-PHP/tree/1.0.2) (2015-05-13)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.1...1.0.2)
