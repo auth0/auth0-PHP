@@ -11,13 +11,23 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Header\Header;
 
 class ApiClient {
-
     
-    const API_VERSION  = "1.0.1";
-    protected static $meta = array();
+    const API_VERSION  = "1.0.3";
 
-    public static function addHeaderInfoMeta($info) {
-        self::$meta[] = $info;
+    protected static $infoHeadersData;
+
+    protected static function setInfoHeadersData(InformationHeaders $infoHeadersData) {
+        self::$infoHeadersData = $infoHeadersData;
+    }
+
+    protected static function getInfoHeadersData() {
+        if (self::$infoHeadersData === null) {
+            self::$infoHeadersData = new InformationHeaders;
+
+            self::$infoHeadersData->setPackage('auth0-php', self::API_VERSION);
+            self::$infoHeadersData->setEnvironment('PHP', phpversion());
+        }
+        return self::$infoHeadersData;
     }
 
     protected $domain;
@@ -29,20 +39,7 @@ class ApiClient {
         $this->domain = $config['domain'];
         $this->headers = isset($config['headers']) ? $config['headers'] : array();
 
-        $this->addInformationHeaders();
-    }
-
-    protected function addInformationHeaders() {
-
-        $meta = '';
-
-        if (!empty(self::$meta)) {
-            $meta = '(' . implode(',', self::$meta) . ')';
-        }
-
-        $this->headers[] = new Header('User-Agent', 'PHP/' . phpversion() . $meta);
-        $this->headers[] = new Header('Auth0-Client', 'PHP/' . self::API_VERSION);
-
+        $this->headers[] = new Header('Auth0-Client', base64_encode(json_encode(self::getInfoHeadersData()->get())));
     }
 
     public function __call($name, $arguments) {
