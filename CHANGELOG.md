@@ -1,5 +1,9 @@
 # Change Log
 
+## [1.0.4](https://github.com/auth0/auth0-PHP/tree/1.0.4) (2015-05-19)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.3...1.0.4)
+
 ## [1.0.3](https://github.com/auth0/auth0-PHP/tree/1.0.3) (2015-05-15)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.2...1.0.3)
