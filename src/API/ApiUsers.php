@@ -10,10 +10,7 @@ class ApiUsers {
 
     protected static function getApiV2Client($domain) {
 
-        $apiDomain = 'https://login.auth0.com';
-        if (strpos($domain, 'eu.auth0.com') !== false) {
-            $apiDomain = 'https://login.eu.auth0.com';
-        }
+        $apiDomain = "https://$domain";
 
         return new ApiClient(array(
             'domain' => $apiDomain,
