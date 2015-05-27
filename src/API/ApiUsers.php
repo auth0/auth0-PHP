@@ -54,11 +54,10 @@ class ApiUsers {
 
     public static function search($domain, $token, $params) {
 
-        $client = self::getApiV2Client($domain)->post()
+        $client = self::getApiV2Client($domain)->get()
             ->users()
             ->withHeader(new AuthorizationBearer($token))
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($data));
+            ->withHeader(new ContentType('application/json'));
 
         foreach ($params as $param => $value) {
             $client->withParam($param, $value);
@@ -99,7 +98,7 @@ class ApiUsers {
             ->devices()
             ->withHeader(new AuthorizationBearer($token))
             ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($body))
+            ->withBody(json_encode($post_identities_body))
             ->call();
     }
 
