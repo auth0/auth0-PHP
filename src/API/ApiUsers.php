@@ -131,11 +131,16 @@ class ApiUsers {
 
     public static function createEmailVerificationTicket($domain, $token, $user_id, $result_url = null) {
 
+        $body = array('user_id' => $user_id);
+        if ($result_url !== null) {
+            $body['result_url'] = $result_url;
+        }
+
         $request = self::getApiV2Client($domain)->post()
-            ->users($user_id)
             ->tickets()
-            ->email_verification()
-            ->withHeader(new AuthorizationBearer($token));
+            ->addPath('email-verification')
+            ->withHeader(new AuthorizationBearer($token))
+            ->withBody(json_encode($body));
 
         if ($result_url) {
             $body = json_encode(array(
@@ -151,6 +156,7 @@ class ApiUsers {
     public static function createPasswordChangeTicket($domain, $token, $user_id, $new_password, $result_url = null) {
 
         $body = array(
+            'user_id' => $user_id,
             'new_password' => $new_password
         );
 
@@ -159,9 +165,8 @@ class ApiUsers {
         }
 
         return self::getApiV2Client($domain)->post()
-            ->users($user_id)
             ->tickets()
-            ->email_verification()
+            ->addPath('password-change')
             ->withHeader(new AuthorizationBearer($token))
             ->withBody(json_encode($body))
             ->call();

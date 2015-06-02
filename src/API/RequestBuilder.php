@@ -30,12 +30,22 @@ class RequestBuilder {
 
     public function __call($name, $arguments) {
 
-        $this->path[] = $name;
+        $argument = null;
 
         if (count($arguments) > 0) {
-            $this->path[] = $arguments[0];
+            $argument = $arguments[0];
         }
+        
+        $this->addPath($name, $argument);
 
+        return $this;
+    }
+
+    public function addPath($name, $argument = null) {
+        $this->path[] = $name;
+        if ($argument !== null) {
+            $this->path[] = $argument;
+        }
         return $this;
     }
 
