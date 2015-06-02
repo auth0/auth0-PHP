@@ -53,7 +53,7 @@ class Auth0JWT {
                 $payload["scopes"] = $scopes;
             }
 
-            if ($scopes) {
+            if ($custom_payload) {
                 $custom_payload = array_merge($custom_payload, $payload);
             }
 
