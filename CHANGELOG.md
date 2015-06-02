@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.5](https://github.com/auth0/auth0-PHP/tree/1.0.5) (2015-06-02)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.4...1.0.5)
+
+**Merged pull requests:**
+
+- Updates the changed endpoints \(tickets\) [\#15](https://github.com/auth0/auth0-PHP/pull/15) ([glena](https://github.com/glena))
+
+- Api users search link accounts fix [\#14](https://github.com/auth0/auth0-PHP/pull/14) ([deboorn](https://github.com/deboorn))
+
+- Auth0JWT encode fix to allow scope with null custom payload [\#13](https://github.com/auth0/auth0-PHP/pull/13) ([deboorn](https://github.com/deboorn))
+
 ## [1.0.4](https://github.com/auth0/auth0-PHP/tree/1.0.4) (2015-05-19)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.3...1.0.4)
