@@ -5,7 +5,7 @@
         "bramus/router": "dev-master",
         "firebase/php-jwt": "dev-master",
         "adoy/oauth2": "dev-master",
-        "vlucas/phpdotenv": "dev-master",
+        "vlucas/phpdotenv": "1.1.1",
         "auth0/auth0-php": "~1.0"
     },
     "autoload": {
