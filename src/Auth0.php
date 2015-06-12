@@ -311,7 +311,7 @@ class Auth0 {
         return $this->user["app_metadata"];
     }
 
-    private function setUser($user) {
+    public function setUser($user) {
 
         $key = array_search('user',$this->persistantMap);
         if ($key !== false) {
