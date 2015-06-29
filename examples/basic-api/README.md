@@ -23,4 +23,4 @@ composer install
 php -S localhost:30001
 ````
 
-Now, try calling [http://localhost:3001/ping](http://localhost:3001/ping)
+Now, try calling [http://localhost:30001/ping](http://localhost:30001/ping)
