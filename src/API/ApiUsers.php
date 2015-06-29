@@ -95,7 +95,7 @@ class ApiUsers {
 
         return self::getApiV2Client($domain)->post()
             ->users($user_id)
-            ->devices()
+            ->identities()
             ->withHeader(new AuthorizationBearer($token))
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($post_identities_body))
