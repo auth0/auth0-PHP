@@ -11,8 +11,8 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Header\Header;
 
 class ApiClient {
-    
-    const API_VERSION  = "1.0.3";
+
+    const API_VERSION  = "1.0.7";
 
     protected static $infoHeadersDataEnabled = true;
     protected static $infoHeadersData;
@@ -59,7 +59,7 @@ class ApiClient {
             'method' => $name,
             'path' => array( $this->basePath ),
         ));
-        
+
         return $builder->withHeaders($this->headers);
     }
 
