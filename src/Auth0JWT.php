@@ -54,7 +54,7 @@ class Auth0JWT {
             }
 
             if ($custom_payload) {
-                $custom_payload = array_merge($custom_payload, $payload);
+                $payload = array_merge($custom_payload, $payload);
             }
 
             $jti = md5(json_encode($payload));
