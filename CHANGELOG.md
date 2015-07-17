@@ -1,5 +1,33 @@
 # Change Log
 
+## [1.0.7](https://github.com/auth0/auth0-PHP/tree/1.0.7) (2015-07-17)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.6...1.0.7)
+
+**Closed issues:**
+
+- Error at Auth0JWT::encode when using custom payload [\#23](https://github.com/auth0/auth0-PHP/issues/23)
+
+- Error in composer install [\#21](https://github.com/auth0/auth0-PHP/issues/21)
+
+- Test [\#20](https://github.com/auth0/auth0-PHP/issues/20)
+
+**Merged pull requests:**
+
+- v1.0.7 [\#26](https://github.com/auth0/auth0-PHP/pull/26) ([glena](https://github.com/glena))
+
+- Readme file call URL port fixed [\#18](https://github.com/auth0/auth0-PHP/pull/18) ([jose-e-rodriguez](https://github.com/jose-e-rodriguez))
+
+- ApiUsers link account identities fix [\#16](https://github.com/auth0/auth0-PHP/pull/16) ([deboorn](https://github.com/deboorn))
+
+## [1.0.6](https://github.com/auth0/auth0-PHP/tree/1.0.6) (2015-06-12)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.5...1.0.6)
+
+**Merged pull requests:**
+
+- Make Auth0::setUser public in order to let update the stored user [\#17](https://github.com/auth0/auth0-PHP/pull/17) ([glena](https://github.com/glena))
+
 ## [1.0.5](https://github.com/auth0/auth0-PHP/tree/1.0.5) (2015-06-02)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.4...1.0.5)
