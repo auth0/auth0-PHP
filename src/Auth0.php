@@ -1,6 +1,7 @@
 <?php
 namespace Auth0\SDK;
 use Auth0\SDK\API\ApiUsers;
+use Auth0\SDK\API\ApiClient;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Store\EmptyStore;
@@ -232,6 +233,8 @@ class Auth0 {
         $auth0_response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
             "code" => $code,
             "redirect_uri" => $this->redirect_uri
+        ), array(
+            'Auth0-Client' => ApiClient::getInfoHeadersData()->build()
         ));
 
         // Parse it
@@ -253,7 +256,7 @@ class Auth0 {
 
         $token = Auth0JWT::decode($id_token, $this->client_id, $this->client_secret);
 
-        $user = ApiUsers::get($this->domain, $id_token, $token->user_id);
+        $user = ApiUsers::get($this->domain, $id_token, $token->sub);
 
         $this->setUser($user);
 

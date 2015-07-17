@@ -12,10 +12,11 @@ class ApiUsers {
 
         $apiDomain = "https://$domain";
 
-        return new ApiClient(array(
+        $client = new ApiClient(array(
             'domain' => $apiDomain,
             'basePath' => '/api/v2',
         ));
+        return $client;
     }
 
     public static function get($domain, $token, $user_id) {
