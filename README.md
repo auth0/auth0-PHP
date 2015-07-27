@@ -21,6 +21,31 @@ The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of
 
 >***Note:*** API V2 restrict the access to the endpoints via scopes. By default, the user token has granted certain scopes that let update the user metadata but not the root attributes nor app_metadata. To update this information and access another endpoints, you need an special token with this scopes granted. For more information about scopes, check [the API v2 docs](https://auth0.com/docs/apiv2Changes#6).
 
+## Examples
+
+Check the [basic-oauth](https://github.com/auth0/auth0-PHP/tree/master/examples/basic-oauth) example to see a quick demo on how the sdk works.
+You just need to create a `.env` file with the following information:
+
+```
+AUTH0_CLIENT_SECRET=YOUR_APP_SECRET
+AUTH0_CLIENT_ID=YOU_APP_CLIENT
+AUTH0_DOMAIN=YOUR_DOMAIN.auth0.com
+AUTH0_CALLBACK_URL=http://localhost:3000/index.php
+AUTH0_APPTOKEN=A_VALID_APPTOKEN_WITH_CREATE_USER_SCOPE
+```
+
+You will get your app client and secret from your Auth0 app you had created.
+The auth0 domain, is the one you pick when you created your auth0 account.
+You need to set this callback url in your app allowed callbacks.
+The app token is used in the 'create user' page and needs `create:users` scope. To create one, you need to use the token generator in the [API V2 documentation page](https://auth0.com/docs/apiv2)
+
+To run the example, you need composer (the PHP package manager) installed (you can find more info about composer [here](https://getcomposer.org/doc/00-intro.md)) and run the following commands on the same folder than the code.
+
+```
+$ composer install
+$ php -S localhost:3000
+```
+
 ## Migration guide from 0.6.6
 
 1. First is important to read the [API v2 changes document](https://auth0.com/docs/apiv2Changes) to catch up the latest changes to the API.

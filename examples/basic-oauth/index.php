@@ -22,6 +22,12 @@ if (isset($_REQUEST['logout'])) {
 
 if (isset($_REQUEST['update-metadata'])) require 'update-metadata.php';
 
+if (isset($_REQUEST['create-user'])) {
+    require 'create_user.php';
+    exit;
+}
+
+
 if ($userInfo) require 'logeduser.php';
 
 
