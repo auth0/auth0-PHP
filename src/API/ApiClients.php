@@ -73,9 +73,10 @@ class ApiClients {
 
         $info = self::getApiV2Client($domain, $token)->post()
             ->clients()
+            ->withHeader(new AuthorizationBearer($token))
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
-            ->call();
+            ->dump();
 
         return $info;
     }
