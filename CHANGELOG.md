@@ -1,5 +1,35 @@
 # Change Log
 
+## [1.0.9](https://github.com/auth0/auth0-PHP/tree/1.0.9) (2015-08-03)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.8...1.0.9)
+
+**Closed issues:**
+
+- Stable dependencies in composer.json instead of "dev-master" [\#30](https://github.com/auth0/auth0-PHP/issues/30)
+
+**Merged pull requests:**
+
+- tagged adoy to ~1.3 [\#31](https://github.com/auth0/auth0-PHP/pull/31) ([glena](https://github.com/glena))
+
+- Bad reference in Android PHP API Seed Project Readme file \#67 [\#29](https://github.com/auth0/auth0-PHP/pull/29) ([glena](https://github.com/glena))
+
+## [1.0.8](https://github.com/auth0/auth0-PHP/tree/1.0.8) (2015-07-27)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.7...1.0.8)
+
+**Closed issues:**
+
+- Class 'JWT' not found [\#25](https://github.com/auth0/auth0-PHP/issues/25)
+
+- Correct way to use the JWT Token generated in API v2 if we want expanded scope [\#19](https://github.com/auth0/auth0-PHP/issues/19)
+
+**Merged pull requests:**
+
+- Fix create client api call + new create user example [\#28](https://github.com/auth0/auth0-PHP/pull/28) ([glena](https://github.com/glena))
+
+- fixed firebase/php-jwt: dev-master namespace in Auth0JWT [\#24](https://github.com/auth0/auth0-PHP/pull/24) ([loganhenson](https://github.com/loganhenson))
+
 ## [1.0.7](https://github.com/auth0/auth0-PHP/tree/1.0.7) (2015-07-17)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.6...1.0.7)
