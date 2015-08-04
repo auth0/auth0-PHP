@@ -143,13 +143,6 @@ class ApiUsers {
             ->withHeader(new AuthorizationBearer($token))
             ->withBody(json_encode($body));
 
-        // if ($result_url) {
-        //     $body = json_encode(array(
-        //         'result_url' => $result_url
-        //     ));
-        //     $request->withBody($body);
-        // }
-
         return $request->call();
 
     }
