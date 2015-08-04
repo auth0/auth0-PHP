@@ -10,6 +10,7 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
+use Firebase\JWT\JWT;
 
 class Auth0JWT {
 
@@ -65,7 +66,7 @@ class Auth0JWT {
 
             $secret = base64_decode(strtr($client_secret, '-_', '+/'));
 
-            $jwt = \JWT::encode($payload, $secret);
+            $jwt = JWT::encode($payload, $secret);
 
             return $jwt;
 
