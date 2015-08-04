@@ -139,6 +139,7 @@ class ApiUsers {
         $request = self::getApiV2Client($domain)->post()
             ->tickets()
             ->addPath('email-verification')
+            ->withHeader(new ContentType('application/json'))
             ->withHeader(new AuthorizationBearer($token))
             ->withBody(json_encode($body));
 
