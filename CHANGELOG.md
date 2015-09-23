@@ -1,5 +1,25 @@
 # Change Log
 
+## [1.0.10](https://github.com/auth0/auth0-PHP/tree/1.0.10) (2015-09-23)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.9...1.0.10)
+
+**Closed issues:**
+
+- Improve error message when no id\_token is received after code exchange [\#35](https://github.com/auth0/auth0-PHP/issues/35)
+
+- PHP should be 5.4+, not 5.3+ [\#34](https://github.com/auth0/auth0-PHP/issues/34)
+
+**Merged pull requests:**
+
+- Release 1.0.10 [\#36](https://github.com/auth0/auth0-PHP/pull/36) ([glena](https://github.com/glena))
+
+- Remove code that rewrites user\_id property in $body [\#33](https://github.com/auth0/auth0-PHP/pull/33) ([Ring](https://github.com/Ring))
+
+- Comment out code that rewrites user\_id property in $body [\#32](https://github.com/auth0/auth0-PHP/pull/32) ([Ring](https://github.com/Ring))
+
+- Firebase namespace has changed [\#27](https://github.com/auth0/auth0-PHP/pull/27) ([sangallimarco](https://github.com/sangallimarco))
+
 ## [1.0.9](https://github.com/auth0/auth0-PHP/tree/1.0.9) (2015-08-03)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.8...1.0.9)
