@@ -14,4 +14,17 @@ $(document).ready(function() {
       });
 
     });
+
+    $('.btn-link').click(function(e) {
+      e.preventDefault();
+
+      lock.show({
+          callbackURL: AUTH0_LINKUSER_CALLBACK_URL
+          , responseType: 'code'
+          , authParams: {
+              scope: 'openid'
+          }
+      });
+
+    });
 });

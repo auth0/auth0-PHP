@@ -103,12 +103,12 @@ class ApiUsers {
             ->call();
     }
 
-    public static function unlinkAccount($domain, $token, $user_id, $multifactor_provider, $identity) {
+    public static function unlinkAccount($domain, $token, $user_id, $provider, $identity_id) {
 
         return self::getApiV2Client($domain)->delete()
             ->users($user_id)
-            ->addPathVariable($identity)
-            ->identities($multifactor_provider)
+            ->identities($provider)
+            ->addPathVariable($identity_id)
             ->withHeader(new AuthorizationBearer($token))
             ->call();
     }
@@ -139,15 +139,9 @@ class ApiUsers {
         $request = self::getApiV2Client($domain)->post()
             ->tickets()
             ->addPath('email-verification')
+            ->withHeader(new ContentType('application/json'))
             ->withHeader(new AuthorizationBearer($token))
             ->withBody(json_encode($body));
-
-        if ($result_url) {
-            $body = json_encode(array(
-                'result_url' => $result_url
-            ));
-            $request->withBody($body);
-        }
 
         return $request->call();
 
