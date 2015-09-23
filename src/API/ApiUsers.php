@@ -103,12 +103,12 @@ class ApiUsers {
             ->call();
     }
 
-    public static function unlinkAccount($domain, $token, $user_id, $multifactor_provider, $identity) {
+    public static function unlinkAccount($domain, $token, $user_id, $provider, $identity_id) {
 
         return self::getApiV2Client($domain)->delete()
             ->users($user_id)
-            ->addPathVariable($identity)
-            ->identities($multifactor_provider)
+            ->identities($provider)
+            ->addPathVariable($identity_id)
             ->withHeader(new AuthorizationBearer($token))
             ->call();
     }

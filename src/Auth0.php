@@ -246,6 +246,9 @@ class Auth0 {
         if (!$access_token) {
             throw new ApiException('Invalid access_token - Retry login.');
         }
+        if (!$id_token) {
+            throw new ApiException('Missing JWT after code exchange. Remember to ask for openid scope.');
+        }
         // Set the access token in the oauth client for future calls to the Auth0 API
         $this->oauth_client->setAccessToken($access_token);
         $this->oauth_client->setAccessTokenType(Client::ACCESS_TOKEN_BEARER);
