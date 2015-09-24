@@ -334,7 +334,7 @@ class Auth0 {
      *
      * @param string $access_token
      *
-     * @return Auth0SDK\BaseAuth0
+     * @return Auth0\SDK\BaseAuth0
      */
     public function setAccessToken($access_token) {
         $key = array_search('access_token',$this->persistantMap);
@@ -363,7 +363,7 @@ class Auth0 {
      *
      * @param string $id_token
      *
-     * @return Auth0SDK\BaseAuth0
+     * @return Auth0\SDK\BaseAuth0
      */
     public function setIdToken($id_token) {
         $key = array_search('id_token',$this->persistantMap);
@@ -467,7 +467,7 @@ class Auth0 {
      *
      * @param string $domain
      *
-     * @return Auth0SDK\BaseAuth0
+     * @return Auth0\SDK\BaseAuth0
      */
     final public function setDomain($domain)
     {
@@ -491,7 +491,7 @@ class Auth0 {
      *
      * @param string $client_id
      *
-     * @return Auth0SDK\BaseAuth0
+     * @return Auth0\SDK\BaseAuth0
      */
     final public function setClientId($client_id)
     {
@@ -515,7 +515,7 @@ class Auth0 {
      *
      * @param string $client_secret
      *
-     * @return Auth0SDK\BaseAuth0
+     * @return Auth0\SDK\BaseAuth0
      */
     final public function setClientSecret($client_secret)
     {
@@ -539,7 +539,7 @@ class Auth0 {
      *
      * @param string $redirect_uri
      *
-     * @return Auth0SDK\BaseAuth0
+     * @return Auth0\SDK\BaseAuth0
      */
     final public function setRedirectUri($redirect_uri)
     {
@@ -563,7 +563,7 @@ class Auth0 {
      *
      * @param boolean $debug_mode
      *
-     * @return Auth0SDK\BaseAuth0
+     * @return Auth0\SDK\BaseAuth0
      */
     final public function setDebugMode($debug_mode)
     {
@@ -587,7 +587,7 @@ class Auth0 {
      *
      * @param \Closure $debugger
      *
-     * @return Auth0SDK\BaseAuth0
+     * @return Auth0\SDK\BaseAuth0
      */
     final public function setDebugger(Closure $debugger)
     {

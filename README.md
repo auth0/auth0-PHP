@@ -77,7 +77,7 @@ Create a php page (or action if you are using an MVC framework) that will handle
 In there, you should create an instance of the SDK with the proper configuration and ask for the user information.
 
 ~~~php
-use Auth0SDK\Auth0;
+use Auth0\SDK\Auth0;
 
 $auth0 = new Auth0(array(
     'domain'        => 'YOUR_AUTH0_DOMAIN',

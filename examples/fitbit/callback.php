@@ -6,7 +6,7 @@ ini_set("display_errors", 1);
 require_once '../../vendor/autoload.php';
 require_once 'config.php';
 
-use Auth0SDK\Auth0;
+use Auth0\SDK\Auth0;
 
 $auth0 = new Auth0(array(
     'domain'        => $auth0_cfg['domain'],
