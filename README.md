@@ -61,15 +61,7 @@ $ php -S localhost:3000
 
 We recommend using [Composer](http://getcomposer.org/doc/01-basic-usage.md) to install the library.
 
-Modify your `composer.json` to add the following dependencies and run `composer update`.
-
-~~~js
-{
-    "require": {
-        "auth0/auth0-php": "~1.0",
-    }
-}
-~~~
+To install, run `composer require auth0/auth0-php:"~1.0"`.
 
 ### 2. Setup the callback action
 Create a php page (or action if you are using an MVC framework) that will handle the callback from the login attempt.
