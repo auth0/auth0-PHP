@@ -121,7 +121,7 @@ You can trigger the login in different ways, like redirecting to a login link or
           callbackURL: AUTH0_CALLBACK_URL
           , responseType: 'code'
           , authParams: {
-              scope: 'openid profile'
+              scope: 'openid name email picture'
           }
       });
     }
