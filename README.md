@@ -1,5 +1,14 @@
 # Auth0 PHP SDK
 
+## Installation
+
+Check our docs page to get a complete guide on how to install it in an existing project or download a pre configured seedproject:
+
+* Regular webapp: https://auth0.com/docs/quickstart/webapp/php/
+* Web API: https://auth0.com/docs/quickstart/backend/php/
+
+> If you find something wrong in our docs, PR are welcome in our docs repo: https://github.com/auth0/docs
+
 ## News
 
 The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of new [features and changes](https://auth0.com/docs/apiv2Changes).
@@ -54,95 +63,6 @@ $ php -S localhost:3000
  - add the new dependency "firebase/php-jwt" : "dev-master"
 3. Now the SDK is PSR-4 compliant so you will need to change the namespaces (sorry **:(** ) to `\Auth0\SDK`
 4. The method `getUserInfo` is deprecated and candidate to be removed on the next release. User `getUser` instead. `getUser` returns an User object compliant with API v2 which is a `stdClass` (check the schema [here](https://auth0.com/docs/apiv2#!/users/get_users_by_id))
-
-## Installation
-
-### 1. Install the SDK
-
-We recommend using [Composer](http://getcomposer.org/doc/01-basic-usage.md) to install the library.
-
-To install, run `composer require auth0/auth0-php:"~1.0"`.
-
-### 2. Setup the callback action
-Create a php page (or action if you are using an MVC framework) that will handle the callback from the login attempt.
-
-In there, you should create an instance of the SDK with the proper configuration and ask for the user information.
-
-~~~php
-use Auth0\SDK\Auth0;
-
-$auth0 = new Auth0(array(
-    'domain'        => 'YOUR_AUTH0_DOMAIN',
-    'client_id'     => 'YOUR_AUTH0_CLIENT_ID',
-    'client_secret' => 'YOUR_AUTH0_CLIENT_SECRET',
-    'redirect_uri'  => 'http://<name>/callback.php'
-));
-
-$userInfo = $auth0->getUser();
-~~~
-
-If the user was already logged in, `getUser()` will retrieve that [user information](https://docs.auth0.com/user-profile) from the `PHP Session`. If not, it will try to exchange the code given to the callback to get an access token, id token and the [user information](https://docs.auth0.com/user-profile) from auth0.
-
-This makes it possible to use the same code in the callback action and any other page, so to see if there is a logged in user, you can call
-
-
-~~~php
-// ...
-// code from above
-
-if (!$userInfo) {
-    // print login button
-} else {
-    // Say hello to $userInfo['name']
-    // print logout button
-}
-~~~
-
-### 3. Setup the callback action in Auth0
-
-After authenticating the user on Auth0, we will do a GET to a URL on your web site. For security purposes, you have to register this URL on the Application Settings section on Auth0 Admin app.
-
-    http://<name>/callback.php
-
-
-### 4. Triggering login manually or integrating the Auth0 widget
-
-You can trigger the login in different ways, like redirecting to a login link or using [Lock](https://docs.auth0.com/lock), by adding the following javascript into your page
-
-~~~html
-<button onclick="login()">Login</button>
-
-<script src="https://cdn.auth0.com/js/lock-7.min.js"></script>
-<script type="text/javascript">
-    var lock = new Auth0Lock(AUTH0_CLIENT_ID, AUTH0_DOMAIN);
-
-    function login() {
-      lock.show({
-          callbackURL: AUTH0_CALLBACK_URL
-          , responseType: 'code'
-          , authParams: {
-              scope: 'openid name email picture'
-          }
-      });
-    }
-</script>
-~~~
-
-### 5. (Optional) Configure session data
-
-By default, the SDK will store the [user information](https://docs.auth0.com/user-profile) in the `PHP Session` and it will discard the access token and the id token. If you like to persist them as well, you can pass `'persist_access_token' => true` and `'persist_id_token' => true` to the SDK configuration in step 2. You can also disable session all together by passing `'store' => false`.
-
-If you want to change `PHP Session` and use Laravel, Zend, Symfony or other abstraction to the session, you can create a class that implements `get`, `set`, `delete` and pass it to the SDK as following.
-
-~~~php
-$laravelStore = new MyLaravelStore();
-$auth0 = new Auth0(array(
-    // ...
-    'store' => $laravelStore,
-    // ...
-));
-~~~
-
 
 ## Develop
 
