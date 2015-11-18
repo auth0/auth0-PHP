@@ -9,6 +9,7 @@
 namespace Auth0\SDK\API;
 use \Auth0\SDK\API\Header\Header;
 use \GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use \GuzzleHttp\Exception\RequestException;
 
 class RequestBuilder {
@@ -86,16 +87,25 @@ class RequestBuilder {
     public function call() {
 
         $client = new Client();
-        $method = $this->method;
 
         try {
 
-            $response = $client->$method($this->getUrl(), array(
-                'headers' => $this->headers,
-                'body' => $this->body
-            ));
+            $body = null;
+            if (version_compare(ClientInterface::VERSION, '6.0', '>=')) {
+                $response = $client->request($this->method, $this->getUrl(), [
+                    'headers' => $this->headers,
+                    'body' => $this->body,
+                ]);
+                $body = (string) $response->getBody();
+            } else {
+                $request = $client->createRequest($this->method, $this->getUrl(), array(
+                    'headers' => $this->headers,
+                    'body' => $this->body
+                ));
+                $body = (string) $client->send($request)->getBody();
+            }
 
-            return $response->json(array('object' => false));
+            return $this->jsonDecode($body, true);
 
         } catch (RequestException $e) {
             throw $e;
@@ -142,6 +152,34 @@ class RequestBuilder {
             $this->withParam($param['key'], $param['value']);
         }
         return $this;
+    }
+
+    /**
+     * From guzzle 5: \GuzzleHttp\Utils::jsonDecode
+     */
+    protected function jsonDecode($json, $assoc = false, $depth = 512, $options = 0)
+    {
+        static $jsonErrors = [
+            JSON_ERROR_DEPTH => 'JSON_ERROR_DEPTH - Maximum stack depth exceeded',
+            JSON_ERROR_STATE_MISMATCH => 'JSON_ERROR_STATE_MISMATCH - Underflow or the modes mismatch',
+            JSON_ERROR_CTRL_CHAR => 'JSON_ERROR_CTRL_CHAR - Unexpected control character found',
+            JSON_ERROR_SYNTAX => 'JSON_ERROR_SYNTAX - Syntax error, malformed JSON',
+            JSON_ERROR_UTF8 => 'JSON_ERROR_UTF8 - Malformed UTF-8 characters, possibly incorrectly encoded'
+        ];
+
+        $data = \json_decode($json, $assoc, $depth, $options);
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            $last = json_last_error();
+            throw new \InvalidArgumentException(
+                'Unable to parse JSON data: '
+                . (isset($jsonErrors[$last])
+                    ? $jsonErrors[$last]
+                    : 'Unknown error')
+            );
+        }
+
+        return $data;
     }
 
 }
