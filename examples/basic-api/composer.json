@@ -3,7 +3,6 @@
     "description": "Basic sample for securing an API",
     "require": {
         "bramus/router": "dev-master",
-        "adoy/oauth2": "dev-master",
         "vlucas/phpdotenv": "1.1.1",
         "auth0/auth0-php": "~2.0"
     },

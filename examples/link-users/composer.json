@@ -2,7 +2,6 @@
     "name": "auth0/basic-webapp-sample",
     "description": "Basic sample for securing a WebApp with Auth0",
     "require": {
-        "adoy/oauth2": "dev-master",
         "vlucas/phpdotenv": "1.1.1",
         "auth0/auth0-php": "~2.0"
     },
