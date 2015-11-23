@@ -273,7 +273,7 @@ class Auth0 {
      */
     public function getUser() {
         // Ensure we have the user info
-        if ($this->user === false) {
+        if ($this->user === null) {
             $this->exchangeCode();
         }
         if (!is_array($this->user)) {
@@ -352,7 +352,7 @@ class Auth0 {
      * @return string
      */
     final public function getAccessToken() {
-        if ($this->access_token === false) {
+        if ($this->access_token === null) {
             $this->exchangeCode();
         }
         return $this->access_token;
@@ -381,7 +381,7 @@ class Auth0 {
      * @return string
      */
     final public function getIdToken() {
-        if ($this->id_token === false) {
+        if ($this->id_token === null) {
             $this->exchangeCode();
         }
         return $this->id_token;

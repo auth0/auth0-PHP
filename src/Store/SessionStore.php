@@ -65,7 +65,7 @@ class SessionStore
      *
      * @return mixed
      */
-    public function get($key, $default=false) {
+    public function get($key, $default=null) {
         $key_name = $this->getSessionKeyName($key);
 
         if (isset($_SESSION[$key_name])) {
