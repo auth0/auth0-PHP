@@ -89,13 +89,14 @@ class RequestBuilder {
         $method = $this->method;
 
         try {
-
-            $response = $client->$method($this->getUrl(), array(
+            
+            $response = $client->request($this->method, $this->getUrl(), [
                 'headers' => $this->headers,
-                'body' => $this->body
-            ));
+                'body' => $this->body,
+            ]);
+            $body = (string) $response->getBody();
 
-            return $response->json(array('object' => false));
+            return json_decode($body, true);
 
         } catch (RequestException $e) {
             throw $e;
