@@ -11,10 +11,16 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 ## News
 
-The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of new [features and changes](https://auth0.com/docs/apiv2Changes).
+- The version 2.x of the PHP SDK was updated to work with Guzzle 6.1. For compatibility fith Guzzle 5, you should use 1.x branch.
+- The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of new [features and changes](https://auth0.com/docs/apiv2Changes).
 
 ### Backward compatibility breaks
 
+2.x
+- Session storage now returns null (and null is expected by the sdk) if there is no info stored (this change was made since false is a valid value to be stored in session).
+- Guzzle 6.1 required
+
+1.x
 - Now, all the SDK is under the namespace `\Auth0\SDK`
 - The exceptions were moved to the namespace `\Auth0\SDK\Exceptions`
 - The method `Auth0::getUserInfo` is deprecated and soon to be removed. We encourage to use `Auth0::getUser` to enforce the adoption of the API v2
@@ -54,6 +60,11 @@ To run the example, you need composer (the PHP package manager) installed (you c
 $ composer install
 $ php -S localhost:3000
 ```
+
+## Migration guide from 1.x
+
+1. If you use Guzzle (or some other dependency does), you will need to update it to work with Guzzle 6.1.
+2. 
 
 ## Migration guide from 0.6.6
 

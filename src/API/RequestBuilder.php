@@ -96,7 +96,7 @@ class RequestBuilder {
             ]);
             $body = (string) $response->getBody();
 
-            return $this->jsonDecode($body, true);
+            return json_decode($body, true);
 
         } catch (RequestException $e) {
             throw $e;

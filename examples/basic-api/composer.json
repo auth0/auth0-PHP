@@ -5,7 +5,7 @@
         "bramus/router": "dev-master",
         "adoy/oauth2": "dev-master",
         "vlucas/phpdotenv": "1.1.1",
-        "auth0/auth0-php": "~1.0"
+        "auth0/auth0-php": "~2.0"
     },
     "autoload": {
         "psr-4": {
