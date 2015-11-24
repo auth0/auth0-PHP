@@ -1,5 +1,16 @@
 # Change Log
 
+## [2.1.0](https://github.com/auth0/auth0-PHP/tree/2.1.0) (2015-11-24)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.0.0...2.1.0)
+
+**Closed issues:**
+
+- Update to use v3.0 of firebase/php-jwt [\#47](https://github.com/auth0/auth0-PHP/issues/47)
+
+**Merged pull requests:**
+
+- 2.0.1 updated JWT dependency [\#48](https://github.com/auth0/auth0-PHP/pull/48) ([glena](https://github.com/glena))
+
 ## [2.0.0](https://github.com/auth0/auth0-PHP/tree/2.0.0) (2015-11-23)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.10...2.0.0)
 
