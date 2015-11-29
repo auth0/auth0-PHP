@@ -435,13 +435,13 @@ class Auth0 {
     }
 
     /**
-     * If debug mode is set, sends $info to debugger Closure.
+     * If debug mode is set, sends $info to debugger \Closure.
      *
      * @param  mixed $info  Info to debug. It will be converted to string.
      */
     public function debugInfo($info)
     {
-        if ($this->debug_mode && (is_object($this->debugger) && ($this->debugger instanceof Closure))) {
+        if ($this->debug_mode && (is_object($this->debugger) && ($this->debugger instanceof \Closure))) {
             list(, $caller) = debug_backtrace(false);
 
             $caller_function = $caller['function'];
@@ -589,7 +589,7 @@ class Auth0 {
      *
      * @return Auth0\SDK\BaseAuth0
      */
-    final public function setDebugger(Closure $debugger)
+    final public function setDebugger(\Closure $debugger)
     {
         $this->debugger = $debugger;
 
