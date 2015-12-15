@@ -13,7 +13,7 @@
   ));
 
 
-  $userInfo = $auth0->getUserInfo();
+  $userInfo = $auth0->getUser();
 
 ?>
 <html>
