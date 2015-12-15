@@ -51,7 +51,7 @@ if ($secondary_user) {
 <html>
     <head>
         <script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-        <script src="https://cdn.auth0.com/js/lock-7.min.js"></script>
+        <script src="https://cdn.auth0.com/js/lock-7.12.min.js"></script>
 
         <script type="text/javascript" src="//use.typekit.net/iws6ohy.js"></script>
         <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
