@@ -6,7 +6,7 @@ use Auth0\SDK\API\ApiClient;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
 
-class ApiConnection {
+class ApiConnections {
 
     protected static function getApiV2Client($domain) {
 
