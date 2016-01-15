@@ -28,9 +28,7 @@ class Clients {
             $request->withParam('include_fields', $include_fields);
         }
 
-        $info = $request->call();
-
-        return $info;
+        return $request->call();
     }
 
     public function get($id, $fields = null, $include_fields = null) {
@@ -48,37 +46,31 @@ class Clients {
             $request->withParam('include_fields', $include_fields);
         }
 
-        $info = $request->call();
-
-        return $info;
+        return $request->call();
     }
 
     public function delete($id) {
 
-        $request = $this->apiClient->delete()
+        return $this->apiClient->delete()
             ->clients($id)
             ->call();
     }
 
     public function create($data) {
 
-        $info = $this->apiClient->post()
+        return $this->apiClient->post()
             ->clients()
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
             ->call();
-
-        return $info;
     }
 
-    public function update($data) {
+    public function update($id, $data) {
 
-        $info = $this->apiClient->patch()
-            ->clients()
+        return $this->apiClient->patch()
+            ->clients($id)
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
             ->call();
-
-        return $info;
     }
 }

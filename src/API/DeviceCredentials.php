@@ -40,25 +40,21 @@ class DeviceCredentials {
       $request->withParam('type', $type);
     }
 
-    $info = $request->call();
-
-    return $info;
+    return $request->call();
   }
 
   public function createPublicKey($data) {
 
-    $info = $this->apiClient->post()
-      ->addPath('device-credentials');
+    return $this->apiClient->post()
+      ->addPath('device-credentials')
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode($data))
       ->call();
-
-    return $info;
   }
 
   public function deleteDeviceCredential($id) {
 
-    $request = $this->apiClient->delete()
+    return $this->apiClient->delete()
       ->addPath('device-credentials', $id)
       ->call();
   }

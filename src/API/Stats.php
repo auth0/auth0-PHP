@@ -7,11 +7,27 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Stats {
 
-    protected $apiClient;
+  protected $apiClient;
 
-    public function __construct(ApiClient $apiClient) {
-        $this->apiClient = $apiClient;
-    }
+  public function __construct(ApiClient $apiClient) {
+    $this->apiClient = $apiClient;
+  }
 
-    //TODO
+  public function getActiveUsersCount() {
+
+    return $this->apiClient->get()
+      ->stats()
+      ->addPath('active-users')
+      ->call();
+  }
+
+  public function getDailyStats($from, $to) {
+
+    return $this->apiClient->get()
+      ->stats()
+      ->daily()
+      ->withParam('from', $from)
+      ->withParam('to', $to)
+      ->call();
+  }
 }

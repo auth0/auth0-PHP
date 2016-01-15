@@ -7,11 +7,23 @@ use Auth0\SDK\API\Header\ContentType;
 
 class UserBlocks {
 
-    protected $apiClient;
+  protected $apiClient;
 
-    public function __construct(ApiClient $apiClient) {
-        $this->apiClient = $apiClient;
-    }
+  public function __construct(ApiClient $apiClient) {
+    $this->apiClient = $apiClient;
+  }
 
-    //TODO
+  public function get($user_id) {
+
+    return $this->apiClient->get()
+      ->addPath('user-blocks',$user_id)
+      ->call();
+  }
+
+  public function unblock($user_id) {
+
+    return $this->apiClient->delete()
+      ->addPath('user-blocks',$user_id)
+      ->call();
+  }
 }

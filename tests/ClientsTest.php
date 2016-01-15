@@ -1,149 +1,45 @@
-<?php namespace Auth0\Tests;
+<?php
+namespace Auth0\Tests;
 
-use Auth0\SDK\API\Client;
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
-use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\Auth0Api;
 
-class ClientsTest extends \PHPUnit_Framework_TestCase {
-
-    protected $token = '';
-    protected $id = null;
+class ClientsTest extends ApiTests {
 
     public function testGetAll() {
-
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
+        $env = $this->getEnv();
+        $token = $this->getToken($env, [
+            'clients' => [
+                'actions' => ['read']
+            ]
         ]);
 
-        $response = $auth0->get()
-            ->clients()
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->call();
+        $api = new Auth0Api($token, $env['DOMAIN']);
 
-        $this->assertTrue(is_array($response));
-        $this->assertTrue(count($response)>0);
+        $api->clients->getAll();
     }
 
-    public function testCreateOne() {
-
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
+    public function testCreateGetDelete() {
+        $env = $this->getEnv();
+        $token = $this->getToken($env, [
+            'clients' => [
+                'actions' => ['create', 'read', 'delete', 'update']
+            ]
         ]);
 
-        $values = [
-            'name' => 'TestApp',
-        ];
+        $client_name = 'test-create-client' . rand();
 
-        $response = $auth0->post()
-            ->clients()
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($values))
-            ->call();
+        $api = new Auth0Api($token, $env['DOMAIN']);
 
-        $this->id = $response->client_id;
+        $client = $api->clients->create(['name' => $client_name, 'sso' => false]);
 
-        $this->assertObjectHasAttribute('client_id', $response);
-        $this->assertObjectHasAttribute('client_secret', $response);
-        $this->assertObjectHasAttribute('signing_keys', $response);
+        $client2 = $api->clients->get($client['client_id']);
 
-        foreach ($values as $key => $value) {
-            $this->assertObjectHasAttribute($key, $response);
-            $this->assertEquals($value, $response->$key);
-        }
+        $this->assertNotTrue($client2['sso']);
+
+        $client3 = $api->clients->update($client['client_id'], ['sso' => true]);
+
+        $this->assertTrue($client3['sso']);
+
+        $api->clients->delete($client['client_id']);
     }
-
-    /**
-     * @depends testCreateOne
-     */
-    public function testGetOne() {
-
-        $id = $this->getIdByName(['TestApp', 'THIS WAS UPDATED']);
-
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
-        ]);
-
-        $response = $auth0->get()
-            ->clients($id)
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->call();
-
-        $this->assertObjectHasAttribute('client_id', $response);
-        $this->assertObjectHasAttribute('name', $response);
-        $this->assertObjectHasAttribute('tenant', $response);
-        $this->assertEquals($id, $response->client_id);
-    }
-
-    /**
-     * @depends testGetOne
-     */
-    public function testUpdateOne() {
-
-        $id = $this->getIdByName(['TestApp', 'THIS WAS UPDATED']);
-
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
-        ]);
-
-        $values = [
-            'name' => 'THIS WAS UPDATED'
-        ];
-
-        $response = $auth0->patch()
-            ->clients($id)
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($values))
-            ->call();
-
-        $this->assertObjectHasAttribute('client_id', $response);
-        $this->assertEquals($id, $response->client_id);
-
-        foreach ($values as $key => $value) {
-            $this->assertObjectHasAttribute($key, $response);
-            $this->assertEquals($value, $response->$key);
-        }
-    }
-
-    /**
-     * @depends testUpdateOne
-     */
-    public function testDeleteOne() {
-
-        $id = $this->getIdByName(['TestApp', 'THIS WAS UPDATED', 'My application', 'asdf']);
-
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
-        ]);
-
-        $response = $auth0->delete()
-            ->clients($id)
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->call();
-
-    }
-
-    protected function getIdByName($names) {
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
-        ]);
-
-        $response = $auth0->get()
-            ->clients()
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->call();
-
-        foreach ($response as $client) {
-            if (in_array( $client->name , $names )) return $client->client_id;
-        }
-        die('APP DOES NOT EXISTS');
-    }
-
 }

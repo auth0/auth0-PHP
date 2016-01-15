@@ -13,10 +13,12 @@ use \GuzzleHttp\Exception\RequestException;
 
 class RequestBuilder {
 
-    protected $path = array();
-    protected $method = array();
-    protected $headers = array();
-    protected $params = array();
+    protected $path = [];
+    protected $method = [];
+    protected $headers = [];
+    protected $params = [];
+    protected $form_params = [];
+    protected $files = [];
     protected $body;
 
     public function __construct( $config ) {
@@ -83,6 +85,14 @@ class RequestBuilder {
         return $this;
     }
 
+    public function addFile($file_path) {
+        $this->files[] = $filePath;
+    }
+
+    public function addFormParam($key, $value) {
+        $this->form_params[$key] = $value;
+    }
+
     public function call() {
 
         $client = new Client();
@@ -90,10 +100,25 @@ class RequestBuilder {
 
         try {
             
-            $response = $client->request($this->method, $this->getUrl(), [
+            $data = [
                 'headers' => $this->headers,
                 'body' => $this->body,
-            ]);
+            ];
+
+            if (!empty($this->files)) {
+                foreach($this->files as $file) {
+                    $data['multipart'][] = [
+                        'name' => basename($file),
+                        'contents' => $file
+                    ];
+                }
+            }
+
+            if (!empty($this->form_params)) {
+                $data['form_params'] = $this->form_params;
+            }
+
+            $response = $client->request($this->method, $this->getUrl(), $data);
             $body = (string) $response->getBody();
 
             return json_decode($body, true);

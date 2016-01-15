@@ -17,23 +17,21 @@ class Blacklists {
 
         return $this->apiClient->get()
             ->blacklists()
-            ->token()
+            ->tokens()
             ->withParam('aud', $aud)
             ->call();
     }
 
     public function blacklist($aud, $jti) {
 
-        $response = $this->apiClient->post()
+        return $this->apiClient->post()
             ->blacklists()
-            ->token()
+            ->tokens()
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode([
               'aud' => $aud, 
               'jti' => $jti
             ]))
             ->call();
-
-        return $response;
     }
 }

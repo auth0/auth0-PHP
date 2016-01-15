@@ -10,7 +10,7 @@ class Emails {
   protected $apiClient;
 
   public function __construct(ApiClient $apiClient) {
-      $this->apiClient = $apiClient;
+    $this->apiClient = $apiClient;
   }
 
   public function getEmailProvider($fields = null, $include_fields = null) {
@@ -29,38 +29,32 @@ class Emails {
       $request->withParam('include_fields', $include_fields);
     }
 
-    $info = $request->call();
-
-    return $info;
+    return $request->call();
   }
 
   public function configureEmailProvider($data) {
 
-    $info = $this->apiClient->post()
+    return $this->apiClient->post()
       ->emails()
       ->provider()
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode($data))
       ->call();
-
-    return $info;
   }
 
   public function updateEmailProvider($data) {
 
-    $info = $this->apiClient->patch()
+    return $this->apiClient->patch()
       ->emails()
       ->provider()
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode($data))
       ->call();
-
-    return $info;
   }
 
   public function deleteEmailProvider() {
 
-    $request = $this->apiClient->delete()
+    return $this->apiClient->delete()
       ->emails()
       ->provider()
       ->call();

@@ -15,33 +15,27 @@ class Users {
 
     public function get($user_id) {
 
-        $user_info = $this->apiClient->get()
+        return $this->apiClient->get()
             ->users($user_id)
             ->call();
-
-        return $user_info;
     }
 
     public function update($user_id, $data) {
 
-        $user_info = $this->apiClient->patch()
+        return $this->apiClient->patch()
             ->users($user_id)
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
             ->call();
-
-        return $user_info;
     }
 
     public function create($data) {
 
-        $user_info = $this->apiClient->post()
+        return $this->apiClient->post()
             ->users()
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
             ->call();
-
-        return $user_info;
     }
 
     public function search($params) {
@@ -58,14 +52,14 @@ class Users {
 
     public function deleteAll() {
 
-        $this->apiClient->delete()
+        return $this->apiClient->delete()
             ->users()
             ->call();
     }
 
     public function delete($user_id) {
 
-        $this->apiClient->delete()
+        return $this->apiClient->delete()
             ->users($user_id)
             ->call();
     }
@@ -90,14 +84,14 @@ class Users {
     }
 
     public function unlinkDevice($user_id, $device_id) {
-        $this->apiClient->delete()
+        return $this->apiClient->delete()
             ->users($user_id)
             ->devices($device_id)
             ->call();
     }
 
     public function deleteMultifactorProvider($user_id, $multifactor_provider) {
-        $this->apiClient->delete()
+        return $this->apiClient->delete()
             ->users($user_id)
             ->multifactor($multifactor_provider)
             ->call();

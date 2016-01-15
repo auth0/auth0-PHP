@@ -1,103 +1,45 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: germanlena
- * Date: 4/23/15
- * Time: 10:13 AM
- */
-
 namespace Auth0\Tests;
 
+use Auth0\SDK\Auth0Api;
 
-use Auth0\SDK\API\Client;
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
-
-class ConnectionsTest extends \PHPUnit_Framework_TestCase {
-
-    protected $token = '';
+class ConnectionsTest extends ApiTests {
 
     public function testGetAll() {
-
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
+        $env = $this->getEnv();
+        $token = $this->getToken($env, [
+            'connections' => [
+                'actions' => ['read']
+            ]
         ]);
 
-        $response = $auth0->get()
-            ->connections()
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->call();
+        $api = new Auth0Api($token, $env['DOMAIN']);
 
-        $this->assertTrue(is_array($response));
-        $this->assertTrue(count($response)>0);
-
+        $api->connections->getAll();
     }
-    public function testGetAllWithStrategy() {
 
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
+    public function testCreateGetDelete() {
+        $env = $this->getEnv();
+        $token = $this->getToken($env, [
+            'connections' => [
+                'actions' => ['create', 'read', 'delete', 'update']
+            ]
         ]);
 
-        $response = $auth0->get()
-            ->connections()
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->withParam('strategy', 'facebook')
-            ->call();
+        $api = new Auth0Api($token, $env['DOMAIN']);
 
-        $this->assertTrue(is_array($response));
-        $this->assertCount(1,$response);
-        $this->assertObjectHasAttribute('name',$response[0]);
-        $this->assertObjectHasAttribute('strategy',$response[0]);
-        $this->assertEquals('facebook',$response[0]->name);
+        $connection_name = 'test-create-client' . rand();
 
+        $connection = $api->connections->create(['name' => $connection_name, 'strategy' => 'auth0', 'options' => ['requires_username' => false]]);
+
+        $conection2 = $api->connections->get($connection['id']);
+
+        $this->assertNotTrue($conection2['options']['requires_username']);
+
+        $connection3 = $api->connections->update($connection['id'], ['options' => ['requires_username' => true]]);
+
+        $this->assertTrue($connection3['options']['requires_username']);
+
+        $api->connections->delete($connection['id']);
     }
-    public function testGetAllWithStrategyAndFields() {
-
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
-        ]);
-
-        $response = $auth0->get()
-            ->connections()
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->withParam('strategy', 'facebook')
-            ->withParam('fields', 'name,id')
-            ->withParam('include_fields', true)
-            ->call();
-
-        $this->assertTrue(is_array($response));
-        $this->assertCount(1,$response);
-        $this->assertObjectHasAttribute('name',$response[0]);
-        $this->assertObjectHasAttribute('id',$response[0]);
-        $this->assertObjectNotHasAttribute('strategy',$response[0]);
-        $this->assertEquals('facebook',$response[0]->name);
-
-    }
-    public function testGetAllWithStrategyAndWithoutFields() {
-
-        $auth0 = new Client([
-            'domain' => 'https://login.auth0.com',
-            'basePath' => '/api/v2',
-        ]);
-
-        $response = $auth0->get()
-            ->connections()
-            ->withHeader(new AuthorizationBearer($this->token))
-            ->withParam('strategy', 'facebook')
-            ->withParam('fields', 'name,id')
-            ->withParam('include_fields', false)
-            ->call();
-
-        $this->assertTrue(is_array($response));
-        $this->assertCount(1,$response);
-        $this->assertObjectNotHasAttribute('name',$response[0]);
-        $this->assertObjectNotHasAttribute('id',$response[0]);
-        $this->assertObjectHasAttribute('strategy',$response[0]);
-        $this->assertEquals('facebook',$response[0]->strategy);
-
-    }
-
-
 }

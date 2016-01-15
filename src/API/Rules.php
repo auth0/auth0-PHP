@@ -31,9 +31,7 @@ class Rules {
             $request->withParam('include_fields', $include_fields);
         }
 
-        $info = $request->call();
-
-        return $info;
+        return $request->call();
     }
 
     public function get($id, $fields = null, $include_fields = null) {
@@ -58,30 +56,26 @@ class Rules {
 
     public function delete($id) {
 
-        $request = $this->apiClient->delete()
+       return $this->apiClient->delete()
             ->rules($id)
             ->call();
     }
 
     public function create($data) {
 
-        $info = $this->apiClient->post()
+        return $this->apiClient->post()
             ->rules()
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
             ->call();
-
-        return $info;
     }
 
     public function update($id, $data) {
 
-        $info = $this->apiClient->patch()
+        return $this->apiClient->patch()
             ->rules($id)
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
             ->call();
-
-        return $info;
     }
 }
