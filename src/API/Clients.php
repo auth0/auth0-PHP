@@ -66,7 +66,7 @@ class Clients {
             ->clients()
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
-            ->dump();
+            ->call();
 
         return $info;
     }
