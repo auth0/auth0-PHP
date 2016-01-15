@@ -1,7 +1,6 @@
 <?php
 namespace Auth0\SDK;
-use Auth0\SDK\API\ApiUsers;
-use Auth0\SDK\API\ApiClient;
+use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Store\EmptyStore;
@@ -261,7 +260,7 @@ class Auth0 {
         $userinfo_url = $this->generateUrl('user_info');
         $user = $this->oauth_client->fetch($userinfo_url);
 
-        $this->setUser($user);
+        $this->setUser($user["result"]);
 
         return true;
     }
@@ -304,7 +303,9 @@ class Auth0 {
      */
     public function updateUserMetadata($metadata) {
 
-        $user = ApiUsers::update($this->domain, $this->getIdToken(), $this->user["user_id"], array('user_metadata' =>  $metadata));
+        $auth0Api = new Auth0Api($this->getIdToken(), $this->domain);
+
+        $user = $auth0Api->users->update($this->user["user_id"], array('user_metadata' =>  $metadata));
 
         $this->setUser($user);
     }

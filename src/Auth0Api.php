@@ -1,6 +1,12 @@
 <?php
-namespace Auth0\SDK\API;
+namespace Auth0\SDK;
 
+use Auth0\SDK\API\Connections;
+use Auth0\SDK\API\Clients;
+use Auth0\SDK\API\Users;
+use Auth0\SDK\API\Rules;
+
+use Auth0\SDK\API\Helpers\ApiCLient;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 
 class Auth0Api {
@@ -20,13 +26,13 @@ class Auth0Api {
     
     $this->setApiClient();
 
-    $this->connections = new ApiConnections($this->apiClient);
-    $this->clients = new ApiClients($this->apiClient);
-    $this->users = new ApiUsers($this->apiClient);
-    $this->rules = new ApiRules($this->apiClient);
+    $this->connections = new Connections($this->apiClient);
+    $this->clients = new Clients($this->apiClient);
+    $this->users = new Users($this->apiClient);
+    $this->rules = new Rules($this->apiClient);
   }
 
-  protected static function setApiClient() {
+  protected function setApiClient() {
     $apiDomain = "https://{$this->domain}";
 
     $client = new ApiClient([

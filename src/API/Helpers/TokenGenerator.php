@@ -1,4 +1,4 @@
-<?php namespace Auth0\SDK\API; 
+<?php namespace Auth0\SDK\API\Helpers; 
 
 use Firebase\JWT\JWT;    
 

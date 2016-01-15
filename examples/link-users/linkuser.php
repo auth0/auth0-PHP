@@ -35,12 +35,15 @@ if ($secondary_user) {
   echo "Main user: " . $main_user["user_id"] . "\n";
   echo "Main user: " . $secondary_user["user_id"] . "\n";
 
-  var_dump(
-    \Auth0\SDK\API\ApiUsers::linkAccount($domain, $app_token, $main_user["user_id"], array(
+  $auth0Api = new \Auth0\SDK\Auth0Api($app_token, $domain);
+
+  $response = $auth0Api->users->linkAccount($main_user["user_id"], array(
       "provider" => $secondary_user["identities"][0]["provider"],
       "user_id" => $secondary_user["identities"][0]["user_id"]
-    ) )
-  );
+    ));
+
+  var_dump($response);
+
   echo '</pre>';
   exit;
 }
