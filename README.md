@@ -14,7 +14,18 @@ Check our docs page to get a complete guide on how to install it in an existing 
 - The version 2.x of the PHP SDK was updated to work with Guzzle 6.1. For compatibility fith Guzzle 5, you should use 1.x branch.
 - The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of new [features and changes](https://auth0.com/docs/apiv2Changes).
 
-### Backward compatibility breaks
+### *NOTICE* Backward compatibility breaks
+
+3.0
+- SDK api changes, now the Auth0 API client is not build of static clases anymore. Usage example:
+```
+$token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
+$domain = "account.auth0.com";
+
+$auth0Api = new \Auth0\SDK\Auth0Api($token, $domain);
+
+$usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
+```
 
 2.x
 - Session storage now returns null (and null is expected by the sdk) if there is no info stored (this change was made since false is a valid value to be stored in session).
