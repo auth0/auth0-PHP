@@ -63,6 +63,15 @@ class Connections {
             ->call();
     }
 
+    public function deleteUser($id, $email) {
+
+        $request = $this->apiClient->delete()
+            ->connections($id)
+            ->users()
+            ->withParam('email', $email);
+            ->call();
+    }
+
     public function create($data) {
 
         $info = $this->apiClient->post()
