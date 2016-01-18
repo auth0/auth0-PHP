@@ -28,6 +28,8 @@ class ClientsTest extends ApiTests {
 
         $client_name = 'test-create-client' . rand();
 
+        echo "-- Using client name $client_name \n";
+
         $api = new Auth0Api($token, $env['DOMAIN']);
 
         $client = $api->clients->create(['name' => $client_name, 'sso' => false]);

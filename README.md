@@ -1,5 +1,9 @@
 # Auth0 PHP SDK
 
+[![Build Status](https://travis-ci.org/auth0/auth0-PHP.png)](https://travis-ci.org/auth0/auth0-PHP)
+[![Code Climate](https://codeclimate.com/github/auth0/auth0-PHP/badges/gpa.svg)](https://codeclimate.com/github/auth0/auth0-PHP)
+[![Test Coverage](https://codeclimate.com/github/auth0/auth0-PHP/badges/coverage.svg)](https://codeclimate.com/github/auth0/auth0-PHP/coverage)
+
 ## Installation
 
 Check our docs page to get a complete guide on how to install it in an existing project or download a pre configured seedproject:

@@ -14,7 +14,7 @@ use Auth0\SDK\API\Tickets;
 use Auth0\SDK\API\UserBlocks;
 use Auth0\SDK\API\Users;
 
-use Auth0\SDK\API\Helpers\ApiCLient;
+use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 
 class Auth0Api {

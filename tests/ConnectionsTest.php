@@ -30,6 +30,8 @@ class ConnectionsTest extends ApiTests {
 
         $connection_name = 'test-create-client' . rand();
 
+        echo "-- Using connection name $connection_name \n";
+
         $connection = $api->connections->create(['name' => $connection_name, 'strategy' => 'auth0', 'options' => ['requires_username' => false]]);
 
         $conection2 = $api->connections->get($connection['id']);
