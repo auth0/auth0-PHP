@@ -38,7 +38,10 @@ class Users {
             ->call();
     }
 
-    public function search($params) {
+    public function getAll($params = array()) {
+        return $this->search($params);
+    }
+    public function search($params = array()) {
 
         $client = $this->apiClient->get()
             ->users();
