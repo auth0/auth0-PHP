@@ -6,7 +6,7 @@
  * Time: 3:06 PM
  */
 
-namespace Auth0\SDK\API;
+namespace Auth0\SDK\API\Helpers;
 
 use Auth0\SDK\API\Header\Header;
 

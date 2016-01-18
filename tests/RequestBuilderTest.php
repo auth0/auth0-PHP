@@ -1,15 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: germanlena
- * Date: 4/22/15
- * Time: 3:45 PM
- */
-
 namespace Auth0\Tests;
 
-
-use Auth0\SDK\API\RequestBuilder;
+use Auth0\SDK\API\Helpers\RequestBuilder;
 
 class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
 

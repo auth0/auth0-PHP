@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: germanlena
- * Date: 4/23/15
- * Time: 9:54 AM
- */
 
 namespace Auth0\Tests;
 

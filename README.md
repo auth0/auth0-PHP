@@ -1,5 +1,9 @@
 # Auth0 PHP SDK
 
+[![Build Status](https://travis-ci.org/auth0/auth0-PHP.png)](https://travis-ci.org/auth0/auth0-PHP)
+[![Code Climate](https://codeclimate.com/github/auth0/auth0-PHP/badges/gpa.svg)](https://codeclimate.com/github/auth0/auth0-PHP)
+[![Test Coverage](https://codeclimate.com/github/auth0/auth0-PHP/badges/coverage.svg)](https://codeclimate.com/github/auth0/auth0-PHP/coverage)
+
 ## Installation
 
 Check our docs page to get a complete guide on how to install it in an existing project or download a pre configured seedproject:
@@ -11,10 +15,21 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 ## News
 
-- The version 2.x of the PHP SDK was updated to work with Guzzle 6.1. For compatibility fith Guzzle 5, you should use 1.x branch.
+- The version 2.x of the PHP SDK was updated to work with Guzzle 6.1. For compatibility with Guzzle 5, you should use 1.x branch.
 - The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of new [features and changes](https://auth0.com/docs/apiv2Changes).
 
-### Backward compatibility breaks
+### *NOTICE* Backward compatibility breaks
+
+3.0
+- SDK api changes, now the Auth0 API client is not build of static clases anymore. Usage example:
+```
+$token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
+$domain = "account.auth0.com";
+
+$auth0Api = new \Auth0\SDK\Auth0Api($token, $domain);
+
+$usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
+```
 
 2.x
 - Session storage now returns null (and null is expected by the sdk) if there is no info stored (this change was made since false is a valid value to be stored in session).
@@ -78,6 +93,12 @@ $ php -S localhost:3000
 ## Develop
 
 This SDK uses [Composer](http://getcomposer.org/doc/01-basic-usage.md) to manage its dependencies.
+
+### `.env` format
+
+- GLOBAL_CLIENT_ID
+- GLOBAL_CLIENT_SECRET
+- DOMAIN
 
 ### Install dependencies
 

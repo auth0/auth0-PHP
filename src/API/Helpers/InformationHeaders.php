@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\SDK\API;
+namespace Auth0\SDK\API\Helpers;
 
 class InformationHeaders {
 
