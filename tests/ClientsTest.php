@@ -3,22 +3,13 @@ namespace Auth0\Tests;
 
 use Auth0\SDK\Auth0Api;
 
-class ClientsTest extends ApiTests {
-
-    public function testGetAll() {
-        $env = $this->getEnv();
-        $token = $this->getToken($env, [
-            'clients' => [
-                'actions' => ['read']
-            ]
-        ]);
-
-        $api = new Auth0Api($token, $env['DOMAIN']);
-
-        $api->clients->getAll();
+class ClientsTest extends BasicCrudTest {
+    
+    protected function getId($entity) {
+        return $entity['client_id'];
     }
 
-    public function testCreateGetDelete() {
+    protected function getApiClient() {
         $env = $this->getEnv();
         $token = $this->getToken($env, [
             'clients' => [
@@ -26,22 +17,24 @@ class ClientsTest extends ApiTests {
             ]
         ]);
 
-        $client_name = 'test-create-client' . rand();
-
-        echo "-- Using client name $client_name \n";
-
         $api = new Auth0Api($token, $env['DOMAIN']);
 
-        $client = $api->clients->create(['name' => $client_name, 'sso' => false]);
+        return $api->clients;
+    }
 
-        $client2 = $api->clients->get($client['client_id']);
+    protected function getCreateBody() {
+        $client_name = 'test-create-client' . rand();
+        echo "\n-- Using client name $client_name \n";
 
-        $this->assertNotTrue($client2['sso']);
-
-        $client3 = $api->clients->update($client['client_id'], ['sso' => true]);
-
-        $this->assertTrue($client3['sso']);
-
-        $api->clients->delete($client['client_id']);
+        return ['name' => $client_name, 'sso' => false];
+    }
+    protected function getUpdateBody() {
+        return ['sso' => true];
+    }
+    protected function afterCreate($entity) {
+        $this->assertNotTrue($entity['sso']);
+    }
+    protected function afterUpdate($entity) {
+        $this->assertTrue($entity['sso']);
     }
 }

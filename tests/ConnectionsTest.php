@@ -3,22 +3,9 @@ namespace Auth0\Tests;
 
 use Auth0\SDK\Auth0Api;
 
-class ConnectionsTest extends ApiTests {
+class ConnectionsTest extends BasicCrudTest {
 
-    public function testGetAll() {
-        $env = $this->getEnv();
-        $token = $this->getToken($env, [
-            'connections' => [
-                'actions' => ['read']
-            ]
-        ]);
-
-        $api = new Auth0Api($token, $env['DOMAIN']);
-
-        $api->connections->getAll();
-    }
-
-    public function testCreateGetDelete() {
+    protected function getApiClient() {
         $env = $this->getEnv();
         $token = $this->getToken($env, [
             'connections' => [
@@ -28,20 +15,23 @@ class ConnectionsTest extends ApiTests {
 
         $api = new Auth0Api($token, $env['DOMAIN']);
 
+        return $api->connections;
+    }
+
+    protected function getCreateBody() {
         $connection_name = 'test-create-client' . rand();
 
-        echo "-- Using connection name $connection_name \n";
+        echo "\n-- Using connection name $connection_name \n";
 
-        $connection = $api->connections->create(['name' => $connection_name, 'strategy' => 'auth0', 'options' => ['requires_username' => false]]);
-
-        $conection2 = $api->connections->get($connection['id']);
-
-        $this->assertNotTrue($conection2['options']['requires_username']);
-
-        $connection3 = $api->connections->update($connection['id'], ['options' => ['requires_username' => true]]);
-
-        $this->assertTrue($connection3['options']['requires_username']);
-
-        $api->connections->delete($connection['id']);
+        return ['name' => $connection_name, 'strategy' => 'auth0', 'options' => ['requires_username' => false]];
+    }
+    protected function getUpdateBody() {
+        return ['options' => ['requires_username' => true]];
+    }
+    protected function afterCreate($entity) {
+        $this->assertNotTrue($entity['options']['requires_username']);
+    }
+    protected function afterUpdate($entity) {
+        $this->assertTrue($entity['options']['requires_username']);
     }
 }
