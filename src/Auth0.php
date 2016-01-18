@@ -283,16 +283,6 @@ class Auth0 {
     }
 
     /**
-     * Requests user info to Auth0 server.
-     *
-     * @deprecated Use getUser instead
-     * @return array
-     */
-    public function getUserInfo() {
-        return $this->getUser();
-    }
-
-    /**
      * Updathes the user metadata. This end up calling the path /users/{id_user}
      * To delete an attribute, just set it null. ie: [ 'old_attr' => null ]
      * It will only update the existing attrs and keep the others untouch

@@ -28,7 +28,7 @@ $auth0->setDebugger(function($info) {
 });
 
 // Get the user info from auth0
-$userInfo = $auth0->getUserInfo();
+$userInfo = $auth0->getUser();
 
 $fitbitIdentity = $userInfo['identities'][0];
 if ($fitbitIdentity['provider'] != 'fitbit')
