@@ -1,5 +1,37 @@
 # Change Log
 
+## [Unreleased](https://github.com/auth0/auth0-PHP/tree/HEAD)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.0.0...HEAD)
+
+**Closed issues:**
+
+- Outdated Lock [\#52](https://github.com/auth0/auth0-PHP/issues/52)
+- Deprecated method in basic-webapp [\#50](https://github.com/auth0/auth0-PHP/issues/50)
+
+## [3.0.0](https://github.com/auth0/auth0-PHP/tree/3.0.0) (2016-01-18)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.1.2...3.0.0)
+
+**Merged pull requests:**
+
+- V3 with new API and full support for API V2 [\#57](https://github.com/auth0/auth0-PHP/pull/57) ([glena](https://github.com/glena))
+
+## [2.1.2](https://github.com/auth0/auth0-PHP/tree/2.1.2) (2016-01-14)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.1.1...2.1.2)
+
+**Merged pull requests:**
+
+- Update Lock [\#53](https://github.com/auth0/auth0-PHP/pull/53) ([Annyv2](https://github.com/Annyv2))
+- Update index.php [\#51](https://github.com/auth0/auth0-PHP/pull/51) ([Annyv2](https://github.com/Annyv2))
+- Update lock [\#45](https://github.com/auth0/auth0-PHP/pull/45) ([Annyv2](https://github.com/Annyv2))
+
+## [2.1.1](https://github.com/auth0/auth0-PHP/tree/2.1.1) (2015-11-29)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.1.0...2.1.1)
+
+**Merged pull requests:**
+
+- Fix Closure namespace issue [\#49](https://github.com/auth0/auth0-PHP/pull/49) ([mkeasling](https://github.com/mkeasling))
+
 ## [2.1.0](https://github.com/auth0/auth0-PHP/tree/2.1.0) (2015-11-24)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.0.0...2.1.0)
 
