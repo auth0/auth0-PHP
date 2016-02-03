@@ -17,10 +17,3 @@ addons:
       secure: w73sOC3Dvc5qAo/UFgA+9y8Ig3xh+fYFY45ynX9X9sSR5aH3IDBtwEu/NGpEtv7JF4TeQW/fZHMQOKybaDCn37i0lXsYqenGYofb+RHNtt8qnXhIlI7/0bll6chat7BCJ55RfyPNorTqTD+TWMqp8lKNtkm6pPhq+Arh8e5ryNw=
 after_script:
 - vendor/bin/test-reporter
-env:
-  DOMAIN:
-    secure: mhGjLlbxHNu5P69n0GbG6aMPOseKiZiO3EMpZSJLrNgCjcZ9j1iQjlrySUr5ZXwdj2FRVDzqGfrnLX3cAlcGRKNj8MNAjcQihVnj0fyd/LpQk8qY17JWT0hL/zb/507NHwck2o7A6EhJ7OO82EpvGM6iw+LNQUW84LYa4zzmYmc=
-  GLOBAL_CLIENT_SECRET:
-    secure: Eg3vLNXrfbgWRt9+hxd6e3Ma9nZ/YhHFpeL2YPMcoiEDnSsJHk1TfxWiE6cle2gsE7bFN4cZECToYZp0ZC0qkSg/jkj336vMbno5okrsZViZGMipspnfeTqVPzS4TxWdE6xkEZXbX0fAFLnHzbDviWMj2x1n2fYpK1LVm1h+C8w=
-  GLOBAL_CLIENT_ID:
-    secure: gfLGfHD2++dh3i+RKqrXJ/vagLqjkgcpqYo1YCqZR3Ax6gU7s6MryIGpVedIdPVEfLExjEKSBWUFIeI7VJKvww/kRU7LSsWOZ0Wag5w4hdbeTM+FHgoS7y7qYe8VvFRUIcY/8q0PVFz8IedJM+JvJlc3t27ixN5evDCS7X9EIAE=
