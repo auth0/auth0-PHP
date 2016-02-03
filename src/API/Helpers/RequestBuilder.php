@@ -53,6 +53,7 @@ class RequestBuilder {
 
     public function addPathVariable($variable) {
         $this->path[] = $variable;
+        return $this;
     }
 
     public function getUrl() {
@@ -85,18 +86,18 @@ class RequestBuilder {
         return $this;
     }
 
-    public function addFile($file_path) {
-        $this->files[] = $filePath;
+    public function addFile($field, $file_path) {
+        $this->files[$field] = $file_path;
+        return $this;
     }
 
     public function addFormParam($key, $value) {
         $this->form_params[$key] = $value;
+        return $this;
     }
 
     public function call() {
-
         $client = new Client();
-        $method = $this->method;
 
         try {
             
@@ -106,15 +107,8 @@ class RequestBuilder {
             ];
 
             if (!empty($this->files)) {
-                foreach($this->files as $file) {
-                    $data['multipart'][] = [
-                        'name' => basename($file),
-                        'contents' => $file
-                    ];
-                }
-            }
-
-            if (!empty($this->form_params)) {
+               $data['multipart'] = $this->buildMultiPart();
+            } else if (!empty($this->form_params)) {
                 $data['form_params'] = $this->form_params;
             }
 
@@ -126,7 +120,6 @@ class RequestBuilder {
         } catch (RequestException $e) {
             throw $e;
         }
-
     }
 
     public function withHeaders($headers) {
@@ -168,6 +161,24 @@ class RequestBuilder {
             $this->withParam($param['key'], $param['value']);
         }
         return $this;
+    }
+
+    private function buildMultiPart() {
+        $multipart = array();
+
+        foreach($this->files as $field => $file) {
+            $multipart[] = [
+                'name' => $field,
+                'contents' => fopen($file, 'r')
+            ];
+        }
+        foreach($this->form_params as $param => $value) {
+            $multipart[] = [
+                'name' => $param,
+                'contents' => $value
+            ];
+        }
+        return $multipart;
     }
 
 }

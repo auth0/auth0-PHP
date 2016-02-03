@@ -20,17 +20,17 @@ class Jobs {
       ->call();
   }
 
-  public function sendVerificationEmail($file_path, $connection_id) {
+  public function importUsers($file_path, $connection_id) {
 
     return $this->apiClient->post()
       ->jobs()
-      ->addPath('verification-email')
-      ->addFile($file_path)
+      ->addPath('users-imports')
+      ->addFile('users', $file_path)
       ->addFormParam('connection_id', $connection_id)
       ->call();
   }
 
-  public function importUsers($user_id) {
+  public function sendVerificationEmail($user_id) {
 
     return $this->apiClient->post()
       ->jobs()
