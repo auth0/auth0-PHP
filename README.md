@@ -19,6 +19,15 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 > If you find something wrong in our docs, PR are welcome in our docs repo: https://github.com/auth0/docs
 
+## Troubleshoot
+
+### I am getting `curl error 60: SSL certificate proble: self signed certificate in certificate chain` on Windows
+
+This is a common issue with latest PHP versions under windows (related to a incompatibility between windows and openssl CAs database).
+
+- download this CAs database `https://curl.haxx.se/ca/cacert.pem` to c:/cacert.pem
+- you need to edit your php.ini and make `openssl.capath=c:/cacert.pem` so it points to the file you downloaded
+
 ## News
 
 - The version 2.x of the PHP SDK was updated to work with Guzzle 6.1. For compatibility with Guzzle 5, you should use 1.x branch.
