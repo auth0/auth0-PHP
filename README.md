@@ -21,7 +21,7 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 ## Troubleshoot
 
-### I am getting `curl error 60: SSL certificate proble: self signed certificate in certificate chain` on Windows
+> I am getting `curl error 60: SSL certificate problem: self signed certificate in certificate chain` on Windows
 
 This is a common issue with latest PHP versions under windows (related to a incompatibility between windows and openssl CAs database).
 
