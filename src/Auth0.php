@@ -217,7 +217,7 @@ class Auth0 {
 
     /**
      * Exchanges the code from the URI parameters for an access token, id token and user info
-     * @return Boolean Wheter it exchanged the code or not correctly
+     * @return Boolean Whether it exchanged the code or not correctly
      */
     private function exchangeCode() {
         if (!isset($_REQUEST['code'])) {
