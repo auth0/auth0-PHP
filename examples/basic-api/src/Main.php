@@ -27,14 +27,15 @@ class Main {
 
     public function privatePing(){
 
-        $userData = \Auth0\SDK\Api\ApiUsers::get(getenv('AUTH0_DOMAIN'),$this->token, $this->tokenInfo->sub);
-
+        $auth0Api = new \Auth0\SDK\Auth0Api($this->token, getenv('AUTH0_DOMAIN'));
+        $userData = $auth0Api->users->get($this->tokenInfo->sub);
+        
         return array(
             "status" => 'ok',
             "message" => 'Shh, it\' secret',
             "user" => array(
                 "email" => $userData["email"],
-                "username" => $userData["username"]
+                "name" => $userData["name"]
             )
         );
     }
