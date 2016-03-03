@@ -33,7 +33,7 @@ if ($secondary_user) {
   echo '<pre>';
 
   echo "Main user: " . $main_user["user_id"] . "\n";
-  echo "Main user: " . $secondary_user["user_id"] . "\n";
+  echo "Secondary user: " . $secondary_user["user_id"] . "\n";
 
   $auth0Api = new \Auth0\SDK\Auth0Api($app_token, $domain);
 
