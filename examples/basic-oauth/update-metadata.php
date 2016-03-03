@@ -9,7 +9,7 @@
         echo "<div>UPDATED!!!</div>";
     }  
   
-$userInfo = $auth0Oauth->getUserInfo();
+$userInfo = $auth0Oauth->getUser();
   
 ?>
 

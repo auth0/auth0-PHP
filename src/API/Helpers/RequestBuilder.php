@@ -6,17 +6,19 @@
  * Time: 3:11 PM
  */
 
-namespace Auth0\SDK\API;
+namespace Auth0\SDK\API\Helpers;
 use \Auth0\SDK\API\Header\Header;
 use \GuzzleHttp\Client;
 use \GuzzleHttp\Exception\RequestException;
 
 class RequestBuilder {
 
-    protected $path = array();
-    protected $method = array();
-    protected $headers = array();
-    protected $params = array();
+    protected $path = [];
+    protected $method = [];
+    protected $headers = [];
+    protected $params = [];
+    protected $form_params = [];
+    protected $files = [];
     protected $body;
 
     public function __construct( $config ) {
@@ -51,6 +53,7 @@ class RequestBuilder {
 
     public function addPathVariable($variable) {
         $this->path[] = $variable;
+        return $this;
     }
 
     public function getUrl() {
@@ -83,24 +86,40 @@ class RequestBuilder {
         return $this;
     }
 
-    public function call() {
+    public function addFile($field, $file_path) {
+        $this->files[$field] = $file_path;
+        return $this;
+    }
 
+    public function addFormParam($key, $value) {
+        $this->form_params[$key] = $value;
+        return $this;
+    }
+
+    public function call() {
         $client = new Client();
-        $method = $this->method;
 
         try {
-
-            $response = $client->$method($this->getUrl(), array(
+            
+            $data = [
                 'headers' => $this->headers,
-                'body' => $this->body
-            ));
+                'body' => $this->body,
+            ];
 
-            return $response->json(array('object' => false));
+            if (!empty($this->files)) {
+               $data['multipart'] = $this->buildMultiPart();
+            } else if (!empty($this->form_params)) {
+                $data['form_params'] = $this->form_params;
+            }
+
+            $response = $client->request($this->method, $this->getUrl(), $data);
+            $body = (string) $response->getBody();
+
+            return json_decode($body, true);
 
         } catch (RequestException $e) {
             throw $e;
         }
-
     }
 
     public function withHeaders($headers) {
@@ -142,6 +161,24 @@ class RequestBuilder {
             $this->withParam($param['key'], $param['value']);
         }
         return $this;
+    }
+
+    private function buildMultiPart() {
+        $multipart = array();
+
+        foreach($this->files as $field => $file) {
+            $multipart[] = [
+                'name' => $field,
+                'contents' => fopen($file, 'r')
+            ];
+        }
+        foreach($this->form_params as $param => $value) {
+            $multipart[] = [
+                'name' => $param,
+                'contents' => $value
+            ];
+        }
+        return $multipart;
     }
 
 }

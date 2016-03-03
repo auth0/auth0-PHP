@@ -10,14 +10,18 @@ if (isset($_REQUEST['create'])) {
     $color = $_REQUEST['color'];
 
     echo '<pre>';
-    var_dump(\Auth0\SDK\API\ApiUsers::create($domain, $app_token, array(
+    $auth0Api = new \Auth0\SDK\Auth0Api($app_token, $domain);
+
+    $response = $auth0Api->users->create([
         'email' => $email,
         'password' => $password,
         'connection' => 'Username-Password-Authentication',
-        'user_metadata' => array(
+        'user_metadata' => [
             'color' => $color,
-        )
-    )));
+        ]
+    ]);
+
+    var_dump($response);
     echo '</pre>';
 }
 ?>

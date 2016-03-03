@@ -5,3 +5,4 @@ vendor
 .DS_Store
 .env
 examples/basic-oauth/.env
+composer.lock

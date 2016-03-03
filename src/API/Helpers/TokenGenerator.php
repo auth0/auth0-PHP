@@ -1,5 +1,7 @@
-<?php namespace Auth0\SDK\API; 
-    
+<?php namespace Auth0\SDK\API\Helpers; 
+
+use Firebase\JWT\JWT;    
+
 class TokenGenerator {
     
     protected $client_id;
@@ -53,7 +55,7 @@ class TokenGenerator {
         
         $secret = base64_decode(strtr($this->client_secret, '-_', '+/'));
         
-        $jwt = \JWT::encode($payload, $secret);
+        $jwt = JWT::encode($payload, $secret);
         
         return $jwt;
     }

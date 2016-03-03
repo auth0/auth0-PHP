@@ -35,12 +35,15 @@ if ($secondary_user) {
   echo "Main user: " . $main_user["user_id"] . "\n";
   echo "Main user: " . $secondary_user["user_id"] . "\n";
 
-  var_dump(
-    \Auth0\SDK\API\ApiUsers::linkAccount($domain, $app_token, $main_user["user_id"], array(
+  $auth0Api = new \Auth0\SDK\Auth0Api($app_token, $domain);
+
+  $response = $auth0Api->users->linkAccount($main_user["user_id"], array(
       "provider" => $secondary_user["identities"][0]["provider"],
       "user_id" => $secondary_user["identities"][0]["user_id"]
-    ) )
-  );
+    ));
+
+  var_dump($response);
+
   echo '</pre>';
   exit;
 }
@@ -51,7 +54,7 @@ if ($secondary_user) {
 <html>
     <head>
         <script src="http://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-        <script src="https://cdn.auth0.com/js/lock-7.min.js"></script>
+        <script src="https://cdn.auth0.com/js/lock-8.1.min.js"></script>
 
         <script type="text/javascript" src="//use.typekit.net/iws6ohy.js"></script>
         <script type="text/javascript">try{Typekit.load();}catch(e){}</script>

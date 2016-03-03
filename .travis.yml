@@ -1,0 +1,19 @@
+language: php
+php:
+- 5.5
+- 5.6
+- 7.0
+- hhvm
+before_script:
+- composer self-update
+- composer install --prefer-source --no-interaction --dev
+notifications:
+  email: false
+  slack:
+    secure: JDwvFc7HdGkAkgNMMZ37RmztzICOQWYhKlvQgwzgQee37D3NWYzssMgj7QMIOtRy6CO3CEvgO6Nnp33hn8eMGtpEZkjgweKhKrdVWzdOKPRcAJ8WAKiWc8EEiwBmjC11VK7rNiO6ppIB5UyBYpmOyO6Uzk2bqXCtF9xEUBouiRg=
+addons:
+  code_climate:
+    repo_token:
+      secure: w73sOC3Dvc5qAo/UFgA+9y8Ig3xh+fYFY45ynX9X9sSR5aH3IDBtwEu/NGpEtv7JF4TeQW/fZHMQOKybaDCn37i0lXsYqenGYofb+RHNtt8qnXhIlI7/0bll6chat7BCJ55RfyPNorTqTD+TWMqp8lKNtkm6pPhq+Arh8e5ryNw=
+after_script:
+- vendor/bin/test-reporter
