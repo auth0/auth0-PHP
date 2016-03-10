@@ -22,6 +22,7 @@ class Auth0Api {
   private $token;
   private $domain;
   private $apiClient;
+  private $guzzleOptions;
 
   public $blacklists;
   public $clients;
@@ -36,9 +37,10 @@ class Auth0Api {
   public $userBlocks;
   public $users;
 
-  public function __construct($token, $domain) {
+  public function __construct($token, $domain, $guzzleOptions = []) {
     $this->token = $token;
     $this->domain = $domain;
+    $this->guzzleOptions = $guzzleOptions;
     
     $this->setApiClient();
 
@@ -61,7 +63,8 @@ class Auth0Api {
 
     $client = new ApiClient([
         'domain' => $apiDomain,
-        'basePath' => '/api/v2',
+        'basePath' => '/api/v2/',
+        'guzzleOptions' => $this->guzzleOptions,
         'headers' => [
           new AuthorizationBearer($this->token)
         ]

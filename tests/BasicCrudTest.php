@@ -5,6 +5,8 @@ use Auth0\SDK\Auth0Api;
 
 abstract class BasicCrudTest extends ApiTests {
 
+    protected $domain;
+
     protected abstract function getApiClient();
     protected abstract function getCreateBody();
     protected abstract function getUpdateBody();
@@ -18,6 +20,11 @@ abstract class BasicCrudTest extends ApiTests {
     public function testAll() {
 
         $client = $this->getApiClient();
+
+        $options = $client->getApiClient()->get()->getGuzzleOptions();
+
+        $this->assertArrayHasKey('base_uri', $options);
+        $this->assertEquals("https://$this->domain/api/v2/", $options['base_uri']);
 
         $created = $client->create($this->getCreateBody());
 

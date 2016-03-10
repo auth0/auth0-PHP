@@ -24,7 +24,9 @@ class UsersTest extends BasicCrudTest {
             ]
         ]);
 
-        $api = new Auth0Api($token, $env['DOMAIN']);
+        $this->domain = $env['DOMAIN'];
+
+        $api = new Auth0Api($token, $this->domain);
 
         return $api->users;
     }

@@ -5,13 +5,7 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Connections {
-
-    protected $apiClient;
-
-    public function __construct(ApiClient $apiClient) {
-        $this->apiClient = $apiClient;
-    }
+class Connections extends GenericResource {
 
     public function getAll($strategy = null, $fields = null, $include_fields = null) {
 

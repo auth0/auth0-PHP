@@ -13,18 +13,24 @@ use \GuzzleHttp\Exception\RequestException;
 
 class RequestBuilder {
 
+    protected $domain;
+    protected $basePath;
+
     protected $path = [];
     protected $method = [];
     protected $headers = [];
     protected $params = [];
     protected $form_params = [];
     protected $files = [];
+    protected $guzzleOptions = [];
     protected $body;
 
     public function __construct( $config ) {
 
         $this->method = $config['method'];
         $this->domain = $config['domain'];
+        $this->basePath = isset($config['basePath']) ? $config['basePath'] : '';
+        $this->guzzleOptions = isset($config['guzzleOptions']) ? $config['guzzleOptions'] : [];
         $this->headers = isset($config['headers']) ? $config['headers'] : array();
         if (array_key_exists('path', $config)) $this->path = $config['path'];
 
@@ -57,7 +63,7 @@ class RequestBuilder {
     }
 
     public function getUrl() {
-        return $this->domain . '/' . trim(implode('/',$this->path), '/') . $this->getParams();
+        return trim(implode('/',$this->path), '/') . $this->getParams();
     }
 
     public function getParams() {
@@ -96,8 +102,16 @@ class RequestBuilder {
         return $this;
     }
 
+    public function getGuzzleOptions() {
+        return array_merge(
+            ["base_uri" => $this->domain . $this->basePath], 
+            $this->guzzleOptions
+        );
+    }
+
     public function call() {
-        $client = new Client();
+
+        $client = new Client( $this->getGuzzleOptions() );
 
         try {
             

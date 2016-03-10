@@ -42,11 +42,13 @@ class ApiClient {
     protected $domain;
     protected $basePath;
     protected $headers;
+    protected $guzzleOptions;
 
     public function __construct($config) {
         $this->basePath = $config['basePath'];
         $this->domain = $config['domain'];
-        $this->headers = isset($config['headers']) ? $config['headers'] : array();
+        $this->headers = isset($config['headers']) ? $config['headers'] : [];
+        $this->guzzleOptions = isset($config['guzzleOptions']) ? $config['guzzleOptions'] : [];
 
         if (self::$infoHeadersDataEnabled) {
             $this->headers[] = new Header('Auth0-Client', self::getInfoHeadersData()->build());
@@ -56,8 +58,9 @@ class ApiClient {
     public function __call($name, $arguments) {
         $builder = new RequestBuilder(array(
             'domain' => $this->domain,
+            'basePath' => $this->basePath,
             'method' => $name,
-            'path' => array( $this->basePath ),
+            'guzzleOptions' => $this->guzzleOptions
         ));
 
         return $builder->withHeaders($this->headers);

@@ -5,13 +5,7 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Rules {
-
-    protected $apiClient;
-
-    public function __construct(ApiClient $apiClient) {
-        $this->apiClient = $apiClient;
-    }
+class Rules extends GenericResource {
 
     public function getAll($enabled = null, $fields = null, $include_fields = null) {
 

@@ -13,6 +13,8 @@ class BlacklistsTest extends ApiTests {
             ]
         ]);
 
+        $this->domain = $env['DOMAIN'];
+
         $api = new Auth0Api($token, $env['DOMAIN']);
 
         $aud = $env["GLOBAL_CLIENT_ID"];
