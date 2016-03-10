@@ -40,8 +40,9 @@ This is a common issue with latest PHP versions under windows (related to a inco
 ```
 $token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
 $domain = "account.auth0.com";
+$guzzleOptions = [ ... ];
 
-$auth0Api = new \Auth0\SDK\Auth0Api($token, $domain);
+$auth0Api = new \Auth0\SDK\Auth0Api($token, $domain, $guzzleOptions); /* $guzzleOptions is optional */
 
 $usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
 ```

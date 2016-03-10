@@ -5,16 +5,10 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class DeviceCredentials {
+class DeviceCredentials extends GenericResource {
 
   const TYPE_PUBLIC_KEY = 'public_key';
   const TYPE_REFESH_TOKEN = 'refresh_token';
-
-  protected $apiClient;
-
-  public function __construct(ApiClient $apiClient) {
-    $this->apiClient = $apiClient;
-  }
 
   public function getAll($user_id = null, $client_id = null, $type = null, $fields = null, $include_fields = null) {
 

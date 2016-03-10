@@ -9,18 +9,19 @@ class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
 
         $builder = new RequestBuilder([
             'domain' => 'www.domain.com',
+            'basePath' => '/api',
             'method' => 'get',
         ]);
 
-        $this->assertEquals('www.domain.com/', $builder->getUrl());
+        $this->assertEquals('', $builder->getUrl());
 
         $builder->path1();
 
-        $this->assertEquals('www.domain.com/path1', $builder->getUrl());
+        $this->assertEquals('path1', $builder->getUrl());
 
         $builder->path2(3);
 
-        $this->assertEquals('www.domain.com/path1/path2/3', $builder->getUrl());
+        $this->assertEquals('path1/path2/3', $builder->getUrl());
 
     }
 
@@ -60,7 +61,32 @@ class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
                     ['key' => 'param2', 'value' => 'value2'],
                 ]);
 
-        $this->assertEquals('www.domain.com/path/2/subpath?param1=value1&param2=value2', $builder->getUrl());
+        $this->assertEquals('path/2/subpath?param1=value1&param2=value2', $builder->getUrl());
+    }
+
+    public function testGetGuzzleOptions() {
+        $builder = new RequestBuilder([
+            'domain' => 'www.domain.com',
+            'method' => 'get',
+        ]);
+
+        $options = $builder->getGuzzleOptions();
+
+        $this->assertArrayHasKey('base_uri', $options);
+        $this->assertEquals('www.domain.com', $options['base_uri']);
+    }
+
+    public function testgGetGuzzleOptionsWithBasePath() {
+        $builder = new RequestBuilder([
+            'domain' => 'www.domain.com',
+            'basePath' => '/api',
+            'method' => 'get',
+        ]);
+
+        $options = $builder->getGuzzleOptions();
+
+        $this->assertArrayHasKey('base_uri', $options);
+        $this->assertEquals('www.domain.com/api', $options['base_uri']);
     }
 
 }
