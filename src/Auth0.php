@@ -125,7 +125,7 @@ class Auth0 {
      * @param array $config Required
      *
      * @throws CoreException If `domain` is not provided.
-     * @throws CoreExcaption If `client_id` is not provided.
+     * @throws CoreException If `client_id` is not provided.
      * @throws CoreException If `client_secret` is not provided.
      * @throws CoreException If `redirect_uri` is not provided.
      */
