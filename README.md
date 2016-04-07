@@ -9,7 +9,6 @@
 [![License](https://poser.pugx.org/auth0/auth0-php/license)](https://packagist.org/packages/auth0/auth0-php)
 [![Total Downloads](https://poser.pugx.org/auth0/auth0-php/downloads)](https://packagist.org/packages/auth0/auth0-php)
 
-
 ## Installation
 
 Check our docs page to get a complete guide on how to install it in an existing project or download a pre configured seedproject:
@@ -21,7 +20,7 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 ## Troubleshoot
 
-#### I am getting `curl error 60: SSL certificate problem: self signed certificate in certificate chain` on Windows
+> I am getting `curl error 60: SSL certificate problem: self signed certificate in certificate chain` on Windows
 
 This is a common issue with latest PHP versions under windows (related to a incompatibility between windows and openssl CAs database).
 
@@ -35,7 +34,8 @@ This is a common issue with latest PHP versions under windows (related to a inco
 
 ### *NOTICE* Backward compatibility breaks
 
-3.0
+#### 3.0
+
 - SDK api changes, now the Auth0 API client is not build of static clases anymore. Usage example:
 ```
 $token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
@@ -47,15 +47,16 @@ $auth0Api = new \Auth0\SDK\Auth0Api($token, $domain, $guzzleOptions); /* $guzzle
 $usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
 ```
 
-2.x
+#### 2.x
+
 - Session storage now returns null (and null is expected by the sdk) if there is no info stored (this change was made since false is a valid value to be stored in session).
 - Guzzle 6.1 required
 
-1.x
+#### 1.x
+
 - Now, all the SDK is under the namespace `\Auth0\SDK`
 - The exceptions were moved to the namespace `\Auth0\SDK\Exceptions`
 - The method `Auth0::getUserInfo` is deprecated and soon to be removed. We encourage to use `Auth0::getUser` to enforce the adoption of the API v2
-
 
 ### New features
 
@@ -92,12 +93,13 @@ $ composer install
 $ php -S localhost:3000
 ```
 
-## Migration guide from 1.x
+## Migration guide 
+
+### from 1.x
 
 1. If you use Guzzle (or some other dependency does), you will need to update it to work with Guzzle 6.1.
-2. 
 
-## Migration guide from 0.6.6
+### from 0.6.6
 
 1. First is important to read the [API v2 changes document](https://auth0.com/docs/apiv2Changes) to catch up the latest changes to the API.
 2. Update your composer.json file.
@@ -108,17 +110,14 @@ $ php -S localhost:3000
 
 ## Develop
 
-This SDK uses [Composer](http://getcomposer.org/doc/01-basic-usage.md) to manage its dependencies.
-
-### `.env` format
+### _.env_ format
 
 - GLOBAL_CLIENT_ID
 - GLOBAL_CLIENT_SECRET
 - DOMAIN
 
 ### Install dependencies
-
-    php composer.phar install
+This SDK uses [Composer](http://getcomposer.org/doc/01-basic-usage.md) to manage its dependencies.
 
 ## Configure example
 
@@ -156,10 +155,3 @@ If you have found a bug or if you have a feature request, please report them at 
 ## License
 
 This project is licensed under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
-
-## TODO
-
-- Better code documentation
-- Better user guide
-- Create an interface for the store
-- Drink coffee
