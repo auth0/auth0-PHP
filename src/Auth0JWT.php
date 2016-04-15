@@ -14,13 +14,42 @@ use Firebase\JWT\JWT;
 
 class Auth0JWT {
 
-    public static function decode($jwt, $client_id, $client_secret) {
+    protected static function fetch_public_key($iss) {
+        $secret = [];
+        $jwks = json_decode(file_get_contents("{$iss}.well-known/jwks.json"));
+        foreach ($jwks->keys as $key) {
+            $pem =  '-----BEGIN CERTIFICATE-----'.PHP_EOL
+                .chunk_split($key->x5c[0], 64, PHP_EOL)
+                .'-----END CERTIFICATE-----'.PHP_EOL;
+            $secret[$key->kid] = $pem;
+        }
+        return $secret;
+    }
 
-        $secret = base64_decode(strtr($client_secret, '-_', '+/'));
+    public static function decode($jwt, $client_id, $client_secret, array $authorized_iss = []) {
+        $tks = explode('.', $jwt);
+        if (count($tks) != 3) {
+            throw new UnexpectedValueException('Wrong number of segments');
+        }
+        $headb64 = $tks[0];
+        $body64 = $tks[1];
+        $head = json_decode(JWT::urlsafeB64Decode($headb64));
 
+        if ($head->alg === 'RS256') {
+            $body = json_decode(JWT::urlsafeB64Decode($body64));
+            if ( !in_array($body->iss, $authorized_iss) ) {
+                throw new CoreException("We can't trust on a token issued by: `{$body->iss}`.");
+            }
+            $secret = self::fetch_public_key($body->iss);
+        } elseif ($head->alg === 'HS256') {
+            $secret = JWT::urlsafeB64Decode($client_secret);
+        } else {
+            throw new CoreException("Invalid signature algorithm");
+        }
+        
         try {
             // Decode the user
-            $decodedToken = JWT::decode($jwt, $secret, array('HS256'));
+            $decodedToken = JWT::decode($jwt, $secret, array('HS256', 'RS256'));
             // validate that this JWT was made for us
             if ($decodedToken->aud != $client_id) {
                 throw new CoreException("This token is not intended for us.");
@@ -28,7 +57,6 @@ class Auth0JWT {
         } catch(\Exception $e) {
             throw new CoreException($e->getMessage());
         }
-
         return $decodedToken;
     }
 

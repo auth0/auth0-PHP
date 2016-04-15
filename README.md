@@ -35,6 +35,9 @@ This is a common issue with latest PHP versions under windows (related to a inco
 
 ### *NOTICE* Backward compatibility breaks
 
+3.2
+- Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key
+
 3.0
 - SDK api changes, now the Auth0 API client is not build of static clases anymore. Usage example:
 ```
@@ -46,6 +49,10 @@ $auth0Api = new \Auth0\SDK\Auth0Api($token, $domain, $guzzleOptions); /* $guzzle
 
 $usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
 ```
+
+2.2
+- Now the SDK fetches the user using the `tokeninfo` endpoint to be fully compliant with the openid spec
+- Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key
 
 2.x
 - Session storage now returns null (and null is expected by the sdk) if there is no info stored (this change was made since false is a valid value to be stored in session).
