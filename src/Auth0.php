@@ -38,6 +38,7 @@ class Auth0 {
         'api'           => 'https://{domain}/api/',
         'authorize'     => 'https://{domain}/authorize/',
         'token'         => 'https://{domain}/oauth/token/',
+        'user_info'     => 'https://{domain}/userinfo/',
     );
 
     /**
@@ -257,11 +258,9 @@ class Auth0 {
         $this->setAccessToken($access_token);
         $this->setIdToken($id_token);
 
-        $token = Auth0JWT::decode($id_token, $this->client_id, $this->client_secret);
-
-        $user = ApiUsers::get($this->domain, $id_token, $token->sub);
-
-        $this->setUser($user);
+        $userinfo_url = $this->generateUrl('user_info');
+        $user = $this->oauth_client->fetch($userinfo_url);
+        $this->setUser($user["result"]);
 
         return true;
     }
