@@ -29,7 +29,7 @@ class Auth0JWT {
     public static function decode($jwt, $client_id, $client_secret, array $authorized_iss = []) {
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
-            throw new UnexpectedValueException('Wrong number of segments');
+            throw new CoreException('Wrong number of segments');
         }
         $headb64 = $tks[0];
         $body64 = $tks[1];
