@@ -75,7 +75,7 @@ class Auth0JWT {
      *              'actions' => ['action1', 'action2']
      *          ]
      */
-    public static function encode($client_id, $client_secret, $scopes = null, $custom_payload = null, $lifetime = 36000) {
+    public static function encode($audience, $client_secret, $scopes = null, $custom_payload = null, $lifetime = 36000) {
 
             $time = time();
 
@@ -95,7 +95,7 @@ class Auth0JWT {
 
             $payload['jti'] = $jti;
             $payload["exp"] = $time + $lifetime;
-            $payload["aud"] = $client_id;
+            $payload["aud"] = $audience;
 
             $secret = base64_decode(strtr($client_secret, '-_', '+/'));
 
