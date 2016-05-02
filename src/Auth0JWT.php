@@ -26,7 +26,12 @@ class Auth0JWT {
         return $secret;
     }
 
-    public static function decode($jwt, $client_id, $client_secret, array $authorized_iss = []) {
+    public static function decode($jwt, $valid_audiences, $client_secret, array $authorized_iss = []) {
+
+        if (!is_array($valid_audiences)) {
+            $valid_audiences = [$valid_audiences];
+        }
+        
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
             throw new UnexpectedValueException('Wrong number of segments');
@@ -51,7 +56,7 @@ class Auth0JWT {
             // Decode the user
             $decodedToken = JWT::decode($jwt, $secret, array('HS256', 'RS256'));
             // validate that this JWT was made for us
-            if ($decodedToken->aud != $client_id) {
+            if (!in_array($decodedToken->aud, $valid_audiences)) {
                 throw new CoreException("This token is not intended for us.");
             }
         } catch(\Exception $e) {
