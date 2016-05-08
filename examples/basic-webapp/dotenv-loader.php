@@ -6,11 +6,3 @@
   } catch(InvalidArgumentException $ex) {
     // Ignore if no dotenv
   }
-
-
-
-
-
-
-
-
