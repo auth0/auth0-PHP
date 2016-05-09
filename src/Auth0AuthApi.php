@@ -13,12 +13,18 @@ class Auth0AuthApi {
   private $guzzleOptions;
 
   public function __construct($domain, $client_id, $client_secret = null, $guzzleOptions = []) {
+    
     $this->client_id = $client_id;
     $this->client_secret = $client_secret;
     $this->domain = $domain;
     $this->guzzleOptions = $guzzleOptions;
     
     $this->setApiClient();
+
+    if (!empty($client_id) && !empty($client_secret)) {
+      $this->access_token = $this->oauth_token($client_id, $client_secret);
+    }
+    
   }
 
   protected function setApiClient() {
@@ -78,6 +84,21 @@ class Auth0AuthApi {
 
   }
 
+  public function get_logout_link($returnTo = null, $client_id = null) {
+
+    $params = [];
+    if ($returnTo !== null) {
+      $params['returnTo'] = $returnTo;
+    }
+    if ($client_id !== null) {
+      $params['client_id'] = $client_id;
+    }
+    $query_string = implode('&', $params);
+
+    return "https://{$this->domain}/logout?$query_string";
+
+  }
+
   public function authorize_with_accesstoken($access_token, $connection, $scope = 'openid', $aditional_params = []){
 
     $data = array_merge($aditional_params, [
@@ -105,22 +126,22 @@ class Auth0AuthApi {
     ]);
 
     if ($id_token !== null) {
-      $aditional_params['id_token'] = $id_token;
-      $aditional_params['device'] = $device;
-      $aditional_params['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
+      $data['id_token'] = $id_token;
+      $data['device'] = $device;
+      $data['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
     } else {
       if ($connection === null) {
-        throw new ApiException();
+        throw new ApiException('You need to specify a conection for grant_type=password authentication');
       }
-      $aditional_params['grant_type'] = 'password';
-      $aditional_params['connection'] = $connection;
+      $data['grant_type'] = 'password';
+      $data['connection'] = $connection;
     }
 
     return $this->apiClient->post()
       ->oauth()
       ->ro()
       ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($aditional_params))
+      ->withBody(json_encode($data))
       ->call();
   }
 
@@ -141,7 +162,7 @@ class Auth0AuthApi {
       ->passwordless()
       ->start()
       ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($aditional_params))
+      ->withBody(json_encode($data))
       ->call();
   }
 
@@ -157,7 +178,7 @@ class Auth0AuthApi {
       ->passwordless()
       ->start()
       ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($aditional_params))
+      ->withBody(json_encode($data))
       ->call();
   }
 
@@ -188,9 +209,72 @@ class Auth0AuthApi {
     return $this->apiClient->get()
       ->tokeninfo()
       ->withHeader(new ContentType('application/json'))
-      ->call([
-          'id_token' => $id_token
-        ]);
+      ->withBody(json_encode([
+        'id_token' => $id_token
+      ]))
+      ->call();
 
+  }
+
+  public function delegation($id_token, $type, $target_client_id, $api_type, $aditional_params = [], $scope = 'openid', $grant_type = 'urn:ietf:params:oauth:grant-type:jwt-bearer'){
+
+    if (! in_array($type, ['id_token', 'refresh_token'])) {
+      throw new ApiException('Delegation type must be id_token or refresh_token');
+    }
+
+    $data = array_merge($aditional_params,[
+      'client_id' => $this->client_id,
+      'target' => $target_client_id,
+      'grant_type' => $grant_type,
+      'scope' => $scope,
+      'api_type' => $api_type,
+      $type => $id_token,
+    ]);
+
+    return $this->apiClient->get()
+      ->delegation()
+      ->withHeader(new ContentType('application/json'))
+      ->withBody(json_encode($data))
+      ->call();
+
+  }
+
+  public function get_access_token() {
+    return $this->access_token;
+  }
+
+  public function impersonate($user_id, $protocol, $impersonator_id, $client_id, $additionalParameters=[]){
+
+    $data = [
+      'protocol' => $protocol,
+      'impersonator_id' => $impersonator_id,
+      'client_id' => $client_id,
+      'additionalParameters' => $additionalParameters,
+    ];
+
+    return $this->apiClient->get()
+      ->users($user_id)
+      ->impersonate()
+      ->withHeader(new ContentType('application/json'))
+      ->withHeader(new AuthorizationBearer($this->access_token))
+      ->withBody(json_encode($data))
+      ->call();
+
+  }
+
+  public function oauth_token($client_id, $client_secret, $grant_type = 'client_credentials') {
+
+    $data = [
+      'client_id' => $client_id,
+      'client_secret' => $client_secret,
+      'grant_type' => $grant_type,
+    ];
+
+    return $this->apiClient->get()
+      ->oauth()
+      ->token()
+      ->withHeader(new ContentType('application/json'))
+      ->withBody(json_encode($data))
+      ->call();
   }
 }
