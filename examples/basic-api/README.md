@@ -24,3 +24,8 @@ php -S localhost:3001
 ````
 
 Now, try calling [http://localhost:30001/ping](http://localhost:30001/ping)
+
+With Docker:
+
+- docker build -t auth0-basic-api .
+- docker run -d -p 80:80 --name auth0-basic-api auth0
