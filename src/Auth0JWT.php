@@ -26,12 +26,7 @@ class Auth0JWT {
         return $secret;
     }
 
-    public static function decode($jwt, $valid_audiences, $client_secret, array $authorized_iss = []) {
-
-        if (!is_array($valid_audiences)) {
-            $valid_audiences = [$valid_audiences];
-        }
-        
+    public static function decode($jwt, $client_id, $client_secret, array $authorized_iss = []) {
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
             throw new UnexpectedValueException('Wrong number of segments');
@@ -56,7 +51,7 @@ class Auth0JWT {
             // Decode the user
             $decodedToken = JWT::decode($jwt, $secret, array('HS256', 'RS256'));
             // validate that this JWT was made for us
-            if (!in_array($decodedToken->aud, $valid_audiences)) {
+            if ($decodedToken->aud != $client_id) {
                 throw new CoreException("This token is not intended for us.");
             }
         } catch(\Exception $e) {
@@ -75,7 +70,7 @@ class Auth0JWT {
      *              'actions' => ['action1', 'action2']
      *          ]
      */
-    public static function encode($audience, $client_secret, $scopes = null, $custom_payload = null, $lifetime = 36000) {
+    public static function encode($client_id, $client_secret, $scopes = null, $custom_payload = null, $lifetime = 36000) {
 
             $time = time();
 
@@ -95,7 +90,7 @@ class Auth0JWT {
 
             $payload['jti'] = $jti;
             $payload["exp"] = $time + $lifetime;
-            $payload["aud"] = $audience;
+            $payload["aud"] = $client_id;
 
             $secret = base64_decode(strtr($client_secret, '-_', '+/'));
 
