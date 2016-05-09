@@ -1,17 +1,20 @@
 <?php
 
-namespace Auth0\SDK\API;
+namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Clients extends GenericResource {
+class Rules extends GenericResource {
 
-    public function getAll($fields = null, $include_fields = null) {
+    public function getAll($enabled = null, $fields = null, $include_fields = null) {
 
         $request = $this->apiClient->get()
-            ->clients();
+            ->rules();
 
+        if ($enabled !== null) {
+            $request->withParam('enabled', $enabled);
+        }
         if ($fields !== null) {
             if (is_array($fields)) {
                 $fields = implode(',', $fields);
@@ -28,7 +31,7 @@ class Clients extends GenericResource {
     public function get($id, $fields = null, $include_fields = null) {
 
         $request = $this->apiClient->get()
-            ->clients($id);
+            ->rules($id);
 
         if ($fields !== null) {
             if (is_array($fields)) {
@@ -40,20 +43,22 @@ class Clients extends GenericResource {
             $request->withParam('include_fields', $include_fields);
         }
 
-        return $request->call();
+        $info = $request->call();
+
+        return $info;
     }
 
     public function delete($id) {
 
-        return $this->apiClient->delete()
-            ->clients($id)
+       return $this->apiClient->delete()
+            ->rules($id)
             ->call();
     }
 
     public function create($data) {
 
         return $this->apiClient->post()
-            ->clients()
+            ->rules()
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
             ->call();
@@ -62,7 +67,7 @@ class Clients extends GenericResource {
     public function update($id, $data) {
 
         return $this->apiClient->patch()
-            ->clients($id)
+            ->rules($id)
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($data))
             ->call();

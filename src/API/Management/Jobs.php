@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\SDK\API;
+namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;

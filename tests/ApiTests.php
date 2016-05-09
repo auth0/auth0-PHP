@@ -18,6 +18,8 @@ class ApiTests extends \PHPUnit_Framework_TestCase {
     return [
       "GLOBAL_CLIENT_ID" => getenv('GLOBAL_CLIENT_ID'),
       "GLOBAL_CLIENT_SECRET" => getenv('GLOBAL_CLIENT_SECRET'),
+      "APP_CLIENT_ID" => getenv('APP_CLIENT_ID'),
+      "APP_CLIENT_SECRET" => getenv('APP_CLIENT_SECRET'),
       "DOMAIN" => getenv('DOMAIN'),
     ];
   }
