@@ -51,6 +51,8 @@ $tokens = $auth0Api->authorize_with_ro('theemail@test.com','thepassword');
 $access_token = $auth0Api->get_access_token();
 ```
 
+Check [here](https://github.com/auth0/auth0-PHP/blob/master/tests/AuthApiTest.php#L24-L51) for example on how to authenticate and fetch user info.
+
 #### 3.2
 - Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key
 
