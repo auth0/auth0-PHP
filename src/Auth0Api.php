@@ -1,18 +1,18 @@
 <?php
 namespace Auth0\SDK;
 
-use Auth0\SDK\API\Blacklists;
-use Auth0\SDK\API\Clients;
-use Auth0\SDK\API\Connections;
-use Auth0\SDK\API\DeviceCredentials;
-use Auth0\SDK\API\Emails;
-use Auth0\SDK\API\Jobs;
-use Auth0\SDK\API\Rules;
-use Auth0\SDK\API\Stats;
-use Auth0\SDK\API\Tenants;
-use Auth0\SDK\API\Tickets;
-use Auth0\SDK\API\UserBlocks;
-use Auth0\SDK\API\Users;
+use Auth0\SDK\API\Management\Blacklists;
+use Auth0\SDK\API\Management\Clients;
+use Auth0\SDK\API\Management\Connections;
+use Auth0\SDK\API\Management\DeviceCredentials;
+use Auth0\SDK\API\Management\Emails;
+use Auth0\SDK\API\Management\Jobs;
+use Auth0\SDK\API\Management\Rules;
+use Auth0\SDK\API\Management\Stats;
+use Auth0\SDK\API\Management\Tenants;
+use Auth0\SDK\API\Management\Tickets;
+use Auth0\SDK\API\Management\UserBlocks;
+use Auth0\SDK\API\Management\Users;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
