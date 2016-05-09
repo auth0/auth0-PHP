@@ -17,3 +17,8 @@ addons:
       secure: w73sOC3Dvc5qAo/UFgA+9y8Ig3xh+fYFY45ynX9X9sSR5aH3IDBtwEu/NGpEtv7JF4TeQW/fZHMQOKybaDCn37i0lXsYqenGYofb+RHNtt8qnXhIlI7/0bll6chat7BCJ55RfyPNorTqTD+TWMqp8lKNtkm6pPhq+Arh8e5ryNw=
 after_script:
 - vendor/bin/test-reporter
+env:
+  APP_CLIENT_ID:
+    secure: i1GHYkow2X9bRUZu1Zrflx39VqPxsufIWpmfWnLclA5Cg1BIBzGFFBpuODdxnp7+jkQvcyVJyxBrNzyJ7MMtGl+rLfT/ly32Ac9dUxziAIw2FzOxZQuonVSE4n3YLJPm2ZG5rh4gTLXVxpQxtih3NGZVZ3R9AnppcwPkvPs5mjs=
+  APP_CLIENT_SECRET:
+    secure: cUBlQU93BQDVbhDLw+8fztSD0b1QhMq70FFL5Og1UIphmozpml99Jm6eUnHMP7tluEyKfcQ20C6Ahomc7ppa3WBgQxcDO60Gc7kUmM3QCeLIRC+igxD71ydFfnkU6MqD0fDsUPKolrezTnxDfFsXsiES8HJ7YZU6Mp/JHBJzJXs=

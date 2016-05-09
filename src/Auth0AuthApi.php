@@ -1,8 +1,10 @@
 <?php
 namespace Auth0\SDK;
 
-use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\Exception\ApiException;
 
 class Auth0AuthApi {
 
@@ -13,7 +15,7 @@ class Auth0AuthApi {
   private $guzzleOptions;
 
   public function __construct($domain, $client_id, $client_secret = null, $guzzleOptions = []) {
-    
+
     $this->client_id = $client_id;
     $this->client_secret = $client_secret;
     $this->domain = $domain;
@@ -32,7 +34,7 @@ class Auth0AuthApi {
 
     $client = new ApiClient([
         'domain' => $apiDomain,
-        'basePath' => '/api/v2/',
+        'basePath' => '/',
         'guzzleOptions' => $this->guzzleOptions
     ]);
 
@@ -118,12 +120,12 @@ class Auth0AuthApi {
 
   public function authorize_with_ro($username, $password, $scope = 'openid', $connection = null, $id_token = null, $device = null){
 
-    $data = array_merge($aditional_params, [
+    $data = [
       'client_id' => $this->client_id,
       'username' => $username,
       'password' => $password,
       'scope' => $scope,
-    ]);
+    ];
 
     if ($id_token !== null) {
       $data['id_token'] = $id_token;
@@ -231,7 +233,7 @@ class Auth0AuthApi {
       $type => $id_token,
     ]);
 
-    return $this->apiClient->get()
+    return $this->apiClient->post()
       ->delegation()
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode($data))
@@ -252,11 +254,11 @@ class Auth0AuthApi {
       'additionalParameters' => $additionalParameters,
     ];
 
-    return $this->apiClient->get()
+    return $this->apiClient->post()
       ->users($user_id)
       ->impersonate()
       ->withHeader(new ContentType('application/json'))
-      ->withHeader(new AuthorizationBearer($this->access_token))
+      ->withHeader(new AuthorizationBearer($this->access_token->access_token))
       ->withBody(json_encode($data))
       ->call();
 
@@ -270,7 +272,7 @@ class Auth0AuthApi {
       'grant_type' => $grant_type,
     ];
 
-    return $this->apiClient->get()
+    return $this->apiClient->post()
       ->oauth()
       ->token()
       ->withHeader(new ContentType('application/json'))
