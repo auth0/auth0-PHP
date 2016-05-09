@@ -1,16 +1,93 @@
 # Change Log
 
-## [Unreleased](https://github.com/auth0/auth0-PHP/tree/HEAD)
+## [3.3.0](https://github.com/auth0/auth0-PHP/tree/3.3.0) (2016-05-09)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.2.1...3.3.0)
 
-[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.0.0...HEAD)
+**Merged pull requests:**
+
+- deleted uneccessary code, fixed typos [\#83](https://github.com/auth0/auth0-PHP/pull/83) ([Amialc](https://github.com/Amialc))
+- Add Docker support [\#82](https://github.com/auth0/auth0-PHP/pull/82) ([smtx](https://github.com/smtx))
+- changed UnexpectedValueException to CoreException [\#81](https://github.com/auth0/auth0-PHP/pull/81) ([dryror](https://github.com/dryror))
+- Added auth api support [\#78](https://github.com/auth0/auth0-PHP/pull/78) ([glena](https://github.com/glena))
+
+## [3.2.1](https://github.com/auth0/auth0-PHP/tree/3.2.1) (2016-05-02)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.2.1...3.2.1)
+
+## [2.2.1](https://github.com/auth0/auth0-PHP/tree/2.2.1) (2016-04-27)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.2.0...2.2.1)
 
 **Closed issues:**
 
-- Outdated Lock [\#52](https://github.com/auth0/auth0-PHP/issues/52)
-- Deprecated method in basic-webapp [\#50](https://github.com/auth0/auth0-PHP/issues/50)
+- outdated dependency in api example [\#75](https://github.com/auth0/auth0-PHP/issues/75)
+
+**Merged pull requests:**
+
+- dependencies update in basic api example [\#79](https://github.com/auth0/auth0-PHP/pull/79) ([Amialc](https://github.com/Amialc))
+
+## [3.2.0](https://github.com/auth0/auth0-PHP/tree/3.2.0) (2016-04-15)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.2.0...3.2.0)
+
+## [2.2.0](https://github.com/auth0/auth0-PHP/tree/2.2.0) (2016-04-15)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.1.0...2.2.0)
+
+**Closed issues:**
+
+- /tokeninfo API support [\#76](https://github.com/auth0/auth0-PHP/issues/76)
+- Specify GuzzleHttp config [\#73](https://github.com/auth0/auth0-PHP/issues/73)
+
+**Merged pull requests:**
+
+- Fix typo in DocBlock [\#77](https://github.com/auth0/auth0-PHP/pull/77) ([tflight](https://github.com/tflight))
+
+## [3.1.0](https://github.com/auth0/auth0-PHP/tree/3.1.0) (2016-03-10)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.0.1...3.1.0)
+
+**Closed issues:**
+
+- API seed incomptaible with auth0-php 3 [\#70](https://github.com/auth0/auth0-PHP/issues/70)
+-  "cURL error 60: SSL certificate problem: self signed certificate in certificate chain \(see http://curl.haxx.se/libcurl/c/libcurl-errors.html\)", [\#69](https://github.com/auth0/auth0-PHP/issues/69)
+- basic-webapp outdated dependencies [\#68](https://github.com/auth0/auth0-PHP/issues/68)
+- basic-webapp project relative path [\#67](https://github.com/auth0/auth0-PHP/issues/67)
+- Typo on README [\#63](https://github.com/auth0/auth0-PHP/issues/63)
+- Missing updateAppMetadata\(\) method? [\#59](https://github.com/auth0/auth0-PHP/issues/59)
+
+**Merged pull requests:**
+
+- 3.1.0 [\#74](https://github.com/auth0/auth0-PHP/pull/74) ([glena](https://github.com/glena))
+- Compatibility with new version of Auth0php [\#72](https://github.com/auth0/auth0-PHP/pull/72) ([Annyv2](https://github.com/Annyv2))
+- depedencies update, fix routes to css and js [\#71](https://github.com/auth0/auth0-PHP/pull/71) ([Amialc](https://github.com/Amialc))
+- update lock version [\#66](https://github.com/auth0/auth0-PHP/pull/66) ([Amialc](https://github.com/Amialc))
+- Fixed typo [\#65](https://github.com/auth0/auth0-PHP/pull/65) ([thijsvdanker](https://github.com/thijsvdanker))
+- Update README.md [\#64](https://github.com/auth0/auth0-PHP/pull/64) ([Annyv2](https://github.com/Annyv2))
+- Test travis env vars [\#62](https://github.com/auth0/auth0-PHP/pull/62) ([glena](https://github.com/glena))
+- Fix typo [\#58](https://github.com/auth0/auth0-PHP/pull/58) ([vboctor](https://github.com/vboctor))
+
+## [3.0.1](https://github.com/auth0/auth0-PHP/tree/3.0.1) (2016-02-03)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.11...3.0.1)
+
+**Merged pull requests:**
+
+- Fixed Importing users [\#61](https://github.com/auth0/auth0-PHP/pull/61) ([polishdeveloper](https://github.com/polishdeveloper))
+
+## [1.0.11](https://github.com/auth0/auth0-PHP/tree/1.0.11) (2016-01-27)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.0.0...1.0.11)
+
+**Closed issues:**
+
+- Exception: Cannot handle token prior to \[timestamp\] [\#56](https://github.com/auth0/auth0-PHP/issues/56)
+
+**Merged pull requests:**
+
+- Fix ApiConnections class name [\#60](https://github.com/auth0/auth0-PHP/pull/60) ([bjyoungblood](https://github.com/bjyoungblood))
 
 ## [3.0.0](https://github.com/auth0/auth0-PHP/tree/3.0.0) (2016-01-18)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.1.2...3.0.0)
+
+**Closed issues:**
+
+- Missing instruccions step 2 Configure Auth0 PHP Plugin [\#55](https://github.com/auth0/auth0-PHP/issues/55)
+- Outdated Lock [\#52](https://github.com/auth0/auth0-PHP/issues/52)
+- Deprecated method in basic-webapp [\#50](https://github.com/auth0/auth0-PHP/issues/50)
 
 **Merged pull requests:**
 
