@@ -33,8 +33,7 @@
         <script>
           var AUTH0_CLIENT_ID = '<?php echo getenv("AUTH0_CLIENT_ID") ?>';
           var AUTH0_DOMAIN = '<?php echo getenv("AUTH0_DOMAIN") ?>';
-          var AUTH0_CALLBACK_URL = '<?php echo is_null(getenv("AUTH0_CALLBACK_URL")) ?
-            "http://localhost:3000/index.php" : getenv("AUTH0_CALLBACK_URL") ?>';
+          var AUTH0_CALLBACK_URL = '<?php echo getenv("AUTH0_CALLBACK_URL") ?>';
         </script>
 
 
