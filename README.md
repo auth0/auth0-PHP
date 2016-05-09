@@ -34,6 +34,22 @@ This is a common issue with latest PHP versions under windows (related to a inco
 
 ### *NOTICE* Backward compatibility breaks
 
+#### 3.3
+
+- Now provides an interface for the [Authentication API](https://auth0.com/docs/auth-api).
+
+```
+$domain = "account.auth0.com";
+$client_id = '...';
+$client_secret = '...'; // This is optional, only needed for impersonation or t fetch an access token
+$guzzleOptions = [ ... ]; // $guzzleOptions is optional 
+
+$auth0Api = new \Auth0\SDK\Auth0AuthApi($domain, $client_id, $client_secret, $guzzleOptions); 
+
+$tokens = $auth0Api->authorize_with_ro('theemail@test.com','thepassword');
+
+$access_token = $auth0Api->get_access_token();
+```
 
 #### 3.2
 - Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key
