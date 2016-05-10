@@ -60,7 +60,11 @@ class Auth0JWT {
             // Decode the user
             $decodedToken = JWT::decode($jwt, $secret, array('HS256', 'RS256'));
             // validate that this JWT was made for us
-            if (!in_array($decodedToken->aud, $valid_audiences)) {
+            $audience = $decodedToken->aud;
+            if (! is_array($audience)) {
+                $audience = [$audience];
+            }
+            if (count(array_intersect($audience, $valid_audiences)) > 0) {
                 throw new CoreException("This token is not intended for us.");
             }
         } catch(\Exception $e) {
