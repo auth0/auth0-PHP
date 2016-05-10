@@ -64,7 +64,7 @@ class Auth0JWT {
             if (! is_array($audience)) {
                 $audience = [$audience];
             }
-            if (count(array_intersect($audience, $valid_audiences)) > 0) {
+            if (count(array_intersect($audience, $valid_audiences)) == 0) {
                 throw new CoreException("This token is not intended for us.");
             }
         } catch(\Exception $e) {
