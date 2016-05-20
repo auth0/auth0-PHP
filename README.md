@@ -18,6 +18,76 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 > If you find something wrong in our docs, PR are welcome in our docs repo: https://github.com/auth0/docs
 
+## Getting started
+
+### Oauth2 authentication
+
+```
+require __DIR__ . '/vendor/autoload.php';
+
+use Auth0\SDK\Auth0;
+
+$domain        = 'YOUR_NAMESPACE';
+$client_id     = 'YOUR_CLIENT_ID';
+$client_secret = 'YOUR_CLIENT_SECRET';
+$redirect_uri  = 'http://YOUR_APP/callback';
+
+$auth0 = new Auth0(array(
+    'domain'        => $domain,
+    'client_id'     => $client_id,
+    'client_secret' => $client_secret,
+    'redirect_uri'  => $redirect_uri
+));
+
+$profile = $auth0->getUser();
+
+if (!$userInfo) {
+    $authorize_url = "https://$domain/authorize?response_type=code&scope=openid&client_id=$client_id&redirect_uri=http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] ;
+
+    header("Location: $authorize_url");
+    exit;
+}
+
+var_dump($profile);
+```
+
+> For more info, check the quickstart docs for [Regular webapp](https://auth0.com/docs/quickstart/webapp/php/) and [Web API](https://auth0.com/docs/quickstart/backend/php/).
+
+### Calling the management API
+
+```
+require __DIR__ . '/vendor/autoload.php';
+
+use Auth0\SDK\Auth0Api;
+
+$token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
+$domain = "account.auth0.com";
+
+$auth0Api = new Auth0Api($token, $domain);
+
+$usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
+
+var_dump($usersList);
+```
+
+### Calling the Authentication API
+
+```
+require __DIR__ . '/vendor/autoload.php';
+
+use Auth0\SDK\Auth0AuthApi;
+
+$domain = "account.auth0.com";
+$client_id = '...';
+$client_secret = '...'; // This is optional, only needed for impersonation or t fetch an access token
+
+$auth0Api = new Auth0AuthApi($domain, $client_id, $client_secret); 
+
+$tokens = $auth0Api->authorize_with_ro('theemail@test.com','thepassword');
+
+$access_token = $auth0Api->get_access_token();
+```
+
 ## Troubleshoot
 
 > I am getting `curl error 60: SSL certificate problem: self signed certificate in certificate chain` on Windows
