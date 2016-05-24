@@ -24,15 +24,36 @@ class Tickets extends GenericResource {
 
     }
 
-    public function createPasswordChangeTicket($user_id, $new_password, $result_url = null) {
+    public function createPasswordChangeTicket($user_id, $new_password = null, $result_url = null, $connection_id = null) {
 
-        $body = array(
-            'user_id' => $user_id,
-            'new_password' => $new_password
-        );
+        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id);
+        
+    }
 
+    public function createPasswordChangeTicketByEmail($email, $new_password = null, $result_url = null, $connection_id = null) {
+
+        return $this->createPasswordChangeTicketRaw(null, $mail, $new_password, $result_url, $connection_id);
+        
+    }
+
+    public function createPasswordChangeTicketRaw($user_id = null, $email = null, $new_password = null, $result_url = null, $connection_id = null) {
+
+        $body = [];
+
+        if ($user_id) {
+            $body['user_id'] = $user_id;
+        }
+        if ($email) {
+            $body['email'] = $email;
+        }
+        if ($new_password) {
+            $body['new_password'] = $new_password;
+        }
         if ($result_url) {
             $body['result_url'] = $result_url;
+        }
+        if ($connection_id) {
+            $body['connection_id'] = $connection_id;
         }
 
         return $this->apiClient->post()
@@ -40,6 +61,5 @@ class Tickets extends GenericResource {
             ->addPath('password-change')
             ->withBody(json_encode($body))
             ->call();
-
     }
 }
