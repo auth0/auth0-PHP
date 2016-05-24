@@ -14,7 +14,7 @@ class Auth0AuthApi {
   private $apiClient;
   private $guzzleOptions;
 
-  public function __construct($domain, $client_id, $client_secret = null, $guzzleOptions = []) {
+  public function __construct($domain, $client_id = null, $client_secret = null, $guzzleOptions = []) {
 
     $this->client_id = $client_id;
     $this->client_secret = $client_secret;
