@@ -104,25 +104,6 @@ This is a common issue with latest PHP versions under windows (related to a inco
 
 ### *NOTICE* Backward compatibility breaks
 
-#### 3.3
-
-- Now provides an interface for the [Authentication API](https://auth0.com/docs/auth-api).
-
-```
-$domain = "account.auth0.com";
-$client_id = '...';
-$client_secret = '...'; // This is optional, only needed for impersonation or t fetch an access token
-$guzzleOptions = [ ... ]; // $guzzleOptions is optional 
-
-$auth0Api = new \Auth0\SDK\Auth0AuthApi($domain, $client_id, $client_secret, $guzzleOptions); 
-
-$tokens = $auth0Api->authorize_with_ro('theemail@test.com','thepassword');
-
-$access_token = $auth0Api->get_access_token();
-```
-
-Check [here](https://github.com/auth0/auth0-PHP/blob/master/tests/AuthApiTest.php#L24-L51) for example on how to authenticate and fetch user info.
-
 #### 3.2
 - Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key
 
@@ -161,6 +142,7 @@ $usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
 - The new service `\Auth0\SDK\API\ApiUsers` provides an easy way to consume the API v2 Users endpoints.
 - A simple API client (`\Auth0\SDK\API\ApiClient`) is also available to use.
 - A JWT generator and decoder is also available (`\Auth0\SDK\Auth0JWT`)
+- Now provides an interface for the [Authentication API](https://auth0.com/docs/auth-api).
 
 >***Note:*** API V2 restrict the access to the endpoints via scopes. By default, the user token has granted certain scopes that let update the user metadata but not the root attributes nor app_metadata. To update this information and access another endpoints, you need an special token with this scopes granted. For more information about scopes, check [the API v2 docs](https://auth0.com/docs/apiv2Changes#6).
 
