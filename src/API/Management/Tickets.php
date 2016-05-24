@@ -59,6 +59,7 @@ class Tickets extends GenericResource {
         return $this->apiClient->post()
             ->tickets()
             ->addPath('password-change')
+            ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode($body))
             ->call();
     }
