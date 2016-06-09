@@ -258,7 +258,7 @@ class Auth0AuthApi {
       ->users($user_id)
       ->impersonate()
       ->withHeader(new ContentType('application/json'))
-      ->withHeader(new AuthorizationBearer($this->access_token->access_token))
+      ->withHeader(new AuthorizationBearer($this->access_token['access_token']))
       ->withBody(json_encode($data))
       ->call();
 
