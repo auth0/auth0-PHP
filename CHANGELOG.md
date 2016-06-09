@@ -1,5 +1,39 @@
 # Change Log
 
+## [3.3.6](https://github.com/auth0/auth0-PHP/tree/3.3.6) (2016-06-09)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.5...3.3.6)
+
+**Merged pull requests:**
+
+- $this-\>access\_token is an array, not object [\#85](https://github.com/auth0/auth0-PHP/pull/85) ([dev101](https://github.com/dev101))
+
+## [3.3.5](https://github.com/auth0/auth0-PHP/tree/3.3.5) (2016-05-24)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.4...3.3.5)
+
+**Closed issues:**
+
+- Create password change ticket fails [\#84](https://github.com/auth0/auth0-PHP/issues/84)
+- UnexpectedValueException is used in Auth0JWT.php but is not defined [\#80](https://github.com/auth0/auth0-PHP/issues/80)
+- Add support for auth api endpoints \(/ro\) [\#22](https://github.com/auth0/auth0-PHP/issues/22)
+
+## [3.3.4](https://github.com/auth0/auth0-PHP/tree/3.3.4) (2016-05-24)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.3...3.3.4)
+
+## [3.3.3](https://github.com/auth0/auth0-PHP/tree/3.3.3) (2016-05-24)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.2.3...3.3.3)
+
+## [2.2.3](https://github.com/auth0/auth0-PHP/tree/2.2.3) (2016-05-10)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.2...2.2.3)
+
+## [3.3.2](https://github.com/auth0/auth0-PHP/tree/3.3.2) (2016-05-10)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.1...3.3.2)
+
+## [3.3.1](https://github.com/auth0/auth0-PHP/tree/3.3.1) (2016-05-10)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.2.2...3.3.1)
+
+## [2.2.2](https://github.com/auth0/auth0-PHP/tree/2.2.2) (2016-05-10)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.0...2.2.2)
+
 ## [3.3.0](https://github.com/auth0/auth0-PHP/tree/3.3.0) (2016-05-09)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.2.1...3.3.0)
 
