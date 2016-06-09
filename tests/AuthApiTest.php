@@ -61,4 +61,14 @@ class AuthApiTest extends ApiTests {
         $this->assertArrayHasKey('token_type', $token);
         $this->assertEquals('bearer', strtolower($token['token_type']));
     }
+
+    public function testImpersonation() {
+        $env = $this->getEnv();
+        
+        $api = new Auth0AuthApi($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
+
+        $url = $api->impersonate('facebook|1434903327', "oauth2", 'auth0|56b110b8d9d327e705e1d2da', 'ycynBrUeQUnFqNacG3GAsaTyDhG4h0qT', [ "response_type" => "code" ]);
+
+        $this->assertStringStartsWith("https://" . $env['DOMAIN'], $url);
+    }
 }

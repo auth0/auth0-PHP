@@ -129,7 +129,11 @@ class RequestBuilder {
             $response = $client->request($this->method, $this->getUrl(), $data);
             $body = (string) $response->getBody();
 
-            return json_decode($body, true);
+            if (strpos($response->getHeaderLine('content-type'), 'json') !== false) {
+                return json_decode($body, true);
+            }
+
+            return  $body;
 
         } catch (RequestException $e) {
             throw $e;
