@@ -56,9 +56,7 @@ class Auth0AuthApi {
       $aditional_params['state'] = $state;
     }
 
-    $query_string = implode('&', array_map(function($key,$value){
-      return "$key=$value";
-    }, array_keys($aditional_params), $aditional_params));
+    $query_string = Psr7\build_query($aditional_params);
 
     return "https://{$this->domain}/authorize?$query_string";
   }
