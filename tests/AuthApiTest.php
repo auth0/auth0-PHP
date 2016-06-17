@@ -14,11 +14,11 @@ class AuthApiTest extends ApiTests {
 
         $authorize_url = $api->get_authorize_link('code', 'http://lala.com');
 
-        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=code&redirect_uri=http://lala.com&client_id=123456", $authorize_url);
+        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=code&redirect_uri=http%3A%2F%2Flala.com&client_id=123456", $authorize_url);
 
         $authorize_url2 = $api->get_authorize_link('token', 'http://lala.com', 'facebook', 'dastate');
 
-        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http://lala.com&client_id=123456&connection=facebook&state=dastate", $authorize_url2);
+        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http%3A%2F%2Flala.com&client_id=123456&connection=facebook&state=dastate", $authorize_url2);
     }
 
     public function testAuthorizeWithRO() {
