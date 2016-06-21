@@ -11,6 +11,12 @@
 
 ## Installation
 
+Installing via composer
+
+```
+$ composer require auth0/auth0-php
+```
+
 Check our docs page to get a complete guide on how to install it in an existing project or download a pre configured seedproject:
 
 * Regular webapp: https://auth0.com/docs/quickstart/webapp/php/
