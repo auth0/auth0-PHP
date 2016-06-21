@@ -1,5 +1,19 @@
 # Change Log
 
+## [3.4.0](https://github.com/auth0/auth0-PHP/tree/3.4.0) (2016-06-21)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.7...3.4.0)
+
+**Closed issues:**
+
+- More descriptive error message when code exchange fails [\#86](https://github.com/auth0/auth0-PHP/issues/86)
+
+**Merged pull requests:**
+
+- Correctly build logout url query string [\#87](https://github.com/auth0/auth0-PHP/pull/87) ([robinvdvleuten](https://github.com/robinvdvleuten))
+
+## [3.3.7](https://github.com/auth0/auth0-PHP/tree/3.3.7) (2016-06-09)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.6...3.3.7)
+
 ## [3.3.6](https://github.com/auth0/auth0-PHP/tree/3.3.6) (2016-06-09)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.5...3.3.6)
 
