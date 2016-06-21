@@ -5,6 +5,7 @@ use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\ApiException;
+use GuzzleHttp\Psr7;
 
 class Auth0AuthApi {
 
@@ -55,9 +56,7 @@ class Auth0AuthApi {
       $aditional_params['state'] = $state;
     }
 
-    $query_string = implode('&', array_map(function($key,$value){
-      return "$key=$value";
-    }, array_keys($aditional_params), $aditional_params));
+    $query_string = Psr7\build_query($aditional_params);
 
     return "https://{$this->domain}/authorize?$query_string";
   }
@@ -95,10 +94,10 @@ class Auth0AuthApi {
     if ($client_id !== null) {
       $params['client_id'] = $client_id;
     }
-    $query_string = implode('&', $params);
+
+    $query_string = Psr7\build_query($params);
 
     return "https://{$this->domain}/logout?$query_string";
-
   }
 
   public function authorize_with_accesstoken($access_token, $connection, $scope = 'openid', $aditional_params = []){

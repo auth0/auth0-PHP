@@ -14,11 +14,11 @@ class AuthApiTest extends ApiTests {
 
         $authorize_url = $api->get_authorize_link('code', 'http://lala.com');
 
-        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=code&redirect_uri=http://lala.com&client_id=123456", $authorize_url);
+        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=code&redirect_uri=http%3A%2F%2Flala.com&client_id=123456", $authorize_url);
 
         $authorize_url2 = $api->get_authorize_link('token', 'http://lala.com', 'facebook', 'dastate');
 
-        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http://lala.com&client_id=123456&connection=facebook&state=dastate", $authorize_url2);
+        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http%3A%2F%2Flala.com&client_id=123456&connection=facebook&state=dastate", $authorize_url2);
     }
 
     public function testAuthorizeWithRO() {
@@ -70,5 +70,15 @@ class AuthApiTest extends ApiTests {
         $url = $api->impersonate('facebook|1434903327', "oauth2", 'auth0|56b110b8d9d327e705e1d2da', 'ycynBrUeQUnFqNacG3GAsaTyDhG4h0qT', [ "response_type" => "code" ]);
 
         $this->assertStringStartsWith("https://" . $env['DOMAIN'], $url);
+    }
+
+    public function testLogoutLink() {
+        $env = $this->getEnv();
+
+        $api = new Auth0AuthApi($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
+
+        $this->assertSame("https://" . $env['DOMAIN'] . "/logout?", $api->get_logout_link());
+        $this->assertSame("https://" . $env['DOMAIN'] . "/logout?returnTo=http%3A%2F%2Fexample.com", $api->get_logout_link("http://example.com"));
+        $this->assertSame("https://" . $env['DOMAIN'] . "/logout?returnTo=http%3A%2F%2Fexample.com&client_id=" . $env['GLOBAL_CLIENT_ID'], $api->get_logout_link("http://example.com", $env['GLOBAL_CLIENT_ID']));
     }
 }
