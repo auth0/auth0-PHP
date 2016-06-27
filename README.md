@@ -105,7 +105,7 @@ This is a common issue with latest PHP versions under windows (related to a inco
 
 > I am not using composer, my host does not allow using Composer
 
-This package uses composer for mantianing dependencies. However, if you cannot use comoser for some reason follow the following steps
+This package uses composer for mantianing dependencies. However, if you cannot use composer for some reasons. Please follow the following steps and upload these dependencies manually.
 
 - Download and install composer on your local environment.
 - Install auth0-PHP using composer.
