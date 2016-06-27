@@ -103,6 +103,15 @@ This is a common issue with latest PHP versions under windows (related to a inco
 - download this CAs database `https://curl.haxx.se/ca/cacert.pem` to `c:/cacert.pem`
 - you need to edit your php.ini and add `openssl.capath=c:/cacert.pem` (it should point to the file you downloaded)
 
+> I am not using composer, my host does not allow using Composer
+
+This package uses composer for mantianing dependencies. However, if you cannot use composer on your server. Please follow the following steps and upload these dependencies manually.
+
+- Download and install composer on your local environment.
+- Install auth0-PHP using composer.
+- Once you have everything working upload your scripts to the host along with the vendor folder.
+
+
 ## News
 
 - The version 2.x of the PHP SDK was updated to work with Guzzle 6.1. For compatibility with Guzzle 5, you should use 1.x branch.
