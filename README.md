@@ -47,7 +47,7 @@ $auth0 = new Auth0(array(
 
 $profile = $auth0->getUser();
 
-if (!$userInfo) {
+if (!$profile) {
     $authorize_url = "https://$domain/authorize?response_type=code&scope=openid&client_id=$client_id&redirect_uri=http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] ;
 
     header("Location: $authorize_url");
