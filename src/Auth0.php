@@ -391,6 +391,8 @@ class Auth0 {
     {
         $this->deleteAllPersistentData();
         $this->access_token = NULL;
+        $this->user = NULL;
+        $this->id_token = NULL;
     }
 
 
