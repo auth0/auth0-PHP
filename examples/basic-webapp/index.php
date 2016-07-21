@@ -18,8 +18,8 @@
 ?>
 <html>
     <head>
-        <script src="http://code.jquery.com/jquery-2.2.1.min.js" type="text/javascript"></script>
-        <script src="https://cdn.auth0.com/js/lock-9.0.min.js"></script>
+        <script src="http://code.jquery.com/jquery-3.0.0.min.js" type="text/javascript"></script>
+        <script src="https://cdn.auth0.com/js/lock/10.0/lock.min.js"></script>
 
         <script type="text/javascript" src="//use.typekit.net/iws6ohy.js"></script>
         <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
