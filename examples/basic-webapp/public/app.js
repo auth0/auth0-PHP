@@ -4,7 +4,7 @@ $(document).ready(function() {
           redirectUrl: AUTH0_CALLBACK_URL
           , responseType: 'code'
           , params: {
-              scope: 'openid'
+              scope: 'openid email'
           }
       }});
 
