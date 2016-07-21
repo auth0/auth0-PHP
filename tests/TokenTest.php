@@ -1,7 +1,7 @@
 <?php namespace Auth0\Tests;
 
 use Auth0\SDK\API\Helpers\TokenGenerator;
-use Auth0\SDK\Auth0JWT;
+use Auth0\SDK\JWTVerifier;
 
 class TokenTest extends \PHPUnit_Framework_TestCase {
 
@@ -18,7 +18,12 @@ class TokenTest extends \PHPUnit_Framework_TestCase {
             ]
         ]);
 
-        $decoded = Auth0JWT::decode($jwt, $client_id, $client_secret);
+        $verifier = new JWTVerifier([
+                'valid_audiences' => [$client_id],
+                'client_secret' => $client_secret
+            ]);
+
+        $decoded = $verifier->verifyAndDecode($jwt);
 
         $this->assertObjectHasAttribute('aud', $decoded);
         $this->assertEquals($client_id, $decoded->aud);

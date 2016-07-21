@@ -31,24 +31,21 @@ Check our docs page to get a complete guide on how to install it in an existing 
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Auth0;
+use Auth0\SDK\Auth0AuthApi;
 
 $domain        = 'YOUR_NAMESPACE';
 $client_id     = 'YOUR_CLIENT_ID';
 $client_secret = 'YOUR_CLIENT_SECRET';
 $redirect_uri  = 'http://YOUR_APP/callback';
 
-$auth0 = new Auth0(array(
-    'domain'        => $domain,
-    'client_id'     => $client_id,
-    'client_secret' => $client_secret,
-    'redirect_uri'  => $redirect_uri
-));
+$auth0 = new Auth0AuthApi($domain, $client_id);
 
-$profile = $auth0->getUser();
+$oAuthClient = $auth0->get_oauth_client($client_secret, $redirect_uri);
+$profile = $oAuthClient->getUser();
 
 if (!$profile) {
-    $authorize_url = "https://$domain/authorize?response_type=code&scope=openid&client_id=$client_id&redirect_uri=http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] ;
+
+    $authorize_url = $auth0->get_authorize_link('code', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
 
     header("Location: $authorize_url");
     exit;

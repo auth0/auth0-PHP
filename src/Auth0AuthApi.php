@@ -42,6 +42,20 @@ class Auth0AuthApi {
     $this->apiClient = $client;
   }
 
+  public function get_oauth_client($client_secret, $redirect_uri, $extra_params = []) {
+
+    if (empty($this->client_id)) {
+      throw new ApiException('client_id was not set.');
+    } 
+
+    $extra_params['domain'] = $this->domain;
+    $extra_params['client_id'] = $this->client_id;
+    $extra_params['client_secret'] = $client_secret;
+    $extra_params['redirect_uri'] = $redirect_uri;
+
+    return new Auth0($extra_params);
+  }
+
   public function get_authorize_link($response_type, $redirect_uri, $connection = null, $state = null, $aditional_params = []) {
 
     $aditional_params['response_type'] = $response_type;

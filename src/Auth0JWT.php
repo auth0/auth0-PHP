@@ -13,19 +13,10 @@ use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Firebase\JWT\JWT;
 
+/**
+ * @deprecated
+ */
 class Auth0JWT {
-
-    protected static function fetch_public_key($iss) {
-        $secret = [];
-        $jwks = json_decode(file_get_contents("{$iss}.well-known/jwks.json"));
-        foreach ($jwks->keys as $key) {
-            $pem =  '-----BEGIN CERTIFICATE-----'.PHP_EOL
-                .chunk_split($key->x5c[0], 64, PHP_EOL)
-                .'-----END CERTIFICATE-----'.PHP_EOL;
-            $secret[$key->kid] = $pem;
-        }
-        return $secret;
-    }
 
     public static function decode($jwt, $valid_audiences, $client_secret, array $authorized_iss = []) {
 
@@ -87,32 +78,31 @@ class Auth0JWT {
      */
     public static function encode($audience, $client_secret, $scopes = null, $custom_payload = null, $lifetime = 36000) {
 
-            $time = time();
+        $time = time();
 
-            $payload = array(
-                "iat" => $time,
-            );
+        $payload = array(
+            "iat" => $time,
+        );
 
-            if ($scopes) {
-                $payload["scopes"] = $scopes;
-            }
+        if ($scopes) {
+            $payload["scopes"] = $scopes;
+        }
 
-            if ($custom_payload) {
-                $payload = array_merge($custom_payload, $payload);
-            }
+        if ($custom_payload) {
+            $payload = array_merge($custom_payload, $payload);
+        }
 
-            $jti = md5(json_encode($payload));
+        $jti = md5(json_encode($payload));
 
-            $payload['jti'] = $jti;
-            $payload["exp"] = $time + $lifetime;
-            $payload["aud"] = $audience;
+        $payload['jti'] = $jti;
+        $payload["exp"] = $time + $lifetime;
+        $payload["aud"] = $audience;
 
-            $secret = base64_decode(strtr($client_secret, '-_', '+/'));
+        $secret = base64_decode(strtr($client_secret, '-_', '+/'));
 
-            $jwt = JWT::encode($payload, $secret);
+        $jwt = JWT::encode($payload, $secret);
 
-            return $jwt;
-
+        return $jwt;
 
     }
 
