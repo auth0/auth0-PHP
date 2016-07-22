@@ -97,7 +97,7 @@ class Auth0AuthApi {
 
     $query_string = Psr7\build_query($params);
 
-    return "https://{$this->domain}/logout?$query_string";
+    return "https://{$this->domain}/v2/logout?$query_string";
   }
 
   public function authorize_with_accesstoken($access_token, $connection, $scope = 'openid', $aditional_params = []){
