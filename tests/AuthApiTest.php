@@ -77,10 +77,10 @@ class AuthApiTest extends ApiTests {
 
         $api = new Auth0AuthApi($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
-        $this->assertSame("https://" . $env['DOMAIN'] . "/logout?", $api->get_logout_link());
+        $this->assertSame("https://" . $env['DOMAIN'] . "/v2/logout?", $api->get_logout_link());
         
-        $this->assertSame("https://" . $env['DOMAIN'] . "/logout?returnTo=http%3A%2F%2Fexample.com", $api->get_logout_link("http://example.com"));
+        $this->assertSame("https://" . $env['DOMAIN'] . "/v2/logout?returnTo=http%3A%2F%2Fexample.com", $api->get_logout_link("http://example.com"));
 
-        $this->assertSame("https://" . $env['DOMAIN'] . "/logout?returnTo=http%3A%2F%2Fexample.com&client_id=" . $env['GLOBAL_CLIENT_ID'], $api->get_logout_link("http://example.com", $env['GLOBAL_CLIENT_ID']));
+        $this->assertSame("https://" . $env['DOMAIN'] . "/v2/logout?returnTo=http%3A%2F%2Fexample.com&client_id=" . $env['GLOBAL_CLIENT_ID'], $api->get_logout_link("http://example.com", $env['GLOBAL_CLIENT_ID']));
     }
 }
