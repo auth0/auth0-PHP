@@ -36,7 +36,7 @@ class Auth0 {
     public static $URL_MAP = array(
         'api'           => 'https://{domain}/api/',
         'authorize'     => 'https://{domain}/authorize/',
-        'token'         => 'https://{domain}/oauth/token/',
+        'token'     => 'https://{domain}/oauth/token/',
         'user_info'     => 'https://{domain}/userinfo/',
     );
 
@@ -239,7 +239,7 @@ class Auth0 {
 
         $auth0_response = $response['result'];
 
-        if ($response['code'] !== 200) {
+        if ($response['code'] !== 200) { 
             throw new ApiException($auth0_response['error'] . ': '. $auth0_response['error_description']);
         }
 
