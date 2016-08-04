@@ -8,6 +8,7 @@
 
 namespace Auth0\SDK;
 
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Firebase\JWT\JWT;
@@ -34,11 +35,16 @@ class Auth0JWT {
         
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
-            throw new CoreException('Wrong number of segments');
+            throw new InvalidTokenException('Wrong number of segments');
         }
         $headb64 = $tks[0];
         $body64 = $tks[1];
         $head = json_decode(JWT::urlsafeB64Decode($headb64));
+
+        if ( !($head instanceof stdClass) || ! isset($head->alg))
+        {
+            throw new InvalidTokenException("Invalid token");
+        }
 
         if ($head->alg === 'RS256') {
             $body = json_decode(JWT::urlsafeB64Decode($body64));
