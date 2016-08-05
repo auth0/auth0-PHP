@@ -27,10 +27,14 @@ class Auth0JWT {
         return $secret;
     }
 
-    public static function decode($jwt, $valid_audiences, $client_secret, array $authorized_iss = []) {
+    public static function decode($jwt, $valid_audiences, $client_secret, $authorized_iss) {
 
         if (!is_array($valid_audiences)) {
             $valid_audiences = [$valid_audiences];
+        }
+        
+        if(!is_array($authorized_iss)) {
+            $authorized_iss = [$authorized_iss]
         }
         
         $tks = explode('.', $jwt);
