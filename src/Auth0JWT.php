@@ -41,7 +41,7 @@ class Auth0JWT {
         $body64 = $tks[1];
         $head = json_decode(JWT::urlsafeB64Decode($headb64));
 
-        if ( !($head instanceof stdClass) || ! isset($head->alg))
+        if ( !is_object($head) || ! isset($head->alg))
         {
             throw new InvalidTokenException("Invalid token");
         }
