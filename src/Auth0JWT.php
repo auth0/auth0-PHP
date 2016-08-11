@@ -17,13 +17,22 @@ class Auth0JWT {
 
     protected static function fetch_public_key($iss) {
         $secret = [];
-        $jwks = json_decode(file_get_contents("{$iss}.well-known/jwks.json"));
-        foreach ($jwks->keys as $key) {
-            $pem =  '-----BEGIN CERTIFICATE-----'.PHP_EOL
-                .chunk_split($key->x5c[0], 64, PHP_EOL)
-                .'-----END CERTIFICATE-----'.PHP_EOL;
-            $secret[$key->kid] = $pem;
-        }
+
+        $c = curl_init();
+        curl_setopt_array($c, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => "{$iss}.well-known/jwks.json"
+        ));
+        $jwks = json_decode(curl_exec($c));
+        curl_close($c);
+
+        if (!empty($jwks))
+            foreach ($jwks->keys as $key) {
+                $pem =  '-----BEGIN CERTIFICATE-----'.PHP_EOL
+                    .chunk_split($key->x5c[0], 64, PHP_EOL)
+                    .'-----END CERTIFICATE-----'.PHP_EOL;
+                $secret[$key->kid] = $pem;
+            }
         return $secret;
     }
 
