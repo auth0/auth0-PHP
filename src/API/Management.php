@@ -35,6 +35,7 @@ class Management {
   public $jobs;
   public $logs;
   public $rules;
+  public $resource_servers;
   public $stats;
   public $tenants;
   public $tickets;
@@ -57,6 +58,7 @@ class Management {
     $this->jobs = new Jobs($this->apiClient);
     $this->logs = new Logs($this->apiClient);
     $this->rules = new Rules($this->apiClient);
+    $this->resource_servers = new ResourceServers($this->apiClient);
     $this->stats = new Stats($this->apiClient);
     $this->tenants = new Tenants($this->apiClient);
     $this->tickets = new Tickets($this->apiClient);

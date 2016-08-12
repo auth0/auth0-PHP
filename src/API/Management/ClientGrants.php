@@ -43,7 +43,7 @@ class ClientGrants extends GenericResource
 
   public function update($id, $scope) 
   {
-    $request = $this->apiClient->post()
+    $request = $this->apiClient->patch()
       ->addPath('client-grants', $id)
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode([

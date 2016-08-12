@@ -5,10 +5,10 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Tickets extends GenericResource {
-
-    public function createEmailVerificationTicket($user_id, $result_url = null) {
-
+class Tickets extends GenericResource 
+{
+    public function createEmailVerificationTicket($user_id, $result_url = null) 
+    {
         $body = array('user_id' => $user_id);
         if ($result_url !== null) {
             $body['result_url'] = $result_url;
@@ -24,35 +24,38 @@ class Tickets extends GenericResource {
 
     }
 
-    public function createPasswordChangeTicket($user_id, $new_password = null, $result_url = null, $connection_id = null) {
-
-        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id);
-        
+    public function createPasswordChangeTicket($user_id, $new_password = null, $result_url = null, $connection_id = null) 
+    {
+        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id); 
     }
 
-    public function createPasswordChangeTicketByEmail($email, $new_password = null, $result_url = null, $connection_id = null) {
-
-        return $this->createPasswordChangeTicketRaw(null, $mail, $new_password, $result_url, $connection_id);
-        
+    public function createPasswordChangeTicketByEmail($email, $new_password = null, $result_url = null, $connection_id = null) 
+    {
+        return $this->createPasswordChangeTicketRaw(null, $mail, $new_password, $result_url, $connection_id);   
     }
 
-    public function createPasswordChangeTicketRaw($user_id = null, $email = null, $new_password = null, $result_url = null, $connection_id = null) {
-
+    public function createPasswordChangeTicketRaw($user_id = null, $email = null, $new_password = null, $result_url = null, $connection_id = null) 
+    {
         $body = [];
 
-        if ($user_id) {
+        if ($user_id) 
+        {
             $body['user_id'] = $user_id;
         }
-        if ($email) {
+        if ($email) 
+        {
             $body['email'] = $email;
         }
-        if ($new_password) {
+        if ($new_password) 
+        {
             $body['new_password'] = $new_password;
         }
-        if ($result_url) {
+        if ($result_url) 
+        {
             $body['result_url'] = $result_url;
         }
-        if ($connection_id) {
+        if ($connection_id) 
+        {
             $body['connection_id'] = $connection_id;
         }
 
