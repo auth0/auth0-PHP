@@ -8,6 +8,7 @@ use Auth0\SDK\API\Management\Connections;
 use Auth0\SDK\API\Management\DeviceCredentials;
 use Auth0\SDK\API\Management\Emails;
 use Auth0\SDK\API\Management\Jobs;
+use Auth0\SDK\API\Management\Logs;
 use Auth0\SDK\API\Management\Rules;
 use Auth0\SDK\API\Management\Stats;
 use Auth0\SDK\API\Management\Tenants;
@@ -32,6 +33,7 @@ class Management {
   public $deviceCredentials;
   public $emails;
   public $jobs;
+  public $logs;
   public $rules;
   public $stats;
   public $tenants;
@@ -53,6 +55,7 @@ class Management {
     $this->deviceCredentials = new DeviceCredentials($this->apiClient);
     $this->emails = new Emails($this->apiClient);
     $this->jobs = new Jobs($this->apiClient);
+    $this->logs = new Logs($this->apiClient);
     $this->rules = new Rules($this->apiClient);
     $this->stats = new Stats($this->apiClient);
     $this->tenants = new Tenants($this->apiClient);

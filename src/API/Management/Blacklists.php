@@ -5,8 +5,8 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Blacklists extends GenericResource {
-
+class Blacklists extends GenericResource 
+{
     public function getAll($aud) 
     {
         return $this->apiClient->get()

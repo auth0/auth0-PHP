@@ -5,8 +5,8 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class ClientGrants extends GenericResource {
-
+class ClientGrants extends GenericResource 
+{
   public function get($id, $audience = null) 
   {
     $request = $this->apiClient->get()
@@ -34,7 +34,7 @@ class ClientGrants extends GenericResource {
     return $request->call();
   }
 
-  public function get($id, $audience = null) 
+  public function delete($id, $audience = null) 
   {
     return $this->apiClient->delete()
       ->addPath('client-grants', $id)
@@ -52,5 +52,4 @@ class ClientGrants extends GenericResource {
 
     return $request->call();
   }
-
 }
