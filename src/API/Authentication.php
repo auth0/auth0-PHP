@@ -1,5 +1,5 @@
 <?php
-namespace Auth0\SDK;
+namespace Auth0\SDK\Api;
 
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;

@@ -22,34 +22,32 @@ class ClientGrants extends GenericResource
 
   public function create($client_id, $audience, $scope) 
   {
-    $request = $this->apiClient->post()
+    return $this->apiClient->post()
       ->addPath('client-grants')
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode([
           "client_id" => $client_id,
           "audience" => $audience,
           "scope" => $scope,
-        ]));
-
-    return $request->call();
+        ]))
+      ->call();
   }
 
   public function delete($id, $audience = null) 
   {
     return $this->apiClient->delete()
       ->addPath('client-grants', $id)
-      ->call()
+      ->call();
   }
 
   public function update($id, $scope) 
   {
-    $request = $this->apiClient->patch()
+    return $this->apiClient->patch()
       ->addPath('client-grants', $id)
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode([
           "scope" => $scope,
-        ]));
-
-    return $request->call();
+        ]))
+      ->call();
   }
 }

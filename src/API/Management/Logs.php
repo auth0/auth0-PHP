@@ -9,10 +9,9 @@ class Logs extends GenericResource
 {
   public function get($id) 
   {
-    $request = $this->apiClient->get()
-      ->logs($id);
-
-    return $request->call();
+    return $this->apiClient->get()
+      ->logs($id)
+      ->call();
   }
 
   public function search($params = array()) {

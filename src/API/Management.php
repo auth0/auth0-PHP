@@ -1,5 +1,5 @@
 <?php
-namespace Auth0\SDK;
+namespace Auth0\SDK\Api;
 
 use Auth0\SDK\API\Management\Blacklists;
 use Auth0\SDK\API\Management\Clients;
@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management\DeviceCredentials;
 use Auth0\SDK\API\Management\Emails;
 use Auth0\SDK\API\Management\Jobs;
 use Auth0\SDK\API\Management\Logs;
+use Auth0\SDK\API\Management\ResourceServers;
 use Auth0\SDK\API\Management\Rules;
 use Auth0\SDK\API\Management\Stats;
 use Auth0\SDK\API\Management\Tenants;

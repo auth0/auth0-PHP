@@ -16,28 +16,26 @@ class ResourceServers extends GenericResource
 
   public function create($client_id, $data) 
   {
-    $request = $this->apiClient->post()
+    return $this->apiClient->post()
       ->addPath('resource-servers')
       ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode( $data ));
-
-    return $request->call();
+      ->withBody(json_encode( $data ))
+      ->call();
   }
 
   public function delete($id) 
   {
     return $this->apiClient->delete()
       ->addPath('resource-servers', $id)
-      ->call()
+      ->call();
   }
 
   public function update($id, $data) 
   {
-    $request = $this->apiClient->patch()
+    return $this->apiClient->patch()
       ->addPath('resource-servers', $id)
       ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode( $data ));
-
-    return $request->call();
+      ->withBody(json_encode( $data ))
+      ->call();
   }
 }

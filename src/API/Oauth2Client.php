@@ -1,5 +1,6 @@
 <?php
-namespace Auth0\SDK;
+namespace Auth0\SDK\Api;
+
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
