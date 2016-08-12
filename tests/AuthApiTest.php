@@ -1,7 +1,7 @@
 <?php
 namespace Auth0\Tests;
 
-use Auth0\SDK\Auth0AuthApi;
+use Auth0\SDK\Api\Authentication;
 
 class AuthApiTest extends ApiTests {
 
@@ -10,7 +10,7 @@ class AuthApiTest extends ApiTests {
         $domain = 'dummy.auth0.com';
         $client_id = '123456';
 
-        $api = new Auth0AuthApi($domain, $client_id);
+        $api = new Authentication($domain, $client_id);
 
         $authorize_url = $api->get_authorize_link('code', 'http://lala.com');
 
@@ -24,7 +24,7 @@ class AuthApiTest extends ApiTests {
     public function testAuthorizeWithRO() {
         $env = $this->getEnv();
         
-        $api = new Auth0AuthApi($env['DOMAIN'], $env['APP_CLIENT_ID']);
+        $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
         $response = $api->authorize_with_ro('auth@test.com', '123456', 'openid', 'Username-Password-Authentication');
 
@@ -53,7 +53,7 @@ class AuthApiTest extends ApiTests {
     public function testOauthToken() {
         $env = $this->getEnv();
         
-        $api = new Auth0AuthApi($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
+        $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
         $token = $api->get_access_token();
 
@@ -65,7 +65,7 @@ class AuthApiTest extends ApiTests {
     public function testImpersonation() {
         $env = $this->getEnv();
         
-        $api = new Auth0AuthApi($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
+        $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
         $url = $api->impersonate('facebook|1434903327', "oauth2", 'auth0|56b110b8d9d327e705e1d2da', 'ycynBrUeQUnFqNacG3GAsaTyDhG4h0qT', [ "response_type" => "code" ]);
 
@@ -75,7 +75,7 @@ class AuthApiTest extends ApiTests {
     public function testLogoutLink() {
         $env = $this->getEnv();
 
-        $api = new Auth0AuthApi($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
+        $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
         $this->assertSame("https://" . $env['DOMAIN'] . "/v2/logout?", $api->get_logout_link());
         

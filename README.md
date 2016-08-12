@@ -31,14 +31,14 @@ Check our docs page to get a complete guide on how to install it in an existing 
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Auth0AuthApi;
+use Auth0\SDK\Api\Authentication;
 
 $domain        = 'YOUR_NAMESPACE';
 $client_id     = 'YOUR_CLIENT_ID';
 $client_secret = 'YOUR_CLIENT_SECRET';
 $redirect_uri  = 'http://YOUR_APP/callback';
 
-$auth0 = new Auth0AuthApi($domain, $client_id);
+$auth0 = new Authentication($domain, $client_id);
 
 $oAuthClient = $auth0->get_oauth_client($client_secret, $redirect_uri);
 $profile = $oAuthClient->getUser();
@@ -61,12 +61,12 @@ var_dump($profile);
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Auth0Api;
+use Auth0\SDK\Api\Management;
 
 $token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
 $domain = "account.auth0.com";
 
-$auth0Api = new Auth0Api($token, $domain);
+$auth0Api = new Management($token, $domain);
 
 $usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
 
@@ -78,13 +78,13 @@ var_dump($usersList);
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Auth0AuthApi;
+use Auth0\SDK\Api\Authentication;
 
 $domain = "account.auth0.com";
 $client_id = '...';
 $client_secret = '...'; // This is optional, only needed for impersonation or t fetch an access token
 
-$auth0Api = new Auth0AuthApi($domain, $client_id, $client_secret); 
+$auth0Api = new Authentication($domain, $client_id, $client_secret); 
 
 $tokens = $auth0Api->authorize_with_ro('theemail@test.com','thepassword');
 

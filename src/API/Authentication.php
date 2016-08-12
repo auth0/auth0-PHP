@@ -7,7 +7,7 @@ use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\ApiException;
 use GuzzleHttp\Psr7;
 
-class Auth0AuthApi {
+class Authentication {
 
   private $client_id;
   private $client_secret;
@@ -53,7 +53,7 @@ class Auth0AuthApi {
     $extra_params['client_secret'] = $client_secret;
     $extra_params['redirect_uri'] = $redirect_uri;
 
-    return new Auth0($extra_params);
+    return new Oauth2Client($extra_params);
   }
 
   public function get_authorize_link($response_type, $redirect_uri, $connection = null, $state = null, $aditional_params = []) {

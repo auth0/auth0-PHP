@@ -19,9 +19,9 @@ class TokenTest extends \PHPUnit_Framework_TestCase {
         ]);
 
         $verifier = new JWTVerifier([
-                'valid_audiences' => [$client_id],
-                'client_secret' => $client_secret
-            ]);
+            'valid_audiences' => [$client_id],
+            'client_secret' => $client_secret
+        ]);
 
         $decoded = $verifier->verifyAndDecode($jwt);
 

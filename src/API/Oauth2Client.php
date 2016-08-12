@@ -15,7 +15,7 @@ use OAuth2\Client;
  *       and <https://docs.auth0.com/api-reference>
  * @todo Lots of code documentation.
  */
-class Auth0 {
+class Oauth2Client {
 
     /**
      * Available keys to persist data.

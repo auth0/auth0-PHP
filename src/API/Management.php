@@ -17,7 +17,7 @@ use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 
-class Auth0Api {
+class Management {
 
   private $token;
   private $domain;
