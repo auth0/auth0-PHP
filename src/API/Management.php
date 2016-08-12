@@ -3,6 +3,7 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\API\Management\Blacklists;
 use Auth0\SDK\API\Management\Clients;
+use Auth0\SDK\API\Management\ClientGrants;
 use Auth0\SDK\API\Management\Connections;
 use Auth0\SDK\API\Management\DeviceCredentials;
 use Auth0\SDK\API\Management\Emails;
@@ -26,6 +27,7 @@ class Management {
 
   public $blacklists;
   public $clients;
+  public $client_grants;
   public $connections;
   public $deviceCredentials;
   public $emails;
@@ -46,6 +48,7 @@ class Management {
 
     $this->blacklists = new Blacklists($this->apiClient);
     $this->clients = new Clients($this->apiClient);
+    $this->client_grants = new ClientGrants($this->apiClient);
     $this->connections = new Connections($this->apiClient);
     $this->deviceCredentials = new DeviceCredentials($this->apiClient);
     $this->emails = new Emails($this->apiClient);
