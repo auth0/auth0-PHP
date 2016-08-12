@@ -27,10 +27,11 @@ class JWKFetcher {
     }
 
     public function fetchKeys($iss) {
-        $secret = [];
         $url = "{$iss}.well-known/jwks.json";
 
-        if ($secret = $this->cache->get($url) === null) {
+        if (($secret = $this->cache->get($url)) === null) {
+
+            $secret = [];
 
             $request = new RequestBuilder(array(
                 'domain' => $iss,
@@ -40,8 +41,8 @@ class JWKFetcher {
             ));
             $jwks = $request->call();
 
-            foreach ($jwks->keys as $key) {
-                $secret[$key->kid] = $this->convertCertToPem($key->x5c[0]);
+            foreach ($jwks['keys'] as $key) { 
+                $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
             }
 
             $this->cache->set($url, $secret);
