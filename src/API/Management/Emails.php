@@ -5,29 +5,33 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Emails extends GenericResource {
-
-  public function getEmailProvider($fields = null, $include_fields = null) {
-
+class Emails extends GenericResource 
+{
+  public function getEmailProvider($fields = null, $include_fields = null) 
+  {
     $request = $this->apiClient->get()
         ->emails()
         ->provider();
 
-    if ($fields !== null) {
-      if (is_array($fields)) {
+    if ($fields !== null) 
+    {
+      if (is_array($fields)) 
+      {
         $fields = implode(',', $fields);
       }
       $request->withParam('fields', $fields);
     }
-    if ($include_fields !== null) {
+
+    if ($include_fields !== null) 
+    {
       $request->withParam('include_fields', $include_fields);
     }
 
     return $request->call();
   }
 
-  public function configureEmailProvider($data) {
-
+  public function configureEmailProvider($data) 
+  {
     return $this->apiClient->post()
       ->emails()
       ->provider()
@@ -36,8 +40,8 @@ class Emails extends GenericResource {
       ->call();
   }
 
-  public function updateEmailProvider($data) {
-
+  public function updateEmailProvider($data) 
+  {
     return $this->apiClient->patch()
       ->emails()
       ->provider()
@@ -46,8 +50,8 @@ class Emails extends GenericResource {
       ->call();
   }
 
-  public function deleteEmailProvider() {
-
+  public function deleteEmailProvider() 
+  {
     return $this->apiClient->delete()
       ->emails()
       ->provider()
