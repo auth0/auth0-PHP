@@ -140,9 +140,12 @@ class Authentication {
       'scope' => $scope,
     ];
 
+    if ($device !== null) {
+      $data['device'] = $device;
+    }
+
     if ($id_token !== null) {
       $data['id_token'] = $id_token;
-      $data['device'] = $device;
       $data['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
     } else {
       if ($connection === null) {
@@ -277,13 +280,25 @@ class Authentication {
 
   }
 
-  public function oauth_token($client_id, $client_secret, $grant_type = 'client_credentials') {
+  public function oauth_token($client_id, $client_secret, $grant_type = 'client_credentials', $code = null, $audience = null, $scope = null) {
 
     $data = [
       'client_id' => $client_id,
       'client_secret' => $client_secret,
       'grant_type' => $grant_type,
     ];
+
+    if ($audience !== null) {
+      $data['audience'] = $audience;
+    }
+
+    if ($scope !== null) {
+      $data['scope'] = $scope;
+    }
+
+    if ($code !== null) {
+      $data['code'] = $code;
+    }
 
     return $this->apiClient->post()
       ->oauth()

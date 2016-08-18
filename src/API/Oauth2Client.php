@@ -220,7 +220,7 @@ class Oauth2Client {
      * Exchanges the code from the URI parameters for an access token, id token and user info
      * @return Boolean Whether it exchanged the code or not correctly
      */
-    private function exchangeCode() {
+    public function exchangeCode() {
         if (!isset($_REQUEST['code'])) {
             return false;
         }
