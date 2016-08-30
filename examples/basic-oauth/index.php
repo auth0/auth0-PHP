@@ -10,6 +10,7 @@ $auth0Oauth = new \Auth0\SDK\Auth0(array(
   'client_secret' => getenv('AUTH0_CLIENT_SECRET'),
   'redirect_uri'  => getenv('AUTH0_CALLBACK_URL'),
   'persist_id_token' => true,
+  'persist_refresh_token' => true,
 ));
 
 $userInfo = $auth0Oauth->getUser();

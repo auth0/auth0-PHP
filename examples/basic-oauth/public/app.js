@@ -9,7 +9,7 @@ $(document).ready(function() {
           callbackURL: AUTH0_CALLBACK_URL
           , responseType: 'code'
           , authParams: {
-              scope: 'openid'
+              scope: 'openid offline_access'
           }
       });
 

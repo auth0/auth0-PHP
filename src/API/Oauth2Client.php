@@ -24,6 +24,7 @@ class Oauth2Client {
      * @var array
      */
     public $persistantMap = array(
+        'refresh_token',
         'access_token',
         'user',
         'id_token'
@@ -61,6 +62,13 @@ class Oauth2Client {
      * @var string
      */
     protected $client_secret;
+
+    /**
+     * Auth0 Refresh Token
+     *
+     * @var string
+     */
+    protected $refresh_token;
 
     /**
      * Redirect URI needed on OAuth2 requests.
@@ -117,6 +125,7 @@ class Oauth2Client {
      *     - redirect_uri           (String)  Required. The uri of the auth callback, used as a security method
      *     - persist_user      (Boolean) Optional. Indicates if you want to persist the user info, default true
      *     - persist_access_token   (Boolean) Optional. Indicates if you want to persist the access token, default false
+     *     - persist_refresh_token   (Boolean) Optional. Indicates if you want to persist the refresh token, default false
      *     - persist_id_token       (Boolean) Optional. Indicates if you want to persist the id token, default false
      *     - store                  (Mixed)   Optional. Indicates how we store the persisting methods, default is session
      *                                                  store, you can pass false to avoid storing it or a class that
@@ -177,6 +186,12 @@ class Oauth2Client {
             $this->dontPersist('access_token');
         }
 
+        // Refresh token is not persisted unless said otherwise
+        if (!isset($config['persist_refresh_token']) || (isset($config['persist_refresh_token']) &&
+                $config['persist_refresh_token'] === false)) {
+            $this->dontPersist('refresh_token');
+        }
+
         // Id token is not per persisted unless said otherwise
         if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
                 $config['persist_id_token'] === false)) {
@@ -199,6 +214,7 @@ class Oauth2Client {
         $this->user = $this->store->get("user");
         $this->access_token = $this->store->get("access_token");
         $this->id_token = $this->store->get("id_token");
+        $this->refresh_token = $this->store->get("refresh_token");
 
         if (!$this->access_token) {
             $this->oauth_client->setAccessToken($this->access_token);
@@ -241,11 +257,16 @@ class Oauth2Client {
         $auth0_response = $response['result'];
 
         if ($response['code'] !== 200) { 
-            throw new ApiException($auth0_response['error'] . ': '. $auth0_response['error_description']);
+            if (isset($auth0_response['error'])) {
+                throw new ApiException($auth0_response['error'] . ': '. $auth0_response['error_description']);
+            } else {
+                throw new ApiException($auth0_response);
+            }
         }
 
         $this->debugInfo(json_encode($auth0_response));
         $access_token = (isset($auth0_response['access_token']))? $auth0_response['access_token'] : false;
+        $refresh_token = (isset($auth0_response['refresh_token']))? $auth0_response['refresh_token'] : false;
         $id_token = (isset($auth0_response['id_token']))? $auth0_response['id_token'] : false;
 
         if (!$access_token) {
@@ -263,6 +284,7 @@ class Oauth2Client {
         // Set it and persist it, if needed
         $this->setAccessToken($access_token);
         $this->setIdToken($id_token);
+        $this->setRefreshToken($refresh_token);
 
         $userinfo_url = $this->generateUrl('user_info');
         $user = $this->oauth_client->fetch($userinfo_url);
@@ -346,6 +368,24 @@ class Oauth2Client {
     }
 
     /**
+     * Sets and persists $refresh_token.
+     *
+     * @param string $refresh_token
+     *
+     * @return Auth0\SDK\BaseAuth0
+     */
+    public function setRefreshToken($refresh_token) {
+        $key = array_search('refresh_token',$this->persistantMap);
+        if ($key !== false) {
+            $this->store->set('refresh_token', $refresh_token);
+        }
+
+        $this->refresh_token = $refresh_token;
+
+        return $this;
+    }
+
+    /**
      * Gets $access_token.
      * @return string
      */
@@ -354,6 +394,14 @@ class Oauth2Client {
             $this->exchangeCode();
         }
         return $this->access_token;
+    }
+
+    /**
+     * Gets $refresh_token.
+     * @return string
+     */
+    final public function getRefreshToken() {
+        return $this->refresh_token;
     }
 
     /**
