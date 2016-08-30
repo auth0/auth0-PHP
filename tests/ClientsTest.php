@@ -1,7 +1,7 @@
 <?php
 namespace Auth0\Tests;
 
-use Auth0\SDK\Auth0Api;
+use Auth0\SDK\API\Management;
 
 class ClientsTest extends BasicCrudTest {
     
@@ -19,7 +19,7 @@ class ClientsTest extends BasicCrudTest {
 
         $this->domain = $env['DOMAIN'];
 
-        $api = new Auth0Api($token, $env['DOMAIN']);
+        $api = new Management($token, $env['DOMAIN']);
 
         return $api->clients;
     }

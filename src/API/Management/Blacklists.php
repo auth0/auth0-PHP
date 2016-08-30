@@ -5,10 +5,10 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Blacklists extends GenericResource {
-
-    public function getAll($aud) {
-
+class Blacklists extends GenericResource 
+{
+    public function getAll($aud) 
+    {
         return $this->apiClient->get()
             ->blacklists()
             ->tokens()
@@ -16,8 +16,8 @@ class Blacklists extends GenericResource {
             ->call();
     }
 
-    public function blacklist($aud, $jti) {
-
+    public function blacklist($aud, $jti) 
+    {
         return $this->apiClient->post()
             ->blacklists()
             ->tokens()

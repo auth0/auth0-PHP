@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/auth0/auth0-PHP.png)](https://travis-ci.org/auth0/auth0-PHP)
 [![Code Climate](https://codeclimate.com/github/auth0/auth0-PHP/badges/gpa.svg)](https://codeclimate.com/github/auth0/auth0-PHP)
 [![Test Coverage](https://codeclimate.com/github/auth0/auth0-PHP/badges/coverage.svg)](https://codeclimate.com/github/auth0/auth0-PHP/coverage)
-[![Dependencies](https://www.versioneye.com/php/auth0:auth0-php/3.0.0/badge.svg)](https://www.versioneye.com/php/auth0:auth0-php)
+[![Dependencies](https://www.versioneye.com/php/auth0:auth0-php/badge.svg)](https://www.versioneye.com/php/auth0:auth0-php)
 [![HHVM Status](http://hhvm.h4cc.de/badge/auth0/auth0-php.svg)](http://hhvm.h4cc.de/package/auth0/auth0-php)
 [![License](https://poser.pugx.org/auth0/auth0-php/license)](https://packagist.org/packages/auth0/auth0-php)
 [![Total Downloads](https://poser.pugx.org/auth0/auth0-php/downloads)](https://packagist.org/packages/auth0/auth0-php)
@@ -31,24 +31,21 @@ Check our docs page to get a complete guide on how to install it in an existing 
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Auth0;
+use Auth0\SDK\API\Authentication;
 
 $domain        = 'YOUR_NAMESPACE';
 $client_id     = 'YOUR_CLIENT_ID';
 $client_secret = 'YOUR_CLIENT_SECRET';
 $redirect_uri  = 'http://YOUR_APP/callback';
 
-$auth0 = new Auth0(array(
-    'domain'        => $domain,
-    'client_id'     => $client_id,
-    'client_secret' => $client_secret,
-    'redirect_uri'  => $redirect_uri
-));
+$auth0 = new Authentication($domain, $client_id);
 
-$profile = $auth0->getUser();
+$oAuthClient = $auth0->get_oauth_client($client_secret, $redirect_uri);
+$profile = $oAuthClient->getUser();
 
 if (!$profile) {
-    $authorize_url = "https://$domain/authorize?response_type=code&scope=openid&client_id=$client_id&redirect_uri=http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'] ;
+
+    $authorize_url = $auth0->get_authorize_link('code', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
 
     header("Location: $authorize_url");
     exit;
@@ -64,12 +61,12 @@ var_dump($profile);
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Auth0Api;
+use Auth0\SDK\API\Management;
 
 $token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
 $domain = "account.auth0.com";
 
-$auth0Api = new Auth0Api($token, $domain);
+$auth0Api = new Management($token, $domain);
 
 $usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
 
@@ -81,13 +78,13 @@ var_dump($usersList);
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Auth0AuthApi;
+use Auth0\SDK\API\Authentication;
 
 $domain = "account.auth0.com";
 $client_id = '...';
 $client_secret = '...'; // This is optional, only needed for impersonation or t fetch an access token
 
-$auth0Api = new Auth0AuthApi($domain, $client_id, $client_secret); 
+$auth0Api = new Authentication($domain, $client_id, $client_secret); 
 
 $tokens = $auth0Api->authorize_with_ro('theemail@test.com','thepassword');
 
@@ -118,6 +115,14 @@ This package uses composer for mantianing dependencies. However, if you cannot u
 - The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of new [features and changes](https://auth0.com/docs/apiv2Changes).
 
 ### *NOTICE* Backward compatibility breaks
+
+#### 4.0
+
+- Soon to deprecate the following clases:
+    + Auth0\SDK\Auth0: use \Auth0\SDK\API\Authentication or \Auth0\SDK\API\Oauth2Client instead
+    + Auth0\SDK\Auth0Api: use \Auth0\SDK\API\Management instead
+    + Auth0\SDK\Auth0AuthApi: use \Auth0\SDK\API\Authentication instead
+    + Auth0\SDK\Auth0JWT: Use \Auth0\SDK\JWTVerifier instead
 
 #### 3.2
 - Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key

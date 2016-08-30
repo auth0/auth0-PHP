@@ -35,6 +35,7 @@ class Users extends GenericResource {
     public function getAll($params = array()) {
         return $this->search($params);
     }
+    
     public function search($params = array()) {
 
         $client = $this->apiClient->get()

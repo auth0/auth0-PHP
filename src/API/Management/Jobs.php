@@ -5,17 +5,25 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
 
-class Jobs extends GenericResource {
-
-  public function get($id) {
-
+class Jobs extends GenericResource 
+{
+  public function get($id) 
+  {
     return $this->apiClient->get()
       ->jobs($id)
       ->call();
   }
 
-  public function importUsers($file_path, $connection_id) {
+  public function getErrors($id) 
+  {
+    return $this->apiClient->get()
+      ->jobs($id)
+      ->errors()
+      ->call();
+  }
 
+  public function importUsers($file_path, $connection_id) 
+  {
     return $this->apiClient->post()
       ->jobs()
       ->addPath('users-imports')
@@ -24,8 +32,8 @@ class Jobs extends GenericResource {
       ->call();
   }
 
-  public function sendVerificationEmail($user_id) {
-
+  public function sendVerificationEmail($user_id) 
+  {
     return $this->apiClient->post()
       ->jobs()
       ->addPath('verification-email')

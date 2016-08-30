@@ -1,7 +1,7 @@
 <?php
 namespace Auth0\Tests;
 
-use Auth0\SDK\Auth0Api;
+use Auth0\SDK\API\Management;
 
 class BlacklistsTest extends ApiTests {
 
@@ -15,7 +15,7 @@ class BlacklistsTest extends ApiTests {
 
         $this->domain = $env['DOMAIN'];
 
-        $api = new Auth0Api($token, $env['DOMAIN']);
+        $api = new Management($token, $env['DOMAIN']);
 
         $aud = $env["GLOBAL_CLIENT_ID"];
         $jti = 'somerandomJTI' . rand();

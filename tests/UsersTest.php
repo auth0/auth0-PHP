@@ -1,7 +1,7 @@
 <?php
 namespace Auth0\Tests;
 
-use Auth0\SDK\Auth0Api;
+use Auth0\SDK\API\Management;
 
 class UsersTest extends BasicCrudTest {
 
@@ -26,7 +26,7 @@ class UsersTest extends BasicCrudTest {
 
         $this->domain = $env['DOMAIN'];
 
-        $api = new Auth0Api($token, $this->domain);
+        $api = new Management($token, $this->domain);
 
         return $api->users;
     }
