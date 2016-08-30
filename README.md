@@ -31,7 +31,7 @@ Check our docs page to get a complete guide on how to install it in an existing 
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Api\Authentication;
+use Auth0\SDK\API\Authentication;
 
 $domain        = 'YOUR_NAMESPACE';
 $client_id     = 'YOUR_CLIENT_ID';
@@ -61,7 +61,7 @@ var_dump($profile);
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Api\Management;
+use Auth0\SDK\API\Management;
 
 $token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
 $domain = "account.auth0.com";
@@ -78,7 +78,7 @@ var_dump($usersList);
 ```
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\Api\Authentication;
+use Auth0\SDK\API\Authentication;
 
 $domain = "account.auth0.com";
 $client_id = '...';

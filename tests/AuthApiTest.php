@@ -1,7 +1,7 @@
 <?php
 namespace Auth0\Tests;
 
-use Auth0\SDK\Api\Authentication;
+use Auth0\SDK\API\Authentication;
 
 class AuthApiTest extends ApiTests {
 
