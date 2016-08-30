@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/auth0/auth0-PHP.png)](https://travis-ci.org/auth0/auth0-PHP)
 [![Code Climate](https://codeclimate.com/github/auth0/auth0-PHP/badges/gpa.svg)](https://codeclimate.com/github/auth0/auth0-PHP)
 [![Test Coverage](https://codeclimate.com/github/auth0/auth0-PHP/badges/coverage.svg)](https://codeclimate.com/github/auth0/auth0-PHP/coverage)
-[![Dependencies](https://www.versioneye.com/php/auth0:auth0-php/3.0.0/badge.svg)](https://www.versioneye.com/php/auth0:auth0-php)
+[![Dependencies](https://www.versioneye.com/php/auth0:auth0-php/badge.svg)](https://www.versioneye.com/php/auth0:auth0-php)
 [![HHVM Status](http://hhvm.h4cc.de/badge/auth0/auth0-php.svg)](http://hhvm.h4cc.de/package/auth0/auth0-php)
 [![License](https://poser.pugx.org/auth0/auth0-php/license)](https://packagist.org/packages/auth0/auth0-php)
 [![Total Downloads](https://poser.pugx.org/auth0/auth0-php/downloads)](https://packagist.org/packages/auth0/auth0-php)
@@ -115,6 +115,14 @@ This package uses composer for mantianing dependencies. However, if you cannot u
 - The version 1.x of the PHP SDK now works with the Auth API v2 which adds lots of new [features and changes](https://auth0.com/docs/apiv2Changes).
 
 ### *NOTICE* Backward compatibility breaks
+
+#### 4.0
+
+- Soon to deprecate the following clases:
+    + Auth0\SDK\Auth0: use \Auth0\SDK\API\Authentication or \Auth0\SDK\API\Oauth2Client instead
+    + Auth0\SDK\Auth0Api: use \Auth0\SDK\API\Management instead
+    + Auth0\SDK\Auth0AuthApi: use \Auth0\SDK\API\Authentication instead
+    + Auth0\SDK\Auth0JWT: Use \Auth0\SDK\JWTVerifier instead
 
 #### 3.2
 - Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key
