@@ -3,6 +3,7 @@
 namespace Auth0\SDK;
 
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Firebase\JWT\JWT;
@@ -71,15 +72,20 @@ class JWTVerifier {
         
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
-            throw new CoreException('Wrong number of segments');
+            throw new InvalidTokenException('Wrong number of segments');
         }
 
         $headb64 = $tks[0];
         $body64 = $tks[1];
         $head = json_decode(JWT::urlsafeB64Decode($headb64));
 
+        if ( !is_object($head) || ! isset($head->alg))
+        {
+              throw new InvalidTokenException("Invalid token");
+        }
+
         if (!in_array($head->alg, $this->suported_algs)) {
-            throw new CoreException("Invalid signature algorithm");
+            throw new InvalidTokenException("Invalid signature algorithm");
         }
 
         if ($head->alg === 'RS256') {
@@ -91,7 +97,7 @@ class JWTVerifier {
         } elseif ($head->alg === 'HS256') {
             $secret = JWT::urlsafeB64Decode($this->client_secret);
         } else {
-            throw new CoreException("Invalid signature algorithm");
+            throw new InvalidTokenException("Invalid signature algorithm");
         } 
         
         try {
@@ -103,7 +109,7 @@ class JWTVerifier {
                 $audience = [$audience];
             }
             if (count(array_intersect($audience, $this->valid_audiences)) == 0) {
-                throw new CoreException("This token is not intended for us.");
+                throw new InvalidTokenException("This token is not intended for us.");
             }
         } catch(\Exception $e) {
             throw new CoreException($e->getMessage());

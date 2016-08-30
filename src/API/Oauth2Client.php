@@ -442,6 +442,7 @@ class Oauth2Client {
         $this->access_token = NULL;
         $this->user = NULL;
         $this->id_token = NULL;
+        $this->refresh_token = NULL;
     }
 
 
