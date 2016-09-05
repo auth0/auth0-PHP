@@ -4,14 +4,19 @@ require_once 'vendor/autoload.php';
 require_once 'helpers.php';
 require_once 'dotenv-loader.php';
 
-$auth0Oauth = new \Auth0\SDK\Auth0(array(
-  'domain'        => getenv('AUTH0_DOMAIN'),
-  'client_id'     => getenv('AUTH0_CLIENT_ID'),
-  'client_secret' => getenv('AUTH0_CLIENT_SECRET'),
-  'redirect_uri'  => getenv('AUTH0_CALLBACK_URL'),
+use Auth0\SDK\API\Authentication;
+
+$domain        = getenv('AUTH0_DOMAIN');
+$client_id     = getenv('AUTH0_CLIENT_ID');
+$client_secret = getenv('AUTH0_CLIENT_SECRET');
+$redirect_uri  = getenv('AUTH0_CALLBACK_URL');
+
+$auth0 = new Authentication($domain, $client_id);
+
+$auth0Oauth = $auth0->get_oauth_client($client_secret, $redirect_uri, [
   'persist_id_token' => true,
   'persist_refresh_token' => true,
-));
+]);
 
 $userInfo = $auth0Oauth->getUser();
 
