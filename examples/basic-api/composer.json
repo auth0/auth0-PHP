@@ -4,7 +4,7 @@
     "require": {
         "bramus/router": "dev-master",
         "vlucas/phpdotenv": "2.2.0",
-        "auth0/auth0-php": "~3.2"
+        "auth0/auth0-php": "~4.0"
     },
     "autoload": {
         "psr-4": {
