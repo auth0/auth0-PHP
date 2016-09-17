@@ -28,7 +28,7 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 ### Oauth2 authentication
 
-```
+```php
 require __DIR__ . '/vendor/autoload.php';
 
 use Auth0\SDK\API\Authentication;
@@ -58,7 +58,7 @@ var_dump($profile);
 
 ### Calling the management API
 
-```
+```php
 require __DIR__ . '/vendor/autoload.php';
 
 use Auth0\SDK\API\Management;
@@ -75,7 +75,7 @@ var_dump($usersList);
 
 ### Calling the Authentication API
 
-```
+```php
 require __DIR__ . '/vendor/autoload.php';
 
 use Auth0\SDK\API\Authentication;
@@ -130,7 +130,7 @@ This package uses composer for mantianing dependencies. However, if you cannot u
 #### 3.x
 
 - SDK api changes, now the Auth0 API client is not build of static clases anymore. Usage example:
-```
+```php
 $token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
 $domain = "account.auth0.com";
 $guzzleOptions = [ ... ];
