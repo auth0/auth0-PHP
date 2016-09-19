@@ -330,11 +330,11 @@ class Oauth2Client {
     }
 
     public function getUserMetadata() {
-        return $this->user["user_metadata"];
+        return isset($this->user["user_metadata"]) ? $this->user["user_metadata"] : array();
     }
 
     public function getAppMetadata() {
-        return $this->user["app_metadata"];
+        return isset($this->user["app_metadata"]) ? $this->user["app_metadata"] : array();
     }
 
     public function setUser($user) {
