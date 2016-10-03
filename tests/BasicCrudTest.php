@@ -13,6 +13,10 @@ abstract class BasicCrudTest extends ApiTests {
     protected abstract function afterCreate($entity);
     protected abstract function afterUpdate($entity);
 
+    protected function getAll($client, $entity) {
+        return $client->getAll();
+    }
+
     protected function getId($entity) {
         return $entity['id'];
     }
@@ -28,7 +32,7 @@ abstract class BasicCrudTest extends ApiTests {
 
         $created = $client->create($this->getCreateBody());
 
-        $all = $client->getAll();
+        $all = $this->getAll($client, $created);
 
         $found = false;
         foreach ($all as $value) {

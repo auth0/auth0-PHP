@@ -93,7 +93,7 @@ class JWTVerifier {
             if ( !in_array($body->iss, $this->authorized_iss) ) {
                 throw new CoreException("We can't trust on a token issued by: `{$body->iss}`.");
             }
-            $secret = self::fetch_public_key($body->iss);
+            $secret = $this->JWKFetcher->fetchKeys($body->iss);
         } elseif ($head->alg === 'HS256') {
             $secret = JWT::urlsafeB64Decode($this->client_secret);
         } else {

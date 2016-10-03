@@ -35,7 +35,7 @@ class JWKFetcher {
 
             $request = new RequestBuilder(array(
                 'domain' => $iss,
-                'basePath' => '/.well-known/jwks.json',
+                'basePath' => '.well-known/jwks.json',
                 'method' => 'GET',
                 'guzzleOptions' => $this->guzzleOptions
             ));
