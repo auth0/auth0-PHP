@@ -12,7 +12,7 @@ use Auth0\SDK\API\Header\Header;
 
 class ApiClient {
 
-    const API_VERSION  = "4.0.2";
+    const API_VERSION  = "4.0.3";
 
     protected static $infoHeadersDataEnabled = true;
     protected static $infoHeadersData;
