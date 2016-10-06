@@ -204,7 +204,7 @@ class Auth0
         }
 
         $this->oauth_client = new OAuth2\Client($this->client_id, $this->client_secret);
-        $this->oauth_client->setCurlOption('CURLOPT_CONNECTTIMEOUT', 30);
+        $this->oauth_client->setCurlOption(CURLOPT_CONNECTTIMEOUT, 30);
 
         $this->user_info = $this->store->get("user_info");
         $this->access_token = $this->store->get("access_token");
