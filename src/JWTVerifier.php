@@ -56,7 +56,7 @@ class JWTVerifier {
             }
         }
 
-        if (in_array('RS256', $config['suported_algs']) && !isset($config['client_secret'])) {
+        if (in_array('HS256', $config['suported_algs']) && !isset($config['client_secret'])) {
             throw new CoreException('The client_secret is mandatory when accepting HS256 signed tokens');
         }
 
