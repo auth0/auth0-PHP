@@ -63,7 +63,9 @@ class JWTVerifier {
         $this->suported_algs = $config['suported_algs'];
         $this->valid_audiences = $config['valid_audiences'];
         $this->authorized_iss = $config['authorized_iss'];
-        $this->client_secret = $config['client_secret'];
+        if (in_array('HS256', $config['suported_algs']) {
+            $this->client_secret = $config['client_secret'];
+        }
 
         $this->JWKFetcher = new JWKFetcher($cache, $guzzleOptions);
     }
