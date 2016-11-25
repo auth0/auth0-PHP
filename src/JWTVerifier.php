@@ -44,6 +44,10 @@ class JWTVerifier {
             $config['suported_algs'] = ['HS256'];
         }
 
+        if (!isset($config['secret_base64_encoded'])) {
+            $config['secret_base64_encoded'] = true;
+        }
+
         if (!isset($config['valid_audiences'])) {
             throw new CoreException('The audience is mandatory');
         }
@@ -63,6 +67,7 @@ class JWTVerifier {
         $this->suported_algs = $config['suported_algs'];
         $this->valid_audiences = $config['valid_audiences'];
         $this->authorized_iss = $config['authorized_iss'];
+        $this->secret_base64_encoded = $config['secret_base64_encoded'];
 
         if (in_array('HS256', $config['suported_algs'])) {
             $this->client_secret = $config['client_secret'];
@@ -72,7 +77,7 @@ class JWTVerifier {
     }
 
     public function verifyAndDecode($jwt) {
-        
+
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
             throw new InvalidTokenException('Wrong number of segments');
@@ -98,11 +103,15 @@ class JWTVerifier {
             }
             $secret = $this->JWKFetcher->fetchKeys($body->iss);
         } elseif ($head->alg === 'HS256') {
+          if ($this->secret_base64_encoded) {
             $secret = JWT::urlsafeB64Decode($this->client_secret);
+          } else {
+            $secret = $this->client_secret;
+          }
         } else {
             throw new InvalidTokenException("Invalid signature algorithm");
-        } 
-        
+        }
+
         try {
             // Decode the user
             $decodedToken = JWT::decode($jwt, $secret, array('HS256', 'RS256'));

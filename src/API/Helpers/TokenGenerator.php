@@ -1,12 +1,12 @@
-<?php namespace Auth0\SDK\API\Helpers; 
+<?php namespace Auth0\SDK\API\Helpers;
 
-use Firebase\JWT\JWT;    
+use Firebase\JWT\JWT;
 
 class TokenGenerator {
-    
+
     protected $client_id;
     protected $client_secret;
-    
+
      /**
      * TokenGenerator Constructor.
      *
@@ -17,47 +17,56 @@ class TokenGenerator {
      *
      */
     public function __construct($credentials) {
-        
-        $this->client_id = $credentials['client_id'];
-        $this->client_secret = $credentials['client_secret'];
-        
+
+      if (!isset($credentials['secret_base64_encoded'])) {
+        $credentials['secret_base64_encoded'] = true;
+      }
+
+      $this->client_id = $credentials['client_id'];
+      $this->client_secret = $credentials['client_secret'];
+      $this->secret_base64_encoded = $credentials['secret_base64_encoded'];
+
     }
-    
+
     protected function bstr2bin($input)
     // Binary representation of a binary-string
-    {    
+    {
       // Unpack as a hexadecimal string
       $value = $this->str2hex($input);
-    
+
       // Output binary representation
       return base_convert($value, 16, 2);
     }
-    
+
     protected function str2hex($input) {
         $data = unpack('H*', $input);
         return $data[1];
     }
-    
+
     public function generate($scopes, $lifetime = 36000) {
-    
+
         $time = time();
-        
+
         $payload = array(
             "iat" => $time,
             "scopes" => $scopes
         );
-        
+
         $jti = md5(json_encode($payload));
-        
+
         $payload['jti'] = $jti;
         $payload["exp"] = $time + $lifetime;
         $payload["aud"] = $this->client_id;
-        
-        $secret = base64_decode(strtr($this->client_secret, '-_', '+/'));
-        
+
+        if ($this->secret_base64_encoded) {
+          $secret = base64_decode(strtr($this->client_secret, '-_', '+/'));
+        } else {
+          $secret = $this->client_secret;
+        }
+
         $jwt = JWT::encode($payload, $secret);
-        
+
         return $jwt;
     }
-    
+
 }
