@@ -12,8 +12,12 @@ use Auth0\SDK\API\Authentication;
 
 class AuthApiDBConnectionsTest extends ApiTests {
 
-    protected $email = 'unit.test@auth0.com';
-    protected $connection = 'unit-test';
+    protected $email;
+    protected $connection = 'Username-Password-Authentication';
+
+    protected function setUp() {
+        $this->email = 'test-dbconnections-user' . rand() . '@test.com';
+    }
 
     public function testSignup() {
         $env = $this->getEnv();
