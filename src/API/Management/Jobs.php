@@ -32,21 +32,15 @@ class Jobs extends GenericResource
       ->call();
   }
 
-  public function sendVerificationEmail($user_id, $result_url = null) 
+  public function sendVerificationEmail($user_id) 
   {
-      $body = [
-        'user_id' => $user_id
-      ];
-      
-      if(!is_null($result_url)){
-          $body['result_url'] = $result_url;
-      }
-      
     return $this->apiClient->post()
       ->jobs()
       ->addPath('verification-email')
       ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($body))
+      ->withBody(json_encode([
+        'user_id' => $user_id
+      ]))
       ->call();
   }
 }
