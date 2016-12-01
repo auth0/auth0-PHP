@@ -307,4 +307,41 @@ class Authentication {
       ->withBody(json_encode($data))
       ->call();
   }
+
+  public function dbconnections_signup($email, $password, $connection) {
+
+    $data = [
+      'client_id' => $this->client_id,
+      'email' => $email,
+      'password' => $password,
+      'connection' => $connection,
+    ];
+
+    return $this->apiClient->post()
+      ->dbconnections()
+      ->signup()
+      ->withHeader(new ContentType('application/json'))
+      ->withBody(json_encode($data))
+      ->call();
+  }
+
+  public function dbconnections_change_password($email, $connection, $password = null) {
+
+    $data = [
+      'client_id' => $this->client_id,
+      'email' => $email,
+      'connection' => $connection,
+    ];
+
+    if ($password !== null) {
+      $data['password'] = $password;
+    }
+
+    return $this->apiClient->post()
+      ->dbconnections()
+      ->change_password()
+      ->withHeader(new ContentType('application/json'))
+      ->withBody(json_encode($data))
+      ->call();
+  }
 }
