@@ -42,20 +42,16 @@ class Authentication {
     $this->apiClient = $client;
   }
 
-  public function get_oauth_client($client_secret, $redirect_uri, $extra_params = []) {
-
-    if (empty($this->client_id)) {
-      throw new ApiException('client_id was not set.');
-    }
-
-    $extra_params['domain'] = $this->domain;
-    $extra_params['client_id'] = $this->client_id;
-    $extra_params['client_secret'] = $client_secret;
-    $extra_params['redirect_uri'] = $redirect_uri;
-
-    return new Oauth2Client($extra_params);
-  }
-
+  /**
+   * Builds and returns the `/authorize` url in order to initialize a new authN/authZ transaction
+   *
+   * @method get_authorize_link https://auth0.com/docs/api/authentication#!#get--authorize_db
+   * @param {String} response_type
+   * @param {String} redirect_uri
+   * @param {String} connection [optional]
+   * @param {String} state      [optional]
+   * @param {Object} aditional_params      [optional]
+   */
   public function get_authorize_link($response_type, $redirect_uri, $connection = null, $state = null, $aditional_params = []) {
 
     $aditional_params['response_type'] = $response_type;
@@ -99,7 +95,15 @@ class Authentication {
 
   }
 
-  public function get_logout_link($returnTo = null, $client_id = null) {
+  /**
+   * Builds and returns the Logout url in order to termiate a SSO session
+   *
+   * @method get_logout_link https://auth0.com/docs/api/authentication#logout
+   * @param {String} returnTo
+   * @param {String} client_id
+   * @param {String} client_id
+   */
+  public function get_logout_link($returnTo = null, $client_id = null, $federated = false) {
 
     $params = [];
     if ($returnTo !== null) {
@@ -107,6 +111,9 @@ class Authentication {
     }
     if ($client_id !== null) {
       $params['client_id'] = $client_id;
+    }
+    if ($federated) {
+      $params['federated'] = "";
     }
 
     $query_string = Psr7\build_query($params);
@@ -126,38 +133,6 @@ class Authentication {
     return $this->apiClient->post()
       ->oauth()
       ->access_token()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
-  }
-
-  public function authorize_with_ro($username, $password, $scope = 'openid', $connection = null, $id_token = null, $device = null){
-
-    $data = [
-      'client_id' => $this->client_id,
-      'username' => $username,
-      'password' => $password,
-      'scope' => $scope,
-    ];
-
-    if ($device !== null) {
-      $data['device'] = $device;
-    }
-
-    if ($id_token !== null) {
-      $data['id_token'] = $id_token;
-      $data['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
-    } else {
-      if ($connection === null) {
-        throw new ApiException('You need to specify a conection for grant_type=password authentication');
-      }
-      $data['grant_type'] = 'password';
-      $data['connection'] = $connection;
-    }
-
-    return $this->apiClient->post()
-      ->oauth()
-      ->ro()
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode($data))
       ->call();
@@ -222,41 +197,6 @@ class Authentication {
 
   }
 
-  public function tokeninfo($id_token){
-
-    return $this->apiClient->get()
-      ->tokeninfo()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode([
-        'id_token' => $id_token
-      ]))
-      ->call();
-
-  }
-
-  public function delegation($id_token, $type, $target_client_id, $api_type, $aditional_params = [], $scope = 'openid', $grant_type = 'urn:ietf:params:oauth:grant-type:jwt-bearer'){
-
-    if (! in_array($type, ['id_token', 'refresh_token'])) {
-      throw new ApiException('Delegation type must be id_token or refresh_token');
-    }
-
-    $data = array_merge($aditional_params,[
-      'client_id' => $this->client_id,
-      'target' => $target_client_id,
-      'grant_type' => $grant_type,
-      'scope' => $scope,
-      'api_type' => $api_type,
-      $type => $id_token,
-    ]);
-
-    return $this->apiClient->post()
-      ->delegation()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
-
-  }
-
   public function get_access_token() {
     return $this->access_token;
   }
@@ -314,7 +254,7 @@ class Authentication {
   /**
    * Makes a call to the `oauth/token` endpoint with `password-realm` grant type
    *
-   * @method login_with_default_directory
+   * @method login
    * @param {Object} options:
    * @param {Object} options.username
    * @param {Object} options.password
@@ -367,7 +307,7 @@ class Authentication {
   /**
    * Makes a call to the `oauth/token` endpoint with `client_credentials` grant type
    *
-   * @method login_with_default_directory
+   * @method client_credentials
    * @param {Object} options: https://auth0.com/docs/api-auth/grant/client-credentials
    * @param {Object} options.client_id
    * @param {Object} options.client_secret
