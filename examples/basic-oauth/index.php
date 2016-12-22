@@ -4,24 +4,26 @@ require_once 'vendor/autoload.php';
 require_once 'helpers.php';
 require_once 'dotenv-loader.php';
 
-use Auth0\SDK\API\Authentication;
+use Auth0\SDK\Auth0;
 
 $domain        = getenv('AUTH0_DOMAIN');
 $client_id     = getenv('AUTH0_CLIENT_ID');
 $client_secret = getenv('AUTH0_CLIENT_SECRET');
 $redirect_uri  = getenv('AUTH0_CALLBACK_URL');
 
-$auth0 = new Authentication($domain, $client_id);
-
-$auth0Oauth = $auth0->get_oauth_client($client_secret, $redirect_uri, [
+$auth0 = new Auth0([
+  'domain' => $domain,
+  'client_id' => $client_id,
+  'client_secret' => $client_secret,
+  'redirect_uri' => $redirect_uri,
   'persist_id_token' => true,
   'persist_refresh_token' => true,
 ]);
 
-$userInfo = $auth0Oauth->getUser();
+$userInfo = $auth0->getUser();
 
 if (isset($_REQUEST['logout'])) {
-    $auth0Oauth->logout();
+    $auth0->logout();
     session_destroy();
     header("Location: /");
 }
@@ -37,4 +39,5 @@ if (isset($_REQUEST['create-user'])) {
 if ($userInfo) require 'logeduser.php';
 
 
-require 'login.php';
+// require 'login.php';
+$auth0->login();

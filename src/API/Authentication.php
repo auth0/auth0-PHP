@@ -23,11 +23,6 @@ class Authentication {
     $this->guzzleOptions = $guzzleOptions;
 
     $this->setApiClient();
-
-    if (!empty($client_id) && !empty($client_secret)) {
-      $this->access_token = $this->oauth_token($client_id, $client_secret);
-    }
-
   }
 
   protected function setApiClient() {
@@ -223,7 +218,7 @@ class Authentication {
   /**
    * Makes a call to the `oauth/token` endpoint
    *
-   * @method oauthToken
+   * @method oauth_token
    * @param {Object} options:
    * @param {Object} options.grantType
    * @param {Object} options.client_id
@@ -232,15 +227,14 @@ class Authentication {
    * @param {Object} options.password  [optional] Only if grant type: password/password-realm
    * @param {Object} options.scope     [optional]
    * @param {Object} options.audience  [optional]
-   * @param {Function} cb
    */
-  public function oauth_token($options) {
+  public function oauth_token($options = []) {
     if (! isset($options['client_id'])) {
       $options['client_id'] = $this->client_id;
     }
 
     if (! isset($options['grant_type'])) {
-      throw new ApiException('client_id is mandatory');
+      throw new ApiException('grant_type is mandatory');
     }
 
     return $this->apiClient->post()
@@ -249,6 +243,23 @@ class Authentication {
       ->withHeader(new ContentType('application/json'))
       ->withBody(json_encode($options))
       ->call();
+  }
+
+  /**
+   * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type
+   *
+   * @method code_exchange
+   * @param {Object} code
+   */
+  public function code_exchange($code, $redirect_uri) {
+    $options = [];
+
+    $options['client_secret'] = $this->client_secret;
+    $options['redirect_uri'] = $redirect_uri;
+    $options['code'] = $code;
+    $options['grant_type'] = 'authorization_code';
+
+    return $this->oauth_token($options);
   }
 
   /**
