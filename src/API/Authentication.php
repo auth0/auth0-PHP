@@ -21,13 +21,13 @@ class Authentication {
     $this->client_secret = $client_secret;
     $this->domain = $domain;
     $this->guzzleOptions = $guzzleOptions;
-    
+
     $this->setApiClient();
 
     if (!empty($client_id) && !empty($client_secret)) {
       $this->access_token = $this->oauth_token($client_id, $client_secret);
     }
-    
+
   }
 
   protected function setApiClient() {
@@ -46,7 +46,7 @@ class Authentication {
 
     if (empty($this->client_id)) {
       throw new ApiException('client_id was not set.');
-    } 
+    }
 
     $extra_params['domain'] = $this->domain;
     $extra_params['client_id'] = $this->client_id;
@@ -280,32 +280,108 @@ class Authentication {
 
   }
 
-  public function oauth_token($client_id, $client_secret, $grant_type = 'client_credentials', $code = null, $audience = null, $scope = null) {
-
-    $data = [
-      'client_id' => $client_id,
-      'client_secret' => $client_secret,
-      'grant_type' => $grant_type,
-    ];
-
-    if ($audience !== null) {
-      $data['audience'] = $audience;
+  /**
+   * Makes a call to the `oauth/token` endpoint
+   *
+   * @method oauthToken
+   * @param {Object} options:
+   * @param {Object} options.grantType
+   * @param {Object} options.client_id
+   * @param {Object} options.client_secret [optional] Only if grant type: client_credentials
+   * @param {Object} options.username  [optional] Only if grant type: password/password-realm
+   * @param {Object} options.password  [optional] Only if grant type: password/password-realm
+   * @param {Object} options.scope     [optional]
+   * @param {Object} options.audience  [optional]
+   * @param {Function} cb
+   */
+  public function oauth_token($options) {
+    if (! isset($options['client_id'])) {
+      $options['client_id'] = $this->client_id;
     }
 
-    if ($scope !== null) {
-      $data['scope'] = $scope;
-    }
-
-    if ($code !== null) {
-      $data['code'] = $code;
+    if (! isset($options['grant_type'])) {
+      throw new ApiException('client_id is mandatory');
     }
 
     return $this->apiClient->post()
       ->oauth()
       ->token()
       ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
+      ->withBody(json_encode($options))
       ->call();
+  }
+
+  /**
+   * Makes a call to the `oauth/token` endpoint with `password-realm` grant type
+   *
+   * @method login_with_default_directory
+   * @param {Object} options:
+   * @param {Object} options.username
+   * @param {Object} options.password
+   * @param {Object} options.realm
+   * @param {Object} options.scope [optional]
+   * @param {Object} options.scope [audience]
+   */
+  public function login($options) {
+    if (! isset($options['username'])) {
+      throw new ApiException('username is mandatory');
+    }
+
+    if (! isset($options['password'])) {
+      throw new ApiException('password is mandatory');
+    }
+
+    if (! isset($options['realm'])) {
+      throw new ApiException('realm is mandatory');
+    }
+
+    $options['grant_type'] = 'http://auth0.com/oauth/grant-type/password-realm';
+
+    return $this->oauth_token($options);
+  }
+
+  /**
+   * Makes a call to the `oauth/token` endpoint with `password` grant type
+   *
+   * @method login_with_default_directory
+   * @param {Object} options: https://auth0.com/docs/api-auth/grant/password
+   * @param {Object} options.username
+   * @param {Object} options.password
+   * @param {Object} options.scope [optional]
+   * @param {Object} options.scope [audience]
+   */
+  public function login_with_default_directory($options) {
+    if (! isset($options['username'])) {
+      throw new ApiException('username is mandatory');
+    }
+
+    if (! isset($options['password'])) {
+      throw new ApiException('password is mandatory');
+    }
+
+    $options['grant_type'] = 'password';
+
+    return $this->oauth_token($options);
+  }
+
+  /**
+   * Makes a call to the `oauth/token` endpoint with `client_credentials` grant type
+   *
+   * @method login_with_default_directory
+   * @param {Object} options: https://auth0.com/docs/api-auth/grant/client-credentials
+   * @param {Object} options.client_id
+   * @param {Object} options.client_secret
+   * @param {Object} options.scope [optional]
+   * @param {Object} options.scope [audience]
+   */
+  public function client_credentials($options) {
+    if (! isset($options['client_secret'])) {
+      throw new ApiException('client_secret is mandatory');
+    }
+
+    $options['grant_type'] = 'client_credentials';
+
+    return $this->oauth_token($options);
   }
 
   public function dbconnections_signup($email, $password, $connection) {
