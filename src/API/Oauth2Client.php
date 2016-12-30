@@ -237,10 +237,11 @@ class Oauth2Client {
      * @return Boolean Whether it exchanged the code or not correctly
      */
     public function exchangeCode() {
-        if (!isset($_REQUEST['code'])) {
+        $code = $_GET['code'] ?: $_POST['code'];
+        if (!isset($code)) {
+            $this->debugInfo("No code found in _GET or _POST params.");
             return false;
         }
-        $code = $_REQUEST['code'];
 
         $this->debugInfo("Code: ".$code);
 
