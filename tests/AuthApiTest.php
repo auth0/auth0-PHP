@@ -23,7 +23,7 @@ class AuthApiTest extends ApiTests {
 
     public function testAuthorizeWithRO() {
         $env = $this->getEnv();
-        
+
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
         $response = $api->authorize_with_ro('auth@test.com', '123456', 'openid', 'Username-Password-Authentication');
@@ -40,22 +40,16 @@ class AuthApiTest extends ApiTests {
         $this->assertArrayHasKey('user_id', $userinfo);
         $this->assertEquals('auth@test.com', $userinfo['email']);
         $this->assertEquals('auth0|57e293c6247600bf0ba47fc2', $userinfo['user_id']);
-
-        $tokeninfo = $api->tokeninfo($response['id_token']);
-
-        $this->assertArrayHasKey('email', $tokeninfo);
-        $this->assertArrayHasKey('email_verified', $tokeninfo);
-        $this->assertArrayHasKey('user_id', $tokeninfo);
-        $this->assertEquals('auth@test.com', $tokeninfo['email']);
-        $this->assertEquals('auth0|57e293c6247600bf0ba47fc2', $tokeninfo['user_id']);
     }
 
     public function testOauthToken() {
         $env = $this->getEnv();
-        
-        $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
-        $token = $api->get_access_token();
+        $api = new Authentication($env['DOMAIN'], $env['NIC_ID'], $env['NIC_SECRET']);
+
+        $token = $api->client_credentials([
+          'audience' => 'tests'
+        ]);
 
         $this->assertArrayHasKey('access_token', $token);
         $this->assertArrayHasKey('token_type', $token);
@@ -64,10 +58,12 @@ class AuthApiTest extends ApiTests {
 
     public function testImpersonation() {
         $env = $this->getEnv();
-        
+
         $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
-        $url = $api->impersonate('facebook|1434903327', "oauth2", 'auth0|56b110b8d9d327e705e1d2da', 'ycynBrUeQUnFqNacG3GAsaTyDhG4h0qT', [ "response_type" => "code" ]);
+        $token = $api->client_credentials([]);
+
+        $url = $api->impersonate($token['access_token'], 'facebook|1434903327', "oauth2", 'auth0|56b110b8d9d327e705e1d2da', 'ycynBrUeQUnFqNacG3GAsaTyDhG4h0qT', [ "response_type" => "code" ]);
 
         $this->assertStringStartsWith("https://" . $env['DOMAIN'], $url);
     }
@@ -78,7 +74,7 @@ class AuthApiTest extends ApiTests {
         $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
         $this->assertSame("https://" . $env['DOMAIN'] . "/v2/logout?", $api->get_logout_link());
-        
+
         $this->assertSame("https://" . $env['DOMAIN'] . "/v2/logout?returnTo=http%3A%2F%2Fexample.com", $api->get_logout_link("http://example.com"));
 
         $this->assertSame("https://" . $env['DOMAIN'] . "/v2/logout?returnTo=http%3A%2F%2Fexample.com&client_id=" . $env['GLOBAL_CLIENT_ID'], $api->get_logout_link("http://example.com", $env['GLOBAL_CLIENT_ID']));

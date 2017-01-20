@@ -5,7 +5,8 @@ use Auth0\SDK\API\Management;
 
 class UsersTest extends BasicCrudTest {
 
-    protected $email; 
+    protected $email;
+    protected $findCreatedItem = false;
 
     protected function getId($entity) {
         return $entity['user_id'];
@@ -33,7 +34,7 @@ class UsersTest extends BasicCrudTest {
 
     protected function getAll($client, $entity) { echo "user_id:'{$entity['user_id']}'";
         return $client->getAll([
-            "q" => "user_id:'{$entity['user_id']}'", 
+            "q" => "user_id:'{$entity['user_id']}'",
             "search_engine"=>"v2"
         ]);
     }
@@ -44,8 +45,8 @@ class UsersTest extends BasicCrudTest {
 
         return [
             'connection' => 'Username-Password-Authentication',
-            'email' => $this->email . '@test.com', 
-            'password' => '123456', 
+            'email' => $this->email . '@test.com',
+            'password' => '123456',
             'email_verified' => true
         ];
     }

@@ -7,6 +7,8 @@ abstract class BasicCrudTest extends ApiTests {
 
     protected $domain;
 
+    protected $findCreatedItem = true;
+
     protected abstract function getApiClient();
     protected abstract function getCreateBody();
     protected abstract function getUpdateBody();
@@ -41,7 +43,10 @@ abstract class BasicCrudTest extends ApiTests {
                 break;
             }
         }
-        $this->assertTrue($found, 'Created item not found');
+
+        if ($this->findCreatedItem) {
+          $this->assertTrue($found, 'Created item not found');
+        }
 
         $this->afterCreate($created);
 

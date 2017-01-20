@@ -12,31 +12,17 @@ use Auth0\SDK\API\Header\Header;
 
 class ApiClient {
 
-    const API_VERSION  = "4.0.12";
+    const API_VERSION  = "5.0.0";
 
-    /**
-     * @var bool
-     */
     protected static $infoHeadersDataEnabled = true;
-
-    /**
-     * @var InformationHeaders
-     */
     protected static $infoHeadersData;
 
-    /**
-     * @param InformationHeaders $infoHeadersData
-     * @return null
-     */
     public static function setInfoHeadersData(InformationHeaders $infoHeadersData) {
         if (!self::$infoHeadersDataEnabled) return null;
 
         self::$infoHeadersData = $infoHeadersData;
     }
 
-    /**
-     * @return InformationHeaders|null
-     */
     public static function getInfoHeadersData() {
         if (!self::$infoHeadersDataEnabled) return null;
 
@@ -53,30 +39,11 @@ class ApiClient {
         self::$infoHeadersDataEnabled = false;
     }
 
-    /**
-     * @var string
-     */
     protected $domain;
-
-    /**
-     * @var string
-     */
     protected $basePath;
-
-    /**
-     * @var array
-     */
     protected $headers;
-
-    /**
-     * @var array
-     */
     protected $guzzleOptions;
 
-    /**
-     * ApiClient constructor.
-     * @param array $config
-     */
     public function __construct($config) {
         $this->basePath = $config['basePath'];
         $this->domain = $config['domain'];
@@ -88,12 +55,6 @@ class ApiClient {
         }
     }
 
-    /**
-     * @param string $name
-     * @param array $arguments
-     *
-     * @return RequestBuilder
-     */
     public function __call($name, $arguments) {
         $builder = new RequestBuilder(array(
             'domain' => $this->domain,

@@ -9,51 +9,22 @@ use GuzzleHttp\Psr7;
 
 class Authentication {
 
-    /**
-     * @var string
-     */
   private $client_id;
-
-    /**
-     * @var string
-     */
   private $client_secret;
-
-    /**
-     * @var string
-     */
   private $domain;
-
-    /**
-     * @var ApiClient
-     */
   private $apiClient;
-
-    /**
-     * @var array
-     */
   private $guzzleOptions;
 
-    /**
-     * Authentication constructor.
-     * @param string $domain
-     * @param string|null $client_id
-     * @param string|null $client_secret
-     * @param array $guzzleOptions
-     */
-  public function __construct($domain, $client_id = null, $client_secret = null, $guzzleOptions = []) {
+  public function __construct($domain, $client_id = null, $client_secret = null, $audience = null, $scope = null, $guzzleOptions = []) {
 
     $this->client_id = $client_id;
     $this->client_secret = $client_secret;
     $this->domain = $domain;
     $this->guzzleOptions = $guzzleOptions;
-    
-    $this->setApiClient();
+    $this->audience = $audience;
+    $this->scope = $scope;
 
-    if (!empty($client_id) && !empty($client_secret)) {
-      $this->access_token = $this->oauth_token($client_id, $client_secret);
-    }
-    
+    $this->setApiClient();
   }
 
   protected function setApiClient() {
@@ -68,35 +39,16 @@ class Authentication {
     $this->apiClient = $client;
   }
 
-    /**
-     * @param string $client_secret
-     * @param string $redirect_uri
-     * @param array $extra_params
-     * @return Oauth2Client
-     * @throws ApiException
-     */
-  public function get_oauth_client($client_secret, $redirect_uri, $extra_params = []) {
-
-    if (empty($this->client_id)) {
-      throw new ApiException('client_id was not set.');
-    } 
-
-    $extra_params['domain'] = $this->domain;
-    $extra_params['client_id'] = $this->client_id;
-    $extra_params['client_secret'] = $client_secret;
-    $extra_params['redirect_uri'] = $redirect_uri;
-
-    return new Oauth2Client($extra_params);
-  }
-
-    /**
-     * @param string $response_type
-     * @param string $redirect_uri
-     * @param null|string $connection
-     * @param null|string $state
-     * @param array $aditional_params
-     * @return string
-     */
+  /**
+   * Builds and returns the `/authorize` url in order to initialize a new authN/authZ transaction
+   *
+   * @method get_authorize_link https://auth0.com/docs/api/authentication#!#get--authorize_db
+   * @param {String} response_type
+   * @param {String} redirect_uri
+   * @param {String} connection [optional]
+   * @param {String} state      [optional]
+   * @param {Object} aditional_params      [optional]
+   */
   public function get_authorize_link($response_type, $redirect_uri, $connection = null, $state = null, $aditional_params = []) {
 
     $aditional_params['response_type'] = $response_type;
@@ -116,52 +68,39 @@ class Authentication {
     return "https://{$this->domain}/authorize?$query_string";
   }
 
-    /**
-     * @param string $client_id
-     * @param string $connection
-     * @return string
-     */
   public function get_samlp_link($client_id, $connection = '') {
 
     return "https://{$this->domain}/samlp/$client_id?connection=$connection";
 
   }
 
-    /**
-     * @param string $client_id
-     * @return string
-     */
   public function get_samlp_metadata_link($client_id) {
 
     return "https://{$this->domain}/samlp/metadata/$client_id";
 
   }
 
-    /**
-     * @param string $client_id
-     * @return string
-     */
   public function get_wsfed_link($client_id) {
 
     return "https://{$this->domain}/wsfed/$client_id";
 
   }
 
-    /**
-     * @return string
-     */
   public function get_wsfed_metadata_link() {
 
     return "https://{$this->domain}/wsfed/FederationMetadata/2007-06/FederationMetadata.xml";
 
   }
 
-    /**
-     * @param null|string $returnTo
-     * @param null|string $client_id
-     * @return string
-     */
-  public function get_logout_link($returnTo = null, $client_id = null) {
+  /**
+   * Builds and returns the Logout url in order to termiate a SSO session
+   *
+   * @method get_logout_link https://auth0.com/docs/api/authentication#logout
+   * @param {String} returnTo
+   * @param {String} client_id
+   * @param {Boolean} federated
+   */
+  public function get_logout_link($returnTo = null, $client_id = null, $federated = false) {
 
     $params = [];
     if ($returnTo !== null) {
@@ -170,19 +109,15 @@ class Authentication {
     if ($client_id !== null) {
       $params['client_id'] = $client_id;
     }
+    if ($federated) {
+      $params['federated'] = "";
+    }
 
     $query_string = Psr7\build_query($params);
 
     return "https://{$this->domain}/v2/logout?$query_string";
   }
 
-    /**
-     * @param string $access_token
-     * @param string $connection
-     * @param string $scope
-     * @param array $aditional_params
-     * @return mixed
-     */
   public function authorize_with_accesstoken($access_token, $connection, $scope = 'openid', $aditional_params = []){
 
     $data = array_merge($aditional_params, [
@@ -200,54 +135,6 @@ class Authentication {
       ->call();
   }
 
-    /**
-     * @param string $username
-     * @param string $password
-     * @param string $scope
-     * @param null|string $connection
-     * @param null|string $id_token
-     * @param null|string $device
-     * @return mixed
-     * @throws ApiException
-     */
-  public function authorize_with_ro($username, $password, $scope = 'openid', $connection = null, $id_token = null, $device = null){
-
-    $data = [
-      'client_id' => $this->client_id,
-      'username' => $username,
-      'password' => $password,
-      'scope' => $scope,
-    ];
-
-    if ($device !== null) {
-      $data['device'] = $device;
-    }
-
-    if ($id_token !== null) {
-      $data['id_token'] = $id_token;
-      $data['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
-    } else {
-      if ($connection === null) {
-        throw new ApiException('You need to specify a conection for grant_type=password authentication');
-      }
-      $data['grant_type'] = 'password';
-      $data['connection'] = $connection;
-    }
-
-    return $this->apiClient->post()
-      ->oauth()
-      ->ro()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
-  }
-
-    /**
-     * @param string $email
-     * @param string $type
-     * @param array $authParams
-     * @return mixed
-     */
   public function email_passwordless_start($email, $type, $authParams = []){
 
     $data = [
@@ -269,10 +156,6 @@ class Authentication {
       ->call();
   }
 
-    /**
-     * @param string $phone_number
-     * @return mixed
-     */
   public function sms_passwordless_start($phone_number){
 
     $data = [
@@ -289,34 +172,49 @@ class Authentication {
       ->call();
   }
 
-    /**
-     * @param string $phone_number
-     * @param string $code
-     * @param string $scope
-     * @return mixed
-     */
   public function sms_code_passwordless_verify($phone_number, $code, $scope = 'openid'){
 
     return $this->authorize_with_ro($phone_number, $code, $scope, 'sms');
 
   }
 
-    /**
-     * @param string $email
-     * @param string $code
-     * @param string $scope
-     * @return mixed
-     */
   public function email_code_passwordless_verify($email, $code, $scope = 'openid'){
 
     return $this->authorize_with_ro($email, $code, $scope, 'email');
 
   }
 
-    /**
-     * @param string$access_token
-     * @return mixed
-     */
+  /**
+   * @deprecated Use `login` instead. Use only for passwordless verify
+   */
+  public function authorize_with_ro($username, $password, $scope = 'openid', $connection = null, $id_token = null, $device = null){
+    $data = [
+      'client_id' => $this->client_id,
+      'username' => $username,
+      'password' => $password,
+      'scope' => $scope,
+    ];
+    if ($device !== null) {
+      $data['device'] = $device;
+    }
+    if ($id_token !== null) {
+      $data['id_token'] = $id_token;
+      $data['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
+    } else {
+      if ($connection === null) {
+        throw new ApiException('You need to specify a conection for grant_type=password authentication');
+      }
+      $data['grant_type'] = 'password';
+      $data['connection'] = $connection;
+    }
+    return $this->apiClient->post()
+      ->oauth()
+      ->ro()
+      ->withHeader(new ContentType('application/json'))
+      ->withBody(json_encode($data))
+      ->call();
+  }
+
   public function userinfo($access_token){
 
     return $this->apiClient->get()
@@ -327,72 +225,7 @@ class Authentication {
 
   }
 
-    /**
-     * @param string $id_token
-     * @return mixed
-     */
-  public function tokeninfo($id_token){
-
-    return $this->apiClient->get()
-      ->tokeninfo()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode([
-        'id_token' => $id_token
-      ]))
-      ->call();
-
-  }
-
-    /**
-     * @param string $id_token
-     * @param string $type
-     * @param string $target_client_id
-     * @param string $api_type
-     * @param array $aditional_params
-     * @param string $scope
-     * @param string $grant_type
-     * @return mixed
-     * @throws ApiException
-     */
-  public function delegation($id_token, $type, $target_client_id, $api_type, $aditional_params = [], $scope = 'openid', $grant_type = 'urn:ietf:params:oauth:grant-type:jwt-bearer'){
-
-    if (! in_array($type, ['id_token', 'refresh_token'])) {
-      throw new ApiException('Delegation type must be id_token or refresh_token');
-    }
-
-    $data = array_merge($aditional_params,[
-      'client_id' => $this->client_id,
-      'target' => $target_client_id,
-      'grant_type' => $grant_type,
-      'scope' => $scope,
-      'api_type' => $api_type,
-      $type => $id_token,
-    ]);
-
-    return $this->apiClient->post()
-      ->delegation()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
-
-  }
-
-    /**
-     * @return string
-     */
-  public function get_access_token() {
-    return $this->access_token;
-  }
-
-    /**
-     * @param string $user_id
-     * @param string $protocol
-     * @param string $impersonator_id
-     * @param string $client_id
-     * @param array $additionalParameters
-     * @return mixed
-     */
-  public function impersonate($user_id, $protocol, $impersonator_id, $client_id, $additionalParameters=[]){
+  public function impersonate($access_token, $user_id, $protocol, $impersonator_id, $client_id, $additionalParameters=[]){
 
     $data = [
       'protocol' => $protocol,
@@ -405,55 +238,149 @@ class Authentication {
       ->users($user_id)
       ->impersonate()
       ->withHeader(new ContentType('application/json'))
-      ->withHeader(new AuthorizationBearer($this->access_token['access_token']))
+      ->withHeader(new AuthorizationBearer($access_token))
       ->withBody(json_encode($data))
       ->call();
 
   }
 
-    /**
-     * @param string$client_id
-     * @param string$client_secret
-     * @param string $grant_type
-     * @param null|string $code
-     * @param null|string $audience
-     * @param null|string $scope
-     * @return mixed
-     */
-  public function oauth_token($client_id, $client_secret, $grant_type = 'client_credentials', $code = null, $audience = null, $scope = null) {
-
-    $data = [
-      'client_id' => $client_id,
-      'client_secret' => $client_secret,
-      'grant_type' => $grant_type,
-    ];
-
-    if ($audience !== null) {
-      $data['audience'] = $audience;
+  /**
+   * Makes a call to the `oauth/token` endpoint
+   *
+   * @method oauth_token
+   * @param {Object} options:
+   * @param {Object} options.grantType
+   * @param {Object} options.client_id
+   * @param {Object} options.client_secret [optional] Only if grant type: client_credentials
+   * @param {Object} options.username  [optional] Only if grant type: password/password-realm
+   * @param {Object} options.password  [optional] Only if grant type: password/password-realm
+   * @param {Object} options.scope     [optional]
+   * @param {Object} options.audience  [optional]
+   */
+  public function oauth_token($options = []) {
+    if (! isset($options['client_id'])) {
+      $options['client_id'] = $this->client_id;
     }
 
-    if ($scope !== null) {
-      $data['scope'] = $scope;
-    }
-
-    if ($code !== null) {
-      $data['code'] = $code;
+    if (! isset($options['grant_type'])) {
+      throw new ApiException('grant_type is mandatory');
     }
 
     return $this->apiClient->post()
       ->oauth()
       ->token()
       ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
+      ->withBody(json_encode($options))
       ->call();
   }
 
-    /**
-     * @param string $email
-     * @param string $password
-     * @param string $connection
-     * @return mixed
-     */
+  /**
+   * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type
+   *
+   * @method code_exchange
+   * @param {Object} code
+   */
+  public function code_exchange($code, $redirect_uri) {
+    $options = [];
+
+    $options['client_secret'] = $this->client_secret;
+    $options['redirect_uri'] = $redirect_uri;
+    $options['code'] = $code;
+    $options['grant_type'] = 'authorization_code';
+
+    return $this->oauth_token($options);
+  }
+
+  /**
+   * Makes a call to the `oauth/token` endpoint with `password-realm` grant type
+   *
+   * @method login
+   * @param {Object} options:
+   * @param {Object} options.username
+   * @param {Object} options.password
+   * @param {Object} options.realm
+   * @param {Object} options.scope [optional]
+   * @param {Object} options.audience [optional]
+   */
+  public function login($options) {
+    if (! isset($options['username'])) {
+      throw new ApiException('username is mandatory');
+    }
+
+    if (! isset($options['password'])) {
+      throw new ApiException('password is mandatory');
+    }
+
+    if (! isset($options['realm'])) {
+      throw new ApiException('realm is mandatory');
+    }
+
+    $options['grant_type'] = 'http://auth0.com/oauth/grant-type/password-realm';
+
+    return $this->oauth_token($options);
+  }
+
+  /**
+   * Makes a call to the `oauth/token` endpoint with `password` grant type
+   *
+   * @method login_with_default_directory
+   * @param {Object} options: https://auth0.com/docs/api-auth/grant/password
+   * @param {Object} options.username
+   * @param {Object} options.password
+   * @param {Object} options.scope [optional]
+   * @param {Object} options.scope [audience]
+   */
+  public function login_with_default_directory($options) {
+    if (! isset($options['username'])) {
+      throw new ApiException('username is mandatory');
+    }
+
+    if (! isset($options['password'])) {
+      throw new ApiException('password is mandatory');
+    }
+
+    $options['grant_type'] = 'password';
+
+    return $this->oauth_token($options);
+  }
+
+  /**
+   * Makes a call to the `oauth/token` endpoint with `client_credentials` grant type
+   *
+   * @method client_credentials
+   * @param {Object} options: https://auth0.com/docs/api-auth/grant/client-credentials
+   * @param {Object} options.client_id
+   * @param {Object} options.client_secret
+   * @param {Object} options.scope [optional]
+   * @param {Object} options.audience [optional]
+   */
+  public function client_credentials($options) {
+    if (!isset($options['client_secret'])) {
+      $options['client_secret'] = $this->client_secret;
+    }
+    if (empty($options['client_secret'])) {
+      throw new ApiException('client_secret is mandatory');
+    }
+
+    if (!isset($options['client_id'])) {
+      $options['client_id'] = $this->client_id;
+    }
+    if (empty($options['client_id'])) {
+      throw new ApiException('client_id is mandatory');
+    }
+
+    if (!isset($options['scope'])) {
+      $options['scope'] = $this->scope;
+    }
+    if (!isset($options['audience'])) {
+      $options['audience'] = $this->audience;
+    }
+
+    $options['grant_type'] = 'client_credentials';
+
+    return $this->oauth_token($options);
+  }
+
   public function dbconnections_signup($email, $password, $connection) {
 
     $data = [
@@ -471,12 +398,6 @@ class Authentication {
       ->call();
   }
 
-    /**
-     * @param string $email
-     * @param string $connection
-     * @param null|string $password
-     * @return mixed
-     */
   public function dbconnections_change_password($email, $connection, $password = null) {
 
     $data = [

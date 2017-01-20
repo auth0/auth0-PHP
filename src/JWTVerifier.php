@@ -11,7 +11,7 @@ use Firebase\JWT\JWT;
 class JWTVerifier {
 
     protected $JWKFetcher = null;
-    protected $suported_algs = null;
+    protected $supported_algs = null;
     protected $valid_audiences = null;
     protected $authorized_iss = null;
     protected $client_secret = null;
@@ -21,7 +21,7 @@ class JWTVerifier {
      *
      * Configuration:
      *     - cache                  (CacheHandler)  Optional. Should be an instance of CacheHandler that is going to be used to cache the JWKs
-     *     - suported_algs          (Array)  Optional. The list of supported algorithms. By default only HS256
+     *     - supported_algs          (Array)  Optional. The list of supported algorithms. By default only HS256
      *     - client_secret          (String)  Required (if supported HS256). The Auth0 application secret.
      *     - valid_audiences        (Array)  Required. The list of audiences accepted by the service.
      *     - authorized_iss         (Array) Required (if supported RS256). The list of issuers trusted by the service.
@@ -42,8 +42,12 @@ class JWTVerifier {
             $guzzleOptions = $config['guzzle_options'];
         }
 
-        if (!isset($config['suported_algs'])) {
-            $config['suported_algs'] = ['HS256'];
+        if (isset($config['suported_algs'])) {
+          throw new Exception("`suported_algs` was properly renamed to `supported_algs`.");
+        }
+
+        if (!isset($config['supported_algs'])) {
+            $config['supported_algs'] = ['HS256'];
         }
 
         if (!isset($config['secret_base64_encoded'])) {
@@ -55,23 +59,23 @@ class JWTVerifier {
         }
 
         if (!isset($config['authorized_iss'])) {
-            if (in_array('RS256', $config['suported_algs'])) {
+            if (in_array('RS256', $config['supported_algs'])) {
                 throw new CoreException('The iss is mandatory when accepting RS256 signed tokens');
             } else {
                 $config['authorized_iss'] = [];
             }
         }
 
-        if (in_array('HS256', $config['suported_algs']) && !isset($config['client_secret'])) {
+        if (in_array('HS256', $config['supported_algs']) && !isset($config['client_secret'])) {
             throw new CoreException('The client_secret is mandatory when accepting HS256 signed tokens');
         }
 
-        $this->suported_algs = $config['suported_algs'];
+        $this->supported_algs = $config['supported_algs'];
         $this->valid_audiences = $config['valid_audiences'];
         $this->authorized_iss = $config['authorized_iss'];
         $this->secret_base64_encoded = $config['secret_base64_encoded'];
 
-        if (in_array('HS256', $config['suported_algs'])) {
+        if (in_array('HS256', $config['supported_algs'])) {
             $this->client_secret = $config['client_secret'];
         }
 
@@ -101,7 +105,7 @@ class JWTVerifier {
               throw new InvalidTokenException("Invalid token");
         }
 
-        if (!in_array($head->alg, $this->suported_algs)) {
+        if (!in_array($head->alg, $this->supported_algs)) {
             throw new InvalidTokenException("Invalid signature algorithm");
         }
 
