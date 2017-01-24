@@ -3,7 +3,7 @@
     "description": "Basic sample for securing a WebApp with Auth0",
     "require": {
         "vlucas/phpdotenv": "1.1.1",
-        "auth0/auth0-php": "~3.0"
+        "auth0/auth0-php": "^5.0"
     },
     "license": "MIT",
     "authors": [

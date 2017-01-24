@@ -231,7 +231,7 @@ class Auth0 {
     $this->refresh_token = $this->store->get("refresh_token");
   }
 
-  public function login($connection = null, $state = null) {
+  public function login($state = null, $connection = null) {
     $params = [];
     if ($this->audience) {
       $params['audience'] = $this->audience;

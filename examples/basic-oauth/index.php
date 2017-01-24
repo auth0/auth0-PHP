@@ -38,6 +38,4 @@ if (isset($_REQUEST['create-user'])) {
 
 if ($userInfo) require 'logeduser.php';
 
-
-// require 'login.php';
 $auth0->login();

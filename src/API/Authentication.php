@@ -326,7 +326,11 @@ class Authentication {
    * @param {Object} options.scope [audience]
    */
   public function client_credentials($options) {
+    $client_secret = $this->client_secret;
     if (! isset($options['client_secret'])) {
+      $client_secret = $options['client_secret'];
+    }
+    if (empty($client_secret)) {
       throw new ApiException('client_secret is mandatory');
     }
 
