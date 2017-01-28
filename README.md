@@ -39,7 +39,7 @@ $decoded = $verifier->verifyAndDecode($jwt);
 
 // RS256 tokens
 $verifier = new JWTVerifier([
-    'suported_algs' => ['RS256'],
+    'supported_algs' => ['RS256'],
     'valid_audiences' => [$client_id],
     'authorized_iss' => [$domain]
 ]);
@@ -51,7 +51,7 @@ $decoded = $verifier->verifyAndDecode($jwt);
 Accepted params:
 - **cache**: Receives an instance of `Auth0\SDK\Helpers\Cache\CacheHandler` (Supported `FileSystemCacheHandler` and `NoCacheHandler`). Defaults to `NoCacheHandler`.
 - **guzzle_options**: Configuration propagated to guzzle when fetching the JWKs.
-- **suported_algs**: `RS256` and `HS256` supported. Defaults to `HS256`.
+- **supported_algs**: `RS256` and `HS256` supported. Defaults to `HS256`.
 - **valid_audiences**: List of audiences that identifies the API (usefull for multitenant environments).
 - **authorized_iss**: List of issues authorized to sign tokens for the API.
 - **client_secret**: Client secret used to verify the token signature (only for `HS256`).
@@ -115,7 +115,7 @@ $domain = "account.auth0.com";
 $client_id = '...';
 $client_secret = '...'; // This is optional, only needed for impersonation or t fetch an access token
 
-$auth0Api = new Authentication($domain, $client_id, $client_secret); 
+$auth0Api = new Authentication($domain, $client_id, $client_secret);
 
 $tokens = $auth0Api->authorize_with_ro('theemail@test.com','thepassword');
 
@@ -222,7 +222,7 @@ $ composer install
 $ php -S localhost:3000
 ```
 
-## Migration guide 
+## Migration guide
 
 ### from 1.x
 
