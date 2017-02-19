@@ -4,8 +4,16 @@ namespace Auth0\SDK\Helpers\Cache;
 
 class FileSystemCacheHandler implements CacheHandler 
 {
+    /**
+     * @var string
+     */
   protected $tmp_dir;
 
+    /**
+     * FileSystemCacheHandler constructor.
+     *
+     * @param string $temp_directory_prefix
+     */
   public function __construct($temp_directory_prefix = 'auth0-php') 
   {
     $this->tmp_dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $temp_directory_prefix . DIRECTORY_SEPARATOR;
@@ -14,6 +22,10 @@ class FileSystemCacheHandler implements CacheHandler
     }
   }
 
+    /**
+     * @param string $key
+     * @return mixed|null
+     */
   public function get($key) 
   {
     $key = md5($key);
@@ -34,13 +46,20 @@ class FileSystemCacheHandler implements CacheHandler
     return unserialize(base64_decode($data));
   }
 
+    /**
+     * @param string $key
+     */
   public function delete($key) 
   {
     $key = md5($key);
     $this->set($key, null);
     @unlink($this->tmp_dir . $key);
   }
-  
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
   public function set($key, $value) 
   {
     $key = md5($key);

@@ -7,6 +7,10 @@ use Auth0\SDK\API\Header\ContentType;
 
 class ResourceServers extends GenericResource 
 {
+    /**
+     * @param string $id
+     * @return mixed
+     */
   public function get($id) 
   {
     return $this->apiClient->get()
@@ -14,6 +18,11 @@ class ResourceServers extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $client_id
+     * @param array $data
+     * @return mixed
+     */
   public function create($client_id, $data) 
   {
     return $this->apiClient->post()
@@ -23,6 +32,10 @@ class ResourceServers extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $id
+     * @return mixed
+     */
   public function delete($id) 
   {
     return $this->apiClient->delete()
@@ -30,6 +43,11 @@ class ResourceServers extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $id
+     * @param array $data
+     * @return mixed
+     */
   public function update($id, $data) 
   {
     return $this->apiClient->patch()

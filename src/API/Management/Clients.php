@@ -7,6 +7,11 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Clients extends GenericResource 
 {
+    /**
+     * @param null|string|array $fields
+     * @param null|string|array $include_fields
+     * @return mixed
+     */
     public function getAll($fields = null, $include_fields = null) 
     {
         $request = $this->apiClient->get()
@@ -29,6 +34,12 @@ class Clients extends GenericResource
         return $request->call();
     }
 
+    /**
+     * @param string $id
+     * @param null|string|array $fields
+     * @param null|string|array $include_fields
+     * @return mixed
+     */
     public function get($id, $fields = null, $include_fields = null) 
     {
         $request = $this->apiClient->get()
@@ -50,6 +61,10 @@ class Clients extends GenericResource
         return $request->call();
     }
 
+    /**
+     * @param string $id
+     * @return mixed
+     */
     public function delete($id) 
     {
         return $this->apiClient->delete()
@@ -57,6 +72,10 @@ class Clients extends GenericResource
             ->call();
     }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
     public function create($data) 
     {
         return $this->apiClient->post()
@@ -66,6 +85,11 @@ class Clients extends GenericResource
             ->call();
     }
 
+    /**
+     * @param string $id
+     * @param array $data
+     * @return mixed
+     */
     public function update($id, $data) 
     {
         return $this->apiClient->patch()
