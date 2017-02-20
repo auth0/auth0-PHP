@@ -22,27 +22,108 @@ use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 
 class Management {
 
+    /**
+     * @var string
+     */
   private $token;
+
+    /**
+     * @var string
+     */
   private $domain;
+
+    /**
+     * @var ApiClient
+     */
   private $apiClient;
+
+    /**
+     * @var array
+     */
   private $guzzleOptions;
 
+    /**
+     * @var Blacklists
+     */
   public $blacklists;
+
+    /**
+     * @var Clients
+     */
   public $clients;
+
+    /**
+     * @var ClientGrants
+     */
   public $client_grants;
+
+    /**
+     * @var Connections
+     */
   public $connections;
+
+    /**
+     * @var DeviceCredentials
+     */
   public $deviceCredentials;
+
+    /**
+     * @var Emails
+     */
   public $emails;
+
+    /**
+     * @var Jobs
+     */
   public $jobs;
+
+    /**
+     * @var Logs
+     */
   public $logs;
+
+    /**
+     * @var Rules
+     */
   public $rules;
+
+    /**
+     * @var ResourceServers
+     */
   public $resource_servers;
+
+    /**
+     * @var Stats
+     */
   public $stats;
+
+    /**
+     * @var Tenants
+     */
   public $tenants;
+
+    /**
+     * @var Tickets
+     */
   public $tickets;
+
+    /**
+     * @var UserBlocks
+     */
   public $userBlocks;
+
+    /**
+     * @var Users
+     */
   public $users;
 
+    /**
+     * Management constructor.
+     *
+     * @param string $token
+     * @param string $domain
+     * @param array $guzzleOptions
+     */
   public function __construct($token, $domain, $guzzleOptions = []) {
     $this->token = $token;
     $this->domain = $domain;

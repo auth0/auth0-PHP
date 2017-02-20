@@ -7,6 +7,10 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Blacklists extends GenericResource 
 {
+    /**
+     * @param string $aud
+     * @return mixed
+     */
     public function getAll($aud) 
     {
         return $this->apiClient->get()
@@ -16,6 +20,11 @@ class Blacklists extends GenericResource
             ->call();
     }
 
+    /**
+     * @param string $aud
+     * @param string $jti
+     * @return mixed
+     */
     public function blacklist($aud, $jti) 
     {
         return $this->apiClient->post()

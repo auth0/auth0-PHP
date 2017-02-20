@@ -235,12 +235,18 @@ class Oauth2Client {
     /**
      * Exchanges the code from the URI parameters for an access token, id token and user info
      * @return Boolean Whether it exchanged the code or not correctly
+     * @throws ApiException
      */
     public function exchangeCode() {
-        if (!isset($_REQUEST['code'])) {
+
+        $code = isset($_GET['code'])
+                    ? $_GET['code']
+                    : ( isset($_POST['code']) ? $_POST['code'] : null );
+
+        if (!isset($code)) {
+            $this->debugInfo("No code found in _GET or _POST params.");
             return false;
         }
-        $code = $_REQUEST['code'];
 
         $this->debugInfo("Code: ".$code);
 
@@ -256,7 +262,7 @@ class Oauth2Client {
 
         $auth0_response = $response['result'];
 
-        if ($response['code'] !== 200) { 
+        if ($response['code'] !== 200) {
             if (isset($auth0_response['error'])) {
                 throw new ApiException($auth0_response['error'] . ': '. $auth0_response['error_description']);
             } else {
@@ -312,13 +318,13 @@ class Oauth2Client {
     }
 
     /**
-     * Updathes the user metadata. This end up calling the path /users/{id_user}
+     * Updates the user metadata. This end up calling the path /users/{id_user}
      * To delete an attribute, just set it null. ie: [ 'old_attr' => null ]
      * It will only update the existing attrs and keep the others untouch
      * for more info:
      *       https://auth0.com/docs/apiv2#!/users/patch_users_by_id
      *
-     * @return User data
+     * @param array $metadata
      */
     public function updateUserMetadata($metadata) {
 
@@ -329,14 +335,24 @@ class Oauth2Client {
         $this->setUser($user);
     }
 
+    /**
+     * @return array
+     */
     public function getUserMetadata() {
         return isset($this->user["user_metadata"]) ? $this->user["user_metadata"] : array();
     }
 
+    /**
+     * @return array
+     */
     public function getAppMetadata() {
         return isset($this->user["app_metadata"]) ? $this->user["app_metadata"] : array();
     }
 
+    /**
+     * @param $user
+     * @return Oauth2Client
+     */
     public function setUser($user) {
 
         $key = array_search('user',$this->persistantMap);
@@ -354,7 +370,7 @@ class Oauth2Client {
      *
      * @param string $access_token
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     public function setAccessToken($access_token) {
         $key = array_search('access_token',$this->persistantMap);
@@ -372,7 +388,7 @@ class Oauth2Client {
      *
      * @param string $refresh_token
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     public function setRefreshToken($refresh_token) {
         $key = array_search('refresh_token',$this->persistantMap);
@@ -409,7 +425,7 @@ class Oauth2Client {
      *
      * @param string $id_token
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     public function setIdToken($id_token) {
         $key = array_search('id_token',$this->persistantMap);
@@ -516,7 +532,7 @@ class Oauth2Client {
      *
      * @param string $domain
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     final public function setDomain($domain)
     {
@@ -540,7 +556,7 @@ class Oauth2Client {
      *
      * @param string $client_id
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     final public function setClientId($client_id)
     {
@@ -564,7 +580,7 @@ class Oauth2Client {
      *
      * @param string $client_secret
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     final public function setClientSecret($client_secret)
     {
@@ -588,7 +604,7 @@ class Oauth2Client {
      *
      * @param string $redirect_uri
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     final public function setRedirectUri($redirect_uri)
     {
@@ -612,7 +628,7 @@ class Oauth2Client {
      *
      * @param boolean $debug_mode
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     final public function setDebugMode($debug_mode)
     {
@@ -636,7 +652,7 @@ class Oauth2Client {
      *
      * @param \Closure $debugger
      *
-     * @return Auth0\SDK\BaseAuth0
+     * @return Oauth2Client
      */
     final public function setDebugger(\Closure $debugger)
     {

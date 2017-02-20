@@ -9,12 +9,38 @@ use GuzzleHttp\Psr7;
 
 class Authentication {
 
+    /**
+     * @var string
+     */
   private $client_id;
+
+    /**
+     * @var string
+     */
   private $client_secret;
+
+    /**
+     * @var string
+     */
   private $domain;
+
+    /**
+     * @var ApiClient
+     */
   private $apiClient;
+
+    /**
+     * @var array
+     */
   private $guzzleOptions;
 
+    /**
+     * Authentication constructor.
+     * @param string $domain
+     * @param string|null $client_id
+     * @param string|null $client_secret
+     * @param array $guzzleOptions
+     */
   public function __construct($domain, $client_id = null, $client_secret = null, $guzzleOptions = []) {
 
     $this->client_id = $client_id;
@@ -42,6 +68,13 @@ class Authentication {
     $this->apiClient = $client;
   }
 
+    /**
+     * @param string $client_secret
+     * @param string $redirect_uri
+     * @param array $extra_params
+     * @return Oauth2Client
+     * @throws ApiException
+     */
   public function get_oauth_client($client_secret, $redirect_uri, $extra_params = []) {
 
     if (empty($this->client_id)) {
@@ -56,6 +89,14 @@ class Authentication {
     return new Oauth2Client($extra_params);
   }
 
+    /**
+     * @param string $response_type
+     * @param string $redirect_uri
+     * @param null|string $connection
+     * @param null|string $state
+     * @param array $aditional_params
+     * @return string
+     */
   public function get_authorize_link($response_type, $redirect_uri, $connection = null, $state = null, $aditional_params = []) {
 
     $aditional_params['response_type'] = $response_type;
@@ -75,30 +116,51 @@ class Authentication {
     return "https://{$this->domain}/authorize?$query_string";
   }
 
+    /**
+     * @param string $client_id
+     * @param string $connection
+     * @return string
+     */
   public function get_samlp_link($client_id, $connection = '') {
 
     return "https://{$this->domain}/samlp/$client_id?connection=$connection";
 
   }
 
+    /**
+     * @param string $client_id
+     * @return string
+     */
   public function get_samlp_metadata_link($client_id) {
 
     return "https://{$this->domain}/samlp/metadata/$client_id";
 
   }
 
+    /**
+     * @param string $client_id
+     * @return string
+     */
   public function get_wsfed_link($client_id) {
 
     return "https://{$this->domain}/wsfed/$client_id";
 
   }
 
+    /**
+     * @return string
+     */
   public function get_wsfed_metadata_link() {
 
     return "https://{$this->domain}/wsfed/FederationMetadata/2007-06/FederationMetadata.xml";
 
   }
 
+    /**
+     * @param null|string $returnTo
+     * @param null|string $client_id
+     * @return string
+     */
   public function get_logout_link($returnTo = null, $client_id = null) {
 
     $params = [];
@@ -114,6 +176,13 @@ class Authentication {
     return "https://{$this->domain}/v2/logout?$query_string";
   }
 
+    /**
+     * @param string $access_token
+     * @param string $connection
+     * @param string $scope
+     * @param array $aditional_params
+     * @return mixed
+     */
   public function authorize_with_accesstoken($access_token, $connection, $scope = 'openid', $aditional_params = []){
 
     $data = array_merge($aditional_params, [
@@ -131,6 +200,16 @@ class Authentication {
       ->call();
   }
 
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $scope
+     * @param null|string $connection
+     * @param null|string $id_token
+     * @param null|string $device
+     * @return mixed
+     * @throws ApiException
+     */
   public function authorize_with_ro($username, $password, $scope = 'openid', $connection = null, $id_token = null, $device = null){
 
     $data = [
@@ -163,6 +242,12 @@ class Authentication {
       ->call();
   }
 
+    /**
+     * @param string $email
+     * @param string $type
+     * @param array $authParams
+     * @return mixed
+     */
   public function email_passwordless_start($email, $type, $authParams = []){
 
     $data = [
@@ -184,6 +269,10 @@ class Authentication {
       ->call();
   }
 
+    /**
+     * @param string $phone_number
+     * @return mixed
+     */
   public function sms_passwordless_start($phone_number){
 
     $data = [
@@ -200,18 +289,34 @@ class Authentication {
       ->call();
   }
 
+    /**
+     * @param string $phone_number
+     * @param string $code
+     * @param string $scope
+     * @return mixed
+     */
   public function sms_code_passwordless_verify($phone_number, $code, $scope = 'openid'){
 
     return $this->authorize_with_ro($phone_number, $code, $scope, 'sms');
 
   }
 
+    /**
+     * @param string $email
+     * @param string $code
+     * @param string $scope
+     * @return mixed
+     */
   public function email_code_passwordless_verify($email, $code, $scope = 'openid'){
 
     return $this->authorize_with_ro($email, $code, $scope, 'email');
 
   }
 
+    /**
+     * @param string$access_token
+     * @return mixed
+     */
   public function userinfo($access_token){
 
     return $this->apiClient->get()
@@ -222,6 +327,10 @@ class Authentication {
 
   }
 
+    /**
+     * @param string $id_token
+     * @return mixed
+     */
   public function tokeninfo($id_token){
 
     return $this->apiClient->get()
@@ -234,6 +343,17 @@ class Authentication {
 
   }
 
+    /**
+     * @param string $id_token
+     * @param string $type
+     * @param string $target_client_id
+     * @param string $api_type
+     * @param array $aditional_params
+     * @param string $scope
+     * @param string $grant_type
+     * @return mixed
+     * @throws ApiException
+     */
   public function delegation($id_token, $type, $target_client_id, $api_type, $aditional_params = [], $scope = 'openid', $grant_type = 'urn:ietf:params:oauth:grant-type:jwt-bearer'){
 
     if (! in_array($type, ['id_token', 'refresh_token'])) {
@@ -257,10 +377,21 @@ class Authentication {
 
   }
 
+    /**
+     * @return string
+     */
   public function get_access_token() {
     return $this->access_token;
   }
 
+    /**
+     * @param string $user_id
+     * @param string $protocol
+     * @param string $impersonator_id
+     * @param string $client_id
+     * @param array $additionalParameters
+     * @return mixed
+     */
   public function impersonate($user_id, $protocol, $impersonator_id, $client_id, $additionalParameters=[]){
 
     $data = [
@@ -280,6 +411,15 @@ class Authentication {
 
   }
 
+    /**
+     * @param string$client_id
+     * @param string$client_secret
+     * @param string $grant_type
+     * @param null|string $code
+     * @param null|string $audience
+     * @param null|string $scope
+     * @return mixed
+     */
   public function oauth_token($client_id, $client_secret, $grant_type = 'client_credentials', $code = null, $audience = null, $scope = null) {
 
     $data = [
@@ -308,6 +448,12 @@ class Authentication {
       ->call();
   }
 
+    /**
+     * @param string $email
+     * @param string $password
+     * @param string $connection
+     * @return mixed
+     */
   public function dbconnections_signup($email, $password, $connection) {
 
     $data = [
@@ -325,6 +471,12 @@ class Authentication {
       ->call();
   }
 
+    /**
+     * @param string $email
+     * @param string $connection
+     * @param null|string $password
+     * @return mixed
+     */
   public function dbconnections_change_password($email, $connection, $password = null) {
 
     $data = [

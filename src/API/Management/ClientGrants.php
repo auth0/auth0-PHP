@@ -7,6 +7,11 @@ use Auth0\SDK\API\Header\ContentType;
 
 class ClientGrants extends GenericResource 
 {
+    /**
+     * @param string $id
+     * @param null|string $audience
+     * @return mixed
+     */
   public function get($id, $audience = null) 
   {
     $request = $this->apiClient->get()
@@ -20,6 +25,12 @@ class ClientGrants extends GenericResource
     return $request->call();
   }
 
+    /**
+     * @param string $client_id
+     * @param string $audience
+     * @param string $scope
+     * @return mixed
+     */
   public function create($client_id, $audience, $scope) 
   {
     return $this->apiClient->post()
@@ -33,6 +44,11 @@ class ClientGrants extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $id
+     * @param null|string $audience
+     * @return mixed
+     */
   public function delete($id, $audience = null) 
   {
     return $this->apiClient->delete()
@@ -40,6 +56,11 @@ class ClientGrants extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $id
+     * @param string $scope
+     * @return mixed
+     */
   public function update($id, $scope) 
   {
     return $this->apiClient->patch()

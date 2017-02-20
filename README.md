@@ -129,7 +129,7 @@ $access_token = $auth0Api->get_access_token();
 This is a common issue with latest PHP versions under windows (related to a incompatibility between windows and openssl CAs database).
 
 - download this CAs database `https://curl.haxx.se/ca/cacert.pem` to `c:/cacert.pem`
-- you need to edit your php.ini and add `openssl.capath=c:/cacert.pem` (it should point to the file you downloaded)
+- you need to edit your php.ini and add `openssl.cafile=c:/cacert.pem` (it should point to the file you downloaded)
 
 > I am not using composer, my host does not allow using Composer
 

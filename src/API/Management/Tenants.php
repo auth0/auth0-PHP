@@ -7,6 +7,11 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Tenants extends GenericResource 
 {
+    /**
+     * @param mixed $fields
+     * @param mixed $include_fields
+     * @return mixed
+     */
   public function get($fields = null, $include_fields = null) 
   {
     $request = $this->apiClient->get()
@@ -30,6 +35,10 @@ class Tenants extends GenericResource
     return $request->call();
   }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
   public function update($data) 
   {
     return $this->apiClient->patch()

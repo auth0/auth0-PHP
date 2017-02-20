@@ -7,6 +7,9 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Stats extends GenericResource 
 {
+    /**
+     * @return mixed
+     */
   public function getActiveUsersCount() 
   {
     return $this->apiClient->get()
@@ -15,6 +18,11 @@ class Stats extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $from
+     * @param string $to
+     * @return mixed
+     */
   public function getDailyStats($from, $to) 
   {
     return $this->apiClient->get()

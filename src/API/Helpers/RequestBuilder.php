@@ -13,18 +13,60 @@ use \GuzzleHttp\Exception\RequestException;
 
 class RequestBuilder {
 
+    /**
+     * @var string
+     */
     protected $domain;
+
+    /**
+     * @var string
+     */
     protected $basePath;
 
+    /**
+     * @var array
+     */
     protected $path = [];
+
+    /**
+     * @var array
+     */
     protected $method = [];
+
+    /**
+     * @var array
+     */
     protected $headers = [];
+
+    /**
+     * @var array
+     */
     protected $params = [];
+
+    /**
+     * @var array
+     */
     protected $form_params = [];
+
+    /**
+     * @var array
+     */
     protected $files = [];
+
+    /**
+     * @var array
+     */
     protected $guzzleOptions = [];
+
+    /**
+     * @var string
+     */
     protected $body;
 
+    /**
+     * RequestBuilder constructor.
+     * @param array $config
+     */
     public function __construct( $config ) {
 
         $this->method = $config['method'];
@@ -36,6 +78,11 @@ class RequestBuilder {
 
     }
 
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return RequestBuilder
+     */
     public function __call($name, $arguments) {
 
         $argument = null;
@@ -49,6 +96,11 @@ class RequestBuilder {
         return $this;
     }
 
+    /**
+     * @param string $name
+     * @param string|null $argument
+     * @return RequestBuilder
+     */
     public function addPath($name, $argument = null) {
         $this->path[] = $name;
         if ($argument !== null) {
@@ -57,15 +109,25 @@ class RequestBuilder {
         return $this;
     }
 
+    /**
+     * @param string $variable
+     * @return RequestBuilder
+     */
     public function addPathVariable($variable) {
         $this->path[] = $variable;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getUrl() {
         return trim(implode('/',$this->path), '/') . $this->getParams();
     }
 
+    /**
+     * @return string
+     */
     public function getParams() {
         if (empty($this->params)) return '';
 
@@ -76,6 +138,9 @@ class RequestBuilder {
         return '?' . implode('&',$params);
     }
 
+    /**
+     * @return RequestBuilder
+     */
     public function dump() {
         echo "<pre>";
         echo "METHOD: {$this->method}\n";
@@ -92,16 +157,29 @@ class RequestBuilder {
         return $this;
     }
 
+    /**
+     * @param string $field
+     * @param string $file_path
+     * @return RequestBuilder
+     */
     public function addFile($field, $file_path) {
         $this->files[$field] = $file_path;
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @param string $value
+     * @return RequestBuilder
+     */
     public function addFormParam($key, $value) {
         $this->form_params[$key] = $value;
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getGuzzleOptions() {
         return array_merge(
             ["base_uri" => $this->domain . $this->basePath], 
@@ -109,6 +187,9 @@ class RequestBuilder {
         );
     }
 
+    /**
+     * @return mixed|string
+     */
     public function call() {
 
         $client = new Client( $this->getGuzzleOptions() );
@@ -140,6 +221,10 @@ class RequestBuilder {
         }
     }
 
+    /**
+     * @param $headers
+     * @return RequestBuilder
+     */
     public function withHeaders($headers) {
 
         foreach ($headers as $header) {
@@ -149,6 +234,11 @@ class RequestBuilder {
         return $this;
     }
 
+    /**
+     * @param Header|string $header
+     * @param null|string $value
+     * @return $this
+     */
     public function withHeader($header, $value = null) {
 
         if ($header instanceof Header) {
@@ -160,11 +250,20 @@ class RequestBuilder {
         return $this;
     }
 
+    /**
+     * @param string $body
+     * @return $this
+     */
     public function withBody($body) {
         $this->body = $body;
         return $this;
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
     public function withParam($key, $value) {
 
         $value = ($value === true ? 'true' : $value);
@@ -174,6 +273,10 @@ class RequestBuilder {
         return $this;
     }
 
+    /**
+     * @param array $params
+     * @return RequestBuilder
+     */
     public function withParams($params) {
         foreach($params as $param) {
             $this->withParam($param['key'], $param['value']);
@@ -181,6 +284,9 @@ class RequestBuilder {
         return $this;
     }
 
+    /**
+     * @return array
+     */
     private function buildMultiPart() {
         $multipart = array();
 
