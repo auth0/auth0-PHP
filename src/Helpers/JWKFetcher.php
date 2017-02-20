@@ -8,9 +8,21 @@ use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 
 class JWKFetcher {
 
+    /**
+     * @var CacheHandler|NoCacheHandler
+     */
     private $cache = null;
+
+    /**
+     * @var array
+     */
     private $guzzleOptions = null;
 
+    /**
+     * JWKFetcher constructor.
+     * @param CacheHandler|null $cache
+     * @param array $guzzleOptions
+     */
     public function __construct(CacheHandler $cache = null, $guzzleOptions = []) {
         if ($cache === null) {
             $cache = new NoCacheHandler();
@@ -20,12 +32,20 @@ class JWKFetcher {
         $this->guzzleOptions = $guzzleOptions;
     }
 
+    /**
+     * @param string $cert
+     * @return string
+     */
     protected function convertCertToPem($cert) {
         return '-----BEGIN CERTIFICATE-----'.PHP_EOL
             .chunk_split($cert, 64, PHP_EOL)
             .'-----END CERTIFICATE-----'.PHP_EOL;
     }
 
+    /**
+     * @param string $iss
+     * @return array|null
+     */
     public function fetchKeys($iss) {
         $url = "{$iss}.well-known/jwks.json";
 

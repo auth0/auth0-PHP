@@ -10,6 +10,7 @@ namespace Auth0\SDK\Store;
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  */
+use Auth0\SDK\API\Oauth2Client;
 
 
 /**
@@ -22,7 +23,7 @@ class SessionStore
     const BASE_NAME = 'auth0_';
 
     /**
-     * @see Auth0\SDK\BaseAuth0
+     * @see Oauth2Client
      */
     public function __construct() {
 
@@ -91,7 +92,7 @@ class SessionStore
     /**
      * Constructs a session var name.
      *
-     * @param  strign $key
+     * @param  string $key
      *
      * @return string
      */

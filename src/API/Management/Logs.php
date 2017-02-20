@@ -7,6 +7,10 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Logs extends GenericResource 
 {
+    /**
+     * @param string $id
+     * @return mixed
+     */
   public function get($id) 
   {
     return $this->apiClient->get()
@@ -14,6 +18,10 @@ class Logs extends GenericResource
       ->call();
   }
 
+    /**
+     * @param array $params
+     * @return mixed
+     */
   public function search($params = array()) {
 
     $client = $this->apiClient->get()

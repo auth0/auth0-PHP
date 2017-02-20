@@ -7,6 +7,12 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Connections extends GenericResource 
 {
+    /**
+     * @param null|string $strategy
+     * @param null|string|array $fields
+     * @param null|string|array $include_fields
+     * @return mixed
+     */
     public function getAll($strategy = null, $fields = null, $include_fields = null) 
     {
         $request = $this->apiClient->get()
@@ -34,6 +40,12 @@ class Connections extends GenericResource
         return $request->call();
     }
 
+    /**
+     * @param string $id
+     * @param null|string|array $fields
+     * @param null|string|array $include_fields
+     * @return mixed
+     */
     public function get($id, $fields = null, $include_fields = null) 
     {
         $request = $this->apiClient->get()
@@ -56,6 +68,10 @@ class Connections extends GenericResource
         return $request->call();
     }
 
+    /**
+     * @param string $id
+     * @return mixed
+     */
     public function delete($id) 
     {
         return $this->apiClient->delete()
@@ -63,6 +79,11 @@ class Connections extends GenericResource
             ->call();
     }
 
+    /**
+     * @param string $id
+     * @param string $email
+     * @return mixed
+     */
     public function deleteUser($id, $email) 
     {
         return $this->apiClient->delete()
@@ -72,6 +93,10 @@ class Connections extends GenericResource
             ->call();
     }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
     public function create($data) 
     {
         return $this->apiClient->post()
@@ -81,6 +106,11 @@ class Connections extends GenericResource
             ->call();
     }
 
+    /**
+     * @param string $id
+     * @param array $data
+     * @return mixed
+     */
     public function update($id, $data) 
     {
         return $this->apiClient->patch()
