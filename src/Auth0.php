@@ -6,6 +6,7 @@ use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
+use Auth0\SDK\Store\StoreInterface;
 use Auth0\SDK\API\Authentication;
 
 /**
@@ -111,6 +112,12 @@ class Auth0 {
   */
   protected $access_token;
   /**
+  * Store
+  *
+  * @var StoreInterface
+  */
+  protected $store;
+  /**
   * The user object
   *
   * @var string
@@ -215,12 +222,12 @@ class Auth0 {
     }
     if (isset($config['store'])) {
         if ($config['store'] === false) {
-            $this->store = new EmptyStore();
+          $this->setStore(new EmptyStore());
         } else {
-            $this->store = $config['store'];
+          $this->setStore($config['store']);
         }
     } else {
-        $this->store = new SessionStore();
+      $this->setStore(new SessionStore());
     }
 
     $this->authentication = new Authentication ($this->domain, $this->client_id, $this->client_secret, $this->guzzleOptions);
@@ -392,5 +399,15 @@ class Auth0 {
       if ($key !== false) {
           unset($this->persistantMap[$key]);
       }
+  }
+
+  /**
+   * @param StoreInterface $store
+   *
+   * @return Auth0\SDK\BaseAuth0
+   */
+  public function setStore(StoreInterface $store) {
+    $this->store = $store;
+    return $this;
   }
 }
