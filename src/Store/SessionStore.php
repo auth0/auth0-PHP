@@ -17,7 +17,7 @@ namespace Auth0\SDK\Store;
  *
  * @author Auth0
  */
-class SessionStore
+class SessionStore implements StoreInterface
 {
     const BASE_NAME = 'auth0_';
 

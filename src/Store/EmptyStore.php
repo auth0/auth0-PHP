@@ -18,7 +18,7 @@ namespace Auth0\SDK\Store;
  *
  * @author Auth0
  */
-class EmptyStore
+class EmptyStore implements StoreInterface
 {
     public function set($key, $value) {
     }
