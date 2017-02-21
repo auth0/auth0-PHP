@@ -12,7 +12,7 @@ use Auth0\SDK\API\Header\Header;
 
 class ApiClient {
 
-    const API_VERSION  = "4.0.7";
+    const API_VERSION  = "4.0.12";
 
     /**
      * @var bool
