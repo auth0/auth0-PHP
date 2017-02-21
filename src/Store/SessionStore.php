@@ -18,7 +18,7 @@ use Auth0\SDK\API\Oauth2Client;
  *
  * @author Auth0
  */
-class SessionStore
+class SessionStore implements StoreInterface
 {
     const BASE_NAME = 'auth0_';
 

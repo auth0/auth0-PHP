@@ -6,6 +6,7 @@ use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
+use Auth0\SDK\Store\StoreInterface;
 use OAuth2\Client;
 
 /**
@@ -115,6 +116,13 @@ class Oauth2Client {
     protected $oauth_client;
 
     /**
+     * Store
+     *
+     * @var StoreInterface
+     */
+    protected $store;
+
+    /**
      * BaseAuth0 Constructor.
      *
      * Configuration:
@@ -201,12 +209,12 @@ class Oauth2Client {
 
         if (isset($config['store'])) {
             if ($config['store'] === false) {
-                $this->store = new EmptyStore();
+                $this->setStore(new EmptyStore());
             } else {
-                $this->store = $config['store'];
+                $this->setStore($config['store']);
             }
         } else {
-            $this->store = new SessionStore();
+            $this->setStore(new SessionStore());
         }
 
         $this->oauth_client = new Client($this->client_id, $this->client_secret);
@@ -669,5 +677,17 @@ class Oauth2Client {
     final public function getDebugger()
     {
         return $this->debugger;
+    }
+
+    /**
+     * @param StoreInterface $store
+     *
+     * @return Auth0\SDK\BaseAuth0
+     */
+    final public function setStore(StoreInterface $store)
+    {
+        $this->store = $store;
+
+        return $this;
     }
 }
