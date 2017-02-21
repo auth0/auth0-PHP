@@ -4,7 +4,14 @@ use Firebase\JWT\JWT;
 
 class TokenGenerator {
 
+    /**
+     * @var string
+     */
     protected $client_id;
+
+    /**
+     * @var string
+     */
     protected $client_secret;
 
      /**
@@ -15,6 +22,7 @@ class TokenGenerator {
      *                                                  auth0 console
      *     - client_secret          (String)  Required. The application secret, same comment as above
      *
+     * @param array $credentials
      */
     public function __construct($credentials) {
 
@@ -28,6 +36,10 @@ class TokenGenerator {
 
     }
 
+    /**
+     * @param string $input
+     * @return string
+     */
     protected function bstr2bin($input)
     // Binary representation of a binary-string
     {
@@ -38,11 +50,20 @@ class TokenGenerator {
       return base_convert($value, 16, 2);
     }
 
+    /**
+     * @param string $input
+     * @return mixed
+     */
     protected function str2hex($input) {
         $data = unpack('H*', $input);
         return $data[1];
     }
 
+    /**
+     * @param $scopes
+     * @param int $lifetime
+     * @return string
+     */
     public function generate($scopes, $lifetime = 36000) {
 
         $time = time();

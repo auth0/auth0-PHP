@@ -7,6 +7,10 @@ use Auth0\SDK\API\Header\ContentType;
 
 class UserBlocks extends GenericResource 
 {
+    /**
+     * @param string $user_id
+     * @return mixed
+     */
   public function get($user_id) 
   {
     return $this->apiClient->get()
@@ -14,6 +18,10 @@ class UserBlocks extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $identifier
+     * @return mixed
+     */
   public function getByIdentifier($identifier) 
   {
     return $this->apiClient->get()
@@ -22,6 +30,10 @@ class UserBlocks extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $user_id
+     * @return mixed
+     */
   public function unblock($user_id) 
   {
     return $this->apiClient->delete()
@@ -29,6 +41,10 @@ class UserBlocks extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $identifier
+     * @return mixed
+     */
   public function unblockByIdentifier($identifier) 
   {
     return $this->apiClient->delete()

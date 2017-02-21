@@ -7,6 +7,11 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Emails extends GenericResource 
 {
+    /**
+     * @param null|string|array $fields
+     * @param null|string|array $include_fields
+     * @return mixed
+     */
   public function getEmailProvider($fields = null, $include_fields = null) 
   {
     $request = $this->apiClient->get()
@@ -30,6 +35,10 @@ class Emails extends GenericResource
     return $request->call();
   }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
   public function configureEmailProvider($data) 
   {
     return $this->apiClient->post()
@@ -40,6 +49,10 @@ class Emails extends GenericResource
       ->call();
   }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
   public function updateEmailProvider($data) 
   {
     return $this->apiClient->patch()
@@ -50,6 +63,9 @@ class Emails extends GenericResource
       ->call();
   }
 
+    /**
+     * @return mixed
+     */
   public function deleteEmailProvider() 
   {
     return $this->apiClient->delete()

@@ -10,6 +10,14 @@ class DeviceCredentials extends GenericResource
   const TYPE_PUBLIC_KEY = 'public_key';
   const TYPE_REFESH_TOKEN = 'refresh_token';
 
+    /**
+     * @param string $user_id
+     * @param string $client_id
+     * @param string $type
+     * @param null|string|array $fields
+     * @param null|string|array $include_fields
+     * @return mixed
+     */
   public function getAll($user_id = null, $client_id = null, $type = null, $fields = null, $include_fields = null) 
   {
     $request = $this->apiClient->get()
@@ -47,6 +55,10 @@ class DeviceCredentials extends GenericResource
     return $request->call();
   }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
   public function createPublicKey($data) 
   {
     return $this->apiClient->post()
@@ -56,6 +68,10 @@ class DeviceCredentials extends GenericResource
       ->call();
   }
 
+    /**
+     * @param string $id
+     * @return mixed
+     */
   public function deleteDeviceCredential($id) 
   {
     return $this->apiClient->delete()

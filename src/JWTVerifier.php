@@ -27,6 +27,8 @@ class JWTVerifier {
      *     - authorized_iss         (Array) Required (if supported RS256). The list of issuers trusted by the service.
      *     - guzzle_options         (Array) Optional Extra configuration options sent to guzzle.
      *
+     * @param array $config
+     * @throws CoreException
      */
     public function __construct($config) {
 
@@ -76,7 +78,14 @@ class JWTVerifier {
         $this->JWKFetcher = new JWKFetcher($cache, $guzzleOptions);
     }
 
-    public function verifyAndDecode($jwt) {
+    /**
+     * @param string $jwt
+     * @return object
+     * @throws CoreException
+     * @throws InvalidTokenException
+     */
+    public function verifyAndDecode($jwt)
+    {
 
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {

@@ -7,6 +7,10 @@ use Auth0\SDK\API\Header\ContentType;
 
 class Users extends GenericResource {
 
+    /**
+     * @param string $user_id
+     * @return mixed
+     */
     public function get($user_id) {
 
         return $this->apiClient->get()
@@ -14,6 +18,11 @@ class Users extends GenericResource {
             ->call();
     }
 
+    /**
+     * @param string $user_id
+     * @param array $data
+     * @return mixed
+     */
     public function update($user_id, $data) {
 
         return $this->apiClient->patch()
@@ -23,6 +32,10 @@ class Users extends GenericResource {
             ->call();
     }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
     public function create($data) {
 
         return $this->apiClient->post()
@@ -32,10 +45,18 @@ class Users extends GenericResource {
             ->call();
     }
 
+    /**
+     * @param array $params
+     * @return mixed
+     */
     public function getAll($params = array()) {
         return $this->search($params);
     }
-    
+
+    /**
+     * @param array $params
+     * @return mixed
+     */
     public function search($params = array()) {
 
         $client = $this->apiClient->get()
@@ -48,6 +69,9 @@ class Users extends GenericResource {
         return $client->call();
     }
 
+    /**
+     * @return mixed
+     */
     public function deleteAll() {
 
         return $this->apiClient->delete()
@@ -55,6 +79,10 @@ class Users extends GenericResource {
             ->call();
     }
 
+    /**
+     * @param string $user_id
+     * @return mixed
+     */
     public function delete($user_id) {
 
         return $this->apiClient->delete()
@@ -62,6 +90,11 @@ class Users extends GenericResource {
             ->call();
     }
 
+    /**
+     * @param string $user_id
+     * @param mixed $post_identities_body
+     * @return mixed
+     */
     public function linkAccount($user_id, $post_identities_body) {
 
         return $this->apiClient->post()
@@ -72,6 +105,12 @@ class Users extends GenericResource {
             ->call();
     }
 
+    /**
+     * @param string $user_id
+     * @param string $provider
+     * @param string $identity_id
+     * @return mixed
+     */
     public function unlinkAccount($user_id, $provider, $identity_id) {
 
         return $this->apiClient->delete()
@@ -81,6 +120,11 @@ class Users extends GenericResource {
             ->call();
     }
 
+    /**
+     * @param string $user_id
+     * @param string $device_id
+     * @return mixed
+     */
     public function unlinkDevice($user_id, $device_id) {
         return $this->apiClient->delete()
             ->users($user_id)
@@ -88,6 +132,11 @@ class Users extends GenericResource {
             ->call();
     }
 
+    /**
+     * @param string $user_id
+     * @param string $multifactor_provider
+     * @return mixed
+     */
     public function deleteMultifactorProvider($user_id, $multifactor_provider) {
         return $this->apiClient->delete()
             ->users($user_id)
