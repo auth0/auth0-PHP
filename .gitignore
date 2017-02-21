@@ -4,5 +4,6 @@ vendor
 .idea
 .DS_Store
 .env
+.env.us
 examples/basic-oauth/.env
 composer.lock

@@ -30,6 +30,8 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 ```php
 // HS256 tokens
+use Auth0\SDK\JWTVerifier;
+
 $verifier = new JWTVerifier([
     'valid_audiences' => [$client_id],
     'client_secret' => $client_secret
@@ -62,24 +64,27 @@ Accepted params:
 ```php
 require __DIR__ . '/vendor/autoload.php';
 
-use Auth0\SDK\API\Authentication;
+use Auth0\SDK\Auth0;
 
 $domain        = 'YOUR_NAMESPACE';
 $client_id     = 'YOUR_CLIENT_ID';
 $client_secret = 'YOUR_CLIENT_SECRET';
 $redirect_uri  = 'http://YOUR_APP/callback';
 
-$auth0 = new Authentication($domain, $client_id);
+$auth0 = new Auth0([
+  'domain' => $domain,
+  'client_id' => $client_id,
+  'client_secret' => $client_secret,
+  'redirect_uri' => $redirect_uri,
+  'audience' => 'urn:test:api',
+  'persist_id_token' => true,
+  'persist_refresh_token' => true,
+]);
 
-$oAuthClient = $auth0->get_oauth_client($client_secret, $redirect_uri);
-$profile = $oAuthClient->getUser();
+$userInfo = $auth0->getUser();
 
-if (!$profile) {
-
-    $authorize_url = $auth0->get_authorize_link('code', 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
-
-    header("Location: $authorize_url");
-    exit;
+if (!$userInfo) {
+    $auth0->login();
 }
 
 var_dump($profile);
@@ -117,9 +122,18 @@ $client_secret = '...'; // This is optional, only needed for impersonation or t 
 
 $auth0Api = new Authentication($domain, $client_id, $client_secret);
 
-$tokens = $auth0Api->authorize_with_ro('theemail@test.com','thepassword');
+// getting an access token with client credentials grant
+$access_token = $auth0Api->client_credentials([
+        'audience' => 'urn:test:api',
+        'scope' => 'do:something read:somethingelse',
+    ]);
 
-$access_token = $auth0Api->get_access_token();
+// getting an access token with password realm grant
+$access_token = $auth0Api->login([
+        'username' => 'someone@example.com',
+        'password' => 'shh',
+        'realm' => 'Username-Password-Authentication',
+    ]);
 ```
 
 ## Troubleshoot

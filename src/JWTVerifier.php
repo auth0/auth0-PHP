@@ -40,6 +40,10 @@ class JWTVerifier {
             $guzzleOptions = $config['guzzle_options'];
         }
 
+        if (isset($config['suported_algs'])) {
+          throw new Exception("`suported_algs` was properly renamed to `supported_algs`.");
+        }
+
         if (!isset($config['supported_algs'])) {
             $config['supported_algs'] = ['HS256'];
         }

@@ -15,7 +15,6 @@ class Users extends GenericResource {
     }
 
     public function update($user_id, $data) {
-
         return $this->apiClient->patch()
             ->users($user_id)
             ->withHeader(new ContentType('application/json'))
@@ -35,7 +34,7 @@ class Users extends GenericResource {
     public function getAll($params = array()) {
         return $this->search($params);
     }
-    
+
     public function search($params = array()) {
 
         $client = $this->apiClient->get()
