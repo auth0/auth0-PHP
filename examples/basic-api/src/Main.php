@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Auth0\SDK\JWTVerifier;
+
 class Main {
 
     protected $token;
@@ -10,8 +12,14 @@ class Main {
     public function setCurrentToken($token) {
 
         try {
-            $this->tokenInfo = \Auth0\SDK\Auth0JWT::decode($token, getenv('AUTH0_CLIENT_ID'), getenv('AUTH0_CLIENT_SECRET'));
-            $this->token = $token;
+          $verifier = new JWTVerifier([
+            'supported_algs' => ['RS256'],
+            'valid_audiences' => [getenv('AUTH0_AUDIENCE')],
+            'authorized_iss' => ['https://' . getenv('AUTH0_DOMAIN') . '/']
+          ]);
+
+          $this->token = $token;
+          $this->tokenInfo = $verifier->verifyAndDecode($token);
         }
         catch(\Auth0\SDK\Exception\CoreException $e) {
           throw $e;
@@ -29,7 +37,7 @@ class Main {
 
         $auth0Api = new \Auth0\SDK\Auth0Api($this->token, getenv('AUTH0_DOMAIN'));
         $userData = $auth0Api->users->get($this->tokenInfo->sub);
-        
+
         return array(
             "status" => 'ok',
             "message" => 'Shh, it\' secret',
