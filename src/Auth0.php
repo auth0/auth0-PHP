@@ -256,21 +256,33 @@ class Auth0 {
   }
 
   public function getUser() {
+    if ($this->user) {
+      return $this->user;
+    }
     $this->exchange();
     return $this->user;
   }
 
   public function getIdToken() {
+    if ($this->id_token) {
+      return $this->id_token;
+    }
     $this->exchange();
     return $this->id_token;
   }
 
   public function getAccessToken() {
+    if ($this->access_token) {
+      return $this->access_token;
+    }
     $this->exchange();
     return $this->access_token;
   }
 
   public function getRefreshToken() {
+    if ($this->refresh_token) {
+      return $this->refresh_token;
+    }
     $this->exchange();
     return $this->refresh_token;
   }
