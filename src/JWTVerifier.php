@@ -43,7 +43,7 @@ class JWTVerifier {
         }
 
         if (isset($config['suported_algs'])) {
-          throw new Exception("`suported_algs` was properly renamed to `supported_algs`.");
+          throw new CoreException("`suported_algs` was properly renamed to `supported_algs`.");
         }
 
         if (!isset($config['supported_algs'])) {
@@ -90,7 +90,6 @@ class JWTVerifier {
      */
     public function verifyAndDecode($jwt)
     {
-
         $tks = explode('.', $jwt);
         if (count($tks) != 3) {
             throw new InvalidTokenException('Wrong number of segments');
