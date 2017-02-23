@@ -43,7 +43,7 @@ $decoded = $verifier->verifyAndDecode($jwt);
 $verifier = new JWTVerifier([
     'supported_algs' => ['RS256'],
     'valid_audiences' => [$client_id],
-    'authorized_iss' => [$domain]
+    'authorized_iss' => ["https://$domain/"] // the issues will look like https://your_account[.region].auth0.com/ (being region an optional segment only present for eu and au accounts.
 ]);
 
 $decoded = $verifier->verifyAndDecode($jwt);
