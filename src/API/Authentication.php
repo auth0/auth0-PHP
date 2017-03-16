@@ -262,6 +262,10 @@ class Authentication {
       $options['client_id'] = $this->client_id;
     }
 
+    if (! isset($options['client_secret'])) {
+      $options['client_secret'] = $this->client_secret;
+    }
+
     if (! isset($options['grant_type'])) {
       throw new ApiException('grant_type is mandatory');
     }
