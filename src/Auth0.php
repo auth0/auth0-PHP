@@ -422,4 +422,12 @@ class Auth0 {
     $this->store = $store;
     return $this;
   }
+
+  /**
+   * @param \Closure $debugger
+   */
+  public function setDebugger(\Closure $debugger)
+  {
+      $this->debugger = $debugger;
+  }
 }
