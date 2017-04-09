@@ -1,7 +1,6 @@
 <?php
-namespace Auth0\Tests;
 
-use Auth0\SDK\Auth0Api;
+namespace Auth0\Tests\API;
 
 abstract class BasicCrudTest extends ApiTests {
 

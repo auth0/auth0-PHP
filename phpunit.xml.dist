@@ -1,17 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./tests/bootstrap.php"
-         colors="true">
+<phpunit
+     colors="true"
+     bootstrap="./vendor/autoload.php"
+>
   <testsuites>
-    <testsuite>
-      <directory>tests</directory>
+    <testsuite name="Auth0 Test Suite">
+      <directory>./tests</directory>
     </testsuite>
   </testsuites>
+
   <filter>
     <whitelist>
-      <directory suffix=".php">src</directory>
-      <exclude>
-        <directory suffix="Interface.php">src/</directory>
-      </exclude>
+      <directory suffix=".php">./src/</directory>
     </whitelist>
   </filter>
 </phpunit>
