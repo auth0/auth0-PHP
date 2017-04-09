@@ -41,6 +41,9 @@ class HttpClientBuilder
      */
     public function __construct($endpoint, HttpClient $httpClient = null)
     {
+        if (!preg_match('|https?://.+|sim', $endpoint)) {
+            $endpoint = 'https://'.$endpoint;
+        }
         $this->endpoint = $endpoint;
         $this->pureHttpClient = $httpClient ?: HttpClientDiscovery::find();
     }
@@ -66,7 +69,7 @@ class HttpClientBuilder
     public function buildHttpClient()
     {
         $pluginClient = new PluginClient($this->pureHttpClient, [
-            new BaseUriPlugin(UriFactoryDiscovery::find()->createUri('https://'.$this->endpoint)),
+            new BaseUriPlugin(UriFactoryDiscovery::find()->createUri($this->endpoint)),
             new HeaderDefaultsPlugin(['Content-Type'=>'application/json']),
         ]);
 

@@ -2,7 +2,8 @@
 
 namespace Auth0\SDK\Helpers;
 
-use Auth0\SDK\API\Helpers\RequestBuilder;
+use Auth0\SDK\API\Helpers\HttpClientBuilder;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 
@@ -53,13 +54,9 @@ class JWKFetcher {
 
             $secret = [];
 
-            $request = new RequestBuilder(array(
-                'domain' => $iss,
-                'basePath' => '.well-known/jwks.json',
-                'method' => 'GET',
-                'guzzleOptions' => $this->guzzleOptions
-            ));
-            $jwks = $request->call();
+            $httpClient = (new HttpClientBuilder($iss))->buildHttpClient();
+            $response = $httpClient->get('.well-known/jwks.json');
+            $jwks = ResponseMediator::getContent($response);
 
             foreach ($jwks['keys'] as $key) { 
                 $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
