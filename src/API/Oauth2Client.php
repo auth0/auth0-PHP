@@ -1,7 +1,7 @@
 <?php
 namespace Auth0\SDK\API;
 
-use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\API\Helpers\ClientHeaders;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Store\EmptyStore;
@@ -257,7 +257,7 @@ class Oauth2Client {
             "code" => $code,
             "redirect_uri" => $this->redirect_uri
         ), array(
-            'Auth0-Client' => ApiClient::getInfoHeadersData()->build()
+            'Auth0-Client' => ClientHeaders::getInfoHeadersData()->build()
         ));
 
         $auth0_response = $response['result'];

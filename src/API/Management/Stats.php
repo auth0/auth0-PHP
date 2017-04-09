@@ -2,34 +2,33 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Stats extends GenericResource 
+class Stats extends GenericResource
 {
     /**
-     * @return mixed
+     * @return array|string
      */
-  public function getActiveUsersCount() 
-  {
-    return $this->apiClient->get()
-      ->stats()
-      ->addPath('active-users')
-      ->call();
-  }
+    public function getActiveUsersCount()
+    {
+        $response = $this->httpClient->get('/stats/active-users');
+
+        return ResponseMediator::getContent($response);
+    }
 
     /**
      * @param string $from
      * @param string $to
-     * @return mixed
+     *
+     * @return array|string
      */
-  public function getDailyStats($from, $to) 
-  {
-    return $this->apiClient->get()
-      ->stats()
-      ->daily()
-      ->withParam('from', $from)
-      ->withParam('to', $to)
-      ->call();
-  }
+    public function getDailyStats($from, $to)
+    {
+        $response = $this->httpClient->get('/stats/daily?'.http_build_url([
+          'from' => $from,
+          'to' => $to,
+        ]));
+
+        return ResponseMediator::getContent($response);
+    }
 }

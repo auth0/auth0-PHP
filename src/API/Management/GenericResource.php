@@ -1,27 +1,21 @@
-<?php namespace Auth0\SDK\API\Management;
+<?php
 
-use Auth0\SDK\API\Helpers\ApiClient;
+namespace Auth0\SDK\API\Management;
 
-class GenericResource {
+use Http\Client\Common\HttpMethodsClient;
+
+abstract class GenericResource
+{
+    /**
+     * @var HttpMethodsClient
+     */
+    protected $httpClient;
 
     /**
-     * @var ApiClient
+     * @param HttpMethodsClient $apiClient
      */
-  protected $apiClient;
-
-    /**
-     * GenericResource constructor.
-     * @param ApiClient $apiClient
-     */
-  public function __construct(ApiClient $apiClient) {
-      $this->apiClient = $apiClient;
-  }
-
-    /**
-     * @return ApiClient
-     */
-  public function getApiClient() {
-    return $this->apiClient;
-  }
-  
+    public function __construct(HttpMethodsClient $apiClient)
+    {
+        $this->httpClient = $apiClient;
+    }
 }

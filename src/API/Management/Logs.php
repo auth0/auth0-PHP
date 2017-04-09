@@ -2,35 +2,31 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Logs extends GenericResource 
+class Logs extends GenericResource
 {
     /**
      * @param string $id
+     *
      * @return mixed
      */
-  public function get($id) 
-  {
-    return $this->apiClient->get()
-      ->logs($id)
-      ->call();
-  }
+    public function get($id)
+    {
+        $response = $this->httpClient->get(sprintf('/logs/%s', $id));
+
+        return ResponseMediator::getContent($response);
+    }
 
     /**
      * @param array $params
+     *
      * @return mixed
      */
-  public function search($params = array()) {
+    public function search($params = array())
+    {
+        $response = $this->httpClient->get('/logs?', http_build_url($params));
 
-    $client = $this->apiClient->get()
-        ->logs();
-
-    foreach ($params as $param => $value) {
-        $client->withParam($param, $value);
+        return ResponseMediator::getContent($response);
     }
-
-    return $client->call();
-  }
 }

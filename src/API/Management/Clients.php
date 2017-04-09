@@ -2,100 +2,104 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Clients extends GenericResource 
+class Clients extends GenericResource
 {
     /**
      * @param null|string|array $fields
      * @param null|string|array $include_fields
+     *
      * @return mixed
      */
-    public function getAll($fields = null, $include_fields = null) 
+    public function getAll($fields = null, $include_fields = null)
     {
-        $request = $this->apiClient->get()
-            ->clients();
-
-        if ($fields !== null) 
-        {
-            if (is_array($fields)) 
-            {
+        $queryParams = [];
+        if ($fields !== null) {
+            if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
-            $request->withParam('fields', $fields);
+            $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) 
-        {
-            $request->withParam('include_fields', $include_fields);
+        if ($include_fields !== null) {
+            $queryParams['include_fields'] = $include_fields;
         }
 
-        return $request->call();
+        $query='';
+        if (!empty($queryParams)) {
+            $query = '?'.http_build_url($queryParams);
+        }
+        $response = $this->httpClient->get('/clients'.$query);
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
-     * @param string $id
+     * @param string            $id
      * @param null|string|array $fields
      * @param null|string|array $include_fields
+     *
      * @return mixed
      */
-    public function get($id, $fields = null, $include_fields = null) 
+    public function get($id, $fields = null, $include_fields = null)
     {
-        $request = $this->apiClient->get()
-            ->clients($id);
-
-        if ($fields !== null) 
-        {
-            if (is_array($fields)) 
-            {
+        $queryParams = [];
+        if ($fields !== null) {
+            if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
-            $request->withParam('fields', $fields);
-        }
-        if ($include_fields !== null) 
-        {
-            $request->withParam('include_fields', $include_fields);
+            $queryParams['fields'] = $fields;
         }
 
-        return $request->call();
+        if ($include_fields !== null) {
+            $queryParams['include_fields'] = $include_fields;
+        }
+
+        $query='';
+        if (!empty($queryParams)) {
+            $query = '?'.http_build_url($queryParams);
+        }
+        $response = $this->httpClient->get('/clients/'.$id.$query);
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param string $id
+     *
      * @return mixed
      */
-    public function delete($id) 
+    public function delete($id)
     {
-        return $this->apiClient->delete()
-            ->clients($id)
-            ->call();
+        $response = $this->httpClient->delete('/clients/'.$id);
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param array $data
+     *
      * @return mixed
      */
-    public function create($data) 
+    public function create($data)
     {
-        return $this->apiClient->post()
-            ->clients()
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($data))
-            ->call();
+        $response = $this->httpClient->post('/clients', [], json_encode($data));
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param string $id
-     * @param array $data
+     * @param array  $data
+     *
      * @return mixed
      */
-    public function update($id, $data) 
+    public function update($id, $data)
     {
-        return $this->apiClient->patch()
-            ->clients($id)
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($data))
-            ->call();
+        $response = $this->httpClient->patch('/clients/'.$id, [], json_encode($data));
+
+        return ResponseMediator::getContent($response);
     }
 }

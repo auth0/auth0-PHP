@@ -18,8 +18,6 @@ use Auth0\SDK\API\Management\Tickets;
 use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
