@@ -75,9 +75,4 @@ class HttpClientBuilder
 
         return new HttpMethodsClient($pluginClient, MessageFactoryDiscovery::find());
     }
-
-
-
-
-
 }

@@ -15,7 +15,7 @@ class ClientGrants extends GenericResource
     {
         $query = '';
         if ($audience !== null) {
-            $query = '?'.http_build_url(['audience' => $audience]);
+            $query = '?'.http_build_query(['audience' => $audience]);
         }
 
         $response = $this->httpClient->get('/client-grants'.$query);

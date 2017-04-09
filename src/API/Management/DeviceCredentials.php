@@ -47,7 +47,7 @@ class DeviceCredentials extends GenericResource
 
       $query = '';
       if (!empty($queryParams)) {
-          $query = '?'.http_build_url($queryParams);
+          $query = '?'.http_build_query($queryParams);
       }
       $response = $this->httpClient->get('/device-credentials'.$query);
 

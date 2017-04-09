@@ -28,7 +28,7 @@ class Clients extends GenericResource
 
         $query='';
         if (!empty($queryParams)) {
-            $query = '?'.http_build_url($queryParams);
+            $query = '?'.http_build_query($queryParams);
         }
         $response = $this->httpClient->get('/clients'.$query);
 
@@ -58,7 +58,7 @@ class Clients extends GenericResource
 
         $query='';
         if (!empty($queryParams)) {
-            $query = '?'.http_build_url($queryParams);
+            $query = '?'.http_build_query($queryParams);
         }
         $response = $this->httpClient->get('/clients/'.$id.$query);
 

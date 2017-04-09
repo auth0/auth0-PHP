@@ -33,7 +33,7 @@ class Connections extends GenericResource
 
         $query = '';
         if (!empty($queryParams)) {
-            $query = '?'.http_build_url($queryParams);
+            $query = '?'.http_build_query($queryParams);
         }
         $response = $this->httpClient->get('/connections'.$query);
 
@@ -63,7 +63,7 @@ class Connections extends GenericResource
 
         $query = '';
         if (!empty($queryParams)) {
-            $query = '?'.http_build_url($queryParams);
+            $query = '?'.http_build_query($queryParams);
         }
         $response = $this->httpClient->get('/connections/'.$id.$query);
 
@@ -90,7 +90,7 @@ class Connections extends GenericResource
      */
     public function deleteUser($id, $email)
     {
-        $response = $this->httpClient->delete(sprintf('/connections/%s?', $id, http_build_url(['email' => $email])));
+        $response = $this->httpClient->delete(sprintf('/connections/%s?', $id, http_build_query(['email' => $email])));
 
         return ResponseMediator::getContent($response);
     }

@@ -24,7 +24,7 @@ class Stats extends GenericResource
      */
     public function getDailyStats($from, $to)
     {
-        $response = $this->httpClient->get('/stats/daily?'.http_build_url([
+        $response = $this->httpClient->get('/stats/daily?'.http_build_query([
           'from' => $from,
           'to' => $to,
         ]));

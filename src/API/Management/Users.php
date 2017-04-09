@@ -34,7 +34,7 @@ class Users extends GenericResource
 
     public function search($params = array())
     {
-        $response = $this->httpClient->get('/users?'.http_build_url($params));
+        $response = $this->httpClient->get('/users?'.http_build_query($params));
 
         return ResponseMediator::getContent($response);
     }

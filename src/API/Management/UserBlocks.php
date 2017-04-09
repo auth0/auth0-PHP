@@ -25,7 +25,7 @@ class UserBlocks extends GenericResource
      */
     public function getByIdentifier($identifier)
     {
-        $response = $this->httpClient->get('/user-blocks?'.http_build_url(['identifier' => $identifier]));
+        $response = $this->httpClient->get('/user-blocks?'.http_build_query(['identifier' => $identifier]));
 
         return ResponseMediator::getContent($response);
     }
@@ -49,7 +49,7 @@ class UserBlocks extends GenericResource
      */
     public function unblockByIdentifier($identifier)
     {
-        $response = $this->httpClient->delete('/user-blocks?'.http_build_url(['identifier' => $identifier]));
+        $response = $this->httpClient->delete('/user-blocks?'.http_build_query(['identifier' => $identifier]));
 
         return ResponseMediator::getContent($response);
     }

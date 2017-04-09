@@ -25,13 +25,8 @@ abstract class BasicCrudTest extends ApiTests {
     public function testAll() {
 
         $client = $this->getApiClient();
-
-        $options = $client->getApiClient()->get()->getGuzzleOptions();
-
-        $this->assertArrayHasKey('base_uri', $options);
-        $this->assertEquals("https://$this->domain/api/v2/", $options['base_uri']);
-
         $created = $client->create($this->getCreateBody());
+        $this->assertEquals(200, $created['statusCode'], "Status code was not 200. We got: ".json_encode($created));
 
         $all = $this->getAll($client, $created);
 
