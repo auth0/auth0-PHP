@@ -2,7 +2,6 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
 class Clients extends GenericResource

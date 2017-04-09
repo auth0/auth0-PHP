@@ -44,7 +44,7 @@ class HttpClientBuilder
         if (!preg_match('|https?://.+|sim', $endpoint)) {
             $endpoint = 'https://'.$endpoint;
         }
-        $this->endpoint = $endpoint;
+        $this->endpoint = rtrim($endpoint, '/');
         $this->pureHttpClient = $httpClient ?: HttpClientDiscovery::find();
     }
 

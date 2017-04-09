@@ -173,7 +173,7 @@ class Authentication {
    */
   public function userinfo($accessToken)
   {
-      $response = $this->httpClient->get('/userinfo', ['Authorization' => 'Bearer '.$accessToken], json_encode($data));
+      $response = $this->httpClient->get('/userinfo', ['Authorization' => 'Bearer '.$accessToken]);
 
       return ResponseMediator::getContent($response);
   }
