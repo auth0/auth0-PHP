@@ -25,6 +25,7 @@ matrix:
       env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci"
 
 install:
+  - if [[ $COVERAGE = true ]]; then composer require codeclimate/php-test-reporter":^0.2 --no-update; fi
   - travis_retry composer update ${COMPOSER_FLAGS} --prefer-dist --no-interaction
 
 script:
