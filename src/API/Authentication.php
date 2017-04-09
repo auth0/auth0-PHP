@@ -172,18 +172,6 @@ class Authentication {
       ->call();
   }
 
-  public function sms_code_passwordless_verify($phone_number, $code, $scope = 'openid'){
-
-    return $this->authorize_with_ro($phone_number, $code, $scope, 'sms');
-
-  }
-
-  public function email_code_passwordless_verify($email, $code, $scope = 'openid'){
-
-    return $this->authorize_with_ro($email, $code, $scope, 'email');
-
-  }
-
   public function userinfo($access_token){
 
     return $this->apiClient->get()
