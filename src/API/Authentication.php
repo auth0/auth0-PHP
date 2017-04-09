@@ -1,42 +1,43 @@
 <?php
+
 namespace Auth0\SDK\API;
 
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
-use Auth0\SDK\API\Header\ContentType;
-use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\API\Helpers\HttpClientBuilder;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Exception\ApiException;
 use GuzzleHttp\Psr7;
+use Http\Client\Common\HttpMethodsClient;
+use Http\Client\HttpClient;
 
 class Authentication {
 
   private $client_id;
   private $client_secret;
   private $domain;
-  private $apiClient;
-  private $guzzleOptions;
 
-  public function __construct($domain, $client_id = null, $client_secret = null, $audience = null, $scope = null, $guzzleOptions = []) {
+    /**
+     * @var HttpMethodsClient
+     */
+  private $httpClient;
+
+    /**
+     *
+     * @param string      $domain
+     * @param string|null $client_id
+     * @param string|null $client_secret
+     * @param string|null $audience
+     * @param string|null $scope
+     * @param HttpClient|null $client
+     */
+  public function __construct($domain, $client_id = null, $client_secret = null, $audience = null, $scope = null, HttpClient $client = null) {
 
     $this->client_id = $client_id;
     $this->client_secret = $client_secret;
     $this->domain = $domain;
-    $this->guzzleOptions = $guzzleOptions;
     $this->audience = $audience;
     $this->scope = $scope;
 
-    $this->setApiClient();
-  }
-
-  protected function setApiClient() {
-    $apiDomain = "https://{$this->domain}";
-
-    $client = new ApiClient([
-        'domain' => $apiDomain,
-        'basePath' => '/',
-        'guzzleOptions' => $this->guzzleOptions
-    ]);
-
-    $this->apiClient = $client;
+    $this->httpClient = (new HttpClientBuilder($domain, $client))->buildHttpClient();
   }
 
   /**
@@ -127,12 +128,9 @@ class Authentication {
       'scope' => $scope,
     ]);
 
-    return $this->apiClient->post()
-      ->oauth()
-      ->access_token()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
+    $response = $this->httpClient->post('/oauth/access_token', [], json_encode($data));
+
+    return ResponseMediator::getContent($response);
   }
 
   public function email_passwordless_start($email, $type, $authParams = []){
@@ -148,12 +146,9 @@ class Authentication {
       $data['authParams'] = $authParams;
     }
 
-    return $this->apiClient->post()
-      ->passwordless()
-      ->start()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
+    $response = $this->httpClient->post('/passwordless/start', [], json_encode($data));
+
+    return ResponseMediator::getContent($response);
   }
 
   public function sms_passwordless_start($phone_number){
@@ -164,22 +159,23 @@ class Authentication {
       'phone_number' => $phone_number,
     ];
 
-    return $this->apiClient->post()
-      ->passwordless()
-      ->start()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
+
+    $response = $this->httpClient->post('/passwordless/start', [], json_encode($data));
+
+    return ResponseMediator::getContent($response);
+
   }
 
-  public function userinfo($access_token){
+  /**
+   * @param $accessToken
+   *
+   * @return array|string
+   */
+  public function userinfo($accessToken)
+  {
+      $response = $this->httpClient->get('/userinfo', ['Authorization' => 'Bearer '.$accessToken], json_encode($data));
 
-    return $this->apiClient->get()
-      ->userinfo()
-      ->withHeader(new ContentType('application/json'))
-      ->withHeader(new AuthorizationBearer($access_token))
-      ->call();
-
+      return ResponseMediator::getContent($response);
   }
 
   public function impersonate($access_token, $user_id, $protocol, $impersonator_id, $client_id, $additionalParameters=[]){
@@ -191,14 +187,9 @@ class Authentication {
       'additionalParameters' => $additionalParameters,
     ];
 
-    return $this->apiClient->post()
-      ->users($user_id)
-      ->impersonate()
-      ->withHeader(new ContentType('application/json'))
-      ->withHeader(new AuthorizationBearer($access_token))
-      ->withBody(json_encode($data))
-      ->call();
+    $response = $this->httpClient->post(sprintf('/users/%s/impersonate', $user_id), ['Authorization' => 'Bearer '.$access_token], json_encode($data));
 
+    return ResponseMediator::getContent($response);
   }
 
   /**
@@ -227,12 +218,9 @@ class Authentication {
       throw new ApiException('grant_type is mandatory');
     }
 
-    return $this->apiClient->post()
-      ->oauth()
-      ->token()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($options))
-      ->call();
+    $response = $this->httpClient->post('/oauth/token', [], json_encode($options));
+
+    return ResponseMediator::getContent($response);
   }
 
   /**
@@ -351,12 +339,10 @@ class Authentication {
       'connection' => $connection,
     ];
 
-    return $this->apiClient->post()
-      ->dbconnections()
-      ->signup()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
+
+    $response = $this->httpClient->post('/dbconnections/signup', [], json_encode($data));
+
+    return ResponseMediator::getContent($response);
   }
 
   public function dbconnections_change_password($email, $connection, $password = null) {
@@ -371,11 +357,8 @@ class Authentication {
       $data['password'] = $password;
     }
 
-    return $this->apiClient->post()
-      ->dbconnections()
-      ->change_password()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
+    $response = $this->httpClient->post('/dbconnections/change_password', [], json_encode($data));
+
+    return ResponseMediator::getContent($response);
   }
 }
