@@ -7,6 +7,7 @@ use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use OAuth2\Client;
+use Auth0\SDK\API\Auth0Api;
 
 /**
  * This class provides access to Auth0 Platform.
