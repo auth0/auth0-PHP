@@ -24,7 +24,6 @@ class BlacklistsTest extends ApiTests {
         $api->blacklists->blacklist($aud, $jti);
 
         $all = $api->blacklists->getAll($aud);
-        $this->assertEquals(200, $all['statusCode'], "Status code was not 200. We got: ".json_encode($all));
 
         $found = false;
         foreach ($all as $value) {

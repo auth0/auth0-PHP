@@ -13,7 +13,7 @@ class Blacklists extends GenericResource
      */
     public function getAll($aud) 
     {
-        $response = $this->httpClient->get('/blacklist/tokens?'.http_build_query(['aud'=>$aud]));
+        $response = $this->httpClient->get('/blacklists/tokens?'.http_build_query(['aud'=>$aud]));
 
         return ResponseMediator::getContent($response);
     }
@@ -25,7 +25,7 @@ class Blacklists extends GenericResource
      */
     public function blacklist($aud, $jti) 
     {
-        $response = $this->httpClient->post('/blacklist/tokens', [], json_encode([
+        $response = $this->httpClient->post('/blacklists/tokens', [], json_encode([
             'aud' => $aud,
             'jti' => $jti
         ]));

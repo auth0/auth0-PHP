@@ -26,7 +26,6 @@ abstract class BasicCrudTest extends ApiTests {
 
         $client = $this->getApiClient();
         $created = $client->create($this->getCreateBody());
-        $this->assertEquals(200, $created['statusCode'], "Status code was not 200. We got: ".json_encode($created));
 
         $all = $this->getAll($client, $created);
 

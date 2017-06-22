@@ -5,6 +5,7 @@ namespace Auth0\SDK\API\Helpers;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\BaseUriPlugin;
+use Http\Client\Common\Plugin\HeaderAppendPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Client\HttpClient;
@@ -71,6 +72,7 @@ class HttpClientBuilder
         $pluginClient = new PluginClient($this->pureHttpClient, [
             new BaseUriPlugin(UriFactoryDiscovery::find()->createUri($this->endpoint)),
             new HeaderDefaultsPlugin(['Content-Type'=>'application/json']),
+            new HeaderAppendPlugin($this->headers),
         ]);
 
         return new HttpMethodsClient($pluginClient, MessageFactoryDiscovery::find());
