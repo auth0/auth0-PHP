@@ -1,4 +1,5 @@
 <?php
+
 namespace Auth0\Tests;
 
 use Auth0\SDK\Helpers\Cache\CacheHandler;

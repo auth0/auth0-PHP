@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: remuslazar
- * Date: 01.12.16
- * Time: 10:16
- */
 
-namespace Auth0\Tests;
+
+namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Authentication;
+use Auth0\Tests\API\ApiTests;
 
 class AuthApiDBConnectionsTest extends ApiTests {
 
