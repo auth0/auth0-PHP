@@ -81,7 +81,10 @@ class TokenTest extends \PHPUnit_Framework_TestCase {
             ]
         ]);
 
-        $decoded = Auth0JWT::decode($jwt, $client_id, $client_secret);
+        $decoded = (new JWTVerifier([
+            'supported_algs'=> ['HS256'],
+            'client_secret' => $client_secret
+        ]))->verifyAndDecode($jwt);
 
         $this->assertObjectHasAttribute('aud', $decoded);
         $this->assertEquals($client_id, $decoded->aud);
