@@ -27,7 +27,12 @@ class AuthApiTest extends ApiTests {
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
-        $response = $api->login(['username'=>'auth@test.com', 'password'=>'123456', 'realm'=>'openid']);
+        $response = $api->login([
+            'username'=>'auth@test.com',
+            'password'=>'123456',
+            'realm' => 'Username-Password-Authentication',
+            'scope'=>'openid'
+        ]);
 
         $this->assertArrayHasKey('id_token', $response);
         $this->assertArrayHasKey('access_token', $response);
