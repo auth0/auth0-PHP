@@ -12,7 +12,6 @@ php:
   - 5.6
   - 7.0
   - 7.1
-  - hhvm
 
 env:
   global:
@@ -21,6 +20,8 @@ env:
 matrix:
   fast_finish: true
   include:
+    - php: hhvm
+      dist: trusty
     - php: 5.5
       env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true TEST_COMMAND="composer test-ci"
 
