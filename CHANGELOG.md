@@ -1,5 +1,18 @@
 # Change Log
 
+## [5.0.4](https://github.com/auth0/auth0-PHP/tree/5.0.4) (2017-06-26)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.0...5.0.4)
+
+**Added**
+- Added setter for debugger [\#149](https://github.com/auth0/auth0-PHP/pull/149) ([AxaliaN](https://github.com/AxaliaN))
+
+**Changed**
+- Restructured tests and fixed hhvm build [\#164](https://github.com/auth0/auth0-PHP/pull/164) ([Nyholm](https://github.com/Nyholm))
+- Update .env.example with more appropriate values [\#148](https://github.com/auth0/auth0-PHP/pull/148) ([AmaanC](https://github.com/AmaanC))
+
+**Removed**
+- Remove non-essential dev package [\#157](https://github.com/auth0/auth0-PHP/pull/157) ([Nyholm](https://github.com/Nyholm))
+
 ## [3.4.0](https://github.com/auth0/auth0-PHP/tree/3.4.0) (2016-06-21)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.3.7...3.4.0)
 
