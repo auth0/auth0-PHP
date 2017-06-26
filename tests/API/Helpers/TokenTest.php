@@ -1,4 +1,5 @@
-<?php namespace Auth0\Tests;
+<?php
+namespace Auth0\Tests\Api\Helpers;
 
 use Auth0\SDK\API\Helpers\TokenGenerator;
 use Auth0\SDK\JWTVerifier;

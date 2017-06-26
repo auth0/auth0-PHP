@@ -1,10 +1,13 @@
-<?php namespace Auth0\Tests;
+<?php
+namespace Auth0\Tests\Api\Helpers;
 
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Helpers\Cache\FileSystemCacheHandler;
+use Auth0\Tests\API\ApiTests;
+use Auth0\Tests\CacheDecorator;
 
-class JWKTest extends ApiTests 
+class JWKTest extends ApiTests
 {
     public function testNoCache() 
     {

@@ -1,7 +1,8 @@
 <?php
-namespace Auth0\Tests;
+namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
+use Auth0\Tests\API\BasicCrudTest;
 
 class UsersTest extends BasicCrudTest {
 

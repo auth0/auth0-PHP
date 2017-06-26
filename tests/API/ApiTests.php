@@ -1,5 +1,5 @@
 <?php
-namespace Auth0\Tests;
+namespace Auth0\Tests\API;
 
 use Auth0\SDK\API\Helpers\TokenGenerator;
 use josegonzalez\Dotenv\Loader;
