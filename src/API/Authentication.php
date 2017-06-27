@@ -172,49 +172,6 @@ class Authentication {
       ->call();
   }
 
-  public function sms_code_passwordless_verify($phone_number, $code, $scope = 'openid'){
-
-    return $this->authorize_with_ro($phone_number, $code, $scope, 'sms');
-
-  }
-
-  public function email_code_passwordless_verify($email, $code, $scope = 'openid'){
-
-    return $this->authorize_with_ro($email, $code, $scope, 'email');
-
-  }
-
-  /**
-   * @deprecated Use `login` instead. Use only for passwordless verify
-   */
-  public function authorize_with_ro($username, $password, $scope = 'openid', $connection = null, $id_token = null, $device = null){
-    $data = [
-      'client_id' => $this->client_id,
-      'username' => $username,
-      'password' => $password,
-      'scope' => $scope,
-    ];
-    if ($device !== null) {
-      $data['device'] = $device;
-    }
-    if ($id_token !== null) {
-      $data['id_token'] = $id_token;
-      $data['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
-    } else {
-      if ($connection === null) {
-        throw new ApiException('You need to specify a conection for grant_type=password authentication');
-      }
-      $data['grant_type'] = 'password';
-      $data['connection'] = $connection;
-    }
-    return $this->apiClient->post()
-      ->oauth()
-      ->ro()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
-  }
-
   public function userinfo($access_token){
 
     return $this->apiClient->get()

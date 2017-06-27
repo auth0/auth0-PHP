@@ -22,27 +22,6 @@ class AuthApiTest extends ApiTests {
         $this->assertEquals("https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http%3A%2F%2Flala.com&client_id=123456&connection=facebook&state=dastate", $authorize_url2);
     }
 
-    public function testAuthorizeWithRO() {
-        $env = $this->getEnv();
-
-        $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
-
-        $response = $api->authorize_with_ro('auth@test.com', '123456', 'openid', 'Username-Password-Authentication');
-
-        $this->assertArrayHasKey('id_token', $response);
-        $this->assertArrayHasKey('access_token', $response);
-        $this->assertArrayHasKey('token_type', $response);
-        $this->assertEquals('bearer', $response['token_type']);
-
-        $userinfo = $api->userinfo($response['access_token']);
-
-        $this->assertArrayHasKey('email', $userinfo);
-        $this->assertArrayHasKey('email_verified', $userinfo);
-        $this->assertArrayHasKey('user_id', $userinfo);
-        $this->assertEquals('auth@test.com', $userinfo['email']);
-        $this->assertEquals('auth0|57e293c6247600bf0ba47fc2', $userinfo['user_id']);
-    }
-
     public function testOauthToken() {
         $env = $this->getEnv();
 
