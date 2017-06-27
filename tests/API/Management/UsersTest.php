@@ -33,7 +33,9 @@ class UsersTest extends BasicCrudTest {
         return $api->users;
     }
 
-    protected function getAll($client, $entity) { echo "user_id:'{$entity['user_id']}'";
+    protected function getAll($client, $entity)
+    {
+        echo "user_id:'{$entity['user_id']}'";
         return $client->getAll([
             "q" => "user_id:'{$entity['user_id']}'",
             "search_engine"=>"v2"

@@ -2,75 +2,70 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Emails extends GenericResource 
+class Emails extends GenericResource
 {
     /**
-     * @param null|string|array $fields
-     * @param null|string|array $include_fields
-     * @return mixed
-     */
-  public function getEmailProvider($fields = null, $include_fields = null) 
+   * @param null|string|array $fields
+   * @param null|string|array $include_fields
+   *
+   * @return mixed
+   */
+  public function getEmailProvider($fields = null, $include_fields = null)
   {
-    $request = $this->apiClient->get()
-        ->emails()
-        ->provider();
-
-    if ($fields !== null) 
-    {
-      if (is_array($fields)) 
-      {
-        $fields = implode(',', $fields);
+      $queryParams = [];
+      if ($fields !== null) {
+          if (is_array($fields)) {
+              $fields = implode(',', $fields);
+          }
+          $queryParams['fields'] = $fields;
       }
-      $request->withParam('fields', $fields);
-    }
 
-    if ($include_fields !== null) 
-    {
-      $request->withParam('include_fields', $include_fields);
-    }
+      if ($include_fields !== null) {
+          $queryParams['include_fields'] = $include_fields;
+      }
 
-    return $request->call();
+      $query = '';
+      if (!empty($queryParams)) {
+          $query = '?'.http_build_query($queryParams);
+      }
+      $response = $this->httpClient->get('/emails/provider'.$query);
+
+      return ResponseMediator::getContent($response);
   }
 
-    /**
-     * @param array $data
-     * @return mixed
-     */
-  public function configureEmailProvider($data) 
+  /**
+   * @param array $data
+   *
+   * @return mixed
+   */
+  public function configureEmailProvider($data)
   {
-    return $this->apiClient->post()
-      ->emails()
-      ->provider()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
+      $response = $this->httpClient->post('/emails/provider', [], json_encode($data));
+
+      return ResponseMediator::getContent($response);
   }
 
-    /**
-     * @param array $data
-     * @return mixed
-     */
-  public function updateEmailProvider($data) 
+  /**
+   * @param array $data
+   *
+   * @return mixed
+   */
+  public function updateEmailProvider($data)
   {
-    return $this->apiClient->patch()
-      ->emails()
-      ->provider()
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode($data))
-      ->call();
+      $response = $this->httpClient->patch('/emails/provider', [], json_encode($data));
+
+      return ResponseMediator::getContent($response);
   }
 
-    /**
-     * @return mixed
-     */
-  public function deleteEmailProvider() 
+  /**
+   * @return mixed
+   */
+  public function deleteEmailProvider()
   {
-    return $this->apiClient->delete()
-      ->emails()
-      ->provider()
-      ->call();
+      $response = $this->httpClient->delete('/emails/provider');
+
+      return ResponseMediator::getContent($response);
   }
 }

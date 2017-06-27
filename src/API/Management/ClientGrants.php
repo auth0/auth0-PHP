@@ -2,73 +2,69 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class ClientGrants extends GenericResource 
+class ClientGrants extends GenericResource
 {
     /**
-     * @param string $id
-     * @param null|string $audience
-     * @return mixed
+     * @param string|null $audience
+     *
+     * @return array|string
      */
-  public function get($id, $audience = null) 
-  {
-    $request = $this->apiClient->get()
-      ->addPath('client-grants');
-
-    if ($audience !== null) 
+    public function get($audience = null)
     {
-      $request = $request->withParam('audience', $audience);
-    }
+        $query = '';
+        if ($audience !== null) {
+            $query = '?'.http_build_query(['audience' => $audience]);
+        }
 
-    return $request->call();
-  }
+        $response = $this->httpClient->get('/client-grants'.$query);
+
+        return ResponseMediator::getContent($response);
+    }
 
     /**
      * @param string $client_id
      * @param string $audience
      * @param string $scope
+     *
      * @return mixed
      */
-  public function create($client_id, $audience, $scope) 
-  {
-    return $this->apiClient->post()
-      ->addPath('client-grants')
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode([
-          "client_id" => $client_id,
-          "audience" => $audience,
-          "scope" => $scope,
-        ]))
-      ->call();
-  }
+    public function create($client_id, $audience, $scope)
+    {
+        $response = $this->httpClient->post('/client-grants', [], json_encode([
+            'client_id' => $client_id,
+            'audience' => $audience,
+            'scope' => $scope,
+        ]));
+
+        return ResponseMediator::getContent($response);
+    }
 
     /**
      * @param string $id
-     * @param null|string $audience
-     * @return mixed
+     *
+     * @return array|string
      */
-  public function delete($id, $audience = null) 
-  {
-    return $this->apiClient->delete()
-      ->addPath('client-grants', $id)
-      ->call();
-  }
+    public function delete($id)
+    {
+        $response = $this->httpClient->delete('/client-grants/'.$id);
+
+        return ResponseMediator::getContent($response);
+    }
 
     /**
      * @param string $id
      * @param string $scope
-     * @return mixed
+     *
+     * @return array|string
      */
-  public function update($id, $scope) 
-  {
-    return $this->apiClient->patch()
-      ->addPath('client-grants', $id)
-      ->withHeader(new ContentType('application/json'))
-      ->withBody(json_encode([
-          "scope" => $scope,
-        ]))
-      ->call();
-  }
+    public function update($id, $scope)
+    {
+        $response = $this->httpClient->patch('/client-grants/'.$id, [], json_encode([
+            'scope' => $scope,
+        ]));
+
+        return ResponseMediator::getContent($response);
+    }
 }

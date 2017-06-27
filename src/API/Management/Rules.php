@@ -2,109 +2,108 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Rules extends GenericResource 
+class Rules extends GenericResource
 {
     /**
-     * @param null|string $enabled
+     * @param null|string       $enabled
      * @param null|string|array $fields
      * @param null|string|array $include_fields
+     *
      * @return mixed
      */
-    public function getAll($enabled = null, $fields = null, $include_fields = null) 
+    public function getAll($enabled = null, $fields = null, $include_fields = null)
     {
-        $request = $this->apiClient->get()
-            ->rules();
-
-        if ($enabled !== null) 
-        {
-            $request->withParam('enabled', $enabled);
+        $queryParams = [];
+        if ($enabled !== null) {
+            $queryParams['enabled'] = $enabled;
         }
 
-        if ($fields !== null) 
-        {
-            if (is_array($fields)) 
-            {
+        if ($fields !== null) {
+            if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
-            $request->withParam('fields', $fields);
+            $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) 
-        {
-            $request->withParam('include_fields', $include_fields);
+        if ($include_fields !== null) {
+            $queryParams['include_fields'] = $include_fields;
         }
 
-        return $request->call();
+        $query = '';
+        if (!empty($queryParams)) {
+            $query = '?'.http_build_query($queryParams);
+        }
+        $response = $this->httpClient->get('/rules'.$query);
+
+        return ResponseMediator::getContent($response);
+    }
+
+    /**
+     * @param string            $id
+     * @param null|string|array $fields
+     * @param null|string|array $include_fields
+     *
+     * @return mixed
+     */
+    public function get($id, $fields = null, $include_fields = null)
+    {
+        $queryParams = [];
+        if ($fields !== null) {
+            if (is_array($fields)) {
+                $fields = implode(',', $fields);
+            }
+            $queryParams['fields'] = $fields;
+        }
+
+        if ($include_fields !== null) {
+            $queryParams['include_fields'] = $include_fields;
+        }
+
+        $query = '';
+        if (!empty($queryParams)) {
+            $query = '?'.http_build_query($queryParams);
+        }
+        $response = $this->httpClient->get('/rules/'.$id.$query);
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param string $id
-     * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     *
      * @return mixed
      */
-    public function get($id, $fields = null, $include_fields = null) 
+    public function delete($id)
     {
-        $request = $this->apiClient->get()
-            ->rules($id);
+        $response = $this->httpClient->delete(sprintf('/rules/%s', $id));
 
-        if ($fields !== null) 
-        {
-            if (is_array($fields)) 
-            {
-                $fields = implode(',', $fields);
-            }
-            $request->withParam('fields', $fields);
-        }
-
-        if ($include_fields !== null) 
-        {
-            $request->withParam('include_fields', $include_fields);
-        }
-
-        $info = $request->call();
-
-        return $info;
-    }
-
-    /**
-     * @param string $id
-     * @return mixed
-     */
-    public function delete($id) 
-    {
-       return $this->apiClient->delete()
-            ->rules($id)
-            ->call();
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param array $data
+     *
      * @return mixed
      */
-    public function create($data) 
+    public function create($data)
     {
-        return $this->apiClient->post()
-            ->rules()
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($data))
-            ->call();
+        $response = $this->httpClient->post('/rules', [], json_encode($data));
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param string $id
-     * @param array $data
+     * @param array  $data
+     *
      * @return mixed
      */
-    public function update($id, $data) 
+    public function update($id, $data)
     {
-        return $this->apiClient->patch()
-            ->rules($id)
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($data))
-            ->call();
+        $response = $this->httpClient->patch('/rules/'.$id, [], json_encode($data));
+
+        return ResponseMediator::getContent($response);
     }
 }

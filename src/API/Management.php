@@ -1,6 +1,7 @@
 <?php
 namespace Auth0\SDK\API;
 
+use Auth0\SDK\API\Helpers\HttpClientBuilder;
 use Auth0\SDK\API\Management\Blacklists;
 use Auth0\SDK\API\Management\Clients;
 use Auth0\SDK\API\Management\ClientGrants;
@@ -17,8 +18,8 @@ use Auth0\SDK\API\Management\Tickets;
 use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Http\Client\Common\HttpMethodsClient;
+use Http\Client\HttpClient;
 
 class Management {
 
@@ -33,9 +34,9 @@ class Management {
   private $domain;
 
     /**
-     * @var ApiClient
+     * @var HttpMethodsClient
      */
-  private $apiClient;
+  private $httpClient;
 
     /**
      * @var array
@@ -122,44 +123,30 @@ class Management {
      *
      * @param string $token
      * @param string $domain
-     * @param array $guzzleOptions
+     * @param HttpClient|null $client
      */
-  public function __construct($token, $domain, $guzzleOptions = []) {
+  public function __construct($token, $domain, HttpClient $client = null) {
     $this->token = $token;
     $this->domain = $domain;
-    $this->guzzleOptions = $guzzleOptions;
-    
-    $this->setApiClient();
 
-    $this->blacklists = new Blacklists($this->apiClient);
-    $this->clients = new Clients($this->apiClient);
-    $this->client_grants = new ClientGrants($this->apiClient);
-    $this->connections = new Connections($this->apiClient);
-    $this->deviceCredentials = new DeviceCredentials($this->apiClient);
-    $this->emails = new Emails($this->apiClient);
-    $this->jobs = new Jobs($this->apiClient);
-    $this->logs = new Logs($this->apiClient);
-    $this->rules = new Rules($this->apiClient);
-    $this->resource_servers = new ResourceServers($this->apiClient);
-    $this->stats = new Stats($this->apiClient);
-    $this->tenants = new Tenants($this->apiClient);
-    $this->tickets = new Tickets($this->apiClient);
-    $this->userBlocks = new UserBlocks($this->apiClient);
-    $this->users = new Users($this->apiClient);
-  }
+    $httpClientBuilder = new HttpClientBuilder($domain.'/api/v2/', $client);
+    $httpClientBuilder->addHeader('Authorization', 'Bearer '.$token);
+    $this->httpClient = $httpClientBuilder->buildHttpClient();
 
-  protected function setApiClient() {
-    $apiDomain = "https://{$this->domain}";
-
-    $client = new ApiClient([
-        'domain' => $apiDomain,
-        'basePath' => '/api/v2/',
-        'guzzleOptions' => $this->guzzleOptions,
-        'headers' => [
-          new AuthorizationBearer($this->token)
-        ]
-    ]);
-
-    $this->apiClient = $client;
+    $this->blacklists = new Blacklists($this->httpClient);
+    $this->clients = new Clients($this->httpClient);
+    $this->client_grants = new ClientGrants($this->httpClient);
+    $this->connections = new Connections($this->httpClient);
+    $this->deviceCredentials = new DeviceCredentials($this->httpClient);
+    $this->emails = new Emails($this->httpClient);
+    $this->jobs = new Jobs($this->httpClient);
+    $this->logs = new Logs($this->httpClient);
+    $this->rules = new Rules($this->httpClient);
+    $this->resource_servers = new ResourceServers($this->httpClient);
+    $this->stats = new Stats($this->httpClient);
+    $this->tenants = new Tenants($this->httpClient);
+    $this->tickets = new Tickets($this->httpClient);
+    $this->userBlocks = new UserBlocks($this->httpClient);
+    $this->users = new Users($this->httpClient);
   }
 }

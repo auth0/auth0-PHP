@@ -14,8 +14,11 @@
 Installing via composer
 
 ```
-$ composer require auth0/auth0-php
+$ composer require auth0/auth0-php php-http/guzzle6-adapter php-http/message
 ```
+
+Why `php-http/guzzle6-adapter`? We are decoupled from any HTTP messaging client with help by [HTTPlug](http://httplug.io/). 
+Read about clients in their [docs](http://docs.php-http.org/en/latest/httplug/users.html).
 
 Check our docs page to get a complete guide on how to install it in an existing project or download a pre configured seedproject:
 
@@ -148,7 +151,7 @@ This is a common issue with latest PHP versions under windows (related to a inco
 
 > I am not using composer, my host does not allow using Composer
 
-This package uses composer for mantianing dependencies. However, if you cannot use composer on your server. Please follow the following steps and upload these dependencies manually.
+This package uses composer for maintaining dependencies. However, if you cannot use composer on your server. Please follow the following steps and upload these dependencies manually.
 
 - Download and install composer on your local environment.
 - Install auth0-PHP using composer.

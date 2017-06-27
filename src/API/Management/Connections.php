@@ -2,121 +2,121 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Connections extends GenericResource 
+class Connections extends GenericResource
 {
     /**
-     * @param null|string $strategy
+     * @param null|string       $strategy
      * @param null|string|array $fields
      * @param null|string|array $include_fields
+     *
      * @return mixed
      */
-    public function getAll($strategy = null, $fields = null, $include_fields = null) 
+    public function getAll($strategy = null, $fields = null, $include_fields = null)
     {
-        $request = $this->apiClient->get()
-                    ->connections();
-
-        if ($strategy !== null) 
-        {
-            $request->withParam('strategy', $strategy);
+        $queryParams = [];
+        if ($strategy !== null) {
+            $queryParams['strategy'] = $strategy;
         }
 
-        if ($fields !== null) 
-        {
-            if (is_array($fields)) 
-            {
+        if ($fields !== null) {
+            if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
-            $request->withParam('fields', $fields);
+            $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) 
-        {
-            $request->withParam('include_fields', $include_fields);
+        if ($include_fields !== null) {
+            $queryParams['include_fields'] = $include_fields;
         }
 
-        return $request->call();
+        $query = '';
+        if (!empty($queryParams)) {
+            $query = '?'.http_build_query($queryParams);
+        }
+        $response = $this->httpClient->get('/connections'.$query);
+
+        return ResponseMediator::getContent($response);
+    }
+
+    /**
+     * @param string            $id
+     * @param null|string|array $fields
+     * @param null|string|array $include_fields
+     *
+     * @return mixed
+     */
+    public function get($id, $fields = null, $include_fields = null)
+    {
+        $queryParams = [];
+        if ($fields !== null) {
+            if (is_array($fields)) {
+                $fields = implode(',', $fields);
+            }
+            $queryParams['fields'] = $fields;
+        }
+
+        if ($include_fields !== null) {
+            $queryParams['include_fields'] = $include_fields;
+        }
+
+        $query = '';
+        if (!empty($queryParams)) {
+            $query = '?'.http_build_query($queryParams);
+        }
+        $response = $this->httpClient->get('/connections/'.$id.$query);
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param string $id
-     * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     *
      * @return mixed
      */
-    public function get($id, $fields = null, $include_fields = null) 
+    public function delete($id)
     {
-        $request = $this->apiClient->get()
-            ->connections($id);
+        $response = $this->httpClient->delete('/connections/'.$id);
 
-        if ($fields !== null) 
-        {
-            if (is_array($fields)) 
-            {
-                $fields = implode(',', $fields);
-            }
-            $request->withParam('fields', $fields);
-        }
-
-        if ($include_fields !== null) 
-        {
-            $request->withParam('include_fields', $include_fields);
-        }
-
-        return $request->call();
-    }
-
-    /**
-     * @param string $id
-     * @return mixed
-     */
-    public function delete($id) 
-    {
-        return $this->apiClient->delete()
-            ->connections($id)
-            ->call();
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param string $id
      * @param string $email
+     *
      * @return mixed
      */
-    public function deleteUser($id, $email) 
+    public function deleteUser($id, $email)
     {
-        return $this->apiClient->delete()
-            ->connections($id)
-            ->users()
-            ->withParam('email', $email)
-            ->call();
+        $response = $this->httpClient->delete(sprintf('/connections/%s?', $id, http_build_query(['email' => $email])));
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param array $data
+     *
      * @return mixed
      */
-    public function create($data) 
+    public function create($data)
     {
-        return $this->apiClient->post()
-            ->connections()
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($data))
-            ->call();
+        $response = $this->httpClient->post('/connections', [], json_encode($data));
+
+        return ResponseMediator::getContent($response);
     }
 
     /**
      * @param string $id
-     * @param array $data
+     * @param array  $data
+     *
      * @return mixed
      */
-    public function update($id, $data) 
+    public function update($id, $data)
     {
-        return $this->apiClient->patch()
-            ->connections($id)
-            ->withHeader(new ContentType('application/json'))
-            ->withBody(json_encode($data))
-            ->call();
+        $response = $this->httpClient->patch('/connections/'.$id, [], json_encode($data));
+
+        return ResponseMediator::getContent($response);
     }
 }
