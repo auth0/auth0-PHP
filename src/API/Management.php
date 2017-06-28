@@ -1,4 +1,5 @@
 <?php
+
 namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Helpers\HttpClientBuilder;
@@ -10,143 +11,156 @@ use Auth0\SDK\API\Management\DeviceCredentials;
 use Auth0\SDK\API\Management\Emails;
 use Auth0\SDK\API\Management\Jobs;
 use Auth0\SDK\API\Management\Logs;
-use Auth0\SDK\API\Management\ResourceServers;
 use Auth0\SDK\API\Management\Rules;
 use Auth0\SDK\API\Management\Stats;
 use Auth0\SDK\API\Management\Tenants;
 use Auth0\SDK\API\Management\Tickets;
 use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
-
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
-class Management {
+class Management
+{
+    /**
+     * @var string
+     */
+    private $token;
 
     /**
      * @var string
      */
-  private $token;
-
-    /**
-     * @var string
-     */
-  private $domain;
+    private $domain;
 
     /**
      * @var HttpMethodsClient
      */
-  private $httpClient;
+    private $httpClient;
 
     /**
-     * @var array
-     */
-  private $guzzleOptions;
-
-    /**
-     * @var Blacklists
-     */
-  public $blacklists;
-
-    /**
-     * @var Clients
-     */
-  public $clients;
-
-    /**
-     * @var ClientGrants
-     */
-  public $client_grants;
-
-    /**
-     * @var Connections
-     */
-  public $connections;
-
-    /**
-     * @var DeviceCredentials
-     */
-  public $deviceCredentials;
-
-    /**
-     * @var Emails
-     */
-  public $emails;
-
-    /**
-     * @var Jobs
-     */
-  public $jobs;
-
-    /**
-     * @var Logs
-     */
-  public $logs;
-
-    /**
-     * @var Rules
-     */
-  public $rules;
-
-    /**
-     * @var ResourceServers
-     */
-  public $resource_servers;
-
-    /**
-     * @var Stats
-     */
-  public $stats;
-
-    /**
-     * @var Tenants
-     */
-  public $tenants;
-
-    /**
-     * @var Tickets
-     */
-  public $tickets;
-
-    /**
-     * @var UserBlocks
-     */
-  public $userBlocks;
-
-    /**
-     * @var Users
-     */
-  public $users;
-
-    /**
-     * Management constructor.
-     *
-     * @param string $token
-     * @param string $domain
+     * @param string          $token
+     * @param string          $domain
      * @param HttpClient|null $client
      */
-  public function __construct($token, $domain, HttpClient $client = null) {
-    $this->token = $token;
-    $this->domain = $domain;
+    public function __construct($token, $domain, HttpClient $client = null)
+    {
+        $this->token = $token;
+        $this->domain = $domain;
 
-    $httpClientBuilder = new HttpClientBuilder($domain.'/api/v2/', $client);
-    $httpClientBuilder->addHeader('Authorization', 'Bearer '.$token);
-    $this->httpClient = $httpClientBuilder->buildHttpClient();
+        $httpClientBuilder = new HttpClientBuilder($domain.'/api/v2/', $client);
+        $httpClientBuilder->addHeader('Authorization', 'Bearer '.$token);
+        $this->httpClient = $httpClientBuilder->buildHttpClient();
+    }
 
-    $this->blacklists = new Blacklists($this->httpClient);
-    $this->clients = new Clients($this->httpClient);
-    $this->client_grants = new ClientGrants($this->httpClient);
-    $this->connections = new Connections($this->httpClient);
-    $this->deviceCredentials = new DeviceCredentials($this->httpClient);
-    $this->emails = new Emails($this->httpClient);
-    $this->jobs = new Jobs($this->httpClient);
-    $this->logs = new Logs($this->httpClient);
-    $this->rules = new Rules($this->httpClient);
-    $this->resource_servers = new ResourceServers($this->httpClient);
-    $this->stats = new Stats($this->httpClient);
-    $this->tenants = new Tenants($this->httpClient);
-    $this->tickets = new Tickets($this->httpClient);
-    $this->userBlocks = new UserBlocks($this->httpClient);
-    $this->users = new Users($this->httpClient);
-  }
+    /**
+     * @return Blacklists
+     */
+    public function blacklists()
+    {
+        return new Blacklists($this->httpClient);
+    }
+
+    /**
+     * @return Clients
+     */
+    public function clients()
+    {
+        return new Clients($this->httpClient);
+    }
+
+    /**
+     * @return ClientGrants
+     */
+    public function clientGrants()
+    {
+        return new ClientGrants($this->httpClient);
+    }
+
+    /**
+     * @return Connections
+     */
+    public function connections()
+    {
+        return new Connections($this->httpClient);
+    }
+
+    /**
+     * @return DeviceCredentials
+     */
+    public function deviceCredentials()
+    {
+        return new DeviceCredentials($this->httpClient);
+    }
+
+    /**
+     * @return Emails
+     */
+    public function emails()
+    {
+        return new Emails($this->httpClient);
+    }
+
+    /**
+     * @return Jobs
+     */
+    public function jobs()
+    {
+        return new Jobs($this->httpClient);
+    }
+
+    /**
+     * @return Logs
+     */
+    public function logs()
+    {
+        return new Logs($this->httpClient);
+    }
+
+    /**
+     * @return Rules
+     */
+    public function rules()
+    {
+        return new Rules($this->httpClient);
+    }
+
+    /**
+     * @return Stats
+     */
+    public function stats()
+    {
+        return new Stats($this->httpClient);
+    }
+
+    /**
+     * @return Tenants
+     */
+    public function tenants()
+    {
+        return new Tenants($this->httpClient);
+    }
+
+    /**
+     * @return Tickets
+     */
+    public function tickets()
+    {
+        return new Tickets($this->httpClient);
+    }
+
+    /**
+     * @return UserBlocks
+     */
+    public function userBlocks()
+    {
+        return new UserBlocks($this->httpClient);
+    }
+
+    /**
+     * @return Users
+     */
+    public function Users()
+    {
+        return new users($this->httpClient);
+    }
 }
