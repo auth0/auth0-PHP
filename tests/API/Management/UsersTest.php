@@ -30,7 +30,7 @@ class UsersTest extends BasicCrudTest {
 
         $api = new Management($token, $this->domain);
 
-        return $api->users;
+        return $api->users();
     }
 
     protected function getAll($client, $entity)

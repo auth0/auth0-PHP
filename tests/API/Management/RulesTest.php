@@ -18,7 +18,7 @@ class RulesTest extends BasicCrudTest {
 
         $api = new Management($token, $env['DOMAIN']);
 
-        return $api->rules;
+        return $api->rules();
     }
 
     protected function getCreateBody() {

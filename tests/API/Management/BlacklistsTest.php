@@ -21,9 +21,9 @@ class BlacklistsTest extends ApiTests {
         $aud = $env["GLOBAL_CLIENT_ID"];
         $jti = 'somerandomJTI' . rand();
 
-        $api->blacklists->blacklist($aud, $jti);
+        $api->blacklists()->blacklist($aud, $jti);
 
-        $all = $api->blacklists->getAll($aud);
+        $all = $api->blacklists()->getAll($aud);
 
         $found = false;
         foreach ($all as $value) {

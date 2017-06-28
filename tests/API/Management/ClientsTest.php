@@ -22,7 +22,7 @@ class ClientsTest extends BasicCrudTest {
 
         $api = new Management($token, $env['DOMAIN']);
 
-        return $api->clients;
+        return $api->clients();
     }
 
     protected function getCreateBody() {

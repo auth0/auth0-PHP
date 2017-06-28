@@ -18,7 +18,7 @@ class ConnectionsTest extends BasicCrudTest {
 
         $api = new Management($token, $env['DOMAIN']);
 
-        return $api->connections;
+        return $api->connections();
     }
 
     protected function getCreateBody() {
