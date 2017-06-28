@@ -130,7 +130,6 @@ class Auth0 {
   */
   protected $authentication;
 
-  protected $guzzleOptions;
 
   /**
    * BaseAuth0 Constructor.
@@ -151,7 +150,6 @@ class Auth0 {
    *                                                  store, you can pass false to avoid storing it or a class that
    *                                                  implements a store (get, set, delete). TODO: add a proper interface
    *     - debug                  (Boolean) Optional. Default false
-   *     - guzzle_options          (Object) Optional. Options forwarded to Guzzle
    *
    * @param array $config Required
    *

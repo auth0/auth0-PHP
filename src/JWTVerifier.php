@@ -25,7 +25,6 @@ class JWTVerifier {
      *     - client_secret          (String)  Required (if supported HS256). The Auth0 application secret.
      *     - valid_audiences        (Array)  Required. The list of audiences accepted by the service.
      *     - authorized_iss         (Array) Required (if supported RS256). The list of issuers trusted by the service.
-     *     - guzzle_options         (Array) Optional Extra configuration options sent to guzzle.
      *
      * @param array $config
      * @throws CoreException
@@ -33,13 +32,9 @@ class JWTVerifier {
     public function __construct($config) {
 
         $cache = null;
-        $guzzleOptions = [];
 
         if (isset($config['cache'])) {
             $cache = $config['cache'];
-        }
-        if (isset($config['guzzle_options'])) {
-            $guzzleOptions = $config['guzzle_options'];
         }
 
         if (isset($config['suported_algs'])) {
@@ -79,7 +74,7 @@ class JWTVerifier {
             $this->client_secret = $config['client_secret'];
         }
 
-        $this->JWKFetcher = new JWKFetcher($cache, $guzzleOptions);
+        $this->JWKFetcher = new JWKFetcher($cache);
     }
 
     /**

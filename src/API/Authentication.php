@@ -5,7 +5,6 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Helpers\HttpClientBuilder;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Exception\ApiException;
-use GuzzleHttp\Psr7;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
@@ -64,7 +63,7 @@ class Authentication {
       $aditional_params['state'] = $state;
     }
 
-    $query_string = Psr7\build_query($aditional_params);
+    $query_string = http_build_query($aditional_params);
 
     return "https://{$this->domain}/authorize?$query_string";
   }
@@ -114,7 +113,7 @@ class Authentication {
       $params['federated'] = "";
     }
 
-    $query_string = Psr7\build_query($params);
+    $query_string = http_build_query($params);
 
     return "https://{$this->domain}/v2/logout?$query_string";
   }
