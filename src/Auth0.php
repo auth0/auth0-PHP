@@ -60,13 +60,13 @@ class Auth0 {
   *
   * @var string
   */
-  protected $response_mode = 'query';
+  protected $response_mode;
   /**
   * Response Type
   *
   * @var string
   */
-  protected $response_type = 'code';
+  protected $response_type;
   /**
   * Audience
   *
@@ -160,82 +160,72 @@ class Auth0 {
    * @throws CoreException If `client_secret` is not provided.
    * @throws CoreException If `redirect_uri` is not provided.
    */
-  public function __construct(array $config) {
-    if (!empty($config['domain'])) {
-        $this->domain = $config['domain'];
-    } else {
-        throw new CoreException('Invalid domain');
-    }
-    if (!empty($config['client_id'])) {
-        $this->client_id = $config['client_id'];
-    } else {
-        throw new CoreException('Invalid client_id');
-    }
-    if (!empty($config['client_secret'])) {
-        $this->client_secret = $config['client_secret'];
-    } else {
-        throw new CoreException('Invalid client_secret');
-    }
-    if (!empty($config['redirect_uri'])) {
-        $this->redirect_uri = $config['redirect_uri'];
-    } else {
-        throw new CoreException('Invalid redirect_uri');
-    }
-    if (isset($config['audience'])) {
-        $this->audience = $config['audience'];
-    }
-    if (isset($config['response_mode'])) {
-        $this->response_mode = $config['response_mode'];
-    }
-    if (isset($config['response_type'])) {
-        $this->response_type = $config['response_type'];
-    }
-    if (isset($config['scope'])) {
-        $this->scope = $config['scope'];
-    }
-    if (isset($config['guzzle_options'])) {
-        $this->guzzleOptions = $config['guzzle_options'];
-    }
-    if (isset($config['debug'])) {
-        $this->debug_mode = $config['debug'];
-    } else {
-        $this->debug_mode = false;
-    }
-    // User info is persisted unless said otherwise
-    if (isset($config['persist_user']) && $config['persist_user'] === false) {
-        $this->dontPersist('user');
-    }
-    // Access token is not persisted unless said otherwise
-    if (!isset($config['persist_access_token']) || (isset($config['persist_access_token']) &&
-            $config['persist_access_token'] === false)) {
-        $this->dontPersist('access_token');
-    }
-    // Refresh token is not persisted unless said otherwise
-    if (!isset($config['persist_refresh_token']) || (isset($config['persist_refresh_token']) &&
-            $config['persist_refresh_token'] === false)) {
-        $this->dontPersist('refresh_token');
-    }
-    // Id token is not per persisted unless said otherwise
-    if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
-            $config['persist_id_token'] === false)) {
-        $this->dontPersist('id_token');
-    }
-    if (isset($config['store'])) {
-        if ($config['store'] === false) {
-          $this->setStore(new EmptyStore());
-        } else {
-          $this->setStore($config['store']);
+  public function __construct(array $config)
+  {
+        $requiredConfigNames = ['domain', 'client_id', 'client_secret', 'redirect_uri'];
+        foreach ($requiredConfigNames as $name) {
+          if (empty($config[$name])) {
+              throw new CoreException(sprintf('Config name "%s" cannot be empty or missing. ', $name));
+          }
         }
-    } else {
-      $this->setStore(new SessionStore());
-    }
 
-    $this->authentication = new Authentication($this->domain, $this->client_id, $this->client_secret);
+        $this->domain = $config['domain'];
+        $this->client_id = $config['client_id'];
+        $this->client_secret = $config['client_secret'];
+        $this->redirect_uri = $config['redirect_uri'];
 
-    $this->user = $this->store->get("user");
-    $this->access_token = $this->store->get("access_token");
-    $this->id_token = $this->store->get("id_token");
-    $this->refresh_token = $this->store->get("refresh_token");
+        $defaults = [
+          'audience' => null,
+          'response_mode' => 'query',
+          'response_type' => 'code',
+          'scope' => null,
+          'debug_mode' => false,
+          'persist_user' => null,
+          'persist_access_token' => false,
+          'persist_refresh_token' => false,
+          'persist_id_token' => false,
+          'store' => null,
+        ];
+
+        $config = array_merge($defaults, $config);
+
+        $this->audience = $config['audience'];
+        $this->response_mode = $config['response_mode'];
+        $this->response_type = $config['response_type'];
+        $this->scope = $config['scope'];
+        $this->debug_mode = $config['debug_mode'];
+
+        // User info is persisted unless said otherwise
+        if (false === $config['persist_user']) {
+            $this->dontPersist('user');
+        }
+        // Access token is not persisted unless said otherwise
+        if (false === $config['persist_access_token']) {
+            $this->dontPersist('access_token');
+        }
+        // Refresh token is not persisted unless said otherwise
+        if (false === $config['persist_refresh_token']) {
+            $this->dontPersist('refresh_token');
+        }
+        // Id token is not per persisted unless said otherwise
+        if (false === $config['persist_id_token']) {
+            $this->dontPersist('id_token');
+        }
+
+        if (null === $config['store']) {
+            $this->setStore(new SessionStore());
+        } elseif ($config['store'] === false) {
+            $this->setStore(new EmptyStore());
+        } else {
+            $this->setStore($config['store']);
+        }
+
+        $this->authentication = new Authentication($this->domain, $this->client_id, $this->client_secret);
+
+        $this->user = $this->store->get("user");
+        $this->access_token = $this->store->get("access_token");
+        $this->id_token = $this->store->get("id_token");
+        $this->refresh_token = $this->store->get("refresh_token");
   }
 
   public function login($state = null, $connection = null) {
