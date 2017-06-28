@@ -20,8 +20,8 @@ class JWTVerifier {
      * JWTVerifier Constructor.
      *
      * Configuration:
-     *     - cache                  (CacheHandler)  Optional. Should be an instance of CacheHandler that is going to be used to cache the JWKs
-     *     - supported_algs          (Array)  Optional. The list of supported algorithms. By default only HS256
+     *     - cache                  (SimpleCache)  Optional. Should be an instance of Psr\SimpleCache\CacheInterface that is going to be used to cache the JWKs
+     *     - supported_algs         (Array)  Optional. The list of supported algorithms. By default only HS256
      *     - client_secret          (String)  Required (if supported HS256). The Auth0 application secret.
      *     - valid_audiences        (Array)  Required. The list of audiences accepted by the service.
      *     - authorized_iss         (Array) Required (if supported RS256). The list of issuers trusted by the service.
