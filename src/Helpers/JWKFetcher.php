@@ -4,13 +4,12 @@ namespace Auth0\SDK\Helpers;
 
 use Auth0\SDK\API\Helpers\HttpClientBuilder;
 use Auth0\SDK\API\Helpers\ResponseMediator;
-use Auth0\SDK\Helpers\Cache\CacheHandler;
-use Auth0\SDK\Helpers\Cache\NoCacheHandler;
+use Psr\SimpleCache\CacheInterface;
 
 class JWKFetcher {
 
     /**
-     * @var CacheHandler|NoCacheHandler
+     * @var CacheInterface
      */
     private $cache = null;
 
@@ -21,14 +20,10 @@ class JWKFetcher {
 
     /**
      * JWKFetcher constructor.
-     * @param CacheHandler|null $cache
+     * @param CacheInterface|null $cache
      * @param array $guzzleOptions
      */
-    public function __construct(CacheHandler $cache = null, $guzzleOptions = []) {
-        if ($cache === null) {
-            $cache = new NoCacheHandler();
-        }
-
+    public function __construct(CacheInterface $cache = null, $guzzleOptions = []) {
         $this->cache = $cache;
         $this->guzzleOptions = $guzzleOptions;
     }
@@ -50,7 +45,7 @@ class JWKFetcher {
     public function fetchKeys($iss) {
         $url = "{$iss}.well-known/jwks.json";
 
-        if (($secret = $this->cache->get($url)) === null) {
+        if (null === $this->cache || ($secret = $this->cache->get($url)) === null) {
 
             $secret = [];
 
@@ -62,7 +57,9 @@ class JWKFetcher {
                 $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
             }
 
-            $this->cache->set($url, $secret);
+            if ($this->cache) {
+                $this->cache->set($url, $secret);
+            }
         }
 
         return $secret;
