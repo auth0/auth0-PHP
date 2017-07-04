@@ -168,8 +168,8 @@ class Management
     /**
      * @return Users
      */
-    public function Users()
+    public function users()
     {
-        return new users($this->httpClient);
+        return new Users($this->httpClient);
     }
 }
