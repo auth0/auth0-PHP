@@ -14,18 +14,11 @@ class JWKFetcher {
     private $cache = null;
 
     /**
-     * @var array
-     */
-    private $guzzleOptions = null;
-
-    /**
      * JWKFetcher constructor.
      * @param CacheInterface|null $cache
-     * @param array $guzzleOptions
      */
-    public function __construct(CacheInterface $cache = null, $guzzleOptions = []) {
+    public function __construct(CacheInterface $cache = null) {
         $this->cache = $cache;
-        $this->guzzleOptions = $guzzleOptions;
     }
 
     /**
