@@ -1,28 +1,28 @@
 <?php
-namespace Auth0\Tests\Api\Helpers;
+
+namespace Auth0\Tests\API\Helpers;
 
 use Auth0\SDK\API\Helpers\TokenGenerator;
 use Auth0\SDK\JWTVerifier;
-use Auth0\SDK\Auth0JWT;
 
-class TokenTest extends \PHPUnit_Framework_TestCase {
-
-    public function testTokenGenerationDecode() {
-
+class TokenTest extends \PHPUnit_Framework_TestCase
+{
+    public function testTokenGenerationDecode()
+    {
         $client_id = 'client_id_1';
         $client_secret = 'client_secret_1';
 
-        $generator = new TokenGenerator([ 'client_id' => $client_id, 'client_secret' => $client_secret]);
+        $generator = new TokenGenerator(['client_id' => $client_id, 'client_secret' => $client_secret]);
 
         $jwt = $generator->generate([
             'users' => [
-                'actions' => ['read']
-            ]
+                'actions' => ['read'],
+            ],
         ]);
 
         $verifier = new JWTVerifier([
             'valid_audiences' => [$client_id],
-            'client_secret' => $client_secret
+            'client_secret' => $client_secret,
         ]);
 
         $decoded = $verifier->verifyAndDecode($jwt);
@@ -35,27 +35,27 @@ class TokenTest extends \PHPUnit_Framework_TestCase {
         $this->assertArraySubset(['read'], $decoded->scopes->users->actions);
     }
 
-    public function testTokenWithNotEncodedSecret() {
-
+    public function testTokenWithNotEncodedSecret()
+    {
         $client_id = 'client_id_1';
         $client_secret = 'client_secret_1';
 
         $generator = new TokenGenerator([
           'client_id' => $client_id,
           'client_secret' => $client_secret,
-          'secret_base64_encoded' => false
+          'secret_base64_encoded' => false,
         ]);
 
         $jwt = $generator->generate([
             'users' => [
-                'actions' => ['read']
-            ]
+                'actions' => ['read'],
+            ],
         ]);
 
         $verifier = new JWTVerifier([
             'valid_audiences' => [$client_id],
             'client_secret' => $client_secret,
-            'secret_base64_encoded' => false
+            'secret_base64_encoded' => false,
         ]);
 
         $decoded = $verifier->verifyAndDecode($jwt);

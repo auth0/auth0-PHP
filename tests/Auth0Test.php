@@ -10,11 +10,11 @@ class Auth0Test extends TestCase
 {
     public function testConstructorDefaults()
     {
-        $auth0=new Auth0([
-            'domain'=>'foo',
-            'client_id'=>'bar',
-            'client_secret'=>'baz',
-            'redirect_uri'=>'biz',
+        $auth0 = new Auth0([
+            'domain' => 'foo',
+            'client_id' => 'bar',
+            'client_secret' => 'baz',
+            'redirect_uri' => 'biz',
             'store' => false,
         ]);
 
@@ -32,11 +32,11 @@ class Auth0Test extends TestCase
 
     public function testConstructor()
     {
-        $auth0=new Auth0([
-            'domain'=>'foo',
-            'client_id'=>'bar',
-            'client_secret'=>'baz',
-            'redirect_uri'=>'biz',
+        $auth0 = new Auth0([
+            'domain' => 'foo',
+            'client_id' => 'bar',
+            'client_secret' => 'baz',
+            'redirect_uri' => 'biz',
             'store' => false,
             'persist_user' => false,
             'persist_access_token' => true,
@@ -48,7 +48,7 @@ class Auth0Test extends TestCase
             'scope' => 'scope',
             'debug_mode' => true,
         ]);
-        
+
         $this->assertEquals('audience', NSA::getProperty($auth0, 'audience'));
         $this->assertEquals('response_mode', NSA::getProperty($auth0, 'response_mode'));
         $this->assertEquals('response_type', NSA::getProperty($auth0, 'response_type'));

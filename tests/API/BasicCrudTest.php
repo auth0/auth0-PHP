@@ -2,28 +2,30 @@
 
 namespace Auth0\Tests\API;
 
-abstract class BasicCrudTest extends ApiTests {
-
+abstract class BasicCrudTest extends ApiTests
+{
     protected $domain;
 
     protected $findCreatedItem = true;
 
-    protected abstract function getApiClient();
-    protected abstract function getCreateBody();
-    protected abstract function getUpdateBody();
-    protected abstract function afterCreate($entity);
-    protected abstract function afterUpdate($entity);
+    abstract protected function getApiClient();
+    abstract protected function getCreateBody();
+    abstract protected function getUpdateBody();
+    abstract protected function afterCreate($entity);
+    abstract protected function afterUpdate($entity);
 
-    protected function getAll($client, $entity) {
+    protected function getAll($client, $entity)
+    {
         return $client->getAll();
     }
 
-    protected function getId($entity) {
+    protected function getId($entity)
+    {
         return $entity['id'];
     }
 
-    public function testAll() {
-
+    public function testAll()
+    {
         $client = $this->getApiClient();
         $created = $client->create($this->getCreateBody());
 
@@ -38,7 +40,7 @@ abstract class BasicCrudTest extends ApiTests {
         }
 
         if ($this->findCreatedItem) {
-          $this->assertTrue($found, 'Created item not found');
+            $this->assertTrue($found, 'Created item not found');
         }
 
         $this->afterCreate($created);
