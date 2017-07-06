@@ -1,21 +1,22 @@
 <?php
 
-
 namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\Tests\API\ApiTests;
 
-class AuthApiDBConnectionsTest extends ApiTests {
-
+class AuthApiDBConnectionsTest extends ApiTests
+{
     protected $email;
     protected $connection = 'Username-Password-Authentication';
 
-    protected function setUp() {
-        $this->email = 'test-dbconnections-user' . rand() . '@test.com';
+    protected function setUp()
+    {
+        $this->email = 'test-dbconnections-user'.rand().'@test.com';
     }
 
-    public function testSignup() {
+    public function testSignup()
+    {
         $env = $this->getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
@@ -32,7 +33,8 @@ class AuthApiDBConnectionsTest extends ApiTests {
         $this->assertEquals($email, $response['email']);
     }
 
-    public function testChangePassword() {
+    public function testChangePassword()
+    {
         $env = $this->getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);

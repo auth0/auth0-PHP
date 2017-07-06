@@ -26,7 +26,7 @@ class Clients extends GenericResource
             $queryParams['include_fields'] = $include_fields;
         }
 
-        $query='';
+        $query = '';
         if (!empty($queryParams)) {
             $query = '?'.http_build_query($queryParams);
         }
@@ -56,7 +56,7 @@ class Clients extends GenericResource
             $queryParams['include_fields'] = $include_fields;
         }
 
-        $query='';
+        $query = '';
         if (!empty($queryParams)) {
             $query = '?'.http_build_query($queryParams);
         }

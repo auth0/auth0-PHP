@@ -14,122 +14,122 @@ use Auth0\SDK\API\Authentication;
  *
  * @author Auth0
  */
-class Auth0 {
-  /**
-  * Available keys to persist data.
-  *
-  * @var array
-  */
+class Auth0
+{
+    /**
+   * Available keys to persist data.
+   *
+   * @var array
+   */
   public $persistantMap = array(
     'refresh_token',
     'access_token',
     'user',
-    'id_token'
+    'id_token',
   );
   /**
-  * Auth0 URL Map.
-  *
-  * @var array
-  */
+   * Auth0 URL Map.
+   *
+   * @var array
+   */
   public static $URL_MAP = array(
-    'api'           => 'https://{domain}/api/',
-    'authorize'     => 'https://{domain}/authorize/',
-    'token'     => 'https://{domain}/oauth/token/',
-    'user_info'     => 'https://{domain}/userinfo/',
+    'api' => 'https://{domain}/api/',
+    'authorize' => 'https://{domain}/authorize/',
+    'token' => 'https://{domain}/oauth/token/',
+    'user_info' => 'https://{domain}/userinfo/',
   );
   /**
-  * Auth0 Domain.
-  *
-  * @var string
-  */
+   * Auth0 Domain.
+   *
+   * @var string
+   */
   protected $domain;
   /**
-  * Auth0 Client ID
-  *
-  * @var string
-  */
+   * Auth0 Client ID.
+   *
+   * @var string
+   */
   protected $client_id;
   /**
-  * Auth0 Client Secret
-  *
-  * @var string
-  */
+   * Auth0 Client Secret.
+   *
+   * @var string
+   */
   protected $client_secret;
   /**
-  * Response Mode
-  *
-  * @var string
-  */
+   * Response Mode.
+   *
+   * @var string
+   */
   protected $response_mode;
   /**
-  * Response Type
-  *
-  * @var string
-  */
+   * Response Type.
+   *
+   * @var string
+   */
   protected $response_type;
   /**
-  * Audience
-  *
-  * @var string
-  */
+   * Audience.
+   *
+   * @var string
+   */
   protected $audience;
   /**
-  * Scope
-  *
-  * @var string
-  */
+   * Scope.
+   *
+   * @var string
+   */
   protected $scope;
   /**
-  * Auth0 Refresh Token
-  *
-  * @var string
-  */
+   * Auth0 Refresh Token.
+   *
+   * @var string
+   */
   protected $refresh_token;
   /**
-  * Redirect URI needed on OAuth2 requests.
-  *
-  * @var string
-  */
+   * Redirect URI needed on OAuth2 requests.
+   *
+   * @var string
+   */
   protected $redirect_uri;
   /**
-  * Debug mode flag.
-  *
-  * @var Boolean
-  */
+   * Debug mode flag.
+   *
+   * @var bool
+   */
   protected $debug_mode;
   /**
-  * Debugger function.
-  * Will be called only if $debug_mode is true.
-  *
-  * @var \Closure
-  */
+   * Debugger function.
+   * Will be called only if $debug_mode is true.
+   *
+   * @var \Closure
+   */
   protected $debugger;
   /**
-  * The access token retrieved after authorization.
-  * NULL means that there is no authorization yet.
-  *
-  * @var string
-  */
+   * The access token retrieved after authorization.
+   * NULL means that there is no authorization yet.
+   *
+   * @var string
+   */
   protected $access_token;
   /**
-  * Store
-  *
-  * @var StoreInterface
-  */
+   * Store.
+   *
+   * @var StoreInterface
+   */
   protected $store;
   /**
-  * The user object
-  *
-  * @var string
-  */
+   * The user object.
+   *
+   * @var string
+   */
   protected $user;
   /**
-  * Authentication Client.
-  *
-  * @var \Auth0\SDK\API\Authentication
-  */
+   * Authentication Client.
+   *
+   * @var \Auth0\SDK\API\Authentication
+   */
   protected $authentication;
-
 
   /**
    * BaseAuth0 Constructor.
@@ -153,26 +153,26 @@ class Auth0 {
    *
    * @param array $config Required
    *
-   * @throws CoreException If `domain` is not provided.
-   * @throws CoreException If `client_id` is not provided.
-   * @throws CoreException If `client_secret` is not provided.
-   * @throws CoreException If `redirect_uri` is not provided.
+   * @throws CoreException If `domain` is not provided
+   * @throws CoreException If `client_id` is not provided
+   * @throws CoreException If `client_secret` is not provided
+   * @throws CoreException If `redirect_uri` is not provided
    */
   public function __construct(array $config)
   {
-        $requiredConfigNames = ['domain', 'client_id', 'client_secret', 'redirect_uri'];
-        foreach ($requiredConfigNames as $name) {
+      $requiredConfigNames = ['domain', 'client_id', 'client_secret', 'redirect_uri'];
+      foreach ($requiredConfigNames as $name) {
           if (empty($config[$name])) {
               throw new CoreException(sprintf('Config name "%s" cannot be empty or missing. ', $name));
           }
-        }
+      }
 
-        $this->domain = $config['domain'];
-        $this->client_id = $config['client_id'];
-        $this->client_secret = $config['client_secret'];
-        $this->redirect_uri = $config['redirect_uri'];
+      $this->domain = $config['domain'];
+      $this->client_id = $config['client_id'];
+      $this->client_secret = $config['client_secret'];
+      $this->redirect_uri = $config['redirect_uri'];
 
-        $defaults = [
+      $defaults = [
           'audience' => null,
           'response_mode' => 'query',
           'response_type' => 'code',
@@ -185,13 +185,13 @@ class Auth0 {
           'store' => null,
         ];
 
-        $config = array_merge($defaults, $config);
+      $config = array_merge($defaults, $config);
 
-        $this->audience = $config['audience'];
-        $this->response_mode = $config['response_mode'];
-        $this->response_type = $config['response_type'];
-        $this->scope = $config['scope'];
-        $this->debug_mode = $config['debug_mode'];
+      $this->audience = $config['audience'];
+      $this->response_mode = $config['response_mode'];
+      $this->response_type = $config['response_type'];
+      $this->scope = $config['scope'];
+      $this->debug_mode = $config['debug_mode'];
 
         // User info is persisted unless said otherwise
         if (false === $config['persist_user']) {
@@ -210,115 +210,126 @@ class Auth0 {
             $this->dontPersist('id_token');
         }
 
-        if (null === $config['store']) {
-            $this->setStore(new SessionStore());
-        } elseif ($config['store'] === false) {
-            $this->setStore(new EmptyStore());
-        } else {
-            $this->setStore($config['store']);
+      if (null === $config['store']) {
+          $this->setStore(new SessionStore());
+      } elseif ($config['store'] === false) {
+          $this->setStore(new EmptyStore());
+      } else {
+          $this->setStore($config['store']);
+      }
+
+      $this->authentication = new Authentication($this->domain, $this->client_id, $this->client_secret);
+
+      $this->user = $this->store->get('user');
+      $this->access_token = $this->store->get('access_token');
+      $this->id_token = $this->store->get('id_token');
+      $this->refresh_token = $this->store->get('refresh_token');
+  }
+
+    public function login($state = null, $connection = null)
+    {
+        $params = [];
+        if ($this->audience) {
+            $params['audience'] = $this->audience;
+        }
+        if ($this->scope) {
+            $params['scope'] = $this->scope;
         }
 
-        $this->authentication = new Authentication($this->domain, $this->client_id, $this->client_secret);
+        $params['response_mode'] = $this->response_mode;
 
-        $this->user = $this->store->get("user");
-        $this->access_token = $this->store->get("access_token");
-        $this->id_token = $this->store->get("id_token");
-        $this->refresh_token = $this->store->get("refresh_token");
-  }
+        $url = $this->authentication->get_authorize_link($this->response_type, $this->redirect_uri, $connection, $state, $params);
 
-  public function login($state = null, $connection = null) {
-    $params = [];
-    if ($this->audience) {
-      $params['audience'] = $this->audience;
-    }
-    if ($this->scope) {
-      $params['scope'] = $this->scope;
+        header("Location: $url");
+        exit;
     }
 
-    $params['response_mode'] = $this->response_mode;
+    public function getUser()
+    {
+        if ($this->user) {
+            return $this->user;
+        }
+        $this->exchange();
 
-    $url = $this->authentication->get_authorize_link($this->response_type, $this->redirect_uri, $connection, $state, $params);
-
-    header("Location: $url");
-    exit;
-  }
-
-  public function getUser() {
-    if ($this->user) {
-      return $this->user;
+        return $this->user;
     }
-    $this->exchange();
-    return $this->user;
-  }
 
-  public function getIdToken() {
-    if ($this->id_token) {
-      return $this->id_token;
-    }
-    $this->exchange();
-    return $this->id_token;
-  }
+    public function getIdToken()
+    {
+        if ($this->id_token) {
+            return $this->id_token;
+        }
+        $this->exchange();
 
-  public function getAccessToken() {
-    if ($this->access_token) {
-      return $this->access_token;
+        return $this->id_token;
     }
-    $this->exchange();
-    return $this->access_token;
-  }
 
-  public function getRefreshToken() {
-    if ($this->refresh_token) {
-      return $this->refresh_token;
+    public function getAccessToken()
+    {
+        if ($this->access_token) {
+            return $this->access_token;
+        }
+        $this->exchange();
+
+        return $this->access_token;
     }
-    $this->exchange();
-    return $this->refresh_token;
-  }
+
+    public function getRefreshToken()
+    {
+        if ($this->refresh_token) {
+            return $this->refresh_token;
+        }
+        $this->exchange();
+
+        return $this->refresh_token;
+    }
 
   /**
-   * Code exchange
+   * Code exchange.
    *
-   * @throws CoreException If there is an active session already.
+   * @throws CoreException If there is an active session already
    */
-  public function exchange() {
-    $code = $this->getAuthorizationCode();
-    if (!$code) {
-      return false;
-    }
+  public function exchange()
+  {
+      $code = $this->getAuthorizationCode();
+      if (!$code) {
+          return false;
+      }
 
-    if ($this->user) {
-      throw new CoreException('Can\'t initialize a new session while there is one active session already');
-    }
+      if ($this->user) {
+          throw new CoreException('Can\'t initialize a new session while there is one active session already');
+      }
 
-    $response = $this->authentication->code_exchange($code, $this->redirect_uri);
+      $response = $this->authentication->code_exchange($code, $this->redirect_uri);
 
-    $access_token = (isset($response['access_token']))? $response['access_token'] : false;
-    $refresh_token = (isset($response['refresh_token']))? $response['refresh_token'] : false;
-    $id_token = (isset($response['id_token']))? $response['id_token'] : false;
+      $access_token = (isset($response['access_token'])) ? $response['access_token'] : false;
+      $refresh_token = (isset($response['refresh_token'])) ? $response['refresh_token'] : false;
+      $id_token = (isset($response['id_token'])) ? $response['id_token'] : false;
 
-    if (!$access_token) {
-        throw new ApiException('Invalid access_token - Retry login.');
-    }
+      if (!$access_token) {
+          throw new ApiException('Invalid access_token - Retry login.');
+      }
 
-    $this->setAccessToken($access_token);
-    $this->setIdToken($id_token);
-    $this->setRefreshToken($refresh_token);
+      $this->setAccessToken($access_token);
+      $this->setIdToken($id_token);
+      $this->setRefreshToken($refresh_token);
 
-    $user = $this->authentication->userinfo($access_token);
-    $this->setUser($user);
+      $user = $this->authentication->userinfo($access_token);
+      $this->setUser($user);
 
-    return true;
+      return true;
   }
 
+    public function setUser($user)
+    {
+        $key = array_search('user', $this->persistantMap);
+        if ($key !== false) {
+            $this->store->set('user', $user);
+        }
+        $this->user = $user;
 
-  public function setUser($user) {
-    $key = array_search('user',$this->persistantMap);
-    if ($key !== false) {
-      $this->store->set('user', $user);
+        return $this;
     }
-    $this->user = $user;
-    return $this;
-  }
   /**
    * Sets and persists $access_token.
    *
@@ -326,13 +337,15 @@ class Auth0 {
    *
    * @return Auth0\SDK\BaseAuth0
    */
-  public function setAccessToken($access_token) {
-    $key = array_search('access_token',$this->persistantMap);
-    if ($key !== false) {
-      $this->store->set('access_token', $access_token);
-    }
-    $this->access_token = $access_token;
-    return $this;
+  public function setAccessToken($access_token)
+  {
+      $key = array_search('access_token', $this->persistantMap);
+      if ($key !== false) {
+          $this->store->set('access_token', $access_token);
+      }
+      $this->access_token = $access_token;
+
+      return $this;
   }
   /**
    * Sets and persists $id_token.
@@ -341,13 +354,15 @@ class Auth0 {
    *
    * @return Auth0\SDK\BaseAuth0
    */
-  public function setIdToken($id_token) {
-    $key = array_search('id_token',$this->persistantMap);
-    if ($key !== false) {
-      $this->store->set('id_token', $id_token);
-    }
-    $this->id_token = $id_token;
-    return $this;
+  public function setIdToken($id_token)
+  {
+      $key = array_search('id_token', $this->persistantMap);
+      if ($key !== false) {
+          $this->store->set('id_token', $id_token);
+      }
+      $this->id_token = $id_token;
+
+      return $this;
   }
   /**
    * Sets and persists $refresh_token.
@@ -356,46 +371,52 @@ class Auth0 {
    *
    * @return Auth0\SDK\BaseAuth0
    */
-  public function setRefreshToken($refresh_token) {
-    $key = array_search('refresh_token',$this->persistantMap);
-    if ($key !== false) {
-      $this->store->set('refresh_token', $refresh_token);
-    }
-    $this->refresh_token = $refresh_token;
-    return $this;
-  }
-
-  protected function getAuthorizationCode() {
-    if ($this->response_mode === 'query') {
-      return (isset($_GET['code']) ? $_GET['code'] : null);
-    } elseif ($this->response_mode === 'form_post') {
-      return (isset($_POST['code']) ? $_POST['code'] : null);
-    }
-
-    return null;
-  }
-
-  public function logout() {
-    $this->deleteAllPersistentData();
-    $this->access_token = NULL;
-    $this->user = NULL;
-    $this->id_token = NULL;
-    $this->refresh_token = NULL;
-  }
-
-  public function deleteAllPersistentData()
+  public function setRefreshToken($refresh_token)
   {
-    foreach ($this->persistantMap as $key) {
-      $this->store->delete($key);
-    }
+      $key = array_search('refresh_token', $this->persistantMap);
+      if ($key !== false) {
+          $this->store->set('refresh_token', $refresh_token);
+      }
+      $this->refresh_token = $refresh_token;
+
+      return $this;
   }
+
+    protected function getAuthorizationCode()
+    {
+        if ($this->response_mode === 'query') {
+            return isset($_GET['code']) ? $_GET['code'] : null;
+        } elseif ($this->response_mode === 'form_post') {
+            return isset($_POST['code']) ? $_POST['code'] : null;
+        }
+
+        return null;
+    }
+
+    public function logout()
+    {
+        $this->deleteAllPersistentData();
+        $this->access_token = null;
+        $this->user = null;
+        $this->id_token = null;
+        $this->refresh_token = null;
+    }
+
+    public function deleteAllPersistentData()
+    {
+        foreach ($this->persistantMap as $key) {
+            $this->store->delete($key);
+        }
+    }
 
   /**
-   * Removes $name from the persistantMap, thus not persisting it when we set the value
-   * @param  String $name The value to remove
+   * Removes $name from the persistantMap, thus not persisting it when we set the value.
+   *
+   * @param  string $name The value to remove
    */
-  private function dontPersist($name) {
-      $key = array_search($name,$this->persistantMap);
+  private function dontPersist($name)
+  {
+      $key = array_search($name, $this->persistantMap);
       if ($key !== false) {
           unset($this->persistantMap[$key]);
       }
@@ -406,9 +427,11 @@ class Auth0 {
    *
    * @return Auth0\SDK\BaseAuth0
    */
-  public function setStore(StoreInterface $store) {
-    $this->store = $store;
-    return $this;
+  public function setStore(StoreInterface $store)
+  {
+      $this->store = $store;
+
+      return $this;
   }
 
   /**

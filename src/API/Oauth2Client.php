@@ -1,4 +1,5 @@
 <?php
+
 namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Helpers\ClientHeaders;
@@ -12,12 +13,13 @@ use OAuth2\Client;
  * This class provides access to Auth0 Platform.
  *
  * @author Auth0
+ *
  * @todo Logout and other useful proxies. See <https://app.auth0.com/#/sdk/api>
  *       and <https://docs.auth0.com/api-reference>
- * @todo Lots of code documentation.
+ * @todo Lots of code documentation
  */
-class Oauth2Client {
-
+class Oauth2Client
+{
     /**
      * Available keys to persist data.
      *
@@ -27,7 +29,7 @@ class Oauth2Client {
         'refresh_token',
         'access_token',
         'user',
-        'id_token'
+        'id_token',
     );
 
     /**
@@ -36,10 +38,10 @@ class Oauth2Client {
      * @var array
      */
     public static $URL_MAP = array(
-        'api'           => 'https://{domain}/api/',
-        'authorize'     => 'https://{domain}/authorize/',
-        'token'     => 'https://{domain}/oauth/token/',
-        'user_info'     => 'https://{domain}/userinfo/',
+        'api' => 'https://{domain}/api/',
+        'authorize' => 'https://{domain}/authorize/',
+        'token' => 'https://{domain}/oauth/token/',
+        'user_info' => 'https://{domain}/userinfo/',
     );
 
     /**
@@ -50,21 +52,21 @@ class Oauth2Client {
     protected $domain;
 
     /**
-     * Auth0 Client ID
+     * Auth0 Client ID.
      *
      * @var string
      */
     protected $client_id;
 
     /**
-     * Auth0 Client Secret
+     * Auth0 Client Secret.
      *
      * @var string
      */
     protected $client_secret;
 
     /**
-     * Auth0 Refresh Token
+     * Auth0 Refresh Token.
      *
      * @var string
      */
@@ -80,7 +82,7 @@ class Oauth2Client {
     /**
      * Debug mode flag.
      *
-     * @var Boolean
+     * @var bool
      */
     protected $debug_mode;
 
@@ -101,7 +103,7 @@ class Oauth2Client {
     protected $access_token;
 
     /**
-     * The user object
+     * The user object.
      *
      * @var string
      */
@@ -134,10 +136,10 @@ class Oauth2Client {
      *
      * @param array $config Required
      *
-     * @throws CoreException If `domain` is not provided.
-     * @throws CoreException If `client_id` is not provided.
-     * @throws CoreException If `client_secret` is not provided.
-     * @throws CoreException If `redirect_uri` is not provided.
+     * @throws CoreException If `domain` is not provided
+     * @throws CoreException If `client_id` is not provided
+     * @throws CoreException If `client_secret` is not provided
+     * @throws CoreException If `redirect_uri` is not provided
      */
     public function __construct(array $config)
     {
@@ -195,7 +197,6 @@ class Oauth2Client {
         // Id token is not per persisted unless said otherwise
         if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
                 $config['persist_id_token'] === false)) {
-
             $this->dontPersist('id_token');
         }
 
@@ -211,10 +212,10 @@ class Oauth2Client {
 
         $this->oauth_client = new Client($this->client_id, $this->client_secret);
 
-        $this->user = $this->store->get("user");
-        $this->access_token = $this->store->get("access_token");
-        $this->id_token = $this->store->get("id_token");
-        $this->refresh_token = $this->store->get("refresh_token");
+        $this->user = $this->store->get('user');
+        $this->access_token = $this->store->get('access_token');
+        $this->id_token = $this->store->get('id_token');
+        $this->refresh_token = $this->store->get('refresh_token');
 
         if (!$this->access_token) {
             $this->oauth_client->setAccessToken($this->access_token);
@@ -222,58 +223,63 @@ class Oauth2Client {
     }
 
     /**
-     * Removes $name from the persistantMap, thus not persisting it when we set the value
-     * @param  String $name The value to remove
+     * Removes $name from the persistantMap, thus not persisting it when we set the value.
+     *
+     * @param string $name The value to remove
      */
-    private function dontPersist($name) {
-        $key = array_search($name,$this->persistantMap);
+    private function dontPersist($name)
+    {
+        $key = array_search($name, $this->persistantMap);
         if ($key !== false) {
             unset($this->persistantMap[$key]);
         }
     }
 
     /**
-     * Exchanges the code from the URI parameters for an access token, id token and user info
-     * @return Boolean Whether it exchanged the code or not correctly
+     * Exchanges the code from the URI parameters for an access token, id token and user info.
+     *
+     * @return bool Whether it exchanged the code or not correctly
+     *
      * @throws ApiException
      */
-    public function exchangeCode() {
-
+    public function exchangeCode()
+    {
         $code = isset($_GET['code'])
                     ? $_GET['code']
-                    : ( isset($_POST['code']) ? $_POST['code'] : null );
+                    : (isset($_POST['code']) ? $_POST['code'] : null);
 
         if (!isset($code)) {
-            $this->debugInfo("No code found in _GET or _POST params.");
+            $this->debugInfo('No code found in _GET or _POST params.');
+
             return false;
         }
 
-        $this->debugInfo("Code: ".$code);
+        $this->debugInfo('Code: '.$code);
 
         // Generate the url to the API that will give us the access token and id token
         $auth_url = $this->generateUrl('token');
         // Make the call
-        $response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
-            "code" => $code,
-            "redirect_uri" => $this->redirect_uri
+        $response = $this->oauth_client->getAccessToken($auth_url, 'authorization_code', array(
+            'code' => $code,
+            'redirect_uri' => $this->redirect_uri,
         ), array(
-            'Auth0-Client' => ClientHeaders::getInfoHeadersData()->build()
+            'Auth0-Client' => ClientHeaders::getInfoHeadersData()->build(),
         ));
 
         $auth0_response = $response['result'];
 
         if ($response['code'] !== 200) {
             if (isset($auth0_response['error'])) {
-                throw new ApiException($auth0_response['error'] . ': '. $auth0_response['error_description']);
+                throw new ApiException($auth0_response['error'].': '.$auth0_response['error_description']);
             } else {
                 throw new ApiException($auth0_response);
             }
         }
 
         $this->debugInfo(json_encode($auth0_response));
-        $access_token = (isset($auth0_response['access_token']))? $auth0_response['access_token'] : false;
-        $refresh_token = (isset($auth0_response['refresh_token']))? $auth0_response['refresh_token'] : false;
-        $id_token = (isset($auth0_response['id_token']))? $auth0_response['id_token'] : false;
+        $access_token = (isset($auth0_response['access_token'])) ? $auth0_response['access_token'] : false;
+        $refresh_token = (isset($auth0_response['refresh_token'])) ? $auth0_response['refresh_token'] : false;
+        $id_token = (isset($auth0_response['id_token'])) ? $auth0_response['id_token'] : false;
 
         if (!$access_token) {
             throw new ApiException('Invalid access_token - Retry login.');
@@ -295,7 +301,7 @@ class Oauth2Client {
         $userinfo_url = $this->generateUrl('user_info');
         $user = $this->oauth_client->fetch($userinfo_url);
 
-        $this->setUser($user["result"]);
+        $this->setUser($user['result']);
 
         return true;
     }
@@ -305,7 +311,8 @@ class Oauth2Client {
      *
      * @return array
      */
-    public function getUser() {
+    public function getUser()
+    {
         // Ensure we have the user info
         if ($this->user === null) {
             $this->exchangeCode();
@@ -322,15 +329,15 @@ class Oauth2Client {
      * To delete an attribute, just set it null. ie: [ 'old_attr' => null ]
      * It will only update the existing attrs and keep the others untouch
      * for more info:
-     *       https://auth0.com/docs/apiv2#!/users/patch_users_by_id
+     *       https://auth0.com/docs/apiv2#!/users/patch_users_by_id.
      *
      * @param array $metadata
      */
-    public function updateUserMetadata($metadata) {
-
+    public function updateUserMetadata($metadata)
+    {
         $auth0Api = new Auth0Api($this->getIdToken(), $this->domain);
 
-        $user = $auth0Api->users->update($this->user["user_id"], array('user_metadata' =>  $metadata));
+        $user = $auth0Api->users->update($this->user['user_id'], array('user_metadata' => $metadata));
 
         $this->setUser($user);
     }
@@ -338,24 +345,27 @@ class Oauth2Client {
     /**
      * @return array
      */
-    public function getUserMetadata() {
-        return isset($this->user["user_metadata"]) ? $this->user["user_metadata"] : array();
+    public function getUserMetadata()
+    {
+        return isset($this->user['user_metadata']) ? $this->user['user_metadata'] : array();
     }
 
     /**
      * @return array
      */
-    public function getAppMetadata() {
-        return isset($this->user["app_metadata"]) ? $this->user["app_metadata"] : array();
+    public function getAppMetadata()
+    {
+        return isset($this->user['app_metadata']) ? $this->user['app_metadata'] : array();
     }
 
     /**
      * @param $user
+     *
      * @return Oauth2Client
      */
-    public function setUser($user) {
-
-        $key = array_search('user',$this->persistantMap);
+    public function setUser($user)
+    {
+        $key = array_search('user', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('user', $user);
         }
@@ -372,8 +382,9 @@ class Oauth2Client {
      *
      * @return Oauth2Client
      */
-    public function setAccessToken($access_token) {
-        $key = array_search('access_token',$this->persistantMap);
+    public function setAccessToken($access_token)
+    {
+        $key = array_search('access_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('access_token', $access_token);
         }
@@ -390,8 +401,9 @@ class Oauth2Client {
      *
      * @return Oauth2Client
      */
-    public function setRefreshToken($refresh_token) {
-        $key = array_search('refresh_token',$this->persistantMap);
+    public function setRefreshToken($refresh_token)
+    {
+        $key = array_search('refresh_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('refresh_token', $refresh_token);
         }
@@ -403,20 +415,25 @@ class Oauth2Client {
 
     /**
      * Gets $access_token.
+     *
      * @return string
      */
-    final public function getAccessToken() {
+    final public function getAccessToken()
+    {
         if ($this->access_token === null) {
             $this->exchangeCode();
         }
+
         return $this->access_token;
     }
 
     /**
      * Gets $refresh_token.
+     *
      * @return string
      */
-    final public function getRefreshToken() {
+    final public function getRefreshToken()
+    {
         return $this->refresh_token;
     }
 
@@ -427,8 +444,9 @@ class Oauth2Client {
      *
      * @return Oauth2Client
      */
-    public function setIdToken($id_token) {
-        $key = array_search('id_token',$this->persistantMap);
+    public function setIdToken($id_token)
+    {
+        $key = array_search('id_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('id_token', $id_token);
         }
@@ -439,34 +457,36 @@ class Oauth2Client {
     }
 
     /**
-     * Gets the id token
+     * Gets the id token.
+     *
      * @return string
      */
-    final public function getIdToken() {
+    final public function getIdToken()
+    {
         if ($this->id_token === null) {
             $this->exchangeCode();
         }
+
         return $this->id_token;
     }
 
     /**
-     * Logout (removes all persisten data)
+     * Logout (removes all persisten data).
      */
     final public function logout()
     {
         $this->deleteAllPersistentData();
-        $this->access_token = NULL;
-        $this->user = NULL;
-        $this->id_token = NULL;
-        $this->refresh_token = NULL;
+        $this->access_token = null;
+        $this->user = null;
+        $this->id_token = null;
+        $this->refresh_token = null;
     }
-
 
     /**
      * Constructs an API URL.
      *
-     * @param  string $domain_key
-     * @param  string $path
+     * @param string $domain_key
+     * @param string $path
      *
      * @return string
      */
@@ -485,8 +505,8 @@ class Oauth2Client {
     /**
      * Checks for all dependencies of SDK or API.
      *
-     * @throws CoreException If CURL extension is not found.
-     * @throws CoreException If JSON extension is not found.
+     * @throws CoreException If CURL extension is not found
+     * @throws CoreException If JSON extension is not found
      */
     final public function checkRequirements()
     {
@@ -502,7 +522,7 @@ class Oauth2Client {
     /**
      * If debug mode is set, sends $info to debugger \Closure.
      *
-     * @param  mixed $info  Info to debug. It will be converted to string.
+     * @param mixed $info Info to debug. It will be converted to string
      */
     public function debugInfo($info)
     {
@@ -512,7 +532,7 @@ class Oauth2Client {
             $caller_function = $caller['function'];
             $caller_class = $caller['class'];
 
-            $this->debugger->__invoke($caller_class.'::'.$caller_function. ' > '.$info);
+            $this->debugger->__invoke($caller_class.'::'.$caller_function.' > '.$info);
         }
     }
 
@@ -542,7 +562,7 @@ class Oauth2Client {
     }
 
     /**
-     * Gets $domain
+     * Gets $domain.
      *
      * @return string
      */
@@ -626,7 +646,7 @@ class Oauth2Client {
     /**
      * Sets $debug_mode.
      *
-     * @param boolean $debug_mode
+     * @param bool $debug_mode
      *
      * @return Oauth2Client
      */
@@ -640,7 +660,7 @@ class Oauth2Client {
     /**
      * Gets $debug_mode.
      *
-     * @return boolean
+     * @return bool
      */
     final public function getDebugMode()
     {
