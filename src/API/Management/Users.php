@@ -39,13 +39,6 @@ class Users extends GenericResource
         return ResponseMediator::getContent($response);
     }
 
-    public function deleteAll()
-    {
-        $response = $this->httpClient->delete('/users');
-
-        return ResponseMediator::getContent($response);
-    }
-
     public function delete($user_id)
     {
         $response = $this->httpClient->delete(sprintf('/users/%s', $user_id));
