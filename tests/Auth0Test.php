@@ -19,15 +19,15 @@ class Auth0Test extends TestCase
         ]);
 
         $this->assertEquals('foo', NSA::getProperty($auth0, 'domain'));
-        $this->assertEquals('bar', NSA::getProperty($auth0, 'client_id'));
-        $this->assertEquals('baz', NSA::getProperty($auth0, 'client_secret'));
-        $this->assertEquals('biz', NSA::getProperty($auth0, 'redirect_uri'));
+        $this->assertEquals('bar', NSA::getProperty($auth0, 'clientId'));
+        $this->assertEquals('baz', NSA::getProperty($auth0, 'clientSecret'));
+        $this->assertEquals('biz', NSA::getProperty($auth0, 'redirectUri'));
         $this->assertEquals(null, NSA::getProperty($auth0, 'audience'));
-        $this->assertEquals('query', NSA::getProperty($auth0, 'response_mode'));
-        $this->assertEquals('code', NSA::getProperty($auth0, 'response_type'));
+        $this->assertEquals('query', NSA::getProperty($auth0, 'responseMode'));
+        $this->assertEquals('code', NSA::getProperty($auth0, 'responseType'));
         $this->assertEquals(null, NSA::getProperty($auth0, 'scope'));
-        $this->assertEquals(false, NSA::getProperty($auth0, 'debug_mode'));
-        $this->assertEquals(['user'], array_values(NSA::getProperty($auth0, 'persistantMap')));
+        $this->assertEquals(false, NSA::getProperty($auth0, 'debugMode'));
+        $this->assertEquals(['user'], array_values(NSA::getProperty($auth0, 'persistentMap')));
     }
 
     public function testConstructor()
@@ -50,10 +50,10 @@ class Auth0Test extends TestCase
         ]);
 
         $this->assertEquals('audience', NSA::getProperty($auth0, 'audience'));
-        $this->assertEquals('response_mode', NSA::getProperty($auth0, 'response_mode'));
-        $this->assertEquals('response_type', NSA::getProperty($auth0, 'response_type'));
+        $this->assertEquals('response_mode', NSA::getProperty($auth0, 'responseMode'));
+        $this->assertEquals('response_type', NSA::getProperty($auth0, 'responseType'));
         $this->assertEquals('scope', NSA::getProperty($auth0, 'scope'));
-        $this->assertEquals(true, NSA::getProperty($auth0, 'debug_mode'));
-        $this->assertEquals(['refresh_token', 'access_token', 'id_token'], array_values(NSA::getProperty($auth0, 'persistantMap')));
+        $this->assertEquals(true, NSA::getProperty($auth0, 'debugMode'));
+        $this->assertEquals(['refresh_token', 'access_token', 'id_token'], array_values(NSA::getProperty($auth0, 'persistentMap')));
     }
 }

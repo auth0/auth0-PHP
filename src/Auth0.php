@@ -21,7 +21,7 @@ class Auth0
    *
    * @var array
    */
-  private $persistantMap = [
+  private $persistentMap = [
     'refresh_token',
     'access_token',
     'user',
@@ -323,7 +323,7 @@ class Auth0
 
     public function setUser($user)
     {
-        $key = array_search('user', $this->persistantMap);
+        $key = array_search('user', $this->persistentMap);
         if ($key !== false) {
             $this->store->set('user', $user);
         }
@@ -341,7 +341,7 @@ class Auth0
    */
   public function setAccessToken($accessToken)
   {
-      $key = array_search('access_token', $this->persistantMap);
+      $key = array_search('access_token', $this->persistentMap);
       if ($key !== false) {
           $this->store->set('access_token', $accessToken);
       }
@@ -359,7 +359,7 @@ class Auth0
    */
   public function setIdToken($idToken)
   {
-      $key = array_search('id_token', $this->persistantMap);
+      $key = array_search('id_token', $this->persistentMap);
       if ($key !== false) {
           $this->store->set('id_token', $idToken);
       }
@@ -377,7 +377,7 @@ class Auth0
    */
   public function setRefreshToken($refreshToken)
   {
-      $key = array_search('refresh_token', $this->persistantMap);
+      $key = array_search('refresh_token', $this->persistentMap);
       if ($key !== false) {
           $this->store->set('refresh_token', $refreshToken);
       }
@@ -406,21 +406,21 @@ class Auth0
 
     public function deleteAllPersistentData()
     {
-        foreach ($this->persistantMap as $key) {
+        foreach ($this->persistentMap as $key) {
             $this->store->delete($key);
         }
     }
 
   /**
-   * Removes $name from the persistantMap, thus not persisting it when we set the value.
+   * Removes $name from the persistentMap, thus not persisting it when we set the value.
    *
    * @param string $name The value to remove
    */
   private function dontPersist($name)
   {
-      $key = array_search($name, $this->persistantMap);
+      $key = array_search($name, $this->persistentMap);
       if ($key !== false) {
-          unset($this->persistantMap[$key]);
+          unset($this->persistentMap[$key]);
       }
   }
 
