@@ -138,18 +138,20 @@ class Auth0
   /**
    * @param array $config {
    *
-   *    @var string $domain Required. Should match your Auth0 domain
-   *    @var string $client_id Required. The id of the application, you can get this in the auth0 console
-   *    @var string $client_secret Required. The application secret, same comment as above
-   *    @var string $redirect_uri Required. The uri of the auth callback, used as a security method
-   *    @var string $response_mode Optional. Default `query`
-   *    @var string $response_mode Optional. Default `code`
-   *    @var string $persist_user Optional. Indicates if you want to persist the user info, default true
-   *    @var string $persist_access_token Optional. Indicates if you want to persist the access token, default false
+   *    @var string $domain                Required. Should match your Auth0 domain
+   *    @var string $client_id             Required. The id of the application, you can get this in the auth0 console
+   *    @var string $client_secret         Required. The application secret, same comment as above
+   *    @var string $redirect_uri          Required. The uri of the auth callback, used as a security method
+   *    @var string $response_mode         Optional. Default `query`
+   *    @var string $response_mode         Optional. Default `code`
+   *    @var string $persist_user          Optional. Indicates if you want to persist the user info, default true
+   *    @var string $persist_access_token  Optional. Indicates if you want to persist the access token, default false
    *    @var string $persist_refresh_token Optional. Indicates if you want to persist the refresh token, default false
-   *    @var string $persist_id_token Optional. Indicates if you want to persist the id token, default false
-   *    @var mixed $store Optional. Indicates how we store the persisting methods, default is session store, you can pass false to avoid storing it or a class that implements a store (get, set, delete). TODO: add a proper interface
-   *    @var bool $debug Optional. Default false
+   *    @var string $persist_id_token      Optional. Indicates if you want to persist the id token, default false
+   *    @var bool   $debug                 Optional. Default false
+   *    @var mixed  $store                 Optional. Indicates how we store the persisting methods, default is session store,
+   *                                         you can pass false to avoid storing it or a class that implements a store
+   *                                         (get, set, delete). TODO: add a proper interface
    * }
    *
    * @throws CoreException If `domain` is not provided

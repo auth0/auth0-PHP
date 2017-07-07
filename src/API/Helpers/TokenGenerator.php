@@ -24,9 +24,9 @@ class TokenGenerator
     /**
      * @param array $credentials {
      *
-     *     @var string $client_id Required. The id of the application, you can get this in the auth0 console
+     *     @var string $client_id     Required. The id of the application, you can get this in the auth0 console
      *     @var string $client_secret Required. The application secret, same comment as above
-     *     @var bool $replace Optional.
+     *     @var bool   $replace       Optional.
      * }
      */
     public function __construct(array $credentials)

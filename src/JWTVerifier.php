@@ -42,12 +42,12 @@ class JWTVerifier
     /**
      * @param array $config {
      *
-     *      @var array $valid_audiences Required. The list of audiences accepted by the service.
-     *      @var string $client_secret Required (if supported HS256). The Auth0 application secret.
-     *      @var array $authorized_iss Required (if supported RS256). The list of issuers trusted by the service.
-     *      @var \Psr\SimpleCache\CacheInterface $cache Optional. Used to cache the JWKs
-     *      @var array $supported_algs Optional. The list of supported algorithms. By default only HS256
-     *      @var bool $secret_base64_encoded Optional. Default true
+     *      @var array                           $valid_audiences       Required. The list of audiences accepted by the service
+     *      @var string                          $client_secret         Required (if supported HS256). The Auth0 application secret
+     *      @var array                           $authorized_iss        Required (if supported RS256). The list of issuers trusted by the service
+     *      @var \Psr\SimpleCache\CacheInterface $cache Optional.       Used to cache the JWKs
+     *      @var array                           $supported_algs        Optional. The list of supported algorithms. By default only HS256
+     *      @var bool                            $secret_base64_encoded Optional. Default true
      * }
      *
      * @throws CoreException
