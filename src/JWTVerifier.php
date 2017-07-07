@@ -9,11 +9,11 @@ use Firebase\JWT\JWT;
 
 class JWTVerifier
 {
-    protected $JWKFetcher = null;
-    protected $supported_algs = null;
-    protected $valid_audiences = null;
-    protected $authorized_iss = null;
-    protected $client_secret = null;
+    private $JWKFetcher = null;
+    private $supportedAlgs = null;
+    private $validAudiences = null;
+    private $authorizedIss = null;
+    private $clientSecret = null;
 
     /**
      * JWTVerifier Constructor.
@@ -65,13 +65,13 @@ class JWTVerifier
             throw new CoreException('The client_secret is mandatory when accepting HS256 signed tokens');
         }
 
-        $this->supported_algs = $config['supported_algs'];
-        $this->valid_audiences = $config['valid_audiences'];
-        $this->authorized_iss = $config['authorized_iss'];
+        $this->supportedAlgs = $config['supported_algs'];
+        $this->validAudiences = $config['valid_audiences'];
+        $this->authorizedIss = $config['authorized_iss'];
         $this->secret_base64_encoded = $config['secret_base64_encoded'];
 
         if (in_array('HS256', $config['supported_algs'])) {
-            $this->client_secret = $config['client_secret'];
+            $this->clientSecret = $config['client_secret'];
         }
 
         $this->JWKFetcher = new JWKFetcher($cache);
@@ -100,21 +100,21 @@ class JWTVerifier
             throw new InvalidTokenException('Invalid token');
         }
 
-        if (!in_array($head->alg, $this->supported_algs)) {
+        if (!in_array($head->alg, $this->supportedAlgs)) {
             throw new InvalidTokenException('Invalid signature algorithm');
         }
 
         if ($head->alg === 'RS256') {
             $body = json_decode(JWT::urlsafeB64Decode($body64));
-            if (!in_array($body->iss, $this->authorized_iss)) {
+            if (!in_array($body->iss, $this->authorizedIss)) {
                 throw new CoreException("We can't trust on a token issued by: `{$body->iss}`.");
             }
             $secret = $this->JWKFetcher->fetchKeys($body->iss);
         } elseif ($head->alg === 'HS256') {
             if ($this->secret_base64_encoded) {
-                $secret = JWT::urlsafeB64Decode($this->client_secret);
+                $secret = JWT::urlsafeB64Decode($this->clientSecret);
             } else {
-                $secret = $this->client_secret;
+                $secret = $this->clientSecret;
             }
         } else {
             throw new InvalidTokenException('Invalid signature algorithm');
@@ -128,7 +128,7 @@ class JWTVerifier
             if (!is_array($audience)) {
                 $audience = [$audience];
             }
-            if (count(array_intersect($audience, $this->valid_audiences)) == 0) {
+            if (count(array_intersect($audience, $this->validAudiences)) == 0) {
                 throw new InvalidTokenException('This token is not intended for us.');
             }
         } catch (\Exception $e) {

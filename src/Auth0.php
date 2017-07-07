@@ -21,7 +21,7 @@ class Auth0
    *
    * @var array
    */
-  public $persistantMap = array(
+  private $persistantMap = array(
     'refresh_token',
     'access_token',
     'user',
@@ -32,7 +32,7 @@ class Auth0
    *
    * @var array
    */
-  public static $URL_MAP = array(
+    private static $URL_MAP = array(
     'api' => 'https://{domain}/api/',
     'authorize' => 'https://{domain}/authorize/',
     'token' => 'https://{domain}/oauth/token/',
@@ -43,93 +43,93 @@ class Auth0
    *
    * @var string
    */
-  protected $domain;
+    private $domain;
   /**
    * Auth0 Client ID.
    *
    * @var string
    */
-  protected $client_id;
+    private $clientId;
   /**
    * Auth0 Client Secret.
    *
    * @var string
    */
-  protected $client_secret;
+    private $clientSecret;
   /**
    * Response Mode.
    *
    * @var string
    */
-  protected $response_mode;
+    private $responseMode;
   /**
    * Response Type.
    *
    * @var string
    */
-  protected $response_type;
+    private $responseType;
   /**
    * Audience.
    *
    * @var string
    */
-  protected $audience;
+    private $audience;
   /**
    * Scope.
    *
    * @var string
    */
-  protected $scope;
+    private $scope;
   /**
    * Auth0 Refresh Token.
    *
    * @var string
    */
-  protected $refresh_token;
+    private $refreshToken;
   /**
    * Redirect URI needed on OAuth2 requests.
    *
    * @var string
    */
-  protected $redirect_uri;
+    private $redirectUri;
   /**
    * Debug mode flag.
    *
    * @var bool
    */
-  protected $debug_mode;
+    private $debugMode;
   /**
    * Debugger function.
    * Will be called only if $debug_mode is true.
    *
    * @var \Closure
    */
-  protected $debugger;
+    private $debugger;
   /**
    * The access token retrieved after authorization.
    * NULL means that there is no authorization yet.
    *
    * @var string
    */
-  protected $access_token;
+    private $accessToken;
   /**
    * Store.
    *
    * @var StoreInterface
    */
-  protected $store;
+    private $store;
   /**
    * The user object.
    *
    * @var string
    */
-  protected $user;
+    private $user;
   /**
    * Authentication Client.
    *
    * @var \Auth0\SDK\API\Authentication
    */
-  protected $authentication;
+    private $authentication;
 
   /**
    * BaseAuth0 Constructor.
@@ -168,9 +168,9 @@ class Auth0
       }
 
       $this->domain = $config['domain'];
-      $this->client_id = $config['client_id'];
-      $this->client_secret = $config['client_secret'];
-      $this->redirect_uri = $config['redirect_uri'];
+      $this->clientId = $config['client_id'];
+      $this->clientSecret = $config['client_secret'];
+      $this->redirectUri = $config['redirect_uri'];
 
       $defaults = [
           'audience' => null,
@@ -188,10 +188,10 @@ class Auth0
       $config = array_merge($defaults, $config);
 
       $this->audience = $config['audience'];
-      $this->response_mode = $config['response_mode'];
-      $this->response_type = $config['response_type'];
+      $this->responseMode = $config['response_mode'];
+      $this->responseType = $config['response_type'];
       $this->scope = $config['scope'];
-      $this->debug_mode = $config['debug_mode'];
+      $this->debugMode = $config['debug_mode'];
 
         // User info is persisted unless said otherwise
         if (false === $config['persist_user']) {
@@ -218,12 +218,12 @@ class Auth0
           $this->setStore($config['store']);
       }
 
-      $this->authentication = new Authentication($this->domain, $this->client_id, $this->client_secret);
+      $this->authentication = new Authentication($this->domain, $this->clientId, $this->clientSecret);
 
       $this->user = $this->store->get('user');
-      $this->access_token = $this->store->get('access_token');
+      $this->accessToken = $this->store->get('access_token');
       $this->id_token = $this->store->get('id_token');
-      $this->refresh_token = $this->store->get('refresh_token');
+      $this->refreshToken = $this->store->get('refresh_token');
   }
 
     public function login($state = null, $connection = null)
@@ -236,9 +236,9 @@ class Auth0
             $params['scope'] = $this->scope;
         }
 
-        $params['response_mode'] = $this->response_mode;
+        $params['response_mode'] = $this->responseMode;
 
-        $url = $this->authentication->get_authorize_link($this->response_type, $this->redirect_uri, $connection, $state, $params);
+        $url = $this->authentication->get_authorize_link($this->responseType, $this->redirectUri, $connection, $state, $params);
 
         header("Location: $url");
         exit;
@@ -266,22 +266,22 @@ class Auth0
 
     public function getAccessToken()
     {
-        if ($this->access_token) {
-            return $this->access_token;
+        if ($this->accessToken) {
+            return $this->accessToken;
         }
         $this->exchange();
 
-        return $this->access_token;
+        return $this->accessToken;
     }
 
     public function getRefreshToken()
     {
-        if ($this->refresh_token) {
-            return $this->refresh_token;
+        if ($this->refreshToken) {
+            return $this->refreshToken;
         }
         $this->exchange();
 
-        return $this->refresh_token;
+        return $this->refreshToken;
     }
 
   /**
@@ -300,7 +300,7 @@ class Auth0
           throw new CoreException('Can\'t initialize a new session while there is one active session already');
       }
 
-      $response = $this->authentication->code_exchange($code, $this->redirect_uri);
+      $response = $this->authentication->code_exchange($code, $this->redirectUri);
 
       $access_token = (isset($response['access_token'])) ? $response['access_token'] : false;
       $refresh_token = (isset($response['refresh_token'])) ? $response['refresh_token'] : false;
@@ -333,17 +333,17 @@ class Auth0
   /**
    * Sets and persists $access_token.
    *
-   * @param string $access_token
+   * @param string $accessToken
    *
    * @return Auth0\SDK\BaseAuth0
    */
-  public function setAccessToken($access_token)
+  public function setAccessToken($accessToken)
   {
       $key = array_search('access_token', $this->persistantMap);
       if ($key !== false) {
-          $this->store->set('access_token', $access_token);
+          $this->store->set('access_token', $accessToken);
       }
-      $this->access_token = $access_token;
+      $this->accessToken = $accessToken;
 
       return $this;
   }
@@ -367,26 +367,26 @@ class Auth0
   /**
    * Sets and persists $refresh_token.
    *
-   * @param string $refresh_token
+   * @param string $refreshToken
    *
    * @return Auth0\SDK\BaseAuth0
    */
-  public function setRefreshToken($refresh_token)
+  public function setRefreshToken($refreshToken)
   {
       $key = array_search('refresh_token', $this->persistantMap);
       if ($key !== false) {
-          $this->store->set('refresh_token', $refresh_token);
+          $this->store->set('refresh_token', $refreshToken);
       }
-      $this->refresh_token = $refresh_token;
+      $this->refreshToken = $refreshToken;
 
       return $this;
   }
 
-    protected function getAuthorizationCode()
+    private function getAuthorizationCode()
     {
-        if ($this->response_mode === 'query') {
+        if ($this->responseMode === 'query') {
             return isset($_GET['code']) ? $_GET['code'] : null;
-        } elseif ($this->response_mode === 'form_post') {
+        } elseif ($this->responseMode === 'form_post') {
             return isset($_POST['code']) ? $_POST['code'] : null;
         }
 
@@ -396,10 +396,10 @@ class Auth0
     public function logout()
     {
         $this->deleteAllPersistentData();
-        $this->access_token = null;
+        $this->accessToken = null;
         $this->user = null;
         $this->id_token = null;
-        $this->refresh_token = null;
+        $this->refreshToken = null;
     }
 
     public function deleteAllPersistentData()
