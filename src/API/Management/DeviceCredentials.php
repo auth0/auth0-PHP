@@ -10,9 +10,9 @@ class DeviceCredentials extends GenericResource
     const TYPE_REFESH_TOKEN = 'refresh_token';
 
   /**
-   * @param string $user_id
-   * @param string $client_id
-   * @param string $type
+   * @param string            $user_id
+   * @param string            $client_id
+   * @param string            $type
    * @param null|string|array $fields
    * @param null|string|array $include_fields
    *

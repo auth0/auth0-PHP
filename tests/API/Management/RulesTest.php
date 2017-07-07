@@ -29,21 +29,24 @@ class RulesTest extends BasicCrudTest
         echo "\n-- Using rule name $name \n";
 
         return [
-            'name' => $name,
-            'script' => "function (user, context, callback) {\n  callback(null, user, context);\n}",
+            'name'    => $name,
+            'script'  => "function (user, context, callback) {\n  callback(null, user, context);\n}",
             'enabled' => true,
         ];
     }
+
     protected function getUpdateBody()
     {
         return [
             'enabled' => false,
         ];
     }
+
     protected function afterCreate($entity)
     {
         $this->assertTrue($entity['enabled']);
     }
+
     protected function afterUpdate($entity)
     {
         $this->assertNotTrue($entity['enabled']);

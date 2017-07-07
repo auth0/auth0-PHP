@@ -4,8 +4,8 @@ namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Helpers\HttpClientBuilder;
 use Auth0\SDK\API\Management\Blacklists;
-use Auth0\SDK\API\Management\Clients;
 use Auth0\SDK\API\Management\ClientGrants;
+use Auth0\SDK\API\Management\Clients;
 use Auth0\SDK\API\Management\Connections;
 use Auth0\SDK\API\Management\DeviceCredentials;
 use Auth0\SDK\API\Management\Emails;

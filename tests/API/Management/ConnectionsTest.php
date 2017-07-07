@@ -31,14 +31,17 @@ class ConnectionsTest extends BasicCrudTest
 
         return ['name' => $connection_name, 'strategy' => 'auth0', 'options' => ['requires_username' => false]];
     }
+
     protected function getUpdateBody()
     {
         return ['options' => ['requires_username' => true]];
     }
+
     protected function afterCreate($entity)
     {
         $this->assertNotTrue($entity['options']['requires_username']);
     }
+
     protected function afterUpdate($entity)
     {
         $this->assertTrue($entity['options']['requires_username']);

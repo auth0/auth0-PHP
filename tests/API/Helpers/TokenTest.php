@@ -22,7 +22,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
 
         $verifier = new JWTVerifier([
             'valid_audiences' => [$client_id],
-            'client_secret' => $client_secret,
+            'client_secret'   => $client_secret,
         ]);
 
         $decoded = $verifier->verifyAndDecode($jwt);
@@ -41,8 +41,8 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $client_secret = 'client_secret_1';
 
         $generator = new TokenGenerator([
-          'client_id' => $client_id,
-          'client_secret' => $client_secret,
+          'client_id'             => $client_id,
+          'client_secret'         => $client_secret,
           'secret_base64_encoded' => false,
         ]);
 
@@ -53,8 +53,8 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         ]);
 
         $verifier = new JWTVerifier([
-            'valid_audiences' => [$client_id],
-            'client_secret' => $client_secret,
+            'valid_audiences'       => [$client_id],
+            'client_secret'         => $client_secret,
             'secret_base64_encoded' => false,
         ]);
 

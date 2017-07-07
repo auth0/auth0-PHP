@@ -2,12 +2,12 @@
 
 namespace Auth0\SDK;
 
-use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
-use Auth0\SDK\API\Authentication;
 
 /**
  * This class provides access to Auth0 Platform.
@@ -21,114 +21,114 @@ class Auth0
    *
    * @var array
    */
-  private $persistantMap = array(
+  private $persistantMap = [
     'refresh_token',
     'access_token',
     'user',
     'id_token',
-  );
-  /**
-   * Auth0 URL Map.
-   *
-   * @var array
-   */
-    private static $URL_MAP = array(
-    'api' => 'https://{domain}/api/',
+  ];
+    /**
+     * Auth0 URL Map.
+     *
+     * @var array
+     */
+    private static $URL_MAP = [
+    'api'       => 'https://{domain}/api/',
     'authorize' => 'https://{domain}/authorize/',
-    'token' => 'https://{domain}/oauth/token/',
+    'token'     => 'https://{domain}/oauth/token/',
     'user_info' => 'https://{domain}/userinfo/',
-  );
-  /**
-   * Auth0 Domain.
-   *
-   * @var string
-   */
+  ];
+    /**
+     * Auth0 Domain.
+     *
+     * @var string
+     */
     private $domain;
-  /**
-   * Auth0 Client ID.
-   *
-   * @var string
-   */
+    /**
+     * Auth0 Client ID.
+     *
+     * @var string
+     */
     private $clientId;
-  /**
-   * Auth0 Client Secret.
-   *
-   * @var string
-   */
+    /**
+     * Auth0 Client Secret.
+     *
+     * @var string
+     */
     private $clientSecret;
-  /**
-   * Response Mode.
-   *
-   * @var string
-   */
+    /**
+     * Response Mode.
+     *
+     * @var string
+     */
     private $responseMode;
-  /**
-   * Response Type.
-   *
-   * @var string
-   */
+    /**
+     * Response Type.
+     *
+     * @var string
+     */
     private $responseType;
-  /**
-   * Audience.
-   *
-   * @var string
-   */
+    /**
+     * Audience.
+     *
+     * @var string
+     */
     private $audience;
-  /**
-   * Scope.
-   *
-   * @var string
-   */
+    /**
+     * Scope.
+     *
+     * @var string
+     */
     private $scope;
-  /**
-   * Auth0 Refresh Token.
-   *
-   * @var string
-   */
+    /**
+     * Auth0 Refresh Token.
+     *
+     * @var string
+     */
     private $refreshToken;
-  /**
-   * Redirect URI needed on OAuth2 requests.
-   *
-   * @var string
-   */
+    /**
+     * Redirect URI needed on OAuth2 requests.
+     *
+     * @var string
+     */
     private $redirectUri;
-  /**
-   * Debug mode flag.
-   *
-   * @var bool
-   */
+    /**
+     * Debug mode flag.
+     *
+     * @var bool
+     */
     private $debugMode;
-  /**
-   * Debugger function.
-   * Will be called only if $debug_mode is true.
-   *
-   * @var \Closure
-   */
+    /**
+     * Debugger function.
+     * Will be called only if $debug_mode is true.
+     *
+     * @var \Closure
+     */
     private $debugger;
-  /**
-   * The access token retrieved after authorization.
-   * NULL means that there is no authorization yet.
-   *
-   * @var string
-   */
+    /**
+     * The access token retrieved after authorization.
+     * NULL means that there is no authorization yet.
+     *
+     * @var string
+     */
     private $accessToken;
-  /**
-   * Store.
-   *
-   * @var StoreInterface
-   */
+    /**
+     * Store.
+     *
+     * @var StoreInterface
+     */
     private $store;
-  /**
-   * The user object.
-   *
-   * @var string
-   */
+    /**
+     * The user object.
+     *
+     * @var string
+     */
     private $user;
-  /**
-   * Authentication Client.
-   *
-   * @var \Auth0\SDK\API\Authentication
-   */
+    /**
+     * Authentication Client.
+     *
+     * @var \Auth0\SDK\API\Authentication
+     */
     private $authentication;
 
   /**
@@ -173,16 +173,16 @@ class Auth0
       $this->redirectUri = $config['redirect_uri'];
 
       $defaults = [
-          'audience' => null,
-          'response_mode' => 'query',
-          'response_type' => 'code',
-          'scope' => null,
-          'debug_mode' => false,
-          'persist_user' => null,
-          'persist_access_token' => false,
+          'audience'              => null,
+          'response_mode'         => 'query',
+          'response_type'         => 'code',
+          'scope'                 => null,
+          'debug_mode'            => false,
+          'persist_user'          => null,
+          'persist_access_token'  => false,
           'persist_refresh_token' => false,
-          'persist_id_token' => false,
-          'store' => null,
+          'persist_id_token'      => false,
+          'store'                 => null,
         ];
 
       $config = array_merge($defaults, $config);
@@ -330,6 +330,7 @@ class Auth0
 
         return $this;
     }
+
   /**
    * Sets and persists $access_token.
    *
@@ -347,6 +348,7 @@ class Auth0
 
       return $this;
   }
+
   /**
    * Sets and persists $id_token.
    *
@@ -364,6 +366,7 @@ class Auth0
 
       return $this;
   }
+
   /**
    * Sets and persists $refresh_token.
    *
@@ -389,8 +392,6 @@ class Auth0
         } elseif ($this->responseMode === 'form_post') {
             return isset($_POST['code']) ? $_POST['code'] : null;
         }
-
-        return null;
     }
 
     public function logout()
@@ -412,7 +413,7 @@ class Auth0
   /**
    * Removes $name from the persistantMap, thus not persisting it when we set the value.
    *
-   * @param  string $name The value to remove
+   * @param string $name The value to remove
    */
   private function dontPersist($name)
   {

@@ -81,7 +81,7 @@ class CacheDecorator implements CacheInterface
     public function count($method)
     {
         if (!isset($this->counter[$method])) {
-            return null;
+            return;
         }
 
         return $this->counter[$method];

@@ -20,11 +20,11 @@ class Authentication
   private $httpClient;
 
   /**
-   * @param string      $domain
-   * @param string|null $client_id
-   * @param string|null $client_secret
-   * @param string|null $audience
-   * @param string|null $scope
+   * @param string          $domain
+   * @param string|null     $client_id
+   * @param string|null     $client_secret
+   * @param string|null     $audience
+   * @param string|null     $scope
    * @param HttpClient|null $client
    */
   public function __construct($domain, $client_id = null, $client_secret = null, $audience = null, $scope = null, HttpClient $client = null)
@@ -118,10 +118,10 @@ class Authentication
     public function authorize_with_accesstoken($access_token, $connection, $scope = 'openid', $aditional_params = [])
     {
         $data = array_merge($aditional_params, [
-      'client_id' => $this->client_id,
+      'client_id'    => $this->client_id,
       'access_token' => $access_token,
-      'connection' => $connection,
-      'scope' => $scope,
+      'connection'   => $connection,
+      'scope'        => $scope,
     ]);
 
         $response = $this->httpClient->post('/oauth/access_token', [], json_encode($data));
@@ -132,10 +132,10 @@ class Authentication
     public function email_passwordless_start($email, $type, $authParams = [])
     {
         $data = [
-      'client_id' => $this->client_id,
+      'client_id'  => $this->client_id,
       'connection' => 'email',
-      'send' => $type,
-      'email' => $email,
+      'send'       => $type,
+      'email'      => $email,
     ];
 
         if (!empty($authParams)) {
@@ -150,8 +150,8 @@ class Authentication
     public function sms_passwordless_start($phone_number)
     {
         $data = [
-      'client_id' => $this->client_id,
-      'connection' => 'sms',
+      'client_id'    => $this->client_id,
+      'connection'   => 'sms',
       'phone_number' => $phone_number,
     ];
 
@@ -175,9 +175,9 @@ class Authentication
     public function impersonate($access_token, $user_id, $protocol, $impersonator_id, $client_id, $additionalParameters = [])
     {
         $data = [
-      'protocol' => $protocol,
-      'impersonator_id' => $impersonator_id,
-      'client_id' => $client_id,
+      'protocol'             => $protocol,
+      'impersonator_id'      => $impersonator_id,
+      'client_id'            => $client_id,
       'additionalParameters' => $additionalParameters,
     ];
 
@@ -337,9 +337,9 @@ class Authentication
     public function dbconnections_signup($email, $password, $connection)
     {
         $data = [
-      'client_id' => $this->client_id,
-      'email' => $email,
-      'password' => $password,
+      'client_id'  => $this->client_id,
+      'email'      => $email,
+      'password'   => $password,
       'connection' => $connection,
     ];
 
@@ -351,8 +351,8 @@ class Authentication
     public function dbconnections_change_password($email, $connection, $password = null)
     {
         $data = [
-      'client_id' => $this->client_id,
-      'email' => $email,
+      'client_id'  => $this->client_id,
+      'email'      => $email,
       'connection' => $connection,
     ];
 

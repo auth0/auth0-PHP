@@ -19,7 +19,7 @@ class ClientHeaders
     public static function getInfoHeadersData()
     {
         if (!self::$infoHeadersDataEnabled) {
-            return null;
+            return;
         }
 
         if (self::$infoHeadersData === null) {

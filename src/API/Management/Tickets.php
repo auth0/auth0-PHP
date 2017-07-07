@@ -14,7 +14,7 @@ class Tickets extends GenericResource
      */
     public function createEmailVerificationTicket($user_id, $result_url = null)
     {
-        $body = array('user_id' => $user_id);
+        $body = ['user_id' => $user_id];
         if ($result_url !== null) {
             $body['result_url'] = $result_url;
         }

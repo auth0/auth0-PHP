@@ -47,7 +47,7 @@ class TokenGenerator
     }
 
     /**
-     * Binary representation of a binary-string
+     * Binary representation of a binary-string.
      *
      * @param string $input
      *
@@ -84,10 +84,10 @@ class TokenGenerator
     {
         $time = time();
 
-        $payload = array(
-            'iat' => $time,
+        $payload = [
+            'iat'    => $time,
             'scopes' => $scopes,
-        );
+        ];
 
         $jti = md5(json_encode($payload));
 

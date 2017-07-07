@@ -34,8 +34,8 @@ class ClientGrants extends GenericResource
     {
         $response = $this->httpClient->post('/client-grants', [], json_encode([
             'client_id' => $client_id,
-            'audience' => $audience,
-            'scope' => $scope,
+            'audience'  => $audience,
+            'scope'     => $scope,
         ]));
 
         return ResponseMediator::getContent($response);

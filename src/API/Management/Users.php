@@ -27,12 +27,12 @@ class Users extends GenericResource
         return ResponseMediator::getContent($response);
     }
 
-    public function getAll($params = array())
+    public function getAll($params = [])
     {
         return $this->search($params);
     }
 
-    public function search($params = array())
+    public function search($params = [])
     {
         $response = $this->httpClient->get('/users?'.http_build_query($params));
 

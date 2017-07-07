@@ -80,10 +80,10 @@ class JWTVerifier
     /**
      * @param string $jwt
      *
-     * @return object
-     *
      * @throws CoreException
      * @throws InvalidTokenException
+     *
+     * @return object
      */
     public function verifyAndDecode($jwt)
     {
@@ -122,7 +122,7 @@ class JWTVerifier
 
         try {
             // Decode the user
-            $decodedToken = JWT::decode($jwt, $secret, array('HS256', 'RS256'));
+            $decodedToken = JWT::decode($jwt, $secret, ['HS256', 'RS256']);
             // validate that this JWT was made for us
             $audience = $decodedToken->aud;
             if (!is_array($audience)) {

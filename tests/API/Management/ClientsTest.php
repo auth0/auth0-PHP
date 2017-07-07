@@ -35,14 +35,17 @@ class ClientsTest extends BasicCrudTest
 
         return ['name' => $client_name, 'sso' => false];
     }
+
     protected function getUpdateBody()
     {
         return ['sso' => true];
     }
+
     protected function afterCreate($entity)
     {
         $this->assertNotTrue($entity['sso']);
     }
+
     protected function afterUpdate($entity)
     {
         $this->assertTrue($entity['sso']);
