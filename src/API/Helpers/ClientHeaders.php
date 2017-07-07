@@ -6,16 +6,14 @@ class ClientHeaders
 {
     const API_VERSION = '5.0.0';
 
-    protected static $infoHeadersDataEnabled = true;
-    protected static $infoHeadersData;
+    private static $infoHeadersDataEnabled = true;
+    private static $infoHeadersData;
 
     public static function setInfoHeadersData(InformationHeaders $infoHeadersData)
     {
-        if (!self::$infoHeadersDataEnabled) {
-            return null;
+        if (self::$infoHeadersDataEnabled) {
+            self::$infoHeadersData = $infoHeadersData;
         }
-
-        self::$infoHeadersData = $infoHeadersData;
     }
 
     public static function getInfoHeadersData()

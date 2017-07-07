@@ -9,7 +9,7 @@ use Psr\SimpleCache\CacheInterface;
 class JWKFetcher
 {
     /**
-     * @var CacheInterface
+     * @var CacheInterface|null
      */
     private $cache = null;
 

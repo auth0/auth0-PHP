@@ -7,7 +7,7 @@ class InformationHeaders
     /**
      * @var array
      */
-    protected $data = array();
+    private $data = [];
 
     /**
      * @param string $name

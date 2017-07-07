@@ -25,7 +25,7 @@ class Oauth2Client
      *
      * @var array
      */
-    public $persistantMap = array(
+    private $persistantMap = array(
         'refresh_token',
         'access_token',
         'user',
@@ -37,7 +37,7 @@ class Oauth2Client
      *
      * @var array
      */
-    public static $URL_MAP = array(
+    private static $URL_MAP = array(
         'api' => 'https://{domain}/api/',
         'authorize' => 'https://{domain}/authorize/',
         'token' => 'https://{domain}/oauth/token/',
@@ -49,42 +49,42 @@ class Oauth2Client
      *
      * @var string
      */
-    protected $domain;
+    private $domain;
 
     /**
      * Auth0 Client ID.
      *
      * @var string
      */
-    protected $client_id;
+    private $clientId;
 
     /**
      * Auth0 Client Secret.
      *
      * @var string
      */
-    protected $client_secret;
+    private $clientSecret;
 
     /**
      * Auth0 Refresh Token.
      *
      * @var string
      */
-    protected $refresh_token;
+    private $refreshToken;
 
     /**
      * Redirect URI needed on OAuth2 requests.
      *
      * @var string
      */
-    protected $redirect_uri;
+    private $redirectUri;
 
     /**
      * Debug mode flag.
      *
      * @var bool
      */
-    protected $debug_mode;
+    private $debugMode;
 
     /**
      * Debugger function.
@@ -92,29 +92,29 @@ class Oauth2Client
      *
      * @var \Closure
      */
-    protected $debugger;
+    private $debugger;
 
     /**
      * The access token retrieved after authorization.
      * NULL means that there is no authorization yet.
      *
-     * @var string
+     * @var string|null
      */
-    protected $access_token;
+    private $accessToken;
 
     /**
      * The user object.
      *
      * @var string
      */
-    protected $user;
+    private $user;
 
     /**
      * OAuth2 Client.
      *
      * @var \OAuth2\Client
      */
-    protected $oauth_client;
+    private $oauthClient;
 
     /**
      * BaseAuth0 Constructor.
@@ -154,27 +154,27 @@ class Oauth2Client
         }
 
         if (isset($config['client_id'])) {
-            $this->client_id = $config['client_id'];
+            $this->clientId = $config['client_id'];
         } else {
             throw new CoreException('Invalid client_id');
         }
 
         if (isset($config['client_secret'])) {
-            $this->client_secret = $config['client_secret'];
+            $this->clientSecret = $config['client_secret'];
         } else {
             throw new CoreException('Invalid client_secret');
         }
 
         if (isset($config['redirect_uri'])) {
-            $this->redirect_uri = $config['redirect_uri'];
+            $this->redirectUri = $config['redirect_uri'];
         } else {
             throw new CoreException('Invalid redirect_uri');
         }
 
         if (isset($config['debug'])) {
-            $this->debug_mode = $config['debug'];
+            $this->debugMode = $config['debug'];
         } else {
-            $this->debug_mode = false;
+            $this->debugMode = false;
         }
 
         // User info is persisted unless said otherwise
@@ -210,15 +210,15 @@ class Oauth2Client
             $this->store = new SessionStore();
         }
 
-        $this->oauth_client = new Client($this->client_id, $this->client_secret);
+        $this->oauthClient = new Client($this->clientId, $this->clientSecret);
 
         $this->user = $this->store->get('user');
-        $this->access_token = $this->store->get('access_token');
+        $this->accessToken = $this->store->get('access_token');
         $this->id_token = $this->store->get('id_token');
-        $this->refresh_token = $this->store->get('refresh_token');
+        $this->refreshToken = $this->store->get('refresh_token');
 
-        if (!$this->access_token) {
-            $this->oauth_client->setAccessToken($this->access_token);
+        if (!$this->accessToken) {
+            $this->oauthClient->setAccessToken($this->accessToken);
         }
     }
 
@@ -259,9 +259,9 @@ class Oauth2Client
         // Generate the url to the API that will give us the access token and id token
         $auth_url = $this->generateUrl('token');
         // Make the call
-        $response = $this->oauth_client->getAccessToken($auth_url, 'authorization_code', array(
+        $response = $this->oauthClient->getAccessToken($auth_url, 'authorization_code', array(
             'code' => $code,
-            'redirect_uri' => $this->redirect_uri,
+            'redirect_uri' => $this->redirectUri,
         ), array(
             'Auth0-Client' => ClientHeaders::getInfoHeadersData()->build(),
         ));
@@ -290,8 +290,8 @@ class Oauth2Client
         }
 
         // Set the access token in the oauth client for future calls to the Auth0 API
-        $this->oauth_client->setAccessToken($access_token);
-        $this->oauth_client->setAccessTokenType(Client::ACCESS_TOKEN_BEARER);
+        $this->oauthClient->setAccessToken($access_token);
+        $this->oauthClient->setAccessTokenType(Client::ACCESS_TOKEN_BEARER);
 
         // Set it and persist it, if needed
         $this->setAccessToken($access_token);
@@ -299,7 +299,7 @@ class Oauth2Client
         $this->setRefreshToken($refresh_token);
 
         $userinfo_url = $this->generateUrl('user_info');
-        $user = $this->oauth_client->fetch($userinfo_url);
+        $user = $this->oauthClient->fetch($userinfo_url);
 
         $this->setUser($user['result']);
 
@@ -378,18 +378,18 @@ class Oauth2Client
     /**
      * Sets and persists $access_token.
      *
-     * @param string $access_token
+     * @param string $accessToken
      *
      * @return Oauth2Client
      */
-    public function setAccessToken($access_token)
+    public function setAccessToken($accessToken)
     {
         $key = array_search('access_token', $this->persistantMap);
         if ($key !== false) {
-            $this->store->set('access_token', $access_token);
+            $this->store->set('access_token', $accessToken);
         }
 
-        $this->access_token = $access_token;
+        $this->accessToken = $accessToken;
 
         return $this;
     }
@@ -397,18 +397,18 @@ class Oauth2Client
     /**
      * Sets and persists $refresh_token.
      *
-     * @param string $refresh_token
+     * @param string $refreshToken
      *
      * @return Oauth2Client
      */
-    public function setRefreshToken($refresh_token)
+    public function setRefreshToken($refreshToken)
     {
         $key = array_search('refresh_token', $this->persistantMap);
         if ($key !== false) {
-            $this->store->set('refresh_token', $refresh_token);
+            $this->store->set('refresh_token', $refreshToken);
         }
 
-        $this->refresh_token = $refresh_token;
+        $this->refreshToken = $refreshToken;
 
         return $this;
     }
@@ -420,11 +420,11 @@ class Oauth2Client
      */
     final public function getAccessToken()
     {
-        if ($this->access_token === null) {
+        if ($this->accessToken === null) {
             $this->exchangeCode();
         }
 
-        return $this->access_token;
+        return $this->accessToken;
     }
 
     /**
@@ -434,7 +434,7 @@ class Oauth2Client
      */
     final public function getRefreshToken()
     {
-        return $this->refresh_token;
+        return $this->refreshToken;
     }
 
     /**
@@ -476,10 +476,10 @@ class Oauth2Client
     final public function logout()
     {
         $this->deleteAllPersistentData();
-        $this->access_token = null;
+        $this->accessToken = null;
         $this->user = null;
         $this->id_token = null;
-        $this->refresh_token = null;
+        $this->refreshToken = null;
     }
 
     /**
@@ -526,7 +526,7 @@ class Oauth2Client
      */
     public function debugInfo($info)
     {
-        if ($this->debug_mode && (is_object($this->debugger) && ($this->debugger instanceof \Closure))) {
+        if ($this->debugMode && (is_object($this->debugger) && ($this->debugger instanceof \Closure))) {
             list(, $caller) = debug_backtrace(false);
 
             $caller_function = $caller['function'];
@@ -574,13 +574,13 @@ class Oauth2Client
     /**
      * Sets $client_id.
      *
-     * @param string $client_id
+     * @param string $clientId
      *
      * @return Oauth2Client
      */
-    final public function setClientId($client_id)
+    final public function setClientId($clientId)
     {
-        $this->client_id = $client_id;
+        $this->clientId = $clientId;
 
         return $this;
     }
@@ -592,19 +592,19 @@ class Oauth2Client
      */
     final public function getClientId()
     {
-        return $this->client_id;
+        return $this->clientId;
     }
 
     /**
      * Sets $client_secret.
      *
-     * @param string $client_secret
+     * @param string $clientSecret
      *
      * @return Oauth2Client
      */
-    final public function setClientSecret($client_secret)
+    final public function setClientSecret($clientSecret)
     {
-        $this->client_secret = $client_secret;
+        $this->clientSecret = $clientSecret;
 
         return $this;
     }
@@ -616,19 +616,19 @@ class Oauth2Client
      */
     final public function getClientSecret()
     {
-        return $this->client_secret;
+        return $this->clientSecret;
     }
 
     /**
      * Sets $redirect_uri.
      *
-     * @param string $redirect_uri
+     * @param string $redirectUri
      *
      * @return Oauth2Client
      */
-    final public function setRedirectUri($redirect_uri)
+    final public function setRedirectUri($redirectUri)
     {
-        $this->redirect_uri = $redirect_uri;
+        $this->redirectUri = $redirectUri;
 
         return $this;
     }
@@ -640,19 +640,19 @@ class Oauth2Client
      */
     final public function getRedirectUri()
     {
-        return $this->redirect_uri;
+        return $this->redirectUri;
     }
 
     /**
      * Sets $debug_mode.
      *
-     * @param bool $debug_mode
+     * @param bool $debugMode
      *
      * @return Oauth2Client
      */
-    final public function setDebugMode($debug_mode)
+    final public function setDebugMode($debugMode)
     {
-        $this->debug_mode = $debug_mode;
+        $this->debugMode = $debugMode;
 
         return $this;
     }
@@ -664,7 +664,7 @@ class Oauth2Client
      */
     final public function getDebugMode()
     {
-        return $this->debug_mode;
+        return $this->debugMode;
     }
 
     /**
