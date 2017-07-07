@@ -22,13 +22,6 @@ class TokenGenerator
     private $secretBase64Encoded = true;
 
     /**
-     * TokenGenerator Constructor.
-     *
-     * Configuration:
-     *     - client_id              (String)  Required. The id of the application, you can get this in the auth0 console
-     *     - client_secret          (String)  Required. The application secret, same comment as above
-     *     - secret_base64_encoded  (bool)    Optional.
-     *
      * @param array $credentials {
      *
      *     @var string $client_id Required. The id of the application, you can get this in the auth0 console

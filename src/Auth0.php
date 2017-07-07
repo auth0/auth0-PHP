@@ -87,6 +87,10 @@ class Auth0
      */
     private $refreshToken;
     /**
+     * @var string
+     */
+    private $idToken;
+    /**
      * Redirect URI needed on OAuth2 requests.
      *
      * @var string
@@ -132,26 +136,21 @@ class Auth0
     private $authentication;
 
   /**
-   * BaseAuth0 Constructor.
+   * @param array $config {
    *
-   * Configuration:
-   *     - domain                 (String)  Required. Should match your Auth0 domain
-   *     - client_id              (String)  Required. The id of the application, you can get this in the
-   *                                                  auth0 console
-   *     - client_secret          (String)  Required. The application secret, same comment as above
-   *     - redirect_uri           (String)  Required. The uri of the auth callback, used as a security method
-   *     - response_mode          (String)  Optional. Default `query`
-   *     - response_type          (String)  Optional. Default `code`
-   *     - persist_user           (Boolean) Optional. Indicates if you want to persist the user info, default true
-   *     - persist_access_token   (Boolean) Optional. Indicates if you want to persist the access token, default false
-   *     - persist_refresh_token  (Boolean) Optional. Indicates if you want to persist the refresh token, default false
-   *     - persist_id_token       (Boolean) Optional. Indicates if you want to persist the id token, default false
-   *     - store                  (Mixed)   Optional. Indicates how we store the persisting methods, default is session
-   *                                                  store, you can pass false to avoid storing it or a class that
-   *                                                  implements a store (get, set, delete). TODO: add a proper interface
-   *     - debug                  (Boolean) Optional. Default false
-   *
-   * @param array $config Required
+   *    @var string $domain Required. Should match your Auth0 domain
+   *    @var string $client_id Required. The id of the application, you can get this in the auth0 console
+   *    @var string $client_secret Required. The application secret, same comment as above
+   *    @var string $redirect_uri Required. The uri of the auth callback, used as a security method
+   *    @var string $response_mode Optional. Default `query`
+   *    @var string $response_mode Optional. Default `code`
+   *    @var string $persist_user Optional. Indicates if you want to persist the user info, default true
+   *    @var string $persist_access_token Optional. Indicates if you want to persist the access token, default false
+   *    @var string $persist_refresh_token Optional. Indicates if you want to persist the refresh token, default false
+   *    @var string $persist_id_token Optional. Indicates if you want to persist the id token, default false
+   *    @var mixed $store Optional. Indicates how we store the persisting methods, default is session store, you can pass false to avoid storing it or a class that implements a store (get, set, delete). TODO: add a proper interface
+   *    @var bool $debug Optional. Default false
+   * }
    *
    * @throws CoreException If `domain` is not provided
    * @throws CoreException If `client_id` is not provided
@@ -222,7 +221,7 @@ class Auth0
 
       $this->user = $this->store->get('user');
       $this->accessToken = $this->store->get('access_token');
-      $this->id_token = $this->store->get('id_token');
+      $this->idToken = $this->store->get('id_token');
       $this->refreshToken = $this->store->get('refresh_token');
   }
 
@@ -256,12 +255,12 @@ class Auth0
 
     public function getIdToken()
     {
-        if ($this->id_token) {
-            return $this->id_token;
+        if ($this->idToken) {
+            return $this->idToken;
         }
         $this->exchange();
 
-        return $this->id_token;
+        return $this->idToken;
     }
 
     public function getAccessToken()
@@ -302,19 +301,19 @@ class Auth0
 
       $response = $this->authentication->code_exchange($code, $this->redirectUri);
 
-      $access_token = (isset($response['access_token'])) ? $response['access_token'] : false;
-      $refresh_token = (isset($response['refresh_token'])) ? $response['refresh_token'] : false;
-      $id_token = (isset($response['id_token'])) ? $response['id_token'] : false;
+      $accessToken = (isset($response['access_token'])) ? $response['access_token'] : false;
+      $refreshToken = (isset($response['refresh_token'])) ? $response['refresh_token'] : false;
+      $idToken = (isset($response['id_token'])) ? $response['id_token'] : false;
 
-      if (!$access_token) {
+      if (!$accessToken) {
           throw new ApiException('Invalid access_token - Retry login.');
       }
 
-      $this->setAccessToken($access_token);
-      $this->setIdToken($id_token);
-      $this->setRefreshToken($refresh_token);
+      $this->setAccessToken($accessToken);
+      $this->setIdToken($idToken);
+      $this->setRefreshToken($refreshToken);
 
-      $user = $this->authentication->userinfo($access_token);
+      $user = $this->authentication->userinfo($accessToken);
       $this->setUser($user);
 
       return true;
@@ -336,7 +335,7 @@ class Auth0
    *
    * @param string $accessToken
    *
-   * @return Auth0\SDK\BaseAuth0
+   * @return self
    */
   public function setAccessToken($accessToken)
   {
@@ -352,17 +351,17 @@ class Auth0
   /**
    * Sets and persists $id_token.
    *
-   * @param string $id_token
+   * @param string $idToken
    *
-   * @return Auth0\SDK\BaseAuth0
+   * @return self
    */
-  public function setIdToken($id_token)
+  public function setIdToken($idToken)
   {
       $key = array_search('id_token', $this->persistantMap);
       if ($key !== false) {
-          $this->store->set('id_token', $id_token);
+          $this->store->set('id_token', $idToken);
       }
-      $this->id_token = $id_token;
+      $this->idToken = $idToken;
 
       return $this;
   }
@@ -372,7 +371,7 @@ class Auth0
    *
    * @param string $refreshToken
    *
-   * @return Auth0\SDK\BaseAuth0
+   * @return self
    */
   public function setRefreshToken($refreshToken)
   {
@@ -399,7 +398,7 @@ class Auth0
         $this->deleteAllPersistentData();
         $this->accessToken = null;
         $this->user = null;
-        $this->id_token = null;
+        $this->idToken = null;
         $this->refreshToken = null;
     }
 
@@ -426,7 +425,7 @@ class Auth0
   /**
    * @param StoreInterface $store
    *
-   * @return Auth0\SDK\BaseAuth0
+   * @return self
    */
   public function setStore(StoreInterface $store)
   {

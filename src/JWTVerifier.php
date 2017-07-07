@@ -9,23 +9,46 @@ use Firebase\JWT\JWT;
 
 class JWTVerifier
 {
-    private $JWKFetcher = null;
-    private $supportedAlgs = null;
-    private $validAudiences = null;
-    private $authorizedIss = null;
-    private $clientSecret = null;
+    /**
+     * @var JWKFetcher
+     */
+    private $JWKFetcher;
 
     /**
-     * JWTVerifier Constructor.
+     * @var array
+     */
+    private $supportedAlgs;
+
+    /**
+     * @var array
+     */
+    private $validAudiences;
+
+    /**
+     * @var array
+     */
+    private $authorizedIss;
+
+    /**
+     * @var string|null
+     */
+    private $clientSecret;
+
+    /**
+     * @var bool
+     */
+    private $secretBase64Encoded = true;
+
+    /**
+     * @param array $config {
      *
-     * Configuration:
-     *     - cache                  (SimpleCache)  Optional. Should be an instance of Psr\SimpleCache\CacheInterface that is going to be used to cache the JWKs
-     *     - supported_algs         (Array)  Optional. The list of supported algorithms. By default only HS256
-     *     - client_secret          (String)  Required (if supported HS256). The Auth0 application secret.
-     *     - valid_audiences        (Array)  Required. The list of audiences accepted by the service.
-     *     - authorized_iss         (Array) Required (if supported RS256). The list of issuers trusted by the service.
-     *
-     * @param array $config
+     *      @var array $valid_audiences Required. The list of audiences accepted by the service.
+     *      @var string $client_secret Required (if supported HS256). The Auth0 application secret.
+     *      @var array $authorized_iss Required (if supported RS256). The list of issuers trusted by the service.
+     *      @var \Psr\SimpleCache\CacheInterface $cache Optional. Used to cache the JWKs
+     *      @var array $supported_algs Optional. The list of supported algorithms. By default only HS256
+     *      @var bool $secret_base64_encoded Optional. Default true
+     * }
      *
      * @throws CoreException
      */
@@ -45,8 +68,8 @@ class JWTVerifier
             $config['supported_algs'] = ['HS256'];
         }
 
-        if (!isset($config['secret_base64_encoded'])) {
-            $config['secret_base64_encoded'] = true;
+        if (isset($config['secret_base64_encoded'])) {
+            $this->secretBase64Encoded = $config['secret_base64_encoded'];
         }
 
         if (!isset($config['valid_audiences'])) {
@@ -68,7 +91,6 @@ class JWTVerifier
         $this->supportedAlgs = $config['supported_algs'];
         $this->validAudiences = $config['valid_audiences'];
         $this->authorizedIss = $config['authorized_iss'];
-        $this->secret_base64_encoded = $config['secret_base64_encoded'];
 
         if (in_array('HS256', $config['supported_algs'])) {
             $this->clientSecret = $config['client_secret'];
@@ -111,7 +133,7 @@ class JWTVerifier
             }
             $secret = $this->JWKFetcher->fetchKeys($body->iss);
         } elseif ($head->alg === 'HS256') {
-            if ($this->secret_base64_encoded) {
+            if ($this->secretBase64Encoded) {
                 $secret = JWT::urlsafeB64Decode($this->clientSecret);
             } else {
                 $secret = $this->clientSecret;
