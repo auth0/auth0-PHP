@@ -291,9 +291,28 @@ Auth0 helps you to:
 1. Go to [Auth0](https://auth0.com) and click Sign Up.
 2. Use Google, GitHub or Microsoft Account to login.
 
-## Issue Reporting
+## Contribute
 
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+We are happy if you want to get involved in this project to help use create a better user experience. Feel free to submit
+a pull request with your changes. When adding or changing code there are a few things to keep in mind
+
+* Your changes must be covered by tests
+* You must follow PSR2 + Symfony code style
+* Your changes must be documented
+
+### Run the tests
+
+```
+git clone git@github.com:auth0/auth0-PHP.git
+composer update
+composer test
+```
+
+### Issue Reporting
+
+If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do 
+not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) 
+details the procedure for disclosing security issues.
 
 ## Author
 
