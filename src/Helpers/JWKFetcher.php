@@ -9,7 +9,7 @@ use Psr\SimpleCache\CacheInterface;
 class JWKFetcher
 {
     /**
-     * @var CacheInterface
+     * @var CacheInterface|null
      */
     private $cache = null;
 
@@ -28,7 +28,7 @@ class JWKFetcher
      *
      * @return string
      */
-    protected function convertCertToPem($cert)
+    private function convertCertToPem($cert)
     {
         return '-----BEGIN CERTIFICATE-----'.PHP_EOL
             .chunk_split($cert, 64, PHP_EOL)

@@ -23,6 +23,7 @@ interface StoreInterface
      * @param mixed  $value
      */
     public function set($key, $value);
+
     /**
      * Get a value from the store by a given key.
      *
@@ -32,6 +33,7 @@ interface StoreInterface
      * @return mixed
      */
     public function get($key, $default = null);
+
     /**
      * Remove a value from the store.
      *

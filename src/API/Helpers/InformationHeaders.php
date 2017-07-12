@@ -7,7 +7,7 @@ class InformationHeaders
     /**
      * @var array
      */
-    protected $data = array();
+    private $data = [];
 
     /**
      * @param string $name
@@ -25,10 +25,10 @@ class InformationHeaders
      */
     public function setEnvironment($name, $version)
     {
-        $this->data['environment'][] = array(
-            'name' => $name,
+        $this->data['environment'][] = [
+            'name'    => $name,
             'version' => $version,
-        );
+        ];
     }
 
     /**
@@ -45,10 +45,10 @@ class InformationHeaders
      */
     public function setDependency($name, $version)
     {
-        $this->data['dependencies'][] = array(
-            'name' => $name,
+        $this->data['dependencies'][] = [
+            'name'    => $name,
             'version' => $version,
-        );
+        ];
     }
 
     /**

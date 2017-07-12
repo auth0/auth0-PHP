@@ -26,7 +26,7 @@ class Stats extends GenericResource
     {
         $response = $this->httpClient->get('/stats/daily?'.http_build_query([
           'from' => $from,
-          'to' => $to,
+          'to'   => $to,
         ]));
 
         return ResponseMediator::getContent($response);

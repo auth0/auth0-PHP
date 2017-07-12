@@ -40,7 +40,7 @@ class UsersTest extends BasicCrudTest
         echo "user_id:'{$entity['user_id']}'";
 
         return $client->getAll([
-            'q' => "user_id:'{$entity['user_id']}'",
+            'q'             => "user_id:'{$entity['user_id']}'",
             'search_engine' => 'v2',
         ]);
     }
@@ -51,9 +51,9 @@ class UsersTest extends BasicCrudTest
         echo "\n-- Using user email {$this->email} \n";
 
         return [
-            'connection' => 'Username-Password-Authentication',
-            'email' => $this->email.'@test.com',
-            'password' => '123456',
+            'connection'     => 'Username-Password-Authentication',
+            'email'          => $this->email.'@test.com',
+            'password'       => '123456',
             'email_verified' => true,
         ];
     }
@@ -62,10 +62,12 @@ class UsersTest extends BasicCrudTest
     {
         return ['email' => $this->email.'changed@test.com'];
     }
+
     protected function afterCreate($entity)
     {
         $this->assertEquals($this->email.'@test.com', $entity['email']);
     }
+
     protected function afterUpdate($entity)
     {
         $this->assertEquals($this->email.'changed@test.com', $entity['email']);

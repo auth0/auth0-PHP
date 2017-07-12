@@ -23,7 +23,7 @@ class Logs extends GenericResource
      *
      * @return mixed
      */
-    public function search($params = array())
+    public function search($params = [])
     {
         $response = $this->httpClient->get('/logs?', http_build_query($params));
 

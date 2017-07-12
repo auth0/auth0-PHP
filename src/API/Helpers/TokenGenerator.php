@@ -9,47 +9,50 @@ class TokenGenerator
     /**
      * @var string
      */
-    protected $client_id;
+    private $clientId;
 
     /**
      * @var string
      */
-    protected $client_secret;
+    private $clientSecret;
 
     /**
-     * TokenGenerator Constructor.
-     *
-     * Configuration:
-     *     - client_id              (String)  Required. The id of the application, you can get this in the
-     *                                                  auth0 console
-     *     - client_secret          (String)  Required. The application secret, same comment as above
-     *
-     * @param array $credentials
+     * @var bool
      */
-    public function __construct($credentials)
+    private $secretBase64Encoded = true;
+
+    /**
+     * @param array $credentials {
+     *
+     *     @var string $client_id     Required. The id of the application, you can get this in the auth0 console
+     *     @var string $client_secret Required. The application secret, same comment as above
+     *     @var bool   $replace       Optional.
+     * }
+     */
+    public function __construct(array $credentials)
     {
-        if (!isset($credentials['secret_base64_encoded'])) {
-            $credentials['secret_base64_encoded'] = true;
+        if (isset($credentials['secret_base64_encoded'])) {
+            $this->secretBase64Encoded = $credentials['secret_base64_encoded'];
         }
 
-        $this->client_id = $credentials['client_id'];
-        $this->client_secret = $credentials['client_secret'];
-        $this->secret_base64_encoded = $credentials['secret_base64_encoded'];
+        $this->clientId = $credentials['client_id'];
+        $this->clientSecret = $credentials['client_secret'];
     }
 
     /**
+     * Binary representation of a binary-string.
+     *
      * @param string $input
      *
      * @return string
      */
     protected function bstr2bin($input)
-    // Binary representation of a binary-string
     {
         // Unpack as a hexadecimal string
-      $value = $this->str2hex($input);
+        $value = $this->str2hex($input);
 
-      // Output binary representation
-      return base_convert($value, 16, 2);
+        // Output binary representation
+        return base_convert($value, 16, 2);
     }
 
     /**
@@ -74,21 +77,21 @@ class TokenGenerator
     {
         $time = time();
 
-        $payload = array(
-            'iat' => $time,
+        $payload = [
+            'iat'    => $time,
             'scopes' => $scopes,
-        );
+        ];
 
         $jti = md5(json_encode($payload));
 
         $payload['jti'] = $jti;
         $payload['exp'] = $time + $lifetime;
-        $payload['aud'] = $this->client_id;
+        $payload['aud'] = $this->clientId;
 
-        if ($this->secret_base64_encoded) {
-            $secret = base64_decode(strtr($this->client_secret, '-_', '+/'));
+        if ($this->secretBase64Encoded) {
+            $secret = base64_decode(strtr($this->clientSecret, '-_', '+/'));
         } else {
-            $secret = $this->client_secret;
+            $secret = $this->clientSecret;
         }
 
         $jwt = JWT::encode($payload, $secret);

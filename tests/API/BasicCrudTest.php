@@ -9,9 +9,13 @@ abstract class BasicCrudTest extends ApiTests
     protected $findCreatedItem = true;
 
     abstract protected function getApiClient();
+
     abstract protected function getCreateBody();
+
     abstract protected function getUpdateBody();
+
     abstract protected function afterCreate($entity);
+
     abstract protected function afterUpdate($entity);
 
     protected function getAll($client, $entity)
