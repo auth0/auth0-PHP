@@ -8,6 +8,11 @@ use Auth0\SDK\Exception\ApiException;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
+/**
+ * Class to communicate with Auth0 Authentication API
+ *
+ * @link https://auth0.com/docs/api/authentication
+ */
 final class Authentication
 {
     /**
@@ -52,15 +57,17 @@ final class Authentication
     /**
      * Builds and returns the `/authorize` url in order to initialize a new authN/authZ transaction.
      *
-     * @method get_authorize_link https://auth0.com/docs/api/authentication#!#get--authorize_db
+     * @link https://auth0.com/docs/api/authentication#!#get--authorize_db
      *
-     * @param {String} response_type
-     * @param {String} redirect_uri
-     * @param {String} connection [optional]
-     * @param {String} state      [optional]
-     * @param {Object} aditional_params      [optional]
+     * @param string $responseType
+     * @param string $redirectUri
+     * @param string|null $connection
+     * @param string|null $state
+     * @param array $additionalParams
+     *
+     * @return string
      */
-    public function get_authorize_link($responseType, $redirectUri, $connection = null, $state = null, $additionalParams = [])
+    public function getAuthorizeLink($responseType, $redirectUri, $connection = null, $state = null, array $additionalParams = [])
     {
         $additionalParams['response_type'] = $responseType;
         $additionalParams['redirect_uri'] = $redirectUri;
@@ -74,41 +81,61 @@ final class Authentication
             $additionalParams['state'] = $state;
         }
 
-        $query_string = http_build_query($additionalParams);
-
-        return "https://{$this->domain}/authorize?$query_string";
+        return sprintf('https://%s/authorize?%s', $this->domain, http_build_query($additionalParams));
     }
 
-    public function get_samlp_link($client_id, $connection = '')
+    /**
+     * @param string $clientId
+     * @param string $connection
+     *
+     * @return string
+     */
+    public function getSamlpLink($clientId, $connection = '')
     {
-        return "https://{$this->domain}/samlp/$client_id?connection=$connection";
+        return sprintf('https://%s/samlp/%s?connection=%s', $this->domain, $clientId, $connection);
     }
 
-    public function get_samlp_metadata_link($client_id)
+    /**
+     * @param string $clientId
+     *
+     * @return string
+     */
+    public function getSamlpMetadataLink($clientId)
     {
-        return "https://{$this->domain}/samlp/metadata/$client_id";
+        return sprintf('https://%s/samlp/metadata/%s', $this->domain, $clientId);
     }
 
-    public function get_wsfed_link($client_id)
+    /**
+     * @param string $clientId
+     *
+     * @return string
+     */
+    public function getWsfedLink($clientId)
     {
-        return "https://{$this->domain}/wsfed/$client_id";
+        return sprintf('https://%s/wsfed/%s', $this->domain, $clientId);
     }
 
-    public function get_wsfed_metadata_link()
+    /**
+     *
+     * @return string
+     */
+    public function getWsfedMetadataLink()
     {
-        return "https://{$this->domain}/wsfed/FederationMetadata/2007-06/FederationMetadata.xml";
+        return sprintf('https://%s/wsfed/FederationMetadata/2007-06/FederationMetadata.xml', $this->domain);
     }
 
     /**
      * Builds and returns the Logout url in order to termiate a SSO session.
      *
-     * @method get_logout_link https://auth0.com/docs/api/authentication#logout
+     * @link https://auth0.com/docs/api/authentication#logout
      *
-     * @param {String} returnTo
-     * @param {String} client_id
-     * @param {Boolean} federated
+     * @param string|null $returnTo
+     * @param string|null $clientId
+     * @param bool $federated
+     *
+     * @return string
      */
-    public function get_logout_link($returnTo = null, $clientId = null, $federated = false)
+    public function getLogoutLink($returnTo = null, $clientId = null, $federated = false)
     {
         $params = [];
         if ($returnTo !== null) {
@@ -124,7 +151,15 @@ final class Authentication
         return sprintf('https://%s/v2/logout?%s', $this->domain, http_build_query($params));
     }
 
-    public function authorize_with_accesstoken($accessToken, $connection, $scope = 'openid', $additionalParams = [])
+    /**
+     * @param string $accessToken
+     * @param string $connection
+     * @param string $scope
+     * @param array $additionalParams
+     *
+     * @return array
+     */
+    public function authorizeWithAccessToken($accessToken, $connection, $scope = 'openid', array $additionalParams = [])
     {
         $data = array_merge($additionalParams, [
             'client_id'    => $this->clientId,
@@ -138,7 +173,14 @@ final class Authentication
         return ResponseMediator::getContent($response);
     }
 
-    public function email_passwordless_start($email, $type, $authParams = [])
+    /**
+     * @param string $email
+     * @param string $type
+     * @param array $authParams
+     *
+     * @return array
+     */
+    public function emailPasswordlessStart($email, $type, array $authParams = [])
     {
         $data = [
             'client_id'  => $this->clientId,
@@ -156,12 +198,17 @@ final class Authentication
         return ResponseMediator::getContent($response);
     }
 
-    public function sms_passwordless_start($phone_number)
+    /**
+     * @param string $phoneNumber
+     *
+     * @return array
+     */
+    public function smsPasswordlessStart($phoneNumber)
     {
         $data = [
             'client_id'    => $this->clientId,
             'connection'   => 'sms',
-            'phone_number' => $phone_number,
+            'phone_number' => $phoneNumber,
         ];
 
         $response = $this->httpClient->post('/passwordless/start', [], json_encode($data));
@@ -170,27 +217,37 @@ final class Authentication
     }
 
     /**
-     * @param $accessToken
+     * @param string $accessToken
      *
-     * @return array|string
+     * @return array
      */
-    public function userinfo($accessToken)
+    public function userInfo($accessToken)
     {
         $response = $this->httpClient->get('/userinfo', ['Authorization' => 'Bearer '.$accessToken]);
 
         return ResponseMediator::getContent($response);
     }
 
-    public function impersonate($access_token, $user_id, $protocol, $impersonator_id, $client_id, $additionalParameters = [])
+    /**
+     * @param string $accessToken
+     * @param string $userId
+     * @param string $protocol
+     * @param string $impersonatorId
+     * @param string $clientId
+     * @param array $additionalParameters
+     *
+     * @return array
+     */
+    public function impersonate($accessToken, $userId, $protocol, $impersonatorId, $clientId, array $additionalParameters = [])
     {
         $data = [
             'protocol'             => $protocol,
-            'impersonator_id'      => $impersonator_id,
-            'client_id'            => $client_id,
+            'impersonator_id'      => $impersonatorId,
+            'client_id'            => $clientId,
             'additionalParameters' => $additionalParameters,
         ];
 
-        $response = $this->httpClient->post(sprintf('/users/%s/impersonate', $user_id), ['Authorization' => 'Bearer '.$access_token], json_encode($data));
+        $response = $this->httpClient->post(sprintf('/users/%s/impersonate', $userId), ['Authorization' => 'Bearer '.$accessToken], json_encode($data));
 
         return ResponseMediator::getContent($response);
     }
@@ -198,18 +255,19 @@ final class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint.
      *
-     * @method oauth_token
+     * @param string $grantType
+     * @param array $options {
+     *      @var string $client_id     Optional. Will use $this->clientId as default
+     *      @var string $client_secret Optional. Only if grant type: client_credentials. Will use $this->clientId as default
+     *      @var string $username      Optional. Only if grant type: password/password-realm
+     *      @var string $password      Optional. Only if grant type: password/password-realm
+     *      @var string $scope         Optional.
+     *      @var string $audience      Optional.
+     * }
      *
-     * @param {Object} options:
-     * @param {Object} options.grantType
-     * @param {Object} options.client_id
-     * @param {Object} options.client_secret [optional] Only if grant type: client_credentials
-     * @param {Object} options.username  [optional] Only if grant type: password/password-realm
-     * @param {Object} options.password  [optional] Only if grant type: password/password-realm
-     * @param {Object} options.scope     [optional]
-     * @param {Object} options.audience  [optional]
+     * @return array
      */
-    public function oauth_token($options = [])
+    public function oauthToken($grantType, array $options)
     {
         if (!isset($options['client_id'])) {
             $options['client_id'] = $this->clientId;
@@ -219,9 +277,7 @@ final class Authentication
             $options['client_secret'] = $this->clientSecret;
         }
 
-        if (!isset($options['grant_type'])) {
-            throw new ApiException('grant_type is mandatory');
-        }
+        $options['grant_type'] = $grantType;
 
         $response = $this->httpClient->post('/oauth/token', [], json_encode($options));
 
@@ -231,96 +287,90 @@ final class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type.
      *
-     * @param $code
-     * @param $redirectUri
+     * @param string $code
+     * @param string $redirectUri
      *
-     * @return array|string
+     * @return array
      */
-    public function code_exchange($code, $redirectUri)
+    public function codeExchange($code, $redirectUri)
     {
         $options = [];
 
         $options['client_secret'] = $this->clientSecret;
         $options['redirect_uri'] = $redirectUri;
         $options['code'] = $code;
-        $options['grant_type'] = 'authorization_code';
 
-        return $this->oauth_token($options);
+        return $this->oauthToken('authorization_code', $options);
     }
 
     /**
      * Makes a call to the `oauth/token` endpoint with `password-realm` grant type.
      *
-     * @method login
+     * @param string $username
+     * @param string $password
+     * @param string $realm
+     * @param array $options {
      *
-     * @param {Object} options:
-     * @param {Object} options.username
-     * @param {Object} options.password
-     * @param {Object} options.realm
-     * @param {Object} options.scope [optional]
-     * @param {Object} options.audience [optional]
+     *      @var string $scope    Optional
+     *      @var string $audience Optional.
+     * }
+     *
+     * @return array
      */
-    public function login($options)
+    public function login($username, $password, $realm, array $options = [])
     {
-        if (!isset($options['username'])) {
-            throw new ApiException('username is mandatory');
-        }
+        $options['username'] = $username;
+        $options['password'] = $password;
+        $options['realm'] = $realm;
 
-        if (!isset($options['password'])) {
-            throw new ApiException('password is mandatory');
-        }
-
-        if (!isset($options['realm'])) {
-            throw new ApiException('realm is mandatory');
-        }
-
-        $options['grant_type'] = 'http://auth0.com/oauth/grant-type/password-realm';
-
-        return $this->oauth_token($options);
+        return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', $options);
     }
 
     /**
      * Makes a call to the `oauth/token` endpoint with `password` grant type.
      *
-     * @method login_with_default_directory
+     * @link https://auth0.com/docs/api-auth/grant/password
      *
-     * @param {Object} options: https://auth0.com/docs/api-auth/grant/password
-     * @param {Object} options.username
-     * @param {Object} options.password
-     * @param {Object} options.scope [optional]
-     * @param {Object} options.scope [audience]
+     * @param string $username
+     * @param string $password
+     * @param array $options {
+     *
+     *      @var string $scope    Optional.
+     *      @var string $audience Optional.
+     *}
+     *
+     * @return array
      */
-    public function login_with_default_directory($options)
+    public function loginWithDefaultDirectory($username, $password, array $options = [])
     {
-        if (!isset($options['username'])) {
-            throw new ApiException('username is mandatory');
-        }
+        $options['username'] = $username;
+        $options['password'] = $password;
 
-        if (!isset($options['password'])) {
-            throw new ApiException('password is mandatory');
-        }
-
-        $options['grant_type'] = 'password';
-
-        return $this->oauth_token($options);
+        return $this->oauthToken('password', $options);
     }
 
     /**
      * Makes a call to the `oauth/token` endpoint with `client_credentials` grant type.
      *
-     * @method client_credentials
+     * @link https://auth0.com/docs/api-auth/grant/client-credentials
      *
-     * @param {Object} options: https://auth0.com/docs/api-auth/grant/client-credentials
-     * @param {Object} options.client_id
-     * @param {Object} options.client_secret
-     * @param {Object} options.scope [optional]
-     * @param {Object} options.audience [optional]
+     * @param array $options {
+     *
+     *      @var string $client_id     If none set, we use $this->clientId
+     *      @var string $client_secret If none set, we use $this->clientSecret
+     *      @var string $scope         Optional. If none set, we use $this->scope
+     *      @var string $audience      Optional. If none set, we use $this->audience
+     * }
+     *
+     * @return array
+     * @throws ApiException
      */
-    public function client_credentials($options)
+    public function clientCredentials(array $options = [])
     {
         if (!isset($options['client_secret'])) {
             $options['client_secret'] = $this->clientSecret;
         }
+
         if (empty($options['client_secret'])) {
             throw new ApiException('client_secret is mandatory');
         }
@@ -328,6 +378,7 @@ final class Authentication
         if (!isset($options['client_id'])) {
             $options['client_id'] = $this->clientId;
         }
+
         if (empty($options['client_id'])) {
             throw new ApiException('client_id is mandatory');
         }
@@ -335,16 +386,22 @@ final class Authentication
         if (!isset($options['scope'])) {
             $options['scope'] = $this->scope;
         }
+
         if (!isset($options['audience'])) {
             $options['audience'] = $this->audience;
         }
 
-        $options['grant_type'] = 'client_credentials';
-
-        return $this->oauth_token($options);
+        return $this->oauthToken('client_credentials', $options);
     }
 
-    public function dbconnections_signup($email, $password, $connection)
+    /**
+     * @param string $email
+     * @param string $password
+     * @param string $connection
+     *
+     * @return array
+     */
+    public function dbconnectionsSignup($email, $password, $connection)
     {
         $data = [
             'client_id'  => $this->clientId,
@@ -358,7 +415,14 @@ final class Authentication
         return ResponseMediator::getContent($response);
     }
 
-    public function dbconnections_change_password($email, $connection, $password = null)
+    /**
+     * @param string $email
+     * @param string $connection
+     * @param string|null $password
+     *
+     * @return array
+     */
+    public function dbconnectionsChangePassword($email, $connection, $password = null)
     {
         $data = [
             'client_id'  => $this->clientId,
