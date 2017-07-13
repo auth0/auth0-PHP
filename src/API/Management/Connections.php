@@ -9,11 +9,11 @@ class Connections extends GenericResource
     /**
      * @param null|string       $strategy
      * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     * @param null|string|array $includeFields
      *
      * @return mixed
      */
-    public function getAll($strategy = null, $fields = null, $include_fields = null)
+    public function getAll($strategy = null, $fields = null, $includeFields = null)
     {
         $queryParams = [];
         if ($strategy !== null) {
@@ -27,8 +27,8 @@ class Connections extends GenericResource
             $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $include_fields;
+        if ($includeFields !== null) {
+            $queryParams['include_fields'] = $includeFields;
         }
 
         $query = '';
@@ -43,11 +43,11 @@ class Connections extends GenericResource
     /**
      * @param string            $id
      * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     * @param null|string|array $includeFields
      *
      * @return mixed
      */
-    public function get($id, $fields = null, $include_fields = null)
+    public function get($id, $fields = null, $includeFields = null)
     {
         $queryParams = [];
         if ($fields !== null) {
@@ -57,8 +57,8 @@ class Connections extends GenericResource
             $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $include_fields;
+        if ($includeFields !== null) {
+            $queryParams['include_fields'] = $includeFields;
         }
 
         $query = '';

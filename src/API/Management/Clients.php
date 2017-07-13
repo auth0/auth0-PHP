@@ -8,11 +8,11 @@ class Clients extends GenericResource
 {
     /**
      * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     * @param null|string|array $includeFields
      *
      * @return mixed
      */
-    public function getAll($fields = null, $include_fields = null)
+    public function getAll($fields = null, $includeFields = null)
     {
         $queryParams = [];
         if ($fields !== null) {
@@ -22,8 +22,8 @@ class Clients extends GenericResource
             $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $include_fields;
+        if ($includeFields !== null) {
+            $queryParams['include_fields'] = $includeFields;
         }
 
         $query = '';
@@ -38,11 +38,11 @@ class Clients extends GenericResource
     /**
      * @param string            $id
      * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     * @param null|string|array $includeFields
      *
      * @return mixed
      */
-    public function get($id, $fields = null, $include_fields = null)
+    public function get($id, $fields = null, $includeFields = null)
     {
         $queryParams = [];
         if ($fields !== null) {
@@ -52,8 +52,8 @@ class Clients extends GenericResource
             $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $include_fields;
+        if ($includeFields !== null) {
+            $queryParams['include_fields'] = $includeFields;
         }
 
         $query = '';

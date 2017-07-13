@@ -32,17 +32,17 @@ class Jobs extends GenericResource
     }
 
     /**
-     * @param string $file_path
-     * @param string $connection_id
+     * @param string $filePath
+     * @param string $connectionId
      *
      * @return mixed
      */
-    public function importUsers($file_path, $connection_id)
+    public function importUsers($filePath, $connectionId)
     {
-        $resource = fopen($file_path, 'r');
+        $resource = fopen($filePath, 'r');
         $streamBuilder = new MultipartStreamBuilder();
         $streamBuilder->addResource('users', $resource);
-        $streamBuilder->addResource('connection_id', $connection_id);
+        $streamBuilder->addResource('connection_id', $connectionId);
         $stream = $streamBuilder->build();
         $boundary = $streamBuilder->getBoundary();
 
@@ -52,14 +52,14 @@ class Jobs extends GenericResource
     }
 
     /**
-     * @param string $user_id
+     * @param string $userId
      *
      * @return mixed
      */
-    public function sendVerificationEmail($user_id)
+    public function sendVerificationEmail($userId)
     {
         $response = $this->httpClient->post('/jobs/verification-email', [], json_encode([
-          'user_id' => $user_id,
+          'user_id' => $userId,
         ]));
 
         return ResponseMediator::getContent($response);
