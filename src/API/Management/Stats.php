@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Stats extends GenericResource
+final class Stats extends GenericResource
 {
     /**
      * @return array|string

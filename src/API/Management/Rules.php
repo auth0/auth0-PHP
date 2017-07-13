@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Rules extends GenericResource
+final class Rules extends GenericResource
 {
     /**
      * @param null|string       $enabled

@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class DeviceCredentials extends GenericResource
+final class DeviceCredentials extends GenericResource
 {
     const TYPE_PUBLIC_KEY = 'public_key';
     const TYPE_REFESH_TOKEN = 'refresh_token';

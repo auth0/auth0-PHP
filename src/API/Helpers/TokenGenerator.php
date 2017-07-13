@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Helpers;
 
 use Firebase\JWT\JWT;
 
-class TokenGenerator
+final class TokenGenerator
 {
     /**
      * @var string

@@ -21,7 +21,7 @@ use Auth0\SDK\API\Management\Users;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
-class Management
+final class Management
 {
     /**
      * @var string

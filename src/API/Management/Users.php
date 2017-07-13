@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Users extends GenericResource
+final class Users extends GenericResource
 {
     public function get($user_id)
     {

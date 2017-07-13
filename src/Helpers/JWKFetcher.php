@@ -6,7 +6,7 @@ use Auth0\SDK\API\Helpers\HttpClientBuilder;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 use Psr\SimpleCache\CacheInterface;
 
-class JWKFetcher
+final class JWKFetcher
 {
     /**
      * @var CacheInterface|null

@@ -7,7 +7,7 @@ use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Firebase\JWT\JWT;
 
-class JWTVerifier
+final class JWTVerifier
 {
     /**
      * @var JWKFetcher
