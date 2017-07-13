@@ -25,7 +25,7 @@ class AuthApiDBConnectionsTest extends ApiTests
         $password = '123-xxx-23A-bar';
         $connection = $this->connection;
 
-        $response = $api->dbconnections_signup($email, $password, $connection);
+        $response = $api->dbconnectionsSignup($email, $password, $connection);
 
         $this->assertArrayHasKey('_id', $response);
         $this->assertArrayHasKey('email_verified', $response);
@@ -42,7 +42,7 @@ class AuthApiDBConnectionsTest extends ApiTests
         $email = $this->email;
         $connection = $this->connection;
 
-        $response = $api->dbconnections_change_password($email, $connection);
+        $response = $api->dbconnectionsChangePassword($email, $connection);
 
         $this->assertNotEmpty($response);
         $this->assertContains('email', $response);
