@@ -78,12 +78,15 @@ class Users extends GenericResource
     }
 
     /**
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/post_identities
+     *
      * @param string $userId
-     * @param string $postIdentitiesBody
+     * @param array  $postIdentitiesBody
      *
      * @return array
      */
-    public function linkAccount($userId, $postIdentitiesBody)
+    public function linkAccount($userId, array $postIdentitiesBody)
     {
         $response = $this->httpClient->post(sprintf('/users/%s/identities', $userId), [], json_encode($postIdentitiesBody));
 
