@@ -27,17 +27,7 @@ final class Auth0
         'user',
         'id_token',
     ];
-    /**
-     * Auth0 URL Map.
-     *
-     * @var array
-     */
-    private static $URL_MAP = [
-        'api'       => 'https://{domain}/api/',
-        'authorize' => 'https://{domain}/authorize/',
-        'token'     => 'https://{domain}/oauth/token/',
-        'user_info' => 'https://{domain}/userinfo/',
-    ];
+
     /**
      * Auth0 Domain.
      *
