@@ -267,7 +267,7 @@ final class Authentication
      *
      * @return array
      */
-    public function oauthToken($grantType, array $options)
+    private function oauthToken($grantType, array $options)
     {
         if (!isset($options['client_id'])) {
             $options['client_id'] = $this->clientId;
