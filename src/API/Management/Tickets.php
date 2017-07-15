@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Tickets extends GenericResource
+final class Tickets extends GenericResource
 {
     /**
      * @param string      $user_id

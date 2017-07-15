@@ -8,7 +8,7 @@ use Auth0\SDK\Exception\ApiException;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
-class Authentication
+final class Authentication
 {
     /**
      * @var null|string

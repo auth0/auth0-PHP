@@ -2,7 +2,7 @@
 
 namespace Auth0\SDK\API\Helpers;
 
-class InformationHeaders
+final class InformationHeaders
 {
     /**
      * @var array

@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Blacklists extends GenericResource
+final class Blacklists extends GenericResource
 {
     /**
      * @param string $aud

@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Clients extends GenericResource
+final class Clients extends GenericResource
 {
     /**
      * @param null|string|array $fields

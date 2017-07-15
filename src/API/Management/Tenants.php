@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class Tenants extends GenericResource
+final class Tenants extends GenericResource
 {
     /**
      * @param mixed $fields

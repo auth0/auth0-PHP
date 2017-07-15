@@ -2,7 +2,7 @@
 
 namespace Auth0\SDK\API\Helpers;
 
-class ClientHeaders
+final class ClientHeaders
 {
     const API_VERSION = '5.0.0';
 

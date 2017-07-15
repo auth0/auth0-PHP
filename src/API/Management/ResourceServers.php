@@ -4,7 +4,7 @@ namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-class ResourceServers extends GenericResource
+final class ResourceServers extends GenericResource
 {
     /**
      * @param string $id

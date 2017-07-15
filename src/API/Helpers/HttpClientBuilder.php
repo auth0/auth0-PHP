@@ -15,7 +15,7 @@ use Http\Discovery\UriFactoryDiscovery;
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class HttpClientBuilder
+final class HttpClientBuilder
 {
     /**
      * @var string

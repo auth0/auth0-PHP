@@ -14,7 +14,7 @@ use Auth0\SDK\Store\StoreInterface;
  *
  * @author Auth0
  */
-class Auth0
+final class Auth0
 {
     /**
      * Available keys to persist data.

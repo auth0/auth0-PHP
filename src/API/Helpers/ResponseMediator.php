@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class ResponseMediator
+final class ResponseMediator
 {
     /**
      * @param ResponseInterface $response
