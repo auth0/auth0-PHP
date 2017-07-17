@@ -10,15 +10,15 @@ final class DeviceCredentials extends GenericResource
     const TYPE_REFESH_TOKEN = 'refresh_token';
 
   /**
-   * @param string            $user_id
-   * @param string            $client_id
+   * @param string            $userId
+   * @param string            $clientId
    * @param string            $type
    * @param null|string|array $fields
-   * @param null|string|array $include_fields
+   * @param null|string|array $includeFields
    *
    * @return mixed
    */
-  public function getAll($user_id = null, $client_id = null, $type = null, $fields = null, $include_fields = null)
+  public function getAll($userId = null, $clientId = null, $type = null, $fields = null, $includeFields = null)
   {
       $queryParams = [];
 
@@ -29,16 +29,16 @@ final class DeviceCredentials extends GenericResource
           $queryParams['fields'] = $fields;
       }
 
-      if ($include_fields !== null) {
-          $queryParams['include_fields'] = $include_fields;
+      if ($includeFields !== null) {
+          $queryParams['include_fields'] = $includeFields;
       }
 
-      if ($user_id !== null) {
-          $queryParams['user_id'] = $user_id;
+      if ($userId !== null) {
+          $queryParams['user_id'] = $userId;
       }
 
-      if ($client_id !== null) {
-          $queryParams['client_id'] = $client_id;
+      if ($clientId !== null) {
+          $queryParams['client_id'] = $clientId;
       }
 
       if ($type !== null) {

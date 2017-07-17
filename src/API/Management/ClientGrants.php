@@ -24,16 +24,16 @@ final class ClientGrants extends GenericResource
     }
 
     /**
-     * @param string $client_id
+     * @param string $clientId
      * @param string $audience
      * @param string $scope
      *
      * @return mixed
      */
-    public function create($client_id, $audience, $scope)
+    public function create($clientId, $audience, $scope)
     {
         $response = $this->httpClient->post('/client-grants', [], json_encode([
-            'client_id' => $client_id,
+            'client_id' => $clientId,
             'audience'  => $audience,
             'scope'     => $scope,
         ]));

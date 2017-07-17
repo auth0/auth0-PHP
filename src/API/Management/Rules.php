@@ -9,11 +9,11 @@ final class Rules extends GenericResource
     /**
      * @param null|string       $enabled
      * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     * @param null|string|array $includeFields
      *
      * @return mixed
      */
-    public function getAll($enabled = null, $fields = null, $include_fields = null)
+    public function getAll($enabled = null, $fields = null, $includeFields = null)
     {
         $queryParams = [];
         if ($enabled !== null) {
@@ -27,8 +27,8 @@ final class Rules extends GenericResource
             $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $include_fields;
+        if ($includeFields !== null) {
+            $queryParams['include_fields'] = $includeFields;
         }
 
         $query = '';
@@ -43,11 +43,11 @@ final class Rules extends GenericResource
     /**
      * @param string            $id
      * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     * @param null|string|array $includeFields
      *
      * @return mixed
      */
-    public function get($id, $fields = null, $include_fields = null)
+    public function get($id, $fields = null, $includeFields = null)
     {
         $queryParams = [];
         if ($fields !== null) {
@@ -57,8 +57,8 @@ final class Rules extends GenericResource
             $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $include_fields;
+        if ($includeFields !== null) {
+            $queryParams['include_fields'] = $includeFields;
         }
 
         $query = '';

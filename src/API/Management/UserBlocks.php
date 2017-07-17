@@ -7,13 +7,13 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class UserBlocks extends GenericResource
 {
     /**
-     * @param string $user_id
+     * @param string $userId
      *
      * @return mixed
      */
-    public function get($user_id)
+    public function get($userId)
     {
-        $response = $this->httpClient->get('/user-blocks/'.$user_id);
+        $response = $this->httpClient->get('/user-blocks/'.$userId);
 
         return ResponseMediator::getContent($response);
     }
@@ -31,13 +31,13 @@ final class UserBlocks extends GenericResource
     }
 
     /**
-     * @param string $user_id
+     * @param string $userId
      *
      * @return mixed
      */
-    public function unblock($user_id)
+    public function unblock($userId)
     {
-        $response = $this->httpClient->delete('/user-blocks/'.$user_id);
+        $response = $this->httpClient->delete('/user-blocks/'.$userId);
 
         return ResponseMediator::getContent($response);
     }

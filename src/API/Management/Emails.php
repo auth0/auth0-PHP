@@ -8,11 +8,11 @@ final class Emails extends GenericResource
 {
     /**
    * @param null|string|array $fields
-   * @param null|string|array $include_fields
+   * @param null|string|array $includeFields
    *
    * @return mixed
    */
-  public function getEmailProvider($fields = null, $include_fields = null)
+  public function getEmailProvider($fields = null, $includeFields = null)
   {
       $queryParams = [];
       if ($fields !== null) {
@@ -22,8 +22,8 @@ final class Emails extends GenericResource
           $queryParams['fields'] = $fields;
       }
 
-      if ($include_fields !== null) {
-          $queryParams['include_fields'] = $include_fields;
+      if ($includeFields !== null) {
+          $queryParams['include_fields'] = $includeFields;
       }
 
       $query = '';

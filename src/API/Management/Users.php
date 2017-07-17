@@ -6,70 +6,129 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 
 final class Users extends GenericResource
 {
-    public function get($user_id)
+    /**
+     * @param string $userId
+     *
+     * @return array
+     */
+    public function get($userId)
     {
-        $response = $this->httpClient->get(sprintf('/users/%s', $user_id));
+        $response = $this->httpClient->get(sprintf('/users/%s', $userId));
 
         return ResponseMediator::getContent($response);
     }
 
-    public function update($user_id, $data)
+    /**
+     * @param string $userId
+     * @param array $data
+     *
+     * @return array
+     */
+    public function update($userId, array $data)
     {
-        $response = $this->httpClient->patch(sprintf('/users/%s', $user_id), [], json_encode($data));
+        $response = $this->httpClient->patch(sprintf('/users/%s', $userId), [], json_encode($data));
 
         return ResponseMediator::getContent($response);
     }
 
-    public function create($data)
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    public function create(array $data)
     {
         $response = $this->httpClient->post('/users', [], json_encode($data));
 
         return ResponseMediator::getContent($response);
     }
 
-    public function getAll($params = [])
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    public function getAll(array $params = [])
     {
         return $this->search($params);
     }
 
-    public function search($params = [])
+    /**
+     * @param array $params
+     *
+     * @return array
+     */
+    public function search(array $params = [])
     {
         $response = $this->httpClient->get('/users?'.http_build_query($params));
 
         return ResponseMediator::getContent($response);
     }
 
-    public function delete($user_id)
+    /**
+     * @param string $userId
+     *
+     * @return array
+     */
+    public function delete($userId)
     {
-        $response = $this->httpClient->delete(sprintf('/users/%s', $user_id));
+        $response = $this->httpClient->delete(sprintf('/users/%s', $userId));
 
         return ResponseMediator::getContent($response);
     }
 
-    public function linkAccount($user_id, $post_identities_body)
+    /**
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/post_identities
+     *
+     * @param string $userId
+     * @param array  $identities
+     *
+     * @return array
+     */
+    public function linkAccount($userId, array $identities)
     {
-        $response = $this->httpClient->post(sprintf('/users/%s/identities', $user_id), [], json_encode($post_identities_body));
+        $response = $this->httpClient->post(sprintf('/users/%s/identities', $userId), [], json_encode($identities));
 
         return ResponseMediator::getContent($response);
     }
 
-    public function unlinkAccount($user_id, $provider, $identity_id)
+    /**
+     * @param string $userId
+     * @param string $provider
+     * @param string $identityId
+     *
+     * @return array
+     */
+    public function unlinkAccount($userId, $provider, $identityId)
     {
-        $response = $this->httpClient->delete(sprintf('/users/%s/identities/%s/%s', $user_id, $provider, $identity_id));
+        $response = $this->httpClient->delete(sprintf('/users/%s/identities/%s/%s', $userId, $provider, $identityId));
 
         return ResponseMediator::getContent($response);
     }
 
-    public function unlinkDevice($user_id, $device_id)
+    /**
+     * @param string $userId
+     * @param string $deviceId
+     *
+     * @return array
+     */
+    public function unlinkDevice($userId, $deviceId)
     {
-        $response = $this->httpClient->delete(sprintf('/users/%s/devices/%s', $user_id, $device_id));
+        $response = $this->httpClient->delete(sprintf('/users/%s/devices/%s', $userId, $deviceId));
 
         return ResponseMediator::getContent($response);
     }
 
-    public function deleteMultifactorProvider($user_id, $multifactor_provider)
+    /**
+     * @param string $userId
+     * @param string $multifactorProvider
+     *
+     * @return array
+     */
+    public function deleteMultifactorProvider($userId, $multifactorProvider)
     {
-        $response = $this->httpClient->delete(sprintf('/users/%s/multifactor/%s', $user_id, $multifactor_provider));
+        $response = $this->httpClient->delete(sprintf('/users/%s/multifactor/%s', $userId, $multifactorProvider));
 
         return ResponseMediator::getContent($response);
     }

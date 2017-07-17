@@ -8,11 +8,11 @@ final class Tenants extends GenericResource
 {
     /**
      * @param mixed $fields
-     * @param mixed $include_fields
+     * @param mixed $includeFields
      *
      * @return mixed
      */
-    public function get($fields = null, $include_fields = null)
+    public function get($fields = null, $includeFields = null)
     {
         $queryParams = [];
         if ($fields !== null) {
@@ -22,8 +22,8 @@ final class Tenants extends GenericResource
             $queryParams['fields'] = $fields;
         }
 
-        if ($include_fields !== null) {
-            $queryParams['include_fields'] = $include_fields;
+        if ($includeFields !== null) {
+            $queryParams['include_fields'] = $includeFields;
         }
 
         $query = '';

@@ -49,9 +49,9 @@ final class SessionStore implements StoreInterface
      */
     public function set($key, $value)
     {
-        $key_name = $this->getSessionKeyName($key);
+        $keyName = $this->getSessionKeyName($key);
 
-        $_SESSION[$key_name] = $value;
+        $_SESSION[$keyName] = $value;
     }
 
     /**
@@ -65,10 +65,10 @@ final class SessionStore implements StoreInterface
      */
     public function get($key, $default = null)
     {
-        $key_name = $this->getSessionKeyName($key);
+        $keyName = $this->getSessionKeyName($key);
 
-        if (isset($_SESSION[$key_name])) {
-            return $_SESSION[$key_name];
+        if (isset($_SESSION[$keyName])) {
+            return $_SESSION[$keyName];
         } else {
             return $default;
         }
@@ -81,9 +81,9 @@ final class SessionStore implements StoreInterface
      */
     public function delete($key)
     {
-        $key_name = $this->getSessionKeyName($key);
+        $keyName = $this->getSessionKeyName($key);
 
-        unset($_SESSION[$key_name]);
+        unset($_SESSION[$keyName]);
     }
 
     /**
