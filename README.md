@@ -108,7 +108,7 @@ $domain = "account.auth0.com";
 
 $auth0Api = new Management($token, $domain);
 
-$usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
+$usersList = $auth0Api->users()->search([ "q" => "email@test.com" ]);
 
 var_dump($usersList);
 ```
@@ -127,7 +127,7 @@ $client_secret = '...'; // This is optional, only needed for impersonation or t 
 $auth0Api = new Authentication($domain, $client_id, $client_secret);
 
 // getting an access token with client credentials grant
-$access_token = $auth0Api->client_credentials([
+$access_token = $auth0Api->clientCredentials([
         'audience' => 'urn:test:api',
         'scope' => 'do:something read:somethingelse',
     ]);
