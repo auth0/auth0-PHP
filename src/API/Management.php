@@ -21,6 +21,11 @@ use Auth0\SDK\API\Management\Users;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
+/**
+ * Class to communicate with Auth0 Management API
+ *
+ * @link https://auth0.com/docs/api/management/v2
+ */
 final class Management
 {
     /**
