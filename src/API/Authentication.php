@@ -47,13 +47,8 @@ class Authentication {
     $this->client_secret = $client_secret;
     $this->domain = $domain;
     $this->guzzleOptions = $guzzleOptions;
-    
-    $this->setApiClient();
 
-    if (!empty($client_id) && !empty($client_secret)) {
-      $this->access_token = $this->oauth_token($client_id, $client_secret);
-    }
-    
+    $this->setApiClient();
   }
 
   protected function setApiClient() {
@@ -79,7 +74,7 @@ class Authentication {
 
     if (empty($this->client_id)) {
       throw new ApiException('client_id was not set.');
-    } 
+    }
 
     $extra_params['domain'] = $this->domain;
     $extra_params['client_id'] = $this->client_id;
@@ -393,6 +388,10 @@ class Authentication {
      * @return mixed
      */
   public function impersonate($user_id, $protocol, $impersonator_id, $client_id, $additionalParameters=[]){
+
+    if (empty($this->access_token) && !empty($client_id) && !empty($client_secret)) {
+      $this->access_token = $this->oauth_token($client_id, $client_secret);
+    }
 
     $data = [
       'protocol' => $protocol,
