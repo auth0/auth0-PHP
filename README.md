@@ -119,7 +119,7 @@ use Auth0\SDK\API\Authentication;
 
 $domain = "account.auth0.com";
 $client_id = '...';
-$client_secret = '...'; // This is optional, only needed for impersonation or t fetch an access token
+$client_secret = '...'; // This is optional, only needed for code exchange and impersonation api
 
 $auth0Api = new Authentication($domain, $client_id, $client_secret);
 
