@@ -1,6 +1,6 @@
 <?php
 
-namespace auth0\tests\API\Management;
+namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
 use Auth0\Tests\API\ApiTests;
