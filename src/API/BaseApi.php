@@ -1,6 +1,6 @@
 <?php
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Exception\ApiException;
@@ -13,7 +13,10 @@ use Http\Client\Common\HttpMethodsClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-abstract class GenericResource
+/**
+ * @author Tobias Nyholm <tobias.nyholm@gmail.com>
+ */
+abstract class BaseApi
 {
     /**
      * @var HttpMethodsClient

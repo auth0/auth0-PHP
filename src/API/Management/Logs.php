@@ -2,9 +2,10 @@
 
 namespace Auth0\SDK\API\Management;
 
+use Auth0\SDK\API\BaseApi;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-final class Logs extends GenericResource
+final class Logs extends BaseApi
 {
     /**
      * @param string $id

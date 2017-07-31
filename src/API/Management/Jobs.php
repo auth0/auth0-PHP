@@ -2,10 +2,11 @@
 
 namespace Auth0\SDK\API\Management;
 
+use Auth0\SDK\API\BaseApi;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
 
-final class Jobs extends GenericResource
+final class Jobs extends BaseApi
 {
     /**
      * @param string $id
