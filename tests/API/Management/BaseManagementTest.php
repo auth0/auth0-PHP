@@ -31,9 +31,10 @@ abstract class BaseManagementTest extends ApiTests
      */
     protected function createResponse($body = null, $httpStatus = 200, $headers = [])
     {
-        if (!isset($headers['Content-Type'])){
+        if (!isset($headers['Content-Type'])) {
             $headers['Content-Type'] = 'application/json';
         }
+
         return new Response($httpStatus, $headers, $body);
     }
 }

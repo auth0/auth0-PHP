@@ -1,13 +1,8 @@
 <?php
 
-namespace Auth0\Tests\API\Management;
+namespace auth0\tests\API\Management;
 
 use Auth0\SDK\API\Management;
-use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
-use Http\Client\Common\HttpMethodsClient;
-use Http\Client\HttpClient;
-use Http\Discovery\MessageFactoryDiscovery;
 use Http\Mock\Client;
 
 class BlacklistsTest extends BaseManagementTest
