@@ -16,7 +16,11 @@ final class Blacklists extends GenericResource
     {
         $response = $this->httpClient->get('/blacklists/tokens?'.http_build_query(['aud' => $aud]));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
@@ -34,6 +38,10 @@ final class Blacklists extends GenericResource
             'jti' => $jti,
         ]));
 
-        return ResponseMediator::getContent($response);
+        if (204 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }
