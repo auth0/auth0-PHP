@@ -3,6 +3,7 @@
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
+use Auth0\SDK\Exception\ApiException;
 
 final class Blacklists extends GenericResource
 {
@@ -11,6 +12,8 @@ final class Blacklists extends GenericResource
      * @param string $aud
      *
      * @return array
+     *
+     * @throws ApiException On invalid responses
      */
     public function getAll($aud)
     {
@@ -30,6 +33,8 @@ final class Blacklists extends GenericResource
      * @param string $jti
      *
      * @return array
+     *
+     * @throws ApiException On invalid responses
      */
     public function blacklist($aud, $jti)
     {
