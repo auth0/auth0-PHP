@@ -22,11 +22,17 @@ class SimpleCacheStore implements StoreInterface
         $this->cache = $cachePool;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function set($key, $value)
     {
         return $this->cache->set($this->cleanKey($key), $value);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function get($key, $default = null)
     {
         if (null === $result = $this->cache->get($this->cleanKey($key))) {
@@ -36,11 +42,20 @@ class SimpleCacheStore implements StoreInterface
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($key)
     {
         $this->cache->delete($this->cleanKey($key));
     }
 
+    /**
+     * Clean the cache key for invalid chars.
+     *
+     * @param string$key
+     * @return string
+     */
     private function cleanKey($key)
     {
         return preg_replace('|[^A-Za-z0-9_\.]|', '', $key);
