@@ -8,6 +8,6 @@ namespace Auth0\SDK\Exception;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class RequestException extends ApiException
+class BadRequestException extends ApiException
 {
 }

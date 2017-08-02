@@ -7,6 +7,6 @@ namespace Auth0\SDK\Exception;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class TooManyRequestsException extends RequestException
+class TooManyRequestsException extends BadRequestException
 {
 }

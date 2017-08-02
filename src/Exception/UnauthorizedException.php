@@ -7,6 +7,6 @@ namespace Auth0\SDK\Exception;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class UnauthorizedException extends RequestException
+class UnauthorizedException extends BadRequestException
 {
 }

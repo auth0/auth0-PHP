@@ -7,6 +7,6 @@ namespace Auth0\SDK\Exception;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class ForbiddenException extends RequestException
+class ForbiddenException extends BadRequestException
 {
 }

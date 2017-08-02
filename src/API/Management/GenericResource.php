@@ -5,7 +5,7 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\ForbiddenException;
-use Auth0\SDK\Exception\RequestException;
+use Auth0\SDK\Exception\BadRequestException;
 use Auth0\SDK\Exception\TooManyRequestsException;
 use Auth0\SDK\Exception\UnauthorizedException;
 use Auth0\SDK\Exception\UnknownApiException;
@@ -41,7 +41,7 @@ abstract class GenericResource
 
         switch ($status) {
             case 400:
-                throw RequestException::create($response, $content);
+                throw BadRequestException::create($response, $content);
             case 401:
                 throw UnauthorizedException::create($response, $content);
             case 403:
