@@ -4,7 +4,6 @@ namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
 use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 use Http\Discovery\MessageFactoryDiscovery;
@@ -19,22 +18,10 @@ abstract class BaseManagementTest extends ApiTests
      *
      * @return Management
      */
-    protected function getManagementApi($httpClient)
+    protected function getManagementApi(HttpClient $httpClient)
     {
         return new Management(
             'token', 'domain.com', new HttpMethodsClient($httpClient, MessageFactoryDiscovery::find())
         );
-    }
-
-    /**
-     * @return Response
-     */
-    protected function createResponse($body = null, $httpStatus = 200, $headers = [])
-    {
-        if (!isset($headers['Content-Type'])) {
-            $headers['Content-Type'] = 'application/json';
-        }
-
-        return new Response($httpStatus, $headers, $body);
     }
 }

@@ -309,19 +309,26 @@ final class Authentication
      * @param string $username
      * @param string $password
      * @param string $realm
-     * @param array $options {
-     *
-     *      @var string $scope    Optional
-     *      @var string $audience Optional.
-     * }
+     * @param string $scope
+     * @param string $audience
      *
      * @return array
      */
-    public function login($username, $password, $realm, array $options = [])
+    public function login($username, $password, $realm, $scope = null, $audience = null)
     {
+        $options = [];
+
         $options['username'] = $username;
         $options['password'] = $password;
         $options['realm'] = $realm;
+
+        if (!empty($scope)) {
+            $options['scope'] = $scope;
+        }
+
+        if (!empty($audience)) {
+            $options['audience'] = $audience;
+        }
 
         return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', $options);
     }
@@ -333,18 +340,25 @@ final class Authentication
      *
      * @param string $username
      * @param string $password
-     * @param array $options {
-     *
-     *      @var string $scope    Optional.
-     *      @var string $audience Optional.
-     *}
+     * @param string $scope
+     * @param string $audience
      *
      * @return array
      */
-    public function loginWithDefaultDirectory($username, $password, array $options = [])
+    public function loginWithDefaultDirectory($username, $password, $scope = null, $audience = null)
     {
+        $options = [];
+
         $options['username'] = $username;
         $options['password'] = $password;
+
+        if (!empty($scope)) {
+            $options['scope'] = $scope;
+        }
+
+        if (!empty($audience)) {
+            $options['audience'] = $audience;
+        }
 
         return $this->oauthToken('password', $options);
     }
