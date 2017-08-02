@@ -3,9 +3,9 @@
 namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
-use Auth0\Tests\API\ApiTests;
+use Http\Mock\Client;
 
-class BlacklistsTest extends ApiTests
+class BlacklistsTest extends BaseManagementTest
 {
     public function testBlacklistAndGet()
     {
@@ -36,5 +36,47 @@ class BlacklistsTest extends ApiTests
         }
 
         $this->assertTrue($found, 'Blacklisted token not found');
+    }
+
+    public function testGetAll()
+    {
+        $httpClient = new Client();
+        $httpClient->addResponse($this->createResponse('[
+  {
+    "aud": "foo",
+    "jti": "bar"
+  }
+]'));
+        $api = $this->getManagementApi($httpClient);
+        $response = $api->blacklists()->getAll('foo');
+
+        $this->assertNotEmpty($response);
+        $this->assertNotEmpty($response[0]);
+        $this->assertArrayHasKey('aud', $response[0]);
+        $this->assertArrayHasKey('jti', $response[0]);
+    }
+
+    public function testBlacklist()
+    {
+        $httpClient = new Client();
+        $httpClient->addResponse($this->createResponse(null, 204));
+        $api = $this->getManagementApi($httpClient);
+        $response = $api->blacklists()->blacklist('foo', 'bar');
+
+        $this->assertEmpty($response);
+    }
+
+    /**
+     * TODO we should get an exception here.
+     */
+    public function testBlacklistEmptyJti()
+    {
+        $httpClient = new Client();
+        $httpClient->addResponse($this->createResponse(null, 400));
+        $api = $this->getManagementApi($httpClient);
+        $response = $api->blacklists()->blacklist('foo', '');
+
+        // TODO remove this.
+        $this->assertEmpty($response);
     }
 }

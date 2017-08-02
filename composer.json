@@ -26,6 +26,7 @@
     "phpunit/phpunit": "^5.7.21",
     "php-http/guzzle6-adapter": "^1.0",
     "php-http/message": "^1.0",
+    "php-http/mock-client": "^1.0",
     "guzzlehttp/psr7": "^1.0",
     "cache/array-adapter": "^0.5",
     "cache/simple-cache-bridge": "^0.1",

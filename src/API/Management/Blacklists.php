@@ -7,6 +7,7 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class Blacklists extends GenericResource
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens
      * @param string $aud
      *
      * @return array
@@ -19,6 +20,8 @@ final class Blacklists extends GenericResource
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Blacklists/post_tokens
+     *
      * @param string $aud
      * @param string $jti
      *
