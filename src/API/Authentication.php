@@ -4,7 +4,7 @@ namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Helpers\HttpClientBuilder;
 use Auth0\SDK\API\Helpers\ResponseMediator;
-use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Exception\InvalidArgumentException;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
@@ -377,7 +377,7 @@ final class Authentication
      * }
      *
      * @return array
-     * @throws ApiException
+     * @throws InvalidArgumentException
      */
     public function clientCredentials(array $options = [])
     {
@@ -386,7 +386,7 @@ final class Authentication
         }
 
         if (empty($options['client_secret'])) {
-            throw new ApiException('client_secret is mandatory');
+            throw new InvalidArgumentException('client_secret is mandatory');
         }
 
         if (!isset($options['client_id'])) {
@@ -394,7 +394,7 @@ final class Authentication
         }
 
         if (empty($options['client_id'])) {
-            throw new ApiException('client_id is mandatory');
+            throw new InvalidArgumentException('client_id is mandatory');
         }
 
         if (!isset($options['scope'])) {

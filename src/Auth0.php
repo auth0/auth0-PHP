@@ -3,8 +3,8 @@
 namespace Auth0\SDK;
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\InvalidArgumentException;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
@@ -279,6 +279,7 @@ final class Auth0
      * Code exchange.
      *
      * @throws CoreException If there is an active session already
+     * @throws InvalidArgumentException
      */
     public function exchange()
     {
@@ -298,7 +299,7 @@ final class Auth0
         $idToken = (isset($response['id_token'])) ? $response['id_token'] : false;
 
         if (!$accessToken) {
-            throw new ApiException('Invalid access_token - Retry login.');
+            throw new InvalidArgumentException('Invalid access_token - Retry login.');
         }
 
         $this->setAccessToken($accessToken);

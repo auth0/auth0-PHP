@@ -67,16 +67,13 @@ class BlacklistsTest extends BaseManagementTest
     }
 
     /**
-     * TODO we should get an exception here.
+     * @expectedException \Auth0\SDK\Exception\BadRequestException
      */
     public function testBlacklistEmptyJti()
     {
         $httpClient = new Client();
         $httpClient->addResponse($this->createResponse(null, 400));
         $api = $this->getManagementApi($httpClient);
-        $response = $api->blacklists()->blacklist('foo', '');
-
-        // TODO remove this.
-        $this->assertEmpty($response);
+        $api->blacklists()->blacklist('foo', '');
     }
 }

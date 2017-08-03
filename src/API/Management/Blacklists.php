@@ -3,6 +3,7 @@
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ResponseMediator;
+use Auth0\SDK\Exception\ApiException;
 
 final class Blacklists extends GenericResource
 {
@@ -11,12 +12,18 @@ final class Blacklists extends GenericResource
      * @param string $aud
      *
      * @return array
+     *
+     * @throws ApiException On invalid responses
      */
     public function getAll($aud)
     {
         $response = $this->httpClient->get('/blacklists/tokens?'.http_build_query(['aud' => $aud]));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
@@ -26,6 +33,8 @@ final class Blacklists extends GenericResource
      * @param string $jti
      *
      * @return array
+     *
+     * @throws ApiException On invalid responses
      */
     public function blacklist($aud, $jti)
     {
@@ -34,6 +43,10 @@ final class Blacklists extends GenericResource
             'jti' => $jti,
         ]));
 
-        return ResponseMediator::getContent($response);
+        if (204 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }
