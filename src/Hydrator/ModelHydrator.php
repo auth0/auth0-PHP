@@ -19,7 +19,7 @@ final class ModelHydrator implements Hydrator
      *
      * @return mixed
      */
-    public function hydrate(ResponseInterface $response, string $class)
+    public function hydrate(ResponseInterface $response, $class)
     {
         $body = $response->getBody()->__toString();
         if (strpos($response->getHeaderLine('Content-Type'), 'application/json') !== 0) {

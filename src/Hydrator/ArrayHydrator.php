@@ -18,7 +18,7 @@ final class ArrayHydrator implements Hydrator
      *
      * @return array
      */
-    public function hydrate(ResponseInterface $response, string $class): array
+    public function hydrate(ResponseInterface $response, $class)
     {
         $body = $response->getBody()->__toString();
         if (strpos($response->getHeaderLine('Content-Type'), 'application/json') !== 0) {

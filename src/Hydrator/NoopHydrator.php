@@ -17,7 +17,7 @@ final class NoopHydrator implements Hydrator
      *
      * @throws \LogicException
      */
-    public function hydrate(ResponseInterface $response, string $class)
+    public function hydrate(ResponseInterface $response, $class)
     {
         throw new \LogicException('The NoopHydrator should never be called');
     }
