@@ -6,6 +6,8 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
+ *
+ * @deprecated Will be removed prior release of 6.0.0. Use the Hydrators instead.
  */
 final class ResponseMediator
 {
