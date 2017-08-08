@@ -79,7 +79,7 @@ final class Emails extends BaseApi
     }
 
     /**
-     * @https://auth0.com/docs/api/management/v2#!/Emails/delete_provider
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/delete_provider
      *
      * @return mixed
      */

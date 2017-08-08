@@ -62,6 +62,8 @@ final class ResourceServers extends BaseApi
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/patch_resource_servers_by_id
+     *
      * @param string $id
      * @param array  $data
      *

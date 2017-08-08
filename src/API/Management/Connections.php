@@ -139,7 +139,7 @@ final class Connections extends BaseApi
     }
 
     /**
-     * @https://auth0.com/docs/api/management/v2#!/Connections/patch_connections_by_id
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/patch_connections_by_id
      *
      * @param string $id
      * @param array  $data
