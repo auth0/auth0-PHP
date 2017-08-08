@@ -2,9 +2,10 @@
 
 namespace Auth0\SDK\API\Management;
 
+use Auth0\SDK\API\BaseApi;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 
-final class UserBlocks extends GenericResource
+final class UserBlocks extends BaseApi
 {
     /**
      * @param string $userId

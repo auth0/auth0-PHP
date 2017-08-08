@@ -2,10 +2,11 @@
 
 namespace Auth0\SDK\API\Management;
 
+use Auth0\SDK\API\BaseApi;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Exception\ApiException;
 
-final class Blacklists extends GenericResource
+final class Blacklists extends BaseApi
 {
     /**
      * @link https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens

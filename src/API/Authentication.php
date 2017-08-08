@@ -4,6 +4,7 @@ namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Helpers\HttpClientBuilder;
 use Auth0\SDK\API\Helpers\ResponseMediator;
+use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\InvalidArgumentException;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
@@ -13,7 +14,7 @@ use Http\Client\HttpClient;
  *
  * @link https://auth0.com/docs/api/authentication
  */
-final class Authentication
+final class Authentication extends BaseApi
 {
     /**
      * @var null|string
@@ -31,9 +32,14 @@ final class Authentication
     private $domain;
 
     /**
-     * @var HttpMethodsClient
+     * @var string|null
      */
-    private $httpClient;
+    private $audience;
+
+    /**
+     * @var string|null
+     */
+    private $scope;
 
     /**
      * @param string          $domain
@@ -51,7 +57,7 @@ final class Authentication
         $this->audience = $audience;
         $this->scope = $scope;
 
-        $this->httpClient = (new HttpClientBuilder($domain, $client))->buildHttpClient();
+        parent::__construct((new HttpClientBuilder($domain, $client))->buildHttpClient());
     }
 
     /**
@@ -157,6 +163,8 @@ final class Authentication
      * @param string $scope
      * @param array $additionalParams
      *
+     * @throws InvalidArgumentException
+     *
      * @return array
      */
     public function authorizeWithAccessToken($accessToken, $connection, $scope = 'openid', array $additionalParams = [])
@@ -170,13 +178,19 @@ final class Authentication
 
         $response = $this->httpClient->post('/oauth/access_token', [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
      * @param string $email
      * @param string $type
      * @param array $authParams
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -195,11 +209,17 @@ final class Authentication
 
         $response = $this->httpClient->post('/passwordless/start', [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
      * @param string $phoneNumber
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -213,11 +233,17 @@ final class Authentication
 
         $response = $this->httpClient->post('/passwordless/start', [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
      * @param string $accessToken
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -225,7 +251,11 @@ final class Authentication
     {
         $response = $this->httpClient->get('/userinfo', ['Authorization' => 'Bearer '.$accessToken]);
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
@@ -235,6 +265,8 @@ final class Authentication
      * @param string $impersonatorId
      * @param string $clientId
      * @param array $additionalParameters
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -249,7 +281,11 @@ final class Authentication
 
         $response = $this->httpClient->post(sprintf('/users/%s/impersonate', $userId), ['Authorization' => 'Bearer '.$accessToken], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
@@ -264,6 +300,8 @@ final class Authentication
      *      @var string $scope         Optional.
      *      @var string $audience      Optional.
      * }
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -281,7 +319,11 @@ final class Authentication
 
         $response = $this->httpClient->post('/oauth/token', [], json_encode($options));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
@@ -289,6 +331,8 @@ final class Authentication
      *
      * @param string $code
      * @param string $redirectUri
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -311,6 +355,9 @@ final class Authentication
      * @param string $realm
      * @param string $scope
      * @param string $audience
+     *
+     * @throws InvalidArgumentException
+     *
      *
      * @return array
      */
@@ -342,6 +389,8 @@ final class Authentication
      * @param string $password
      * @param string $scope
      * @param string $audience
+     *
+     * @throws InvalidArgumentException
      *
      * @return array
      */
@@ -376,8 +425,10 @@ final class Authentication
      *      @var string $audience      Optional. If none set, we use $this->audience
      * }
      *
-     * @return array
      * @throws InvalidArgumentException
+     * @throws ApiException On invalid responses
+     *
+     * @return array
      */
     public function clientCredentials(array $options = [])
     {
@@ -413,6 +464,8 @@ final class Authentication
      * @param string $password
      * @param string $connection
      *
+     * @throws ApiException On invalid responses
+     *
      * @return array
      */
     public function dbconnectionsSignup($email, $password, $connection)
@@ -426,13 +479,19 @@ final class Authentication
 
         $response = $this->httpClient->post('/dbconnections/signup', [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
      * @param string $email
      * @param string $connection
      * @param string|null $password
+     *
+     * @throws ApiException On invalid responses
      *
      * @return array
      */
@@ -450,6 +509,10 @@ final class Authentication
 
         $response = $this->httpClient->post('/dbconnections/change_password', [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }
