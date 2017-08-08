@@ -168,21 +168,6 @@ final class Users extends BaseApi
     }
 
     /**
-     * TODO find a link to the documentation
-     *
-     * @param string $userId
-     * @param string $deviceId
-     *
-     * @return array
-     */
-    public function unlinkDevice($userId, $deviceId)
-    {
-        $response = $this->httpClient->delete(sprintf('/users/%s/devices/%s', $userId, $deviceId));
-
-        $this->handleExceptions($response);
-    }
-
-    /**
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_multifactor_by_provider
      *
      * @param string $userId
