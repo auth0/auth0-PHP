@@ -65,7 +65,7 @@ final class Authentication extends BaseApi
         $this->domain = $domain;
         $this->audience = $audience;
         $this->scope = $scope;
-        $this->hydrator = $hydrator ?: new ArrayHydrator();
+        $hydrator = $hydrator ?: new ArrayHydrator();
 
         parent::__construct((new HttpClientBuilder($domain, $client))->buildHttpClient(), $hydrator);
     }
