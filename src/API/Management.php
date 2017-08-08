@@ -18,6 +18,8 @@ use Auth0\SDK\API\Management\Tenants;
 use Auth0\SDK\API\Management\Tickets;
 use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
+use Auth0\SDK\Hydrator\ArrayHydrator;
+use Auth0\SDK\Hydrator\Hydrator;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
@@ -44,11 +46,17 @@ final class Management
     private $httpClient;
 
     /**
+     * @var Hydrator
+     */
+    private $hydrator;
+
+    /**
      * @param string          $token
      * @param string          $domain
      * @param HttpClient|null $client
+     * @param Hydrator|null   $hydrator
      */
-    public function __construct($token, $domain, HttpClient $client = null)
+    public function __construct($token, $domain, HttpClient $client = null, Hydrator $hydrator = null)
     {
         $this->token = $token;
         $this->domain = $domain;
@@ -56,6 +64,7 @@ final class Management
         $httpClientBuilder = new HttpClientBuilder($domain.'/api/v2/', $client);
         $httpClientBuilder->addHeader('Authorization', 'Bearer '.$token);
         $this->httpClient = $httpClientBuilder->buildHttpClient();
+        $this->hydrator = $hydrator ?: new ArrayHydrator();
     }
 
     /**
@@ -63,7 +72,7 @@ final class Management
      */
     public function blacklists()
     {
-        return new Blacklists($this->httpClient);
+        return new Blacklists($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -71,7 +80,7 @@ final class Management
      */
     public function clients()
     {
-        return new Clients($this->httpClient);
+        return new Clients($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -79,7 +88,7 @@ final class Management
      */
     public function clientGrants()
     {
-        return new ClientGrants($this->httpClient);
+        return new ClientGrants($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -87,7 +96,7 @@ final class Management
      */
     public function connections()
     {
-        return new Connections($this->httpClient);
+        return new Connections($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -95,7 +104,7 @@ final class Management
      */
     public function deviceCredentials()
     {
-        return new DeviceCredentials($this->httpClient);
+        return new DeviceCredentials($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -103,7 +112,7 @@ final class Management
      */
     public function emails()
     {
-        return new Emails($this->httpClient);
+        return new Emails($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -111,7 +120,7 @@ final class Management
      */
     public function jobs()
     {
-        return new Jobs($this->httpClient);
+        return new Jobs($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -119,7 +128,7 @@ final class Management
      */
     public function logs()
     {
-        return new Logs($this->httpClient);
+        return new Logs($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -127,7 +136,7 @@ final class Management
      */
     public function rules()
     {
-        return new Rules($this->httpClient);
+        return new Rules($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -135,7 +144,7 @@ final class Management
      */
     public function resourceServers()
     {
-        return new ResourceServers($this->httpClient);
+        return new ResourceServers($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -143,7 +152,7 @@ final class Management
      */
     public function stats()
     {
-        return new Stats($this->httpClient);
+        return new Stats($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -151,7 +160,7 @@ final class Management
      */
     public function tenants()
     {
-        return new Tenants($this->httpClient);
+        return new Tenants($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -159,7 +168,7 @@ final class Management
      */
     public function tickets()
     {
-        return new Tickets($this->httpClient);
+        return new Tickets($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -167,7 +176,7 @@ final class Management
      */
     public function userBlocks()
     {
-        return new UserBlocks($this->httpClient);
+        return new UserBlocks($this->httpClient, $this->hydrator);
     }
 
     /**
@@ -175,6 +184,6 @@ final class Management
      */
     public function users()
     {
-        return new Users($this->httpClient);
+        return new Users($this->httpClient, $this->hydrator);
     }
 }

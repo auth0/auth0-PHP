@@ -6,6 +6,8 @@ use Auth0\SDK\API\Helpers\HttpClientBuilder;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\InvalidArgumentException;
+use Auth0\SDK\Hydrator\ArrayHydrator;
+use Auth0\SDK\Hydrator\Hydrator;
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\HttpClient;
 
@@ -49,15 +51,23 @@ final class Authentication extends BaseApi
      * @param string|null     $scope
      * @param HttpClient|null $client
      */
-    public function __construct($domain, $clientId = null, $clientSecret = null, $audience = null, $scope = null, HttpClient $client = null)
-    {
+    public function __construct(
+        $domain,
+        $clientId = null,
+        $clientSecret = null,
+        $audience = null,
+        $scope = null,
+        HttpClient $client = null,
+        Hydrator $hydrator = null
+    ) {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->domain = $domain;
         $this->audience = $audience;
         $this->scope = $scope;
+        $this->hydrator = $hydrator ?: new ArrayHydrator();
 
-        parent::__construct((new HttpClientBuilder($domain, $client))->buildHttpClient());
+        parent::__construct((new HttpClientBuilder($domain, $client))->buildHttpClient(), $hydrator);
     }
 
     /**

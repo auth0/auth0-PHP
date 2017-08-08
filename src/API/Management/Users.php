@@ -5,6 +5,7 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\API\BaseApi;
 use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Model\Management\Users\User;
 
 final class Users extends BaseApi
 {
@@ -21,8 +22,12 @@ final class Users extends BaseApi
     {
         $response = $this->httpClient->get(sprintf('/users/%s', $userId));
 
+        if (!$this->hydrator) {
+            return $response;
+        }
+
         if (200 === $response->getStatusCode()) {
-            return ResponseMediator::getContent($response);
+            return $this->hydrator->hydrate($response, User::class);
         }
 
         $this->handleExceptions($response);

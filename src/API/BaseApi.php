@@ -9,6 +9,8 @@ use Auth0\SDK\Exception\BadRequestException;
 use Auth0\SDK\Exception\TooManyRequestsException;
 use Auth0\SDK\Exception\UnauthorizedException;
 use Auth0\SDK\Exception\UnknownApiException;
+use Auth0\SDK\Hydrator\Hydrator;
+use Auth0\SDK\Hydrator\NoopHydrator;
 use Http\Client\Common\HttpMethodsClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -24,11 +26,21 @@ abstract class BaseApi
     protected $httpClient;
 
     /**
-     * @param HttpMethodsClient $apiClient
+     * @var Hydrator|null
      */
-    public function __construct(HttpMethodsClient $apiClient)
+    protected $hydrator;
+
+    /**
+     * @param HttpMethodsClient $apiClient
+     * @param Hydrator $hydrator
+     */
+    public function __construct(HttpMethodsClient $apiClient, Hydrator $hydrator)
     {
         $this->httpClient = $apiClient;
+
+        if (!$hydrator instanceof NoopHydrator) {
+            $this->hydrator = $hydrator;
+        }
     }
 
     /**

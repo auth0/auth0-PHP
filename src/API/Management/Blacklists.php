@@ -3,8 +3,9 @@
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\BaseApi;
-use Auth0\SDK\API\Helpers\ResponseMediator;
 use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Model\EmptyResponse;
+use Auth0\SDK\Model\Management\Blacklist\BlacklistIndex;
 
 final class Blacklists extends BaseApi
 {
@@ -12,7 +13,7 @@ final class Blacklists extends BaseApi
      * @link https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens
      * @param string $aud
      *
-     * @return array
+     * @return BlacklistIndex
      *
      * @throws ApiException On invalid responses
      */
@@ -20,8 +21,12 @@ final class Blacklists extends BaseApi
     {
         $response = $this->httpClient->get('/blacklists/tokens?'.http_build_query(['aud' => $aud]));
 
+        if (!$this->hydrator) {
+            return $response;
+        }
+
         if (200 === $response->getStatusCode()) {
-            return ResponseMediator::getContent($response);
+            return $this->hydrator->hydrate($response, BlacklistIndex::class);
         }
 
         $this->handleExceptions($response);
@@ -33,7 +38,7 @@ final class Blacklists extends BaseApi
      * @param string $aud
      * @param string $jti
      *
-     * @return array
+     * @return EmptyResponse
      *
      * @throws ApiException On invalid responses
      */
@@ -44,8 +49,12 @@ final class Blacklists extends BaseApi
             'jti' => $jti,
         ]));
 
+        if (!$this->hydrator) {
+            return $response;
+        }
+
         if (204 === $response->getStatusCode()) {
-            return ResponseMediator::getContent($response);
+            return $this->hydrator->hydrate($response, EmptyResponse::class);
         }
 
         $this->handleExceptions($response);
