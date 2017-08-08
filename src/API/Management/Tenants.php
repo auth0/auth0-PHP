@@ -8,6 +8,8 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class Tenants extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Tenants/get_settings
+     *
      * @param mixed $fields
      * @param mixed $includeFields
      *
@@ -33,10 +35,16 @@ final class Tenants extends BaseApi
         }
         $response = $this->httpClient->get('/tenants/settings'.$query);
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Tenants/patch_settings
+     *
      * @param array $data
      *
      * @return mixed
@@ -45,6 +53,10 @@ final class Tenants extends BaseApi
     {
         $response = $this->httpClient->patch('/tenants/settings', [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }

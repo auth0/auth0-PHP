@@ -9,6 +9,8 @@ use Http\Message\MultipartStream\MultipartStreamBuilder;
 final class Jobs extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id
+     *
      * @param string $id
      *
      * @return mixed
@@ -17,10 +19,16 @@ final class Jobs extends BaseApi
     {
         $response = $this->httpClient->get(sprintf('/jobs/%s', $id));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/get_errors
+     *
      * @param string $id
      *
      * @return mixed
@@ -29,10 +37,16 @@ final class Jobs extends BaseApi
     {
         $response = $this->httpClient->get(sprintf('/jobs/%s/errors', $id));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/post_users_imports
+     *
      * @param string $filePath
      * @param string $connectionId
      *
@@ -49,10 +63,16 @@ final class Jobs extends BaseApi
 
         $response = $this->httpClient->post('/jobs/users-imports', ['Content-Type' => 'multipart/form-data; boundary="'.$boundary.'"'], $stream);
 
-        return ResponseMediator::getContent($response);
+        if (201 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/post_verification_email
+     *
      * @param string $userId
      *
      * @return mixed
@@ -63,6 +83,10 @@ final class Jobs extends BaseApi
           'user_id' => $userId,
         ]));
 
-        return ResponseMediator::getContent($response);
+        if (201 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }

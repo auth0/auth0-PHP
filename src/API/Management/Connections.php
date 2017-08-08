@@ -8,6 +8,8 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class Connections extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections
+     *
      * @param null|string       $strategy
      * @param null|string|array $fields
      * @param null|string|array $includeFields
@@ -38,10 +40,16 @@ final class Connections extends BaseApi
         }
         $response = $this->httpClient->get('/connections'.$query);
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections_by_id
+     *
      * @param string            $id
      * @param null|string|array $fields
      * @param null|string|array $includeFields
@@ -68,10 +76,16 @@ final class Connections extends BaseApi
         }
         $response = $this->httpClient->get('/connections/'.$id.$query);
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_connections_by_id
+     *
      * @param string $id
      *
      * @return mixed
@@ -80,10 +94,16 @@ final class Connections extends BaseApi
     {
         $response = $this->httpClient->delete('/connections/'.$id);
 
-        return ResponseMediator::getContent($response);
+        if (204 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_users_by_email
+     *
      * @param string $id
      * @param string $email
      *
@@ -93,10 +113,16 @@ final class Connections extends BaseApi
     {
         $response = $this->httpClient->delete(sprintf('/connections/%s?', $id, http_build_query(['email' => $email])));
 
-        return ResponseMediator::getContent($response);
+        if (204 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/post_connections
+     *
      * @param array $data
      *
      * @return mixed
@@ -105,10 +131,16 @@ final class Connections extends BaseApi
     {
         $response = $this->httpClient->post('/connections', [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (201 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @https://auth0.com/docs/api/management/v2#!/Connections/patch_connections_by_id
+     *
      * @param string $id
      * @param array  $data
      *
@@ -118,6 +150,10 @@ final class Connections extends BaseApi
     {
         $response = $this->httpClient->patch('/connections/'.$id, [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }

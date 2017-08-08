@@ -11,6 +11,8 @@ final class DeviceCredentials extends BaseApi
     const TYPE_REFESH_TOKEN = 'refresh_token';
 
   /**
+   * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials
+   *
    * @param string            $userId
    * @param string            $clientId
    * @param string            $type
@@ -52,10 +54,16 @@ final class DeviceCredentials extends BaseApi
       }
       $response = $this->httpClient->get('/device-credentials'.$query);
 
-      return ResponseMediator::getContent($response);
+      if (200 === $response->getStatusCode()) {
+          return ResponseMediator::getContent($response);
+      }
+
+      $this->handleExceptions($response);
   }
 
   /**
+   * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/post_device_credentials
+   *
    * @param array $data
    *
    * @return mixed
@@ -64,10 +72,16 @@ final class DeviceCredentials extends BaseApi
   {
       $response = $this->httpClient->post('/device-credentials', [], json_encode($data));
 
-      return ResponseMediator::getContent($response);
+      if (201 === $response->getStatusCode()) {
+          return ResponseMediator::getContent($response);
+      }
+
+      $this->handleExceptions($response);
   }
 
   /**
+   * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/delete_device_credentials_by_id
+   *
    * @param string $id
    *
    * @return mixed
@@ -76,6 +90,10 @@ final class DeviceCredentials extends BaseApi
   {
       $response = $this->httpClient->delete('/device-credentials/'.$id);
 
-      return ResponseMediator::getContent($response);
+      if (204 === $response->getStatusCode()) {
+          return ResponseMediator::getContent($response);
+      }
+
+      $this->handleExceptions($response);
   }
 }

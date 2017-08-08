@@ -8,6 +8,8 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class Tickets extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification
+     *
      * @param string      $userId
      * @param null|string $resultUrl
      *
@@ -21,7 +23,11 @@ final class Tickets extends BaseApi
         }
         $response = $this->httpClient->post('/tickets/email-verification', [], json_encode($body));
 
-        return ResponseMediator::getContent($response);
+        if (201 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
@@ -51,6 +57,8 @@ final class Tickets extends BaseApi
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_password_change
+     *
      * @param null|string $userId
      * @param null|string $email
      * @param null|string $newPassword
@@ -81,6 +89,10 @@ final class Tickets extends BaseApi
 
         $response = $this->httpClient->post('/tickets/password-change', [], json_encode($body));
 
-        return ResponseMediator::getContent($response);
+        if (201 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }

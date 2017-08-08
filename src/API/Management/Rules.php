@@ -8,6 +8,8 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class Rules extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/get_rules
+     *
      * @param null|string       $enabled
      * @param null|string|array $fields
      * @param null|string|array $includeFields
@@ -38,10 +40,16 @@ final class Rules extends BaseApi
         }
         $response = $this->httpClient->get('/rules'.$query);
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/get_rules_by_id
+     *
      * @param string            $id
      * @param null|string|array $fields
      * @param null|string|array $includeFields
@@ -68,10 +76,16 @@ final class Rules extends BaseApi
         }
         $response = $this->httpClient->get('/rules/'.$id.$query);
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/delete_rules_by_id
+     *
      * @param string $id
      *
      * @return mixed
@@ -80,10 +94,16 @@ final class Rules extends BaseApi
     {
         $response = $this->httpClient->delete(sprintf('/rules/%s', $id));
 
-        return ResponseMediator::getContent($response);
+        if (204 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/post_rules
+     *
      * @param array $data
      *
      * @return mixed
@@ -92,10 +112,16 @@ final class Rules extends BaseApi
     {
         $response = $this->httpClient->post('/rules', [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (201 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/patch_rules_by_id
+     *
      * @param string $id
      * @param array  $data
      *
@@ -105,6 +131,10 @@ final class Rules extends BaseApi
     {
         $response = $this->httpClient->patch('/rules/'.$id, [], json_encode($data));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }

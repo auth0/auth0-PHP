@@ -8,16 +8,24 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class Stats extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Stats/get_active_users
+     *
      * @return array|string
      */
     public function getActiveUsersCount()
     {
         $response = $this->httpClient->get('/stats/active-users');
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Stats/get_daily
+     *
      * @param string $from
      * @param string $to
      *
@@ -30,6 +38,10 @@ final class Stats extends BaseApi
           'to'   => $to,
         ]));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }
