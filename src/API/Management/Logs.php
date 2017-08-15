@@ -8,6 +8,8 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class Logs extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Logs/get_logs_by_id
+     *
      * @param string $id
      *
      * @return mixed
@@ -16,10 +18,16 @@ final class Logs extends BaseApi
     {
         $response = $this->httpClient->get(sprintf('/logs/%s', $id));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Logs/get_logs
+     *
      * @param array $params
      *
      * @return mixed
@@ -28,6 +36,10 @@ final class Logs extends BaseApi
     {
         $response = $this->httpClient->get('/logs?', http_build_query($params));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }

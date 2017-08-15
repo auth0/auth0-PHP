@@ -8,6 +8,8 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class UserBlocks extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks_by_id
+     *
      * @param string $userId
      *
      * @return mixed
@@ -16,10 +18,16 @@ final class UserBlocks extends BaseApi
     {
         $response = $this->httpClient->get('/user-blocks/'.$userId);
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks
+     *
      * @param string $identifier
      *
      * @return mixed
@@ -28,10 +36,16 @@ final class UserBlocks extends BaseApi
     {
         $response = $this->httpClient->get('/user-blocks?'.http_build_query(['identifier' => $identifier]));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/User_Blocks/delete_user_blocks_by_id
+     *
      * @param string $userId
      *
      * @return mixed
@@ -40,10 +54,16 @@ final class UserBlocks extends BaseApi
     {
         $response = $this->httpClient->delete('/user-blocks/'.$userId);
 
-        return ResponseMediator::getContent($response);
+        if (204 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/User_Blocks/delete_user_blocks
+     *
      * @param string $identifier
      *
      * @return mixed
@@ -52,6 +72,10 @@ final class UserBlocks extends BaseApi
     {
         $response = $this->httpClient->delete('/user-blocks?'.http_build_query(['identifier' => $identifier]));
 
-        return ResponseMediator::getContent($response);
+        if (204 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }

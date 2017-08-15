@@ -8,6 +8,8 @@ use Auth0\SDK\API\Helpers\ResponseMediator;
 final class ClientGrants extends BaseApi
 {
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
+     *
      * @param string|null $audience
      *
      * @return array|string
@@ -21,10 +23,16 @@ final class ClientGrants extends BaseApi
 
         $response = $this->httpClient->get('/client-grants'.$query);
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/post_client_grants
+     *
      * @param string $clientId
      * @param string $audience
      * @param string $scope
@@ -39,10 +47,16 @@ final class ClientGrants extends BaseApi
             'scope'     => $scope,
         ]));
 
-        return ResponseMediator::getContent($response);
+        if (201 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
+     *
      * @param string $id
      *
      * @return array|string
@@ -51,10 +65,16 @@ final class ClientGrants extends BaseApi
     {
         $response = $this->httpClient->delete('/client-grants/'.$id);
 
-        return ResponseMediator::getContent($response);
+        if (204 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 
     /**
+     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/patch_client_grants_by_id
+     *
      * @param string $id
      * @param string $scope
      *
@@ -66,6 +86,10 @@ final class ClientGrants extends BaseApi
             'scope' => $scope,
         ]));
 
-        return ResponseMediator::getContent($response);
+        if (200 === $response->getStatusCode()) {
+            return ResponseMediator::getContent($response);
+        }
+
+        $this->handleExceptions($response);
     }
 }
