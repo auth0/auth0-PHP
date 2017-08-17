@@ -42,9 +42,9 @@ final class JWKFetcher
      */
     public function fetchKeys($iss)
     {
-        $url = "{$iss}.well-known/jwks.json";
+        $cacheKey = sha1("{$iss}.well-known/jwks.json");
 
-        if (null === $this->cache || ($secret = $this->cache->get($url)) === null) {
+        if (null === $this->cache || ($secret = $this->cache->get($cacheKey)) === null) {
             $secret = [];
 
             $httpClient = (new HttpClientBuilder($iss))->buildHttpClient();
@@ -56,7 +56,7 @@ final class JWKFetcher
             }
 
             if ($this->cache) {
-                $this->cache->set($url, $secret);
+                $this->cache->set($cacheKey, $secret);
             }
         }
 
