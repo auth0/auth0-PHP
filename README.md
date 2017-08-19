@@ -165,7 +165,6 @@ This package uses composer for mantianing dependencies. However, if you cannot u
 #### 4.0
 
 - Soon to deprecate the following clases:
-    + Auth0\SDK\Auth0: use \Auth0\SDK\API\Authentication or \Auth0\SDK\API\Oauth2Client instead
     + Auth0\SDK\Auth0Api: use \Auth0\SDK\API\Management instead
     + Auth0\SDK\Auth0AuthApi: use \Auth0\SDK\API\Authentication instead
     + Auth0\SDK\Auth0JWT: Use \Auth0\SDK\JWTVerifier instead
