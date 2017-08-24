@@ -198,7 +198,6 @@ $usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
 
 - Now, all the SDK is under the namespace `\Auth0\SDK`
 - The exceptions were moved to the namespace `\Auth0\SDK\Exceptions`
-- The method `Auth0::getUserInfo` is deprecated and soon to be removed. We encourage to use `Auth0::getUser` to enforce the adoption of the API v2
 
 ### New features
 
