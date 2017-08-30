@@ -47,13 +47,6 @@ class Users extends GenericResource {
         return $client->call();
     }
 
-    public function deleteAll() {
-
-        return $this->apiClient->delete()
-            ->users()
-            ->call();
-    }
-
     public function delete($user_id) {
 
         return $this->apiClient->delete()

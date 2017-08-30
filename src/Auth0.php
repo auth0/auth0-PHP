@@ -230,7 +230,7 @@ class Auth0 {
       $this->setStore(new SessionStore());
     }
 
-    $this->authentication = new Authentication ($this->domain, $this->client_id, $this->client_secret, $this->guzzleOptions);
+    $this->authentication = new Authentication ($this->domain, $this->client_id, $this->client_secret, $this->audience, $this->scope, $this->guzzleOptions);
 
     $this->user = $this->store->get("user");
     $this->access_token = $this->store->get("access_token");
