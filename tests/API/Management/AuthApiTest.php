@@ -40,7 +40,7 @@ class AuthApiTest extends ApiTests {
         $this->assertArrayHasKey('email_verified', $userinfo);
         $this->assertArrayHasKey('user_id', $userinfo);
         $this->assertEquals('german@auth0.com', $userinfo['email']);
-        $this->assertEquals('auth0|57e293c6247600bf0ba47fc2', $userinfo['user_id']);
+        $this->assertEquals('auth0|58adc60b82b0ca0774643eef', $userinfo['user_id']);
     }
 
     public function testOauthToken() {
