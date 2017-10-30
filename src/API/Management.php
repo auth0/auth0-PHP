@@ -16,6 +16,7 @@ use Auth0\SDK\API\Management\Tenants;
 use Auth0\SDK\API\Management\Tickets;
 use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
+use Auth0\SDK\API\Management\UsersByEmail;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
@@ -146,6 +147,7 @@ class Management {
     $this->tickets = new Tickets($this->apiClient);
     $this->userBlocks = new UserBlocks($this->apiClient);
     $this->users = new Users($this->apiClient);
+    $this->usersByEmail = new UsersByEmail($this->apiClient);
   }
 
   protected function setApiClient() {
