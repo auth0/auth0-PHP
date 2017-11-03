@@ -230,7 +230,7 @@ class Auth0 {
       $this->setStore(new SessionStore());
     }
 
-    $this->authentication = new Authentication ($this->domain, $this->client_id, $this->client_secret, $this->audience, $this->scope, $this->guzzleOptions);
+    $this->authentication = new Authentication ($this->domain, $this->client_id, $this->client_secret, $this->audience, $this->scope, $this->guzzleOptions, $this->store);
 
     $this->user = $this->store->get("user");
     $this->access_token = $this->store->get("access_token");
@@ -296,6 +296,15 @@ class Auth0 {
     $code = $this->getAuthorizationCode();
     if (!$code) {
       return false;
+    }
+
+    $state = $this->getState();
+    if (!$state) {
+      return false;
+    }
+
+    if($this->store->get("state") != $state) {
+      throw new CoreException('State validation failed, states do not match.');
     }
 
     if ($this->user) {
@@ -382,6 +391,16 @@ class Auth0 {
       return (isset($_GET['code']) ? $_GET['code'] : null);
     } elseif ($this->response_mode === 'form_post') {
       return (isset($_POST['code']) ? $_POST['code'] : null);
+    }
+
+    return null;
+  }
+
+  protected function getState() {
+    if ($this->response_mode === 'query') {
+      return (isset($_GET['state']) ? $_GET['state'] : null);
+    } elseif ($this->response_mode === 'form_post') {
+      return (isset($_POST['state']) ? $_POST['state'] : null);
     }
 
     return null;
