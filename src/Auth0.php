@@ -8,6 +8,9 @@ use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\API\Helpers\State\StateHandler;
+use Auth0\SDK\API\Helpers\State\SessionStateHandler;
+use Auth0\SDK\API\Helpers\State\DummyStateHandler;
 
 /**
  * This class provides access to Auth0 Platform.
@@ -133,6 +136,12 @@ class Auth0 {
   protected $guzzleOptions;
 
   /**
+   * State Handler
+   * @var StateHandler
+   */
+  protected $stateHandler;
+
+  /**
    * BaseAuth0 Constructor.
    *
    * Configuration:
@@ -229,8 +238,19 @@ class Auth0 {
     } else {
       $this->setStore(new SessionStore());
     }
+    if (isset($config['state_handler'])) {
+      if ($config['state_handler'] === false) {
+        $this->stateHandler = new DummyStateHandler();
+      } else {
+        $this->stateHandler = $config['state_handler'];
+      }
+    } elseif ($config['store'] === false) {
+      $this->stateHandler = new DummyStateHandler();
+    } else {
+      $this->stateHandler = new SessionStateHandler(new SessionStore());
+    }
 
-    $this->authentication = new Authentication ($this->domain, $this->client_id, $this->client_secret, $this->audience, $this->scope, $this->guzzleOptions, $this->store);
+    $this->authentication = new Authentication ($this->domain, $this->client_id, $this->client_secret, $this->audience, $this->scope, $this->guzzleOptions);
 
     $this->user = $this->store->get("user");
     $this->access_token = $this->store->get("access_token");
@@ -245,6 +265,10 @@ class Auth0 {
     }
     if ($this->scope) {
       $params['scope'] = $this->scope;
+    }
+
+    if($state === null) {
+      $state = $this->stateHandler->issue();
     }
 
     $params['response_mode'] = $this->response_mode;
@@ -303,9 +327,7 @@ class Auth0 {
       return false;
     }
 
-    if($this->store->get("state") != $state) {
-      throw new CoreException('State validation failed, states do not match.');
-    }
+    $this->stateHandler->validate($state);
 
     if ($this->user) {
       throw new CoreException('Can\'t initialize a new session while there is one active session already');

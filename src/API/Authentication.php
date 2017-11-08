@@ -5,7 +5,6 @@ use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\ApiException;
-use Auth0\SDK\Store\SessionStore;
 use GuzzleHttp\Psr7;
 
 class Authentication {
@@ -15,9 +14,8 @@ class Authentication {
   private $domain;
   private $apiClient;
   private $guzzleOptions;
-  private $store;
 
-  public function __construct($domain, $client_id = null, $client_secret = null, $audience = null, $scope = null, $guzzleOptions = [], $store = null) {
+  public function __construct($domain, $client_id = null, $client_secret = null, $audience = null, $scope = null, $guzzleOptions = []) {
 
     $this->client_id = $client_id;
     $this->client_secret = $client_secret;
@@ -25,7 +23,6 @@ class Authentication {
     $this->guzzleOptions = $guzzleOptions;
     $this->audience = $audience;
     $this->scope = $scope;
-    $this->store = $store;
 
     $this->setApiClient();
   }
@@ -64,12 +61,6 @@ class Authentication {
 
     if($state !== null) {
       $aditional_params['state'] = $state;
-    } else {
-      $aditional_params['state'] = bin2hex(openssl_random_pseudo_bytes(32));
-    }
-
-    if($this->store !== null) {
-      $this->store->set('state', $aditional_params['state']);
     }
 
     $query_string = Psr7\build_query($aditional_params);

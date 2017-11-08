@@ -13,9 +13,9 @@ class AuthApiTest extends ApiTests {
 
         $api = new Authentication($domain, $client_id);
 
-        $authorize_url = $api->get_authorize_link('code', 'http://lala.com', null);
+        $authorize_url = $api->get_authorize_link('code', 'http://lala.com');
 
-        $this->assertRegExp('@^https://dummy\.auth0\.com/authorize\?response_type=code&redirect_uri=http%3A%2F%2Flala\.com&client_id=123456&state=[0-9a-z]{64}@', $authorize_url);
+        $this->assertEquals("https://dummy.auth0.com/authorize?response_type=code&redirect_uri=http%3A%2F%2Flala.com&client_id=123456", $authorize_url);
 
         $authorize_url2 = $api->get_authorize_link('token', 'http://lala.com', 'facebook', 'dastate');
 
