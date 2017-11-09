@@ -325,13 +325,12 @@ class Auth0 {
     }
 
     $state = $this->getState();
-    if (!$state) {
-      return false;
-    }
 
-    if (!$this->stateHandler->validate($state)) {
-      throw new CoreException('Invalid state');
-    }
+    if($this->stateHandler->hasState()) {
+      if (!$this->stateHandler->validate($state)) {
+        throw new CoreException('Invalid state');
+      }
+    } 
 
     if ($this->user) {
       throw new CoreException('Can\'t initialize a new session while there is one active session already');

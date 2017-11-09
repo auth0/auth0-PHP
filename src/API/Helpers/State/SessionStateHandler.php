@@ -21,6 +21,8 @@ use Auth0\SDK\Exception\CoreException;
  */
 class SessionStateHandler implements StateHandler 
 {
+    const STATE_NAME = 'webauth_state';
+
     private $store;
 
     /**
@@ -37,7 +39,7 @@ class SessionStateHandler implements StateHandler
      */
     public function issue() {
         $state = uniqid('', true);
-        $this->store->set('webauth_state', $state);
+        $this->store->set(self::STATE_NAME, $state);
         return $state;
     }
 
@@ -47,7 +49,16 @@ class SessionStateHandler implements StateHandler
      * @return string
      */
     public function store($state) {
-        $this->store->set('webauth_state', $state);
+        $this->store->set(self::STATE_NAME, $state);
+    }
+
+    /**
+     * Return status that a state is currently stored in the handler.
+     * 
+     * @return bool
+     */
+    public function hasState() {
+        return $this->store->get(self::STATE_NAME) !== null;
     }
 
     /**
@@ -58,6 +69,8 @@ class SessionStateHandler implements StateHandler
      * @throws exception
      */
     public function validate($state) {
-        return ($this->store->get('webauth_state') == $state);
+        $valid = $this->store->get(self::STATE_NAME) == $state;
+        $this->store->delete(self::STATE_NAME);
+        return $valid;
     }
 }

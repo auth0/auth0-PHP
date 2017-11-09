@@ -35,6 +35,15 @@ class DummyStateHandler implements StateHandler
     }
 
     /**
+     * Return status that a state is currently stored in the handler.
+     * 
+     * @return bool
+     */
+    public function hasState() {
+        return true;
+    }
+
+    /**
      * Perform validation of the returned state with the previously generated state.
      * 
      * @param  string $state
