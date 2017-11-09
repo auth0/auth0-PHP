@@ -36,9 +36,18 @@ class SessionStateHandler implements StateHandler
      * @return string
      */
     public function issue() {
-        $state = bin2hex(openssl_random_pseudo_bytes(32));
-        $this->store->set('state', $state);
+        $state = uniqid('', true);
+        $this->store->set('webauth_state', $state);
         return $state;
+    }
+
+    /**
+     * Store a given state value to be used for the state param value during authorization.
+     * 
+     * @return string
+     */
+    public function store($state) {
+        $this->store->set('webauth_state', $state);
     }
 
     /**
@@ -49,9 +58,6 @@ class SessionStateHandler implements StateHandler
      * @throws exception
      */
     public function validate($state) {
-        if($this->store->get('state') != $state) {
-            throw new CoreException('State validation failed, states do not match.');
-        }
-        $this->store->delete('state');
+        return ($this->store->get('webauth_state') == $state);
     }
 }

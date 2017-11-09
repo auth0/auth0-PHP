@@ -23,15 +23,23 @@ interface StateHandler {
     /**
      * Generate state value to be used for the state param value during authorization.
      * 
-     * @return string
+     * @return string || null
      */
     public function issue();
+
+    /**
+     * Store a given state value to be used for the state param value during authorization.
+     * 
+     * @return string
+     */
+    public function store($state);
 
     /**
      * Perform validation of the returned state with the previously generated state.
      * 
      * @param  string $state
      * 
+     * @return bool result
      * @throws exception
      */
     public function validate($state);
