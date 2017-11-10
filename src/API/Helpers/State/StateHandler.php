@@ -35,13 +35,6 @@ interface StateHandler {
     public function store($state);
 
     /**
-     * Return status that a state is currently stored in the handler.
-     * 
-     * @return bool
-     */
-    public function hasState();
-
-    /**
      * Perform validation of the returned state with the previously generated state.
      * 
      * @param  string $state

@@ -51,16 +51,7 @@ class SessionStateHandler implements StateHandler
     public function store($state) {
         $this->store->set(self::STATE_NAME, $state);
     }
-
-    /**
-     * Return status that a state is currently stored in the handler.
-     * 
-     * @return bool
-     */
-    public function hasState() {
-        return $this->store->get(self::STATE_NAME) !== null;
-    }
-
+    
     /**
      * Perform validation of the returned state with the previously generated state.
      * 

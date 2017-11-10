@@ -244,8 +244,6 @@ class Auth0 {
       } else {
         $this->stateHandler = $config['state_handler'];
       }
-    } elseif (isset($config['store']) && $config['store'] === false) {
-      $this->stateHandler = new DummyStateHandler();
     } else {
       $this->stateHandler = new SessionStateHandler(new SessionStore());
     }
@@ -326,11 +324,9 @@ class Auth0 {
 
     $state = $this->getState();
 
-    if($this->stateHandler->hasState()) {
-      if (!$this->stateHandler->validate($state)) {
-        throw new CoreException('Invalid state');
-      }
-    } 
+    if (!$this->stateHandler->validate($state)) {
+      throw new CoreException('Invalid state');
+    }
 
     if ($this->user) {
       throw new CoreException('Can\'t initialize a new session while there is one active session already');
