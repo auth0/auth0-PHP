@@ -229,7 +229,7 @@ final class Auth0
 
         $params['response_mode'] = $this->responseMode;
 
-        $url = $this->authentication->get_authorize_link($this->responseType, $this->redirectUri, $connection, $state, $params);
+        $url = $this->authentication->getAuthorizeLink($this->responseType, $this->redirectUri, $connection, $state, $params);
 
         header("Location: $url");
         exit;
@@ -292,7 +292,7 @@ final class Auth0
             throw new CoreException('Can\'t initialize a new session while there is one active session already');
         }
 
-        $response = $this->authentication->code_exchange($code, $this->redirectUri);
+        $response = $this->authentication->codeExchange($code, $this->redirectUri);
 
         $accessToken = (isset($response['access_token'])) ? $response['access_token'] : false;
         $refreshToken = (isset($response['refresh_token'])) ? $response['refresh_token'] : false;
