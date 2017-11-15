@@ -12,7 +12,7 @@ namespace Auth0\SDK\API\Helpers\State;
  */
 
 /**
- * This interface must be implemented by state handlers.
+ * Dummy implementation of the StateHandler
  *
  * @author Auth0
  */
@@ -31,7 +31,7 @@ class DummyStateHandler implements StateHandler
      * Store state value to be used for the state param value during authorization.
      * 
      */
-    public function state($state) {
+    public function store($state) {
     }
 
     /**

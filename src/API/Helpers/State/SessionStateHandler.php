@@ -15,7 +15,7 @@ use Auth0\SDK\Exception\CoreException;
  */
 
 /**
- * This interface must be implemented by state handlers.
+ * Session based implementation of StateHandler.
  *
  * @author Auth0
  */
