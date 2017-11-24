@@ -1,5 +1,14 @@
 # Change Log
 
+## [5.0.6](https://github.com/auth0/auth0-PHP/tree/5.0.4) (2017-11-24)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.4...5.0.6)
+
+**Added**
+- Add support for the new users by email API [\#213](https://github.com/auth0/auth0-PHP/pull/213) ([erichard](https://github.com/erichard))
+
+**Fixed**
+- Fixes build [\#211](https://github.com/auth0/auth0-PHP/pull/211) ([aknosis](https://github.com/aknosis))
+
 ## [5.0.4](https://github.com/auth0/auth0-PHP/tree/5.0.4) (2017-06-26)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.0...5.0.4)
 
