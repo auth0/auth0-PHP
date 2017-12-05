@@ -256,7 +256,8 @@ class Auth0 {
     $this->refresh_token = $this->store->get("refresh_token");
   }
 
-  public function login($state = null, $connection = null) {
+  public function login($state = null, $connection = null, $additional_params = []) {
+
     $params = [];
     if ($this->audience) {
       $params['audience'] = $this->audience;
@@ -272,6 +273,10 @@ class Auth0 {
     }
 
     $params['response_mode'] = $this->response_mode;
+
+    if($additional_params) {
+      $params = array_replace($params, $additional_params);
+    }
 
     $url = $this->authentication->get_authorize_link($this->response_type, $this->redirect_uri, $connection, $state, $params);
 
