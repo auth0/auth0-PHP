@@ -24,12 +24,13 @@ Check our docs page to get a complete guide on how to install it in an existing 
 
 > If you find something wrong in our docs, PR are welcome in our docs repo: https://github.com/auth0/docs
 
-## Upgrade Notes 5.1.0+
+## Security Upgrade Notes 5.1.0+
 
-**State validation** has now been added as default behaviour for security. By default this will automatically use **Session Storage** and will
-apply if you are using the combination of the `Auth0->login()` method  to call `/authorize` and using the `Auth0->exchange` method in your callback. If you require custom storage methods you can implement your own [StateHandler](https://github.com/auth0/auth0-PHP/blob/master/src/API/Helpers/State/StateHandler.php) and set it using the `state_handler` key when you initialize an `Auth0` instance.
+**State validation** is now default behaviour for improved security. By default this will automatically use **Session Storage** and will
+apply if you are using the combination of the `Auth0->login()` method to call the `/authorize` endpoint and using any method which calls the `Auth0->exchange()` method in your callback.
+If you require custom storage methods you can implement your own [StateHandler](https://github.com/auth0/auth0-PHP/blob/master/src/API/Helpers/State/StateHandler.php) and set it using the `state_handler` key when you initialize an `Auth0` instance.
 
-**Important:** If you are using a mixture and/or handling your own callback you should disable the *StateHandler* by setting the `state_handler` key to `false` when you initialize the `Auth0` instance.
+**Important:** If you are using the `Auth0->exchange()` and using a method other than `Auth0->login()` to generate the Authorize URL you can disable the *StateHandler* by setting the `state_handler` key to `false` when you initialize the `Auth0` instance. However, it is **Highly Recommended** to implement state validation.
 
 ## Getting started
 
