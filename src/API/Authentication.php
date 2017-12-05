@@ -347,6 +347,15 @@ final class Authentication extends BaseApi
         return $this->oauthToken('authorization_code', $options);
     }
 
+    /**
+     * Makes a call to the `oauth/token` endpoint with `refresh_token` grant type.
+     *
+     * @param string $refreshToken
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return array
+     */
     public function refreshTokenExchange($refreshToken)
     {
         $options = [];
