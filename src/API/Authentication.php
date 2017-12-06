@@ -348,6 +348,24 @@ final class Authentication extends BaseApi
     }
 
     /**
+     * Makes a call to the `oauth/token` endpoint with `refresh_token` grant type.
+     *
+     * @param string $refreshToken
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return array
+     */
+    public function refreshTokenExchange($refreshToken)
+    {
+        $options = [];
+
+        $options['refresh_token'] = $refreshToken;
+
+        return $this->oauthToken('refresh_token', $options);
+    }
+    
+    /**
      * Makes a call to the `oauth/token` endpoint with `password-realm` grant type.
      *
      * @param string $username
