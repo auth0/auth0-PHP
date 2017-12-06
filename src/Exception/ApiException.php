@@ -33,6 +33,9 @@ abstract class ApiException extends \RuntimeException implements Exception
     {
         $e = new static();
         $e->response = $response;
+        if (is_array($message)) {
+            $message = json_encode($message);
+        }
         $e->message = $message;
 
         return $e;
