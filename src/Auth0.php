@@ -8,6 +8,9 @@ use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\API\Helpers\State\StateHandler;
+use Auth0\SDK\API\Helpers\State\SessionStateHandler;
+use Auth0\SDK\API\Helpers\State\DummyStateHandler;
 
 /**
  * This class provides access to Auth0 Platform.
@@ -133,6 +136,12 @@ class Auth0 {
   protected $guzzleOptions;
 
   /**
+   * State Handler
+   * @var StateHandler
+   */
+  protected $stateHandler;
+
+  /**
    * BaseAuth0 Constructor.
    *
    * Configuration:
@@ -229,6 +238,15 @@ class Auth0 {
     } else {
       $this->setStore(new SessionStore());
     }
+    if (isset($config['state_handler'])) {
+      if ($config['state_handler'] === false) {
+        $this->stateHandler = new DummyStateHandler();
+      } else {
+        $this->stateHandler = $config['state_handler'];
+      }
+    } else {
+      $this->stateHandler = new SessionStateHandler(new SessionStore());
+    }
 
     $this->authentication = new Authentication ($this->domain, $this->client_id, $this->client_secret, $this->audience, $this->scope, $this->guzzleOptions);
 
@@ -238,7 +256,8 @@ class Auth0 {
     $this->refresh_token = $this->store->get("refresh_token");
   }
 
-  public function login($state = null, $connection = null) {
+  public function login($state = null, $connection = null, $additional_params = []) {
+
     $params = [];
     if ($this->audience) {
       $params['audience'] = $this->audience;
@@ -247,7 +266,17 @@ class Auth0 {
       $params['scope'] = $this->scope;
     }
 
+    if($state === null) {
+      $state = $this->stateHandler->issue();
+    } else {
+      $this->stateHandler->store($state);
+    }
+
     $params['response_mode'] = $this->response_mode;
+
+    if($additional_params) {
+      $params = array_replace($params, $additional_params);
+    }
 
     $url = $this->authentication->get_authorize_link($this->response_type, $this->redirect_uri, $connection, $state, $params);
 
@@ -296,6 +325,12 @@ class Auth0 {
     $code = $this->getAuthorizationCode();
     if (!$code) {
       return false;
+    }
+
+    $state = $this->getState();
+
+    if (!$this->stateHandler->validate($state)) {
+      throw new CoreException('Invalid state');
     }
 
     if ($this->user) {
@@ -382,6 +417,16 @@ class Auth0 {
       return (isset($_GET['code']) ? $_GET['code'] : null);
     } elseif ($this->response_mode === 'form_post') {
       return (isset($_POST['code']) ? $_POST['code'] : null);
+    }
+
+    return null;
+  }
+
+  protected function getState() {
+    if ($this->response_mode === 'query') {
+      return (isset($_GET['state']) ? $_GET['state'] : null);
+    } elseif ($this->response_mode === 'form_post') {
+      return (isset($_POST['state']) ? $_POST['state'] : null);
     }
 
     return null;
