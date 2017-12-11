@@ -21,6 +21,13 @@ $auth0 = new Auth0([
   'persist_refresh_token' => true,
 ]);
 
+if (isset($_REQUEST['logout'])) {
+  $auth0->logout();
+  session_destroy();
+  header("Location: /");
+  die();
+}
+
 $userInfo = $auth0->getUser();
 
 if (!$userInfo) {

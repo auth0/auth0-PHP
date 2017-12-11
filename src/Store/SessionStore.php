@@ -10,8 +10,6 @@ namespace Auth0\SDK\Store;
  * For the full copyright and license information, please view the LICENSE file
  * that was distributed with this source code.
  */
-use Auth0\SDK\API\Oauth2Client;
-
 
 /**
  * This class provides a layer to persist user access using PHP Sessions.
