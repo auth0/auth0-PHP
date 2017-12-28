@@ -44,6 +44,8 @@ class Tenants extends GenericResource
     return $this->apiClient->patch()
       ->tenants()
       ->settings()
+      ->withHeader(new ContentType('application/json'))
+      ->withBody(json_encode($data))
       ->call();
   }
 }
