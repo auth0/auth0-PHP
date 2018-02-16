@@ -42,10 +42,13 @@ class JWKFetcher {
             .'-----END CERTIFICATE-----'.PHP_EOL;
     }
 
-    /**
-     * @param string $iss
-     * @return array|null
-     */
+  /**
+   * @param string $iss
+   *
+   * @return array|mixed|null
+   *
+   * @throws \Exception
+   */
     public function fetchKeys($iss) {
         $url = "{$iss}.well-known/jwks.json";
 

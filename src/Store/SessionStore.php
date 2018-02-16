@@ -44,7 +44,7 @@ class SessionStore implements StoreInterface
 
 
     /**
-     * Persists $value on $_SESSION, idetified by $key.
+     * Persists $value on $_SESSION, identified by $key.
      *
      * @param string $key
      * @param mixed $value
@@ -56,8 +56,8 @@ class SessionStore implements StoreInterface
     }
 
     /**
-     * Gets persisted values idetified by $key.
-     * If the value is not setted, returns $default.
+     * Gets persisted values identified by $key.
+     * If the value is not set, returns $default.
      *
      * @param  string  $key
      * @param  mixed   $default

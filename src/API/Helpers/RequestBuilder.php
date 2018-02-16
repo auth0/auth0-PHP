@@ -187,9 +187,11 @@ class RequestBuilder {
         );
     }
 
-    /**
-     * @return mixed|string
-     */
+  /**
+   * @return mixed|string
+   *
+   * @throws \Exception
+   */
     public function call() {
 
         $client = new Client( $this->getGuzzleOptions() );

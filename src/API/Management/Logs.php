@@ -2,10 +2,8 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\ContentType;
 
-class Logs extends GenericResource 
+class Logs extends GenericResource
 {
     /**
      * @param string $id

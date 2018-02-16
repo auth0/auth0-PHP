@@ -119,6 +119,11 @@ class Management {
   public $users;
 
     /**
+     * @var UsersByEmail
+     */
+  public $usersByEmail;
+
+    /**
      * Management constructor.
      *
      * @param string $token

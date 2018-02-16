@@ -49,7 +49,7 @@ abstract class BasicCrudTest extends ApiTests {
 
         $this->afterCreate($created);
 
-        $client3 = $client->update($this->getId($created), $this->getUpdateBody());
+        $client->update($this->getId($created), $this->getUpdateBody());
 
         $get = $client->get($this->getId($created));
         $this->afterUpdate($get);
