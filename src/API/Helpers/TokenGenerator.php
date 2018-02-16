@@ -14,6 +14,11 @@ class TokenGenerator {
      */
     protected $client_secret;
 
+    /**
+     * @var string
+     */
+    protected $secret_base64_encoded;
+
      /**
      * TokenGenerator Constructor.
      *
@@ -21,6 +26,7 @@ class TokenGenerator {
      *     - client_id              (String)  Required. The id of the application, you can get this in the
      *                                                  auth0 console
      *     - client_secret          (String)  Required. The application secret, same comment as above
+     *     - secret_base64_encoded  (Bool)  Required. Is the secret Base64 encoded?
      *
      * @param array $credentials
      */

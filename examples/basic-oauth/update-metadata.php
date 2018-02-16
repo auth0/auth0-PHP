@@ -23,10 +23,7 @@ $userInfo = $auth0->getUser();
 ?>
 
 <form action="?update-metadata" method="POST">
-
-    <textarea name='metadata'>
-        <?php echo json_encode($userInfo["user_metadata"]); ?>
-    </textarea>
-
+    <label for="field-metadata"></label>
+    <textarea name="metadata" id="field-metadata"><?php echo json_encode($userInfo["user_metadata"]); ?></textarea>
     <input type="submit" name="update" value="Update" />
 </form>

@@ -42,11 +42,13 @@ class SessionStateHandler implements StateHandler
         return $state;
     }
 
-    /**
-     * Store a given state value to be used for the state param value during authorization.
-     * 
-     * @return string
-     */
+  /**
+   * Store a given state value to be used for the state param value during authorization.
+   *
+   * @param string $state
+   *
+   * @return mixed|void
+   */
     public function store($state) {
         $this->store->set(self::STATE_NAME, $state);
     }
