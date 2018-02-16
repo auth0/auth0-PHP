@@ -115,6 +115,12 @@ class Auth0 {
   */
   protected $access_token;
   /**
+  * JWT for identity information
+  *
+  * @var string
+  */
+  protected $id_token;
+  /**
   * Store
   *
   * @var StoreInterface
@@ -322,7 +328,10 @@ class Auth0 {
   /**
    * Code exchange
    *
-   * @throws CoreException If there is an active session already.
+   * @throws CoreException - if an active session already or state cannot be validated
+   * @throws ApiException - if access token is invalid
+   *
+   * @returns bool
    */
   public function exchange() {
     $code = $this->getAuthorizationCode();
@@ -374,7 +383,7 @@ class Auth0 {
    *
    * @param string $access_token
    *
-   * @return Auth0\SDK\BaseAuth0
+   * @return \Auth0\SDK\Auth0
    */
   public function setAccessToken($access_token) {
     $key = array_search('access_token',$this->persistantMap);
@@ -389,7 +398,7 @@ class Auth0 {
    *
    * @param string $id_token
    *
-   * @return Auth0\SDK\BaseAuth0
+   * @return \Auth0\SDK\Auth0
    */
   public function setIdToken($id_token) {
     $key = array_search('id_token',$this->persistantMap);
@@ -404,7 +413,7 @@ class Auth0 {
    *
    * @param string $refresh_token
    *
-   * @return Auth0\SDK\BaseAuth0
+   * @return \Auth0\SDK\Auth0
    */
   public function setRefreshToken($refresh_token) {
     $key = array_search('refresh_token',$this->persistantMap);
@@ -464,7 +473,7 @@ class Auth0 {
   /**
    * @param StoreInterface $store
    *
-   * @return Auth0\SDK\BaseAuth0
+   * @return \Auth0\SDK\Auth0
    */
   public function setStore(StoreInterface $store) {
     $this->store = $store;

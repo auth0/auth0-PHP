@@ -85,10 +85,9 @@ label {
 }
 .answer {
   width: 70%;
-  margin: auto;
+  margin: auto auto 20px;
   text-align: left;
   padding-left: 10%;
-  margin-bottom: 20px;
 }
 .login-page .login-box {
   padding: 100px 0;

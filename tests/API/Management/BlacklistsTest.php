@@ -6,6 +6,8 @@ use Auth0\Tests\API\ApiTests;
 
 class BlacklistsTest extends ApiTests {
 
+    private $domain;
+
     public function testBlacklistAndGet() {
         $env = $this->getEnv();
         $token = $this->getToken($env, [

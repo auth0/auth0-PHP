@@ -101,11 +101,25 @@ class Oauth2Client {
     protected $access_token;
 
     /**
+     * JWT for identity information
+     *
+     * @var string
+     */
+    protected $id_token;
+
+    /**
      * The user object
      *
      * @var string
      */
     protected $user;
+
+    /**
+     * Storage object
+     *
+     * @var string
+     */
+    protected $store;
 
     /**
      * OAuth2 Client.
@@ -304,6 +318,8 @@ class Oauth2Client {
      * Requests user info to Auth0 server.
      *
      * @return array
+     *
+     * @throws ApiException
      */
     public function getUser() {
         // Ensure we have the user info
@@ -320,11 +336,15 @@ class Oauth2Client {
     /**
      * Updates the user metadata. This end up calling the path /users/{id_user}
      * To delete an attribute, just set it null. ie: [ 'old_attr' => null ]
-     * It will only update the existing attrs and keep the others untouch
-     * for more info:
-     *       https://auth0.com/docs/apiv2#!/users/patch_users_by_id
+     * It will only update the existing attrs and keep the others untouched
+     *
+     * TODO: Replace Auth0Api with Management
+     *
+     * @see https://auth0.com/docs/apiv2#!/users/patch_users_by_id
      *
      * @param array $metadata
+     *
+     * @throws ApiException
      */
     public function updateUserMetadata($metadata) {
 
@@ -402,8 +422,11 @@ class Oauth2Client {
     }
 
     /**
-     * Gets $access_token.
+     * Gets an access_token
+     *
      * @return string
+     *
+     * @throws ApiException
      */
     final public function getAccessToken() {
         if ($this->access_token === null) {
@@ -413,7 +436,8 @@ class Oauth2Client {
     }
 
     /**
-     * Gets $refresh_token.
+     * Gets a refresh_token
+     *
      * @return string
      */
     final public function getRefreshToken() {
@@ -440,7 +464,10 @@ class Oauth2Client {
 
     /**
      * Gets the id token
+     *
      * @return string
+     *
+     * @throws ApiException
      */
     final public function getIdToken() {
         if ($this->id_token === null) {
@@ -450,7 +477,7 @@ class Oauth2Client {
     }
 
     /**
-     * Logout (removes all persisten data)
+     * Logout (removes all persistent data)
      */
     final public function logout()
     {

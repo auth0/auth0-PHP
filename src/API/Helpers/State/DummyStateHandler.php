@@ -21,26 +21,30 @@ class DummyStateHandler implements StateHandler
     /**
      * Generate state value to be used for the state param value during authorization.
      * 
-     * @return string
+     * @return string|null
      */
     public function issue() {
         return null;
     }
 
-    /**
-     * Store state value to be used for the state param value during authorization.
-     * 
-     */
+  /**
+   * Store state value to be used for the state param value during authorization.
+   *
+   * @param string $state
+   *
+   * @return string|void
+   */
     public function store($state) {
     }
 
     /**
      * Perform validation of the returned state with the previously generated state.
      * 
-     * @param  string $state
+     * @param string $state
      * 
      * @return bool result
-     * @throws exception
+     *
+     * @throws \Exception
      */
     public function validate($state) {
         return true;

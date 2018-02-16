@@ -5,7 +5,6 @@
 [![Code Climate](https://codeclimate.com/github/auth0/auth0-PHP/badges/gpa.svg)](https://codeclimate.com/github/auth0/auth0-PHP)
 [![Test Coverage](https://codeclimate.com/github/auth0/auth0-PHP/badges/coverage.svg)](https://codeclimate.com/github/auth0/auth0-PHP/coverage)
 [![Dependencies](https://www.versioneye.com/php/auth0:auth0-php/badge.svg)](https://www.versioneye.com/php/auth0:auth0-php)
-[![HHVM Status](http://hhvm.h4cc.de/badge/auth0/auth0-php.svg)](http://hhvm.h4cc.de/package/auth0/auth0-php)
 [![License](https://poser.pugx.org/auth0/auth0-php/license)](https://packagist.org/packages/auth0/auth0-php)
 [![Total Downloads](https://poser.pugx.org/auth0/auth0-php/downloads)](https://packagist.org/packages/auth0/auth0-php)
 
@@ -62,7 +61,7 @@ Accepted params:
 - **cache**: Receives an instance of `Auth0\SDK\Helpers\Cache\CacheHandler` (Supported `FileSystemCacheHandler` and `NoCacheHandler`). Defaults to `NoCacheHandler`.
 - **guzzle_options**: Configuration propagated to guzzle when fetching the JWKs.
 - **supported_algs**: `RS256` and `HS256` supported. Defaults to `HS256`.
-- **valid_audiences**: List of audiences that identifies the API (usefull for multitenant environments).
+- **valid_audiences**: List of audiences that identifies the API (useful for multi-tenant environments).
 - **authorized_iss**: List of issues authorized to sign tokens for the API.
 - **client_secret**: Client secret used to verify the token signature (only for `HS256`).
 - **secret_base64_encoded**: When `true`, it will decode the secret used to verify the token signature. Defaults to `true` (used only for `HS256`).
@@ -156,7 +155,7 @@ This is a common issue with latest PHP versions under windows (related to a inco
 
 > I am not using composer, my host does not allow using Composer
 
-This package uses composer for mantianing dependencies. However, if you cannot use composer on your server. Please follow the following steps and upload these dependencies manually.
+This package uses composer for maintaining dependencies. However, if you cannot use composer on your server. Please follow the following steps and upload these dependencies manually.
 
 - Download and install composer on your local environment.
 - Install auth0-PHP using composer.
@@ -172,7 +171,7 @@ This package uses composer for mantianing dependencies. However, if you cannot u
 
 #### 4.0
 
-- Soon to deprecate the following clases:
+- Soon to deprecate the following classes:
     + Auth0\SDK\Auth0Api: use \Auth0\SDK\API\Management instead
     + Auth0\SDK\Auth0AuthApi: use \Auth0\SDK\API\Authentication instead
     + Auth0\SDK\Auth0JWT: Use \Auth0\SDK\JWTVerifier instead
@@ -182,7 +181,7 @@ This package uses composer for mantianing dependencies. However, if you cannot u
 
 #### 3.x
 
-- SDK api changes, now the Auth0 API client is not build of static clases anymore. Usage example:
+- SDK api changes, now the Auth0 API client is not build of static classes anymore. Usage example:
 ```php
 $token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
 $domain = "account.auth0.com";
@@ -282,7 +281,7 @@ This SDK uses [Composer](http://getcomposer.org/doc/01-basic-usage.md) to manage
 
 Auth0 helps you to:
 
-* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
+* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, among others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
 * Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
 * Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
 * Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
@@ -300,7 +299,7 @@ If you have found a bug or if you have a feature request, please report them at 
 
 ## Author
 
-[Auth0](auth0.com)
+[Auth0](https://auth0.com)
 
 ## License
 
