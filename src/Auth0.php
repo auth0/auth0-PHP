@@ -238,8 +238,8 @@ class Auth0 {
     $this->refresh_token = $this->store->get("refresh_token");
   }
 
-  public function login($state = null, $connection = null) {
-    $params = [];
+  public function login($state = null, $connection = null, $additional_params = []) {
+    $params = $additional_params;
     if ($this->audience) {
       $params['audience'] = $this->audience;
     }
