@@ -39,7 +39,7 @@ class SessionStateHandler implements StateHandler
      */
     public function issue() {
         $state = uniqid('', true);
-        $this->store->set(self::STATE_NAME, $state);
+        $this->store($state);
         return $state;
     }
 
