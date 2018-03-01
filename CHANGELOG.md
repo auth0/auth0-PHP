@@ -1,5 +1,17 @@
 # Change Log
 
+## [5.1.0](https://github.com/auth0/auth0-PHP/tree/5.1.0) (2018-03-02)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.6...5.1.0)
+
+**Closed issues**
+- Support for php-jwt 5 [\#210](https://github.com/auth0/auth0-PHP/issues/210)
+
+**Added**
+- Adding tests for state handler; correcting storage method used [\#228](https://github.com/auth0/auth0-PHP/pull/228) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Bumping JWT package version [\#229](https://github.com/auth0/auth0-PHP/pull/229) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.0.6](https://github.com/auth0/auth0-PHP/tree/5.0.4) (2017-11-24)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.4...5.0.6)
 
