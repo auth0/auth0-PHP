@@ -3,7 +3,6 @@
 namespace Auth0\SDK\API\Helpers\State;
 
 use Auth0\SDK\Store\SessionStore;
-use Auth0\SDK\Exception\CoreException;
 
 /*
  * This file is part of Auth0-PHP package.
@@ -54,10 +53,12 @@ class SessionStateHandler implements StateHandler
     
     /**
      * Perform validation of the returned state with the previously generated state.
-     * 
-     * @param  string $state
-     * 
-     * @throws exception
+     *
+     * @param string $state
+     *
+     * @return bool
+     *
+     * @throws \Exception
      */
     public function validate($state) {
         $valid = $this->store->get(self::STATE_NAME) == $state;

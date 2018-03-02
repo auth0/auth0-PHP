@@ -273,8 +273,8 @@ class Auth0 {
     }
 
     $params['response_mode'] = $this->response_mode;
-
-    if($additional_params) {
+    
+    if( ! empty( $additional_params ) && is_array( $additional_params ) ) {
       $params = array_replace($params, $additional_params);
     }
 
