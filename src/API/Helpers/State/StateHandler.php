@@ -18,7 +18,8 @@ use Auth0\SDK\Store\StoreInterface;
  *
  * @author Auth0
  */
-interface StateHandler {
+interface StateHandler
+{
 
     /**
      * Generate state value to be used for the state param value during authorization.
