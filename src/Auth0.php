@@ -158,7 +158,8 @@ class Auth0 {
    *     - persist_id_token       (Boolean) Optional. Indicates if you want to persist the id token, default false
    *     - store                  (Mixed)   Optional. Indicates how we store the persisting methods, default is session
    *                                                  store, you can pass false to avoid storing it or a class that
-   *                                                  implements a store (get, set, delete). TODO: add a proper interface
+   *                                                  implements the StorageInterface
+   *     - state_handler            (Mixed) Optional  Indicates how to handle the state, default is SessionStateHandler using a newly opened session, you can pass false to avoid handling the state or a class that implements the StateHandler interface
    *     - debug                  (Boolean) Optional. Default false
    *     - guzzle_options          (Object) Optional. Options forwarded to Guzzle
    *
