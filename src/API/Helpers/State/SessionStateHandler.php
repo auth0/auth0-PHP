@@ -2,7 +2,7 @@
 
 namespace Auth0\SDK\API\Helpers\State;
 
-use Auth0\SDK\Store\SessionStore;
+use Auth0\SDK\Store\StoreInterface;
 
 /*
  * This file is part of Auth0-PHP package.
@@ -25,9 +25,9 @@ class SessionStateHandler implements StateHandler
     private $store;
 
     /**
-     * @param SessionStore $store
+     * @param StoreInterface $store
      */
-    public function __construct(SessionStore $store) {
+    public function __construct(StoreInterface $store) {
         $this->store = $store;
     }
 
