@@ -7,6 +7,16 @@ use Auth0\SDK\API\Header\ContentType;
 
 class ResourceServers extends GenericResource 
 {
+  /**
+   * @return mixed
+   */
+  public function getAll()
+  {
+    return $this->apiClient->get()
+      ->addPath('resource-servers')
+      ->call();
+  }
+  
     /**
      * @param string $id
      * @return mixed
