@@ -1,5 +1,20 @@
 # Change Log
 
+## [5.1.1](https://github.com/auth0/auth0-PHP/tree/5.1.1) (2018-04-03)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.1.0...5.1.1)
+
+**Closed issues**
+- State Handler with Custom Session Store [\#233](https://github.com/auth0/auth0-PHP/issues/233)
+- Implement ResourceServices::getAll [\#200](https://github.com/auth0/auth0-PHP/issues/200)
+
+**Added**
+- Implement ResourceServices::getAll() [\#236](https://github.com/auth0/auth0-PHP/pull/236) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Incorrect type hint on SessionStateHandler __construct [\#235](https://github.com/auth0/auth0-PHP/pull/235) ([joshcanhelp](https://github.com/joshcanhelp))
+- Auth0 class documentation fixed for store and state handler [\#232](https://github.com/auth0/auth0-PHP/pull/232) ([jspetrak](https://github.com/jspetrak))
+- Fixing minor code quality issues [\#231](https://github.com/auth0/auth0-PHP/pull/231) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.1.0](https://github.com/auth0/auth0-PHP/tree/5.1.0) (2018-03-02)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.6...5.1.0)
 
