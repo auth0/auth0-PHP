@@ -64,7 +64,7 @@ Accepted params:
 - **supported_algs**: `RS256` and `HS256` supported. Defaults to `HS256`.
 - **valid_audiences**: List of audiences that identifies the API (usefull for multitenant environments).
 - **authorized_iss**: List of issues authorized to sign tokens for the API.
-- **client_secret**: Client secret used to verify the token signature (only for `HS256`).
+- **client_secret**: Application Secret used to verify the token signature (only for `HS256`).
 - **secret_base64_encoded**: When `true`, it will decode the secret used to verify the token signature. Defaults to `true` (used only for `HS256`).
 
 ### Oauth2 authentication
