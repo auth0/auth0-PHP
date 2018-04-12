@@ -251,7 +251,7 @@ class Auth0 {
       if ($config['state_handler'] === false) {
         $this->stateHandler = new DummyStateHandler();
       } else {
-        $this->stateHandler = $config['state_handler'];
+        $this->stateHandler = new $config['state_handler'];
       }
     } else {
       $this->stateHandler = new SessionStateHandler(new SessionStore());
