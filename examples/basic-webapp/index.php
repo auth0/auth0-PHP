@@ -1,82 +1,65 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-use Auth0\SDK\Auth0;
-use Dotenv\Dotenv;
-
 // Require composer autoloader
 require __DIR__ . '/vendor/autoload.php';
 
-// Load env variables
-// https://github.com/vlucas/phpdotenv#usage
-$dotenv = new Dotenv( __DIR__ );
-$dotenv->load();
+require __DIR__ . '/dotenv-loader.php';
 
-// Create a new Auth0 instance
-// https://github.com/auth0/auth0-PHP#oauth2-authentication
-$auth0 = new Auth0( [
-  'domain' => $_ENV[ 'AUTH0_DOMAIN' ],
-  'client_id' => $_ENV[ 'AUTH0_CLIENT_ID' ],
-  'client_secret' => $_ENV[ 'AUTH0_CLIENT_SECRET' ],
-  'redirect_uri' => $_ENV[ 'AUTH0_CALLBACK_URL' ],
-  'scope' => 'openid profile email',
+use Auth0\SDK\Auth0;
+
+$domain        = getenv('AUTH0_DOMAIN');
+$client_id     = getenv('AUTH0_CLIENT_ID');
+$client_secret = getenv('AUTH0_CLIENT_SECRET');
+$redirect_uri  = getenv('AUTH0_CALLBACK_URL');
+
+$auth0 = new Auth0([
+  'domain' => $domain,
+  'client_id' => $client_id,
+  'client_secret' => $client_secret,
+  'redirect_uri' => $redirect_uri,
   'persist_id_token' => true,
   'persist_refresh_token' => true,
-] );
+]);
 
-if ( isset( $_GET['logout'] ) ) {
-  
-  // Catch logout requests and process
+if (isset($_REQUEST['logout'])) {
   $auth0->logout();
   session_destroy();
-  header( 'Location: ' . $_ENV[ 'AUTH0_CALLBACK_URL' ] );
+  header("Location: /");
   die();
-  
-} elseif ( isset( $_GET[ 'login' ] ) ) {
-  
-  // Redirect to the hosted login page
+}
+
+$userInfo = $auth0->getUser();
+
+if (!$userInfo) {
   $auth0->login();
 }
 
-// Get userinfo from session or from code exchange after login
-$userinfo = $auth0->getUser();
-
-// Redirect to not show auth parameters (not required)
-if ( ! empty( $_GET['code'] ) ) {
-  header( 'Location: ' . $_ENV[ 'AUTH0_CALLBACK_URL' ] );
-  die();
-}
-?><!DOCTYPE html>
-<html lang="en">
+?>
+<html>
     <head>
-        <meta charset="UTF-8">
-        <title>Auth0 PHP Webapp Example</title>
-        <link rel="stylesheet" href="https://cdn.auth0.com/styleguide/core/2.0.5/core.min.css" />
-        <link rel="stylesheet" href="https://cdn.auth0.com/styleguide/components/2.0.0/components.min.css" />
-        <link type="text/css" rel="stylesheet" href="main.css">
+        <script src="http://code.jquery.com/jquery-3.0.0.min.js" type="text/javascript"></script>
+
+        <script type="text/javascript" src="//use.typekit.net/iws6ohy.js"></script>
+        <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- font awesome from BootstrapCDN -->
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+
+        <link href="public/app.css" rel="stylesheet">
+
     </head>
-    <body>
-        <section>
-            <img class="logo" src="//cdn.auth0.com/samples/auth0_logo_final_blue_RGB.png">
-            <?php if ( ! empty( $_GET['error'] ) ) : ?>
-                <div class="alert alert-danger"><?php echo strip_tags( $_GET['error'] ) ?></div>
-            <?php endif; ?>
-            <?php if ( $userinfo ) :
-                $picture = filter_var( $userinfo['picture'], FILTER_SANITIZE_URL );
-                $nickname = filter_var( $userinfo['email'], FILTER_SANITIZE_STRING );
-                $email = filter_var( $userinfo['email'], FILTER_SANITIZE_EMAIL );
-                ?>
-                <img class="avatar" src="<?php echo $picture; ?>"/>
-                <h1><?php echo $nickname; ?></h1>
-                <p class="<?php echo $userinfo[ 'email_verified' ] ? 'verified' : 'not-verified'; ?>">
-                    <a href="mailto:<?php echo $email; ?>"><?php echo $email; ?></a></p>
-                <p><a class="btn btn-success" href="?logout" tabindex="1">Logout</a></p>
-            <?php else : ?>
-                <p><a class="btn btn-primary" href="?login" tabindex="1">Login</a></p>
-            <?php endif; ?>
-        </section>
+    <body class="home">
+        <div class="container">
+            <div class="login-page clearfix">
+              <div class="logged-in-box auth0-box logged-in">
+                <h1 id="logo"><img src="//cdn.auth0.com/samples/auth0_logo_final_blue_RGB.png" /></h1>
+                <img class="avatar" src="<?php echo $userInfo['picture'] ?>"/>
+                <h2>Welcome <span class="nickname"><?php echo $userInfo['nickname'] ?></span></h2>
+              </div>
+            </div>
+        </div>
     </body>
 </html>
