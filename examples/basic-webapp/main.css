@@ -1,0 +1,53 @@
+/* https://styleguide.auth0.com */
+
+body {
+    background: #E3E5E7;
+    padding: 3%;
+    margin: 0;
+}
+
+section {
+    padding: 3%;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    margin: 0 auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+img {
+    display: inline-block;
+}
+
+img.logo {
+    width: 50%;
+    margin-bottom: 2em;
+}
+
+img.avatar {
+    width: 80%;
+}
+
+.verified {
+    color: #7ED321;
+}
+
+.verified:after {
+    content: '✓';
+}
+
+.not-verified {
+    color: #FF3E00;
+}
+
+.not-verified:after {
+    content: '✗';
+}
+
+.verified:after,
+.not-verified:after {
+    display: inline-block;
+    margin-left: 0.25em;
+    font-size: 2em;
+    vertical-align: middle;
+}
