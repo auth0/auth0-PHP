@@ -2,8 +2,18 @@
     "name": "auth0/basic-webapp-sample",
     "description": "Basic sample for securing a WebApp with Auth0",
     "require": {
-         "vlucas/phpdotenv": "^2.0",
+         "vlucas/phpdotenv": "2.3.0",
          "auth0/auth0-php": "^5.0"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin Gontovnikas",
+            "email": "martin@gon.to"
+        },
+        {
+            "name": "Germán Lena",
+            "email": "german.lena@gmail.com"
+        }
+    ]
 }
