@@ -1,28 +1,29 @@
-# Auth0 + PHP WebApp Seed
-This is the seed project you need to use if you're going to create a PHP Regular WebApp. If you want to build an API to use with a SPA or a Mobile app, you should check [this other seed project](https://github.com/auth0/auth0-PHP/tree/master/examples/basic-api)
+# Auth0 PHP SDK web application example
 
-This example is deployed at Heroku at [http://php-webapp.herokuapp.com/](http://php-webapp.herokuapp.com/)
+This is a simple example of how to authenticate with Auth0 using the PHP SDK. This example requires PHP version 5.6 or higher and [Composer](https://getcomposer.org/doc/00-intro.md).
 
-#Running the example
-In order to run the example you need to have `composer` and `php` installed.
+First, install Composer dependencies in this directory using one of the two commands below:
 
-You also need to set the ClientSecret, ClientId, Domain and Callback URL for your Auth0 app as environment variables with the following names respectively: `AUTH0_CLIENT_SECRET`, `AUTH0_CLIENT_ID`, `AUTH0_DOMAIN` and `AUTH0_CALLBACK_URL`.
+```bash
+# If installed globally, use:
+composer install;
 
-For that, if you just create a file named `.env` in the directory and set the values like the following, the app will just work:
+# If downloaded for this project, use:
+php composer.phar install;
+```
 
-````bash
-# .env file
-AUTH0_CLIENT_SECRET=myCoolSecret
-AUTH0_CLIENT_ID=myCoolClientId
-AUTH0_DOMAIN=yourDomain.auth0.com
-AUTH0_CALLBACK_URL=http://your.url/
-````
+Next, move the example environment file to one that will be used for this project:
 
-Once you've set those 4 environment variables, just run the following to get the app started:
+```bash
+mv example.env .env
+``` 
 
-````bash
-composer install
+Login to your Auth0 account (or create one for free [here](https://auth0.com/signup)) and [create a new Regular Web Application](https://auth0.com/docs/clients). Add `http://localhost:3000` to the **Allowed Callback URLs** and **Allowed Web Origins** fields. 
+
+Now, copy and paste the Domain, Client ID, and Client Secret into the `.env` file created above. Add `http://localhost:3000` as the `AUTH0_CALLBACK_URL` so this application can process the authentication.
+
+Finally, start the built-in PHP server and visit [http://localhost:3000](http://localhost:3000) in your browser:
+
+```bash
 php -S localhost:3000
-````
-
-Now, try calling [http://localhost:3000/](http://localhost:3000/)
+```
