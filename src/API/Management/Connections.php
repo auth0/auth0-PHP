@@ -37,7 +37,19 @@ class Connections extends GenericResource
             $request->withParam('include_fields', $include_fields);
         }
 
-        return $request->call();
+        $request->withParam('per_page', 100);
+        $allConnections = [];
+        $page = 0;
+
+        do
+        {
+            $request->withParam('page', $page);
+            $connections = $request->call();
+            $allConnections = array_merge($allConnections, $connections);
+            $page++;
+        } while (count($connections) == 100);
+
+        return $allConnections;
     }
 
     /**
