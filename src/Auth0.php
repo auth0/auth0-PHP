@@ -1,4 +1,9 @@
 <?php
+/**
+ * Main entry point to the Auth0 SDK
+ *
+ * @package Auth0\SDK
+ */
 
 namespace Auth0\SDK;
 
@@ -14,241 +19,282 @@ use Auth0\SDK\API\Helpers\State\DummyStateHandler;
 
 /**
  * This class provides access to Auth0 Platform.
- *
- * @author Auth0
  */
 class Auth0
 {
-  /**
-  * Available keys to persist data.
-  *
-  * @var array
-  */
-    public $persistantMap = array(
-    'refresh_token',
-    'access_token',
-    'user',
-    'id_token'
-    );
-  /**
-  * Auth0 URL Map.
-  *
-  * @var array
-  */
-    public static $URL_MAP = array(
-    'api'           => 'https://{domain}/api/',
-    'authorize'     => 'https://{domain}/authorize/',
-    'token'     => 'https://{domain}/oauth/token/',
-    'user_info'     => 'https://{domain}/userinfo/',
-    );
-  /**
-  * Auth0 Domain.
-  *
-  * @var string
-  */
+
+    /**
+     * Available keys to persist data.
+     *
+     * @var array
+     */
+    public $persistantMap = [
+        'refresh_token',
+        'access_token',
+        'user',
+        'id_token',
+    ];
+
+    /**
+     * Auth0 URL Map.
+     *
+     * @var array
+     */
+    public static $URL_MAP = [
+        'api'           => 'https://{domain}/api/',
+        'authorize'     => 'https://{domain}/authorize/',
+        'token'     => 'https://{domain}/oauth/token/',
+        'user_info'     => 'https://{domain}/userinfo/',
+    ];
+
+    /**
+     * Auth0 Domain.
+     *
+     * @var string
+     */
     protected $domain;
-  /**
-  * Auth0 Client ID
-  *
-  * @var string
-  */
-    protected $client_id;
-  /**
-  * Auth0 Client Secret
-  *
-  * @var string
-  */
-    protected $client_secret;
-  /**
-  * Response Mode
-  *
-  * @var string
-  */
-    protected $response_mode = 'query';
-  /**
-  * Response Type
-  *
-  * @var string
-  */
-    protected $response_type = 'code';
-  /**
-  * Audience
-  *
-  * @var string
-  */
+
+    /**
+     * Auth0 Client ID
+     *
+     * @var string
+     */
+    protected $clientId;
+
+    /**
+     * Auth0 Client Secret
+     *
+     * @var string
+     */
+    protected $clientSecret;
+
+    /**
+     * Response Mode
+     *
+     * @var string
+     */
+    protected $responseMode = 'query';
+
+    /**
+     * Response Type
+     *
+     * @var string
+     */
+    protected $responseType = 'code';
+
+    /**
+     * Audience
+     *
+     * @var string
+     */
     protected $audience;
-  /**
-  * Scope
-  *
-  * @var string
-  */
+
+    /**
+     * Scope
+     *
+     * @var string
+     */
     protected $scope;
-  /**
-  * Auth0 Refresh Token
-  *
-  * @var string
-  */
-    protected $refresh_token;
-  /**
-  * Redirect URI needed on OAuth2 requests.
-  *
-  * @var string
-  */
-    protected $redirect_uri;
-  /**
-  * Debug mode flag.
-  *
-  * @var Boolean
-  */
-    protected $debug_mode;
-  /**
-  * Debugger function.
-  * Will be called only if $debug_mode is true.
-  *
-  * @var \Closure
-  */
+
+    /**
+     * Auth0 Refresh Token
+     *
+     * @var string
+     */
+    protected $refreshToken;
+
+    /**
+     * Redirect URI needed on OAuth2 requests.
+     *
+     * @var string
+     */
+    protected $redirectUri;
+
+    /**
+     * Debug mode flag.
+     *
+     * @var boolean
+     */
+    protected $debugMode;
+
+    /**
+     * Debugger function.
+     * Will be called only if $debug_mode is true.
+     *
+     * @var \Closure
+     */
     protected $debugger;
-  /**
-  * The access token retrieved after authorization.
-  * NULL means that there is no authorization yet.
-  *
-  * @var string
-  */
-    protected $access_token;
-  /**
-  * JWT for identity information
-  *
-  * @var string
-  */
-    protected $id_token;
-  /**
-  * Store
-  *
-  * @var StoreInterface
-  */
+
+    /**
+     * The access token retrieved after authorization.
+     * NULL means that there is no authorization yet.
+     *
+     * @var string
+     */
+    protected $accessToken;
+
+    /**
+     * JWT for identity information
+     *
+     * @var string
+     */
+    protected $idToken;
+
+    /**
+     * Store
+     *
+     * @var StoreInterface
+     */
     protected $store;
-  /**
-  * The user object
-  *
-  * @var string
-  */
+
+    /**
+     * The user object
+     *
+     * @var string
+     */
     protected $user;
-  /**
-  * Authentication Client.
-  *
-  * @var \Auth0\SDK\API\Authentication
-  */
+
+    /**
+     * Authentication Client.
+     *
+     * @var \Auth0\SDK\API\Authentication
+     */
     protected $authentication;
 
+    /**
+     * Configuration options for Guzzle HTTP client.
+     *
+     * @var array
+     *
+     * @see http://docs.guzzlephp.org/en/stable/request-options.html
+     */
     protected $guzzleOptions;
 
-  /**
-   * State Handler
-   * @var StateHandler
-   */
+    /**
+     * State Handler.
+     *
+     * @var StateHandler
+     */
     protected $stateHandler;
 
-  /**
-   * BaseAuth0 Constructor.
-   *
-   * Configuration:
-   *     - domain                 (String)  Required. Should match your Auth0 domain
-   *     - client_id              (String)  Required. The id of the application, you can get this in the
-   *                                                  auth0 console
-   *     - client_secret          (String)  Required. The application secret, same comment as above
-   *     - redirect_uri           (String)  Required. The uri of the auth callback, used as a security method
-   *     - response_mode          (String)  Optional. Default `query`
-   *     - response_type          (String)  Optional. Default `code`
-   *     - persist_user           (Boolean) Optional. Indicates if you want to persist the user info, default true
-   *     - persist_access_token   (Boolean) Optional. Indicates if you want to persist the access token, default false
-   *     - persist_refresh_token  (Boolean) Optional. Indicates if you want to persist the refresh token, default false
-   *     - persist_id_token       (Boolean) Optional. Indicates if you want to persist the id token, default false
-   *     - store                  (Mixed)   Optional. Indicates how we store the persisting methods, default is session
-   *                                                  store, you can pass false to avoid storing it or a class that
-   *                                                  implements the StorageInterface
-   *     - state_handler            (Mixed) Optional  Indicates how to handle the state, default is SessionStateHandler
-   *                                                  using a newly opened session, you can pass false to avoid handling
-   *                                                  the state or a class that implements the StateHandler interface
-   *     - debug                  (Boolean) Optional. Default false
-   *     - guzzle_options          (Object) Optional. Options forwarded to Guzzle
-   *
-   * @param array $config Required
-   *
-   * @throws CoreException If `domain` is not provided.
-   * @throws CoreException If `client_id` is not provided.
-   * @throws CoreException If `client_secret` is not provided.
-   * @throws CoreException If `redirect_uri` is not provided.
-   */
+    /**
+     * BaseAuth0 Constructor.
+     *
+     * Configuration:
+     *     - domain                 (String)  Required. Should match your Auth0 domain
+     *     - client_id              (String)  Required. The id of the application, you can get this in the
+     *                                                  auth0 console
+     *     - client_secret          (String)  Required. The application secret, same comment as above
+     *     - redirect_uri           (String)  Required. The uri of the auth callback, used as a security method
+     *     - response_mode          (String)  Optional. Default `query`
+     *     - response_type          (String)  Optional. Default `code`
+     *     - persist_user           (Boolean) Optional. Persist the user info, default true
+     *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
+     *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
+     *     - persist_id_token       (Boolean) Optional. Persist the ID token, default false
+     *     - store                  (Mixed)   Optional. How to store persisting methods, default is SessionStore, you
+     *                                                  can pass false to avoid storage it or a class that implements
+     *                                                  StorageInterface
+     *     - state_handler            (Mixed) Optional  How to handle state, default is SessionStateHandler using a
+     *                                                  newly opened session, you can pass false to avoid handling
+     *                                                  the state or a class that implements the StateHandler interface
+     *     - debug                  (Boolean) Optional. Default false
+     *     - guzzle_options          (Object) Optional. Options forwarded to Guzzle
+     *
+     * @param array $config - Required configuration options.
+     *
+     * @throws CoreException If `domain` is not provided.
+     * @throws CoreException If `client_id` is not provided.
+     * @throws CoreException If `client_secret` is not provided.
+     * @throws CoreException If `redirect_uri` is not provided.
+     */
     public function __construct(array $config)
     {
-        if (!empty($config['domain'])) {
-            $this->domain = $config['domain'];
-        } else {
+        if (empty($config['domain'])) {
             throw new CoreException('Invalid domain');
         }
-        if (!empty($config['client_id'])) {
-            $this->client_id = $config['client_id'];
-        } else {
+
+        if (empty($config['client_id'])) {
             throw new CoreException('Invalid client_id');
         }
-        if (!empty($config['client_secret'])) {
-            $this->client_secret = $config['client_secret'];
-        } else {
+
+        if (empty($config['client_secret'])) {
             throw new CoreException('Invalid client_secret');
         }
-        if (!empty($config['redirect_uri'])) {
-            $this->redirect_uri = $config['redirect_uri'];
-        } else {
+
+        if (empty($config['redirect_uri'])) {
             throw new CoreException('Invalid redirect_uri');
         }
+
+        $this->domain       = $config['domain'];
+        $this->clientId     = $config['client_id'];
+        $this->clientSecret = $config['client_secret'];
+        $this->redirectUri  = $config['redirect_uri'];
+
         if (isset($config['audience'])) {
             $this->audience = $config['audience'];
         }
+
         if (isset($config['response_mode'])) {
-            $this->response_mode = $config['response_mode'];
+            $this->responseMode = $config['response_mode'];
         }
+
         if (isset($config['response_type'])) {
-            $this->response_type = $config['response_type'];
+            $this->responseType = $config['response_type'];
         }
+
         if (isset($config['scope'])) {
             $this->scope = $config['scope'];
         }
+
         if (isset($config['guzzle_options'])) {
             $this->guzzleOptions = $config['guzzle_options'];
         }
+
         if (isset($config['debug'])) {
-            $this->debug_mode = $config['debug'];
+            $this->debugMode = $config['debug'];
         } else {
-            $this->debug_mode = false;
+            $this->debugMode = false;
         }
-      // User info is persisted unless said otherwise
+
+        // User info is persisted unless said otherwise.
         if (isset($config['persist_user']) && $config['persist_user'] === false) {
-            $this->dontPersist('user');
+            $this->_dontPersist('user');
         }
-      // Access token is not persisted unless said otherwise
-        if (!isset($config['persist_access_token']) || (isset($config['persist_access_token']) &&
-            $config['persist_access_token'] === false)) {
-            $this->dontPersist('access_token');
+
+        // Access token is not persisted unless said otherwise.
+        if (!isset($config['persist_access_token']) || (isset($config['persist_access_token'])
+            && $config['persist_access_token'] === false)
+        ) {
+            $this->_dontPersist('access_token');
         }
-      // Refresh token is not persisted unless said otherwise
-        if (!isset($config['persist_refresh_token']) || (isset($config['persist_refresh_token']) &&
-            $config['persist_refresh_token'] === false)) {
-            $this->dontPersist('refresh_token');
+
+        // Refresh token is not persisted unless said otherwise.
+        if (!isset($config['persist_refresh_token']) || (isset($config['persist_refresh_token'])
+            && $config['persist_refresh_token'] === false)
+        ) {
+            $this->_dontPersist('refresh_token');
         }
-      // Id token is not per persisted unless said otherwise
-        if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
-            $config['persist_id_token'] === false)) {
-            $this->dontPersist('id_token');
+
+        // ID token is not persisted unless said otherwise.
+        if (!isset($config['persist_id_token']) || (isset($config['persist_id_token'])
+            && $config['persist_id_token'] === false)
+        ) {
+            $this->_dontPersist('id_token');
         }
+
         if (isset($config['store'])) {
             if ($config['store'] === false) {
-                $this->setStore(new EmptyStore());
+                $emptyStore = new EmptyStore();
+                $this->setStore($emptyStore);
             } else {
                 $this->setStore($config['store']);
             }
         } else {
-            $this->setStore(new SessionStore());
+            $sessionStore = new SessionStore();
+            $this->setStore($sessionStore);
         }
+
         if (isset($config['state_handler'])) {
             if ($config['state_handler'] === false) {
                 $this->stateHandler = new DummyStateHandler();
@@ -256,24 +302,45 @@ class Auth0
                 $this->stateHandler = $config['state_handler'];
             }
         } else {
-            $this->stateHandler = new SessionStateHandler(new SessionStore());
+            $stateStore         = new SessionStore();
+            $this->stateHandler = new SessionStateHandler($stateStore);
         }
 
-        $this->authentication = new Authentication($this->domain, $this->client_id, $this->client_secret, $this->audience, $this->scope, $this->guzzleOptions);
+        $this->authentication = new Authentication(
+            $this->domain,
+            $this->clientId,
+            $this->clientSecret,
+            $this->audience,
+            $this->scope,
+            $this->guzzleOptions
+        );
 
-        $this->user = $this->store->get("user");
-        $this->access_token = $this->store->get("access_token");
-        $this->id_token = $this->store->get("id_token");
-        $this->refresh_token = $this->store->get("refresh_token");
+        $this->user         = $this->store->get('user');
+        $this->accessToken  = $this->store->get('access_token');
+        $this->idToken      = $this->store->get('id_token');
+        $this->refreshToken = $this->store->get('refresh_token');
+
     }
 
-    public function login($state = null, $connection = null, $additional_params = [])
+    /**
+     * Redirect to the hosted login page for a specific client
+     *
+     * @param null  $state            - state value.
+     * @param null  $connection       - connection to use.
+     * @param array $additionalParams - additional, valid parameters.
+     *
+     * @return void
+     *
+     * @see \Auth0\SDK\API\Authentication::get_authorize_link()
+     * @see https://auth0.com/docs/api/authentication#login
+     */
+    public function login($state=null, $connection=null, $additionalParams=[])
     {
-
         $params = [];
         if ($this->audience) {
             $params['audience'] = $this->audience;
         }
+
         if ($this->scope) {
             $params['scope'] = $this->scope;
         }
@@ -284,62 +351,110 @@ class Auth0
             $this->stateHandler->store($state);
         }
 
-        $params['response_mode'] = $this->response_mode;
-    
-        if (! empty($additional_params) && is_array($additional_params)) {
-            $params = array_replace($params, $additional_params);
+        $params['response_mode'] = $this->responseMode;
+
+        if (! empty($additionalParams) && is_array($additionalParams)) {
+            $params = array_replace($params, $additionalParams);
         }
 
-        $url = $this->authentication->get_authorize_link($this->response_type, $this->redirect_uri, $connection, $state, $params);
+        $url = $this->authentication->get_authorize_link(
+            $this->responseType,
+            $this->redirectUri,
+            $connection,
+            $state,
+            $params
+        );
 
-        header("Location: $url");
+        header('Location: '.$url);
         exit;
+
     }
 
+    /**
+     * Get userinfo from persisted session or from a code exchange
+     *
+     * @return array|null
+     *
+     * @throws ApiException (see self::exchange()).
+     * @throws CoreException (see self::exchange()).
+     */
     public function getUser()
     {
-        if ($this->user) {
-            return $this->user;
+        if (!$this->user) {
+            $this->exchange();
         }
-        $this->exchange();
+
         return $this->user;
+
     }
 
-    public function getIdToken()
-    {
-        if ($this->id_token) {
-            return $this->id_token;
-        }
-        $this->exchange();
-        return $this->id_token;
-    }
-
+    /**
+     * Get access token from persisted session or from a code exchange
+     *
+     * @return string|null
+     *
+     * @throws ApiException (see self::exchange()).
+     * @throws CoreException (see self::exchange()).
+     */
     public function getAccessToken()
     {
-        if ($this->access_token) {
-            return $this->access_token;
+        if ($this->accessToken) {
+            return $this->accessToken;
         }
+
         $this->exchange();
-        return $this->access_token;
+        return $this->accessToken;
+
     }
 
+    /**
+     * Get ID token from persisted session or from a code exchange
+     *
+     * @return string|null
+     *
+     * @throws ApiException (see self::exchange()).
+     * @throws CoreException (see self::exchange()).
+     */
+    public function getIdToken()
+    {
+        if ($this->idToken) {
+            return $this->idToken;
+        }
+
+        $this->exchange();
+        return $this->idToken;
+
+    }
+
+    /**
+     * Get refresh token from persisted session or from a code exchange
+     *
+     * @return string|null
+     *
+     * @throws ApiException (see self::exchange()).
+     * @throws CoreException (see self::exchange()).
+     */
     public function getRefreshToken()
     {
-        if ($this->refresh_token) {
-            return $this->refresh_token;
+        if ($this->refreshToken) {
+            return $this->refreshToken;
         }
+
         $this->exchange();
-        return $this->refresh_token;
+        return $this->refreshToken;
+
     }
 
-  /**
-   * Code exchange
-   *
-   * @throws CoreException - if an active session already or state cannot be validated
-   * @throws ApiException - if access token is invalid
-   *
-   * @returns bool
-   */
+    /**
+     * Exchange authorization code for access, ID, and refresh tokens
+     *
+     * @throws CoreException - if an active session already or state cannot be validated.
+     * @throws ApiException - if access token is invalid.
+     *
+     * @return boolean
+     *
+     * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
+     */
     public function exchange()
     {
         $code = $this->getAuthorizationCode();
@@ -357,116 +472,168 @@ class Auth0
             throw new CoreException('Can\'t initialize a new session while there is one active session already');
         }
 
-        $response = $this->authentication->code_exchange($code, $this->redirect_uri);
+        $response = $this->authentication->code_exchange($code, $this->redirectUri);
 
-        $access_token = (isset($response['access_token']))? $response['access_token'] : false;
-        $refresh_token = (isset($response['refresh_token']))? $response['refresh_token'] : false;
-        $id_token = (isset($response['id_token']))? $response['id_token'] : false;
-
-        if (!$access_token) {
+        if (empty($response['access_token'])) {
             throw new ApiException('Invalid access_token - Retry login.');
         }
 
-        $this->setAccessToken($access_token);
-        $this->setIdToken($id_token);
-        $this->setRefreshToken($refresh_token);
+        $accessToken = $response['access_token'];
 
-        $user = $this->authentication->userinfo($access_token);
+        $refreshToken = false;
+        if (isset($response['refresh_token'])) {
+            $refreshToken = $response['refresh_token'];
+        }
+
+        $idToken = false;
+        if (isset($response['id_token'])) {
+            $idToken = $response['id_token'];
+        }
+
+        $this->setAccessToken($accessToken);
+        $this->setIdToken($idToken);
+        $this->setRefreshToken($refreshToken);
+
+        $user = $this->authentication->userinfo($accessToken);
         $this->setUser($user);
 
         return true;
+
     }
 
-
-    public function setUser($user)
+    /**
+     * Set the user property to a userinfo array and, if configured, persist
+     *
+     * @param array $user - userinfo from Auth0.
+     *
+     * @return $this
+     */
+    public function setUser(array $user)
     {
         $key = array_search('user', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('user', $user);
         }
+
         $this->user = $user;
         return $this;
+
     }
-  /**
-   * Sets and persists $access_token.
-   *
-   * @param string $access_token
-   *
-   * @return \Auth0\SDK\Auth0
-   */
-    public function setAccessToken($access_token)
+
+    /**
+     * Sets and persists the access token.
+     *
+     * @param string $accessToken - access token returned from the code exchange.
+     *
+     * @return \Auth0\SDK\Auth0
+     */
+    public function setAccessToken($accessToken)
     {
         $key = array_search('access_token', $this->persistantMap);
         if ($key !== false) {
-            $this->store->set('access_token', $access_token);
+            $this->store->set('access_token', $accessToken);
         }
-        $this->access_token = $access_token;
+
+        $this->accessToken = $accessToken;
         return $this;
+
     }
-  /**
-   * Sets and persists $id_token.
-   *
-   * @param string $id_token
-   *
-   * @return \Auth0\SDK\Auth0
-   */
-    public function setIdToken($id_token)
+
+    /**
+     * Sets and persists the ID token.
+     *
+     * @param string $idToken - ID token returned from the code exchange.
+     *
+     * @return \Auth0\SDK\Auth0
+     */
+    public function setIdToken($idToken)
     {
         $key = array_search('id_token', $this->persistantMap);
         if ($key !== false) {
-            $this->store->set('id_token', $id_token);
+            $this->store->set('id_token', $idToken);
         }
-        $this->id_token = $id_token;
+
+        $this->idToken = $idToken;
         return $this;
+
     }
-  /**
-   * Sets and persists $refresh_token.
-   *
-   * @param string $refresh_token
-   *
-   * @return \Auth0\SDK\Auth0
-   */
-    public function setRefreshToken($refresh_token)
+
+    /**
+     * Sets and persists the refresh token.
+     *
+     * @param string $refreshToken - refresh token returned from the code exchange.
+     *
+     * @return \Auth0\SDK\Auth0
+     */
+    public function setRefreshToken($refreshToken)
     {
         $key = array_search('refresh_token', $this->persistantMap);
         if ($key !== false) {
-            $this->store->set('refresh_token', $refresh_token);
+            $this->store->set('refresh_token', $refreshToken);
         }
-        $this->refresh_token = $refresh_token;
+
+        $this->refreshToken = $refreshToken;
         return $this;
+
     }
 
+    /**
+     * Get the authorization code from POST or GET, depending on response_mode
+     *
+     * @return string|null
+     *
+     * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
+     */
     protected function getAuthorizationCode()
     {
-        if ($this->response_mode === 'query') {
-            return (isset($_GET['code']) ? $_GET['code'] : null);
-        } elseif ($this->response_mode === 'form_post') {
-            return (isset($_POST['code']) ? $_POST['code'] : null);
+        $code = null;
+        if ($this->responseMode === 'query' && isset($_GET['code'])) {
+            $code = $_GET['code'];
+        } else if ($this->responseMode === 'form_post' && isset($_POST['code'])) {
+            $code = $_POST['code'];
         }
 
-        return null;
+        return $code;
     }
 
+    /**
+     * Get the state from POST or GET, depending on response_mode
+     *
+     * @return string|null
+     *
+     * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
+     */
     protected function getState()
     {
-        if ($this->response_mode === 'query') {
-            return (isset($_GET['state']) ? $_GET['state'] : null);
-        } elseif ($this->response_mode === 'form_post') {
-            return (isset($_POST['state']) ? $_POST['state'] : null);
+        $state = null;
+        if ($this->responseMode === 'query' && isset($_GET['state'])) {
+            $state = $_GET['state'];
+        } else if ($this->responseMode === 'form_post' && isset($_POST['state'])) {
+            $state = $_POST['state'];
         }
 
-        return null;
+        return $state;
     }
 
+    /**
+     * Delete any persistent data and clear out all stored properties
+     *
+     * @return void
+     */
     public function logout()
     {
         $this->deleteAllPersistentData();
-        $this->access_token = null;
-        $this->user = null;
-        $this->id_token = null;
-        $this->refresh_token = null;
+        $this->accessToken  = null;
+        $this->user         = null;
+        $this->idToken      = null;
+        $this->refreshToken = null;
     }
 
+    /**
+     * Delete all persisted data
+     *
+     * @return void
+     */
     public function deleteAllPersistentData()
     {
         foreach ($this->persistantMap as $key) {
@@ -474,11 +641,14 @@ class Auth0
         }
     }
 
-  /**
-   * Removes $name from the persistantMap, thus not persisting it when we set the value
-   * @param  String $name The value to remove
-   */
-    private function dontPersist($name)
+    /**
+     * Removes $name from the persistantMap, thus not persisting it when we set the value.
+     *
+     * @param string $name - value to remove from persistence.
+     *
+     * @return void
+     */
+    private function _dontPersist($name)
     {
         $key = array_search($name, $this->persistantMap);
         if ($key !== false) {
@@ -486,20 +656,26 @@ class Auth0
         }
     }
 
-  /**
-   * @param StoreInterface $store
-   *
-   * @return \Auth0\SDK\Auth0
-   */
+    /**
+     * Set the storage engine that implements StoreInterface
+     *
+     * @param StoreInterface $store - storage engine to use.
+     *
+     * @return \Auth0\SDK\Auth0
+     */
     public function setStore(StoreInterface $store)
     {
         $this->store = $store;
         return $this;
     }
 
-  /**
-   * @param \Closure $debugger
-   */
+    /**
+     * Set the debugger closure
+     *
+     * @param \Closure $debugger - debugger closure to use.
+     *
+     * @return void
+     */
     public function setDebugger(\Closure $debugger)
     {
         $this->debugger = $debugger;
