@@ -9,6 +9,7 @@
 namespace Auth0\SDK\API\Helpers;
 
 use Auth0\SDK\API\Header\Header;
+use Auth0\SDK\API\Header\ContentType;
 
 class ApiClient {
 
@@ -64,6 +65,31 @@ class ApiClient {
         ));
 
         return $builder->withHeaders($this->headers);
+    }
+
+    /**
+     * Create a new RequestBuilder.
+     * Similar to the above but does not use a magic method.
+     *
+     * @param string $method - HTTP method to use (GET, POST, PATCH, etc).
+     *
+     * @return RequestBuilder
+     */
+    public function method($method) {
+        $method = strtolower( $method );
+        $builder = new RequestBuilder( [
+            'domain' => $this->domain,
+            'basePath' => $this->basePath,
+            'method' => $method,
+            'guzzleOptions' => $this->guzzleOptions
+        ] );
+        $builder->withHeaders($this->headers);
+
+        if ( in_array( $method, [ 'patch', 'post', 'put' ] ) ) {
+            $builder->withHeader( new ContentType('application/json') );
+        }
+
+        return $builder;
     }
 
 }
