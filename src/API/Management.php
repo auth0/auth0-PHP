@@ -75,6 +75,11 @@ class Management {
   public $emails;
 
     /**
+     * @var EmailTemplates
+     */
+  public $emailTemplates;
+
+    /**
      * @var Jobs
      */
   public $jobs;

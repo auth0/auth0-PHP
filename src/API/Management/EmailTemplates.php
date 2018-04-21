@@ -1,46 +1,76 @@
 <?php
-
+/**
+ * @package Auth0\SDK\API\Management
+ */
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Header\ContentType;
-
+/**
+ * Class EmailTemplates.
+ * Handles requests to the Email Templates endpoint of the v2 Management API.
+ *
+ * @package Auth0\SDK\API\Management\EmailTemplates
+ */
 class EmailTemplates extends GenericResource
 {
     /**
-     * Get an email template
+     * Get an email template by name.
+     * The email template needs to already exist or the response will be a 404.
+     * An invalid template name will respond with a 400.
+     * See docs @link below for valid names and fields.
      *
-     * @param string $templateName - the email template name to get
+     * @param string $templateName - the email template name to get.
      *
-     * @return mixed
+     * @return array
+     *
+     * @throws \Exception - if a 200 response was not returned from the API.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName
      */
     public function get($templateName)
     {
-        return $this->apiClient->get()->addPath('email-templates', $templateName)->call();
+        return $this->apiClient->method('get')
+            ->addPath('email-templates', $templateName)
+            ->call();
     }
 
     /**
-     * @param array $data
-     * @return mixed
+     * Patch an email template by name.
+     * This will update only the email template data fields provided (see HTTP PATCH).
+     * See docs @link below for valid names and fields.
+     *
+     * @param string $templateName - the email template name to patch.
+     * @param array $data - an array of data to update.
+     *
+     * @return array - updated data for the template name provided.
+     *
+     * @throws \Exception - if a 200 response was not returned from the API.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
      */
-    public function create($data) 
+    public function patch($templateName, $data)
     {
-        return $this->apiClient->post()
-            ->clients()
-            ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('patch')
+            ->addPath('email-templates', $templateName)
             ->withBody(json_encode($data))
             ->call();
     }
 
     /**
-     * @param string $id
-     * @param array $data
-     * @return mixed
+     * Create an email template by name.
+     * See docs @link below for valid names and fields.
+     *
+     * @param array $data - an array of data to use for the new email, including a valid template name.
+     *
+     * @return mixed|string
+     *
+     * @throws \Exception - if a 200 response was not returned from the API.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates
      */
-    public function patch($id, $data)
+    public function create($data)
     {
-        return $this->apiClient->patch()
-            ->clients($id)
-            ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+            ->addPath('email-templates')
             ->withBody(json_encode($data))
             ->call();
     }
