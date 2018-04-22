@@ -14,9 +14,8 @@ class EmailTemplates extends GenericResource
 {
     /**
      * Get an email template by name.
-     * The email template needs to already exist or the response will be a 404.
-     * An invalid template name will respond with a 400.
      * See docs @link below for valid names and fields.
+     * Requires scope: read:email_templates.
      *
      * @param string $templateName - the email template name to get.
      *
@@ -36,7 +35,8 @@ class EmailTemplates extends GenericResource
     /**
      * Patch an email template by name.
      * This will update only the email template data fields provided (see HTTP PATCH).
-     * See docs @link below for valid names and fields.
+     * See docs @link below for valid names, fields, and possible responses.
+     * Requires scope: update:email_templates.
      *
      * @param string $templateName - the email template name to patch.
      * @param array $data - an array of data to update.
@@ -58,8 +58,11 @@ class EmailTemplates extends GenericResource
     /**
      * Create an email template by name.
      * See docs @link below for valid names and fields.
+     * Requires scope: create:email_templates.
      *
-     * @param array $data - an array of data to use for the new email, including a valid template name.
+     * @param array $data
+     *      An array of data to use for the new email, including a valid `template`.
+     *      See docs link below for required fields.
      *
      * @return mixed|string
      *

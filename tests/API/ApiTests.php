@@ -5,15 +5,15 @@ use Auth0\SDK\API\Helpers\TokenGenerator;
 use josegonzalez\Dotenv\Loader;
 
 class ApiTests extends \PHPUnit_Framework_TestCase {
+
   protected function getEnv() {
-    try {
+    return self::getEnvStatic();
+  }
+
+  protected static function getEnvStatic() {
       $loader = new Loader('.env');
       $loader->parse()
              ->putenv(true);
-    }
-    catch (\InvalidArgumentException $e) {
-      //ignore
-    }
 
     return [
       "GLOBAL_CLIENT_ID" => getenv('GLOBAL_CLIENT_ID'),
@@ -27,7 +27,14 @@ class ApiTests extends \PHPUnit_Framework_TestCase {
   }
 
   protected function getToken($env, $scopes) {
-    $generator = new TokenGenerator([ 'client_id' => $env['GLOBAL_CLIENT_ID'], 'client_secret' => $env['GLOBAL_CLIENT_SECRET' ] ]);
+    return self::getTokenStatic($env, $scopes);
+  }
+
+  protected static function getTokenStatic($env, $scopes) {
+    $generator = new TokenGenerator([
+        'client_id' => $env['GLOBAL_CLIENT_ID'],
+        'client_secret' => $env['GLOBAL_CLIENT_SECRET']
+    ]);
     return $generator->generate($scopes);
   }
 }
