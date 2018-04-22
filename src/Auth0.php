@@ -259,28 +259,28 @@ class Auth0
 
         // User info is persisted unless said otherwise.
         if (isset($config['persist_user']) && $config['persist_user'] === false) {
-            $this->_dontPersist('user');
+            $this->dontPersist('user');
         }
 
         // Access token is not persisted unless said otherwise.
         if (!isset($config['persist_access_token']) || (isset($config['persist_access_token'])
             && $config['persist_access_token'] === false)
         ) {
-            $this->_dontPersist('access_token');
+            $this->dontPersist('access_token');
         }
 
         // Refresh token is not persisted unless said otherwise.
         if (!isset($config['persist_refresh_token']) || (isset($config['persist_refresh_token'])
             && $config['persist_refresh_token'] === false)
         ) {
-            $this->_dontPersist('refresh_token');
+            $this->dontPersist('refresh_token');
         }
 
         // ID token is not persisted unless said otherwise.
         if (!isset($config['persist_id_token']) || (isset($config['persist_id_token'])
             && $config['persist_id_token'] === false)
         ) {
-            $this->_dontPersist('id_token');
+            $this->dontPersist('id_token');
         }
 
         if (isset($config['store'])) {
@@ -319,7 +319,6 @@ class Auth0
         $this->accessToken  = $this->store->get('access_token');
         $this->idToken      = $this->store->get('id_token');
         $this->refreshToken = $this->store->get('refresh_token');
-
     }
 
     /**
@@ -334,7 +333,7 @@ class Auth0
      * @see \Auth0\SDK\API\Authentication::get_authorize_link()
      * @see https://auth0.com/docs/api/authentication#login
      */
-    public function login($state=null, $connection=null, $additionalParams=[])
+    public function login($state = null, $connection = null, $additionalParams = [])
     {
         $params = [];
         if ($this->audience) {
@@ -367,7 +366,6 @@ class Auth0
 
         header('Location: '.$url);
         exit;
-
     }
 
     /**
@@ -385,7 +383,6 @@ class Auth0
         }
 
         return $this->user;
-
     }
 
     /**
@@ -404,7 +401,6 @@ class Auth0
 
         $this->exchange();
         return $this->accessToken;
-
     }
 
     /**
@@ -423,7 +419,6 @@ class Auth0
 
         $this->exchange();
         return $this->idToken;
-
     }
 
     /**
@@ -442,7 +437,6 @@ class Auth0
 
         $this->exchange();
         return $this->refreshToken;
-
     }
 
     /**
@@ -498,7 +492,6 @@ class Auth0
         $this->setUser($user);
 
         return true;
-
     }
 
     /**
@@ -517,7 +510,6 @@ class Auth0
 
         $this->user = $user;
         return $this;
-
     }
 
     /**
@@ -536,7 +528,6 @@ class Auth0
 
         $this->accessToken = $accessToken;
         return $this;
-
     }
 
     /**
@@ -555,7 +546,6 @@ class Auth0
 
         $this->idToken = $idToken;
         return $this;
-
     }
 
     /**
@@ -574,7 +564,6 @@ class Auth0
 
         $this->refreshToken = $refreshToken;
         return $this;
-
     }
 
     /**
@@ -589,7 +578,7 @@ class Auth0
         $code = null;
         if ($this->responseMode === 'query' && isset($_GET['code'])) {
             $code = $_GET['code'];
-        } else if ($this->responseMode === 'form_post' && isset($_POST['code'])) {
+        } elseif ($this->responseMode === 'form_post' && isset($_POST['code'])) {
             $code = $_POST['code'];
         }
 
@@ -608,7 +597,7 @@ class Auth0
         $state = null;
         if ($this->responseMode === 'query' && isset($_GET['state'])) {
             $state = $_GET['state'];
-        } else if ($this->responseMode === 'form_post' && isset($_POST['state'])) {
+        } elseif ($this->responseMode === 'form_post' && isset($_POST['state'])) {
             $state = $_POST['state'];
         }
 
@@ -648,7 +637,7 @@ class Auth0
      *
      * @return void
      */
-    private function _dontPersist($name)
+    private function dontPersist($name)
     {
         $key = array_search($name, $this->persistantMap);
         if ($key !== false) {
