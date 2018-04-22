@@ -18,7 +18,10 @@ use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\API\Helpers\State\DummyStateHandler;
 
 /**
- * This class provides access to Auth0 Platform.
+ * Class Auth0
+ * Provides access to Auth0 authentication functionality.
+ *
+ * @package Auth0\SDK
  */
 class Auth0
 {
@@ -36,7 +39,7 @@ class Auth0
     ];
 
     /**
-     * Auth0 URL Map.
+     * Auth0 URL Map (not currently used in the SDK)
      *
      * @var array
      */
@@ -48,49 +51,49 @@ class Auth0
     ];
 
     /**
-     * Auth0 Domain.
+     * Auth0 Domain, found in Application settings
      *
      * @var string
      */
     protected $domain;
 
     /**
-     * Auth0 Client ID
+     * Auth0 Client ID, found in Application settings
      *
      * @var string
      */
     protected $clientId;
 
     /**
-     * Auth0 Client Secret
+     * Auth0 Client Secret, found in Application settings
      *
      * @var string
      */
     protected $clientSecret;
 
     /**
-     * Response Mode
+     * Response mode
      *
      * @var string
      */
     protected $responseMode = 'query';
 
     /**
-     * Response Type
+     * Response type
      *
      * @var string
      */
     protected $responseType = 'code';
 
     /**
-     * Audience
+     * Audience for the API being used
      *
      * @var string
      */
     protected $audience;
 
     /**
-     * Scope
+     * Scope for ID tokens and /userinfo endpoint
      *
      * @var string
      */
@@ -104,7 +107,7 @@ class Auth0
     protected $refreshToken;
 
     /**
-     * Redirect URI needed on OAuth2 requests.
+     * Redirect URI needed on OAuth2 requests, aka callback URL
      *
      * @var string
      */
@@ -141,14 +144,14 @@ class Auth0
     protected $idToken;
 
     /**
-     * Store
+     * Storage engine for persistence
      *
      * @var StoreInterface
      */
     protected $store;
 
     /**
-     * The user object
+     * The user object provided by Auth0
      *
      * @var string
      */
@@ -180,28 +183,24 @@ class Auth0
     /**
      * BaseAuth0 Constructor.
      *
+     * @param array $config - Required configuration options.
      * Configuration:
-     *     - domain                 (String)  Required. Should match your Auth0 domain
-     *     - client_id              (String)  Required. The id of the application, you can get this in the
-     *                                                  auth0 console
-     *     - client_secret          (String)  Required. The application secret, same comment as above
-     *     - redirect_uri           (String)  Required. The uri of the auth callback, used as a security method
+     *     - domain                 (String)  Required. Auth0 domain for your tenant
+     *     - client_id              (String)  Required. Client ID found in the Application settings
+     *     - client_secret          (String)  Required. Client Secret found in the Application settings
+     *     - redirect_uri           (String)  Required. Authentication callback URI
      *     - response_mode          (String)  Optional. Default `query`
      *     - response_type          (String)  Optional. Default `code`
      *     - persist_user           (Boolean) Optional. Persist the user info, default true
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
      *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
      *     - persist_id_token       (Boolean) Optional. Persist the ID token, default false
-     *     - store                  (Mixed)   Optional. How to store persisting methods, default is SessionStore, you
-     *                                                  can pass false to avoid storage it or a class that implements
-     *                                                  StorageInterface
-     *     - state_handler            (Mixed) Optional  How to handle state, default is SessionStateHandler using a
-     *                                                  newly opened session, you can pass false to avoid handling
-     *                                                  the state or a class that implements the StateHandler interface
-     *     - debug                  (Boolean) Optional. Default false
-     *     - guzzle_options          (Object) Optional. Options forwarded to Guzzle
-     *
-     * @param array $config - Required configuration options.
+     *     - store                  (Mixed)   Optional. A class that implements StorageInterface or false for none;
+     *                                                  leave empty to default to SessionStore
+     *     - state_handler          (Mixed)   Optional  A class that implements StateHandler of false for none;
+     *                                                  leave empty to default to SessionStore SessionStateHandler
+     *     - debug                  (Boolean) Optional. Turn on debug mode, default false
+     *     - guzzle_options          (Object) Optional. Options passed to Guzzle
      *
      * @throws CoreException If `domain` is not provided.
      * @throws CoreException If `client_id` is not provided.
@@ -251,35 +250,25 @@ class Auth0
             $this->guzzleOptions = $config['guzzle_options'];
         }
 
-        if (isset($config['debug'])) {
-            $this->debugMode = $config['debug'];
-        } else {
-            $this->debugMode = false;
-        }
+        $this->debugMode = isset($config['debug']) ? $config['debug'] : false;
 
-        // User info is persisted unless said otherwise.
-        if (isset($config['persist_user']) && $config['persist_user'] === false) {
+        // User info is persisted by default.
+        if (isset($config['persist_user']) && false === $config['persist_user']) {
             $this->dontPersist('user');
         }
 
-        // Access token is not persisted unless said otherwise.
-        if (!isset($config['persist_access_token']) || (isset($config['persist_access_token'])
-            && $config['persist_access_token'] === false)
-        ) {
+        // Access token is not persisted by default.
+        if (!isset($config['persist_access_token']) || false === $config['persist_access_token']) {
             $this->dontPersist('access_token');
         }
 
-        // Refresh token is not persisted unless said otherwise.
-        if (!isset($config['persist_refresh_token']) || (isset($config['persist_refresh_token'])
-            && $config['persist_refresh_token'] === false)
-        ) {
+        // Refresh token is not persisted by default.
+        if (!isset($config['persist_refresh_token']) || false === $config['persist_refresh_token']) {
             $this->dontPersist('refresh_token');
         }
 
-        // ID token is not persisted unless said otherwise.
-        if (!isset($config['persist_id_token']) || (isset($config['persist_id_token'])
-            && $config['persist_id_token'] === false)
-        ) {
+        // ID token is not persisted by default.
+        if (!isset($config['persist_id_token']) || false === $config['persist_id_token']) {
             $this->dontPersist('id_token');
         }
 
@@ -364,7 +353,7 @@ class Auth0
             $params
         );
 
-        header('Location: '.$url);
+        header('Location: ' . $url);
         exit;
     }
 
@@ -381,7 +370,6 @@ class Auth0
         if (!$this->user) {
             $this->exchange();
         }
-
         return $this->user;
     }
 
@@ -395,11 +383,9 @@ class Auth0
      */
     public function getAccessToken()
     {
-        if ($this->accessToken) {
-            return $this->accessToken;
+        if (!$this->accessToken) {
+            $this->exchange();
         }
-
-        $this->exchange();
         return $this->accessToken;
     }
 
@@ -413,11 +399,9 @@ class Auth0
      */
     public function getIdToken()
     {
-        if ($this->idToken) {
-            return $this->idToken;
+        if (!$this->idToken) {
+            $this->exchange();
         }
-
-        $this->exchange();
         return $this->idToken;
     }
 
@@ -431,11 +415,9 @@ class Auth0
      */
     public function getRefreshToken()
     {
-        if ($this->refreshToken) {
-            return $this->refreshToken;
+        if (!$this->refreshToken) {
+            $this->exchange();
         }
-
-        $this->exchange();
         return $this->refreshToken;
     }
 
@@ -503,8 +485,7 @@ class Auth0
      */
     public function setUser(array $user)
     {
-        $key = array_search('user', $this->persistantMap);
-        if ($key !== false) {
+        if (in_array('user', $this->persistantMap)) {
             $this->store->set('user', $user);
         }
 
@@ -521,8 +502,7 @@ class Auth0
      */
     public function setAccessToken($accessToken)
     {
-        $key = array_search('access_token', $this->persistantMap);
-        if ($key !== false) {
+        if (in_array('access_token', $this->persistantMap)) {
             $this->store->set('access_token', $accessToken);
         }
 
@@ -539,8 +519,7 @@ class Auth0
      */
     public function setIdToken($idToken)
     {
-        $key = array_search('id_token', $this->persistantMap);
-        if ($key !== false) {
+        if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
         }
 
@@ -557,8 +536,7 @@ class Auth0
      */
     public function setRefreshToken($refreshToken)
     {
-        $key = array_search('refresh_token', $this->persistantMap);
-        if ($key !== false) {
+        if (in_array('refresh_token', $this->persistantMap)) {
             $this->store->set('refresh_token', $refreshToken);
         }
 
