@@ -66,7 +66,7 @@ if ( ! empty( $_GET['code'] ) ) {
             <?php endif; ?>
             <?php if ( $userinfo ) :
                 $picture = filter_var( $userinfo['picture'], FILTER_SANITIZE_URL );
-                $nickname = filter_var( $userinfo['email'], FILTER_SANITIZE_STRING );
+                $nickname = filter_var( $userinfo['nickname'], FILTER_SANITIZE_STRING );
                 $email = filter_var( $userinfo['email'], FILTER_SANITIZE_EMAIL );
                 ?>
                 <img class="avatar" src="<?php echo $picture; ?>"/>

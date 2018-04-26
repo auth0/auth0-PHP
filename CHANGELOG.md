@@ -18,6 +18,12 @@
 ## [5.1.0](https://github.com/auth0/auth0-PHP/tree/5.1.0) (2018-03-02)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.6...5.1.0)
 
+[State validation](https://auth0.com/docs/protocols/oauth2/oauth-state) was added in 5.1.0 for improved security. By default, this uses session storage and will happen automatically if you are using a combination of `Auth0::login()` and any method which calls `Auth0::exchange()` in your callback.
+
+If you need to use a different storage method, implement your own [StateHandler](https://github.com/auth0/auth0-PHP/blob/master/src/API/Helpers/State/StateHandler.php) and set it using the `state_handler` config key when you initialize an `Auth0` instance.
+
+If you are using `Auth0::exchange()` and a method other than `Auth0::login()` to generate the Authorize URL, you can disable automatic state validation by setting the `state_handler` key to `false` when you initialize the `Auth0` instance. It is **highly recommended** to implement state validation, either automatically or otherwise
+
 **Closed issues**
 - Support for php-jwt 5 [\#210](https://github.com/auth0/auth0-PHP/issues/210)
 
@@ -124,8 +130,14 @@
 ## [3.2.0](https://github.com/auth0/auth0-PHP/tree/3.2.0) (2016-04-15)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.2.0...3.2.0)
 
+- Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key
+
 ## [2.2.0](https://github.com/auth0/auth0-PHP/tree/2.2.0) (2016-04-15)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/3.1.0...2.2.0)
+
+**Notes**
+- Now the SDK fetches the user using the `tokeninfo` endpoint to be fully compliant with the openid spec
+- Now the SDK supports RS256 codes, it will decode using the `.well-known/jwks.json` endpoint to fetch the public key
 
 **Closed issues:**
 
@@ -180,6 +192,19 @@
 ## [3.0.0](https://github.com/auth0/auth0-PHP/tree/3.0.0) (2016-01-18)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/2.1.2...3.0.0)
 
+**General 3.x notes**
+- SDK api changes, now the Auth0 API client is not build of static classes anymore. Usage example:
+
+```php
+$token = "eyJhbGciO....eyJhdWQiOiI....1ZVDisdL...";
+$domain = "account.auth0.com";
+$guzzleOptions = [ ... ];
+
+$auth0Api = new \Auth0\SDK\Auth0Api($token, $domain, $guzzleOptions); /* $guzzleOptions is optional */
+
+$usersList = $auth0Api->users->search([ "q" => "email@test.com" ]);
+```
+
 **Closed issues:**
 
 - Missing instruccions step 2 Configure Auth0 PHP Plugin [\#55](https://github.com/auth0/auth0-PHP/issues/55)
@@ -219,6 +244,11 @@
 
 ## [2.0.0](https://github.com/auth0/auth0-PHP/tree/2.0.0) (2015-11-23)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/1.0.10...2.0.0)
+
+**General 2.x notes**
+
+- Session storage now returns null (and null is expected by the sdk) if there is no info stored (this change was made since false is a valid value to be stored in session).
+- Guzzle 6.1 required
 
 **Closed issues:**
 
@@ -337,6 +367,17 @@
 
 ## [1.0.0](https://github.com/auth0/auth0-PHP/tree/1.0.0) (2015-05-07)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/0.6.6...1.0.0)
+
+**General 1.x notes** 
+
+- Now, all the SDK is under the namespace `\Auth0\SDK`
+- The exceptions were moved to the namespace `\Auth0\SDK\Exceptions`
+- The Auth0 class, now provides two methods to access the user metadata, `getUserMetadata` and `getAppMetadata`. For more info, check the [API v2 changes](https://auth0.com/docs/apiv2Changes)
+- The Auth0 class, now provides a way to update the UserMetadata with the method `updateUserMetadata`. Internally, it uses the [update user endpoint](https://auth0.com/docs/apiv2#!/users/patch_users_by_id), check the method documentation for more info.
+- The new service `\Auth0\SDK\API\ApiUsers` provides an easy way to consume the API v2 Users endpoints.
+- A simple API client (`\Auth0\SDK\API\ApiClient`) is also available to use.
+- A JWT generator and decoder is also available (`\Auth0\SDK\Auth0JWT`)
+- Now provides an interface for the [Authentication API](https://auth0.com/docs/auth-api).
 
 **Closed issues:**
 
