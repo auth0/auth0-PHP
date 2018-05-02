@@ -7,9 +7,9 @@
 [![License](https://poser.pugx.org/auth0/auth0-php/license)](https://packagist.org/packages/auth0/auth0-php)
 [![Total Downloads](https://poser.pugx.org/auth0/auth0-php/downloads)](https://packagist.org/packages/auth0/auth0-php)
 
-The Auth0 PHP SDK was created to provide straight-forward and tested methods for accessing Authentication and Management API endpoints. This README provides the basics for getting started along with a few simple examples of how to use the SDK. 
+The Auth0 PHP SDK provides straight-forward and tested methods for accessing Authentication and Management API endpoints. This README describes how to get started and provides simple examples of how to use the SDK.
 
-For a more detailed guide on how to install this in an existing project or to download a pre-configured seed project:
+For more details about how to install this SDK into an existing project or how to download a preconfigured seed project, see:
 
 * [Basic PHP application quickstart](https://auth0.com/docs/quickstart/webapp/php/)
 * [PHP API quickstart](https://auth0.com/docs/quickstart/backend/php/)
@@ -20,7 +20,7 @@ Please see the notes in the [changelog](CHANGELOG.md#510-2018-03-02) regarding s
 
 ## Installation
 
-We recommend installing the SDK with [Composer](https://getcomposer.org/doc/00-intro.md). If you have Composer installed globally, it's as simple as:
+We recommend installing the SDK with [Composer](https://getcomposer.org/doc/00-intro.md). If you already have Composer installed globally, run the following:
 
 ```
 $ composer require auth0/auth0-php
@@ -34,7 +34,7 @@ php composer.phar require auth0/auth0-php
 
 This will create `composer.json` and `composer.lock` files in the directory where the command was run, along with a vendor folder containing this SDK and its dependencies. 
 
-Include the Composer autoload file in your project and you're ready to use the SDK:
+Finally, include the Composer autoload file in your project to use the SDK:
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
@@ -46,10 +46,10 @@ The examples below use [PHP Dotenv](https://github.com/josegonzalez/php-dotenv) 
 
 First, you'll need a free Auth0 account and an Application:
 
-1. Go to [auth0.com/signup](https://auth0.com/signup) and create your account
-2. Once your in the dashboard, go to **Applications**, then **Create Application**
+1. Go to [auth0.com/signup](https://auth0.com/signup) and create your account.
+2. Once you are in the dashboard, go to **Applications**, then **Create Application**.
 3. Give your Application a name, select **Regular Web Application**, then **Create**
-4. Click the **Settings** tab for the required credentials used below
+4. Click the **Settings** tab for the required credentials used below.
 
 Next, create a `.env` file and add the following values:
 
@@ -99,22 +99,22 @@ The examples below assume that you followed the installation steps above and are
 
 ### Login
 
-The simplest and most secure way to handle logins to a web application is to use the [Authentication Code grant](https://auth0.com/docs/api-auth/tutorials/authorization-code-grant) combined with Auth0's Universal Login page. In short, that process is:
+The easiest and most secure way to handle logins to a web application is to use the [Authentication Code grant](https://auth0.com/docs/api-auth/tutorials/authorization-code-grant) combined with Auth0's Universal Login page. In short, that process is:
 
-1. An user requesting access is redirected to the Universal Login Page
-2. The user authenticates using one of many possible connections - social like Twitter or Facebook; database using a email and password; passwordless using email or a mobile device
-3. The user is redirected back to your application's callback URL with a `code` and `state` parameter if successful or an `error` and `error_description` if not
-4. If the authentication was successful, the `state` parameter is validated
-5. If the `state` is valid, the `code` parameter is exchanged with Auth0 for an access token
-6. If the exchange is successful, the access token is used to call an Auth0 `/userinfo` endpoint, which returns the now-authenticated user's information
-7. This information can be used to create an account, start an application-specific session, or simply persist as the user session. 
+1. An user requesting access is redirected to the Universal Login Page.
+2. The user authenticates using one of many possible connections: social (Twitter or Facebook); database (email and password); passwordless (email or a mobile device).
+3. The user is redirected back to your application's callback URL with a `code` and `state` parameter if successful or an `error` and `error_description` if not.
+4. If the authentication was successful, the `state` parameter is validated.
+5. If the `state` is valid, the `code` parameter is exchanged with Auth0 for an access token.
+6. If the exchange is successful, the access token is used to call an Auth0 `/userinfo` endpoint, which returns the authenticated user's information.
+7. This information can be used to create an account, to start an application-specific session, or to persist as the user session.
 
-Most of the steps above are handled internally by this SDK. Your application will simply need to:
+The PHP SDK handles most of the previous steps. Your application needs to:
 
-1. Determine a login action (click a link, visit walled content, etc) and call `Auth0::login()`
-2. Handle returned errors
+1. Determine a log in action (for example: click a link, visit walled content, etc.) and call  `Auth0::login()`
+2. Handle returned errors.
 
-The most simple implementation of this looks like this:
+A simple implementation of these steps looks like this:
 
 ```php
 // Example #1
@@ -161,8 +161,8 @@ var_dump($userinfo);
 
 Loading the script above in your browser should:
 
-1. Immediately redirect you to an Auth0 login page for your tenant
-2. After successfully logging in using any connection, redirect you back to your app
+1. Immediately redirect you to an Auth0 login page for your tenant.
+2. After successfully logging in using any connection, redirect you back to your app.
 3. Display the returned userinfo:
 
 ```php
@@ -402,9 +402,9 @@ Regardless of the method, the token generated must have the scopes required for 
 
 To grant the scopes needed: 
 
-1. Go to [APIs](https://manage.auth0.com/#/apis) > Auth0 Management API > **Machine to Machine Applications** tab
-2. Find your Application and authorize it
-3. Click the arrow to expand the row and select the scopes required
+1. Go to [APIs](https://manage.auth0.com/#/apis) > Auth0 Management API > **Machine to Machine Applications** tab.
+2. Find your Application and authorize it.
+3. Click the arrow to expand the row and select the scopes required.
 
 Now you can authenticate one of the two ways above and use that token to perform operations:
 
@@ -464,14 +464,14 @@ if (! empty($results)) {
 
 ## Contributing
 
-The SDKs we provide and maintain are for the benefit of our developer community so feedback, detailed bug reports, and focused PRs are all appreciated. Thank you in advance!
+We provide and maintain SDKs for the benefit of our developer community. Feedback, detailed bug reports, and focused PRs are appreciated. Thank you in advance!
 
 When contributing to this SDK, please:
 
-- Maintain the minimum PHP version (found under `require.php` in `composer.json`)
-- Code to the [PSR-2 standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-- Write tests and run them with `composer test`
-- Keep PRs focused and change the minimum number of lines to achieve your goal
+- Maintain the minimum PHP version (found under `require.php` in `composer.json`).
+- Code to the [PSR-2 standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md).
+- Write tests and run them with `composer test`.
+- Keep PRs focused and change the minimum number of lines to achieve your goal.
 
 To run tests on the SDK, you'll need to create a `.env` file in the root of this package with the following entries:
 
@@ -489,8 +489,8 @@ We're working on test coverage and quality but please note that newer tenants mi
 
 This is a common issue with latest PHP versions under windows (related to a incompatibility between windows and openssl CAs database).
 
-- download this CA database `https://curl.haxx.se/ca/cacert.pem` to `c:/cacert.pem`
-- edit your php.ini and add `openssl.cafile=c:/cacert.pem` (it should point to the file you downloaded)
+1. Download this CA database `https://curl.haxx.se/ca/cacert.pem` to `c:/cacert.pem`.
+2. Edit your php.ini and add `openssl.cafile=c:/cacert.pem`. (It should point to the file you downloaded.)
 
 > My host does not allow using Composer
 
