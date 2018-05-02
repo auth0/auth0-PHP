@@ -30,7 +30,7 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit",
+    "test": "SHELL_INTERACTIVE=1 vendor/bin/phpunit  --colors=always --verbose ",
     "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"
   },
   "license": "MIT"

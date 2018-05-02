@@ -3,6 +3,7 @@
 namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
+use Auth0\SDK\API\Management\EmailTemplates;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Exception\ClientException;
 
@@ -13,18 +14,26 @@ use GuzzleHttp\Exception\ClientException;
  */
 class EmailTemplateTest extends ApiTests
 {
-
-    const EMAIL_TEMPLATE_NAME = 'enrollment_email';
+    /**
+     * Email template to test
+     *
+     * @var string
+     */
+    const EMAIL_TEMPLATE_NAME = EmailTemplates::TEMPLATE_ENROLLMENT_EMAIL;
 
     /**
-     * Management API token with scopes read:email_templates, create:email_templates, update:email_templates
+     * Management API token with scopes:
+     *  - read:email_templates
+     *  - create:email_templates
+     *  - update:email_templates
+     *  - read:email_provider
      *
      * @var string
      */
     protected static $token;
 
     /**
-     * Valid tenant domain
+     * Valid tenant domain set in project .env file as `DOMAIN`
      *
      * @var string
      */
@@ -42,7 +51,14 @@ class EmailTemplateTest extends ApiTests
      *
      * @var array
      */
-    protected static $gotEmail;
+    protected static $gotEmail = [];
+
+    /**
+     * If the email template was not found, this is the error code
+     *
+     * @var bool
+     */
+    protected static $setUpEmailError = null;
 
     /**
      * Can this email template be created?
@@ -62,17 +78,19 @@ class EmailTemplateTest extends ApiTests
 
         self::$domain = $env['DOMAIN'];
         self::$token = self::getTokenStatic($env, [
-            'email_templates' => [
-                'actions' => ['create', 'read', 'update']
-            ]
+            'email_templates' => [ 'actions' => ['create', 'read', 'update'] ],
+            'email_provider' => [ 'actions' => ['read'] ],
         ]);
 
         self::$api = new Management(self::$token, self::$domain);
 
         try {
+            // Try to get the email template specified.
             self::$gotEmail = self::$api->emailTemplates->get(self::EMAIL_TEMPLATE_NAME);
         } catch (ClientException $e) {
-            if (404 === $e->getCode()) {
+            self::$setUpEmailError = $e->getCode();
+            if (404 === self::$setUpEmailError) {
+                // Could not find the email template so it can/must be created
                 self::$mustCreate = true;
             }
         }
@@ -83,25 +101,32 @@ class EmailTemplateTest extends ApiTests
      */
     protected function assertPreConditions()
     {
-        $this->assertNotEmpty(self::$token);
-        $this->assertInstanceOf(Management::class, self::$api);
+        // Need to have an email provider setup for the tenant to perform this test.
+        try {
+            self::$api->emails->getEmailProvider();
+        } catch (\Exception $e) {
+            $this->markTestSkipped('Need to specify an email provider in the dashboard > Emails > Provider');
+        }
+
+        // If we don't have an email template and can't create, something sent wrong in self::setUpBeforeClass().
+        if (! self::$mustCreate && empty(self::$gotEmail)) {
+            $this->markTestSkipped(
+                'Email template '. self::EMAIL_TEMPLATE_NAME . ' not found with error ' . self::$setUpEmailError
+            );
+        }
     }
 
     /**
+     * Test if we got an email template, test create if we didn't
+     *
      * @throws \Exception
      */
     public function testGotAnEmail()
     {
         if (self::$mustCreate) {
-            self::$gotEmail = self::$api->emailTemplates->create([
-                'template' => self::EMAIL_TEMPLATE_NAME,
-                'body' => '<!doctype html><html><body><h1>Hi!</h1></body></html>',
-                'from' => 'test@' . self::$domain,
-                'subject' => 'Test email',
-                'syntax' => 'liquid',
-                'urlLifetimeInSeconds' => 0,
-                'enabled' => false,
-            ]);
+            $from_email = 'test@' . self::$domain;
+            self::$gotEmail = self::$api->emailTemplates->create(self::EMAIL_TEMPLATE_NAME, $from_email);
+            $this->assertEquals($from_email, self::$gotEmail['from']);
         }
 
         $this->assertEquals(self::EMAIL_TEMPLATE_NAME, self::$gotEmail['template']);
