@@ -4,6 +4,8 @@
  */
 namespace Auth0\SDK\API\Management;
 
+use \Auth0\SDK\Exception\CoreException;
+
 /**
  * Class EmailTemplates.
  * Handles requests to the Email Templates endpoint of the v2 Management API.
@@ -13,11 +15,56 @@ namespace Auth0\SDK\API\Management;
 class EmailTemplates extends GenericResource
 {
     /**
+     * @var string
+     */
+    const TEMPLATE_VERIFY_EMAIL = 'verify_email';
+
+    /**
+     * @var string
+     */
+    const TEMPLATE_RESET_EMAIL = 'reset_email';
+
+    /**
+     * @var string
+     */
+    const TEMPLATE_WELCOME_EMAIL = 'welcome_email';
+
+    /**
+     * @var string
+     */
+    const TEMPLATE_BLOCKED_ACCOUNT = 'blocked_account';
+
+    /**
+     * @var string
+     */
+    const TEMPLATE_STOLEN_CREDENTIALS = 'stolen_credentials';
+
+    /**
+     * @var string
+     */
+    const TEMPLATE_ENROLLMENT_EMAIL = 'enrollment_email';
+
+    /**
+     * @var string
+     */
+    const TEMPLATE_CHANGE_PASSWORD = 'change_password';
+
+    /**
+     * @var string
+     */
+    const TEMPLATE_PASSWORD_RESET = 'password_reset';
+
+    /**
+     * @var string
+     */
+    const TEMPLATE_MFA_OOB_CODE = 'mfa_oob_code';
+
+    /**
      * Get an email template by name.
      * See docs @link below for valid names and fields.
      * Requires scope: read:email_templates.
      *
-     * @param string $templateName - the email template name to get.
+     * @param string $templateName - the email template name to get (see constants defined for this class).
      *
      * @return array
      *
@@ -38,7 +85,7 @@ class EmailTemplates extends GenericResource
      * See docs @link below for valid names, fields, and possible responses.
      * Requires scope: update:email_templates.
      *
-     * @param string $templateName - the email template name to patch.
+     * @param string $templateName - the email template name to patch (see constants defined for this class).
      * @param array $data - an array of data to update.
      *
      * @return array - updated data for the template name provided.
@@ -60,9 +107,14 @@ class EmailTemplates extends GenericResource
      * See docs @link below for valid names and fields.
      * Requires scope: create:email_templates.
      *
-     * @param array $data
-     *      An array of data to use for the new email, including a valid `template`.
-     *      See docs link below for required fields.
+     * @param string $template - the template name to create (see constants defined for this class).
+     * @param boolean $enabled - is the email template enabled?
+     * @param string $from - the email address the email should come from.
+     * @param string $subject - the email subject.
+     * @param string $body - the email body in the syntax indicated below.
+     * @param string $syntax - the email body syntax to use.
+     * @param string $resultUrl - URL where a click-through should land.
+     * @param int $urlLifetime - URL lifetime, in seconds.
      *
      * @return mixed|string
      *
@@ -70,8 +122,31 @@ class EmailTemplates extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates
      */
-    public function create($data)
-    {
+    public function create(
+        $template,
+        $enabled,
+        $from,
+        $subject,
+        $body,
+        $syntax = 'liquid',
+        $resultUrl = '',
+        $urlLifetime = 0
+    ) {
+        // Required fields
+        $data = [
+            'template' => (string) $template,
+            'enabled' => (bool) $enabled,
+            'from' => (string) $from,
+            'subject' => (string) $subject,
+            'body' => (string) $body,
+            'syntax' => (string) $syntax,
+            'urlLifetimeInSeconds' => abs( intval( $urlLifetime ) )
+        ];
+
+        if (! empty($resultUrl)) {
+            $data['resultUrl'] = filter_var($resultUrl, FILTER_SANITIZE_URL);
+        }
+
         return $this->apiClient->method('post')
             ->addPath('email-templates')
             ->withBody(json_encode($data))
