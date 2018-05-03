@@ -74,7 +74,7 @@ AUTH0_AUTH_AUDIENCE="https://${AUTH0_DOMAIN}/userinfo/"
 AUTH0_MANAGEMENT_AUDIENCE="https://${AUTH0_DOMAIN}/api/v2/"
 
 # API token for accessing the Management API (not required for authentication calls)
-AUTH0_MANAGEMENT_API_TOKEN="App token goes here"
+AUTH0_MANAGEMENT_API_TOKEN="API token goes here"
 ```
 
 In your application below the Composer autoload `require`, add:
@@ -95,7 +95,7 @@ echo 'My Auth0 domain is ' . getenv('AUTH0_DOMAIN') . '!';
 
 This SDK provides easy-to-implement methods to access the [Authentication API](https://auth0.com/docs/api/authentication). Some common authentication operations are explained below with examples. For additional information and capabilities, please see the methods in the `\Auth0\SDK\API\Authentication` class. Avoid using any methods marked `@deprecated` as they will be removed in the next major version and may not be enabled for your account.
 
-The examples below assume that you followed the installation steps above and are using a `.env` file and loader to store credentials.
+The examples below assume that you followed the steps in the [Installation section](#installation) above and are using a `.env` file and loader to store credentials.
 
 ### Login
 
@@ -134,6 +134,7 @@ $auth0 = new Auth0([
     'redirect_uri' => getenv('AUTH0_LOGIN_CALLBACK_URL'),
 
     // The scope determines what data is provided by the /userinfo endpoint.
+    // There must be at least one valid scope included here for anything to be returned from /userinfo.
     'scope' => 'openid',
 ]);
 
@@ -142,11 +143,11 @@ if (! empty($_GET['error']) || ! empty($_GET['error_description'])) {
 }
 
 // If there is a user persisted (PHP session by default), return that.
-// Otherwise, look for a `state` and `code` URL parameter to validate and exchange, respectively.
+// Otherwise, look for a "code" and "state" URL parameter to validate and exchange, respectively.
 // If the state validation and code exchange are successful, return the userinfo.
 $userinfo = $auth0->getUser();
 
-// We have no persisted user and no `code` parameter so we redirect to the Universal Login Page.
+// We have no persisted user and no "code" parameter so we redirect to the Universal Login Page.
 if (empty($userinfo)) {
     $auth0->login();
 }
@@ -155,7 +156,7 @@ if (empty($userinfo)) {
 var_dump($userinfo);
 
 // This is where a user record in a local database could be retrieved or created.
-// Redirect somewhere to remove `code` and `state` parameters to avoid a fatal error on refresh.
+// Redirect somewhere to remove "code" and "state" parameters to avoid a fatal error on refresh.
 
 ```
 
@@ -163,7 +164,7 @@ Loading the script above in your browser should:
 
 1. Immediately redirect you to an Auth0 login page for your tenant.
 2. After successfully logging in using any connection, redirect you back to your app.
-3. Display the returned userinfo:
+3. Display the returned user information:
 
 ```php
 array(1) { ["sub"]=> string(30) "auth0|4b12v471de68e34446mq7c2v" }
@@ -195,7 +196,7 @@ header('Location: /profile.php');
 
 ```
 
-This profile page will return all the data we retrieved from the `/userinfo` endpoint and stored in our session:
+This profile page will return all the data we retrieved from the `/userinfo` endpoint and stored in our session. The data displayed here is controlled by the `scope` parameter we passed to the `Auth0` class. More information on the claims we can pass to `scope` is [here](https://auth0.com/docs/api-auth/tutorials/adoption/scope-custom-claims).
 
 
 ```php
@@ -208,16 +209,21 @@ $store = new SessionStore();
 $userinfo = $store->get('user');
 
 if ($userinfo) {
+    // The $userinfo keys below will not exist if the user does not have that data.
     printf(
         '<h1>Hi %s!</h1>
-        <p><img width="200" src="%s"></p>
+        <p><img width="100" src="%s"></p>
         <p><strong>Last update:</strong> %s</p>
         <p><strong>Contact:</strong> %s %s</p>',
-        strip_tags($userinfo[ 'nickname' ]),
-        filter_var($userinfo[ 'picture' ], FILTER_SANITIZE_URL),
-        date('j/m/Y', strtotime($userinfo[ 'updated_at' ])),
-        filter_var($userinfo[ 'email' ], FILTER_SANITIZE_EMAIL),
-        $userinfo[ 'email_verified' ] ? '✓' : '✗'
+        isset($userinfo['nickname']) ? strip_tags($userinfo['nickname']) : '[unknown]',
+        isset($userinfo['picture'])
+            ? filter_var($userinfo['picture'], FILTER_SANITIZE_URL)
+            : 'https://www.gravatar.com/avatar/?d=retro',
+        isset($userinfo['updated_at']) ? date('j/m/Y', strtotime($userinfo['updated_at'])) : '[unknown]',
+        isset($userinfo['email'])
+            ? filter_var($userinfo['email'], FILTER_SANITIZE_EMAIL)
+            : '[unknown]',
+        !empty($userinfo[ 'email_verified' ]) ? '✓' : '✗'
     );
 } else {
     echo '<p>Please login to view your profile.</p>';
@@ -226,7 +232,7 @@ if ($userinfo) {
 
 ### Logout
 
-In addition to logging in, we also want users to be able to log out. When users log out, they must invalidate their session for the application. For this SDK, that means destroying their persistent user data:
+In addition to logging in, we also want users to be able to log out. When users log out, they must invalidate their session for the application. For this SDK, that means destroying their persistent user and token data:
 
 ```php
 // Example #2
@@ -320,13 +326,13 @@ Array
 )
 ```
 
-See the "Usage - Management API" section below for more information on how to use this access token. 
+See the [Usage - Management API](#usage-management-api) section below for more information on how to use this access token. 
 
 ## Usage - Decoding and Verifying JWTs
 
 This SDK also includes an interface to the [Firebase PHP JWT library](https://github.com/firebase/php-jwt), used to decode and verify JSON web tokens (JWT). The `JWTVerifier` class has a single method, `verifyAndDecode()`, which accepts a JWT and either returns a decoded token or throws an error. More information on JWTs and how to build and decode them can be found [here on jwt.io](https://jwt.io/).
 
-The decoder can work with both HS256 and RS256 tokens. Both types require the algorithm and valid audiences to indicated before processing. Additionally, HS256 tokens require the client secret while RS256 tokens require an authorized issuer. 
+The decoder can work with both HS256 and RS256 tokens. Both types require the algorithm and valid audiences to be indicated before processing. Additionally, HS256 tokens require the client secret while RS256 tokens require an authorized issuer. The issuer is used to fetch a JWKs file during the decoding process as well. ([More about signing algorithms here](https://auth0.com/blog/navigating-rs256-and-jwks/).)
 
 Here is an example of a small, URL-based JWT decoder:
 
@@ -340,13 +346,13 @@ use Auth0\SDK\Exception\CoreException;
 
 // Do we have an ID token?
 if (empty($_GET[ 'id_token' ])) {
-    echo '<code>No `id_token` URL parameter!</code> ';
+    echo '<code>No "id_token" URL parameter!</code> ';
     exit;
 }
 
 // Do we have a valid algorithm?
 if (empty($_GET[ 'token_alg' ]) || ! in_array($_GET[ 'token_alg' ], [ 'HS256', 'RS256' ])) {
-    echo '<code>Missing or invalid `token_alg` URL parameter!</code> ';
+    echo '<code>Missing or invalid "token_alg" URL parameter!</code> ';
     exit;
 }
 
@@ -396,7 +402,7 @@ This SDK also provides a wrapper for the Management API, which is used to perfor
 In order to use the Management API, you must authenticate one of two ways:
 
 - For temporary access or testing, you can [manually generate an API token](https://auth0.com/docs/api/management/v2/tokens#get-a-token-manually) and save it in your `.env` file
-- For extended access, you can create and execute and Client Credentials grant (detailed above) when access is required
+- For extended access, you can create and execute and Client Credentials grant ([detailed above](#client-credentials-grant)) when access is required
 
 Regardless of the method, the token generated must have the scopes required for the operations your app wants to execute. Consult the [API documentation](https://auth0.com/docs/api/management/v2) for the scopes required for the specific endpoint you're trying to access.
 
@@ -476,10 +482,14 @@ When contributing to this SDK, please:
 To run tests on the SDK, you'll need to create a `.env` file in the root of this package with the following entries:
 
 - `DOMAIN` - Auth0 domain for your test tenant
-- `APP_CLIENT_ID` - Client ID for the test Application
-- `APP_CLIENT_SECRET` - Client Secret for the test Application
+- `APP_CLIENT_ID` - Client ID for a test Regular Web Application
+- `APP_CLIENT_SECRET` - Client Secret for a test Regular Web Application
+- `NIC_ID` - Client ID for a test Non-Interactive Client Application
+- `NIC_SECRET` - Client Secret for a test Non-Interactive Client Application
 - `GLOBAL_CLIENT_ID` - Client ID for your tenant (found in Tenant > Settings > Advanced)
 - `GLOBAL_CLIENT_SECRET` - Client Secret for your tenant (found in Tenant > Settings > Advanced)
+
+This file is automatically excluded from Git with the `.gitignore` for this repo. 
 
 We're working on test coverage and quality but please note that newer tenants might see errors (typically `404`) for endpoints that are no longer available. Another common error is a `429` for too many requests. 
 
@@ -487,7 +497,7 @@ We're working on test coverage and quality but please note that newer tenants mi
 
 > I am getting `curl error 60: SSL certificate problem: self signed certificate in certificate chain` on Windows
 
-This is a common issue with latest PHP versions under windows (related to a incompatibility between windows and openssl CAs database).
+This is a common issue with latest PHP versions under **Windows OS** (related to a incompatibility between windows and openssl CAs database).
 
 1. Download this CA database `https://curl.haxx.se/ca/cacert.pem` to `c:/cacert.pem`.
 2. Edit your php.ini and add `openssl.cafile=c:/cacert.pem`. (It should point to the file you downloaded.)
