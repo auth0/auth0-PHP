@@ -11,9 +11,11 @@ class ApiTests extends \PHPUnit_Framework_TestCase {
   }
 
   protected static function getEnvStatic() {
-      $loader = new Loader('.env');
-      $loader->parse()
-             ->putenv(true);
+    $env_path = '.env';
+    if (file_exists($env_path)) {
+      $loader = new Loader($env_path);
+      $loader->parse()->putenv(true);
+    }
 
     return [
       "GLOBAL_CLIENT_ID" => getenv('GLOBAL_CLIENT_ID'),
