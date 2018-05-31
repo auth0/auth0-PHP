@@ -19,6 +19,7 @@ abstract class BasicCrudTest extends ApiTests
     protected $env;
 
     /**
+<<<<<<< HEAD
      * API client to test.
      *
      * @var mixed
@@ -33,6 +34,8 @@ abstract class BasicCrudTest extends ApiTests
     protected $id_name = 'id';
 
     /**
+=======
+>>>>>>> Clients endpoint pagination and improvements
      * Should all results be searched for the created entity?
      *
      * @var bool
