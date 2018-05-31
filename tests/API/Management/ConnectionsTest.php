@@ -4,37 +4,142 @@ namespace Auth0\Tests\API\Management;
 use Auth0\SDK\API\Management;
 use Auth0\Tests\API\BasicCrudTest;
 
-class ConnectionsTest extends BasicCrudTest {
+/**
+ * Class ConnectionsTest.
+ *
+ * @package Auth0\Tests\API\Management
+ */
+class ConnectionsTest extends BasicCrudTest
+{
+    /**
+     * Unique identifier name for Connections.
+     *
+     * @var string
+     */
+    protected $id_name = 'id';
 
-    protected function getApiClient() {
-        $env = $this->getEnv();
-        $token = $this->getToken($env, [
-            'connections' => [
-                'actions' => ['create', 'read', 'delete', 'update']
-            ]
+    /**
+     * Random number used for unique testing names.
+     *
+     * @var integer
+     */
+    protected $rand;
+
+    /**
+     * ConnectionsTest constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->rand = rand();
+    }
+
+    /**
+     * Return the Connections API to test.
+     *
+     * @return Management\Connections
+     */
+    protected function getApiClient()
+    {
+        $token = $this->getToken($this->env, [
+            'connections' => ['actions' => ['create', 'read', 'delete', 'update']],
+            'users' => ['actions' => ['delete']],
         ]);
-
-        $this->domain = $env['DOMAIN'];
-
-        $api = new Management($token, $env['DOMAIN']);
-
+        $api = new Management($token, $this->domain);
         return $api->connections;
     }
 
-    protected function getCreateBody() {
-        $connection_name = 'test-create-client' . rand();
+    /**
+     * Get the Connection create data to send with the test create call.
+     *
+     * @return array
+     */
+    protected function getCreateBody()
+    {
+        return [
+            'name' => 'TEST-CREATE-CONNECTION-' . $this->rand,
+            'strategy' => 'auth0',
+            'options' => [
+                'requires_username' => true,
+                'passwordPolicy' => 'fair',
+            ],
+        ];
+    }
 
-        echo "\n-- Using connection name $connection_name \n";
+    /**
+     * Tests the \Auth0\SDK\API\Management\Connections::getAll() method.
+     *
+     * @param array $created_entity - Entity created during create() test.
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    protected function getAllEntities($created_entity)
+    {
+        $fields = array_keys($this->getCreateBody());
+        $fields[] = $this->id_name;
+        $page_num = 1;
 
-        return ['name' => $connection_name, 'strategy' => 'auth0', 'options' => ['requires_username' => false]];
+        // Get the second page of Connections with 1 per page (second result).
+        $paged_results = $this->api->getAll(null, $fields, true, $page_num, 1);
+
+        // Make sure we only have one result, as requested.
+        $this->assertEquals(1, count($paged_results));
+
+        // Get many results (needs to include the created result if self::findCreatedItem === true).
+        $many_results_per_page = 50;
+        $many_results = $this->api->getAll(null, $fields, true, 0, $many_results_per_page);
+
+        // Make sure we have at least as many results as we requested.
+        $this->assertLessThan($many_results_per_page, count($many_results));
+
+        // Make sure our paged result above appears in the right place.
+        // $page_num here represents the expected location for the single entity retrieved above.
+        $this->assertEquals($paged_results[0][$this->id_name], $many_results[$page_num][$this->id_name]);
+
+        return $many_results;
     }
-    protected function getUpdateBody() {
-        return ['options' => ['requires_username' => true]];
+
+    /**
+     * Check that the Connection created matches the initial values sent.
+     *
+     * @param array $entity - The created Connection to check against initial values.
+     */
+    protected function afterCreate($entity)
+    {
+        $expected = $this->getCreateBody();
+        $this->assertNotEmpty($entity[$this->id_name]);
+        $this->assertEquals($expected['strategy'], $entity['strategy']);
+        $this->assertEquals($expected['name'], $entity['name']);
+        $this->assertEquals($expected['options']['requires_username'], $entity['options']['requires_username']);
+        $this->assertEquals($expected['options']['passwordPolicy'], $entity['options']['passwordPolicy']);
     }
-    protected function afterCreate($entity) {
-        $this->assertNotTrue($entity['options']['requires_username']);
+
+    /**
+     * Get the Connection update data to send with the test update call.
+     *
+     * @return array
+     */
+    protected function getUpdateBody()
+    {
+        return [
+            'options' => [
+                'requires_username' => false,
+                'passwordPolicy' => 'good',
+            ],
+        ];
     }
-    protected function afterUpdate($entity) {
-        $this->assertTrue($entity['options']['requires_username']);
+
+    /**
+     * Update entity returned values check.
+     *
+     * @param array $entity - Connection that was updated.
+     */
+    protected function afterUpdate($entity)
+    {
+        $expected = $this->getUpdateBody();
+        $this->assertEquals($expected['options']['requires_username'], $entity['options']['requires_username']);
+        $this->assertEquals($expected['options']['passwordPolicy'], $entity['options']['passwordPolicy']);
     }
 }
