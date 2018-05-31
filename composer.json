@@ -31,7 +31,10 @@
   },
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 vendor/bin/phpunit  --colors=always --verbose ",
-    "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml"
+    "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml",
+    "php-compat" : "SHELL_INTERACTIVE=1 phpcs --standard=PHPCompatibility --runtime-set testVersion 5.5",
+    "phpcs"      : "SHELL_INTERACTIVE=1 phpcs --standard=PSR2 --extensions=php --ignore=./examples/*,./vendor/*",
+    "phpcbf"     : "SHELL_INTERACTIVE=1 phpcbf --standard=PSR2 --extensions=php --ignore=./examples/*,./vendor/*"
   },
   "license": "MIT"
 }
