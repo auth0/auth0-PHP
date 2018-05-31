@@ -14,7 +14,6 @@ namespace Auth0\SDK\API\Management;
  */
 class Clients extends GenericResource
 {
-
     /**
      * Get all Clients by page.
      *
