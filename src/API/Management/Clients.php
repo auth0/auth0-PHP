@@ -32,7 +32,7 @@ class Clients extends GenericResource
     public function getAll($fields = null, $include_fields = null, $page = null, $per_page = null, $add_params = [])
     {
         // Set additional parameters first so they are over-written by function parameters.
-        $params = is_array( $add_params ) ? $add_params : [];
+        $params = is_array($add_params) ? $add_params : [];
 
         // Results fields.
         if (!empty($fields)) {
