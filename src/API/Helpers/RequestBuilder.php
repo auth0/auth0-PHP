@@ -287,6 +287,17 @@ class RequestBuilder {
     }
 
     /**
+     * @param array $params
+     * @return RequestBuilder
+     */
+    public function withParamsDict($params) {
+        foreach($params as $key => $value) {
+            $this->withParam($key, $value);
+        }
+        return $this;
+    }
+
+    /**
      * @return array
      */
     private function buildMultiPart() {
