@@ -94,11 +94,9 @@ abstract class BasicCrudTest extends ApiTests
      * Stub "get all entities" method.
      * Can be overridden by child classes for specific test cases.
      *
-     * @param array $created_entity - Created entity.
-     *
      * @return mixed
      */
-    protected function getAllEntities($created_entity)
+    protected function getAllEntities()
     {
         return $this->api->getAll();
     }
@@ -113,6 +111,19 @@ abstract class BasicCrudTest extends ApiTests
     protected function getId($entity)
     {
         return $entity[$this->id_name];
+    }
+
+    /**
+     * Does an error message contain a specific string?
+     *
+     * @param \Exception $e - Error object.
+     * @param string $str - String to find in the error message.
+     *
+     * @return bool
+     */
+    protected function errorHasString(\Exception $e, $str)
+    {
+        return ! ( false === strpos($e->getMessage(), $str) );
     }
 
     /**

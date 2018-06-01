@@ -69,13 +69,11 @@ class ConnectionsTest extends BasicCrudTest
     /**
      * Tests the \Auth0\SDK\API\Management\Connections::getAll() method.
      *
-     * @param array $created_entity - Entity created during create() test.
-     *
      * @return mixed
      *
      * @throws \Exception
      */
-    protected function getAllEntities($created_entity)
+    protected function getAllEntities()
     {
         $fields = array_keys($this->getCreateBody());
         $fields[] = $this->id_name;
@@ -96,7 +94,7 @@ class ConnectionsTest extends BasicCrudTest
 
         // Make sure our paged result above appears in the right place.
         // $page_num here represents the expected location for the single entity retrieved above.
-        $this->assertEquals($paged_results[0][$this->id_name], $many_results[$page_num][$this->id_name]);
+        $this->assertEquals($this->getId($paged_results[0]), $this->getId($many_results[$page_num]));
 
         return $many_results;
     }
