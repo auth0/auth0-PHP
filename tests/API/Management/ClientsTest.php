@@ -2,7 +2,6 @@
 namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
-use Auth0\SDK\API\Management\Clients;
 use Auth0\Tests\API\BasicCrudTest;
 
 /**
@@ -20,62 +19,11 @@ class ClientsTest extends BasicCrudTest
     protected $id_name = 'client_id';
 
     /**
-     * Name of the created Client.
-     * Appended with a random string in self::__construct().
+     * Random number used for unique testing names.
      *
-     * @var string
+     * @var integer
      */
-    protected $create_client_name = 'TEST-CREATE-CLIENT-';
-
-    /**
-     * Application type of the created Client.
-     *
-     * @var string
-     */
-    protected $create_app_type = Clients::APP_TYPE_REGULAR_WEB;
-
-    /**
-     * SSO setting of the created Client.
-     *
-     * @var bool
-     */
-    protected $create_sso = false;
-
-    /**
-     * Description of the created Client.
-     *
-     * @var string
-     */
-    protected $create_desc = '__Auth0_PHP_initial_app_description__';
-
-    /**
-     * Name of the updated Client.
-     * Appended with a random string in self::__construct().
-     *
-     * @var string
-     */
-    protected $update_client_name = 'TEST-UPDATE-CLIENT-';
-
-    /**
-     * Application type of the updated Client.
-     *
-     * @var string
-     */
-    protected $update_app_type = Clients::APP_TYPE_NON_INTERACTIVE;
-
-    /**
-     * SSO setting of the updated Client.
-     *
-     * @var bool
-     */
-    protected $update_sso = true;
-
-    /**
-     * Description of the updated Client.
-     *
-     * @var string
-     */
-    protected $update_desc = '__Auth0_PHP_updated_app_description__';
+    protected $rand;
 
     /**
      * ClientsTest constructor.
@@ -83,20 +31,7 @@ class ClientsTest extends BasicCrudTest
     public function __construct()
     {
         parent::__construct();
-        $this->create_client_name .= rand();
-        $this->update_client_name .= rand();
-    }
-
-    /**
-     * Return the ID for the entity created.
-     *
-     * @param array $entity - Client created during test.
-     *
-     * @return string|integer
-     */
-    protected function getId($entity)
-    {
-        return $entity[$this->id_name];
+        $this->rand = rand();
     }
 
     /**
@@ -119,36 +54,35 @@ class ClientsTest extends BasicCrudTest
     protected function getCreateBody()
     {
         return [
-            'name' => $this->create_client_name,
-            'app_type' => $this->create_app_type,
-            'sso' => $this->create_sso,
-            'description' => $this->create_desc,
+            'name' => 'TEST-CREATE-CLIENT-' . $this->rand,
+            'app_type' => 'regular_web',
+            'sso' => false,
+            'description' => '__Auth0_PHP_initial_app_description__',
         ];
     }
 
     /**
      * Tests the \Auth0\SDK\API\Management\Clients::getAll() method.
      *
-     * @param Management\Clients $client - API client to use.
      * @param array $created_entity - Entity created during create() test.
      *
      * @return mixed
      *
      * @throws \Exception
      */
-    protected function getAll($client, $created_entity)
+    protected function getAllEntities($created_entity)
     {
         $fields = array_keys($this->getCreateBody());
         $fields[] = $this->id_name;
 
         // Check that pagination works.
-        $all_results = $client->getAll($fields, true, $this->create_app_type, 1, 1);
+        $all_results = $this->api->getAll($fields, true, 1, 1);
         $this->assertEquals(1, count($all_results));
         $this->assertEquals(count($fields), count($all_results[0]));
 
         // If we want to check for the created result, we need all Clients.
         if ($this->findCreatedItem) {
-            $all_results = $client->getAll($fields, true, $this->create_app_type, 0, 100);
+            $all_results = $this->api->getAll($fields, true, 0, 100);
         }
 
         return $all_results;
@@ -161,11 +95,12 @@ class ClientsTest extends BasicCrudTest
      */
     protected function afterCreate($entity)
     {
+        $expect_client = $this->getCreateBody();
         $this->assertNotEmpty($entity[$this->id_name]);
-        $this->assertEquals($this->create_client_name, $entity['name']);
-        $this->assertEquals($this->create_app_type, $entity['app_type']);
-        $this->assertEquals($this->create_sso, $entity['sso']);
-        $this->assertEquals($this->create_desc, $entity['description']);
+        $this->assertEquals($expect_client['name'], $entity['name']);
+        $this->assertEquals($expect_client['app_type'], $entity['app_type']);
+        $this->assertEquals($expect_client['sso'], $entity['sso']);
+        $this->assertEquals($expect_client['description'], $entity['description']);
     }
 
     /**
@@ -176,10 +111,10 @@ class ClientsTest extends BasicCrudTest
     protected function getUpdateBody()
     {
         return [
-            'name' => $this->update_client_name,
-            'app_type' => $this->update_app_type,
-            'sso' => $this->update_sso,
-            'description' => $this->update_desc,
+            'name' => 'TEST-UPDATE-CLIENT-',
+            'app_type' => 'native',
+            'sso' => true,
+            'description' => '__Auth0_PHP_updated_app_description__',
         ];
     }
 
@@ -190,9 +125,10 @@ class ClientsTest extends BasicCrudTest
      */
     protected function afterUpdate($entity)
     {
-        $this->assertEquals($this->update_client_name, $entity['name']);
-        $this->assertEquals($this->update_app_type, $entity['app_type']);
-        $this->assertEquals($this->update_sso, $entity['sso']);
-        $this->assertEquals($this->update_desc, $entity['description']);
+        $expect_client = $this->getUpdateBody();
+        $this->assertEquals($expect_client['name'], $entity['name']);
+        $this->assertEquals($expect_client['app_type'], $entity['app_type']);
+        $this->assertEquals($expect_client['sso'], $entity['sso']);
+        $this->assertEquals($expect_client['description'], $entity['description']);
     }
 }

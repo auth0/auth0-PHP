@@ -19,6 +19,20 @@ abstract class BasicCrudTest extends ApiTests
     protected $env;
 
     /**
+     * API client to test.
+     *
+     * @var mixed
+     */
+    protected $api;
+
+    /**
+     * Name of the entity's ID.
+     *
+     * @var mixed
+     */
+    protected $id_name = 'id';
+
+    /**
      * Should all results be searched for the created entity?
      *
      * @var bool
@@ -73,20 +87,20 @@ abstract class BasicCrudTest extends ApiTests
         parent::__construct();
         $this->env = $this->getEnv();
         $this->domain = $this->env['DOMAIN'];
+        $this->api = $this->getApiClient();
     }
 
     /**
      * Stub "get all entities" method.
      * Can be overridden by child classes for specific test cases.
      *
-     * @param mixed $crud_api - API client from the child class
      * @param array $created_entity - Created entity.
      *
      * @return mixed
      */
-    protected function getAll($crud_api, $created_entity)
+    protected function getAllEntities($created_entity)
     {
-        return $crud_api->getAll();
+        return $this->api->getAll();
     }
 
     /**
@@ -98,7 +112,7 @@ abstract class BasicCrudTest extends ApiTests
      */
     protected function getId($entity)
     {
-        return $entity['id'];
+        return $entity[$this->id_name];
     }
 
     /**
@@ -106,26 +120,22 @@ abstract class BasicCrudTest extends ApiTests
      */
     public function testAll()
     {
-
-        // Get the API client from the child class.
-        $crud_api = $this->getApiClient();
-
         // Get and check that our options have been set correctly.
-        $options = $crud_api->getApiClient()->get()->getGuzzleOptions();
+        $options = $this->api->getApiClient()->get()->getGuzzleOptions();
         $this->assertArrayHasKey('base_uri', $options);
         $this->assertEquals("https://$this->domain/api/v2/", $options['base_uri']);
 
         // Test a generic "create entity" method for this API client.
-        $created_entity = $crud_api->create($this->getCreateBody());
+        $created_entity = $this->api->create($this->getCreateBody());
         $created_entity_id = $this->getId($created_entity);
         $this->afterCreate($created_entity);
 
         // Test a generic "get entity" method.
-        $got_entity = $crud_api->get($created_entity_id);
+        $got_entity = $this->api->get($created_entity_id);
         $this->afterCreate($got_entity);
 
         // Test a generic "get all entities" method for this API client.
-        $all_entities = $this->getAll($crud_api, $created_entity);
+        $all_entities = $this->getAllEntities($created_entity);
 
         // Look through our returned results for the created item, if indicated.
         if ($this->findCreatedItem && !empty($all_entities)) {
@@ -140,10 +150,10 @@ abstract class BasicCrudTest extends ApiTests
         }
 
         // Test a generic "update entity" method for this API client.
-        $updated_entity = $crud_api->update($created_entity_id, $this->getUpdateBody());
+        $updated_entity = $this->api->update($created_entity_id, $this->getUpdateBody());
         $this->afterUpdate($updated_entity);
 
         // Test a generic "delete entity" method for this API client.
-        $crud_api->delete($created_entity_id);
+        $this->api->delete($created_entity_id);
     }
 }
