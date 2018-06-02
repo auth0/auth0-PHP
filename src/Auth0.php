@@ -545,6 +545,42 @@ class Auth0
     }
 
     /**
+     * Renews the access token and ID token using an existing refresh token.
+     * 
+     * @throws CoreException If the Auth0 object does not have access token and refresh token
+     * @return bool
+     */
+    public function renewTokens()
+    {
+        if (!$this->accessToken) {
+            throw new CoreException('Can\'t renew the access token if there isn\'t one valid');
+        }
+
+        if (!$this->refreshToken) {
+            throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
+        }
+
+        $response = $this->authentication->oauth_token([
+            'grant_type' => 'refresh_token',
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'refresh_token' => $this->refreshToken,
+        ]);
+
+        if (empty($response['access_token']) || empty($response['id_token'])) {
+            return FALSE;
+        }
+
+        $accessToken = $response['access_token'];
+        $this->setAccessToken($accessToken);
+
+        $idToken = $response['id_token'];
+        $this->setIdToken($idToken);
+
+        return TRUE;
+    }
+
+    /**
      * Get the authorization code from POST or GET, depending on response_mode
      *
      * @return string|null
