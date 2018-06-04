@@ -93,6 +93,7 @@ class ClientsTest extends BasicCrudTest
         $this->assertLessThan($many_results_per_page, count($many_results));
 
         // Make sure our paged result above appears in the right place.
+        // $page_num here represents the expected location for the single entity retrieved above. 
         $this->assertEquals($paged_results[0][$this->id_name], $many_results[$page_num][$this->id_name]);
 
         return $many_results;

@@ -22,7 +22,7 @@ class Clients extends GenericResource
      * @param null|boolean      $include_fields - True to include $fields, false to exclude $fields.
      * @param integer           $page           - Page number to get, zero-based.
      * @param null|integer      $per_page       - Number of results to get, null to return the default number.
-     * @param array             $add_params     - Additional API parameters; see docs link below for supported.
+     * @param array             $add_params     - Additional API parameters, over-written by function params.
      *
      * @return mixed
      *
@@ -33,7 +33,7 @@ class Clients extends GenericResource
     public function getAll($fields = null, $include_fields = null, $page = 0, $per_page = null, $add_params = [])
     {
         // Set additional parameters first so they are over-written by function parameters.
-        $params = $add_params;
+        $params = is_array( $add_params ) ? $add_params : [];
 
         // Results fields.
         if (!empty($fields)) {
