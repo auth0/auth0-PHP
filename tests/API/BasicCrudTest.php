@@ -116,15 +116,20 @@ abstract class BasicCrudTest extends ApiTests
     }
 
     /**
+     * Check that HTTP options have been set correctly.
+     */
+    public function testHttpOptions()
+    {
+        $options = $this->api->getApiClient()->get()->getGuzzleOptions();
+        $this->assertArrayHasKey('base_uri', $options);
+        $this->assertEquals("https://$this->domain/api/v2/", $options['base_uri']);
+    }
+
+    /**
      * All basic CRUD test assertions.
      */
     public function testAll()
     {
-        // Get and check that our options have been set correctly.
-        $options = $this->api->getApiClient()->get()->getGuzzleOptions();
-        $this->assertArrayHasKey('base_uri', $options);
-        $this->assertEquals("https://$this->domain/api/v2/", $options['base_uri']);
-
         // Test a generic "create entity" method for this API client.
         $created_entity = $this->api->create($this->getCreateBody());
         $created_entity_id = $this->getId($created_entity);
@@ -132,6 +137,8 @@ abstract class BasicCrudTest extends ApiTests
 
         // Test a generic "get entity" method.
         $got_entity = $this->api->get($created_entity_id);
+
+        // Make sure what we got matches what we created.
         $this->afterCreate($got_entity);
 
         // Test a generic "get all entities" method for this API client.

@@ -51,7 +51,7 @@ class Clients extends GenericResource
 
         return $this->apiClient->method('get')
             ->addPath('clients')
-            ->withParamsDict($params)
+            ->withDictParams($params)
             ->call();
     }
 
@@ -82,7 +82,7 @@ class Clients extends GenericResource
 
         return $this->apiClient->method('get')
             ->addPath('clients', $client_id)
-            ->withParamsDict($params)
+            ->withDictParams($params)
             ->call();
     }
 

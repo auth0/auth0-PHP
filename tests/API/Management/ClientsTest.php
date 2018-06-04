@@ -74,18 +74,28 @@ class ClientsTest extends BasicCrudTest
     {
         $fields = array_keys($this->getCreateBody());
         $fields[] = $this->id_name;
+        $page_num = 1;
 
-        // Check that pagination works.
-        $all_results = $this->api->getAll($fields, true, 1, 1);
-        $this->assertEquals(1, count($all_results));
-        $this->assertEquals(count($fields), count($all_results[0]));
+        // Get the second page of Clients with 1 per page (second result).
+        $paged_results = $this->api->getAll($fields, true, $page_num, 1);
 
-        // If we want to check for the created result, we need all Clients.
-        if ($this->findCreatedItem) {
-            $all_results = $this->api->getAll($fields, true, 0, 100);
-        }
+        // Make sure we only have one result, as requested.
+        $this->assertEquals(1, count($paged_results));
 
-        return $all_results;
+        // Make sure we only have the 4 fields we requested.
+        $this->assertEquals(count($fields), count($paged_results[0]));
+
+        // Get many results (needs to include the created result if self::findCreatedItem === true).
+        $many_results_per_page = 50;
+        $many_results = $this->api->getAll($fields, true, 0, $many_results_per_page);
+
+        // Make sure we have at least as many results as we requested.
+        $this->assertLessThan($many_results_per_page, count($many_results));
+
+        // Make sure our paged result above appears in the right place.
+        $this->assertEquals($paged_results[0][$this->id_name], $many_results[$page_num][$this->id_name]);
+
+        return $many_results;
     }
 
     /**
@@ -95,12 +105,12 @@ class ClientsTest extends BasicCrudTest
      */
     protected function afterCreate($entity)
     {
-        $expect_client = $this->getCreateBody();
-        $this->assertNotEmpty($entity[$this->id_name]);
-        $this->assertEquals($expect_client['name'], $entity['name']);
-        $this->assertEquals($expect_client['app_type'], $entity['app_type']);
-        $this->assertEquals($expect_client['sso'], $entity['sso']);
-        $this->assertEquals($expect_client['description'], $entity['description']);
+        $expected = $this->getCreateBody();
+        $this->assertNotEmpty($this->getId($entity));
+        $this->assertEquals($expected['name'], $entity['name']);
+        $this->assertEquals($expected['app_type'], $entity['app_type']);
+        $this->assertEquals($expected['sso'], $entity['sso']);
+        $this->assertEquals($expected['description'], $entity['description']);
     }
 
     /**
@@ -125,10 +135,10 @@ class ClientsTest extends BasicCrudTest
      */
     protected function afterUpdate($entity)
     {
-        $expect_client = $this->getUpdateBody();
-        $this->assertEquals($expect_client['name'], $entity['name']);
-        $this->assertEquals($expect_client['app_type'], $entity['app_type']);
-        $this->assertEquals($expect_client['sso'], $entity['sso']);
-        $this->assertEquals($expect_client['description'], $entity['description']);
+        $expected = $this->getUpdateBody();
+        $this->assertEquals($expected['name'], $entity['name']);
+        $this->assertEquals($expected['app_type'], $entity['app_type']);
+        $this->assertEquals($expected['sso'], $entity['sso']);
+        $this->assertEquals($expected['description'], $entity['description']);
     }
 }
