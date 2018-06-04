@@ -132,8 +132,8 @@ abstract class BasicCrudTest extends ApiTests
     {
         // Test a generic "create entity" method for this API client.
         $created_entity = $this->api->create($this->getCreateBody());
-        $created_entity_id = $this->getId($created_entity);
         $this->afterCreate($created_entity);
+        $created_entity_id = $this->getId($created_entity);
 
         // Test a generic "get entity" method.
         $got_entity = $this->api->get($created_entity_id);
