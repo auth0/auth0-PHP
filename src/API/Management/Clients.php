@@ -20,7 +20,7 @@ class Clients extends GenericResource
      *
      * @param null|string|array $fields         - Fields to include or exclude from the result.
      * @param null|boolean      $include_fields - True to include $fields, false to exclude $fields.
-     * @param integer           $page           - Page number to get, zero-based.
+     * @param null|integer      $page           - Page number to get, zero-based.
      * @param null|integer      $per_page       - Number of results to get, null to return the default number.
      * @param array             $add_params     - Additional API parameters, over-written by function params.
      *
@@ -30,7 +30,7 @@ class Clients extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients
      */
-    public function getAll($fields = null, $include_fields = null, $page = 0, $per_page = null, $add_params = [])
+    public function getAll($fields = null, $include_fields = null, $page = null, $per_page = null, $add_params = [])
     {
         // Set additional parameters first so they are over-written by function parameters.
         $params = is_array( $add_params ) ? $add_params : [];
@@ -44,9 +44,11 @@ class Clients extends GenericResource
         }
 
         // Pagination.
-        $params['page'] = abs(intval($page));
-        if (null !== $per_page) {
-            $params['per_page'] = $per_page;
+        if (null !== $page) {
+            $params['page'] = abs(intval($page));
+            if (null !== $per_page) {
+                $params['per_page'] = $per_page;
+            }
         }
 
         return $this->apiClient->method('get')
