@@ -4,40 +4,142 @@ namespace Auth0\Tests\API\Management;
 use Auth0\SDK\API\Management;
 use Auth0\Tests\API\BasicCrudTest;
 
-class ClientsTest extends BasicCrudTest {
-    
-    protected function getId($entity) {
-        return $entity['client_id'];
+/**
+ * Class ClientsTest
+ *
+ * @package Auth0\Tests\API\Management
+ */
+class ClientsTest extends BasicCrudTest
+{
+    /**
+     * Unique identifier name for Clients.
+     *
+     * @var string
+     */
+    protected $id_name = 'client_id';
+
+    /**
+     * Random number used for unique testing names.
+     *
+     * @var integer
+     */
+    protected $rand;
+
+    /**
+     * ClientsTest constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->rand = rand();
     }
 
-    protected function getApiClient() {
-        $env = $this->getEnv();
-        $token = $this->getToken($env, [
-            'clients' => [
-                'actions' => ['create', 'read', 'delete', 'update']
-            ]
-        ]);
-
-        $this->domain = $env['DOMAIN'];
-
-        $api = new Management($token, $env['DOMAIN']);
-
+    /**
+     * Return the Clients API to test.
+     *
+     * @return Management\Clients
+     */
+    protected function getApiClient()
+    {
+        $token = $this->getToken($this->env, [ 'clients' => [ 'actions' => ['create', 'read', 'delete', 'update' ] ] ]);
+        $api = new Management($token, $this->domain);
         return $api->clients;
     }
 
-    protected function getCreateBody() {
-        $client_name = 'test-create-client' . rand();
-        echo "\n-- Using client name $client_name \n";
+    /**
+     * Get the Client create data to send with the test create call.
+     *
+     * @return array
+     */
+    protected function getCreateBody()
+    {
+        return [
+            'name' => 'TEST-CREATE-CLIENT-' . $this->rand,
+            'app_type' => 'regular_web',
+            'sso' => false,
+            'description' => '__Auth0_PHP_initial_app_description__',
+        ];
+    }
 
-        return ['name' => $client_name, 'sso' => false];
+    /**
+     * Tests the \Auth0\SDK\API\Management\Clients::getAll() method.
+     *
+     * @param array $created_entity - Entity created during create() test.
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    protected function getAllEntities($created_entity)
+    {
+        $fields = array_keys($this->getCreateBody());
+        $fields[] = $this->id_name;
+        $page_num = 1;
+
+        // Get the second page of Clients with 1 per page (second result).
+        $paged_results = $this->api->getAll($fields, true, $page_num, 1);
+
+        // Make sure we only have one result, as requested.
+        $this->assertEquals(1, count($paged_results));
+
+        // Make sure we only have the 4 fields we requested.
+        $this->assertEquals(count($fields), count($paged_results[0]));
+
+        // Get many results (needs to include the created result if self::findCreatedItem === true).
+        $many_results_per_page = 50;
+        $many_results = $this->api->getAll($fields, true, 0, $many_results_per_page);
+
+        // Make sure we have at least as many results as we requested.
+        $this->assertLessThan($many_results_per_page, count($many_results));
+
+        // Make sure our paged result above appears in the right place.
+        // $page_num here represents the expected location for the single entity retrieved above. 
+        $this->assertEquals($paged_results[0][$this->id_name], $many_results[$page_num][$this->id_name]);
+
+        return $many_results;
     }
-    protected function getUpdateBody() {
-        return ['sso' => true];
+
+    /**
+     * Check that the Client created matches the initial values sent.
+     *
+     * @param array $entity - The created Client to check against initial values.
+     */
+    protected function afterCreate($entity)
+    {
+        $expected = $this->getCreateBody();
+        $this->assertNotEmpty($this->getId($entity));
+        $this->assertEquals($expected['name'], $entity['name']);
+        $this->assertEquals($expected['app_type'], $entity['app_type']);
+        $this->assertEquals($expected['sso'], $entity['sso']);
+        $this->assertEquals($expected['description'], $entity['description']);
     }
-    protected function afterCreate($entity) {
-        $this->assertNotTrue($entity['sso']);
+
+    /**
+     * Get the Client values that should be updated.
+     *
+     * @return array
+     */
+    protected function getUpdateBody()
+    {
+        return [
+            'name' => 'TEST-UPDATE-CLIENT-',
+            'app_type' => 'native',
+            'sso' => true,
+            'description' => '__Auth0_PHP_updated_app_description__',
+        ];
     }
-    protected function afterUpdate($entity) {
-        $this->assertTrue($entity['sso']);
+
+    /**
+     * Update entity returned values check.
+     *
+     * @param array $entity - Client that was updated.
+     */
+    protected function afterUpdate($entity)
+    {
+        $expected = $this->getUpdateBody();
+        $this->assertEquals($expected['name'], $entity['name']);
+        $this->assertEquals($expected['app_type'], $entity['app_type']);
+        $this->assertEquals($expected['sso'], $entity['sso']);
+        $this->assertEquals($expected['description'], $entity['description']);
     }
 }

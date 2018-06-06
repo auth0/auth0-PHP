@@ -287,6 +287,20 @@ class RequestBuilder {
     }
 
     /**
+     * Add URL parameters using $key => $value array.
+     *
+     * @param array $params - URL parameters to add.
+     * 
+     * @return RequestBuilder
+     */
+    public function withDictParams($params) {
+        foreach($params as $key => $value) {
+            $this->withParam($key, $value);
+        }
+        return $this;
+    }
+
+    /**
      * @return array
      */
     private function buildMultiPart() {
