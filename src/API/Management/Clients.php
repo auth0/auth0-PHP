@@ -88,7 +88,7 @@ class Clients extends GenericResource
     }
 
     /**
-     * Delete a client.
+     * Delete a Client by ID.
      *
      * @param string $client_id - Client ID to delete.
      *
@@ -108,7 +108,7 @@ class Clients extends GenericResource
     /**
      * Create a new Client.
      *
-     * @param array $data - Client create data.
+     * @param array $data - Client create data; "name" field is required.
      *
      * @return mixed|string
      *
