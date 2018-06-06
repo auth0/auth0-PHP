@@ -24,7 +24,7 @@ class Connections extends GenericResource
      * @param null|integer $per_page       - Number of results to get, null to return the default number.
      * @param array $add_params            - Additional API parameters, over-written by function params.
      *
-     * @return mixed|string
+     * @return mixed
      *
      * @throws \Exception
      *
@@ -42,7 +42,7 @@ class Connections extends GenericResource
         $params = is_array($add_params) ? $add_params : [];
 
         // Connection strategy to filter results by.
-        if (null !== $strategy) {
+        if (!empty($strategy)) {
             $params['strategy'] = $strategy;
         }
 
@@ -139,7 +139,7 @@ class Connections extends GenericResource
     }
 
     /**
-     * Create a Connection.
+     * Create a new Connection.
      *
      * @param array $data - Connection create data; "name" and "strategy" fields are required.
      *
@@ -169,7 +169,7 @@ class Connections extends GenericResource
      * Update a Connection.
      *
      * @param string $id - Connection ID to update.
-     * @param array $data - Update data.
+     * @param array $data - Connection data to update.
      *
      * @return mixed|string
      *

@@ -90,7 +90,7 @@ class ClientsTest extends BasicCrudTest
         $many_results = $this->api->getAll($fields, true, 0, $many_results_per_page);
 
         // Make sure we have at least as many results as we requested.
-        $this->assertLessThan($many_results_per_page, count($many_results));
+        $this->assertLessThanOrEqual($many_results_per_page, count($many_results));
 
         // Make sure our paged result above appears in the right place.
         // $page_num here represents the expected location for the single entity retrieved above. 
