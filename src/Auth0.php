@@ -477,6 +477,40 @@ class Auth0
     }
 
     /**
+     * Renews the access token and ID token using an existing refresh token.
+     * 
+     * Scope offline_access must be declared during initial authentication in order to obtain refresh token for later token renewal.
+     * 
+     * @throws CoreException If the Auth0 object does not have access token and refresh token
+     * @throws ApiException If the Auth0 API did not renew access and ID token properly
+     * @link https://auth0.com/docs/tokens/refresh-token/current
+     */
+    public function renewTokens()
+    {
+        if (!$this->accessToken) {
+            throw new CoreException('Can\'t renew the access token if there isn\'t one valid');
+        }
+
+        if (!$this->refreshToken) {
+            throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
+        }
+
+        $response = $this->authentication->oauth_token([
+            'grant_type' => 'refresh_token',
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'refresh_token' => $this->refreshToken,
+        ]);
+
+        if (empty($response['access_token']) || empty($response['id_token'])) {
+            throw new ApiException('Token did not refresh correctly. Access or ID token not provided.');
+        }
+
+        $this->setAccessToken($response['access_token']);
+        $this->setIdToken($response['id_token']);
+    }
+
+    /**
      * Set the user property to a userinfo array and, if configured, persist
      *
      * @param array $user - userinfo from Auth0.
@@ -542,42 +576,6 @@ class Auth0
 
         $this->refreshToken = $refreshToken;
         return $this;
-    }
-
-    /**
-     * Renews the access token and ID token using an existing refresh token.
-     * 
-     * @throws CoreException If the Auth0 object does not have access token and refresh token
-     * @return bool
-     */
-    public function renewTokens()
-    {
-        if (!$this->accessToken) {
-            throw new CoreException('Can\'t renew the access token if there isn\'t one valid');
-        }
-
-        if (!$this->refreshToken) {
-            throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
-        }
-
-        $response = $this->authentication->oauth_token([
-            'grant_type' => 'refresh_token',
-            'client_id' => $this->clientId,
-            'client_secret' => $this->clientSecret,
-            'refresh_token' => $this->refreshToken,
-        ]);
-
-        if (empty($response['access_token']) || empty($response['id_token'])) {
-            return FALSE;
-        }
-
-        $accessToken = $response['access_token'];
-        $this->setAccessToken($accessToken);
-
-        $idToken = $response['id_token'];
-        $this->setIdToken($idToken);
-
-        return TRUE;
     }
 
     /**
