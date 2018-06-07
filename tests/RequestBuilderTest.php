@@ -32,20 +32,24 @@ class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
             'method' => 'get',
         ]);
 
+        // Adding a parameter should be reflected in the RequestBuilder object.
         $builder->withParam('param1', 'value1');
-
         $this->assertEquals('?param1=value1', $builder->getParams());
 
+        // Adding a second parameter should be reflected in the RequestBuilder object.
         $builder->withParam('param2', 'value2');
-
         $this->assertEquals('?param1=value1&param2=value2', $builder->getParams());
 
+        // Adding a parameter array should be reflected in the RequestBuilder object.
         $builder->withParams([
             ['key' => 'param3','value'=>'value3'],
             ['key' => 'param1','value'=>'value4'],
         ]);
-
         $this->assertEquals('?param1=value4&param2=value2&param3=value3', $builder->getParams());
+
+        // Adding a parameter dictionary should be reflected in the RequestBuilder object.
+        $builder->withDictParams([ 'param4' => 'value4', 'param2' => 'value5']);
+        $this->assertEquals('?param1=value4&param2=value5&param3=value3&param4=value4', $builder->getParams());
     }
 
     public function testFullUrl() {
