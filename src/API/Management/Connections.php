@@ -120,7 +120,7 @@ class Connections extends GenericResource
     /**
      * Delete a specific User for a Connection.
      *
-     * @param string $id - Connection ID (currently only database connections are supported).
+     * @param string $id - Auth0 database Connection ID (user_id with strategy of "auth0").
      * @param string $email - Email of the user to delete.
      *
      * @return mixed|string
