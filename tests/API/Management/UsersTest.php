@@ -33,7 +33,7 @@ class UsersTest extends BasicCrudTest {
         return $api->users;
     }
 
-    protected function getAllEntities($entity) { echo "user_id:'{$entity['user_id']}'";
+    protected function getAllEntities($entity) {
         return $this->api->getAll([
             "q" => "user_id:'{$entity['user_id']}'",
             "search_engine"=>"v2"
@@ -42,12 +42,11 @@ class UsersTest extends BasicCrudTest {
 
     protected function getCreateBody() {
         $this->email = 'test-create-user' . rand();
-        echo "\n-- Using user email {$this->email} \n";
 
         return [
             'connection' => 'Username-Password-Authentication',
             'email' => $this->email . '@test.com',
-            'password' => '123456',
+            'password' => 'xQaZ123we5',
             'email_verified' => true
         ];
     }
