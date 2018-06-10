@@ -23,7 +23,6 @@ class RulesTest extends BasicCrudTest {
 
     protected function getCreateBody() {
         $name = 'test-create-rule' . rand();
-        echo "\n-- Using rule name $name \n";
 
         return [
             "name" => $name,
