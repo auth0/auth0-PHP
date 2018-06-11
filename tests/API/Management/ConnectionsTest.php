@@ -19,22 +19,6 @@ class ConnectionsTest extends BasicCrudTest
     protected $id_name = 'id';
 
     /**
-     * Random number used for unique testing names.
-     *
-     * @var integer
-     */
-    protected $rand;
-
-    /**
-     * ConnectionsTest constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->rand = rand();
-    }
-
-    /**
      * Return the Connections API to test.
      *
      * @return Management\Connections

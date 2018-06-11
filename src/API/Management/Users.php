@@ -60,6 +60,7 @@ class Users extends GenericResource
      *      - "phone_number" field is required by sms connections.
      *      - "email" field is required by email and DB connections.
      *      - "password" field is required by DB connections.
+     *      - Depending on the connection user, other fields may be required.
      *
      * @return mixed|string
      *
@@ -84,7 +85,7 @@ class Users extends GenericResource
 
             // Passwords are required for DB connections.
             if ('email' !== $data['connection'] && empty($data['password'])) {
-                throw new \Exception('Missing required "password" field for DB connection.');
+                throw new \Exception('Missing required "password" field for "' . $data['connection'] . '" connection.');
             }
         }
 
@@ -126,15 +127,11 @@ class Users extends GenericResource
             $params['fields'] = $fields;
         }
         if (isset($params['fields'])) {
-            if (empty($params['fields'])) {
-                unset($params['fields']);
-            } else {
-                if (is_array($params['fields'])) {
-                    $params['fields'] = implode(',', $params['fields']);
-                }
-                if (null !== $include_fields) {
-                    $params['include_fields'] = (bool) $include_fields;
-                }
+            if (is_array($params['fields'])) {
+                $params['fields'] = implode(',', $params['fields']);
+            }
+            if (null !== $include_fields) {
+                $params['include_fields'] = (bool) $include_fields;
             }
         }
 
@@ -154,6 +151,8 @@ class Users extends GenericResource
 
     /**
      * Wrapper for self::search().
+     *
+     * TODO: Deprecate, replaced with getAll above.
      *
      * @param array $params - Search parameters to send.
      *
@@ -176,6 +175,8 @@ class Users extends GenericResource
      * @return mixed|string
      *
      * @throws \Exception
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/delete_users_by_id
      */
     public function delete($user_id)
     {
@@ -185,14 +186,16 @@ class Users extends GenericResource
     }
 
     /**
-     * Link one user account to another.
+     * Link one user identity to another.
      *
-     * @param string $user_id - User ID of the primary identity where you are linking the secondary account to.
-     * @param array $data - Secondary account to link; either link_with JWT or provider, connection_id, and user_id.
+     * @param string $user_id - User ID of the primary identity
+     * @param array $data - Secondary identity to link; either link_with JWT or provider, connection_id, and user_id.
      *
-     * @return array - Array of the primary account identities.
+     * @return array - Array of the primary account identities after the merge.
      *
      * @throws \Exception
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/post_identities
      */
     public function linkAccount($user_id, $data)
     {
@@ -208,11 +211,13 @@ class Users extends GenericResource
      *
      * @param string $user_id - User ID to unlink.
      * @param string $provider - Identity provider of the secondary linked account.
-     * @param string $identity_id- The unique identifier of the secondary linked account.
+     * @param string $identity_id - The unique identifier of the secondary linked account.
      *
      * @return mixed|string
      *
      * @throws \Exception
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/delete_user_identity_by_user_id
      */
     public function unlinkAccount($user_id, $provider, $identity_id)
     {
@@ -244,7 +249,7 @@ class Users extends GenericResource
     /**
      * Delete the multifactor provider settings for a particular user.
      * This will force user to re-configure the multifactor provider.
-     * 
+     *
      * @param string $user_id - User ID with the multifactor provider to delete.
      * @param string $mfa_provider - Multifactor provider to delete
      *

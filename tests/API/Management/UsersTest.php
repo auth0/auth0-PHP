@@ -19,13 +19,6 @@ class UsersTest extends BasicCrudTest
     protected $id_name = 'user_id';
 
     /**
-     * Random number used for unique testing names.
-     *
-     * @var integer
-     */
-    protected $rand;
-
-    /**
      * Should the results returned by getAll be searched for the created user?
      *
      * @var bool
@@ -38,15 +31,6 @@ class UsersTest extends BasicCrudTest
      * @var string
      */
     protected $connection = 'Username-Password-Authentication';
-
-    /**
-     * UsersTest constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->rand = rand();
-    }
 
     /**
      * Return the Users API to test.
@@ -174,7 +158,7 @@ class UsersTest extends BasicCrudTest
         try {
             $this->api->create([]);
         } catch (\Exception $e) {
-            $caught_connection_error = $this->errorHasString($e, 'connection');
+            $caught_connection_error = $this->errorHasString($e, 'Missing required "connection" field');
         }
         $this->assertTrue($caught_connection_error);
 
@@ -183,7 +167,7 @@ class UsersTest extends BasicCrudTest
         try {
             $this->api->create([ 'connection' => 'sms' ]);
         } catch (\Exception $e) {
-            $caught_phone_error = $this->errorHasString($e, 'phone_number');
+            $caught_phone_error = $this->errorHasString($e, 'Missing required "phone_number" field');
         }
         $this->assertTrue($caught_phone_error);
 
@@ -192,7 +176,7 @@ class UsersTest extends BasicCrudTest
         try {
             $this->api->create([ 'connection' => 'email' ]);
         } catch (\Exception $e) {
-            $caught_email_error = $this->errorHasString($e, 'email');
+            $caught_email_error = $this->errorHasString($e, 'Missing required "email" field');
         }
         $this->assertTrue($caught_email_error);
 
@@ -201,7 +185,7 @@ class UsersTest extends BasicCrudTest
         try {
             $this->api->create([ 'connection' => $this->connection ]);
         } catch (\Exception $e) {
-            $caught_db_email_error = $this->errorHasString($e, 'email');
+            $caught_db_email_error = $this->errorHasString($e, 'Missing required "email" field');
         }
         $this->assertTrue($caught_db_email_error);
     }

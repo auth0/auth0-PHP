@@ -19,22 +19,6 @@ class ClientsTest extends BasicCrudTest
     protected $id_name = 'client_id';
 
     /**
-     * Random number used for unique testing names.
-     *
-     * @var integer
-     */
-    protected $rand;
-
-    /**
-     * ClientsTest constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->rand = rand();
-    }
-
-    /**
      * Return the Clients API to test.
      *
      * @return Management\Clients
