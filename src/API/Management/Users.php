@@ -105,7 +105,7 @@ class Users extends GenericResource
      *
      * @param array $params - Search parameters to send:
      *      - "fields", "include_fields", "page", and "per_page" keys here will override the explicit parameters.
-     *      - Queries using "search_engine" set to "v2" should be migrated to v3; see migration @link below
+     *      - Queries using "search_engine" set to "v2" should be migrated to v3; see search v3 @link below.
      * @param null|string|array $fields - Fields to include or exclude from the result, empty to retrieve all fields:
      *      - Including only the fields required can speed up API calls significantly.
      *      - Arrays will be converted to comma-separated strings
@@ -117,11 +117,8 @@ class Users extends GenericResource
      *
      * @throws \Exception
      *
-     * @link https://auth0.com/docs/users/search/v3#migrate-from-search-engine-v2-to-v3
+     * @link https://auth0.com/docs/users/search/v3
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_users
-     * @link https://auth0.com/docs/users/search/best-practices
-     * @link https://auth0.com/docs/users/search/v3/query-syntax
-     * @link https://auth0.com/docs/users/search/v2/query-syntax
      */
     public function getAll($params = [], $fields = null, $include_fields = null, $page = null, $per_page = null)
     {
@@ -239,19 +236,11 @@ class Users extends GenericResource
     /**
      * TODO: Deprecate, endpoint does not exist.
      *
-     * @param string $user_id - User ID to unlink.
-     * @param string $device_id - Device ID to unlink.
-     *
-     * @return mixed|string
-     *
      * @throws \Exception
      */
     public function unlinkDevice($user_id, $device_id)
     {
-        return $this->apiClient->method('delete')
-            ->addPath('users', $user_id)
-            ->addPath('devices', $device_id)
-            ->call();
+        throw new \Exception('Endpoint /api/v2/users/{user_id}/devices/{device_id} does not exist.');
     }
 
     /**
