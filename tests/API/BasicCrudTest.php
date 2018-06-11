@@ -33,6 +33,13 @@ abstract class BasicCrudTest extends ApiTests
     protected $id_name = 'id';
 
     /**
+     * Random number used for unique testing names.
+     *
+     * @var integer
+     */
+    protected $rand;
+
+    /**
      * Should all results be searched for the created entity?
      *
      * @var bool
@@ -88,6 +95,7 @@ abstract class BasicCrudTest extends ApiTests
         $this->env = $this->getEnv();
         $this->domain = $this->env['DOMAIN'];
         $this->api = $this->getApiClient();
+        $this->rand = rand();
     }
 
     /**
