@@ -16,6 +16,7 @@ class Users extends GenericResource
 {
     /**
      * Get a single User by ID.
+     * Requires scopes: read:users, read:user_idp_tokens.
      *
      * @param string $user_id - User ID to get.
      *
@@ -32,6 +33,8 @@ class Users extends GenericResource
 
     /**
      * Update a User.
+     * Requires scope: update:users.
+     * May require scope: update:users_app_metadata
      *
      * @param string $user_id - User ID to update.
      * @param array $data - User data to update:
@@ -54,6 +57,7 @@ class Users extends GenericResource
 
     /**
      * Create a new User.
+     * Requires scope: create:users.
      *
      * @param array $data - User create data:
      *      - "connection" name field is required and limited to sms, email, & DB connections.
@@ -97,6 +101,7 @@ class Users extends GenericResource
 
     /**
      * Search all Users.
+     * Requires scopes: read:users, read:user_idp_tokens.
      *
      * @param array $params - Search parameters to send:
      *      - "fields", "include_fields", "page", and "per_page" keys here will override the explicit parameters.
@@ -169,6 +174,7 @@ class Users extends GenericResource
 
     /**
      * Delete a User by ID.
+     * Requires scope: delete:users.
      *
      * @param string $user_id - User ID to delete.
      *
@@ -187,6 +193,7 @@ class Users extends GenericResource
 
     /**
      * Link one user identity to another.
+     * Requires scope: update:users.
      *
      * @param string $user_id - User ID of the primary identity
      * @param array $data - Secondary identity to link; either link_with JWT or provider, connection_id, and user_id.
@@ -208,6 +215,7 @@ class Users extends GenericResource
 
     /**
      * Unlink an identity from the target user.
+     * Requires scope: update:users.
      *
      * @param string $user_id - User ID to unlink.
      * @param string $provider - Identity provider of the secondary linked account.
@@ -249,6 +257,7 @@ class Users extends GenericResource
     /**
      * Delete the multifactor provider settings for a particular user.
      * This will force user to re-configure the multifactor provider.
+     * Requires scope: update:users.
      *
      * @param string $user_id - User ID with the multifactor provider to delete.
      * @param string $mfa_provider - Multifactor provider to delete
