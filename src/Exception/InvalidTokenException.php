@@ -13,4 +13,7 @@ namespace Auth0\SDK\Exception;
  *
  * @author Auth0
  */
-class InvalidTokenException extends CoreException { }
+class InvalidTokenException extends CoreException
+{
+ 
+}

@@ -20,13 +20,16 @@ namespace Auth0\SDK\Store;
  */
 class EmptyStore implements StoreInterface
 {
-    public function set($key, $value) {
+    public function set($key, $value)
+    {
     }
 
-    public function get($key, $default=null) {
+    public function get($key, $default = null)
+    {
         return $default;
     }
 
-    public function delete($key) {
+    public function delete($key)
+    {
     }
 }

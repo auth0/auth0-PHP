@@ -8,8 +8,8 @@ use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Firebase\JWT\JWT;
 
-class JWTVerifier {
-
+class JWTVerifier
+{
     protected $JWKFetcher = null;
     protected $supported_algs = null;
     protected $valid_audiences = null;
@@ -21,17 +21,18 @@ class JWTVerifier {
      * JWTVerifier Constructor.
      *
      * Configuration:
-     *     - cache                  (CacheHandler)  Optional. Should be an instance of CacheHandler that is going to be used to cache the JWKs
-     *     - supported_algs          (Array)  Optional. The list of supported algorithms. By default only HS256
-     *     - client_secret          (String)  Required (if supported HS256). The Auth0 application secret.
-     *     - valid_audiences        (Array)  Required. The list of audiences accepted by the service.
-     *     - authorized_iss         (Array) Required (if supported RS256). The list of issuers trusted by the service.
-     *     - guzzle_options         (Array) Optional Extra configuration options sent to guzzle.
+     *     - cache (CacheHandler) - Optional. Instance of CacheHandler to cache the JWKs.
+     *     - supported_algs (Array) - Optional. The list of supported algorithms. By default only HS256.
+     *     - client_secret (String) - Required (if supported HS256). The Auth0 application secret.
+     *     - valid_audiences (Array) - Required. The list of audiences accepted by the service.
+     *     - authorized_iss (Array) - Required (if supported RS256). The list of issuers trusted by the service.
+     *     - guzzle_options (Array) - Optional. Extra configuration options sent to the Guzzle HTTP client.
      *
      * @param array $config
      * @throws CoreException
      */
-    public function __construct($config) {
+    public function __construct($config)
+    {
 
         $cache = null;
         $guzzleOptions = [];
@@ -44,7 +45,7 @@ class JWTVerifier {
         }
 
         if (isset($config['suported_algs'])) {
-          throw new CoreException("`suported_algs` was properly renamed to `supported_algs`.");
+            throw new CoreException("`suported_algs` was properly renamed to `supported_algs`.");
         }
 
         if (!isset($config['supported_algs'])) {
@@ -103,7 +104,7 @@ class JWTVerifier {
         $body64 = $tks[1];
         $head = json_decode(JWT::urlsafeB64Decode($headb64));
 
-        if ( !is_object($head) || ! isset($head->alg)) {
+        if (!is_object($head) || ! isset($head->alg)) {
               throw new InvalidTokenException("Invalid token");
         }
 
@@ -113,16 +114,16 @@ class JWTVerifier {
 
         if ($head->alg === 'RS256') {
             $body = json_decode(JWT::urlsafeB64Decode($body64));
-            if ( !in_array($body->iss, $this->authorized_iss) ) {
+            if (!in_array($body->iss, $this->authorized_iss)) {
                 throw new CoreException("We can't trust on a token issued by: `{$body->iss}`.");
             }
             $secret = $this->JWKFetcher->fetchKeys($body->iss);
         } elseif ($head->alg === 'HS256') {
-          if ($this->secret_base64_encoded) {
-            $secret = JWT::urlsafeB64Decode($this->client_secret);
-          } else {
-            $secret = $this->client_secret;
-          }
+            if ($this->secret_base64_encoded) {
+                $secret = JWT::urlsafeB64Decode($this->client_secret);
+            } else {
+                $secret = $this->client_secret;
+            }
         } else {
             throw new InvalidTokenException("Invalid signature algorithm");
         }
@@ -138,7 +139,7 @@ class JWTVerifier {
             if (count(array_intersect($audience, $this->valid_audiences)) == 0) {
                 throw new InvalidTokenException("This token is not intended for us.");
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new CoreException($e->getMessage());
         }
         return $decodedToken;

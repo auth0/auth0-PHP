@@ -3,9 +3,11 @@ namespace Auth0\Tests;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
 
-class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
+class RequestBuilderTest extends \PHPUnit_Framework_TestCase
+{
 
-    public function testUrl() {
+    public function testUrl()
+    {
 
         $builder = new RequestBuilder([
             'domain' => 'www.domain.com',
@@ -22,10 +24,10 @@ class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
         $builder->path2(3);
 
         $this->assertEquals('path1/path2/3', $builder->getUrl());
-
     }
 
-    public function testParams() {
+    public function testParams()
+    {
 
         $builder = new RequestBuilder([
             'domain' => 'www.domain.com',
@@ -52,7 +54,8 @@ class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
         $this->assertEquals('?param1=value4&param2=value5&param3=value3&param4=value4', $builder->getParams());
     }
 
-    public function testFullUrl() {
+    public function testFullUrl()
+    {
         $builder = new RequestBuilder([
             'domain' => 'www.domain.com',
             'method' => 'get',
@@ -68,7 +71,8 @@ class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
         $this->assertEquals('path/2/subpath?param1=value1&param2=value2', $builder->getUrl());
     }
 
-    public function testGetGuzzleOptions() {
+    public function testGetGuzzleOptions()
+    {
         $builder = new RequestBuilder([
             'domain' => 'www.domain.com',
             'method' => 'get',
@@ -80,7 +84,8 @@ class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
         $this->assertEquals('www.domain.com', $options['base_uri']);
     }
 
-    public function testgGetGuzzleOptionsWithBasePath() {
+    public function testgGetGuzzleOptionsWithBasePath()
+    {
         $builder = new RequestBuilder([
             'domain' => 'www.domain.com',
             'basePath' => '/api',
@@ -92,5 +97,4 @@ class RequestBuilderTest  extends \PHPUnit_Framework_TestCase{
         $this->assertArrayHasKey('base_uri', $options);
         $this->assertEquals('www.domain.com/api', $options['base_uri']);
     }
-
 }

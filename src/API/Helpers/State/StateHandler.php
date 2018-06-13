@@ -2,8 +2,6 @@
 
 namespace Auth0\SDK\API\Helpers\State;
 
-
-
 /*
  * This file is part of Auth0-PHP package.
  *
@@ -23,7 +21,7 @@ interface StateHandler
 
     /**
      * Generate state value to be used for the state param value during authorization.
-     * 
+     *
      * @return string || null
      */
     public function issue();
@@ -39,9 +37,9 @@ interface StateHandler
 
     /**
      * Perform validation of the returned state with the previously generated state.
-     * 
+     *
      * @param  string $state
-     * 
+     *
      * @return bool result
      *
      * @throws \Exception

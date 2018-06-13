@@ -22,112 +22,113 @@ use Auth0\SDK\API\Management\UsersByEmail;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 
-class Management {
+class Management
+{
 
     /**
      * @var string
      */
-  private $token;
+    private $token;
 
     /**
      * @var string
      */
-  private $domain;
+    private $domain;
 
     /**
      * @var ApiClient
      */
-  private $apiClient;
+    private $apiClient;
 
     /**
      * @var array
      */
-  private $guzzleOptions;
+    private $guzzleOptions;
 
     /**
      * @var Blacklists
      */
-  public $blacklists;
+    public $blacklists;
 
     /**
      * @var Clients
      */
-  public $clients;
+    public $clients;
 
     /**
      * @var ClientGrants
      */
-  public $client_grants;
+    public $client_grants;
 
     /**
      * @var Connections
      */
-  public $connections;
+    public $connections;
 
     /**
      * @var DeviceCredentials
      */
-  public $deviceCredentials;
+    public $deviceCredentials;
 
     /**
      * @var Emails
      */
-  public $emails;
+    public $emails;
 
     /**
      * @var EmailTemplates
      */
-  public $emailTemplates;
+    public $emailTemplates;
 
     /**
      * @var Jobs
      */
-  public $jobs;
+    public $jobs;
 
     /**
      * @var Logs
      */
-  public $logs;
+    public $logs;
 
     /**
      * @var Rules
      */
-  public $rules;
+    public $rules;
 
     /**
      * @var ResourceServers
      */
-  public $resource_servers;
+    public $resource_servers;
 
     /**
      * @var Stats
      */
-  public $stats;
+    public $stats;
 
     /**
      * @var Tenants
      */
-  public $tenants;
+    public $tenants;
 
     /**
      * @var Tickets
      */
-  public $tickets;
+    public $tickets;
 
     /**
      * @var UserBlocks
      */
-  public $userBlocks;
+    public $userBlocks;
 
     /**
      * @var Users
      */
-  public $users;
+    public $users;
 
     /**
      * @var UsersByEmail
      */
-  public $usersByEmail;
+    public $usersByEmail;
 
     /**
      * Management constructor.
@@ -136,44 +137,46 @@ class Management {
      * @param string $domain
      * @param array $guzzleOptions
      */
-  public function __construct($token, $domain, $guzzleOptions = []) {
-    $this->token = $token;
-    $this->domain = $domain;
-    $this->guzzleOptions = $guzzleOptions;
+    public function __construct($token, $domain, $guzzleOptions = [])
+    {
+        $this->token = $token;
+        $this->domain = $domain;
+        $this->guzzleOptions = $guzzleOptions;
     
-    $this->setApiClient();
+        $this->setApiClient();
 
-    $this->blacklists = new Blacklists($this->apiClient);
-    $this->clients = new Clients($this->apiClient);
-    $this->client_grants = new ClientGrants($this->apiClient);
-    $this->connections = new Connections($this->apiClient);
-    $this->deviceCredentials = new DeviceCredentials($this->apiClient);
-    $this->emails = new Emails($this->apiClient);
-    $this->emailTemplates = new EmailTemplates($this->apiClient);
-    $this->jobs = new Jobs($this->apiClient);
-    $this->logs = new Logs($this->apiClient);
-    $this->rules = new Rules($this->apiClient);
-    $this->resource_servers = new ResourceServers($this->apiClient);
-    $this->stats = new Stats($this->apiClient);
-    $this->tenants = new Tenants($this->apiClient);
-    $this->tickets = new Tickets($this->apiClient);
-    $this->userBlocks = new UserBlocks($this->apiClient);
-    $this->users = new Users($this->apiClient);
-    $this->usersByEmail = new UsersByEmail($this->apiClient);
-  }
+        $this->blacklists = new Blacklists($this->apiClient);
+        $this->clients = new Clients($this->apiClient);
+        $this->client_grants = new ClientGrants($this->apiClient);
+        $this->connections = new Connections($this->apiClient);
+        $this->deviceCredentials = new DeviceCredentials($this->apiClient);
+        $this->emails = new Emails($this->apiClient);
+        $this->emailTemplates = new EmailTemplates($this->apiClient);
+        $this->jobs = new Jobs($this->apiClient);
+        $this->logs = new Logs($this->apiClient);
+        $this->rules = new Rules($this->apiClient);
+        $this->resource_servers = new ResourceServers($this->apiClient);
+        $this->stats = new Stats($this->apiClient);
+        $this->tenants = new Tenants($this->apiClient);
+        $this->tickets = new Tickets($this->apiClient);
+        $this->userBlocks = new UserBlocks($this->apiClient);
+        $this->users = new Users($this->apiClient);
+        $this->usersByEmail = new UsersByEmail($this->apiClient);
+    }
 
-  protected function setApiClient() {
-    $apiDomain = "https://{$this->domain}";
+    protected function setApiClient()
+    {
+        $apiDomain = "https://{$this->domain}";
 
-    $client = new ApiClient([
+        $client = new ApiClient([
         'domain' => $apiDomain,
         'basePath' => '/api/v2/',
         'guzzleOptions' => $this->guzzleOptions,
         'headers' => [
           new AuthorizationBearer($this->token)
         ]
-    ]);
+        ]);
 
-    $this->apiClient = $client;
-  }
+        $this->apiClient = $client;
+    }
 }

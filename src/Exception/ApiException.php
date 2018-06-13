@@ -13,6 +13,7 @@ namespace Auth0\SDK\Exception;
  *
  * @author Auth0
  */
-class ApiException extends \Exception {
+class ApiException extends \Exception
+{
 
 }

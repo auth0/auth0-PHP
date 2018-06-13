@@ -4,9 +4,9 @@ namespace Auth0\Tests\Helpers\Cache;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Helpers\Cache\FileSystemCacheHandler;
 
-class CacheTest extends \PHPUnit_Framework_TestCase 
+class CacheTest extends \PHPUnit_Framework_TestCase
 {
-    public function testNoCache() 
+    public function testNoCache()
     {
         $cache = new NoCacheHandler();
 
@@ -17,10 +17,9 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $cache->delete('pepe');
 
         $this->assertNull($cache->get('pepe'));
-
     }
 
-    public function testFileSystemCache() 
+    public function testFileSystemCache()
     {
         $cache = new FileSystemCacheHandler();
 

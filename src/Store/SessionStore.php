@@ -23,7 +23,8 @@ class SessionStore implements StoreInterface
     /**
      * @see Oauth2Client
      */
-    public function __construct() {
+    public function __construct()
+    {
 
         $this->initSession();
     }
@@ -34,7 +35,8 @@ class SessionStore implements StoreInterface
      *
      * @return void
      */
-    private function initSession() {
+    private function initSession()
+    {
         if (!session_id()) {
             session_set_cookie_params(60 * 60 * 24 * 7); //seven days
             session_start();
@@ -49,7 +51,8 @@ class SessionStore implements StoreInterface
      * @param string $key
      * @param mixed $value
      */
-    public function set($key, $value) {
+    public function set($key, $value)
+    {
         $key_name = $this->getSessionKeyName($key);
 
         $_SESSION[$key_name] = $value;
@@ -64,7 +67,8 @@ class SessionStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get($key, $default=null) {
+    public function get($key, $default = null)
+    {
         $key_name = $this->getSessionKeyName($key);
 
         if (isset($_SESSION[$key_name])) {
@@ -79,7 +83,8 @@ class SessionStore implements StoreInterface
      *
      * @param  string $key
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         $key_name = $this->getSessionKeyName($key);
 
         unset($_SESSION[$key_name]);
@@ -94,7 +99,8 @@ class SessionStore implements StoreInterface
      *
      * @return string
      */
-    public function getSessionKeyName($key) {
+    public function getSessionKeyName($key)
+    {
         return self::BASE_NAME . '_' . $key;
     }
 }

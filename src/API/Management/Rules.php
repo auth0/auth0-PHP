@@ -2,10 +2,9 @@
 
 namespace Auth0\SDK\API\Management;
 
-
 use Auth0\SDK\API\Header\ContentType;
 
-class Rules extends GenericResource 
+class Rules extends GenericResource
 {
     /**
      * @param null|string $enabled
@@ -13,27 +12,23 @@ class Rules extends GenericResource
      * @param null|string|array $include_fields
      * @return mixed
      */
-    public function getAll($enabled = null, $fields = null, $include_fields = null) 
+    public function getAll($enabled = null, $fields = null, $include_fields = null)
     {
         $request = $this->apiClient->get()
             ->rules();
 
-        if ($enabled !== null) 
-        {
+        if ($enabled !== null) {
             $request->withParam('enabled', $enabled);
         }
 
-        if ($fields !== null) 
-        {
-            if (is_array($fields)) 
-            {
+        if ($fields !== null) {
+            if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
             $request->withParam('fields', $fields);
         }
 
-        if ($include_fields !== null) 
-        {
+        if ($include_fields !== null) {
             $request->withParam('include_fields', $include_fields);
         }
 
@@ -46,22 +41,19 @@ class Rules extends GenericResource
      * @param null|string|array $include_fields
      * @return mixed
      */
-    public function get($id, $fields = null, $include_fields = null) 
+    public function get($id, $fields = null, $include_fields = null)
     {
         $request = $this->apiClient->get()
             ->rules($id);
 
-        if ($fields !== null) 
-        {
-            if (is_array($fields)) 
-            {
+        if ($fields !== null) {
+            if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
             $request->withParam('fields', $fields);
         }
 
-        if ($include_fields !== null) 
-        {
+        if ($include_fields !== null) {
             $request->withParam('include_fields', $include_fields);
         }
 
@@ -74,9 +66,9 @@ class Rules extends GenericResource
      * @param string $id
      * @return mixed
      */
-    public function delete($id) 
+    public function delete($id)
     {
-       return $this->apiClient->delete()
+        return $this->apiClient->delete()
             ->rules($id)
             ->call();
     }
@@ -85,7 +77,7 @@ class Rules extends GenericResource
      * @param array $data
      * @return mixed
      */
-    public function create($data) 
+    public function create($data)
     {
         return $this->apiClient->post()
             ->rules()
@@ -99,7 +91,7 @@ class Rules extends GenericResource
      * @param array $data
      * @return mixed
      */
-    public function update($id, $data) 
+    public function update($id, $data)
     {
         return $this->apiClient->patch()
             ->rules($id)
