@@ -1,5 +1,29 @@
 # Change Log
 
+## [5.2.0](https://github.com/auth0/auth0-PHP/tree/5.2.0) (2018-06-13)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.1.1...5.2.0)
+
+**Closed issues**
+- getAppMetadata - how to use? [\#248](https://github.com/auth0/auth0-PHP/issues/248)
+- Auth0 class missing action to renew access token [\#234](https://github.com/auth0/auth0-PHP/issues/234)
+- DOC maj [\#217](https://github.com/auth0/auth0-PHP/issues/217)
+
+**Added**
+- User pagination and fields, docblocks, formatting, test improvements [\#261](https://github.com/auth0/auth0-PHP/pull/261) ([joshcanhelp](https://github.com/joshcanhelp))
+- Unit test for withDictParams method [\#260](https://github.com/auth0/auth0-PHP/pull/260) ([joshcanhelp](https://github.com/joshcanhelp))
+- Pagination, additional parameters, and tests for the Connections endpoint [\#258](https://github.com/auth0/auth0-PHP/pull/258) ([joshcanhelp](https://github.com/joshcanhelp))
+- Renew tokens method for Auth0 client class [\#257](https://github.com/auth0/auth0-PHP/pull/257) ([jspetrak](https://github.com/jspetrak))
+- Clients endpoint pagination and improvements [\#256](https://github.com/auth0/auth0-PHP/pull/256) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add email template endpoints [\#251](https://github.com/auth0/auth0-PHP/pull/251) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Code style scan and fixes [\#250](https://github.com/auth0/auth0-PHP/pull/250) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix PHPUnit test. [\#262](https://github.com/auth0/auth0-PHP/pull/262) ([maurobonfietti](https://github.com/maurobonfietti))
+- Allow $page to be null for Clients so pagination is not triggered [\#259](https://github.com/auth0/auth0-PHP/pull/259) ([joshcanhelp](https://github.com/joshcanhelp))
+- Rewrite README; add news and notes to CHANGELOG [\#253](https://github.com/auth0/auth0-PHP/pull/253) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.1.1](https://github.com/auth0/auth0-PHP/tree/5.1.1) (2018-04-03)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.1.0...5.1.1)
 
