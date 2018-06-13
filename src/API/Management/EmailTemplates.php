@@ -62,7 +62,7 @@ class EmailTemplates extends GenericResource
     /**
      * Get an email template by name.
      * See docs @link below for valid names and fields.
-     * Requires scope: read:email_templates.
+     * Required scope: "read:email_templates"
      *
      * @param string $templateName - the email template name to get (see constants defined for this class).
      *
@@ -83,7 +83,7 @@ class EmailTemplates extends GenericResource
      * Patch an email template by name.
      * This will update only the email template data fields provided (see HTTP PATCH).
      * See docs @link below for valid names, fields, and possible responses.
-     * Requires scope: update:email_templates.
+     * Required scope: "update:email_templates"
      *
      * @param string $templateName - the email template name to patch (see constants defined for this class).
      * @param array $data - an array of data to update.
@@ -105,7 +105,7 @@ class EmailTemplates extends GenericResource
     /**
      * Create an email template by name.
      * See docs @link below for valid names and fields.
-     * Requires scope: create:email_templates.
+     * Required scope: "create:email_templates"
      *
      * @param string $template - the template name to create (see constants defined for this class).
      * @param boolean $enabled - is the email template enabled?

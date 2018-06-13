@@ -16,6 +16,7 @@ class Connections extends GenericResource
 {
     /**
      * Get all Connections by page.
+     * Required scope: "read:connections"
      *
      * @param null|string $strategy        - Connection strategy to retrieve.
      * @param null|string|array $fields    - Fields to include or exclude from the result, empty to retrieve all fields.
@@ -70,6 +71,7 @@ class Connections extends GenericResource
 
     /**
      * Get a single Connection by ID.
+     * Required scope: "read:connections"
      *
      * @param string $id - Connection ID to get.
      * @param null|string|array $fields - Fields to include or exclude from the result, empty to retrieve all fields.
@@ -101,6 +103,7 @@ class Connections extends GenericResource
 
     /**
      * Delete a Connection by ID.
+     * Required scope: "delete:connections"
      *
      * @param string $id - Connection ID to delete.
      *
@@ -119,6 +122,7 @@ class Connections extends GenericResource
 
     /**
      * Delete a specific User for a Connection.
+     * Required scope: "delete:users"
      *
      * @param string $id - Auth0 database Connection ID (user_id with strategy of "auth0").
      * @param string $email - Email of the user to delete.
@@ -140,6 +144,7 @@ class Connections extends GenericResource
 
     /**
      * Create a new Connection.
+     * Required scope: "create:connections"
      *
      * @param array $data - Connection create data; "name" and "strategy" fields are required.
      *
@@ -167,6 +172,7 @@ class Connections extends GenericResource
 
     /**
      * Update a Connection.
+     * Required scope: "update:connections"
      *
      * @param string $id - Connection ID to update.
      * @param array $data - Connection data to update.
