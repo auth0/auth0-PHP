@@ -16,6 +16,9 @@ class Clients extends GenericResource
 {
     /**
      * Get all Clients by page.
+     * Required scopes:
+     *      - "read:clients" - For any call to this endpoint.
+     *      - "read:client_keys" - To retrieve "client_secret" and "encryption_key" attributes.
      *
      * @param null|string|array $fields         - Fields to include or exclude from the result.
      * @param null|boolean      $include_fields - True to include $fields, false to exclude $fields.
@@ -58,6 +61,9 @@ class Clients extends GenericResource
 
     /**
      * Get a single Client by ID.
+     * Required scopes:
+     *      - "read:clients" - For any call to this endpoint.
+     *      - "read:client_keys" - To retrieve "client_secret" and "encryption_key" attributes.
      *
      * @param string            $client_id      - Client ID to get.
      * @param null|string|array $fields         - Fields to include or exclude, based on $include_fields parameter.
@@ -89,6 +95,7 @@ class Clients extends GenericResource
 
     /**
      * Delete a Client by ID.
+     * Required scope: "delete:clients"
      *
      * @param string $client_id - Client ID to delete.
      *
@@ -107,6 +114,7 @@ class Clients extends GenericResource
 
     /**
      * Create a new Client.
+     * Required scope: "create:clients"
      *
      * @param array $data - Client create data; "name" field is required.
      *
@@ -130,6 +138,9 @@ class Clients extends GenericResource
 
     /**
      * Update a Client.
+     * Required scopes:
+     *      - "update:clients" - For any call to this endpoint.
+     *      - "update:client_keys" - To update "client_secret" and "encryption_key" attributes.
      *
      * @param string $client_id - Client ID to update.
      * @param array $data - Client data to update.
