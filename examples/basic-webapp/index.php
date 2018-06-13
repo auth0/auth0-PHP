@@ -12,12 +12,12 @@ require __DIR__ . '/vendor/autoload.php';
 
 // Load env variables
 // https://github.com/vlucas/phpdotenv#usage
-$dotenv = new Dotenv( __DIR__ );
+$dotenv = new Dotenv(__DIR__);
 $dotenv->load();
 
 // Create a new Auth0 instance
 // https://github.com/auth0/auth0-PHP#oauth2-authentication
-$auth0 = new Auth0( [
+$auth0 = new Auth0([
   'domain' => $_ENV[ 'AUTH0_DOMAIN' ],
   'client_id' => $_ENV[ 'AUTH0_CLIENT_ID' ],
   'client_secret' => $_ENV[ 'AUTH0_CLIENT_SECRET' ],
@@ -25,29 +25,26 @@ $auth0 = new Auth0( [
   'scope' => 'openid profile email',
   'persist_id_token' => true,
   'persist_refresh_token' => true,
-] );
+]);
 
-if ( isset( $_GET['logout'] ) ) {
-  
+if (isset($_GET['logout'])) {
   // Catch logout requests and process
-  $auth0->logout();
-  session_destroy();
-  header( 'Location: ' . $_ENV[ 'AUTH0_CALLBACK_URL' ] );
-  die();
-  
-} elseif ( isset( $_GET[ 'login' ] ) ) {
-  
+    $auth0->logout();
+    session_destroy();
+    header('Location: ' . $_ENV[ 'AUTH0_CALLBACK_URL' ]);
+    die();
+} elseif (isset($_GET[ 'login' ])) {
   // Redirect to the hosted login page
-  $auth0->login();
+    $auth0->login();
 }
 
 // Get userinfo from session or from code exchange after login
 $userinfo = $auth0->getUser();
 
 // Redirect to not show auth parameters (not required)
-if ( ! empty( $_GET['code'] ) ) {
-  header( 'Location: ' . $_ENV[ 'AUTH0_CALLBACK_URL' ] );
-  die();
+if (! empty($_GET['code'])) {
+    header('Location: ' . $_ENV[ 'AUTH0_CALLBACK_URL' ]);
+    die();
 }
 ?><!DOCTYPE html>
 <html lang="en">
@@ -61,13 +58,13 @@ if ( ! empty( $_GET['code'] ) ) {
     <body>
         <section>
             <img class="logo" src="//cdn.auth0.com/samples/auth0_logo_final_blue_RGB.png">
-            <?php if ( ! empty( $_GET['error'] ) ) : ?>
-                <div class="alert alert-danger"><?php echo strip_tags( $_GET['error'] ) ?></div>
+            <?php if (! empty($_GET['error'])) : ?>
+                <div class="alert alert-danger"><?php echo strip_tags($_GET['error']) ?></div>
             <?php endif; ?>
-            <?php if ( $userinfo ) :
-                $picture = filter_var( $userinfo['picture'], FILTER_SANITIZE_URL );
-                $nickname = filter_var( $userinfo['nickname'], FILTER_SANITIZE_STRING );
-                $email = filter_var( $userinfo['email'], FILTER_SANITIZE_EMAIL );
+            <?php if ($userinfo) :
+                $picture = filter_var($userinfo['picture'], FILTER_SANITIZE_URL);
+                $nickname = filter_var($userinfo['nickname'], FILTER_SANITIZE_STRING);
+                $email = filter_var($userinfo['email'], FILTER_SANITIZE_EMAIL);
                 ?>
                 <img class="avatar" src="<?php echo $picture; ?>"/>
                 <h1><?php echo $nickname; ?></h1>

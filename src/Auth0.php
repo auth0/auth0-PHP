@@ -478,9 +478,8 @@ class Auth0
 
     /**
      * Renews the access token and ID token using an existing refresh token.
-     * 
-     * Scope offline_access must be declared during initial authentication in order to obtain refresh token for later token renewal.
-     * 
+     * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
+     *
      * @throws CoreException If the Auth0 object does not have access token and refresh token
      * @throws ApiException If the Auth0 API did not renew access and ID token properly
      * @link https://auth0.com/docs/tokens/refresh-token/current

@@ -18,7 +18,7 @@ use Auth0\SDK\Store\StoreInterface;
  *
  * @author Auth0
  */
-class SessionStateHandler implements StateHandler 
+class SessionStateHandler implements StateHandler
 {
     const STATE_NAME = 'webauth_state';
 
@@ -27,16 +27,18 @@ class SessionStateHandler implements StateHandler
     /**
      * @param StoreInterface $store
      */
-    public function __construct(StoreInterface $store) {
+    public function __construct(StoreInterface $store)
+    {
         $this->store = $store;
     }
 
     /**
      * Generate state value to be used for the state param value during authorization.
-     * 
+     *
      * @return string
      */
-    public function issue() {
+    public function issue()
+    {
         $state = uniqid('', true);
         $this->store($state);
         return $state;
@@ -49,7 +51,8 @@ class SessionStateHandler implements StateHandler
    *
    * @return mixed|void
    */
-    public function store($state) {
+    public function store($state)
+    {
         $this->store->set(self::STATE_NAME, $state);
     }
     
@@ -62,7 +65,8 @@ class SessionStateHandler implements StateHandler
      *
      * @throws \Exception
      */
-    public function validate($state) {
+    public function validate($state)
+    {
         $valid = $this->store->get(self::STATE_NAME) == $state;
         $this->store->delete(self::STATE_NAME);
         return $valid;

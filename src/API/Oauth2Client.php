@@ -10,13 +10,9 @@ use OAuth2\Client;
 
 /**
  * This class provides access to Auth0 Platform.
- *
- * @author Auth0
- * @todo Logout and other useful proxies. See <https://app.auth0.com/#/sdk/api>
- *       and <https://docs.auth0.com/api-reference>
- * @todo Lots of code documentation.
  */
-class Oauth2Client {
+class Oauth2Client
+{
 
     /**
      * Available keys to persist data.
@@ -132,19 +128,17 @@ class Oauth2Client {
      * BaseAuth0 Constructor.
      *
      * Configuration:
-     *     - domain                 (String)  Required. Should match your Auth0 domain
-     *     - client_id              (String)  Required. The id of the application, you can get this in the
-     *                                                  auth0 console
-     *     - client_secret          (String)  Required. The application secret, same comment as above
-     *     - redirect_uri           (String)  Required. The uri of the auth callback, used as a security method
-     *     - persist_user      (Boolean) Optional. Indicates if you want to persist the user info, default true
-     *     - persist_access_token   (Boolean) Optional. Indicates if you want to persist the access token, default false
-     *     - persist_refresh_token   (Boolean) Optional. Indicates if you want to persist the refresh token, default false
-     *     - persist_id_token       (Boolean) Optional. Indicates if you want to persist the id token, default false
-     *     - store                  (Mixed)   Optional. Indicates how we store the persisting methods, default is session
-     *                                                  store, you can pass false to avoid storing it or a class that
-     *                                                  implements a store (get, set, delete). TODO: add a proper interface
-     *     - debug                  (Boolean) Optional. Default false
+     *     - domain (String) - Required. Should match your Auth0 domain
+     *     - client_id (String) - Required. Client ID, found in Application > Settings in the Auth0 dashboard.
+     *     - client_secret (String) - Required. Client Secret, found in Application > Settings in the Auth0 dashboard.
+     *     - redirect_uri (String) - Required. The uri of the auth callback, used as a security method
+     *     - persist_user (Boolean) - Optional. Indicates if you want to persist the user info, default true
+     *     - persist_access_token (Boolean) - Optional. True to, persist the access token; default false
+     *     - persist_refresh_token (Boolean) - Optional. True to persist the refresh token; default false
+     *     - persist_id_token (Boolean) - Optional. Indicates if you want to persist the id token, default false
+     *     - store (Mixed) - Optional. Indicates how we store the persisting methods; default is session store.
+     *          You can pass false to avoid storing it or a class that implements a store (get, set, delete).
+     *     - debug (Boolean) - Optional. Default false
      *
      * @param array $config Required
      *
@@ -209,7 +203,6 @@ class Oauth2Client {
         // Id token is not per persisted unless said otherwise
         if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
                 $config['persist_id_token'] === false)) {
-
             $this->dontPersist('id_token');
         }
 
@@ -239,8 +232,9 @@ class Oauth2Client {
      * Removes $name from the persistantMap, thus not persisting it when we set the value
      * @param  String $name The value to remove
      */
-    private function dontPersist($name) {
-        $key = array_search($name,$this->persistantMap);
+    private function dontPersist($name)
+    {
+        $key = array_search($name, $this->persistantMap);
         if ($key !== false) {
             unset($this->persistantMap[$key]);
         }
@@ -251,7 +245,8 @@ class Oauth2Client {
      * @return Boolean Whether it exchanged the code or not correctly
      * @throws ApiException
      */
-    public function exchangeCode() {
+    public function exchangeCode()
+    {
 
         $code = isset($_GET['code'])
                     ? $_GET['code']
@@ -321,7 +316,8 @@ class Oauth2Client {
      *
      * @throws ApiException
      */
-    public function getUser() {
+    public function getUser()
+    {
         // Ensure we have the user info
         if ($this->user === null) {
             $this->exchangeCode();
@@ -346,7 +342,8 @@ class Oauth2Client {
      *
      * @throws ApiException
      */
-    public function updateUserMetadata($metadata) {
+    public function updateUserMetadata($metadata)
+    {
 
         $auth0Api = new Auth0Api($this->getIdToken(), $this->domain);
 
@@ -358,14 +355,16 @@ class Oauth2Client {
     /**
      * @return array
      */
-    public function getUserMetadata() {
+    public function getUserMetadata()
+    {
         return isset($this->user["user_metadata"]) ? $this->user["user_metadata"] : array();
     }
 
     /**
      * @return array
      */
-    public function getAppMetadata() {
+    public function getAppMetadata()
+    {
         return isset($this->user["app_metadata"]) ? $this->user["app_metadata"] : array();
     }
 
@@ -373,9 +372,10 @@ class Oauth2Client {
      * @param $user
      * @return Oauth2Client
      */
-    public function setUser($user) {
+    public function setUser($user)
+    {
 
-        $key = array_search('user',$this->persistantMap);
+        $key = array_search('user', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('user', $user);
         }
@@ -392,8 +392,9 @@ class Oauth2Client {
      *
      * @return Oauth2Client
      */
-    public function setAccessToken($access_token) {
-        $key = array_search('access_token',$this->persistantMap);
+    public function setAccessToken($access_token)
+    {
+        $key = array_search('access_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('access_token', $access_token);
         }
@@ -410,8 +411,9 @@ class Oauth2Client {
      *
      * @return Oauth2Client
      */
-    public function setRefreshToken($refresh_token) {
-        $key = array_search('refresh_token',$this->persistantMap);
+    public function setRefreshToken($refresh_token)
+    {
+        $key = array_search('refresh_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('refresh_token', $refresh_token);
         }
@@ -428,7 +430,8 @@ class Oauth2Client {
      *
      * @throws ApiException
      */
-    final public function getAccessToken() {
+    final public function getAccessToken()
+    {
         if ($this->access_token === null) {
             $this->exchangeCode();
         }
@@ -440,7 +443,8 @@ class Oauth2Client {
      *
      * @return string
      */
-    final public function getRefreshToken() {
+    final public function getRefreshToken()
+    {
         return $this->refresh_token;
     }
 
@@ -451,8 +455,9 @@ class Oauth2Client {
      *
      * @return Oauth2Client
      */
-    public function setIdToken($id_token) {
-        $key = array_search('id_token',$this->persistantMap);
+    public function setIdToken($id_token)
+    {
+        $key = array_search('id_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('id_token', $id_token);
         }
@@ -469,7 +474,8 @@ class Oauth2Client {
      *
      * @throws ApiException
      */
-    final public function getIdToken() {
+    final public function getIdToken()
+    {
         if ($this->id_token === null) {
             $this->exchangeCode();
         }
@@ -482,10 +488,10 @@ class Oauth2Client {
     final public function logout()
     {
         $this->deleteAllPersistentData();
-        $this->access_token = NULL;
-        $this->user = NULL;
-        $this->id_token = NULL;
-        $this->refresh_token = NULL;
+        $this->access_token = null;
+        $this->user = null;
+        $this->id_token = null;
+        $this->refresh_token = null;
     }
 
 
@@ -553,7 +559,6 @@ class Oauth2Client {
         }
     }
 
-    // -------------------------------------------------------------------------------------------------------------- //
     /**
      * Sets $domain.
      *

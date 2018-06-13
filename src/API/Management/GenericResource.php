@@ -2,26 +2,28 @@
 
 use Auth0\SDK\API\Helpers\ApiClient;
 
-class GenericResource {
+class GenericResource
+{
 
     /**
      * @var ApiClient
      */
-  protected $apiClient;
+    protected $apiClient;
 
     /**
      * GenericResource constructor.
      * @param ApiClient $apiClient
      */
-  public function __construct(ApiClient $apiClient) {
-      $this->apiClient = $apiClient;
-  }
+    public function __construct(ApiClient $apiClient)
+    {
+        $this->apiClient = $apiClient;
+    }
 
     /**
      * @return ApiClient
      */
-  public function getApiClient() {
-    return $this->apiClient;
-  }
-  
+    public function getApiClient()
+    {
+        return $this->apiClient;
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace Auth0\SDK\Store;
+
 /*
  * This file is part of Auth0-PHP package.
  *
@@ -28,7 +29,7 @@ interface StoreInterface
      * @param mixed|null $default
      * @return mixed
      */
-    public function get($key, $default=null);
+    public function get($key, $default = null);
     /**
      * Remove a value from the store
      *

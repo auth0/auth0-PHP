@@ -5,9 +5,11 @@ use Auth0\SDK\API\Helpers\TokenGenerator;
 use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Auth0JWT;
 
-class TokenTest extends \PHPUnit_Framework_TestCase {
+class TokenTest extends \PHPUnit_Framework_TestCase
+{
 
-    public function testTokenGenerationDecode() {
+    public function testTokenGenerationDecode()
+    {
 
         $client_id = 'client_id_1';
         $client_secret = 'client_secret_1';
@@ -35,7 +37,8 @@ class TokenTest extends \PHPUnit_Framework_TestCase {
         $this->assertArraySubset(['read'], $decoded->scopes->users->actions);
     }
 
-    public function testTokenWithNotEncodedSecret() {
+    public function testTokenWithNotEncodedSecret()
+    {
 
         $client_id = 'client_id_1';
         $client_secret = 'client_secret_1';
@@ -68,7 +71,8 @@ class TokenTest extends \PHPUnit_Framework_TestCase {
         $this->assertArraySubset(['read'], $decoded->scopes->users->actions);
     }
 
-    public function testDeprecatedTestTokenGenerationDecode() {
+    public function testDeprecatedTestTokenGenerationDecode()
+    {
 
         $client_id = 'client_id_1';
         $client_secret = 'client_secret_1';
@@ -90,5 +94,4 @@ class TokenTest extends \PHPUnit_Framework_TestCase {
         $this->assertObjectHasAttribute('actions', $decoded->scopes->users);
         $this->assertArraySubset(['read'], $decoded->scopes->users->actions);
     }
-
 }

@@ -11,21 +11,28 @@ namespace Auth0\SDK\API\Helpers;
 use Auth0\SDK\API\Header\Header;
 use Auth0\SDK\API\Header\ContentType;
 
-class ApiClient {
+class ApiClient
+{
 
     const API_VERSION  = "5.0.4";
 
     protected static $infoHeadersDataEnabled = true;
     protected static $infoHeadersData;
 
-    public static function setInfoHeadersData(InformationHeaders $infoHeadersData) {
-        if (!self::$infoHeadersDataEnabled) return null;
+    public static function setInfoHeadersData(InformationHeaders $infoHeadersData)
+    {
+        if (!self::$infoHeadersDataEnabled) {
+            return null;
+        }
 
         self::$infoHeadersData = $infoHeadersData;
     }
 
-    public static function getInfoHeadersData() {
-        if (!self::$infoHeadersDataEnabled) return null;
+    public static function getInfoHeadersData()
+    {
+        if (!self::$infoHeadersDataEnabled) {
+            return null;
+        }
 
         if (self::$infoHeadersData === null) {
             self::$infoHeadersData = new InformationHeaders;
@@ -36,7 +43,8 @@ class ApiClient {
         return self::$infoHeadersData;
     }
 
-    public static function disableInfoHeaders(){
+    public static function disableInfoHeaders()
+    {
         self::$infoHeadersDataEnabled = false;
     }
 
@@ -45,7 +53,8 @@ class ApiClient {
     protected $headers;
     protected $guzzleOptions;
 
-    public function __construct($config) {
+    public function __construct($config)
+    {
         $this->basePath = $config['basePath'];
         $this->domain = $config['domain'];
         $this->headers = isset($config['headers']) ? $config['headers'] : [];
@@ -56,7 +65,8 @@ class ApiClient {
         }
     }
 
-    public function __call($name, $arguments) {
+    public function __call($name, $arguments)
+    {
         $builder = new RequestBuilder(array(
             'domain' => $this->domain,
             'basePath' => $this->basePath,
@@ -75,21 +85,21 @@ class ApiClient {
      *
      * @return RequestBuilder
      */
-    public function method($method) {
-        $method = strtolower( $method );
-        $builder = new RequestBuilder( [
+    public function method($method)
+    {
+        $method = strtolower($method);
+        $builder = new RequestBuilder([
             'domain' => $this->domain,
             'basePath' => $this->basePath,
             'method' => $method,
             'guzzleOptions' => $this->guzzleOptions
-        ] );
+        ]);
         $builder->withHeaders($this->headers);
 
-        if ( in_array( $method, [ 'patch', 'post', 'put' ] ) ) {
-            $builder->withHeader( new ContentType('application/json') );
+        if (in_array($method, [ 'patch', 'post', 'put' ])) {
+            $builder->withHeader(new ContentType('application/json'));
         }
 
         return $builder;
     }
-
 }

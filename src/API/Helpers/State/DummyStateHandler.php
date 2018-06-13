@@ -16,14 +16,15 @@ namespace Auth0\SDK\API\Helpers\State;
  *
  * @author Auth0
  */
-class DummyStateHandler implements StateHandler 
+class DummyStateHandler implements StateHandler
 {
     /**
      * Generate state value to be used for the state param value during authorization.
-     * 
+     *
      * @return string|null
      */
-    public function issue() {
+    public function issue()
+    {
         return null;
     }
 
@@ -34,19 +35,21 @@ class DummyStateHandler implements StateHandler
    *
    * @return string|void
    */
-    public function store($state) {
+    public function store($state)
+    {
     }
 
     /**
      * Perform validation of the returned state with the previously generated state.
-     * 
+     *
      * @param string $state
-     * 
+     *
      * @return bool result
      *
      * @throws \Exception
      */
-    public function validate($state) {
+    public function validate($state)
+    {
         return true;
     }
 }

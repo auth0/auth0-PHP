@@ -4,11 +4,13 @@ namespace Auth0\Tests\API\Management;
 use Auth0\SDK\API\Management;
 use Auth0\Tests\API\ApiTests;
 
-class BlacklistsTest extends ApiTests {
+class BlacklistsTest extends ApiTests
+{
 
     private $domain;
 
-    public function testBlacklistAndGet() {
+    public function testBlacklistAndGet()
+    {
         $env = $this->getEnv();
         $token = $this->getToken($env, [
             'tokens' => [

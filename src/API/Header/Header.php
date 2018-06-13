@@ -1,7 +1,8 @@
 <?php
 namespace Auth0\SDK\API\Header;
 
-class Header {
+class Header
+{
 
     /**
      * @var string
@@ -18,7 +19,8 @@ class Header {
      * @param string $header
      * @param string $value
      */
-    public function __construct($header, $value) {
+    public function __construct($header, $value)
+    {
         $this->header = $header;
         $this->value = $value;
     }
@@ -26,22 +28,24 @@ class Header {
     /**
      * @return string
      */
-    public function getHeader() {
+    public function getHeader()
+    {
         return $this->header;
     }
 
     /**
      * @return string
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->value;
     }
 
     /**
      * @return string
      */
-    public function get() {
+    public function get()
+    {
         return "{$this->header}: {$this->value}\n";
     }
-
 }
