@@ -42,6 +42,8 @@ class DummyStateHandlerTest extends \PHPUnit_Framework_TestCase
     public function testStateValidatesCorrectly()
     {
         $this->assertTrue($this->state->validate(uniqid()));
+
+        // Test again with a different value.
         $this->assertTrue($this->state->validate(uniqid()));
     }
 }

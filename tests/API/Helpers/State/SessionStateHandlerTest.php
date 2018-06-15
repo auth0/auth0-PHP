@@ -17,14 +17,14 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
      *
      * @var SessionStore
      */
-    private $store;
+    private $sessionStore;
 
     /**
      * State handler to use.
      *
      * @var SessionStateHandler
      */
-    private $state;
+    private $stateHandler;
 
     /**
      * SessionStateHandlerTest constructor.
@@ -34,8 +34,8 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
         parent::__construct();
 
         // Suppress header sent error
-        @$this->store = new SessionStore();
-        $this->state = new SessionStateHandler($this->store);
+        @$this->sessionStore = new SessionStore();
+        $this->stateHandler = new SessionStateHandler($this->sessionStore);
     }
 
     /**
@@ -44,8 +44,8 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
     public function testStateStoredCorrectly()
     {
         $uniqid = uniqid();
-        $this->state->store($uniqid);
-        $this->assertEquals($uniqid, $this->store->get(SessionStateHandler::STATE_NAME));
+        $this->stateHandler->store($uniqid);
+        $this->assertEquals($uniqid, $this->sessionStore->get(SessionStateHandler::STATE_NAME));
     }
 
     /**
@@ -53,8 +53,8 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testStateIssuedCorrectly()
     {
-        $state_issued = $this->state->issue();
-        $this->assertEquals($state_issued, $this->store->get(SessionStateHandler::STATE_NAME));
+        $state_issued = $this->stateHandler->issue();
+        $this->assertEquals($state_issued, $this->sessionStore->get(SessionStateHandler::STATE_NAME));
     }
 
     /**
@@ -64,9 +64,20 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
      */
     public function testStateValidatesCorrectly()
     {
-        $state_issued = $this->state->issue();
-        $this->assertTrue($this->state->validate($state_issued));
-        $this->assertNull($this->store->get(SessionStateHandler::STATE_NAME));
-        $this->assertFalse($this->state->validate($state_issued . 'false'));
+        $state_issued = $this->stateHandler->issue();
+        $this->assertTrue($this->stateHandler->validate($state_issued));
+        $this->assertNull($this->sessionStore->get(SessionStateHandler::STATE_NAME));
+
+    }
+
+    /**
+     * Test that state validation fails with an incorrect value.
+     *
+     * @throws \Exception
+     */
+    public function testStateFailsWithIncorrectValue() {
+        $state_issued = $this->stateHandler->issue();
+        $this->assertFalse($this->stateHandler->validate($state_issued . 'false'));
+        $this->assertNull($this->sessionStore->get(SessionStateHandler::STATE_NAME));
     }
 }
