@@ -21,11 +21,10 @@ class SessionStore implements StoreInterface
     const BASE_NAME = 'auth0_';
 
     /**
-     * @see Oauth2Client
+     * SessionStore constructor.
      */
     public function __construct()
     {
-
         $this->initSession();
     }
 
