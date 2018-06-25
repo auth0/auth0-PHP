@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ruleset name="Auth0-PHP" namespace="Auth0PHP\CS\Standard">
+    <description>A custom coding standard for the Auth0 PHP SDK</description>
+
+    <exclude-pattern>/examples/*</exclude-pattern>
+    <exclude-pattern>/vendor/*</exclude-pattern>
+
+    <config name="testVersion" value="5.5-"/>
+    <config name="showProgress" value="1"/>
+    <config name="extensions" value="php"/>
+
+    <arg name="colors"/>
+
+    <!--
+    Generic sniffs
+    https://github.com/squizlabs/PHP_CodeSniffer/tree/master/src/Standards/Generic/Sniffs
+    -->
+    <rule ref="Generic.Arrays">
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+    </rule>
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+    <rule ref="Generic.CodeAnalysis"/>
+    <rule ref="Generic.Commenting"/>
+    <rule ref="Generic.ControlStructures"/>
+    <rule ref="Generic.Files">
+        <exclude name="Generic.Files.EndFileNoNewline"/>
+        <exclude name="Generic.Files.LowercasedFilename"/>
+    </rule>
+    <rule ref="Generic.Formatting">
+        <exclude name="Generic.Formatting.NoSpaceAfterCast"/>
+    </rule>
+    <rule ref="Generic.Functions">
+        <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+    </rule>
+    <rule ref="Generic.Metrics"/>
+    <rule ref="Generic.NamingConventions"/>
+    <rule ref="Generic.PHP">
+        <exclude name="Generic.PHP.ClosingPHPTag"/>
+        <exclude name="Generic.PHP.UpperCaseConstant"/>
+    </rule>
+    <rule ref="Generic.Strings"/>
+    <rule ref="Generic.WhiteSpace">
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+    </rule>
+
+    <!--
+    Squiz Labs sniffs
+    https://github.com/squizlabs/PHP_CodeSniffer/wiki/Customisable-Sniff-Properties
+    -->
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+    <rule ref="Squiz.Classes"/>
+    <rule ref="Squiz.Commenting">
+        <exclude name="Squiz.Commenting.ClosingDeclarationComment"/>
+        <exclude name="Squiz.Commenting.FileComment"/>
+        <exclude name="Squiz.Commenting.LongConditionClosingComment"/>
+        <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
+    </rule>
+    <rule ref="Squiz.ControlStructures"/>
+    <rule ref="Squiz.Functions.FunctionDeclaration">
+        <properties>
+            <property name="ignoreComments" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="Squiz.Functions"/>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+        <properties>
+            <property name="equalsSpacing" value="1" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.Operators">
+        <exclude name="Squiz.Operators.ComparisonOperatorUsage.NotAllowed"/>
+    </rule>
+    <rule ref="Squiz.PHP"/>
+    <rule ref="Squiz.Scope"/>
+    <rule ref="Squiz.Strings"/>
+    <rule ref="Squiz.WhiteSpace">
+        <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace"/>
+        <exclude name="Squiz.WhiteSpace.FunctionSpacing"/>
+        <exclude name="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="spacingBeforeFirst" value="0" />
+            <property name="spacingAfterLast" value="0" />
+        </properties>
+    </rule>
+</ruleset>
