@@ -36,7 +36,8 @@
     "test": "SHELL_INTERACTIVE=1 vendor/bin/phpunit  --colors=always --verbose ",
     "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml",
     "phpcs": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s",
-    "phpcbf": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml .",
+    "phpcbf": "./vendor/bin/phpcbf --standard=phpcs-ruleset.xml .",
+    "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
     "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e"
   }
 }
