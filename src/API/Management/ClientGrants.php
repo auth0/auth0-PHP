@@ -7,8 +7,9 @@ use Auth0\SDK\API\Header\ContentType;
 class ClientGrants extends GenericResource
 {
     /**
-     * @param string $id
-     * @param null|string $audience
+     *
+     * @param  string      $id
+     * @param  null|string $audience
      * @return mixed
      */
     public function get($id, $audience = null)
@@ -24,9 +25,10 @@ class ClientGrants extends GenericResource
     }
 
     /**
-     * @param string $client_id
-     * @param string $audience
-     * @param string $scope
+     *
+     * @param  string $client_id
+     * @param  string $audience
+     * @param  string $scope
      * @return mixed
      */
     public function create($client_id, $audience, $scope)
@@ -35,16 +37,17 @@ class ClientGrants extends GenericResource
         ->addPath('client-grants')
         ->withHeader(new ContentType('application/json'))
         ->withBody(json_encode([
-          "client_id" => $client_id,
-          "audience" => $audience,
-          "scope" => $scope,
+            'client_id' => $client_id,
+            'audience' => $audience,
+            'scope' => $scope,
         ]))
         ->call();
     }
 
     /**
-     * @param string $id
-     * @param null|string $audience
+     *
+     * @param  string      $id
+     * @param  null|string $audience
      * @return mixed
      */
     public function delete($id, $audience = null)
@@ -55,8 +58,9 @@ class ClientGrants extends GenericResource
     }
 
     /**
-     * @param string $id
-     * @param string $scope
+     *
+     * @param  string $id
+     * @param  string $scope
      * @return mixed
      */
     public function update($id, $scope)
@@ -65,7 +69,7 @@ class ClientGrants extends GenericResource
         ->addPath('client-grants', $id)
         ->withHeader(new ContentType('application/json'))
         ->withBody(json_encode([
-          "scope" => $scope,
+            'scope' => $scope,
         ]))
         ->call();
     }

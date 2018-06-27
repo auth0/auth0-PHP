@@ -7,7 +7,8 @@ use Auth0\SDK\API\Header\ContentType;
 class Blacklists extends GenericResource
 {
     /**
-     * @param string $aud
+     *
+     * @param  string $aud
      * @return mixed
      */
     public function getAll($aud)
@@ -20,8 +21,9 @@ class Blacklists extends GenericResource
     }
 
     /**
-     * @param string $aud
-     * @param string $jti
+     *
+     * @param  string $aud
+     * @param  string $jti
      * @return mixed
      */
     public function blacklist($aud, $jti)
@@ -31,8 +33,8 @@ class Blacklists extends GenericResource
             ->tokens()
             ->withHeader(new ContentType('application/json'))
             ->withBody(json_encode([
-              'aud' => $aud,
-              'jti' => $jti
+                'aud' => $aud,
+                'jti' => $jti
             ]))
             ->call();
     }

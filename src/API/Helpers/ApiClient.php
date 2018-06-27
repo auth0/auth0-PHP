@@ -14,14 +14,15 @@ use Auth0\SDK\API\Header\ContentType;
 class ApiClient
 {
 
-    const API_VERSION  = "5.0.4";
+    const API_VERSION = '5.0.4';
 
     protected static $infoHeadersDataEnabled = true;
+
     protected static $infoHeadersData;
 
     public static function setInfoHeadersData(InformationHeaders $infoHeadersData)
     {
-        if (!self::$infoHeadersDataEnabled) {
+        if (! self::$infoHeadersDataEnabled) {
             return null;
         }
 
@@ -30,7 +31,7 @@ class ApiClient
 
     public static function getInfoHeadersData()
     {
-        if (!self::$infoHeadersDataEnabled) {
+        if (! self::$infoHeadersDataEnabled) {
             return null;
         }
 
@@ -40,6 +41,7 @@ class ApiClient
             self::$infoHeadersData->setPackage('auth0-php', self::API_VERSION);
             self::$infoHeadersData->setEnvironment('PHP', phpversion());
         }
+
         return self::$infoHeadersData;
     }
 
@@ -49,15 +51,18 @@ class ApiClient
     }
 
     protected $domain;
+
     protected $basePath;
+
     protected $headers;
+
     protected $guzzleOptions;
 
     public function __construct($config)
     {
-        $this->basePath = $config['basePath'];
-        $this->domain = $config['domain'];
-        $this->headers = isset($config['headers']) ? $config['headers'] : [];
+        $this->basePath      = $config['basePath'];
+        $this->domain        = $config['domain'];
+        $this->headers       = isset($config['headers']) ? $config['headers'] : [];
         $this->guzzleOptions = isset($config['guzzleOptions']) ? $config['guzzleOptions'] : [];
 
         if (self::$infoHeadersDataEnabled) {
@@ -67,12 +72,12 @@ class ApiClient
 
     public function __call($name, $arguments)
     {
-        $builder = new RequestBuilder(array(
+        $builder = new RequestBuilder([
             'domain' => $this->domain,
             'basePath' => $this->basePath,
             'method' => $name,
             'guzzleOptions' => $this->guzzleOptions
-        ));
+        ]);
 
         return $builder->withHeaders($this->headers);
     }
@@ -87,7 +92,7 @@ class ApiClient
      */
     public function method($method)
     {
-        $method = strtolower($method);
+        $method  = strtolower($method);
         $builder = new RequestBuilder([
             'domain' => $this->domain,
             'basePath' => $this->basePath,

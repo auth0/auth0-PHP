@@ -17,24 +17,26 @@ $dotenv->load();
 
 // Create a new Auth0 instance
 // https://github.com/auth0/auth0-PHP#oauth2-authentication
-$auth0 = new Auth0([
-  'domain' => $_ENV[ 'AUTH0_DOMAIN' ],
-  'client_id' => $_ENV[ 'AUTH0_CLIENT_ID' ],
-  'client_secret' => $_ENV[ 'AUTH0_CLIENT_SECRET' ],
-  'redirect_uri' => $_ENV[ 'AUTH0_CALLBACK_URL' ],
-  'scope' => 'openid profile email',
-  'persist_id_token' => true,
-  'persist_refresh_token' => true,
-]);
+$auth0 = new Auth0(
+    [
+    'domain' => $_ENV[ 'AUTH0_DOMAIN' ],
+    'client_id' => $_ENV[ 'AUTH0_CLIENT_ID' ],
+    'client_secret' => $_ENV[ 'AUTH0_CLIENT_SECRET' ],
+    'redirect_uri' => $_ENV[ 'AUTH0_CALLBACK_URL' ],
+    'scope' => 'openid profile email',
+    'persist_id_token' => true,
+    'persist_refresh_token' => true,
+    ]
+);
 
 if (isset($_GET['logout'])) {
-  // Catch logout requests and process
+    // Catch logout requests and process
     $auth0->logout();
     session_destroy();
     header('Location: ' . $_ENV[ 'AUTH0_CALLBACK_URL' ]);
     die();
 } elseif (isset($_GET[ 'login' ])) {
-  // Redirect to the hosted login page
+    // Redirect to the hosted login page
     $auth0->login();
 }
 

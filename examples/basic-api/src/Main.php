@@ -14,11 +14,13 @@ class Main
     {
 
         try {
-            $verifier = new JWTVerifier([
-            'supported_algs' => ['RS256'],
-            'valid_audiences' => [getenv('AUTH0_AUDIENCE')],
-            'authorized_iss' => ['https://' . getenv('AUTH0_DOMAIN') . '/']
-            ]);
+            $verifier = new JWTVerifier(
+                [
+                'supported_algs' => ['RS256'],
+                'valid_audiences' => [getenv('AUTH0_AUDIENCE')],
+                'authorized_iss' => ['https://' . getenv('AUTH0_DOMAIN') . '/']
+                ]
+            );
 
             $this->token = $token;
             $this->tokenInfo = $verifier->verifyAndDecode($token);

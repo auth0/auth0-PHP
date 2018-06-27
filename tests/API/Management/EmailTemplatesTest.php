@@ -56,14 +56,14 @@ class EmailTemplateTest extends ApiTests
     /**
      * If the email template was not found, this is the error code
      *
-     * @var bool
+     * @var boolean
      */
     protected static $setUpEmailError = null;
 
     /**
      * Can this email template be created?
      *
-     * @var bool
+     * @var boolean
      */
     protected static $mustCreate = false;
 
@@ -77,10 +77,12 @@ class EmailTemplateTest extends ApiTests
         $env = self::getEnvStatic();
 
         self::$domain = $env['DOMAIN'];
-        self::$token = self::getTokenStatic($env, [
-            'email_templates' => [ 'actions' => ['create', 'read', 'update'] ],
-            'email_provider' => [ 'actions' => ['read'] ],
-        ]);
+        self::$token  = self::getTokenStatic(
+            $env, [
+                'email_templates' => [ 'actions' => ['create', 'read', 'update'] ],
+                'email_provider' => [ 'actions' => ['read'] ],
+            ]
+        );
 
         self::$api = new Management(self::$token, self::$domain);
 
@@ -111,7 +113,7 @@ class EmailTemplateTest extends ApiTests
         // If we don't have an email template and can't create, something sent wrong in self::setUpBeforeClass().
         if (! self::$mustCreate && empty(self::$gotEmail)) {
             $this->markTestSkipped(
-                'Email template '. self::EMAIL_TEMPLATE_NAME . ' not found with error ' . self::$setUpEmailError
+                'Email template '.self::EMAIL_TEMPLATE_NAME.' not found with error '.self::$setUpEmailError
             );
         }
     }
@@ -124,7 +126,7 @@ class EmailTemplateTest extends ApiTests
     public function testGotAnEmail()
     {
         if (self::$mustCreate) {
-            $from_email = 'test@' . self::$domain;
+            $from_email     = 'test@'.self::$domain;
             self::$gotEmail = self::$api->emailTemplates->create(self::EMAIL_TEMPLATE_NAME, $from_email);
             $this->assertEquals($from_email, self::$gotEmail['from']);
         }
@@ -139,10 +141,12 @@ class EmailTemplateTest extends ApiTests
      */
     public function testPatch()
     {
-        $new_subject = 'Email subject ' . time();
-        self::$gotEmail = self::$api->emailTemplates->patch(self::EMAIL_TEMPLATE_NAME, [
-            'subject' => $new_subject,
-        ]);
+        $new_subject    = 'Email subject '.time();
+        self::$gotEmail = self::$api->emailTemplates->patch(
+            self::EMAIL_TEMPLATE_NAME, [
+                'subject' => $new_subject,
+            ]
+        );
 
         $this->assertEquals($new_subject, self::$gotEmail['subject']);
     }

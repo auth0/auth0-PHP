@@ -15,5 +15,5 @@ namespace Auth0\SDK\Exception;
  */
 class CoreException extends \Exception
 {
- 
+
 }

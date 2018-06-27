@@ -9,8 +9,7 @@ class AuthApiTest extends ApiTests
 
     public function testAuthorize()
     {
-
-        $domain = 'dummy.auth0.com';
+        $domain    = 'dummy.auth0.com';
         $client_id = '123456';
 
         $api = new Authentication($domain, $client_id);
@@ -25,8 +24,7 @@ class AuthApiTest extends ApiTests
         $authorize_url2 = $api->get_authorize_link('token', 'http://lala.com', 'facebook', 'dastate');
 
         $this->assertEquals(
-            'https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http%3A%2F%2Flala.com'.
-                '&client_id=123456&connection=facebook&state=dastate',
+            'https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http%3A%2F%2Flala.com'.'&client_id=123456&connection=facebook&state=dastate',
             $authorize_url2
         );
     }
@@ -59,9 +57,11 @@ class AuthApiTest extends ApiTests
 
         $api = new Authentication($env['DOMAIN'], $env['NIC_ID'], $env['NIC_SECRET']);
 
-        $token = $api->client_credentials([
-          'audience' => 'tests'
-        ]);
+        $token = $api->client_credentials(
+            [
+                'audience' => 'tests'
+            ]
+        );
 
         $this->assertArrayHasKey('access_token', $token);
         $this->assertArrayHasKey('token_type', $token);
@@ -85,7 +85,7 @@ class AuthApiTest extends ApiTests
             [ 'response_type' => 'code' ]
         );
 
-        $this->assertStringStartsWith('https://' . $env['DOMAIN'], $url);
+        $this->assertStringStartsWith('https://'.$env['DOMAIN'], $url);
     }
 
     public function testLogoutLink()
@@ -94,16 +94,15 @@ class AuthApiTest extends ApiTests
 
         $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
-        $this->assertSame('https://' . $env['DOMAIN'] . '/v2/logout?', $api->get_logout_link());
+        $this->assertSame('https://'.$env['DOMAIN'].'/v2/logout?', $api->get_logout_link());
 
         $this->assertSame(
-            'https://' . $env['DOMAIN'] . '/v2/logout?returnTo=http%3A%2F%2Fexample.com',
+            'https://'.$env['DOMAIN'].'/v2/logout?returnTo=http%3A%2F%2Fexample.com',
             $api->get_logout_link('http://example.com')
         );
 
         $this->assertSame(
-            'https://' . $env['DOMAIN'] . '/v2/logout?returnTo=http%3A%2F%2Fexample.com&client_id=' .
-                $env['GLOBAL_CLIENT_ID'],
+            'https://'.$env['DOMAIN'].'/v2/logout?returnTo=http%3A%2F%2Fexample.com&client_id='.$env['GLOBAL_CLIENT_ID'],
             $api->get_logout_link('http://example.com', $env['GLOBAL_CLIENT_ID'])
         );
     }

@@ -19,24 +19,24 @@ class Oauth2Client
      *
      * @var array
      */
-    public $persistantMap = array(
+    public $persistantMap = [
         'refresh_token',
         'access_token',
         'user',
         'id_token'
-    );
+    ];
 
     /**
      * Auth0 URL Map.
      *
      * @var array
      */
-    public static $URL_MAP = array(
+    public static $URL_MAP = [
         'api'           => 'https://{domain}/api/',
         'authorize'     => 'https://{domain}/authorize/',
         'token'     => 'https://{domain}/oauth/token/',
         'user_info'     => 'https://{domain}/userinfo/',
-    );
+    ];
 
     /**
      * Auth0 Domain.
@@ -76,7 +76,7 @@ class Oauth2Client
     /**
      * Debug mode flag.
      *
-     * @var Boolean
+     * @var boolean
      */
     protected $debug_mode;
 
@@ -189,19 +189,19 @@ class Oauth2Client
         }
 
         // Access token is not persisted unless said otherwise
-        if (!isset($config['persist_access_token']) || (isset($config['persist_access_token']) &&
+        if (! isset($config['persist_access_token']) || (isset($config['persist_access_token']) &&
                 $config['persist_access_token'] === false)) {
             $this->dontPersist('access_token');
         }
 
         // Refresh token is not persisted unless said otherwise
-        if (!isset($config['persist_refresh_token']) || (isset($config['persist_refresh_token']) &&
+        if (! isset($config['persist_refresh_token']) || (isset($config['persist_refresh_token']) &&
                 $config['persist_refresh_token'] === false)) {
             $this->dontPersist('refresh_token');
         }
 
         // Id token is not per persisted unless said otherwise
-        if (!isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
+        if (! isset($config['persist_id_token']) || (isset($config['persist_id_token']) &&
                 $config['persist_id_token'] === false)) {
             $this->dontPersist('id_token');
         }
@@ -218,19 +218,20 @@ class Oauth2Client
 
         $this->oauth_client = new Client($this->client_id, $this->client_secret);
 
-        $this->user = $this->store->get("user");
-        $this->access_token = $this->store->get("access_token");
-        $this->id_token = $this->store->get("id_token");
-        $this->refresh_token = $this->store->get("refresh_token");
+        $this->user          = $this->store->get('user');
+        $this->access_token  = $this->store->get('access_token');
+        $this->id_token      = $this->store->get('id_token');
+        $this->refresh_token = $this->store->get('refresh_token');
 
-        if (!$this->access_token) {
+        if (! $this->access_token) {
             $this->oauth_client->setAccessToken($this->access_token);
         }
     }
 
     /**
      * Removes $name from the persistantMap, thus not persisting it when we set the value
-     * @param  String $name The value to remove
+     *
+     * @param string $name The value to remove
      */
     private function dontPersist($name)
     {
@@ -242,53 +243,52 @@ class Oauth2Client
 
     /**
      * Exchanges the code from the URI parameters for an access token, id token and user info
-     * @return Boolean Whether it exchanged the code or not correctly
+     *
+     * @return boolean Whether it exchanged the code or not correctly
      * @throws ApiException
      */
     public function exchangeCode()
     {
+        $code = isset($_GET['code']) ? $_GET['code'] : (isset($_POST['code']) ? $_POST['code'] : null);
 
-        $code = isset($_GET['code'])
-                    ? $_GET['code']
-                    : ( isset($_POST['code']) ? $_POST['code'] : null );
-
-        if (!isset($code)) {
-            $this->debugInfo("No code found in _GET or _POST params.");
+        if (! isset($code)) {
+            $this->debugInfo('No code found in _GET or _POST params.');
             return false;
         }
 
-        $this->debugInfo("Code: ".$code);
+        $this->debugInfo('Code: '.$code);
 
         // Generate the url to the API that will give us the access token and id token
         $auth_url = $this->generateUrl('token');
         // Make the call
-        $response = $this->oauth_client->getAccessToken($auth_url, "authorization_code", array(
-            "code" => $code,
-            "redirect_uri" => $this->redirect_uri
-        ), array(
+        $response = $this->oauth_client->getAccessToken($auth_url, 'authorization_code', [
+            'code' => $code,
+            'redirect_uri' => $this->redirect_uri
+        ], [
             'Auth0-Client' => ApiClient::getInfoHeadersData()->build()
-        ));
+        ]);
 
         $auth0_response = $response['result'];
 
         if ($response['code'] !== 200) {
             if (isset($auth0_response['error'])) {
-                throw new ApiException($auth0_response['error'] . ': '. $auth0_response['error_description']);
+                throw new ApiException($auth0_response['error'].': '.$auth0_response['error_description']);
             } else {
                 throw new ApiException($auth0_response);
             }
         }
 
         $this->debugInfo(json_encode($auth0_response));
-        $access_token = (isset($auth0_response['access_token']))? $auth0_response['access_token'] : false;
-        $refresh_token = (isset($auth0_response['refresh_token']))? $auth0_response['refresh_token'] : false;
-        $id_token = (isset($auth0_response['id_token']))? $auth0_response['id_token'] : false;
+        $access_token  = (isset($auth0_response['access_token'])) ? $auth0_response['access_token'] : false;
+        $refresh_token = (isset($auth0_response['refresh_token'])) ? $auth0_response['refresh_token'] : false;
+        $id_token      = (isset($auth0_response['id_token'])) ? $auth0_response['id_token'] : false;
 
-        if (!$access_token) {
+        if (! $access_token) {
             throw new ApiException('Invalid access_token - Retry login.');
         }
 
-        if (!$id_token) { // id_token is not mandatory anymore. There is no need to force openid connect
+        if (! $id_token) {
+            // id_token is not mandatory anymore. There is no need to force openid connect
             $this->debugInfo('Missing id_token after code exchange. Remember to ask for openid scope.');
         }
 
@@ -302,9 +302,9 @@ class Oauth2Client
         $this->setRefreshToken($refresh_token);
 
         $userinfo_url = $this->generateUrl('user_info');
-        $user = $this->oauth_client->fetch($userinfo_url);
+        $user         = $this->oauth_client->fetch($userinfo_url);
 
-        $this->setUser($user["result"]);
+        $this->setUser($user['result']);
 
         return true;
     }
@@ -322,7 +322,8 @@ class Oauth2Client
         if ($this->user === null) {
             $this->exchangeCode();
         }
-        if (!is_array($this->user)) {
+
+        if (! is_array($this->user)) {
             return null;
         }
 
@@ -344,37 +345,38 @@ class Oauth2Client
      */
     public function updateUserMetadata($metadata)
     {
-
         $auth0Api = new Auth0Api($this->getIdToken(), $this->domain);
 
-        $user = $auth0Api->users->update($this->user["user_id"], array('user_metadata' =>  $metadata));
+        $user = $auth0Api->users->update($this->user['user_id'], ['user_metadata' => $metadata]);
 
         $this->setUser($user);
     }
 
     /**
+     *
      * @return array
      */
     public function getUserMetadata()
     {
-        return isset($this->user["user_metadata"]) ? $this->user["user_metadata"] : array();
+        return isset($this->user['user_metadata']) ? $this->user['user_metadata'] : [];
     }
 
     /**
+     *
      * @return array
      */
     public function getAppMetadata()
     {
-        return isset($this->user["app_metadata"]) ? $this->user["app_metadata"] : array();
+        return isset($this->user['app_metadata']) ? $this->user['app_metadata'] : [];
     }
 
     /**
-     * @param $user
+     *
+     * @param  $user
      * @return Oauth2Client
      */
     public function setUser($user)
     {
-
         $key = array_search('user', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('user', $user);
@@ -435,6 +437,7 @@ class Oauth2Client
         if ($this->access_token === null) {
             $this->exchangeCode();
         }
+
         return $this->access_token;
     }
 
@@ -479,6 +482,7 @@ class Oauth2Client
         if ($this->id_token === null) {
             $this->exchangeCode();
         }
+
         return $this->id_token;
     }
 
@@ -488,9 +492,9 @@ class Oauth2Client
     final public function logout()
     {
         $this->deleteAllPersistentData();
-        $this->access_token = null;
-        $this->user = null;
-        $this->id_token = null;
+        $this->access_token  = null;
+        $this->user          = null;
+        $this->id_token      = null;
         $this->refresh_token = null;
     }
 
@@ -498,8 +502,8 @@ class Oauth2Client
     /**
      * Constructs an API URL.
      *
-     * @param  string $domain_key
-     * @param  string $path
+     * @param string $domain_key
+     * @param string $path
      *
      * @return string
      */
@@ -523,11 +527,11 @@ class Oauth2Client
      */
     final public function checkRequirements()
     {
-        if (!function_exists('curl_version')) {
+        if (! function_exists('curl_version')) {
             throw new CoreException('CURL extension is needed to use Auth0 SDK. Not found.');
         }
 
-        if (!function_exists('json_decode')) {
+        if (! function_exists('json_decode')) {
             throw new CoreException('JSON extension is needed to use Auth0 SDK. Not found.');
         }
     }
@@ -535,7 +539,7 @@ class Oauth2Client
     /**
      * If debug mode is set, sends $info to debugger \Closure.
      *
-     * @param  mixed $info  Info to debug. It will be converted to string.
+     * @param mixed $info Info to debug. It will be converted to string.
      */
     public function debugInfo($info)
     {
@@ -543,9 +547,9 @@ class Oauth2Client
             list(, $caller) = debug_backtrace(false);
 
             $caller_function = $caller['function'];
-            $caller_class = $caller['class'];
+            $caller_class    = $caller['class'];
 
-            $this->debugger->__invoke($caller_class.'::'.$caller_function. ' > '.$info);
+            $this->debugger->__invoke($caller_class.'::'.$caller_function.' > '.$info);
         }
     }
 

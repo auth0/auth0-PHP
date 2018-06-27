@@ -26,21 +26,21 @@ interface StateHandler
      */
     public function issue();
 
-  /**
-   * Store a given state value to be used for the state param value during authorization.
-   *
-   * @param $state
-   *
-   * @return mixed
-   */
+    /**
+     * Store a given state value to be used for the state param value during authorization.
+     *
+     * @param $state
+     *
+     * @return mixed
+     */
     public function store($state);
 
     /**
      * Perform validation of the returned state with the previously generated state.
      *
-     * @param  string $state
+     * @param string $state
      *
-     * @return bool result
+     * @return boolean result
      *
      * @throws \Exception
      */

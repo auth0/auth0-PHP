@@ -12,12 +12,11 @@ class Auth0JWT
 
     public static function decode($jwt, $valid_audiences, $client_secret, array $authorized_iss = [], $cache = null)
     {
-
         $verifier = new JWTVerifier([
-        'valid_audiences' => is_array($valid_audiences) ? $valid_audiences : [$valid_audiences],
-        'client_secret' => $client_secret,
-        'authorized_iss' => $authorized_iss,
-        'cache' => $cache,
+            'valid_audiences' => is_array($valid_audiences) ? $valid_audiences : [$valid_audiences],
+            'client_secret' => $client_secret,
+            'authorized_iss' => $authorized_iss,
+            'cache' => $cache,
         ]);
 
         return $verifier->verifyAndDecode($jwt);

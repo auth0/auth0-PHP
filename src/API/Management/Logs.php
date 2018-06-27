@@ -5,7 +5,8 @@ namespace Auth0\SDK\API\Management;
 class Logs extends GenericResource
 {
     /**
-     * @param string $id
+     *
+     * @param  string $id
      * @return mixed
      */
     public function get($id)
@@ -16,12 +17,12 @@ class Logs extends GenericResource
     }
 
     /**
-     * @param array $params
+     *
+     * @param  array $params
      * @return mixed
      */
-    public function search($params = array())
+    public function search($params = [])
     {
-
         $client = $this->apiClient->get()
         ->logs();
 

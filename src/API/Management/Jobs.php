@@ -7,7 +7,8 @@ use Auth0\SDK\API\Header\ContentType;
 class Jobs extends GenericResource
 {
     /**
-     * @param string $id
+     *
+     * @param  string $id
      * @return mixed
      */
     public function get($id)
@@ -18,7 +19,8 @@ class Jobs extends GenericResource
     }
 
     /**
-     * @param string $id
+     *
+     * @param  string $id
      * @return mixed
      */
     public function getErrors($id)
@@ -30,8 +32,9 @@ class Jobs extends GenericResource
     }
 
     /**
-     * @param string $file_path
-     * @param string $connection_id
+     *
+     * @param  string $file_path
+     * @param  string $connection_id
      * @return mixed
      */
     public function importUsers($file_path, $connection_id)
@@ -45,7 +48,8 @@ class Jobs extends GenericResource
     }
 
     /**
-     * @param string $user_id
+     *
+     * @param  string $user_id
      * @return mixed
      */
     public function sendVerificationEmail($user_id)
@@ -55,7 +59,7 @@ class Jobs extends GenericResource
         ->addPath('verification-email')
         ->withHeader(new ContentType('application/json'))
         ->withBody(json_encode([
-        'user_id' => $user_id
+            'user_id' => $user_id
         ]))
         ->call();
     }

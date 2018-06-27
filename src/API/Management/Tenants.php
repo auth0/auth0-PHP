@@ -7,8 +7,9 @@ use Auth0\SDK\API\Header\ContentType;
 class Tenants extends GenericResource
 {
     /**
-     * @param mixed $fields
-     * @param mixed $include_fields
+     *
+     * @param  mixed $fields
+     * @param  mixed $include_fields
      * @return mixed
      */
     public function get($fields = null, $include_fields = null)
@@ -21,6 +22,7 @@ class Tenants extends GenericResource
             if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
+
             $request->withParam('fields', $fields);
         }
 
@@ -32,7 +34,8 @@ class Tenants extends GenericResource
     }
 
     /**
-     * @param array $data
+     *
+     * @param  array $data
      * @return mixed
      */
     public function update($data)

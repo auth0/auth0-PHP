@@ -11,9 +11,8 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
 
     public function testHeader()
     {
-
-        $headerName = "HEADERNAME";
-        $value = 'THISISTHEVALUE';
+        $headerName = 'HEADERNAME';
+        $value      = 'THISISTHEVALUE';
 
         $header = new Header($headerName, $value);
 
@@ -24,22 +23,20 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
 
     public function testAuthorizationBearer()
     {
-
-        $token = 'THISISTHETOKEN';
+        $token  = 'THISISTHETOKEN';
         $header = new AuthorizationBearer($token);
 
-        $this->assertEquals("Authorization", $header->getHeader());
+        $this->assertEquals('Authorization', $header->getHeader());
         $this->assertEquals("Bearer $token", $header->getValue());
         $this->assertEquals("Authorization: Bearer $token\n", $header->get());
     }
 
     public function testContentType()
     {
-
         $contentType = 'CONTENT/TYPE';
-        $header = new ContentType($contentType);
+        $header      = new ContentType($contentType);
 
-        $this->assertEquals("Content-Type", $header->getHeader());
+        $this->assertEquals('Content-Type', $header->getHeader());
         $this->assertEquals($contentType, $header->getValue());
         $this->assertEquals("Content-Type: $contentType\n", $header->get());
     }

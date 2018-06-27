@@ -1,5 +1,6 @@
 <?php
 /**
+ *
  * @package Auth0\SDK\API\Management
  */
 namespace Auth0\SDK\API\Management;
@@ -15,46 +16,55 @@ use \Auth0\SDK\Exception\CoreException;
 class EmailTemplates extends GenericResource
 {
     /**
+     *
      * @var string
      */
     const TEMPLATE_VERIFY_EMAIL = 'verify_email';
 
     /**
+     *
      * @var string
      */
     const TEMPLATE_RESET_EMAIL = 'reset_email';
 
     /**
+     *
      * @var string
      */
     const TEMPLATE_WELCOME_EMAIL = 'welcome_email';
 
     /**
+     *
      * @var string
      */
     const TEMPLATE_BLOCKED_ACCOUNT = 'blocked_account';
 
     /**
+     *
      * @var string
      */
     const TEMPLATE_STOLEN_CREDENTIALS = 'stolen_credentials';
 
     /**
+     *
      * @var string
      */
     const TEMPLATE_ENROLLMENT_EMAIL = 'enrollment_email';
 
     /**
+     *
      * @var string
      */
     const TEMPLATE_CHANGE_PASSWORD = 'change_password';
 
     /**
+     *
      * @var string
      */
     const TEMPLATE_PASSWORD_RESET = 'password_reset';
 
     /**
+     *
      * @var string
      */
     const TEMPLATE_MFA_OOB_CODE = 'mfa_oob_code';
@@ -86,7 +96,7 @@ class EmailTemplates extends GenericResource
      * Required scope: "update:email_templates"
      *
      * @param string $templateName - the email template name to patch (see constants defined for this class).
-     * @param array $data - an array of data to update.
+     * @param array  $data         - an array of data to update.
      *
      * @return array - updated data for the template name provided.
      *
@@ -107,14 +117,14 @@ class EmailTemplates extends GenericResource
      * See docs @link below for valid names and fields.
      * Required scope: "create:email_templates"
      *
-     * @param string $template - the template name to create (see constants defined for this class).
-     * @param boolean $enabled - is the email template enabled?
-     * @param string $from - the email address the email should come from.
-     * @param string $subject - the email subject.
-     * @param string $body - the email body in the syntax indicated below.
-     * @param string $syntax - the email body syntax to use.
-     * @param string $resultUrl - URL where a click-through should land.
-     * @param int $urlLifetime - URL lifetime, in seconds.
+     * @param string  $template    - the template name to create (see constants defined for this class).
+     * @param boolean $enabled     - is the email template enabled?
+     * @param string  $from        - the email address the email should come from.
+     * @param string  $subject     - the email subject.
+     * @param string  $body        - the email body in the syntax indicated below.
+     * @param string  $syntax      - the email body syntax to use.
+     * @param string  $resultUrl   - URL where a click-through should land.
+     * @param integer $urlLifetime - URL lifetime, in seconds.
      *
      * @return mixed|string
      *
@@ -131,7 +141,8 @@ class EmailTemplates extends GenericResource
         $syntax = 'liquid',
         $resultUrl = '',
         $urlLifetime = 0
-    ) {
+    )
+    {
         // Required fields
         $data = [
             'template' => (string) $template,

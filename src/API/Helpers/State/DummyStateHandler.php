@@ -28,13 +28,13 @@ class DummyStateHandler implements StateHandler
         return null;
     }
 
-  /**
-   * Store state value to be used for the state param value during authorization.
-   *
-   * @param string $state
-   *
-   * @return string|void
-   */
+    /**
+     * Store state value to be used for the state param value during authorization.
+     *
+     * @param string $state
+     *
+     * @return string|void
+     */
     public function store($state)
     {
     }
@@ -44,7 +44,7 @@ class DummyStateHandler implements StateHandler
      *
      * @param string $state
      *
-     * @return bool result
+     * @return boolean result
      *
      * @throws \Exception
      */

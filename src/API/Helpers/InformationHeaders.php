@@ -6,33 +6,37 @@ class InformationHeaders
 {
 
     /**
+     *
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
+     *
      * @param string $name
      * @param string $version
      */
     public function setPackage($name, $version)
     {
-        $this->data['name'] = $name;
+        $this->data['name']    = $name;
         $this->data['version'] = $version;
     }
 
     /**
+     *
      * @param string $name
      * @param string $version
      */
     public function setEnvironment($name, $version)
     {
-        $this->data['environment'][] = array(
+        $this->data['environment'][] = [
             'name' => $name,
             'version' => $version,
-        );
+        ];
     }
 
     /**
+     *
      * @param array $data
      */
     public function setEnvironmentData($data)
@@ -41,18 +45,20 @@ class InformationHeaders
     }
 
     /**
+     *
      * @param string $name
      * @param string $version
      */
     public function setDependency($name, $version)
     {
-        $this->data['dependencies'][] = array(
+        $this->data['dependencies'][] = [
             'name' => $name,
             'version' => $version,
-        );
+        ];
     }
 
     /**
+     *
      * @param array $data
      */
     public function setDependencyData($data)
@@ -61,6 +67,7 @@ class InformationHeaders
     }
 
     /**
+     *
      * @return array
      */
     public function get()
@@ -69,6 +76,7 @@ class InformationHeaders
     }
 
     /**
+     *
      * @return string
      */
     public function build()
@@ -77,12 +85,12 @@ class InformationHeaders
     }
 
     /**
-     * @param InformationHeaders $headers
+     *
+     * @param  InformationHeaders $headers
      * @return InformationHeaders
      */
     public static function Extend(InformationHeaders $headers)
     {
-
         $newHeaders = new InformationHeaders;
 
         $oldData = $headers->get();

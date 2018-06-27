@@ -5,27 +5,31 @@ class Header
 {
 
     /**
+     *
      * @var string
      */
     protected $header;
 
     /**
+     *
      * @var string
      */
     protected $value;
 
     /**
      * Header constructor.
+     *
      * @param string $header
      * @param string $value
      */
     public function __construct($header, $value)
     {
         $this->header = $header;
-        $this->value = $value;
+        $this->value  = $value;
     }
 
     /**
+     *
      * @return string
      */
     public function getHeader()
@@ -34,6 +38,7 @@ class Header
     }
 
     /**
+     *
      * @return string
      */
     public function getValue()
@@ -42,6 +47,7 @@ class Header
     }
 
     /**
+     *
      * @return string
      */
     public function get()

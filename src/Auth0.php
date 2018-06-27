@@ -258,17 +258,17 @@ class Auth0
         }
 
         // Access token is not persisted by default.
-        if (!isset($config['persist_access_token']) || false === $config['persist_access_token']) {
+        if (! isset($config['persist_access_token']) || false === $config['persist_access_token']) {
             $this->dontPersist('access_token');
         }
 
         // Refresh token is not persisted by default.
-        if (!isset($config['persist_refresh_token']) || false === $config['persist_refresh_token']) {
+        if (! isset($config['persist_refresh_token']) || false === $config['persist_refresh_token']) {
             $this->dontPersist('refresh_token');
         }
 
         // ID token is not persisted by default.
-        if (!isset($config['persist_id_token']) || false === $config['persist_id_token']) {
+        if (! isset($config['persist_id_token']) || false === $config['persist_id_token']) {
             $this->dontPersist('id_token');
         }
 
@@ -353,7 +353,7 @@ class Auth0
             $params
         );
 
-        header('Location: ' . $url);
+        header('Location: '.$url);
         exit;
     }
 
@@ -367,9 +367,10 @@ class Auth0
      */
     public function getUser()
     {
-        if (!$this->user) {
+        if (! $this->user) {
             $this->exchange();
         }
+
         return $this->user;
     }
 
@@ -383,9 +384,10 @@ class Auth0
      */
     public function getAccessToken()
     {
-        if (!$this->accessToken) {
+        if (! $this->accessToken) {
             $this->exchange();
         }
+
         return $this->accessToken;
     }
 
@@ -399,9 +401,10 @@ class Auth0
      */
     public function getIdToken()
     {
-        if (!$this->idToken) {
+        if (! $this->idToken) {
             $this->exchange();
         }
+
         return $this->idToken;
     }
 
@@ -415,9 +418,10 @@ class Auth0
      */
     public function getRefreshToken()
     {
-        if (!$this->refreshToken) {
+        if (! $this->refreshToken) {
             $this->exchange();
         }
+
         return $this->refreshToken;
     }
 
@@ -434,13 +438,13 @@ class Auth0
     public function exchange()
     {
         $code = $this->getAuthorizationCode();
-        if (!$code) {
+        if (! $code) {
             return false;
         }
 
         $state = $this->getState();
 
-        if (!$this->stateHandler->validate($state)) {
+        if (! $this->stateHandler->validate($state)) {
             throw new CoreException('Invalid state');
         }
 
@@ -482,15 +486,15 @@ class Auth0
      *
      * @throws CoreException If the Auth0 object does not have access token and refresh token
      * @throws ApiException If the Auth0 API did not renew access and ID token properly
-     * @link https://auth0.com/docs/tokens/refresh-token/current
+     * @link   https://auth0.com/docs/tokens/refresh-token/current
      */
     public function renewTokens()
     {
-        if (!$this->accessToken) {
+        if (! $this->accessToken) {
             throw new CoreException('Can\'t renew the access token if there isn\'t one valid');
         }
 
-        if (!$this->refreshToken) {
+        if (! $this->refreshToken) {
             throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
         }
 
@@ -589,7 +593,7 @@ class Auth0
         $code = null;
         if ($this->responseMode === 'query' && isset($_GET['code'])) {
             $code = $_GET['code'];
-        } elseif ($this->responseMode === 'form_post' && isset($_POST['code'])) {
+        } else if ($this->responseMode === 'form_post' && isset($_POST['code'])) {
             $code = $_POST['code'];
         }
 
@@ -608,7 +612,7 @@ class Auth0
         $state = null;
         if ($this->responseMode === 'query' && isset($_GET['state'])) {
             $state = $_GET['state'];
-        } elseif ($this->responseMode === 'form_post' && isset($_POST['state'])) {
+        } else if ($this->responseMode === 'form_post' && isset($_POST['state'])) {
             $state = $_POST['state'];
         }
 

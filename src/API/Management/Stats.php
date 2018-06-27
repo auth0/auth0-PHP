@@ -5,6 +5,7 @@ namespace Auth0\SDK\API\Management;
 class Stats extends GenericResource
 {
     /**
+     *
      * @return mixed
      */
     public function getActiveUsersCount()
@@ -16,8 +17,9 @@ class Stats extends GenericResource
     }
 
     /**
-     * @param string $from
-     * @param string $to
+     *
+     * @param  string $from
+     * @param  string $to
      * @return mixed
      */
     public function getDailyStats($from, $to)

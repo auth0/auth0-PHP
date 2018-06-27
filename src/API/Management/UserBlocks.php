@@ -5,7 +5,8 @@ namespace Auth0\SDK\API\Management;
 class UserBlocks extends GenericResource
 {
     /**
-     * @param string $user_id
+     *
+     * @param  string $user_id
      * @return mixed
      */
     public function get($user_id)
@@ -16,7 +17,8 @@ class UserBlocks extends GenericResource
     }
 
     /**
-     * @param string $identifier
+     *
+     * @param  string $identifier
      * @return mixed
      */
     public function getByIdentifier($identifier)
@@ -28,7 +30,8 @@ class UserBlocks extends GenericResource
     }
 
     /**
-     * @param string $user_id
+     *
+     * @param  string $user_id
      * @return mixed
      */
     public function unblock($user_id)
@@ -39,7 +42,8 @@ class UserBlocks extends GenericResource
     }
 
     /**
-     * @param string $identifier
+     *
+     * @param  string $identifier
      * @return mixed
      */
     public function unblockByIdentifier($identifier)

@@ -10,11 +10,12 @@ class AuthApiDBConnectionsTest extends ApiTests
 {
 
     protected $email;
+
     protected $connection = 'Username-Password-Authentication';
 
     protected function setUp()
     {
-        $this->email = 'test-dbconnections-user' . rand() . '@test.com';
+        $this->email = 'test-dbconnections-user'.rand().'@test.com';
     }
 
     public function testSignup()
@@ -23,8 +24,8 @@ class AuthApiDBConnectionsTest extends ApiTests
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
-        $email = $this->email;
-        $password = '123-xxx-23A-bar';
+        $email      = $this->email;
+        $password   = '123-xxx-23A-bar';
         $connection = $this->connection;
 
         $response = $api->dbconnections_signup($email, $password, $connection);
@@ -41,7 +42,7 @@ class AuthApiDBConnectionsTest extends ApiTests
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
-        $email = $this->email;
+        $email      = $this->email;
         $connection = $this->connection;
 
         $response = $api->dbconnections_change_password($email, $connection);

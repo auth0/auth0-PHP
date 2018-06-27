@@ -8,10 +8,11 @@ class AuthorizationBearer extends Header
 
     /**
      * AuthorizationBearer constructor.
+     *
      * @param string $token
      */
     public function __construct($token)
     {
-        parent::__construct("Authorization", "Bearer $token");
+        parent::__construct('Authorization', "Bearer $token");
     }
 }
