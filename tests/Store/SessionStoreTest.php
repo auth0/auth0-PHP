@@ -47,7 +47,7 @@ class SessionStoreTest extends PHPUnit_Framework_TestCase
     {
         // Suppressing "headers already sent" warning related to cookies.
         @self::$sessionStore = new SessionStore();
-        self::$sessionKey = 'auth0__' . self::TEST_KEY;
+        self::$sessionKey    = 'auth0__'.self::TEST_KEY;
     }
 
     /**
@@ -85,7 +85,7 @@ class SessionStoreTest extends PHPUnit_Framework_TestCase
     {
         $this->assertFalse(isset($_SESSION[self::$sessionKey]));
         $_SESSION[self::$sessionKey] = self::TEST_VALUE;
-        $test_this_value = self::$sessionStore->get(self::TEST_KEY);
+        $test_this_value             = self::$sessionStore->get(self::TEST_KEY);
         $this->assertEquals(self::TEST_VALUE, $test_this_value);
     }
 

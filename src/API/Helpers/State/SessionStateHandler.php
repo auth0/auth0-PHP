@@ -25,6 +25,7 @@ class SessionStateHandler implements StateHandler
     private $store;
 
     /**
+     *
      * @param StoreInterface $store
      */
     public function __construct(StoreInterface $store)
@@ -44,24 +45,24 @@ class SessionStateHandler implements StateHandler
         return $state;
     }
 
-  /**
-   * Store a given state value to be used for the state param value during authorization.
-   *
-   * @param string $state
-   *
-   * @return mixed|void
-   */
+    /**
+     * Store a given state value to be used for the state param value during authorization.
+     *
+     * @param string $state
+     *
+     * @return mixed|void
+     */
     public function store($state)
     {
         $this->store->set(self::STATE_NAME, $state);
     }
-    
+
     /**
      * Perform validation of the returned state with the previously generated state.
      *
      * @param string $state
      *
-     * @return bool
+     * @return boolean
      *
      * @throws \Exception
      */

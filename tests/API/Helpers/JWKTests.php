@@ -11,8 +11,8 @@ class JWKTest extends ApiTests
 {
     public function testNoCache()
     {
-        $env = $this->getEnv();
-        $cache = new CacheDecorator(new NoCacheHandler());
+        $env     = $this->getEnv();
+        $cache   = new CacheDecorator(new NoCacheHandler());
         $fetcher = new JWKFetcher($cache);
 
         $keys = $fetcher->fetchKeys($env['DOMAIN']);
@@ -28,8 +28,8 @@ class JWKTest extends ApiTests
 
     public function testFileSystemCache()
     {
-        $env = $this->getEnv();
-        $cache = new CacheDecorator(new FileSystemCacheHandler(md5(uniqid())));
+        $env     = $this->getEnv();
+        $cache   = new CacheDecorator(new FileSystemCacheHandler(md5(uniqid())));
         $fetcher = new JWKFetcher($cache);
 
         $keys = $fetcher->fetchKeys($env['DOMAIN']);

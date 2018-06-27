@@ -7,8 +7,9 @@ use Auth0\SDK\API\Header\ContentType;
 class Emails extends GenericResource
 {
     /**
-     * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     *
+     * @param  null|string|array $fields
+     * @param  null|string|array $include_fields
      * @return mixed
      */
     public function getEmailProvider($fields = null, $include_fields = null)
@@ -21,6 +22,7 @@ class Emails extends GenericResource
             if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
+
             $request->withParam('fields', $fields);
         }
 
@@ -32,7 +34,8 @@ class Emails extends GenericResource
     }
 
     /**
-     * @param array $data
+     *
+     * @param  array $data
      * @return mixed
      */
     public function configureEmailProvider($data)
@@ -46,7 +49,8 @@ class Emails extends GenericResource
     }
 
     /**
-     * @param array $data
+     *
+     * @param  array $data
      * @return mixed
      */
     public function updateEmailProvider($data)
@@ -60,6 +64,7 @@ class Emails extends GenericResource
     }
 
     /**
+     *
      * @return mixed
      */
     public function deleteEmailProvider()

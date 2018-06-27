@@ -4,7 +4,9 @@ namespace Auth0\SDK\Helpers\Cache;
 
 class FileSystemCacheHandler implements CacheHandler
 {
+
     /**
+     *
      * @var string
      */
     protected $tmp_dir;
@@ -16,29 +18,29 @@ class FileSystemCacheHandler implements CacheHandler
      */
     public function __construct($temp_directory_prefix = 'auth0-php')
     {
-        $this->tmp_dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $temp_directory_prefix . DIRECTORY_SEPARATOR;
-        if (!file_exists($this->tmp_dir)) {
+        $this->tmp_dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.$temp_directory_prefix.DIRECTORY_SEPARATOR;
+        if (! file_exists($this->tmp_dir)) {
             mkdir($this->tmp_dir);
         }
     }
 
     /**
-     * @param string $key
+     *
+     * @param  string $key
      * @return mixed|null
      */
     public function get($key)
     {
         $key = md5($key);
 
-        if (!file_exists($this->tmp_dir .  $key)) {
+        if (! file_exists($this->tmp_dir.$key)) {
             return null;
         }
 
-        $file = fopen($this->tmp_dir .  $key, "r");
+        $file = fopen($this->tmp_dir.$key, 'r');
         flock($file, LOCK_EX);
 
         $data = fgets($file);
-
 
         flock($file, LOCK_UN);
         fclose($file);
@@ -47,25 +49,27 @@ class FileSystemCacheHandler implements CacheHandler
     }
 
     /**
+     *
      * @param string $key
      */
     public function delete($key)
     {
         $key = md5($key);
         $this->set($key, null);
-        @unlink($this->tmp_dir . $key);
+        @unlink($this->tmp_dir.$key);
     }
 
     /**
+     *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function set($key, $value)
     {
-        $key = md5($key);
+        $key   = md5($key);
         $value = base64_encode(serialize($value));
 
-        $file = fopen($this->tmp_dir . $key, "w+");
+        $file = fopen($this->tmp_dir.$key, 'w+');
         flock($file, LOCK_EX);
 
         fwrite($file, $value, strlen($value));

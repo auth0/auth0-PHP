@@ -6,12 +6,14 @@ class GenericResource
 {
 
     /**
+     *
      * @var ApiClient
      */
     protected $apiClient;
 
     /**
      * GenericResource constructor.
+     *
      * @param ApiClient $apiClient
      */
     public function __construct(ApiClient $apiClient)
@@ -20,6 +22,7 @@ class GenericResource
     }
 
     /**
+     *
      * @return ApiClient
      */
     public function getApiClient()

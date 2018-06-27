@@ -56,12 +56,9 @@
         <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
     </rule>
     <rule ref="Squiz.ControlStructures"/>
-    <rule ref="Squiz.Functions.FunctionDeclaration">
-        <properties>
-            <property name="ignoreComments" value="true"/>
-        </properties>
+    <rule ref="Squiz.Functions">
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.NewlineBeforeOpenBrace"/>
     </rule>
-    <rule ref="Squiz.Functions"/>
     <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
         <properties>
             <property name="equalsSpacing" value="1" />
@@ -69,6 +66,7 @@
     </rule>
     <rule ref="Squiz.Operators">
         <exclude name="Squiz.Operators.ComparisonOperatorUsage.NotAllowed"/>
+        <exclude name="Squiz.Operators.ComparisonOperatorUsage.ImplicitTrue"/>
     </rule>
     <rule ref="Squiz.PHP"/>
     <rule ref="Squiz.Scope"/>

@@ -10,22 +10,25 @@ class TokenTest extends \PHPUnit_Framework_TestCase
 
     public function testTokenGenerationDecode()
     {
-
-        $client_id = 'client_id_1';
+        $client_id     = 'client_id_1';
         $client_secret = 'client_secret_1';
 
         $generator = new TokenGenerator([ 'client_id' => $client_id, 'client_secret' => $client_secret]);
 
-        $jwt = $generator->generate([
-            'users' => [
-                'actions' => ['read']
+        $jwt = $generator->generate(
+            [
+                'users' => [
+                    'actions' => ['read']
+                ]
             ]
-        ]);
+        );
 
-        $verifier = new JWTVerifier([
-            'valid_audiences' => [$client_id],
-            'client_secret' => $client_secret
-        ]);
+        $verifier = new JWTVerifier(
+            [
+                'valid_audiences' => [$client_id],
+                'client_secret' => $client_secret
+            ]
+        );
 
         $decoded = $verifier->verifyAndDecode($jwt);
 
@@ -39,27 +42,32 @@ class TokenTest extends \PHPUnit_Framework_TestCase
 
     public function testTokenWithNotEncodedSecret()
     {
-
-        $client_id = 'client_id_1';
+        $client_id     = 'client_id_1';
         $client_secret = 'client_secret_1';
 
-        $generator = new TokenGenerator([
-          'client_id' => $client_id,
-          'client_secret' => $client_secret,
-          'secret_base64_encoded' => false
-        ]);
-
-        $jwt = $generator->generate([
-            'users' => [
-                'actions' => ['read']
+        $generator = new TokenGenerator(
+            [
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'secret_base64_encoded' => false
             ]
-        ]);
+        );
 
-        $verifier = new JWTVerifier([
-            'valid_audiences' => [$client_id],
-            'client_secret' => $client_secret,
-            'secret_base64_encoded' => false
-        ]);
+        $jwt = $generator->generate(
+            [
+                'users' => [
+                    'actions' => ['read']
+                ]
+            ]
+        );
+
+        $verifier = new JWTVerifier(
+            [
+                'valid_audiences' => [$client_id],
+                'client_secret' => $client_secret,
+                'secret_base64_encoded' => false
+            ]
+        );
 
         $decoded = $verifier->verifyAndDecode($jwt);
 
@@ -73,17 +81,18 @@ class TokenTest extends \PHPUnit_Framework_TestCase
 
     public function testDeprecatedTestTokenGenerationDecode()
     {
-
-        $client_id = 'client_id_1';
+        $client_id     = 'client_id_1';
         $client_secret = 'client_secret_1';
 
         $generator = new TokenGenerator([ 'client_id' => $client_id, 'client_secret' => $client_secret]);
 
-        $jwt = $generator->generate([
-            'users' => [
-                'actions' => ['read']
+        $jwt = $generator->generate(
+            [
+                'users' => [
+                    'actions' => ['read']
+                ]
             ]
-        ]);
+        );
 
         $decoded = Auth0JWT::decode($jwt, $client_id, $client_secret);
 

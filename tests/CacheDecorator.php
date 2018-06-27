@@ -6,8 +6,9 @@ use Auth0\SDK\Helpers\Cache\CacheHandler;
 
 class CacheDecorator implements CacheHandler
 {
-  
+
     protected $cache;
+
     protected $counter = [];
 
     public function __construct(CacheHandler $cache)
@@ -26,7 +27,7 @@ class CacheDecorator implements CacheHandler
         $this->addCount('delete');
         return $this->cache->delete($key);
     }
-  
+
     public function set($key, $value)
     {
         $this->addCount('set');
@@ -35,17 +36,19 @@ class CacheDecorator implements CacheHandler
 
     private function addCount($method)
     {
-        if (!isset($this->counter[$method])) {
+        if (! isset($this->counter[$method])) {
             $this->counter[$method] = 0;
         }
+
         $this->counter[$method]++;
     }
 
     public function count($method)
     {
-        if (!isset($this->counter[$method])) {
+        if (! isset($this->counter[$method])) {
             return null;
         }
+
         return $this->counter[$method];
     }
 }

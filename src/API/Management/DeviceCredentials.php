@@ -6,15 +6,16 @@ use Auth0\SDK\API\Header\ContentType;
 
 class DeviceCredentials extends GenericResource
 {
-    const TYPE_PUBLIC_KEY = 'public_key';
+    const TYPE_PUBLIC_KEY   = 'public_key';
     const TYPE_REFESH_TOKEN = 'refresh_token';
 
     /**
-     * @param string $user_id
-     * @param string $client_id
-     * @param string $type
-     * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     *
+     * @param  string            $user_id
+     * @param  string            $client_id
+     * @param  string            $type
+     * @param  null|string|array $fields
+     * @param  null|string|array $include_fields
      * @return mixed
      */
     public function getAll($user_id = null, $client_id = null, $type = null, $fields = null, $include_fields = null)
@@ -26,6 +27,7 @@ class DeviceCredentials extends GenericResource
             if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
+
             $request->withParam('fields', $fields);
         }
 
@@ -49,7 +51,8 @@ class DeviceCredentials extends GenericResource
     }
 
     /**
-     * @param array $data
+     *
+     * @param  array $data
      * @return mixed
      */
     public function createPublicKey($data)
@@ -62,7 +65,8 @@ class DeviceCredentials extends GenericResource
     }
 
     /**
-     * @param string $id
+     *
+     * @param  string $id
      * @return mixed
      */
     public function deleteDeviceCredential($id)

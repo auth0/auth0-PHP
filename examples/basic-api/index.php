@@ -14,8 +14,8 @@ if (!function_exists('apache_request_headers')) {
         foreach ($_SERVER as $key => $val) {
             if (preg_match($rx_http, $key)) {
                 $arh_key = preg_replace($rx_http, '', $key);
-              // do some nasty string manipulations to restore the original letter case
-              // this should work in most cases
+                // do some nasty string manipulations to restore the original letter case
+                // this should work in most cases
                 $rx_matches = explode('_', $arh_key);
                 if (count($rx_matches) > 0 and strlen($arh_key) > 2) {
                     foreach ($rx_matches as $ak_key => $ak_val) {
@@ -55,55 +55,65 @@ function sendCorsHeaders()
     header("Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE");
 }
 
-  $router->options('/.*', function () {
-      sendCorsHeaders();
-  });
+$router->options(
+    '/.*', function () {
+        sendCorsHeaders();
+    }
+);
 
   sendCorsHeaders();
 
 
   // Check JWT on /secured routes
-  $router->before('GET', '/secured/.*', function () use ($app) {
+$router->before(
+    'GET', '/secured/.*', function () use ($app) {
 
-    $requestHeaders = apache_request_headers();
+        $requestHeaders = apache_request_headers();
 
-    if (!isset($requestHeaders['Authorization'])) {
-        header('HTTP/1.0 401 Unauthorized');
-        echo "No token provided.";
-        exit();
+        if (!isset($requestHeaders['Authorization'])) {
+            header('HTTP/1.0 401 Unauthorized');
+            echo "No token provided.";
+            exit();
+        }
+
+        $authorizationHeader = $requestHeaders['Authorization'];
+
+        if ($authorizationHeader == null) {
+            header('HTTP/1.0 401 Unauthorized');
+            echo "No authorization header sent";
+            exit();
+        }
+
+        $token = str_replace('Bearer ', '', $authorizationHeader);
+
+        try {
+            $app->setCurrentToken($token);
+        } catch (\Auth0\SDK\Exception\CoreException $e) {
+            header('HTTP/1.0 401 Unauthorized');
+            echo "Invalid token";
+            exit();
+        }
     }
+);
 
-    $authorizationHeader = $requestHeaders['Authorization'];
-
-    if ($authorizationHeader == null) {
-        header('HTTP/1.0 401 Unauthorized');
-        echo "No authorization header sent";
-        exit();
+$router->get(
+    '/ping', function () use ($app) {
+        echo json_encode($app->publicPing());
     }
+);
 
-    $token = str_replace('Bearer ', '', $authorizationHeader);
-
-    try {
-        $app->setCurrentToken($token);
-    } catch (\Auth0\SDK\Exception\CoreException $e) {
-        header('HTTP/1.0 401 Unauthorized');
-        echo "Invalid token";
-        exit();
+$router->get(
+    '/secured/ping', function () use ($app) {
+        echo json_encode($app->privatePing());
     }
-  });
+);
 
-  $router->get('/ping', function () use ($app) {
-      echo json_encode($app->publicPing());
-  });
-
-  $router->get('/secured/ping', function () use ($app) {
-      echo json_encode($app->privatePing());
-  });
-
-  $router->set404(function () {
-    header('HTTP/1.1 404 Not Found');
-    echo "Page not found";
-  });
+$router->set404(
+    function () {
+            header('HTTP/1.1 404 Not Found');
+            echo "Page not found";
+    }
+);
 
   // Run the Router
   $router->run();

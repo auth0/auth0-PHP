@@ -36,8 +36,9 @@ class SessionStore implements StoreInterface
      */
     private function initSession()
     {
-        if (!session_id()) {
-            session_set_cookie_params(60 * 60 * 24 * 7); //seven days
+        if (! session_id()) {
+            session_set_cookie_params(60 * 60 * 24 * 7);
+            // seven days
             session_start();
         }
     }
@@ -48,7 +49,7 @@ class SessionStore implements StoreInterface
      * Persists $value on $_SESSION, identified by $key.
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function set($key, $value)
     {
@@ -61,8 +62,8 @@ class SessionStore implements StoreInterface
      * Gets persisted values identified by $key.
      * If the value is not set, returns $default.
      *
-     * @param  string  $key
-     * @param  mixed   $default
+     * @param string $key
+     * @param mixed  $default
      *
      * @return mixed
      */
@@ -80,7 +81,7 @@ class SessionStore implements StoreInterface
     /**
      * Removes a persisted value identified by $key.
      *
-     * @param  string $key
+     * @param string $key
      */
     public function delete($key)
     {
@@ -94,12 +95,12 @@ class SessionStore implements StoreInterface
     /**
      * Constructs a session var name.
      *
-     * @param  string $key
+     * @param string $key
      *
      * @return string
      */
     public function getSessionKeyName($key)
     {
-        return self::BASE_NAME . '_' . $key;
+        return self::BASE_NAME.'_'.$key;
     }
 }

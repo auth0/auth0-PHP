@@ -8,12 +8,13 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testUrl()
     {
-
-        $builder = new RequestBuilder([
-            'domain' => 'www.domain.com',
-            'basePath' => '/api',
-            'method' => 'get',
-        ]);
+        $builder = new RequestBuilder(
+            [
+                'domain' => 'www.domain.com',
+                'basePath' => '/api',
+                'method' => 'get',
+            ]
+        );
 
         $this->assertEquals('', $builder->getUrl());
 
@@ -28,11 +29,12 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testParams()
     {
-
-        $builder = new RequestBuilder([
-            'domain' => 'www.domain.com',
-            'method' => 'get',
-        ]);
+        $builder = new RequestBuilder(
+            [
+                'domain' => 'www.domain.com',
+                'method' => 'get',
+            ]
+        );
 
         // Adding a parameter should be reflected in the RequestBuilder object.
         $builder->withParam('param1', 'value1');
@@ -43,10 +45,12 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('?param1=value1&param2=value2', $builder->getParams());
 
         // Adding a parameter array should be reflected in the RequestBuilder object.
-        $builder->withParams([
-            ['key' => 'param3','value'=>'value3'],
-            ['key' => 'param1','value'=>'value4'],
-        ]);
+        $builder->withParams(
+            [
+                ['key' => 'param3','value' => 'value3'],
+                ['key' => 'param1','value' => 'value4'],
+            ]
+        );
         $this->assertEquals('?param1=value4&param2=value2&param3=value3', $builder->getParams());
 
         // Adding a parameter dictionary should be reflected in the RequestBuilder object.
@@ -56,27 +60,33 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testFullUrl()
     {
-        $builder = new RequestBuilder([
-            'domain' => 'www.domain.com',
-            'method' => 'get',
-        ]);
+        $builder = new RequestBuilder(
+            [
+                'domain' => 'www.domain.com',
+                'method' => 'get',
+            ]
+        );
 
         $builder->path(2)
-                ->subpath()
-                ->withParams([
+            ->subpath()
+            ->withParams(
+                [
                     ['key' => 'param1', 'value' => 'value1'],
                     ['key' => 'param2', 'value' => 'value2'],
-                ]);
+                ]
+            );
 
         $this->assertEquals('path/2/subpath?param1=value1&param2=value2', $builder->getUrl());
     }
 
     public function testGetGuzzleOptions()
     {
-        $builder = new RequestBuilder([
-            'domain' => 'www.domain.com',
-            'method' => 'get',
-        ]);
+        $builder = new RequestBuilder(
+            [
+                'domain' => 'www.domain.com',
+                'method' => 'get',
+            ]
+        );
 
         $options = $builder->getGuzzleOptions();
 
@@ -86,11 +96,13 @@ class RequestBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function testgGetGuzzleOptionsWithBasePath()
     {
-        $builder = new RequestBuilder([
-            'domain' => 'www.domain.com',
-            'basePath' => '/api',
-            'method' => 'get',
-        ]);
+        $builder = new RequestBuilder(
+            [
+                'domain' => 'www.domain.com',
+                'basePath' => '/api',
+                'method' => 'get',
+            ]
+        );
 
         $options = $builder->getGuzzleOptions();
 

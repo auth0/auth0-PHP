@@ -11,6 +11,7 @@ use Auth0\Tests\API\BasicCrudTest;
  */
 class ConnectionsTest extends BasicCrudTest
 {
+
     /**
      * Unique identifier name for Connections.
      *
@@ -25,11 +26,13 @@ class ConnectionsTest extends BasicCrudTest
      */
     protected function getApiClient()
     {
-        $token = $this->getToken($this->env, [
-            'connections' => ['actions' => ['create', 'read', 'delete', 'update']],
-            'users' => ['actions' => ['delete']],
-        ]);
-        $api = new Management($token, $this->domain);
+        $token = $this->getToken(
+            $this->env, [
+                'connections' => ['actions' => ['create', 'read', 'delete', 'update']],
+                'users' => ['actions' => ['delete']],
+            ]
+        );
+        $api   = new Management($token, $this->domain);
         return $api->connections;
     }
 
@@ -41,7 +44,7 @@ class ConnectionsTest extends BasicCrudTest
     protected function getCreateBody()
     {
         return [
-            'name' => 'TEST-CREATE-CONNECTION-' . $this->rand,
+            'name' => 'TEST-CREATE-CONNECTION-'.$this->rand,
             'strategy' => 'auth0',
             'options' => [
                 'requires_username' => true,
@@ -59,7 +62,7 @@ class ConnectionsTest extends BasicCrudTest
      */
     protected function getAllEntities()
     {
-        $fields = array_keys($this->getCreateBody());
+        $fields   = array_keys($this->getCreateBody());
         $fields[] = $this->id_name;
         $page_num = 1;
 
@@ -71,7 +74,7 @@ class ConnectionsTest extends BasicCrudTest
 
         // Get many results (needs to include the created result if self::findCreatedItem === true).
         $many_results_per_page = 50;
-        $many_results = $this->api->getAll(null, $fields, true, 0, $many_results_per_page);
+        $many_results          = $this->api->getAll(null, $fields, true, 0, $many_results_per_page);
 
         // Make sure we have at least as many results as we requested.
         $this->assertLessThanOrEqual($many_results_per_page, count($many_results));

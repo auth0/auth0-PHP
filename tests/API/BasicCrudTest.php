@@ -4,6 +4,7 @@ namespace Auth0\Tests\API;
 
 abstract class BasicCrudTest extends ApiTests
 {
+
     /**
      * Tenant domain for the test account.
      *
@@ -42,7 +43,7 @@ abstract class BasicCrudTest extends ApiTests
     /**
      * Should all results be searched for the created entity?
      *
-     * @var bool
+     * @var boolean
      */
     protected $findCreatedItem = true;
 
@@ -92,10 +93,10 @@ abstract class BasicCrudTest extends ApiTests
     public function __construct()
     {
         parent::__construct();
-        $this->env = $this->getEnv();
+        $this->env    = $this->getEnv();
         $this->domain = $this->env['DOMAIN'];
-        $this->api = $this->getApiClient();
-        $this->rand = rand();
+        $this->api    = $this->getApiClient();
+        $this->rand   = rand();
     }
 
     /**
@@ -124,14 +125,14 @@ abstract class BasicCrudTest extends ApiTests
     /**
      * Does an error message contain a specific string?
      *
-     * @param \Exception $e - Error object.
-     * @param string $str - String to find in the error message.
+     * @param \Exception $e   - Error object.
+     * @param string     $str - String to find in the error message.
      *
-     * @return bool
+     * @return boolean
      */
     protected function errorHasString(\Exception $e, $str)
     {
-        return ! ( false === strpos($e->getMessage(), $str) );
+        return ! (false === strpos($e->getMessage(), $str));
     }
 
     /**
@@ -164,7 +165,7 @@ abstract class BasicCrudTest extends ApiTests
         $all_entities = $this->getAllEntities($created_entity);
 
         // Look through our returned results for the created item, if indicated.
-        if ($this->findCreatedItem && !empty($all_entities)) {
+        if ($this->findCreatedItem && ! empty($all_entities)) {
             $found = false;
             foreach ($all_entities as $value) {
                 if ($this->getId($value) === $created_entity_id) {
@@ -172,6 +173,7 @@ abstract class BasicCrudTest extends ApiTests
                     break;
                 }
             }
+
             $this->assertTrue($found, 'Created item not found');
         }
 

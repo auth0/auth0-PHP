@@ -38,7 +38,7 @@ class Clients extends GenericResource
         $params = is_array($add_params) ? $add_params : [];
 
         // Results fields.
-        if (!empty($fields)) {
+        if (! empty($fields)) {
             $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
             if (null !== $include_fields) {
                 $params['include_fields'] = $include_fields;
@@ -80,7 +80,7 @@ class Clients extends GenericResource
         $params = [];
 
         // Results fields.
-        if (!empty($fields)) {
+        if (! empty($fields)) {
             $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
             if (null !== $include_fields) {
                 $params['include_fields'] = $include_fields;
@@ -143,7 +143,7 @@ class Clients extends GenericResource
      *      - "update:client_keys" - To update "client_secret" and "encryption_key" attributes.
      *
      * @param string $client_id - Client ID to update.
-     * @param array $data - Client data to update.
+     * @param array  $data      - Client data to update.
      *
      * @return mixed|string
      *

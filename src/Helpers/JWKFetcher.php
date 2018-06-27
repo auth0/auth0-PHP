@@ -10,19 +10,22 @@ class JWKFetcher
 {
 
     /**
+     *
      * @var CacheHandler|NoCacheHandler
      */
     private $cache = null;
 
     /**
+     *
      * @var array
      */
     private $guzzleOptions = null;
 
     /**
      * JWKFetcher constructor.
+     *
      * @param CacheHandler|null $cache
-     * @param array $guzzleOptions
+     * @param array             $guzzleOptions
      */
     public function __construct(CacheHandler $cache = null, $guzzleOptions = [])
     {
@@ -30,28 +33,28 @@ class JWKFetcher
             $cache = new NoCacheHandler();
         }
 
-        $this->cache = $cache;
+        $this->cache         = $cache;
         $this->guzzleOptions = $guzzleOptions;
     }
 
     /**
-     * @param string $cert
+     *
+     * @param  string $cert
      * @return string
      */
     protected function convertCertToPem($cert)
     {
-        return '-----BEGIN CERTIFICATE-----'.PHP_EOL
-            .chunk_split($cert, 64, PHP_EOL)
-            .'-----END CERTIFICATE-----'.PHP_EOL;
+        return '-----BEGIN CERTIFICATE-----'.PHP_EOL.chunk_split($cert, 64, PHP_EOL).'-----END CERTIFICATE-----'.PHP_EOL;
     }
 
-  /**
-   * @param string $iss
-   *
-   * @return array|mixed|null
-   *
-   * @throws \Exception
-   */
+    /**
+     *
+     * @param string $iss
+     *
+     * @return array|mixed|null
+     *
+     * @throws \Exception
+     */
     public function fetchKeys($iss)
     {
         $url = "{$iss}.well-known/jwks.json";
@@ -59,13 +62,13 @@ class JWKFetcher
         if (($secret = $this->cache->get($url)) === null) {
             $secret = [];
 
-            $request = new RequestBuilder(array(
+            $request = new RequestBuilder([
                 'domain' => $iss,
                 'basePath' => '.well-known/jwks.json',
                 'method' => 'GET',
                 'guzzleOptions' => $this->guzzleOptions
-            ));
-            $jwks = $request->call();
+            ]);
+            $jwks    = $request->call();
 
             foreach ($jwks['keys'] as $key) {
                 $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);

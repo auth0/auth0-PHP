@@ -35,7 +35,7 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
 
         // Suppress header sent error
         @$this->sessionStore = new SessionStore();
-        $this->stateHandler = new SessionStateHandler($this->sessionStore);
+        $this->stateHandler  = new SessionStateHandler($this->sessionStore);
     }
 
     /**
@@ -75,9 +75,10 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception
      */
-    public function testStateFailsWithIncorrectValue() {
+    public function testStateFailsWithIncorrectValue()
+    {
         $state_issued = $this->stateHandler->issue();
-        $this->assertFalse($this->stateHandler->validate($state_issued . 'false'));
+        $this->assertFalse($this->stateHandler->validate($state_issued.'false'));
         $this->assertNull($this->sessionStore->get(SessionStateHandler::STATE_NAME));
     }
 }

@@ -10,6 +10,7 @@ use Auth0\SDK\API\Helpers\State\DummyStateHandler;
  */
 class DummyStateHandlerTest extends \PHPUnit_Framework_TestCase
 {
+
     /**
      * State handler to use.
      *

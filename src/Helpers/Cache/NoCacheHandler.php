@@ -6,7 +6,8 @@ class NoCacheHandler implements CacheHandler
 {
 
     /**
-     * @param string $key
+     *
+     * @param  string $key
      * @return null
      */
     public function get($key)
@@ -15,6 +16,7 @@ class NoCacheHandler implements CacheHandler
     }
 
     /**
+     *
      * @param string $key
      */
     public function delete($key)
@@ -22,8 +24,9 @@ class NoCacheHandler implements CacheHandler
     }
 
     /**
+     *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function set($key, $value)
     {

@@ -18,12 +18,12 @@ class Connections extends GenericResource
      * Get all Connections by page.
      * Required scope: "read:connections"
      *
-     * @param null|string $strategy        - Connection strategy to retrieve.
-     * @param null|string|array $fields    - Fields to include or exclude from the result, empty to retrieve all fields.
-     * @param null|boolean $include_fields - True to include $fields, false to exclude $fields.
-     * @param null|integer $page           - Page number to get, zero-based.
-     * @param null|integer $per_page       - Number of results to get, null to return the default number.
-     * @param array $add_params            - Additional API parameters, over-written by function params.
+     * @param null|string       $strategy       - Connection strategy to retrieve.
+     * @param null|string|array $fields         - Fields to include or exclude from the result, empty to retrieve all fields.
+     * @param null|boolean      $include_fields - True to include $fields, false to exclude $fields.
+     * @param null|integer      $page           - Page number to get, zero-based.
+     * @param null|integer      $per_page       - Number of results to get, null to return the default number.
+     * @param array             $add_params     - Additional API parameters, over-written by function params.
      *
      * @return mixed
      *
@@ -38,17 +38,18 @@ class Connections extends GenericResource
         $page = null,
         $per_page = null,
         $add_params = []
-    ) {
+    )
+    {
         // Set additional parameters first so they are over-written by function parameters.
         $params = is_array($add_params) ? $add_params : [];
 
         // Connection strategy to filter results by.
-        if (!empty($strategy)) {
+        if (! empty($strategy)) {
             $params['strategy'] = $strategy;
         }
 
         // Results fields.
-        if (!empty($fields)) {
+        if (! empty($fields)) {
             $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
             if (null !== $include_fields) {
                 $params['include_fields'] = $include_fields;
@@ -73,9 +74,9 @@ class Connections extends GenericResource
      * Get a single Connection by ID.
      * Required scope: "read:connections"
      *
-     * @param string $id - Connection ID to get.
-     * @param null|string|array $fields - Fields to include or exclude from the result, empty to retrieve all fields.
-     * @param null|boolean $include_fields - True to include $fields, false to exclude $fields.
+     * @param string            $id             - Connection ID to get.
+     * @param null|string|array $fields         - Fields to include or exclude from the result, empty to retrieve all fields.
+     * @param null|boolean      $include_fields - True to include $fields, false to exclude $fields.
      *
      * @return mixed|string
      *
@@ -88,7 +89,7 @@ class Connections extends GenericResource
         $params = [];
 
         // Results fields.
-        if (!empty($fields)) {
+        if (! empty($fields)) {
             $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
             if (null !== $include_fields) {
                 $params['include_fields'] = $include_fields;
@@ -124,7 +125,7 @@ class Connections extends GenericResource
      * Delete a specific User for a Connection.
      * Required scope: "delete:users"
      *
-     * @param string $id - Auth0 database Connection ID (user_id with strategy of "auth0").
+     * @param string $id    - Auth0 database Connection ID (user_id with strategy of "auth0").
      * @param string $email - Email of the user to delete.
      *
      * @return mixed|string
@@ -174,8 +175,8 @@ class Connections extends GenericResource
      * Update a Connection.
      * Required scope: "update:connections"
      *
-     * @param string $id - Connection ID to update.
-     * @param array $data - Connection data to update.
+     * @param string $id   - Connection ID to update.
+     * @param array  $data - Connection data to update.
      *
      * @return mixed|string
      *

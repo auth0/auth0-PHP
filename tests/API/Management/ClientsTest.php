@@ -11,6 +11,7 @@ use Auth0\Tests\API\BasicCrudTest;
  */
 class ClientsTest extends BasicCrudTest
 {
+
     /**
      * Unique identifier name for Clients.
      *
@@ -26,7 +27,7 @@ class ClientsTest extends BasicCrudTest
     protected function getApiClient()
     {
         $token = $this->getToken($this->env, [ 'clients' => [ 'actions' => ['create', 'read', 'delete', 'update' ] ] ]);
-        $api = new Management($token, $this->domain);
+        $api   = new Management($token, $this->domain);
         return $api->clients;
     }
 
@@ -38,7 +39,7 @@ class ClientsTest extends BasicCrudTest
     protected function getCreateBody()
     {
         return [
-            'name' => 'TEST-CREATE-CLIENT-' . $this->rand,
+            'name' => 'TEST-CREATE-CLIENT-'.$this->rand,
             'app_type' => 'regular_web',
             'sso' => false,
             'description' => '__Auth0_PHP_initial_app_description__',
@@ -54,7 +55,7 @@ class ClientsTest extends BasicCrudTest
      */
     protected function getAllEntities()
     {
-        $fields = array_keys($this->getCreateBody());
+        $fields   = array_keys($this->getCreateBody());
         $fields[] = $this->id_name;
         $page_num = 1;
 
@@ -69,7 +70,7 @@ class ClientsTest extends BasicCrudTest
 
         // Get many results (needs to include the created result if self::findCreatedItem === true).
         $many_results_per_page = 50;
-        $many_results = $this->api->getAll($fields, true, 0, $many_results_per_page);
+        $many_results          = $this->api->getAll($fields, true, 0, $many_results_per_page);
 
         // Make sure we have at least as many results as we requested.
         $this->assertLessThanOrEqual($many_results_per_page, count($many_results));

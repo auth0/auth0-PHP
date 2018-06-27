@@ -7,9 +7,10 @@ use Auth0\SDK\API\Header\ContentType;
 class Rules extends GenericResource
 {
     /**
-     * @param null|string $enabled
-     * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     *
+     * @param  null|string       $enabled
+     * @param  null|string|array $fields
+     * @param  null|string|array $include_fields
      * @return mixed
      */
     public function getAll($enabled = null, $fields = null, $include_fields = null)
@@ -25,6 +26,7 @@ class Rules extends GenericResource
             if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
+
             $request->withParam('fields', $fields);
         }
 
@@ -36,9 +38,10 @@ class Rules extends GenericResource
     }
 
     /**
-     * @param string $id
-     * @param null|string|array $fields
-     * @param null|string|array $include_fields
+     *
+     * @param  string            $id
+     * @param  null|string|array $fields
+     * @param  null|string|array $include_fields
      * @return mixed
      */
     public function get($id, $fields = null, $include_fields = null)
@@ -50,6 +53,7 @@ class Rules extends GenericResource
             if (is_array($fields)) {
                 $fields = implode(',', $fields);
             }
+
             $request->withParam('fields', $fields);
         }
 
@@ -63,7 +67,8 @@ class Rules extends GenericResource
     }
 
     /**
-     * @param string $id
+     *
+     * @param  string $id
      * @return mixed
      */
     public function delete($id)
@@ -74,7 +79,8 @@ class Rules extends GenericResource
     }
 
     /**
-     * @param array $data
+     *
+     * @param  array $data
      * @return mixed
      */
     public function create($data)
@@ -87,8 +93,9 @@ class Rules extends GenericResource
     }
 
     /**
-     * @param string $id
-     * @param array $data
+     *
+     * @param  string $id
+     * @param  array  $data
      * @return mixed
      */
     public function update($id, $data)
