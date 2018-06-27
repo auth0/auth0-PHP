@@ -26,6 +26,12 @@
         <exclude name="Generic.Files.EndFileNoNewline"/>
         <exclude name="Generic.Files.LowercasedFilename"/>
     </rule>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="120"/>
+        </properties>
+    </rule>
     <rule ref="Generic.Formatting">
         <exclude name="Generic.Formatting.NoSpaceAfterCast"/>
     </rule>
@@ -51,6 +57,7 @@
     <rule ref="Squiz.Classes"/>
     <rule ref="Squiz.Commenting">
         <exclude name="Squiz.Commenting.ClosingDeclarationComment"/>
+        <exclude name="Squiz.Commenting.ClassComment.TagNotAllowed"/>
         <exclude name="Squiz.Commenting.FileComment"/>
         <exclude name="Squiz.Commenting.LongConditionClosingComment"/>
         <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
@@ -61,7 +68,7 @@
     </rule>
     <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
         <properties>
-            <property name="equalsSpacing" value="1" />
+            <property name="equalsSpacing" value="1"/>
         </properties>
     </rule>
     <rule ref="Squiz.Operators">
@@ -78,9 +85,9 @@
     </rule>
     <rule ref="Squiz.WhiteSpace.FunctionSpacing">
         <properties>
-            <property name="spacing" value="1" />
-            <property name="spacingBeforeFirst" value="0" />
-            <property name="spacingAfterLast" value="0" />
+            <property name="spacing" value="1"/>
+            <property name="spacingBeforeFirst" value="0"/>
+            <property name="spacingAfterLast" value="0"/>
         </properties>
     </rule>
 </ruleset>
