@@ -13,13 +13,6 @@ abstract class BasicCrudTest extends ApiTests
     protected $domain;
 
     /**
-     * Environment variables, generated in self::__construct().
-     *
-     * @var array
-     */
-    protected $env;
-
-    /**
      * API client to test.
      *
      * @var mixed
@@ -93,8 +86,8 @@ abstract class BasicCrudTest extends ApiTests
     public function __construct()
     {
         parent::__construct();
-        $this->env    = $this->getEnv();
-        $this->domain = $this->env['DOMAIN'];
+        self::$env    = $this->getEnv();
+        $this->domain = self::$env['DOMAIN'];
         $this->api    = $this->getApiClient();
         $this->rand   = rand();
     }
@@ -120,19 +113,6 @@ abstract class BasicCrudTest extends ApiTests
     protected function getId($entity)
     {
         return $entity[$this->id_name];
-    }
-
-    /**
-     * Does an error message contain a specific string?
-     *
-     * @param \Exception $e   - Error object.
-     * @param string     $str - String to find in the error message.
-     *
-     * @return boolean
-     */
-    protected function errorHasString(\Exception $e, $str)
-    {
-        return ! (false === strpos($e->getMessage(), $str));
     }
 
     /**

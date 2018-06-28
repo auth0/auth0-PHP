@@ -26,7 +26,7 @@ class ClientsTest extends BasicCrudTest
      */
     protected function getApiClient()
     {
-        $token = $this->getToken($this->env, [ 'clients' => [ 'actions' => ['create', 'read', 'delete', 'update' ] ] ]);
+        $token = $this->getToken(self::$env, [ 'clients' => [ 'actions' => ['create', 'read', 'delete', 'update' ] ] ]);
         $api   = new Management($token, $this->domain);
         return $api->clients;
     }

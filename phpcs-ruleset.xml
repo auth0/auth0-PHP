@@ -61,10 +61,12 @@
         <exclude name="Squiz.Commenting.FileComment"/>
         <exclude name="Squiz.Commenting.LongConditionClosingComment"/>
         <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
+        <exclude name="Squiz.Commenting.FunctionCommentThrowTag.WrongNumber"/>
     </rule>
     <rule ref="Squiz.ControlStructures"/>
     <rule ref="Squiz.Functions">
         <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.NewlineBeforeOpenBrace"/>
+        <exclude name="Squiz.ControlStructures.InlineIfDeclaration.NoBrackets"/>
     </rule>
     <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
         <properties>
@@ -75,7 +77,10 @@
         <exclude name="Squiz.Operators.ComparisonOperatorUsage.NotAllowed"/>
         <exclude name="Squiz.Operators.ComparisonOperatorUsage.ImplicitTrue"/>
     </rule>
-    <rule ref="Squiz.PHP"/>
+    <rule ref="Squiz.PHP">
+        <exclude name="Squiz.PHP.DisallowComparisonAssignment.AssignedComparison"/>
+        <exclude name="Squiz.PHP.DisallowInlineIf.Found"/>
+    </rule>
     <rule ref="Squiz.Scope"/>
     <rule ref="Squiz.Strings"/>
     <rule ref="Squiz.WhiteSpace">

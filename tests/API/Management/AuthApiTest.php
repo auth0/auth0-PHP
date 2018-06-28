@@ -59,7 +59,7 @@ class AuthApiTest extends ApiTests
 
         $token = $api->client_credentials(
             [
-                'audience' => 'tests'
+                'audience' => 'https://'.$env['DOMAIN'].'/api/v2/'
             ]
         );
 

@@ -2,10 +2,17 @@
 namespace Auth0\Tests\API;
 
 use Auth0\SDK\API\Helpers\TokenGenerator;
+use Auth0\SDK\API\Management;
 use josegonzalez\Dotenv\Loader;
 
 class ApiTests extends \PHPUnit_Framework_TestCase
 {
+
+    /**
+     *
+     * @var array
+     */
+    protected static $env = [];
 
     protected function getEnv()
     {
@@ -45,5 +52,34 @@ class ApiTests extends \PHPUnit_Framework_TestCase
             ]
         );
         return $generator->generate($scopes);
+    }
+
+    /**
+     * Return an API client used during self::setUpBeforeClass().
+     *
+     * @param string $endpoint Endpoint name used for token generation.
+     * @param array  $actions  Actions required for token generation.
+     *
+     * @return mixed
+     */
+    protected static function getApiStatic($endpoint, array $actions)
+    {
+        self::$env  = self::getEnvStatic();
+        $token      = self::getTokenStatic(self::$env, [$endpoint => ['actions' => $actions]]);
+        $api_client = new Management($token, self::$env['DOMAIN']);
+        return $api_client->$endpoint;
+    }
+
+    /**
+     * Does an error message contain a specific string?
+     *
+     * @param \Exception $e   - Error object.
+     * @param string     $str - String to find in the error message.
+     *
+     * @return boolean
+     */
+    protected function errorHasString(\Exception $e, $str)
+    {
+        return ! (false === strpos($e->getMessage(), $str));
     }
 }

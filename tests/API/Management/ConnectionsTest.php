@@ -27,7 +27,7 @@ class ConnectionsTest extends BasicCrudTest
     protected function getApiClient()
     {
         $token = $this->getToken(
-            $this->env, [
+            self::$env, [
                 'connections' => ['actions' => ['create', 'read', 'delete', 'update']],
                 'users' => ['actions' => ['delete']],
             ]

@@ -65,7 +65,7 @@ class LogsTest extends ApiTests
     public function testLogSearchPagination()
     {
         $expected_count = 5;
-        $search_results= self::$api->search([
+        $search_results = self::$api->search([
             // Fields here to speed up API call.
             'fields' => '_id,log_id',
             'include_fields' => true,
