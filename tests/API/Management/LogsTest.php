@@ -21,13 +21,6 @@ class LogsTest extends ApiTests
     protected static $api;
 
     /**
-     * Valid Log ID to test getter.
-     *
-     * @var string
-     */
-    protected static $log_id;
-
-    /**
      * Sets up API client for entire testing class.
      *
      * @return void
@@ -46,31 +39,22 @@ class LogsTest extends ApiTests
      *
      * @return void
      */
-    public function testLogSearch()
-    {
-        $search_results = self::$api->search();
-        $this->assertNotEmpty($search_results);
-
-        // Get the 10th log entry to test pagination in self::testLogSearchPagination().
-        self::$log_id = $search_results[9]['log_id'];
-        $this->assertNotEmpty(self::$log_id);
-    }
-
-    /**
-     * Test fields parameter.
-     *
-     * @return void
-     */
-    public function testLogSearchFields()
+    public function testLogSearchAndGetById()
     {
         $search_results = self::$api->search([
             'fields' => '_id,log_id,date',
             'include_fields' => true,
         ]);
         $this->assertNotEmpty($search_results);
-        $this->assertNotEmpty($search_results[0]['date']);
+        $this->assertNotEmpty($search_results[0]['_id']);
         $this->assertNotEmpty($search_results[0]['log_id']);
+        $this->assertNotEmpty($search_results[0]['date']);
         $this->assertCount(3, $search_results[0]);
+
+        // Test getting a single log result with a valid ID from above.
+        $one_log = self::$api->get($search_results[0]['log_id']);
+        $this->assertNotEmpty($one_log);
+        $this->assertEquals($search_results[0]['log_id'], $one_log['log_id']);
     }
 
     /**
@@ -80,29 +64,25 @@ class LogsTest extends ApiTests
      */
     public function testLogSearchPagination()
     {
-        $expected_count = 10;
-        $search_results = self::$api->search([
+        $search_params  = [
             // Fields here to speed up API call.
-            'fields' => '_id,log_id,date',
+            'fields' => '_id,log_id',
             'include_fields' => true,
 
-            // First page of 10 results.
+            // First page of 2 results.
             'page' => 0,
-            'per_page' => $expected_count,
-        ]);
-        $this->assertNotEmpty($search_results);
-        $this->assertCount($expected_count, $search_results);
-    }
+            'per_page' => 2,
+        ];
 
-    /**
-     * Test getting a single log entry with an ID.
-     *
-     * @return void
-     */
-    public function testGetOne()
-    {
-        $one_log = self::$api->get(self::$log_id);
-        $this->assertNotEmpty($one_log);
-        $this->assertEquals(self::$log_id, $one_log['log_id']);
+        // Get one page of 2 results and check the count.
+        $search_results_1 = self::$api->search($search_params);
+        $this->assertCount(2, $search_results_1);
+
+        // Now get one page of a single result and make sure it matches the second result above.
+        $search_params['page']     = 1;
+        $search_params['per_page'] = 1;
+        $search_results_2          = self::$api->search($search_params);
+        $this->assertCount(1, $search_results_2);
+        $this->assertEquals($search_results_1[1]['log_id'], $search_results_2[0]['log_id']);
     }
 }
