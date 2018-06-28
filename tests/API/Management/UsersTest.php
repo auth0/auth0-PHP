@@ -40,7 +40,7 @@ class UsersTest extends BasicCrudTest
      */
     protected function getApiClient()
     {
-        $token = $this->getToken($this->env, ['users' => ['actions' => ['create', 'read', 'delete', 'update']]]);
+        $token = $this->getToken(self::$env, ['users' => ['actions' => ['create', 'read', 'delete', 'update']]]);
         $api   = new Management($token, $this->domain);
         return $api->users;
     }
