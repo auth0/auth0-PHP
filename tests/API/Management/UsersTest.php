@@ -147,7 +147,7 @@ class UsersTest extends BasicCrudTest
     {
         $expected = $this->getUpdateBody();
         $this->assertEquals($expected['email'], $entity['email']);
-        $this->assertTrue($entity['email_verified']);
+        $this->assertFalse($entity['email_verified']);
         $this->assertEquals($expected['user_metadata']['key1'], $entity['user_metadata']['key1']);
         $this->assertEquals($expected['user_metadata']['key3'], $entity['user_metadata']['key3']);
     }
