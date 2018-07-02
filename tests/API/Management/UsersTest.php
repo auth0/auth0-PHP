@@ -57,7 +57,7 @@ class UsersTest extends BasicCrudTest
             'email' => 'test-create-user-'.$this->rand.'@auth0.com',
             'password' => 'Y6t82hQjpXCMd3oD7Zsc',
             'picture' => 'https://cdn.auth0.com/styleguide/components/1.0.8/media/logos/img/badge.png',
-            'email_verified' => false,
+            'email_verified' => true,
             'user_metadata' => [
                 'key1' => 'value1',
                 'key2' => 'value2',
@@ -116,7 +116,7 @@ class UsersTest extends BasicCrudTest
         $expected = $this->getCreateBody();
         $this->assertNotEmpty($this->getId($entity));
         $this->assertEquals($expected['email'], $entity['email']);
-        $this->assertFalse($entity['email_verified']);
+        $this->assertTrue($entity['email_verified']);
         $this->assertEquals($expected['user_metadata']['key1'], $entity['user_metadata']['key1']);
         $this->assertEquals($expected['user_metadata']['key2'], $entity['user_metadata']['key2']);
     }
@@ -130,7 +130,7 @@ class UsersTest extends BasicCrudTest
     {
         return [
             'email' => 'test-update-user-'.$this->rand.'@auth0.com',
-            'email_verified' => true,
+            'email_verified' => false,
             'user_metadata' => [
                 'key1' => 'value4',
                 'key3' => 'value3',
