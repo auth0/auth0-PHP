@@ -64,25 +64,24 @@ class LogsTest extends ApiTests
      */
     public function testLogSearchPagination()
     {
-        $search_params  = [
+        $expected_count = 5;
+        $search_results= self::$api->search([
             // Fields here to speed up API call.
             'fields' => '_id,log_id',
             'include_fields' => true,
 
-            // First page of 2 results.
-            'page' => 0,
-            'per_page' => 2,
-        ];
+            // Second page of 5 results.
+            'page' => 1,
+            'per_page' => $expected_count,
 
-        // Get one page of 2 results and check the count.
-        $search_results_1 = self::$api->search($search_params);
-        $this->assertCount(2, $search_results_1);
+            // Include totals to check pagination.
+            'include_totals' => true,
+        ]);
 
-        // Now get one page of a single result and make sure it matches the second result above.
-        $search_params['page']     = 1;
-        $search_params['per_page'] = 1;
-        $search_results_2          = self::$api->search($search_params);
-        $this->assertCount(1, $search_results_2);
-        $this->assertEquals($search_results_1[1]['log_id'], $search_results_2[0]['log_id']);
+        $this->assertCount($expected_count, $search_results['logs']);
+        $this->assertEquals($expected_count, $search_results['length']);
+
+        // Starting on 2nd page so starting result should be equal to the number per page.
+        $this->assertEquals($expected_count, $search_results['start']);
     }
 }
