@@ -1,9 +1,5 @@
 <?php
-/**
- * Users endpoints for the Management API.
- *
- * @package Auth0\SDK\API\Management
- */
+
 namespace Auth0\SDK\API\Management;
 
 /**
@@ -20,11 +16,11 @@ class Users extends GenericResource
      *      - "read:users" - For any call to this endpoint.
      *      - "read:user_idp_tokens" - To retrieve the "access_token" field for logged-in identities.
      *
-     * @param string $user_id - User ID to get.
+     * @param string $user_id User ID to get.
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      */
     public function get($user_id)
     {
@@ -39,18 +35,18 @@ class Users extends GenericResource
      *      - "update:users" - For any call to this endpoint.
      *      - "update:users_app_metadata" - For any update that includes "user_metadata" or "app_metadata" fields.
      *
-     * @param string $user_id - User ID to update.
-     * @param array  $data    - User data to update:
+     * @param string $user_id User ID to update.
+     * @param array  $data    User data to update:
      *          - Only certain fields can be updated; see the @link below for allowed fields.
      *          - "user_metadata" and "app_metadata" fields are merged, not replaced.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id
      */
-    public function update($user_id, $data)
+    public function update($user_id, array $data)
     {
         return $this->apiClient->method('patch')
             ->addPath('users', $user_id)
@@ -62,7 +58,7 @@ class Users extends GenericResource
      * Create a new User.
      * Required scope: "create:users"
      *
-     * @param array $data - User create data:
+     * @param array $data User create data:
      *      - "connection" name field is required and limited to sms, email, & DB connections.
      *      - "phone_number" field is required by sms connections.
      *      - "email" field is required by email and DB connections.
@@ -71,11 +67,11 @@ class Users extends GenericResource
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_users
      */
-    public function create($data)
+    public function create(array $data)
     {
         if (empty($data['connection'])) {
             throw new \Exception('Missing required "connection" field.');
@@ -108,24 +104,24 @@ class Users extends GenericResource
      *      - "read:users" - For any call to this endpoint.
      *      - "read:user_idp_tokens" - To retrieve the "access_token" field for logged-in identities.
      *
-     * @param array             $params         - Search parameters to send:
-     *                          - "fields", "include_fields", "page", and "per_page" keys here will override the explicit parameters.
-     *                          - Queries using "search_engine" set to "v2" should be migrated to v3; see search v3 @link below.
-     * @param null|string|array $fields         - Fields to include or exclude from the result, empty to retrieve all fields:
-     *              - Including only the fields required can speed up API calls significantly.
-     *              - Arrays will be converted to comma-separated strings
-     * @param null|boolean      $include_fields - True to include $fields, false to exclude $fields.
-     * @param null|integer      $page           - Page number to get, zero-based.
-     * @param null|integer      $per_page       - Number of results to get, null to return the default number.
+     * @param array             $params         Search parameters to send:
+     *      - "fields", "include_fields", "page", and "per_page" keys here will override the explicit parameters.
+     *      - Queries using "search_engine" set to "v2" should be migrated to v3; see search v3 @link below.
+     * @param null|string|array $fields         Fields to include or exclude from the result.
+     *      - Including only the fields required can speed up API calls significantly.
+     *      - Arrays will be converted to comma-separated strings.
+     * @param null|boolean      $include_fields True to include $fields, false to exclude $fields.
+     * @param null|integer      $page           Page number to get, zero-based.
+     * @param null|integer      $per_page       Number of results to get, null to return the default number.
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/users/search/v3
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_users
      */
-    public function getAll($params = [], $fields = null, $include_fields = null, $page = null, $per_page = null)
+    public function getAll(array $params = [], $fields = null, $include_fields = null, $page = null, $per_page = null)
     {
         $params = is_array($params) ? $params : [];
 
@@ -164,15 +160,15 @@ class Users extends GenericResource
      *
      * TODO: Deprecate, replaced with getAll above.
      *
-     * @param array $params - Search parameters to send.
+     * @param array $params Search parameters to send.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @see self::getAll()
      */
-    public function search($params = [])
+    public function search(array $params = [])
     {
         return $this->getAll($params);
     }
@@ -181,11 +177,11 @@ class Users extends GenericResource
      * Delete a User by ID.
      * Required scope: "delete:users"
      *
-     * @param string $user_id - User ID to delete.
+     * @param string $user_id User ID to delete.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_users_by_id
      */
@@ -200,19 +196,19 @@ class Users extends GenericResource
      * Link one user identity to another.
      * Required scope: "update:users"
      *
-     * @param string $user_id - User ID of the primary account.
-     * @param array  $data    - An array with the following fields:
+     * @param string $user_id User ID of the primary account.
+     * @param array  $data    An array with the following fields:
      *          - "provider" - Secondary account provider.
      *          - "user_id" - Secondary account user ID.
      *          - "connection_id" - Secondary account Connection ID (optional).
      *
-     * @return array - Array of the primary account identities after the merge.
+     * @return array Array of the primary account identities after the merge.
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_identities
      */
-    public function linkAccount($user_id, $data)
+    public function linkAccount($user_id, array $data)
     {
         return $this->apiClient->method('post')
             ->addPath('users', $user_id)
@@ -225,13 +221,13 @@ class Users extends GenericResource
      * Unlink an identity from the target user.
      * Required scope: "update:users"
      *
-     * @param string $user_id     - User ID to unlink.
-     * @param string $provider    - Identity provider of the secondary linked account.
-     * @param string $identity_id - The unique identifier of the secondary linked account.
+     * @param string $user_id     User ID to unlink.
+     * @param string $provider    Identity provider of the secondary linked account.
+     * @param string $identity_id The unique identifier of the secondary linked account.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_user_identity_by_user_id
      */
@@ -245,9 +241,15 @@ class Users extends GenericResource
     }
 
     /**
+     * Unlink device.
      * TODO: Deprecate, endpoint does not exist.
      *
-     * @throws \Exception
+     * @param string $user_id   User ID.
+     * @param string $device_id Device ID.
+     *
+     * @return void
+     *
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      */
     public function unlinkDevice($user_id, $device_id)
     {
@@ -259,12 +261,12 @@ class Users extends GenericResource
      * This will force user to re-configure the multifactor provider.
      * Required scope: "update:users"
      *
-     * @param string $user_id      - User ID with the multifactor provider to delete.
-     * @param string $mfa_provider - Multifactor provider to delete
+     * @param string $user_id      User ID with the multifactor provider to delete.
+     * @param string $mfa_provider Multifactor provider to delete.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      */
     public function deleteMultifactorProvider($user_id, $mfa_provider)
     {

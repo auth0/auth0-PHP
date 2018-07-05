@@ -1,9 +1,5 @@
 <?php
-/**
- * Connections endpoints for the Management API.
- *
- * @package Auth0\SDK\API\Management
- */
+
 namespace Auth0\SDK\API\Management;
 
 /**
@@ -18,16 +14,18 @@ class Connections extends GenericResource
      * Get all Connections by page.
      * Required scope: "read:connections"
      *
-     * @param null|string       $strategy       - Connection strategy to retrieve.
-     * @param null|string|array $fields         - Fields to include or exclude from the result, empty to retrieve all fields.
-     * @param null|boolean      $include_fields - True to include $fields, false to exclude $fields.
-     * @param null|integer      $page           - Page number to get, zero-based.
-     * @param null|integer      $per_page       - Number of results to get, null to return the default number.
-     * @param array             $add_params     - Additional API parameters, over-written by function params.
+     * @param null|string       $strategy       Connection strategy to retrieve.
+     * @param null|string|array $fields         Fields to include or exclude from the result.
+     *      - Including only the fields required can speed up API calls significantly.
+     *      - Arrays will be converted to comma-separated strings.
+     * @param null|boolean      $include_fields True to include $fields, false to exclude $fields.
+     * @param null|integer      $page           Page number to get, zero-based.
+     * @param null|integer      $per_page       Number of results to get, null to return the default number.
+     * @param array             $add_params     Additional API parameters, over-written by function params.
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections
      */
@@ -37,7 +35,7 @@ class Connections extends GenericResource
         $include_fields = null,
         $page = null,
         $per_page = null,
-        $add_params = []
+        array $add_params = []
     )
     {
         // Set additional parameters first so they are over-written by function parameters.
@@ -74,13 +72,15 @@ class Connections extends GenericResource
      * Get a single Connection by ID.
      * Required scope: "read:connections"
      *
-     * @param string            $id             - Connection ID to get.
-     * @param null|string|array $fields         - Fields to include or exclude from the result, empty to retrieve all fields.
-     * @param null|boolean      $include_fields - True to include $fields, false to exclude $fields.
+     * @param string            $id             Connection ID to get.
+     * @param null|string|array $fields         Fields to include or exclude from the result.
+     *      - Including only the fields required can speed up API calls significantly.
+     *      - Arrays will be converted to comma-separated strings.
+     * @param null|boolean      $include_fields True to include $fields, false to exclude $fields.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections_by_id
      */
@@ -106,11 +106,11 @@ class Connections extends GenericResource
      * Delete a Connection by ID.
      * Required scope: "delete:connections"
      *
-     * @param string $id - Connection ID to delete.
+     * @param string $id Connection ID to delete.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_connections_by_id
      */
@@ -125,12 +125,12 @@ class Connections extends GenericResource
      * Delete a specific User for a Connection.
      * Required scope: "delete:users"
      *
-     * @param string $id    - Auth0 database Connection ID (user_id with strategy of "auth0").
-     * @param string $email - Email of the user to delete.
+     * @param string $id    Auth0 database Connection ID (user_id with strategy of "auth0").
+     * @param string $email Email of the user to delete.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_users_by_email
      */
@@ -147,15 +147,15 @@ class Connections extends GenericResource
      * Create a new Connection.
      * Required scope: "create:connections"
      *
-     * @param array $data - Connection create data; "name" and "strategy" fields are required.
+     * @param array $data Connection create data; "name" and "strategy" fields are required.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/post_connections
      */
-    public function create($data)
+    public function create(array $data)
     {
         if (empty($data['name'])) {
             throw new \Exception('Missing required "name" field.');
@@ -175,16 +175,16 @@ class Connections extends GenericResource
      * Update a Connection.
      * Required scope: "update:connections"
      *
-     * @param string $id   - Connection ID to update.
-     * @param array  $data - Connection data to update.
+     * @param string $id   Connection ID to update.
+     * @param array  $data Connection data to update.
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/patch_connections_by_id
      */
-    public function update($id, $data)
+    public function update($id, array $data)
     {
         return $this->apiClient->method('patch')
             ->addPath('connections', $id)

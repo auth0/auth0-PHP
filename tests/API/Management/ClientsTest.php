@@ -1,4 +1,5 @@
 <?php
+
 namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
@@ -51,7 +52,7 @@ class ClientsTest extends BasicCrudTest
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      */
     protected function getAllEntities()
     {
@@ -85,9 +86,11 @@ class ClientsTest extends BasicCrudTest
     /**
      * Check that the Client created matches the initial values sent.
      *
-     * @param array $entity - The created Client to check against initial values.
+     * @param array $entity The created Client to check against initial values.
+     *
+     * @return void
      */
-    protected function afterCreate($entity)
+    protected function afterCreate(array $entity)
     {
         $expected = $this->getCreateBody();
         $this->assertNotEmpty($this->getId($entity));
@@ -115,9 +118,11 @@ class ClientsTest extends BasicCrudTest
     /**
      * Update entity returned values check.
      *
-     * @param array $entity - Client that was updated.
+     * @param array $entity Client that was updated.
+     *
+     * @return void
      */
-    protected function afterUpdate($entity)
+    protected function afterUpdate(array $entity)
     {
         $expected = $this->getUpdateBody();
         $this->assertEquals($expected['name'], $entity['name']);

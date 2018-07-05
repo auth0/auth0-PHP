@@ -26,7 +26,7 @@ class ClientGrants extends GenericResource
      *
      * @return mixed
      *
-     * @throws \Exception Thrown by the Guzzle HTTP client when there is a problem with the API call.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
@@ -57,7 +57,7 @@ class ClientGrants extends GenericResource
      * @return mixed
      *
      * @throws CoreException Thrown when $audience is empty or not a string.
-     * @throws \Exception Thrown by the Guzzle HTTP client when there is a problem with the API call.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
@@ -81,7 +81,7 @@ class ClientGrants extends GenericResource
      * @return mixed
      *
      * @throws CoreException Thrown when $client_id is empty or not a string.
-     * @throws \Exception Thrown by the Guzzle HTTP client when there is a problem with the API call.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
@@ -105,7 +105,7 @@ class ClientGrants extends GenericResource
      * @return mixed
      *
      * @throws CoreException Thrown when $client_id or $audience are empty or not a string.
-     * @throws \Exception Thrown by the Guzzle HTTP client when there is a problem with the API call.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/post_client_grants
      */
@@ -137,7 +137,7 @@ class ClientGrants extends GenericResource
      *
      * @return mixed
      *
-     * @throws \Exception Thrown by the Guzzle HTTP client when there is a problem with the API call.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
      */
@@ -157,7 +157,7 @@ class ClientGrants extends GenericResource
      *
      * @return mixed
      *
-     * @throws \Exception Thrown by the Guzzle HTTP client when there is a problem with the API call.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/patch_client_grants_by_id
      */
@@ -178,7 +178,7 @@ class ClientGrants extends GenericResource
      *
      * @return mixed
      *
-     * @throws \Exception Thrown by the Guzzle HTTP client when there is a problem with the API call.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      */
     public function get($id, $audience = null)
     {
