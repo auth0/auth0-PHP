@@ -58,7 +58,7 @@ class ConnectionsTest extends BasicCrudTest
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      */
     protected function getAllEntities()
     {
@@ -89,9 +89,11 @@ class ConnectionsTest extends BasicCrudTest
     /**
      * Check that the Connection created matches the initial values sent.
      *
-     * @param array $entity - The created Connection to check against initial values.
+     * @param array $entity The created Connection to check against initial values.
+     *
+     * @return void
      */
-    protected function afterCreate($entity)
+    protected function afterCreate(array $entity)
     {
         $expected = $this->getCreateBody();
         $this->assertNotEmpty($entity[$this->id_name]);
@@ -119,9 +121,11 @@ class ConnectionsTest extends BasicCrudTest
     /**
      * Update entity returned values check.
      *
-     * @param array $entity - Connection that was updated.
+     * @param array $entity Connection that was updated.
+     *
+     * @return void
      */
-    protected function afterUpdate($entity)
+    protected function afterUpdate(array $entity)
     {
         $expected = $this->getUpdateBody();
         $this->assertEquals($expected['options']['requires_username'], $entity['options']['requires_username']);

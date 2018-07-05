@@ -2,6 +2,11 @@
 
 namespace Auth0\Tests\API;
 
+/**
+ * Class BasicCrudTest.
+ *
+ * @package Auth0\Tests\API
+ */
 abstract class BasicCrudTest extends ApiTests
 {
 
@@ -64,20 +69,20 @@ abstract class BasicCrudTest extends ApiTests
     /**
      * Assertions for the created entity.
      *
-     * @param array $created_entity - Created entity.
+     * @param array $created_entity Created entity.
      *
      * @return mixed
      */
-    abstract protected function afterCreate($created_entity);
+    abstract protected function afterCreate(array $created_entity);
 
     /**
      * Assertions for the updated entity.
      *
-     * @param array $updated_entity - Updated entity.
+     * @param array $updated_entity Updated entity.
      *
      * @return mixed
      */
-    abstract protected function afterUpdate($updated_entity);
+    abstract protected function afterUpdate(array $updated_entity);
 
     /**
      * BasicCrudTest constructor.
@@ -106,27 +111,31 @@ abstract class BasicCrudTest extends ApiTests
     /**
      * Get the unique identifier for the entity.
      *
-     * @param array $entity - Entity array.
+     * @param array $entity Entity array.
      *
      * @return mixed
      */
-    protected function getId($entity)
+    protected function getId(array $entity)
     {
         return $entity[$this->id_name];
     }
 
     /**
      * Check that HTTP options have been set correctly.
+     *
+     * @return void
      */
     public function testHttpOptions()
     {
         $options = $this->api->getApiClient()->get()->getGuzzleOptions();
         $this->assertArrayHasKey('base_uri', $options);
-        $this->assertEquals("https://$this->domain/api/v2/", $options['base_uri']);
+        $this->assertEquals('https://'.$this->domain.'/api/v2/', $options['base_uri']);
     }
 
     /**
      * All basic CRUD test assertions.
+     *
+     * @return void
      */
     public function testAll()
     {

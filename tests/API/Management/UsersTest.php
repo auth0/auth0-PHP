@@ -70,7 +70,7 @@ class UsersTest extends BasicCrudTest
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      */
     protected function getAllEntities()
     {
@@ -109,9 +109,11 @@ class UsersTest extends BasicCrudTest
     /**
      * Check that the User created matches the initial values sent.
      *
-     * @param array $entity - The created User to check against initial values.
+     * @param array $entity The created User to check against initial values.
+     *
+     * @return void
      */
-    protected function afterCreate($entity)
+    protected function afterCreate(array $entity)
     {
         $expected = $this->getCreateBody();
         $this->assertNotEmpty($this->getId($entity));
@@ -141,9 +143,11 @@ class UsersTest extends BasicCrudTest
     /**
      * Update entity returned values check.
      *
-     * @param array $entity - User that was updated.
+     * @param array $entity User that was updated.
+     *
+     * @return void
      */
-    protected function afterUpdate($entity)
+    protected function afterUpdate(array $entity)
     {
         $expected = $this->getUpdateBody();
         $this->assertEquals($expected['email'], $entity['email']);
@@ -154,6 +158,8 @@ class UsersTest extends BasicCrudTest
 
     /**
      * Test whether the User create function throws errors correctly.
+     *
+     * @return void
      */
     public function testRequiredUserCreateFields()
     {
