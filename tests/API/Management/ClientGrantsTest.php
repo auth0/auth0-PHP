@@ -102,7 +102,7 @@ class ClientGrantsTest extends ApiTests
      */
     public function testGetAllIncludeTotals()
     {
-        $expected_page  = 1;
+        $expected_page  = 0;
         $expected_count = 2;
 
         $results = self::$api->getAll(['include_totals' => true], $expected_page, $expected_count);

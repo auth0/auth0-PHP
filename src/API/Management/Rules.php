@@ -78,7 +78,7 @@ class Rules extends GenericResource
     public function get($id, $fields = null, $include_fields = null)
     {
         if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Empty or invalid "id" parameter.');
+            throw new CoreException('Invalid "id" parameter.');
         }
 
         $params = [];
@@ -113,7 +113,7 @@ class Rules extends GenericResource
     public function delete($id)
     {
         if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Empty or invalid "id" parameter.');
+            throw new CoreException('Invalid "id" parameter.');
         }
 
         return $this->apiClient->method('delete')
@@ -166,11 +166,7 @@ class Rules extends GenericResource
     public function update($id, array $data)
     {
         if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Empty or invalid "id" parameter.');
-        }
-
-        if (empty($data)) {
-            throw new CoreException('Empty "data" parameter; nothing to do.');
+            throw new CoreException('Invalid "id" parameter.');
         }
 
         return $this->apiClient->method('patch')
