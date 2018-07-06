@@ -168,9 +168,8 @@ class RulesTest extends ApiTests
         try {
             self::$api->get(null);
         } catch (CoreException $e) {
-            $caught_get_no_id_exception = $this->errorHasString($e, 'Empty or invalid "id" parameter');
+            $caught_get_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
         }
-
         $this->assertTrue($caught_get_no_id_exception);
 
         // Test that the delete method throws an exception if the $id parameter is empty.
@@ -178,9 +177,8 @@ class RulesTest extends ApiTests
         try {
             self::$api->delete(null);
         } catch (CoreException $e) {
-            $caught_delete_no_id_exception = $this->errorHasString($e, 'Empty or invalid "id" parameter');
+            $caught_delete_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
         }
-
         $this->assertTrue($caught_delete_no_id_exception);
 
         // Test that the create method throws an exception if no "name" field is passed.
@@ -190,7 +188,6 @@ class RulesTest extends ApiTests
         } catch (CoreException $e) {
             $caught_create_no_name_exception = $this->errorHasString($e, 'Missing required "name" field');
         }
-
         $this->assertTrue($caught_create_no_name_exception);
 
         // Test that the create method throws an exception if no "script" field is passed.
@@ -200,7 +197,6 @@ class RulesTest extends ApiTests
         } catch (CoreException $e) {
             $caught_create_no_script_exception = $this->errorHasString($e, 'Missing required "script" field');
         }
-
         $this->assertTrue($caught_create_no_script_exception);
 
         // Test that the update method throws an exception if the $id parameter is empty.
@@ -208,19 +204,8 @@ class RulesTest extends ApiTests
         try {
             self::$api->update(null, []);
         } catch (CoreException $e) {
-            $caught_update_no_id_exception = $this->errorHasString($e, 'Empty or invalid "id" parameter');
+            $caught_update_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
         }
-
         $this->assertTrue($caught_update_no_id_exception);
-
-        // Test that the update method throws an exception if the $id parameter is empty.
-        $caught_update_no_data_exception = false;
-        try {
-            self::$api->update('rule_id', []);
-        } catch (CoreException $e) {
-            $caught_update_no_data_exception = $this->errorHasString($e, 'Empty "data" parameter; nothing to do');
-        }
-
-        $this->assertTrue($caught_update_no_data_exception);
     }
 }
