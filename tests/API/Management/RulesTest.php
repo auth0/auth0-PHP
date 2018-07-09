@@ -170,6 +170,7 @@ class RulesTest extends ApiTests
         } catch (CoreException $e) {
             $caught_get_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
         }
+
         $this->assertTrue($caught_get_no_id_exception);
 
         // Test that the delete method throws an exception if the $id parameter is empty.
@@ -179,6 +180,7 @@ class RulesTest extends ApiTests
         } catch (CoreException $e) {
             $caught_delete_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
         }
+
         $this->assertTrue($caught_delete_no_id_exception);
 
         // Test that the create method throws an exception if no "name" field is passed.
@@ -188,6 +190,7 @@ class RulesTest extends ApiTests
         } catch (CoreException $e) {
             $caught_create_no_name_exception = $this->errorHasString($e, 'Missing required "name" field');
         }
+
         $this->assertTrue($caught_create_no_name_exception);
 
         // Test that the create method throws an exception if no "script" field is passed.
@@ -197,6 +200,7 @@ class RulesTest extends ApiTests
         } catch (CoreException $e) {
             $caught_create_no_script_exception = $this->errorHasString($e, 'Missing required "script" field');
         }
+
         $this->assertTrue($caught_create_no_script_exception);
 
         // Test that the update method throws an exception if the $id parameter is empty.
@@ -206,6 +210,7 @@ class RulesTest extends ApiTests
         } catch (CoreException $e) {
             $caught_update_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
         }
+
         $this->assertTrue($caught_update_no_id_exception);
     }
 }
