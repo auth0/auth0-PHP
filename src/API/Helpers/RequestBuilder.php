@@ -1,94 +1,126 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: germanlena
- * Date: 4/22/15
- * Time: 3:11 PM
- */
-
 namespace Auth0\SDK\API\Helpers;
 
 use \Auth0\SDK\API\Header\Header;
+use \Auth0\SDK\Exception\CoreException;
 use \GuzzleHttp\Client;
 use \GuzzleHttp\Exception\RequestException;
 
+/**
+ * Class RequestBuilder
+ *
+ * @package Auth0\SDK\API\Helpers
+ */
 class RequestBuilder
 {
 
     /**
+     * Domain for the request.
      *
      * @var string
      */
     protected $domain;
 
     /**
+     * Base API path for the request.
      *
      * @var string
      */
     protected $basePath;
 
     /**
+     * Path to request.
      *
      * @var array
      */
     protected $path = [];
 
     /**
+     * HTTP method to use for the request.
      *
      * @var array
      */
     protected $method = [];
 
     /**
+     * Headers to include for the request.
      *
      * @var array
      */
     protected $headers = [];
 
     /**
+     * URL parameters for the request.
      *
      * @var array
      */
     protected $params = [];
 
     /**
+     * Form parameters to send with the request.
      *
      * @var array
      */
     protected $form_params = [];
 
     /**
+     * Files to send with a multipart request.
      *
      * @var array
      */
     protected $files = [];
 
     /**
+     * Guzzle HTTP Client options.
      *
      * @var array
+     *
+     * @see http://docs.guzzlephp.org/en/stable/request-options.html
      */
     protected $guzzleOptions = [];
 
     /**
+     * Request body.
      *
      * @var string
      */
     protected $body;
 
     /**
+     * Valid return types for the call() method.
+     *
+     * @var array
+     */
+    protected $returnTypes = [ 'body', 'headers', 'object', 'protocolVersion', 'reasonPhrase', 'statusCode' ];
+
+    /**
+     * Default return type.
+     *
+     * @var string
+     */
+    protected $returnType = 'body';
+
+    /**
      * RequestBuilder constructor.
      *
-     * @param array $config
+     * @param array $config Configuration array passed to \Auth0\SDK\API\Management constructor.
+     *
+     * @throws CoreException If a returnType is set that is invalid.
      */
-    public function __construct($config)
+    public function __construct(array $config)
     {
         $this->method        = $config['method'];
         $this->domain        = $config['domain'];
         $this->basePath      = isset($config['basePath']) ? $config['basePath'] : '';
         $this->guzzleOptions = isset($config['guzzleOptions']) ? $config['guzzleOptions'] : [];
         $this->headers       = isset($config['headers']) ? $config['headers'] : [];
+
         if (array_key_exists('path', $config)) {
             $this->path = $config['path'];
+        }
+
+        if (array_key_exists('returnType', $config)) {
+            $this->setReturnType( $config['returnType'] );
         }
     }
 
@@ -227,10 +259,11 @@ class RequestBuilder
      *
      * @return mixed|string
      *
-     * @throws \Exception
+     * @throws RequestException
      */
     public function call()
     {
+        // Create a new Guzzle client.
         $client = new Client($this->getGuzzleOptions());
 
         try {
@@ -246,13 +279,31 @@ class RequestBuilder
             }
 
             $response = $client->request($this->method, $this->getUrl(), $data);
-            $body     = (string) $response->getBody();
 
-            if (strpos($response->getHeaderLine('content-type'), 'json') !== false) {
-                return json_decode($body, true);
+            switch ($this->returnType) {
+                case 'headers':
+                return $response->getHeaders();
+
+                case 'object':
+                return $response;
+
+                case 'protocolVersion':
+                return $response->getProtocolVersion();
+
+                case 'reasonPhrase':
+                return $response->getReasonPhrase();
+
+                case 'statusCode':
+                return $response->getStatusCode();
+
+                case 'body':
+                default:
+                    $body = (string) $response->getBody();
+                    if (strpos($response->getHeaderLine('content-type'), 'json') !== false) {
+                        return json_decode($body, true);
+                    }
+                return $body;
             }
-
-            return $body;
         } catch (RequestException $e) {
             throw $e;
         }
@@ -342,6 +393,22 @@ class RequestBuilder
             $this->withParam($key, $value);
         }
 
+        return $this;
+    }
+
+    /**
+     *
+     * @param  $type
+     * @return $this
+     * @throws CoreException When the type passed is not valid.
+     */
+    public function setReturnType($type)
+    {
+        if (! in_array($type, $this->returnTypes)) {
+            throw new CoreException('Invalid return type');
+        }
+
+        $this->returnType = $type;
         return $this;
     }
 
