@@ -58,10 +58,13 @@ class ApiClient
 
     protected $guzzleOptions;
 
+    protected $returnType;
+
     public function __construct($config)
     {
         $this->basePath      = $config['basePath'];
         $this->domain        = $config['domain'];
+        $this->returnType    = isset( $config['returnType'] ) ? $config['returnType'] : null;
         $this->headers       = isset($config['headers']) ? $config['headers'] : [];
         $this->guzzleOptions = isset($config['guzzleOptions']) ? $config['guzzleOptions'] : [];
 
@@ -76,7 +79,8 @@ class ApiClient
             'domain' => $this->domain,
             'basePath' => $this->basePath,
             'method' => $name,
-            'guzzleOptions' => $this->guzzleOptions
+            'guzzleOptions' => $this->guzzleOptions,
+            'returnType' => $this->returnType,
         ]);
 
         return $builder->withHeaders($this->headers);
@@ -97,7 +101,8 @@ class ApiClient
             'domain' => $this->domain,
             'basePath' => $this->basePath,
             'method' => $method,
-            'guzzleOptions' => $this->guzzleOptions
+            'guzzleOptions' => $this->guzzleOptions,
+            'returnType' => $this->returnType,
         ]);
         $builder->withHeaders($this->headers);
 

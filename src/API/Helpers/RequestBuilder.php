@@ -125,12 +125,14 @@ class RequestBuilder
     }
 
     /**
+     * Magic method to overload method calls to paths.
      *
-     * @param  string $name
-     * @param  array  $arguments
+     * @param string $name      Method invoked.
+     * @param array  $arguments Arguments to add to the path.
+     *
      * @return RequestBuilder
      */
-    public function __call($name, $arguments)
+    public function __call($name, array $arguments)
     {
         $argument = null;
 
@@ -144,9 +146,11 @@ class RequestBuilder
     }
 
     /**
+     * Add a path and an optional argument to this request.
      *
-     * @param  string      $name
-     * @param  string|null $argument
+     * @param string      $name     Path to add.
+     * @param string|null $argument Optional argument to add.
+     *
      * @return RequestBuilder
      */
     public function addPath($name, $argument = null)
@@ -160,8 +164,10 @@ class RequestBuilder
     }
 
     /**
+     * Add a path variable.
      *
-     * @param  string $variable
+     * @param string $variable Path variable to add.
+     *
      * @return RequestBuilder
      */
     public function addPathVariable($variable)
@@ -171,6 +177,7 @@ class RequestBuilder
     }
 
     /**
+     * Get the path and URL parameters of this request.
      *
      * @return string
      */
@@ -180,6 +187,7 @@ class RequestBuilder
     }
 
     /**
+     * Output a URL
      *
      * @return string
      */

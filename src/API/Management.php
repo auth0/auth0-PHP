@@ -51,6 +51,12 @@ class Management
 
     /**
      *
+     * @var string
+     */
+    private $returnType;
+
+    /**
+     *
      * @var Blacklists
      */
     public $blacklists;
@@ -157,12 +163,14 @@ class Management
      * @param string $token
      * @param string $domain
      * @param array  $guzzleOptions
+     * @param string $returnType
      */
-    public function __construct($token, $domain, $guzzleOptions = [])
+    public function __construct($token, $domain, $guzzleOptions = [], $returnType = 'body')
     {
         $this->token         = $token;
         $this->domain        = $domain;
         $this->guzzleOptions = $guzzleOptions;
+        $this->returnType    = $returnType;
 
         $this->setApiClient();
 
@@ -193,6 +201,7 @@ class Management
             'domain' => $apiDomain,
             'basePath' => '/api/v2/',
             'guzzleOptions' => $this->guzzleOptions,
+            'returnType' => $this->returnType,
             'headers' => [
                 new AuthorizationBearer($this->token)
             ]
