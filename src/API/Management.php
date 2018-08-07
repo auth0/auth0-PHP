@@ -163,9 +163,9 @@ class Management
      * @param string $token
      * @param string $domain
      * @param array  $guzzleOptions
-     * @param string $returnType
+     * @param string|null $returnType
      */
-    public function __construct($token, $domain, $guzzleOptions = [], $returnType = 'body')
+    public function __construct($token, $domain, $guzzleOptions = [], $returnType = null)
     {
         $this->token         = $token;
         $this->domain        = $domain;

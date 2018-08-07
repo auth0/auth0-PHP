@@ -35,7 +35,12 @@ class AuthApiTest extends ApiTests
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
-        $response = $api->authorize_with_ro('auth@test.com', '123456', 'openid', 'Username-Password-Authentication');
+        $response = $api->authorize_with_ro(
+            'auth@test.com',
+            '123456',
+            'openid email',
+            'Username-Password-Authentication'
+        );
 
         $this->assertArrayHasKey('id_token', $response);
         $this->assertArrayHasKey('access_token', $response);
@@ -46,7 +51,7 @@ class AuthApiTest extends ApiTests
 
         $this->assertArrayHasKey('email', $userinfo);
         $this->assertArrayHasKey('email_verified', $userinfo);
-        $this->assertArrayHasKey('user_id', $userinfo);
+        $this->assertArrayHasKey('sub', $userinfo);
         $this->assertEquals('german@auth0.com', $userinfo['email']);
         $this->assertEquals('auth0|58adc60b82b0ca0774643eef', $userinfo['user_id']);
     }
