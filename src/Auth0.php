@@ -272,6 +272,9 @@ class Auth0
             $this->dontPersist('id_token');
         }
 
+        $session_base_name      = ! empty( $config['session_base_name'] ) ? $config['session_base_name'] : null;
+        $session_cookie_expires = isset( $config['session_cookie_expires'] ) ? $config['session_cookie_expires'] : null;
+
         if (isset($config['store'])) {
             if ($config['store'] === false) {
                 $emptyStore = new EmptyStore();
@@ -280,7 +283,7 @@ class Auth0
                 $this->setStore($config['store']);
             }
         } else {
-            $sessionStore = new SessionStore();
+            $sessionStore = new SessionStore($session_base_name, $session_cookie_expires);
             $this->setStore($sessionStore);
         }
 
@@ -291,7 +294,7 @@ class Auth0
                 $this->stateHandler = $config['state_handler'];
             }
         } else {
-            $stateStore         = new SessionStore();
+            $stateStore         = new SessionStore($session_base_name, $session_cookie_expires);
             $this->stateHandler = new SessionStateHandler($stateStore);
         }
 

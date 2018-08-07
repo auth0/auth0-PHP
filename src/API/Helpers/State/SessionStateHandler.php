@@ -63,8 +63,6 @@ class SessionStateHandler implements StateHandler
      * @param string $state
      *
      * @return boolean
-     *
-     * @throws \Exception
      */
     public function validate($state)
     {

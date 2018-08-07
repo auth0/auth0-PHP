@@ -2,15 +2,6 @@
 
 namespace Auth0\SDK\Store;
 
-/*
- * This file is part of Auth0-PHP package.
- *
- * (c) Auth0
- *
- * For the full copyright and license information, please view the LICENSE file
- * that was distributed with this source code.
- */
-
 /**
  * This class provides a layer to persist user access using PHP Sessions.
  *
@@ -18,14 +9,38 @@ namespace Auth0\SDK\Store;
  */
 class SessionStore implements StoreInterface
 {
+    /**
+     * Session base name, if not configured.
+     */
     const BASE_NAME = 'auth0_';
 
     /**
-     * SessionStore constructor.
+     * Session base name, configurable on instantiation.
+     *
+     * @var string
      */
-    public function __construct()
+    protected $session_base_name = self::BASE_NAME;
+
+    /**
+     * Session cookie expiration, configurable on instantiation.
+     *
+     * @var integer
+     */
+    protected $session_cookie_expires;
+
+    /**
+     * SessionStore constructor.
+     *
+     * @param string|null $base_name      Session base name.
+     * @param integer     $cookie_expires Session expiration in seconds; default is 1 week.
+     */
+    public function __construct($base_name = null, $cookie_expires = 604800)
     {
-        $this->initSession();
+        if (! empty( $base_name )) {
+            $this->session_base_name = $base_name;
+        }
+
+        $this->session_cookie_expires = (int) $cookie_expires;
     }
 
     /**
@@ -37,24 +52,26 @@ class SessionStore implements StoreInterface
     private function initSession()
     {
         if (! session_id()) {
-            session_set_cookie_params(60 * 60 * 24 * 7);
-            // seven days
+            if (! empty( $this->session_cookie_expires )) {
+                session_set_cookie_params($this->session_cookie_expires);
+            }
+
             session_start();
         }
     }
 
-
-
     /**
      * Persists $value on $_SESSION, identified by $key.
      *
-     * @param string $key
-     * @param mixed  $value
+     * @param string $key   Session key to set.
+     * @param mixed  $value Value to use.
+     *
+     * @return void
      */
     public function set($key, $value)
     {
-        $key_name = $this->getSessionKeyName($key);
-
+        $this->initSession();
+        $key_name            = $this->getSessionKeyName($key);
         $_SESSION[$key_name] = $value;
     }
 
@@ -62,13 +79,14 @@ class SessionStore implements StoreInterface
      * Gets persisted values identified by $key.
      * If the value is not set, returns $default.
      *
-     * @param string $key
-     * @param mixed  $default
+     * @param string $key     Session key to set.
+     * @param mixed  $default Default to return if nothing was found.
      *
      * @return mixed
      */
     public function get($key, $default = null)
     {
+        $this->initSession();
         $key_name = $this->getSessionKeyName($key);
 
         if (isset($_SESSION[$key_name])) {
@@ -81,26 +99,26 @@ class SessionStore implements StoreInterface
     /**
      * Removes a persisted value identified by $key.
      *
-     * @param string $key
+     * @param string $key Session key to delete.
+     *
+     * @return void
      */
     public function delete($key)
     {
+        $this->initSession();
         $key_name = $this->getSessionKeyName($key);
-
         unset($_SESSION[$key_name]);
     }
 
-
-
     /**
-     * Constructs a session var name.
+     * Constructs a session key name.
      *
-     * @param string $key
+     * @param string $key Session key name to prefix and return.
      *
      * @return string
      */
     public function getSessionKeyName($key)
     {
-        return self::BASE_NAME.'_'.$key;
+        return $this->session_base_name.'_'.$key;
     }
 }
