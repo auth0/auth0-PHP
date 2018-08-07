@@ -28,28 +28,36 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * SessionStateHandlerTest constructor.
+     *
+     * @return void
      */
     public function __construct()
     {
         parent::__construct();
 
-        // Suppress header sent error
-        @$this->sessionStore = new SessionStore();
-        $this->stateHandler  = new SessionStateHandler($this->sessionStore);
+        $this->sessionStore = new SessionStore();
+        $this->stateHandler = new SessionStateHandler($this->sessionStore);
     }
 
     /**
      * Test that state is stored and retrieved properly.
+     *
+     * @return void
      */
     public function testStateStoredCorrectly()
     {
         $uniqid = uniqid();
-        $this->stateHandler->store($uniqid);
+
+        // Suppressing "headers already sent" warning related to cookies.
+        // phpcs:ignore
+        @$this->stateHandler->store($uniqid);
         $this->assertEquals($uniqid, $this->sessionStore->get(SessionStateHandler::STATE_NAME));
     }
 
     /**
      * Test that the state is being issued correctly.
+     *
+     * @return void
      */
     public function testStateIssuedCorrectly()
     {
@@ -60,7 +68,7 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that state validated properly.
      *
-     * @throws \Exception
+     * @return void
      */
     public function testStateValidatesCorrectly()
     {
@@ -73,7 +81,7 @@ class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * Test that state validation fails with an incorrect value.
      *
-     * @throws \Exception
+     * @return void
      */
     public function testStateFailsWithIncorrectValue()
     {

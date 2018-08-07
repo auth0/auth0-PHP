@@ -25,7 +25,7 @@ class AuthApiDBConnectionsTest extends ApiTests
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
         $email      = $this->email;
-        $password   = '123-xxx-23A-bar';
+        $password   = 'Bqn8LEsu68p38TmFvsWW';
         $connection = $this->connection;
 
         $response = $api->dbconnections_signup($email, $password, $connection);
