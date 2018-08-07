@@ -98,7 +98,7 @@ class RequestBuilder
      *
      * @var string
      */
-    protected $returnType = 'body';
+    protected $returnType;
 
     /**
      * RequestBuilder constructor.
@@ -119,20 +119,18 @@ class RequestBuilder
             $this->path = $config['path'];
         }
 
-        if (array_key_exists('returnType', $config)) {
-            $this->setReturnType( $config['returnType'] );
-        }
+        $this->setReturnType( isset( $config['returnType'] ) ? $config['returnType'] : null );
     }
 
     /**
      * Magic method to overload method calls to paths.
      *
-     * @param string $name      Method invoked.
-     * @param array  $arguments Arguments to add to the path.
+     * @param string      $name      Method invoked.
+     * @param array|null  $arguments Arguments to add to the path.
      *
      * @return RequestBuilder
      */
-    public function __call($name, array $arguments)
+    public function __call($name, $arguments)
     {
         $argument = null;
 
@@ -412,8 +410,12 @@ class RequestBuilder
      */
     public function setReturnType($type)
     {
+        if ( empty( $type ) ) {
+            $type = 'body';
+        }
+
         if (! in_array($type, $this->returnTypes)) {
-            throw new CoreException('Invalid return type');
+            throw new CoreException('Invalid returnType');
         }
 
         $this->returnType = $type;
