@@ -91,7 +91,7 @@ class RequestBuilder
      *
      * @var array
      */
-    protected $returnTypes = [ 'body', 'headers', 'object', 'protocolVersion', 'reasonPhrase', 'statusCode' ];
+    protected $returnTypes = [ 'body', 'headers', 'object' ];
 
     /**
      * Default return type.
@@ -292,15 +292,6 @@ class RequestBuilder
 
                 case 'object':
                 return $response;
-
-                case 'protocolVersion':
-                return $response->getProtocolVersion();
-
-                case 'reasonPhrase':
-                return $response->getReasonPhrase();
-
-                case 'statusCode':
-                return $response->getStatusCode();
 
                 case 'body':
                 default:
