@@ -140,21 +140,6 @@ class RequestBuilderTest extends ApiTests
         $results_object = $api->tenants->get();
         $this->assertInstanceOf( 'GuzzleHttp\Psr7\Response', $results_object );
 
-        // Test that "object" return type returns the correct object type.
-        $api = new Management($token, $env['DOMAIN'], [], 'statusCode');
-        $results_code = $api->tenants->get();
-        $this->assertEquals( 200, $results_code );
-
-        // Test that "object" return type returns the correct object type.
-        $api = new Management($token, $env['DOMAIN'], [], 'reasonPhrase');
-        $results_reason = $api->tenants->get();
-        $this->assertEquals( 'OK', $results_reason );
-
-        // Test that "object" return type returns the correct object type.
-        $api = new Management($token, $env['DOMAIN'], [], 'protocolVersion');
-        $results_ver = $api->tenants->get();
-        $this->assertEquals( '1.1', $results_ver );
-
         // Test that an invalid return type throws an error.
         $caught_return_type_error = false;
         try {
