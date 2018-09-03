@@ -23,6 +23,8 @@ class JWTVerifier
 
     protected $secret_base64_encoded = null;
 
+    protected $jwks_path = null;
+
     /**
      * JWTVerifier Constructor.
      *
@@ -87,6 +89,10 @@ class JWTVerifier
             $this->client_secret = $config['client_secret'];
         }
 
+        if (! empty( $config['jwks_path'] )) {
+            $this->jwks_path = $config['jwks_path'];
+        }
+
         $this->JWKFetcher = new JWKFetcher($cache, $guzzleOptions);
     }
 
@@ -112,7 +118,7 @@ class JWTVerifier
         $head    = json_decode(JWT::urlsafeB64Decode($headb64));
 
         if (! is_object($head) || ! isset($head->alg)) {
-              throw new InvalidTokenException('Invalid token');
+            throw new InvalidTokenException('Invalid token');
         }
 
         if (! in_array($head->alg, $this->supported_algs)) {
@@ -125,7 +131,7 @@ class JWTVerifier
                 throw new CoreException("We can't trust on a token issued by: `{$body->iss}`.");
             }
 
-            $secret = $this->JWKFetcher->fetchKeys($body->iss);
+            $secret = $this->JWKFetcher->fetchKeys($body->iss, $this->jwks_path);
         } else if ($head->alg === 'HS256') {
             if ($this->secret_base64_encoded) {
                 $secret = JWT::urlsafeB64Decode($this->client_secret);

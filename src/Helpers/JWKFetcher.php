@@ -6,16 +6,23 @@ use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 
+/**
+ * Class JWKFetcher
+ *
+ * @package Auth0\SDK\Helpers
+ */
 class JWKFetcher
 {
 
     /**
+     * Cache handler for retrieved JWKS data.
      *
      * @var CacheHandler|NoCacheHandler
      */
     private $cache = null;
 
     /**
+     * Options for the Guzzle HTTP client.
      *
      * @var array
      */
@@ -24,10 +31,10 @@ class JWKFetcher
     /**
      * JWKFetcher constructor.
      *
-     * @param CacheHandler|null $cache
-     * @param array             $guzzleOptions
+     * @param CacheHandler|null $cache         Cache handler for retrieved JWKS data.
+     * @param array             $guzzleOptions Options for the Guzzle HTTP client.
      */
-    public function __construct(CacheHandler $cache = null, $guzzleOptions = [])
+    public function __construct(CacheHandler $cache = null, array $guzzleOptions = [])
     {
         if ($cache === null) {
             $cache = new NoCacheHandler();
@@ -38,39 +45,53 @@ class JWKFetcher
     }
 
     /**
+     * Convert a certificate to PEM.
      *
-     * @param  string $cert
+     * @param string $cert Certificate to convert.
+     *
      * @return string
      */
     protected function convertCertToPem($cert)
     {
-        return '-----BEGIN CERTIFICATE-----'.PHP_EOL.chunk_split($cert, 64, PHP_EOL).'-----END CERTIFICATE-----'.PHP_EOL;
+        $output  = '-----BEGIN CERTIFICATE-----'.PHP_EOL;
+        $output .= chunk_split($cert, 64, PHP_EOL);
+        $output .= '-----END CERTIFICATE-----'.PHP_EOL;
+        return $output;
     }
 
     /**
+     * Fetch
      *
-     * @param string $iss
+     * @param string      $iss       Issuer for the JWKS being fetched.
+     * @param null|string $jwks_path Path to the JWKS from the issuer domain.
      *
      * @return array|mixed|null
-     *
-     * @throws \Exception
      */
-    public function fetchKeys($iss)
+    public function fetchKeys($iss, $jwks_path = null)
     {
-        $url = "{$iss}.well-known/jwks.json";
+        if (empty( $jwks_path )) {
+            $jwks_path = '.well-known/jwks.json';
+        }
 
-        if (($secret = $this->cache->get($url)) === null) {
+        $url = $iss.$jwks_path;
+
+        $secret = $this->cache->get($url);
+        if (is_null($secret)) {
             $secret = [];
 
             $request = new RequestBuilder([
                 'domain' => $iss,
-                'basePath' => '.well-known/jwks.json',
+                'basePath' => $jwks_path,
                 'method' => 'GET',
                 'guzzleOptions' => $this->guzzleOptions
             ]);
             $jwks    = $request->call();
 
             foreach ($jwks['keys'] as $key) {
+                if (empty( $key['kid'] )) {
+                    continue;
+                }
+
                 $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
             }
 
