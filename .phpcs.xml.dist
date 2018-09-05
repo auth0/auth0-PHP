@@ -2,12 +2,21 @@
 <ruleset name="Auth0-PHP" namespace="Auth0PHP\CS\Standard">
     <description>A custom coding standard for the Auth0 PHP SDK</description>
 
+    <file>.</file>
+
     <exclude-pattern>/examples/*</exclude-pattern>
     <exclude-pattern>/vendor/*</exclude-pattern>
 
-    <config name="showProgress" value="1"/>
-    <config name="extensions" value="php"/>
+    <!-- Only check PHP files. -->
+    <arg name="extensions" value="php"/>
 
+    <!-- Show progress, show the error codes for each message (source). -->
+    <arg value="sp"/>
+
+    <!-- Strip the filepaths down to the relevant bit. -->
+    <arg name="basepath" value="."/>
+
+    <!-- Show coloured output, if available. -->
     <arg name="colors"/>
 
     <!--

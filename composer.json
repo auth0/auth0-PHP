@@ -36,11 +36,11 @@
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 vendor/bin/phpunit  --colors=always --verbose ",
     "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml",
-    "phpcs": "./vendor/bin/phpcs -s .",
-    "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs -s",
-    "phpcbf": "./vendor/bin/phpcbf .",
+    "phpcs": "\"vendor/bin/phpcs\"",
+    "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs",
+    "phpcbf": "\"vendor/bin/phpcbf\"",
     "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf",
-    "sniffs": "./vendor/bin/phpcs -e",
+    "sniffs": "\"vendor/bin/phpcs\" -e",
     "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
   }
 }
