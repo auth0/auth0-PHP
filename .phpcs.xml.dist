@@ -5,11 +5,17 @@
     <exclude-pattern>/examples/*</exclude-pattern>
     <exclude-pattern>/vendor/*</exclude-pattern>
 
-    <config name="testVersion" value="5.5-"/>
     <config name="showProgress" value="1"/>
     <config name="extensions" value="php"/>
 
     <arg name="colors"/>
+
+    <!--
+    PHPCompatibility sniffs to check for PHP cross-version incompatible code.
+    https://github.com/PHPCompatibility/PHPCompatibility
+    -->
+    <config name="testVersion" value="5.5-"/>
+    <rule ref="PHPCompatibility"/>
 
     <!--
     Generic sniffs
