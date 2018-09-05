@@ -35,10 +35,10 @@
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 vendor/bin/phpunit  --colors=always --verbose ",
     "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml",
-    "phpcs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s .",
-    "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs --standard=phpcs-ruleset.xml -s",
-    "phpcbf": "./vendor/bin/phpcbf --standard=phpcs-ruleset.xml .",
-    "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf --standard=phpcs-ruleset.xml",
-    "sniffs": "./vendor/bin/phpcs --standard=phpcs-ruleset.xml -e"
+    "phpcs": "./vendor/bin/phpcs -s .",
+    "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs -s",
+    "phpcbf": "./vendor/bin/phpcbf .",
+    "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf",
+    "sniffs": "./vendor/bin/phpcs -e"
   }
 }
