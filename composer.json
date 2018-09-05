@@ -20,7 +20,8 @@
     "phpunit/phpunit": "^4.8 || ^5.7",
     "josegonzalez/dotenv": "^2.0",
     "squizlabs/php_codesniffer": "^3.2",
-    "wimg/php-compatibility": "^8.1"
+    "wimg/php-compatibility": "^8.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
   },
   "autoload": {
     "psr-4": {
@@ -39,6 +40,7 @@
     "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs -s",
     "phpcbf": "./vendor/bin/phpcbf .",
     "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf",
-    "sniffs": "./vendor/bin/phpcs -e"
+    "sniffs": "./vendor/bin/phpcs -e",
+    "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
   }
 }
