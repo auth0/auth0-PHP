@@ -16,6 +16,7 @@ use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\API\Helpers\State\DummyStateHandler;
+use Firebase\JWT\JWT;
 
 /**
  * Class Auth0
@@ -70,6 +71,13 @@ class Auth0
      * @var string
      */
     protected $clientSecret;
+
+    /**
+     * Is the Auth0 Client Secret encoded?
+     *
+     * @var boolean
+     */
+    protected $clientSecretEncoded;
 
     /**
      * Response mode
@@ -225,10 +233,11 @@ class Auth0
             throw new CoreException('Invalid redirect_uri');
         }
 
-        $this->domain       = $config['domain'];
-        $this->clientId     = $config['client_id'];
-        $this->clientSecret = $config['client_secret'];
-        $this->redirectUri  = $config['redirect_uri'];
+        $this->domain              = $config['domain'];
+        $this->clientId            = $config['client_id'];
+        $this->clientSecret        = $config['client_secret'];
+        $this->clientSecretEncoded = ! empty( $config['secret_base64_encoded'] );
+        $this->redirectUri         = $config['redirect_uri'];
 
         if (isset($config['audience'])) {
             $this->audience = $config['audience'];
@@ -557,9 +566,35 @@ class Auth0
      * @param string $idToken - ID token returned from the code exchange.
      *
      * @return \Auth0\SDK\Auth0
+     *
+     * @throws CoreException If ID token did not validate.
      */
     public function setIdToken($idToken)
     {
+        try {
+            $issuer      = 'https://'.$this->domain.'/';
+            $jwtVerifier = new JWTVerifier([
+                'guzzle_options' => $this->guzzleOptions,
+                'client_secret' => $this->clientSecret,
+                'secret_base64_encoded' => $this->clientSecretEncoded,
+                'authorized_iss' => [ $issuer ],
+                'supported_algs' => [ 'HS256', 'RS256' ],
+                'valid_audiences' => [
+                    $this->clientId,
+                    $issuer,
+                    $issuer.'userinfo'
+                ],
+            ]);
+            $jwtVerifier->verifyAndDecode( $idToken );
+        } catch (\Exception $e) {
+            $message = 'ID token could not be validated.';
+            if ($e->getMessage()) {
+                $message .= ' '.$e->getMessage();
+            }
+
+            throw new CoreException($message);
+        }
+
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
         }
