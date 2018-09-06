@@ -60,42 +60,54 @@ class JWKFetcher
     }
 
     /**
-     * Fetch
+     * Fetch JWKS from the token issuer.
      *
-     * @param string      $iss       Issuer for the JWKS being fetched.
-     * @param null|string $jwks_path Path to the JWKS from the issuer domain.
+     * @param string      $domain    Typically the issuer for the JWKS being fetched; include a trailing slash.
+     * @param null|string $jwks_path Path to the JWKS from the issuer domain; pass null to use $domain as the URL.
      *
      * @return array|mixed|null
      */
-    public function fetchKeys($iss, $jwks_path = null)
+    public function fetchKeys($domain, $jwks_path = '.well-known/jwks.json')
     {
+        // If the path parameter is empty, use the $domain parameter as a complete URL.
         if (empty( $jwks_path )) {
-            $jwks_path = '.well-known/jwks.json';
+            $domain_parsed = parse_url( $domain );
+            $domain        = $domain_parsed['scheme'].'://'.$domain_parsed['host'];
+            $domain       .= empty( $domain_parsed['port'] ) ? '' : ':'.$domain_parsed['port'];
+            $domain       .= '/';
+            $jwks_path     = empty( $domain_parsed['path'] ) ? '' : substr( $domain_parsed['path'], 1 );
         }
 
-        $url = $iss.$jwks_path;
-
+        // Check if we have a cache entry for this URL.
+        $url    = $domain.$jwks_path;
         $secret = $this->cache->get($url);
-        if (is_null($secret)) {
-            $secret = [];
+        if (! is_null($secret)) {
+            return $secret;
+        }
 
-            $request = new RequestBuilder([
-                'domain' => $iss,
-                'basePath' => $jwks_path,
-                'method' => 'GET',
-                'guzzleOptions' => $this->guzzleOptions
-            ]);
-            $jwks    = $request->call();
+        $secret = [];
 
-            foreach ($jwks['keys'] as $key) {
-                if (empty( $key['kid'] )) {
-                    continue;
-                }
+        // GET the JWKS URL.
+        $request = new RequestBuilder([
+            'domain' => $domain,
+            'basePath' => $jwks_path,
+            'method' => 'GET',
+            'guzzleOptions' => $this->guzzleOptions
+        ]);
+        $jwks    = $request->call();
 
+        // Nothing to return.
+        if (empty( $jwks['keys'] ) || ! is_array( $jwks['keys'] )) {
+            return $secret;
+        }
+
+        foreach ($jwks['keys'] as $key) {
+            // Get the first kid and return the PEM-formatted x5c cert.
+            if (! empty($key['kid']) && ! empty($key['x5c'])) {
                 $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
+                $this->cache->set($url, $secret);
+                break;
             }
-
-            $this->cache->set($url, $secret);
         }
 
         return $secret;

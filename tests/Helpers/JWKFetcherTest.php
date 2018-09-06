@@ -50,9 +50,25 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNotEmpty( $keys );
 
-        $kids      = array_keys( $keys );
-        $pem       = $keys[$kids[0]];
-        $pem_parts = explode( PHP_EOL, $pem );
+        $pem_parts = $this->getPemFromKeys( $keys );
+
+        $this->assertEquals( '-----BEGIN CERTIFICATE-----', $pem_parts[0] );
+        $this->assertEquals( '-----END CERTIFICATE-----', $pem_parts[count($pem_parts) - 2] );
+    }
+
+    /**
+     * Test that a valid JWKS is fetched with an empty path passed.
+     *
+     * @return void
+     */
+    public function testFetchJwksFullUrl()
+    {
+        $fetcher = new JWKFetcher();
+        $keys    = $fetcher->fetchKeys( self::$issuer.'.well-known/jwks.json', null );
+
+        $this->assertNotEmpty( $keys );
+
+        $pem_parts = $this->getPemFromKeys( $keys );
 
         $this->assertEquals( '-----BEGIN CERTIFICATE-----', $pem_parts[0] );
         $this->assertEquals( '-----END CERTIFICATE-----', $pem_parts[count($pem_parts) - 2] );
@@ -67,7 +83,28 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
     {
         $fetcher = new JWKFetcher();
 
-        $this->expectException(RequestException::class);
-        $fetcher->fetchKeys( self::$issuer, 'invalid/jwks.json' );
+        $caught_req_exception = false;
+        try {
+            $fetcher->fetchKeys( self::$issuer, 'invalid/jwks.json' );
+        } catch (RequestException $e) {
+            $caught_req_exception = true;
+        }
+
+        $this->assertTrue($caught_req_exception);
+    }
+
+    /**
+     * Get a parsed PEM from a key array.
+     *
+     * @param array $keys Keys returned from \Auth0\SDK\Helpers\JWKFetcher::fetchKeys().
+     *
+     * @return array
+     */
+    private function getPemFromKeys(array $keys)
+    {
+        $kids = array_keys( $keys );
+        $pem  = $keys[$kids[0]];
+        return explode( PHP_EOL, $pem );
+
     }
 }

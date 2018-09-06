@@ -1,7 +1,6 @@
 <phpunit
      colors="true"
-     bootstrap="./vendor/autoload.php"
->
+     bootstrap="./vendor/autoload.php">
   <testsuites>
     <testsuite name="Auth0 Test Suite">
       <directory>./tests</directory>

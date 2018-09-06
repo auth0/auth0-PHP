@@ -160,9 +160,9 @@ class Management
     /**
      * Management constructor.
      *
-     * @param string $token
-     * @param string $domain
-     * @param array  $guzzleOptions
+     * @param string      $token
+     * @param string      $domain
+     * @param array       $guzzleOptions
      * @param string|null $returnType
      */
     public function __construct($token, $domain, $guzzleOptions = [], $returnType = null)

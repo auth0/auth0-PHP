@@ -34,8 +34,8 @@
     }
   },
   "scripts": {
-    "test": "SHELL_INTERACTIVE=1 vendor/bin/phpunit  --colors=always --verbose ",
-    "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml",
+    "test": "SHELL_INTERACTIVE=1 vendor/bin/phpunit --colors=always --coverage-text",
+    "test-ci": "vendor/bin/phpunit --colors=always --coverage-text --coverage-clover=build/coverage.xml",
     "phpcs": "\"vendor/bin/phpcs\"",
     "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs",
     "phpcbf": "\"vendor/bin/phpcbf\"",

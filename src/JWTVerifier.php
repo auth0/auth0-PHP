@@ -23,7 +23,7 @@ class JWTVerifier
 
     protected $secret_base64_encoded = null;
 
-    protected $jwks_path = null;
+    protected $jwks_path = '.well-known/jwks.json';
 
     /**
      * JWTVerifier Constructor.
