@@ -125,8 +125,8 @@ class RequestBuilder
     /**
      * Magic method to overload method calls to paths.
      *
-     * @param string      $name      Method invoked.
-     * @param array|null  $arguments Arguments to add to the path.
+     * @param string     $name      Method invoked.
+     * @param array|null $arguments Arguments to add to the path.
      *
      * @return RequestBuilder
      */
@@ -401,7 +401,7 @@ class RequestBuilder
      */
     public function setReturnType($type)
     {
-        if ( empty( $type ) ) {
+        if (empty( $type )) {
             $type = 'body';
         }
 
