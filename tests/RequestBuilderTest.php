@@ -115,28 +115,29 @@ class RequestBuilderTest extends ApiTests
     /**
      * Test that the return type is set properly and returns the correct result.
      */
-    public function testReturnType() {
-        $env  = self::getEnvStatic();
-        $token      = self::getTokenStatic($env, ['tenant_settings' => ['actions' => ['read']]]);
+    public function testReturnType()
+    {
+        $env   = self::getEnvStatic();
+        $token = self::getTokenStatic($env, ['tenant_settings' => ['actions' => ['read']]]);
 
         // Test default return type matches "body".
-        $api = new Management($token, $env['DOMAIN'], []);
+        $api             = new Management($token, $env['DOMAIN'], []);
         $results_default = $api->tenants->get();
         $this->assertTrue( is_array( $results_default ) );
 
-        $api = new Management($token, $env['DOMAIN'], [], 'body');
+        $api          = new Management($token, $env['DOMAIN'], [], 'body');
         $results_body = $api->tenants->get();
         $this->assertEquals( $results_default, $results_body );
 
         // Test that "headers" return type contains expected keys.
-        $api = new Management($token, $env['DOMAIN'], [], 'headers');
+        $api             = new Management($token, $env['DOMAIN'], [], 'headers');
         $results_headers = $api->tenants->get();
         $this->assertArrayHasKey( 'x-ratelimit-limit', $results_headers );
         $this->assertArrayHasKey( 'x-ratelimit-remaining', $results_headers );
         $this->assertArrayHasKey( 'x-ratelimit-reset', $results_headers );
 
         // Test that "object" return type returns the correct object type.
-        $api = new Management($token, $env['DOMAIN'], [], 'object');
+        $api            = new Management($token, $env['DOMAIN'], [], 'object');
         $results_object = $api->tenants->get();
         $this->assertInstanceOf( 'GuzzleHttp\Psr7\Response', $results_object );
 
@@ -145,9 +146,10 @@ class RequestBuilderTest extends ApiTests
         try {
             $api = new Management($token, $env['DOMAIN'], [], '__invalid_return_type__');
             $api->tenants->get();
-        } catch ( CoreException $e ) {
+        } catch (CoreException $e) {
             $caught_return_type_error = $this->errorHasString( $e, 'Invalid returnType' );
         }
+
         $this->assertTrue( $caught_return_type_error );
     }
 }
