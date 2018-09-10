@@ -272,8 +272,9 @@ class Auth0
             $this->dontPersist('id_token');
         }
 
-        $session_base_name      = ! empty( $config['session_base_name'] ) ? $config['session_base_name'] : null;
-        $session_cookie_expires = isset( $config['session_cookie_expires'] ) ? $config['session_cookie_expires'] : null;
+        $session_base_name = ! empty( $config['session_base_name'] ) ? $config['session_base_name'] : SessionStore::BASE_NAME;
+
+        $session_cookie_expires = isset( $config['session_cookie_expires'] ) ? $config['session_cookie_expires'] : SessionStore::COOKIE_EXPIRES;
 
         if (isset($config['store'])) {
             if ($config['store'] === false) {
