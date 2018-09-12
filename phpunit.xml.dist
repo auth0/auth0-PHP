@@ -1,6 +1,6 @@
 <phpunit
-     coverage-text="true"
-     bootstrap="./tests/bootstrap.php">
+  coverage-text="true"
+  bootstrap="./tests/bootstrap.php">
   <testsuites>
     <testsuite name="Auth0 PHP SDK Test Suite">
       <directory>./tests</directory>

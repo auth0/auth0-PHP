@@ -27,8 +27,8 @@ class LogsTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        $env   = self::getEnvStatic();
-        $token = self::getTokenStatic($env, [ 'logs' => [ 'actions' => ['read'] ] ]);
+        $env   = self::getEnv();
+        $token = self::getToken($env, [ 'logs' => [ 'actions' => ['read'] ] ]);
         $api   = new Management($token, $env['DOMAIN'], ['timeout' => 30]);
 
         self::$api = $api->logs;

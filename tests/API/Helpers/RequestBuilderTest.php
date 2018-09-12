@@ -117,8 +117,8 @@ class RequestBuilderTest extends ApiTests
      */
     public function testReturnType()
     {
-        $env   = self::getEnvStatic();
-        $token = self::getTokenStatic($env, ['tenant_settings' => ['actions' => ['read']]]);
+        $env   = self::getEnv();
+        $token = self::getToken($env, ['tenant_settings' => ['actions' => ['read']]]);
 
         // Test default return type matches "body".
         $api             = new Management($token, $env['DOMAIN'], []);
