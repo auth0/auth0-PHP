@@ -74,10 +74,10 @@ class EmailTemplateTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        $env = self::getEnvStatic();
+        $env = self::getEnv();
 
         self::$domain = $env['DOMAIN'];
-        self::$token  = self::getTokenStatic(
+        self::$token  = self::getToken(
             $env, [
                 'email_templates' => [ 'actions' => ['create', 'read', 'update'] ],
                 'email_provider' => [ 'actions' => ['read'] ],

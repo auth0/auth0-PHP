@@ -20,7 +20,7 @@ class AuthApiDBConnectionsTest extends ApiTests
 
     public function testSignup()
     {
-        $env = $this->getEnv();
+        $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
@@ -38,7 +38,7 @@ class AuthApiDBConnectionsTest extends ApiTests
 
     public function testChangePassword()
     {
-        $env = $this->getEnv();
+        $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 

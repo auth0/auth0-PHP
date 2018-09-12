@@ -52,7 +52,7 @@ class ResourceServersTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        self::$api              = self::getApiStatic( 'resource_servers', ['read', 'create', 'delete', 'update'] );
+        self::$api              = self::getApi( 'resource_servers', ['read', 'create', 'delete', 'update'] );
         self::$serverIdentifier = 'TEST_PHP_SDK_ID_'.uniqid();
     }
 

@@ -41,7 +41,7 @@ class ClientGrantsTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        self::$api = self::getApiStatic( 'client_grants', ['read', 'create', 'delete', 'update'] );
+        self::$api = self::getApi( 'client_grants', ['read', 'create', 'delete', 'update'] );
     }
 
     /**
