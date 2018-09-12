@@ -1,0 +1,125 @@
+[
+  {
+    "id": "con_testConnection01",
+    "strategy": "test-strategy-01",
+    "name": "TestConnection01",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection02",
+    "strategy": "test-strategy-02",
+    "name": "TestConnection02",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection03",
+    "strategy": "test-strategy-03",
+    "name": "TestConnection03",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection04",
+    "strategy": "test-strategy-01",
+    "name": "TestConnection04",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection05",
+    "strategy": "test-strategy-02",
+    "name": "TestConnection05",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection06",
+    "strategy": "test-strategy-03",
+    "name": "TestConnection06",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection07",
+    "strategy": "test-strategy-01",
+    "name": "TestConnection07",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection08",
+    "strategy": "test-strategy-02",
+    "name": "TestConnection08",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection09",
+    "strategy": "test-strategy-03",
+    "name": "TestConnection09",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection10",
+    "strategy": "test-strategy-01",
+    "name": "TestConnection10",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection11",
+    "strategy": "test-strategy-02",
+    "name": "TestConnection11",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection12",
+    "strategy": "test-strategy-03",
+    "name": "TestConnection12",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection13",
+    "strategy": "test-strategy-01",
+    "name": "TestConnection13",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection14",
+    "strategy": "test-strategy-02",
+    "name": "TestConnection14",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection15",
+    "strategy": "test-strategy-03",
+    "name": "TestConnection15",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection16",
+    "strategy": "test-strategy-01",
+    "name": "TestConnection10",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection17",
+    "strategy": "test-strategy-02",
+    "name": "TestConnection17",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection18",
+    "strategy": "test-strategy-03",
+    "name": "TestConnection18",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection19",
+    "strategy": "test-strategy",
+    "name": "TestConnection19",
+    "is_domain_connection": false
+  },
+  {
+    "id": "con_testConnection20",
+    "strategy": "test-strategy",
+    "name": "TestConnection20",
+    "is_domain_connection": false,
+    "metadata": {
+      "meta1": "value1"
+    }
+  }
+]

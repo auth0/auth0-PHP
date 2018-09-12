@@ -11,8 +11,8 @@ class BlacklistsTest extends ApiTests
 
     public function testBlacklistAndGet()
     {
-        $env   = $this->getEnv();
-        $token = $this->getToken(
+        $env   = self::getEnv();
+        $token = self::getToken(
             $env, [
                 'tokens' => [
                     'actions' => ['blacklist']

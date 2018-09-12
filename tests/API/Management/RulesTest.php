@@ -26,7 +26,7 @@ class RulesTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        self::$api = self::getApiStatic( 'rules', ['read', 'create', 'delete', 'update'] );
+        self::$api = self::getApi( 'rules', ['read', 'create', 'delete', 'update'] );
     }
 
     /**
