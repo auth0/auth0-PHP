@@ -36,8 +36,8 @@ class SessionStore implements StoreInterface
     /**
      * SessionStore constructor.
      *
-     * @param string|null $base_name      Session base name.
-     * @param integer     $cookie_expires Session expiration in seconds; default is 1 week.
+     * @param string  $base_name      Session base name.
+     * @param integer $cookie_expires Session expiration in seconds; default is 1 week.
      */
     public function __construct($base_name = self::BASE_NAME, $cookie_expires = self::COOKIE_EXPIRES)
     {
@@ -121,6 +121,10 @@ class SessionStore implements StoreInterface
      */
     public function getSessionKeyName($key)
     {
-        return $this->session_base_name.'_'.$key;
+        $key_name = $key;
+        if ( ! empty( $this->session_base_name ) ) {
+            $key_name = $this->session_base_name.'_'.$key_name;
+        }
+        return $key_name;
     }
 }
