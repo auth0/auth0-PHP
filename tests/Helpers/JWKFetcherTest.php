@@ -1,7 +1,8 @@
 <?php
-namespace Auth0\Tests\Helpers\Cache;
+namespace Auth0\Tests\Helpers;
 
 use \Auth0\SDK\Helpers\JWKFetcher;
+use \Auth0\SDK\Helpers\Cache\CacheHandler;
 
 /**
  * Class JWKFetcherTest.
@@ -15,15 +16,15 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testFetchKeysWithoutKid()
+    public function testGetJwksX5cWithoutKid()
     {
         $jwksFetcher = $this->getStub();
 
-        $keys = $jwksFetcher->fetchKeys( 'https://localhost/' );
+        $pem = $jwksFetcher->requestJwkX5c( 'https://localhost/.well-known/jwks.json' );
 
-        $this->assertCount(1, $keys);
+        $this->assertNotEmpty($pem);
 
-        $pem_parts = $this->getPemParts( $keys );
+        $pem_parts = explode( PHP_EOL, $pem );
 
         $this->assertEquals( 4, count($pem_parts) );
         $this->assertEquals( '-----BEGIN CERTIFICATE-----', $pem_parts[0] );
@@ -36,15 +37,15 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testFetchKeysWithKid()
+    public function testGetJwksX5cWithKid()
     {
         $jwksFetcher = $this->getStub();
 
-        $keys = $jwksFetcher->fetchKeys( 'https://localhost/', '__test_kid_2__' );
+        $pem = $jwksFetcher->requestJwkX5c( 'https://localhost/.well-known/jwks.json', '__test_kid_2__' );
 
-        $this->assertCount(1, $keys);
+        $this->assertNotEmpty($pem);
 
-        $pem_parts = $this->getPemParts( $keys );
+        $pem_parts = explode( PHP_EOL, $pem );
 
         $this->assertEquals( 4, count($pem_parts) );
         $this->assertEquals( '-----BEGIN CERTIFICATE-----', $pem_parts[0] );
@@ -57,15 +58,15 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testFetchKeysWithPath()
+    public function testGetJwksX5cWithPath()
     {
         $jwksFetcher = $this->getStub();
 
-        $keys = $jwksFetcher->fetchKeys( 'https://localhost/', '__test_custom_kid__', '.custom/jwks.json' );
+        $pem = $jwksFetcher->requestJwkX5c( 'https://localhost/.custom/jwks.json', '__test_custom_kid__' );
 
-        $this->assertCount(1, $keys);
+        $this->assertNotEmpty($pem);
 
-        $pem_parts = $this->getPemParts( $keys );
+        $pem_parts = explode( PHP_EOL, $pem );
 
         $this->assertEquals( 4, count( $pem_parts ) );
         $this->assertEquals( '-----BEGIN CERTIFICATE-----', $pem_parts[0] );
@@ -78,13 +79,13 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function testFetchKeysNoX5c()
+    public function testGetJwksX5cNoX5c()
     {
         $jwksFetcher = $this->getStub();
 
-        $keys = $jwksFetcher->fetchKeys( 'https://localhost/', '__no_x5c_test_kid_2__' );
+        $pem = $jwksFetcher->requestJwkX5c( 'https://localhost/.custom/jwks.json', '__no_x5c_test_kid_2__' );
 
-        $this->assertEmpty($keys);
+        $this->assertEmpty($pem);
     }
 
     /**
@@ -118,26 +119,54 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that the protected getProp method returns correctly.
+     * Test that the requestJwkX5c method returns a cached value, if set.
      *
      * @return void
      */
-    public function testGetProp()
+    public function testCacheReturn()
     {
-        $jwks = $this->getLocalJwks( 'test', '-jwks' );
+        $jwks_url    = 'https://localhost/.well-known/jwks.json';
+        $kid         = '__test_kid_2__';
+        $cache_value = '__cached_value__';
+        $set_spy     = $this->once();
+        $get_spy     = $this->any();
 
-        $jwksFetcher = new JWKFetcher();
+        // Mock the CacheHandler interface.
+        $cache_handler = $this->getMockBuilder(CacheHandler::class)
+            ->getMock();
 
-        $this->assertEquals( '__string_value_1__', $jwksFetcher->getProp( $jwks, 'string' ) );
-        $this->assertEquals( '__array_value_1__', $jwksFetcher->getProp( $jwks, 'array' ) );
-        $this->assertNull( $jwksFetcher->getProp( $jwks, 'invalid' ) );
+        // The set method should only be called once.
+        $cache_handler->expects($set_spy)
+            ->method('set')
+            ->willReturn( null );
 
-        $test_kid = '__kid_value__';
+        // The get method should be called once and return no cache first, then a cache value after.
+        $cache_handler->expects($get_spy)
+            ->method('get')
+            ->will( $this->onConsecutiveCalls( null, $cache_value ) );
 
-        $this->assertEquals( '__string_value_2__', $jwksFetcher->getProp( $jwks, 'string', $test_kid ) );
-        $this->assertEquals( '__array_value_3__', $jwksFetcher->getProp( $jwks, 'array', $test_kid ) );
-        $this->assertNull( $jwksFetcher->getProp( $jwks, 'invalid', $test_kid ) );
+        $jwksFetcher = $this->getStub($cache_handler);
+
+        $pem_not_cached = $jwksFetcher->requestJwkX5c( $jwks_url, $kid );
+        $this->assertNotEmpty( $pem_not_cached );
+
+        $pem_cached = $jwksFetcher->requestJwkX5c( $jwks_url, $kid );
+        $this->assertEquals( $cache_value, $pem_cached );
+
+        // Test that the set method was called with the correct parameters.
+        $set_invocations = $set_spy->getInvocations();
+        $this->assertEquals( $jwks_url.'|'.$kid, $set_invocations[0]->parameters[0] );
+        $this->assertEquals( $pem_not_cached, $set_invocations[0]->parameters[1] );
+
+        // Test that the get method was only called twice.
+        $this->assertEquals( 2, $get_spy->getInvocationCount() );
     }
+
+    /*
+     *
+     * Test helper functions.
+     *
+     */
 
     /**
      * Get a test JSON fixture instead of a remote one.
@@ -165,32 +194,20 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
     /**
      * Stub the JWKFetcher class.
      *
+     * @param CacheHandler|null $cache_handler Cache handler to use or null if no cache.
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    private function getStub()
+    private function getStub($cache_handler = null)
     {
         $stub = $this->getMockBuilder(JWKFetcher::class)
-            ->setMethods(['getJwks'])
+            ->setConstructorArgs([$cache_handler])
+            ->setMethods(['requestJwks'])
             ->getMock();
 
-        $stub->method('getJwks')
+        $stub->method('requestJwks')
             ->will($this->returnCallback([$this, 'getLocalJwks']));
 
         return $stub;
-    }
-
-    /**
-     * Get array of PEM parts.
-     *
-     * @param array $keys JWKS keys.
-     *
-     * @return array
-     */
-    private function getPemParts(array $keys)
-    {
-        $keys_keys = array_keys($keys);
-        $kid       = $keys_keys[0];
-        $pem       = $keys[$kid];
-        return explode( PHP_EOL, $pem );
     }
 }

@@ -122,9 +122,10 @@ class SessionStore implements StoreInterface
     public function getSessionKeyName($key)
     {
         $key_name = $key;
-        if ( ! empty( $this->session_base_name ) ) {
+        if (! empty( $this->session_base_name )) {
             $key_name = $this->session_base_name.'_'.$key_name;
         }
+
         return $key_name;
     }
 }
