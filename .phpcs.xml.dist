@@ -95,6 +95,7 @@
     <rule ref="Squiz.PHP">
         <exclude name="Squiz.PHP.DisallowComparisonAssignment.AssignedComparison"/>
         <exclude name="Squiz.PHP.DisallowInlineIf.Found"/>
+        <exclude name="Squiz.PHP.DisallowBooleanStatement.Found"/>
     </rule>
     <rule ref="Squiz.Scope"/>
     <rule ref="Squiz.Strings"/>

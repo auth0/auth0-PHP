@@ -6,6 +6,9 @@ use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\ClientException;
+
 /**
  * Class JWKFetcher.
  *
@@ -17,7 +20,7 @@ class JWKFetcher
     /**
      * Cache handler or null for no caching.
      *
-     * @var CacheHandler|NoCacheHandler|null
+     * @var CacheHandler|null
      */
     private $cache = null;
 
@@ -59,101 +62,137 @@ class JWKFetcher
         return $output;
     }
 
+    // phpcs:disable
     /**
-     * Fetch x509 cert for RS256 token decoding.
+     * Appends the default JWKS path to a token issuer to return all keys from a JWKS.
+     * TODO: Deprecate, use $this->getJwksX5c() instead and explain why/how.
      *
-     * @param string      $domain Base domain for the JWKS, including scheme.
-     * @param string|null $kid    Kid to use.
-     * @param string      $path   Path to the JWKS from the $domain.
+     * @param string $iss
      *
-     * @return mixed
+     * @return array|mixed|null
      *
-     * @throws \Exception If the Guzzle HTTP client cannot complete the request.
+     * @throws \Exception
+     *
+     * @codeCoverageIgnore
      */
-    public function fetchKeys($domain, $kid = null, $path = '.well-known/jwks.json')
+    public function fetchKeys($iss)
     {
-        $jwks_url = $domain.$path;
+        $url = "{$iss}.well-known/jwks.json";
 
-        // Check for a cached JWKS value.
-        $secret = $this->cache->get($jwks_url);
-        if (! is_null($secret)) {
-            return $secret;
-        }
+        if (($secret = $this->cache->get($url)) === null) {
+            $secret = [];
 
-        $secret = [];
+            $request = new RequestBuilder([
+                'domain' => $iss,
+                'basePath' => '.well-known/jwks.json',
+                'method' => 'GET',
+                'guzzleOptions' => $this->guzzleOptions
+            ]);
+            $jwks    = $request->call();
 
-        $jwks = $this->getJwks( $domain, $path );
+            foreach ($jwks['keys'] as $key) {
+                $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
+            }
 
-        if (! is_array( $jwks['keys'] ) || empty( $jwks['keys'] )) {
-            return $secret;
-        }
-
-        // No kid passed so get the kid of the first JWK.
-        if (is_null($kid)) {
-            $kid = $this->getProp( $jwks, 'kid' );
-        }
-
-        $x5c = $this->getProp( $jwks, 'x5c', $kid );
-
-        // Need the kid and x5c for a well-formed return value. 
-        if (! is_null($kid) && ! is_null($x5c)) {
-            $secret[$kid] = $this->convertCertToPem($x5c);
-            $this->cache->set($jwks_url, $secret);
+            $this->cache->set($url, $secret);
         }
 
         return $secret;
     }
+    // phpcs:enable
 
     /**
-     * Get a specific property from a JWKS using a key, if provided.
+     * Fetch x509 cert for RS256 token decoding.
      *
-     * @param array       $jwks JWKS to parse.
-     * @param string      $prop Property to retrieve.
-     * @param null|string $kid  Kid to check.
+     * @param string      $jwks_url URL to the JWKS.
+     * @param string|null $kid      Key ID to use; returns first JWK if $kid is null or empty.
      *
-     * @return null|string
+     * @return string|null - Null if an x5c key could not be found for a key ID or if the JWKS is empty/invalid.
      */
-    public function getProp(array $jwks, $prop, $kid = null)
+    public function requestJwkX5c($jwks_url, $kid = null)
     {
-        $r_key = null;
-        if (! $kid) {
-            // No kid indicated, get the first entry.
-            $r_key = $jwks['keys'][0];
-        } else {
-            // Iterate through the JWKS for the correct kid.
-            foreach ($jwks['keys'] as $key) {
-                if (isset($key['kid']) && $key['kid'] === $kid) {
-                    $r_key = $key;
-                    break;
-                }
-            }
+        $cache_key = $jwks_url.'|'.(string) $kid;
+
+        $x5c = $this->cache->get($cache_key);
+        if (! is_null($x5c)) {
+            return $x5c;
         }
 
-        // If a key was not found or the property does not exist, return.
-        if (is_null($r_key) || ! isset($r_key[$prop])) {
+        $jwks = $this->requestJwks($jwks_url);
+        $jwk  = $this->findJwk($jwks, $kid);
+
+        if ($this->subArrayHasEmptyFirstItem($jwk, 'x5c')) {
             return null;
         }
 
-        // If the value is an array, get the first element.
-        return is_array( $r_key[$prop] ) ? $r_key[$prop][0] : $r_key[$prop];
+        $x5c = $this->convertCertToPem($jwk['x5c'][0]);
+        $this->cache->set($cache_key, $x5c);
+        return $x5c;
     }
 
     /**
-     * Get a JWKS given a domain and path to call.
+     * Get a JWKS from a specific URL.
      *
-     * @param string $domain Base domain for the JWKS, including scheme.
-     * @param string $path   Path to the JWKS from the $domain.
+     * @param string $jwks_url URL to the JWKS.
      *
      * @return mixed|string
+     *
+     * @throws RequestException If $jwks_url is empty or malformed.
+     * @throws ClientException  If the JWKS cannot be retrieved.
+     *
+     * @codeCoverageIgnore
      */
-    protected function getJwks($domain, $path)
+    protected function requestJwks($jwks_url)
     {
         $request = new RequestBuilder([
-            'domain' => $domain,
-            'basePath' => $path,
+            'domain' => $jwks_url,
             'method' => 'GET',
             'guzzleOptions' => $this->guzzleOptions
         ]);
         return $request->call();
+    }
+
+    /**
+     * Get a JWK from a JWKS using a key ID, if provided.
+     *
+     * @param array       $jwks JWKS to parse.
+     * @param null|string $kid  Key ID to return; returns first JWK if $kid is null or empty.
+     *
+     * @return array|null Null if the keys array is empty or if the key ID is not found.
+     *
+     * @codeCoverageIgnore
+     */
+    private function findJwk(array $jwks, $kid = null)
+    {
+        if ($this->subArrayHasEmptyFirstItem($jwks, 'keys')) {
+            return null;
+        }
+
+        if (! $kid) {
+            return $jwks['keys'][0];
+        }
+
+        foreach ($jwks['keys'] as $key) {
+            if (isset($key['kid']) && $key['kid'] === $kid) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if an array within an array has a non-empty first item.
+     *
+     * @param array|null $array Main array to check.
+     * @param string     $key   Key pointing to a sub-array.
+     *
+     * @return boolean
+     *
+     * @codeCoverageIgnore
+     */
+    private function subArrayHasEmptyFirstItem($array, $key)
+    {
+        return empty($array) || ! is_array($array[$key]) || empty($array[$key][0]);
     }
 }
