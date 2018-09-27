@@ -37,9 +37,7 @@
     "test": "SHELL_INTERACTIVE=1 vendor/bin/phpunit --colors=always --coverage-text",
     "test-ci": "vendor/bin/phpunit --colors=always --coverage-clover=build/coverage.xml",
     "phpcs": "\"vendor/bin/phpcs\"",
-    "phpcs-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcs",
     "phpcbf": "\"vendor/bin/phpcbf\"",
-    "phpcbf-path": "SHELL_INTERACTIVE=1 ./vendor/bin/phpcbf",
     "sniffs": "\"vendor/bin/phpcs\" -e",
     "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
   }
