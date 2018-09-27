@@ -182,6 +182,27 @@ class Auth0
     protected $guzzleOptions;
 
     /**
+     * Algorithm to use for ID token validation.
+     *
+     * @var string
+     */
+    protected $idTokenAlg = null;
+
+    /**
+     * Valid audiences for ID tokens.
+     *
+     * @var array
+     */
+    protected $idTokenAud = [];
+
+    /**
+     * Valid issuer(s) for ID tokens.
+     *
+     * @var array
+     */
+    protected $idTokenIss = [];
+
+    /**
      * State Handler.
      *
      * @var StateHandler
@@ -257,6 +278,33 @@ class Auth0
 
         if (isset($config['guzzle_options'])) {
             $this->guzzleOptions = $config['guzzle_options'];
+        }
+
+        // If a token algorithm is passed, make sure it's a specific string.
+        if (! empty($config['id_token_alg'])) {
+            if (! in_array( $config['id_token_alg'], ['HS256', 'RS256'] )) {
+                throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
+            }
+
+            $this->idTokenAlg = $config['id_token_alg'];
+        }
+
+        // If a token audience is passed, make sure it's an array.
+        if (! empty($config['id_token_aud'])) {
+            if (! is_array( $config['id_token_aud'] )) {
+                throw new CoreException('Invalid id_token_aud; must be an array of string values');
+            }
+
+            $this->idTokenAud = $config['id_token_aud'];
+        }
+
+        // If a token issuer is passed, make sure it's an array.
+        if (! empty($config['id_token_iss'])) {
+            if (! is_array( $config['id_token_iss'] )) {
+                throw new CoreException('Invalid id_token_iss; must be an array of string values');
+            }
+
+            $this->idTokenIss = $config['id_token_iss'];
         }
 
         $this->debugMode = isset($config['debug']) ? $config['debug'] : false;
@@ -567,33 +615,20 @@ class Auth0
      *
      * @return \Auth0\SDK\Auth0
      *
-     * @throws CoreException If ID token did not validate.
+     * @throws CoreException
+     * @throws Exception\InvalidTokenException
      */
     public function setIdToken($idToken)
     {
-        try {
-            $issuer      = 'https://'.$this->domain.'/';
-            $jwtVerifier = new JWTVerifier([
-                'guzzle_options' => $this->guzzleOptions,
-                'client_secret' => $this->clientSecret,
-                'secret_base64_encoded' => $this->clientSecretEncoded,
-                'authorized_iss' => [ $issuer ],
-                'supported_algs' => [ 'HS256', 'RS256' ],
-                'valid_audiences' => [
-                    $this->clientId,
-                    $issuer,
-                    $issuer.'userinfo'
-                ],
-            ]);
-            $jwtVerifier->verifyAndDecode( $idToken );
-        } catch (\Exception $e) {
-            $message = 'ID token could not be validated.';
-            if ($e->getMessage()) {
-                $message .= ' '.$e->getMessage();
-            }
-
-            throw new CoreException($message);
-        }
+        $jwtVerifier = new JWTVerifier([
+            'valid_audiences' => ! empty($this->idTokenAud) ? $this->idTokenAud : [ $this->clientId ],
+            'supported_algs' => $this->idTokenAlg ? [ $this->idTokenAlg ] : [ 'HS256', 'RS256' ],
+            'authorized_iss' => $this->idTokenIss ? $this->idTokenIss : [ 'https://'.$this->domain.'/' ],
+            'client_secret' => $this->clientSecret,
+            'secret_base64_encoded' => $this->clientSecretEncoded,
+            'guzzle_options' => $this->guzzleOptions,
+        ]);
+        $jwtVerifier->verifyAndDecode( $idToken );
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
