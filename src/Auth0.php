@@ -73,7 +73,8 @@ class Auth0
     protected $clientSecret;
 
     /**
-     * Is the Auth0 Client Secret encoded?
+     * True if the client secret is base64 encoded, false if not.
+     * This information can be found in your Auth0 Application settings below the Client Secret field.
      *
      * @var boolean
      */
@@ -182,7 +183,8 @@ class Auth0
     protected $guzzleOptions;
 
     /**
-     * Algorithm to use for ID token validation.
+     * Algorithm used for ID token validation.
+     * Can be "HS256" or "RS256" only.
      *
      * @var string
      */
@@ -609,7 +611,7 @@ class Auth0
     }
 
     /**
-     * Sets and persists the ID token.
+     * Sets, validates, and persists the ID token.
      *
      * @param string $idToken - ID token returned from the code exchange.
      *

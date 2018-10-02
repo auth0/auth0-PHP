@@ -98,7 +98,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
                 'supported_algs' => [ 'RS256' ],
             ] );
         } catch (CoreException $e) {
-            $caught_exception = $this->errorHasString( $e, 'The iss is required' );
+            $caught_exception = $this->errorHasString( $e, 'The token iss property is required' );
         }
 
         $this->assertTrue($caught_exception);
@@ -260,7 +260,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
             $verifier->verifyAndDecode( $jwt_head.'.'.$jwt_payload.'.'.uniqid() );
         } catch (InvalidTokenException $e) {
             $error_msg        = $e->getMessage();
-            $caught_exception = $this->errorHasString($e, 'This token is not intended for us');
+            $caught_exception = $this->errorHasString($e, 'Invalid audience __invalid_aud__; expected __valid_aud__');
         }
 
         $this->assertTrue($caught_exception, $error_msg);
