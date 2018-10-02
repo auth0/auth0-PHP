@@ -23,11 +23,11 @@ class JWTVerifier
      *
      * @var JWKFetcher|null
      */
-    protected $JWKFetcher = null;
+    protected $jwks_fetcher = null;
 
     /**
      * Algorithms supported.
-     * Only pass in the expected algorithm.
+     * Only pass in the expected algorithm (HS256 or RS256).
      *
      * @var array
      */
@@ -70,9 +70,9 @@ class JWTVerifier
      *                - valid_audiences (Array) - Required; list of audiences accepted by the service.
      *                - client_secret (String) - Required for HS256; Auth0 Application Client Secret.
      *                - authorized_iss (Array) - Required for RS256; list of issuers trusted by the service.
-     *                - cache (CacheHandler) - Optional. Instance of CacheHandler to cache the JWKs.
      *                - supported_algs (Array) - List of supported algorithms; defaults to HS256.
-     *                - guzzle_options (Array) - Extra configuration options sent to the Guzzle HTTP client.
+     *                - cache (CacheHandler) - Optional. Instance of CacheHandler to cache the JWKs.
+     *                - guzzle_options (Array) - Extra Guzzle HTTP client options used when getting a JWKS.
      *                - jwks_path (string) - Path from the issuer domain to the JWKS; used for RS256.
      * @param JWKFetcher|null $jwkFetcher Instance of the JWKFetcher class to inject or null to instantiate.
      *
@@ -87,8 +87,8 @@ class JWTVerifier
         $guzzleOptions = [];
 
         // Allow for dependency injection of a JWKFetcher object.
-        $this->JWKFetcher = $jwkFetcher;
-        if (! $this->JWKFetcher instanceof JWKFetcher) {
+        $this->jwks_fetcher = $jwkFetcher;
+        if (! $this->jwks_fetcher instanceof JWKFetcher) {
             // CacheHandler implementation to be used in JWKFetcher.
             if (isset($config['cache']) && $config['cache'] instanceof CacheHandler) {
                 $cache = $config['cache'];
@@ -99,7 +99,7 @@ class JWTVerifier
                 $guzzleOptions = $config['guzzle_options'];
             }
 
-            $this->JWKFetcher = new JWKFetcher($cache, $guzzleOptions);
+            $this->jwks_fetcher = new JWKFetcher($cache, $guzzleOptions);
         }
 
         // JWKS path to use; see variable declaration above for default.
@@ -109,7 +109,7 @@ class JWTVerifier
 
         // Legacy misspelling in JWT library.
         if (isset($config['suported_algs'])) {
-            throw new CoreException('`suported_algs` was properly renamed to `supported_algs`.');
+            throw new CoreException('`suported_algs` was properly renamed to `supported_algs`');
         }
 
         // Make sure we have audiences to check.
@@ -127,26 +127,21 @@ class JWTVerifier
         // Check for algorithms that are not HS256 or RS256.
         $unsupported_algs = array_diff( $this->supported_algs, [ 'HS256', 'RS256' ] );
         if (! empty( $unsupported_algs )) {
-            throw new CoreException(
-                'Cannot support the following algorithm(s): '.implode( ', ', $unsupported_algs ).'.'
-            );
+            throw new CoreException('Cannot support the following algorithm(s): '.implode( ', ', $unsupported_algs ));
         }
 
-        // Set the authorized issuer is passed.
-        if (isset( $config['authorized_iss'] )) {
+        // Set if the authorized issuer is passed; enforce if RS256.
+        if (! empty( $config['authorized_iss'] )) {
             $this->authorized_iss = $config['authorized_iss'];
+        } else if ($this->supportsAlg( 'RS256' )) {
+            throw new CoreException('The token iss property is required when accepting RS256 signed tokens');
         }
 
-        // Make sure we have an issuer if the token is RS256.
-        if (empty($this->authorized_iss) && $this->supportsAlg( 'RS256' )) {
-            throw new CoreException('The iss is required when accepting RS256 signed tokens.');
-        }
-
-        // Only store the client_secret is this is an HS256 token.
+        // Only store the client_secret if this is an HS256 token.
         if ($this->supportsAlg( 'HS256' )) {
             // HS256 tokens require a client_secret.
             if (empty($config['client_secret'])) {
-                throw new CoreException('The client_secret is required when accepting HS256 signed tokens.');
+                throw new CoreException('The client_secret is required when accepting HS256 signed tokens');
             }
 
             if (! isset($config['secret_base64_encoded']) || $config['secret_base64_encoded']) {
@@ -167,7 +162,7 @@ class JWTVerifier
      * @return mixed
      *
      * @throws InvalidTokenException If the token does not have 3 sections.
-     * @throws InvalidTokenException If the token does not have an algorithm or that algorithm is not supported.
+     * @throws InvalidTokenException If the algorithm used to sign the token is not supported.
      * @throws InvalidTokenException If the token does not have a valid audience.
      * @throws CoreException If an RS256 token is missing a key ID.
      * @throws CoreException If an RS256 token does not have a valid issuer.
@@ -188,48 +183,41 @@ class JWTVerifier
             throw new InvalidTokenException('Malformed token.');
         }
 
-        if (! is_object($head_decoded)) {
-            throw new InvalidTokenException('Malformed token head.');
+        if (! is_object($head_decoded) || ! is_object($body_decoded)) {
+            throw new InvalidTokenException('Malformed token.');
         }
 
         if (empty($head_decoded->alg)) {
-            throw new InvalidTokenException('Token algorithm not found.');
+            throw new InvalidTokenException('Token algorithm not found');
         }
 
         if (! $this->supportsAlg($head_decoded->alg)) {
-            throw new InvalidTokenException('Token algorithm not supported.');
+            throw new InvalidTokenException('Token algorithm not supported');
         }
 
-        if (! is_object($body_decoded)) {
-            throw new InvalidTokenException('Malformed token payload.');
-        }
-
-        if (empty($body_decoded->aud)) {
-            throw new InvalidTokenException('Token audience not found.');
-        }
-
-        // Validate the token audience.
-        $audience = $body_decoded->aud;
-        if (! is_array($audience)) {
-            $audience = [$audience];
-        };
-        if (! count(array_intersect($audience, $this->valid_audiences))) {
-            throw new InvalidTokenException('This token is not intended for us.');
+        // Validate the token audience, if present.
+        if (! empty($body_decoded->aud)) {
+            $audience = is_array($body_decoded->aud) ? $body_decoded->aud : [$body_decoded->aud];
+            if (! count(array_intersect($audience, $this->valid_audiences))) {
+                throw new InvalidTokenException(
+                    'Invalid audience '.$body_decoded->aud.'; expected '.implode( ', ', $this->valid_audiences )
+                );
+            }
         }
 
         if ('HS256' === $head_decoded->alg) {
             $secret = $this->client_secret;
         } else {
             if (empty($head_decoded->kid)) {
-                throw new CoreException('Token key ID is missing for RS256 token.');
+                throw new CoreException('Token key ID is missing for RS256 token');
             }
 
             if (empty($body_decoded->iss) || ! in_array($body_decoded->iss, $this->authorized_iss)) {
-                throw new CoreException('We cannot trust on a token issued by `'.$body_decoded->iss.'`.');
+                throw new CoreException('We cannot trust on a token issued by `'.$body_decoded->iss.'`');
             }
 
             $jwks_url                   = $body_decoded->iss.$this->jwks_path;
-            $secret[$head_decoded->kid] = $this->JWKFetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
+            $secret[$head_decoded->kid] = $this->jwks_fetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
         }
 
         try {
@@ -279,7 +267,7 @@ class JWTVerifier
      */
     private function decodeTokenSegment($segment)
     {
-        return JWT::jsonDecode(JWT::urlsafeB64Decode($segment));
+        return JWT::jsonDecode($this->decodeB64($segment));
     }
 
     /**
