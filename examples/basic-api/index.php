@@ -72,7 +72,7 @@ $router->before(
 
         if (!isset($requestHeaders['Authorization'])) {
             header('HTTP/1.0 401 Unauthorized');
-            echo "No token provided.";
+            echo "No token provided:401";
             exit();
         }
 
@@ -80,7 +80,7 @@ $router->before(
 
         if ($authorizationHeader == null) {
             header('HTTP/1.0 401 Unauthorized');
-            echo "No authorization header sent";
+            echo "No authorization header sent:401";
             exit();
         }
 
@@ -90,7 +90,7 @@ $router->before(
             $app->setCurrentToken($token);
         } catch (\Auth0\SDK\Exception\CoreException $e) {
             header('HTTP/1.0 401 Unauthorized');
-            echo "Invalid token";
+            echo "Invalid token:401";
             exit();
         }
     }
@@ -111,7 +111,7 @@ $router->get(
 $router->set404(
     function () {
             header('HTTP/1.1 404 Not Found');
-            echo "Page not found";
+            echo "Page not found:404";
     }
 );
 
