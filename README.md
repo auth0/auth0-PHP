@@ -100,7 +100,7 @@ The examples below assume that you followed the steps in the [Installation secti
 
 The easiest and most secure way to handle logins to a web application is to use the [Authentication Code grant](https://auth0.com/docs/api-auth/tutorials/authorization-code-grant) combined with Auth0's Universal Login page. In short, that process is:
 
-1. An user requesting access is redirected to the Universal Login Page.
+1. A user requesting access is redirected to the Universal Login Page.
 2. The user authenticates using one of many possible connections: social (Twitter or Facebook); database (email and password); passwordless (email or a mobile device).
 3. The user is redirected back to your application's callback URL with a `code` and `state` parameter if successful or an `error` and `error_description` if not.
 4. If the authentication was successful, the `state` parameter is validated.
@@ -496,7 +496,7 @@ We're working on test coverage and quality but please note that newer tenants mi
 
 > I am getting `curl error 60: SSL certificate problem: self signed certificate in certificate chain` on Windows
 
-This is a common issue with latest PHP versions under **Windows OS** (related to a incompatibility between windows and openssl CAs database).
+This is a common issue with latest PHP versions under **Windows OS** (related to an incompatibility between windows and openssl CAs database).
 
 1. Download this CA database `https://curl.haxx.se/ca/cacert.pem` to `c:/cacert.pem`.
 2. Edit your php.ini and add `openssl.cafile=c:/cacert.pem`. (It should point to the file you downloaded.)
