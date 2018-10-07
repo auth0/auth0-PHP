@@ -41,7 +41,7 @@ require __DIR__ . '/vendor/autoload.php';
 use Auth0\SDK\Auth0;
 ```
 
-The examples below use [PHP Dotenv](https://github.com/josegonzalez/php-dotenv) to store and load sensitive Auth0 credentials from the environment rather than hard-coding them into your application. PHP Dotenv is a dependency of this SDK so if you followed the steps above to install via Composer, the class is available for you to use in your project. 
+The examples below use [PHP Dotenv](https://github.com/josegonzalez/php-dotenv) to store and load sensitive Auth0 credentials from the environment rather than hard-coding them into your application. PHP Dotenv is a dependency of this SDK, so if you followed the steps above to install via Composer, the class is available for you to use in your project. 
 
 First, you'll need a free Auth0 account and an Application:
 
@@ -494,9 +494,9 @@ We're working on test coverage and quality but please note that newer tenants mi
 
 ## Troubleshooting
 
-> I am getting `curl error 60: SSL certificate problem: self signed certificate in certificate chain` on Windows
+> I am getting `curl error 60: SSL certificate problem: self-signed certificate in certificate chain` on Windows
 
-This is a common issue with latest PHP versions under **Windows OS** (related to a incompatibility between windows and openssl CAs database).
+This is a common issue with latest PHP versions under **Windows OS** (related to an incompatibility between windows and openssl CAs database).
 
 1. Download this CA database `https://curl.haxx.se/ca/cacert.pem` to `c:/cacert.pem`.
 2. Edit your php.ini and add `openssl.cafile=c:/cacert.pem`. (It should point to the file you downloaded.)
