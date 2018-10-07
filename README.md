@@ -100,7 +100,7 @@ The examples below assume that you followed the steps in the [Installation secti
 
 The easiest and most secure way to handle logins to a web application is to use the [Authentication Code grant](https://auth0.com/docs/api-auth/tutorials/authorization-code-grant) combined with Auth0's Universal Login page. In short, that process is:
 
-1. An user requesting access is redirected to the Universal Login Page.
+1. A user requesting access is redirected to the Universal Login Page.
 2. The user authenticates using one of many possible connections: social (Twitter or Facebook); database (email and password); passwordless (email or a mobile device).
 3. The user is redirected back to your application's callback URL with a `code` and `state` parameter if successful or an `error` and `error_description` if not.
 4. If the authentication was successful, the `state` parameter is validated.
@@ -110,7 +110,7 @@ The easiest and most secure way to handle logins to a web application is to use 
 
 The PHP SDK handles most of the previous steps. Your application needs to:
 
-1. Determine a log in action (for example: click a link, visit walled content, etc.) and call  `Auth0::login()`
+1. Determine a login action (for example: click a link, visit walled content, etc.) and call  `Auth0::login()`
 2. Handle returned errors.
 
 A simple implementation of these steps looks like this:
