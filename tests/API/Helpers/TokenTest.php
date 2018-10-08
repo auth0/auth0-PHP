@@ -313,7 +313,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $caught_exception = false;
         $error_msg        = 'No exception caught';
         try {
-            $verifier->verifyAndDecode( $jwt_head.'.'.$jwt_payload.'.'.uniqid() );
+            $verifier->verifyAndDecode( $jwt_head.'.'.$jwt_payload.'.'.JWT::urlsafeB64Encode(uniqid()) );
         } catch (CoreException $e) {
             $error_msg        = $e->getMessage();
             $caught_exception = $this->errorHasString($e, 'Signature verification failed');
