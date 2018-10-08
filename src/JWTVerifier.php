@@ -23,7 +23,7 @@ class JWTVerifier
      *
      * @var JWKFetcher|null
      */
-    protected $jwks_fetcher = null;
+    protected $JWKFetcher = null;
 
     /**
      * Algorithms supported.
@@ -87,8 +87,8 @@ class JWTVerifier
         $guzzleOptions = [];
 
         // Allow for dependency injection of a JWKFetcher object.
-        $this->jwks_fetcher = $jwkFetcher;
-        if (! $this->jwks_fetcher instanceof JWKFetcher) {
+        $this->JWKFetcher = $jwkFetcher;
+        if (! $this->JWKFetcher instanceof JWKFetcher) {
             // CacheHandler implementation to be used in JWKFetcher.
             if (isset($config['cache']) && $config['cache'] instanceof CacheHandler) {
                 $cache = $config['cache'];
@@ -99,7 +99,7 @@ class JWTVerifier
                 $guzzleOptions = $config['guzzle_options'];
             }
 
-            $this->jwks_fetcher = new JWKFetcher($cache, $guzzleOptions);
+            $this->JWKFetcher = new JWKFetcher($cache, $guzzleOptions);
         }
 
         // JWKS path to use; see variable declaration above for default.
@@ -217,7 +217,7 @@ class JWTVerifier
             }
 
             $jwks_url                   = $body_decoded->iss.$this->jwks_path;
-            $secret[$head_decoded->kid] = $this->jwks_fetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
+            $secret[$head_decoded->kid] = $this->JWKFetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
         }
 
         try {
