@@ -1,9 +1,0 @@
-{
-    "name": "auth0/basic-webapp-sample",
-    "description": "Basic sample for securing a WebApp with Auth0",
-    "require": {
-         "vlucas/phpdotenv": "^2.0",
-         "auth0/auth0-php": "^5.0"
-    },
-    "license": "MIT"
-}
