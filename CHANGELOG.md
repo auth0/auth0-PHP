@@ -1,5 +1,41 @@
 # Change Log
 
+## [5.3.0](https://github.com/auth0/auth0-PHP/tree/5.3.0) (2018-10-09)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.2.0...5.3.0)
+
+**Closed issues**
+- Question: Handling rate limits [\#277](https://github.com/auth0/auth0-PHP/issues/277)
+- Allow configuration of the JWKS URL [\#276](https://github.com/auth0/auth0-PHP/issues/276)
+- Allow changing the session key name [\#273](https://github.com/auth0/auth0-PHP/issues/273)
+- SessionStore overrides PHP session cookie lifetime setting [\#215](https://github.com/auth0/auth0-PHP/issues/215)
+
+**Added**
+- Add custom JWKS path and kid check to JWKFetcher + tests [\#287](https://github.com/auth0/auth0-PHP/pull/287) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add config keys for session base name and cookie expires [\#279](https://github.com/auth0/auth0-PHP/pull/279) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add return request object [\#278](https://github.com/auth0/auth0-PHP/pull/278) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add pagination and tests to Resource Servers [\#275](https://github.com/auth0/auth0-PHP/pull/275) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix formatting, code standards scan [\#274](https://github.com/auth0/auth0-PHP/pull/274) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add pagination, docs, and better tests for Rules [\#272](https://github.com/auth0/auth0-PHP/pull/272) ([joshcanhelp](https://github.com/joshcanhelp))
+- Adding pagination, tests, + docs to Client Grants; minor test suite refactor [\#271](https://github.com/auth0/auth0-PHP/pull/271) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add tests, docblocks for Logs endpoints [\#270](https://github.com/auth0/auth0-PHP/pull/270) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add PHP_CodeSniffer + ruleset config [\#267](https://github.com/auth0/auth0-PHP/pull/267) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add session state and dummy state handler tests [\#266](https://github.com/auth0/auth0-PHP/pull/266) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Build/PHPCS: update/improve the PHPCS configuration [\#284](https://github.com/auth0/auth0-PHP/pull/284) ([jrfnl](https://github.com/jrfnl))
+
+**Deprecated**
+- Deprecate Auth0\SDK\API\Oauth2Client class [\#269](https://github.com/auth0/auth0-PHP/pull/269) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Removed**
+- Remove examples, add links to Quickstarts [\#293](https://github.com/auth0/auth0-PHP/pull/293) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Whitespace pass with new standards using composer phpcbf [\#268](https://github.com/auth0/auth0-PHP/pull/268) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Security**
+- Add ID token validation [\#285](https://github.com/auth0/auth0-PHP/pull/285) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.2.0](https://github.com/auth0/auth0-PHP/tree/5.2.0) (2018-06-13)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.1.1...5.2.0)
 
