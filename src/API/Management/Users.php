@@ -142,11 +142,11 @@ class Users extends GenericResource
 
         // Keep existing pagination params if passed (backwards-compat), override with non-null function param if not.
         if (! isset($params['page']) && null !== $page) {
-            $params['page'] = abs(intval($page));
+            $params['page'] = abs((int) $page);
         }
 
         if (! isset($params['per_page']) && null !== $per_page) {
-            $params['per_page'] = abs(intval($per_page));
+            $params['per_page'] = abs((int) $per_page);
         }
 
         return $this->apiClient->method('get')

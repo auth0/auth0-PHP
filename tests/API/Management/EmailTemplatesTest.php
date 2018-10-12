@@ -58,7 +58,7 @@ class EmailTemplateTest extends ApiTests
      *
      * @var boolean
      */
-    protected static $setUpEmailError = null;
+    protected static $setUpEmailError;
 
     /**
      * Can this email template be created?

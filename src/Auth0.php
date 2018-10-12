@@ -188,7 +188,7 @@ class Auth0
      *
      * @var string
      */
-    protected $idTokenAlg = null;
+    protected $idTokenAlg;
 
     /**
      * Valid audiences for ID tokens.
@@ -385,7 +385,7 @@ class Auth0
      * @see \Auth0\SDK\API\Authentication::get_authorize_link()
      * @see https://auth0.com/docs/api/authentication#login
      */
-    public function login($state = null, $connection = null, $additionalParams = [])
+    public function login($state = null, $connection = null, array $additionalParams = [])
     {
         $params = [];
         if ($this->audience) {
