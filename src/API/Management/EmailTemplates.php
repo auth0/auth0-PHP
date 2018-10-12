@@ -151,7 +151,7 @@ class EmailTemplates extends GenericResource
             'subject' => (string) $subject,
             'body' => (string) $body,
             'syntax' => (string) $syntax,
-            'urlLifetimeInSeconds' => abs(intval($urlLifetime))
+            'urlLifetimeInSeconds' => abs((int) $urlLifetime)
         ];
 
         if (! empty($resultUrl)) {

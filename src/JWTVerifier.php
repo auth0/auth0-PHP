@@ -23,7 +23,7 @@ class JWTVerifier
      *
      * @var JWKFetcher|null
      */
-    protected $JWKFetcher = null;
+    protected $JWKFetcher;
 
     /**
      * Algorithms supported.
@@ -46,7 +46,7 @@ class JWTVerifier
      *
      * @var array|null
      */
-    protected $authorized_iss = null;
+    protected $authorized_iss;
 
     /**
      * Application Client Secret.
@@ -54,7 +54,7 @@ class JWTVerifier
      *
      * @var string|null
      */
-    protected $client_secret = null;
+    protected $client_secret;
 
     /**
      * Path to the JWKS for RS256 tokens.

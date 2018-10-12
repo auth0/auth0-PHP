@@ -22,14 +22,14 @@ class JWKFetcher
      *
      * @var CacheHandler|null
      */
-    private $cache = null;
+    private $cache;
 
     /**
      * Options for the Guzzle HTTP client.
      *
      * @var array
      */
-    private $guzzleOptions = null;
+    private $guzzleOptions;
 
     /**
      * JWKFetcher constructor.
@@ -111,7 +111,7 @@ class JWKFetcher
      */
     public function requestJwkX5c($jwks_url, $kid = null)
     {
-        $cache_key = $jwks_url.'|'.(string) $kid;
+        $cache_key = $jwks_url.'|'.$kid;
 
         $x5c = $this->cache->get($cache_key);
         if (! is_null($x5c)) {

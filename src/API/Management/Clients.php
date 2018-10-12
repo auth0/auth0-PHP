@@ -51,7 +51,7 @@ class Clients extends GenericResource
 
         // Pagination.
         if (null !== $page) {
-            $params['page'] = abs(intval($page));
+            $params['page'] = abs((int) $page);
             if (null !== $per_page) {
                 $params['per_page'] = $per_page;
             }
