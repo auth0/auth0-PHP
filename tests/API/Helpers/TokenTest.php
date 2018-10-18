@@ -251,7 +251,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $jwt_head      = JWT::urlsafeB64Encode(JWT::jsonEncode($head_obj));
 
         $payload_obj      = new \stdClass();
-        $payload_obj->aud = '__invalid_aud__';
+        $payload_obj->aud = ['__invalid_aud__'];
         $jwt_payload      = JWT::urlsafeB64Encode(JWT::jsonEncode($payload_obj));
 
         $caught_exception = false;
@@ -260,7 +260,10 @@ class TokenTest extends \PHPUnit_Framework_TestCase
             $verifier->verifyAndDecode( $jwt_head.'.'.$jwt_payload.'.'.uniqid() );
         } catch (InvalidTokenException $e) {
             $error_msg        = $e->getMessage();
-            $caught_exception = $this->errorHasString($e, 'Invalid audience __invalid_aud__; expected __valid_aud__');
+            $caught_exception = $this->errorHasString(
+                $e,
+                'Invalid token audience __invalid_aud__; expected __valid_aud__'
+            );
         }
 
         $this->assertTrue($caught_exception, $error_msg);

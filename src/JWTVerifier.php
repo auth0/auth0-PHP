@@ -199,9 +199,9 @@ class JWTVerifier
         if (! empty($body_decoded->aud)) {
             $audience = is_array($body_decoded->aud) ? $body_decoded->aud : [$body_decoded->aud];
             if (! count(array_intersect($audience, $this->valid_audiences))) {
-                throw new InvalidTokenException(
-                    'Invalid audience '.$body_decoded->aud.'; expected '.implode( ', ', $this->valid_audiences )
-                );
+                $message  = 'Invalid token audience '.implode( ', ', $audience );
+                $message .= '; expected '.implode( ', ', $this->valid_audiences );
+                throw new InvalidTokenException($message);
             }
         }
 
