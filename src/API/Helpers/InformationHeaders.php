@@ -23,9 +23,27 @@ class InformationHeaders
     }
 
     /**
+     * Add an optional env property for SDK telemetry.
+     *
+     * @param string $name    - Property name to set, name of dependency or platform.
+     * @param string $version - Version number.
+     */
+    public function setEnvProperty($name, $version)
+    {
+        if (! isset($this->data['env']) || ! is_array($this->data['env'])) {
+            $this->data['env'] = [];
+        }
+
+        $this->data['env'][$name] = $version;
+    }
+
+    /**
+     * TODO: Deprecate, not used.
      *
      * @param string $name
      * @param string $version
+     *
+     * @codeCoverageIgnore - Slated for deprecation
      */
     public function setEnvironment($name, $version)
     {
@@ -36,8 +54,11 @@ class InformationHeaders
     }
 
     /**
+     * TODO: Deprecate, not used.
      *
      * @param array $data
+     *
+     * @codeCoverageIgnore - Slated for deprecation
      */
     public function setEnvironmentData($data)
     {
@@ -45,9 +66,12 @@ class InformationHeaders
     }
 
     /**
+     * TODO: Deprecate, not used.
      *
      * @param string $name
      * @param string $version
+     *
+     * @codeCoverageIgnore - Slated for deprecation
      */
     public function setDependency($name, $version)
     {
@@ -58,8 +82,11 @@ class InformationHeaders
     }
 
     /**
+     * TODO: Deprecate, not used.
      *
      * @param array $data
+     *
+     * @codeCoverageIgnore - Slated for deprecation
      */
     public function setDependencyData($data)
     {
@@ -85,9 +112,12 @@ class InformationHeaders
     }
 
     /**
+     * TODO: Deprecate, not used.
      *
      * @param  InformationHeaders $headers
      * @return InformationHeaders
+     *
+     * @codeCoverageIgnore - Slated for deprecation
      */
     public static function Extend(InformationHeaders $headers)
     {

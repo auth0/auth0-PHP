@@ -12,6 +12,8 @@ use OAuth2\Client;
  * This class provides access to Auth0 Platform.
  *
  * @deprecated - Deprecated in 5.2.1; use \Auth0\SDK\Auth0 instead.
+ *
+ * @codeCoverageIgnore - Deprecated
  */
 class Oauth2Client
 {

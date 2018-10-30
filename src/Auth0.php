@@ -214,7 +214,7 @@ class Auth0
     /**
      * BaseAuth0 Constructor.
      *
-     * @param array $config - Required configuration options.
+     * @param  array $config - Required configuration options.
      * Configuration:
      *     - domain                 (String)  Required. Auth0 domain for your tenant
      *     - client_id              (String)  Required. Client ID found in the Application settings
