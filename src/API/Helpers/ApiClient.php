@@ -14,7 +14,7 @@ use Auth0\SDK\API\Header\ContentType;
 class ApiClient
 {
 
-    const API_VERSION = '5.0.4';
+    const API_VERSION = '5.3.1';
 
     protected static $infoHeadersDataEnabled = true;
 
@@ -39,7 +39,7 @@ class ApiClient
             self::$infoHeadersData = new InformationHeaders;
 
             self::$infoHeadersData->setPackage('auth0-php', self::API_VERSION);
-            self::$infoHeadersData->setEnvironment('PHP', phpversion());
+            self::$infoHeadersData->setEnvProperty('php', phpversion());
         }
 
         return self::$infoHeadersData;

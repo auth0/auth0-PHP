@@ -233,6 +233,8 @@ class Authentication
      * @see https://auth0.com/docs/api/authentication#social-with-provider-s-access-token
      * @see https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html
      * @see https://auth0.com/docs/api-auth/intro
+     *
+     * @codeCoverageIgnore - Deprecated
      */
     public function authorize_with_accesstoken(
         $access_token,
@@ -373,6 +375,8 @@ class Authentication
      *
      * @see https://auth0.com/docs/api/authentication#resource-owner
      * @see https://auth0.com/docs/api-auth/intro
+     *
+     * @codeCoverageIgnore - Deprecated
      */
     public function authorize_with_ro(
         $username,
