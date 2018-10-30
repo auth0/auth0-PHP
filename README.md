@@ -47,7 +47,7 @@ First, you'll need a free Auth0 account and an Application:
 
 1. Go to [auth0.com/signup](https://auth0.com/signup) and create your account.
 2. Once you are in the dashboard, go to **Applications**, then **Create Application**.
-3. Give your Application a name, select **Regular Web Application**, then **Create**
+3. Give your Application a name, select **Regular Web Application**, then **Create**.
 4. Click the **Settings** tab for the required credentials used below.
 
 Next, create a `.env` file and add the following values:
