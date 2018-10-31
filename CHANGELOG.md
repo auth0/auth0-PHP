@@ -1,5 +1,22 @@
 # Change Log
 
+## [5.3.1](https://github.com/auth0/auth0-PHP/tree/5.3.1) (2018-10-31)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.0...5.3.1)
+
+**Closed issues**
+- Array to String exception when audience is an array [\#296](https://github.com/auth0/auth0-PHP/issues/296)
+- Passing accessToken from frontend to PHP API [\#281](https://github.com/auth0/auth0-PHP/issues/281)
+- Deprecated method email_code_passwordless_verify [\#280](https://github.com/auth0/auth0-PHP/issues/280)
+
+**Added**
+- Fix documentation for Auth0 constructor options [\#298](https://github.com/auth0/auth0-PHP/pull/298) ([biganfa](https://github.com/biganfa))
+
+**Changed**
+- Change telemetry headers to new format and add tests [\#300](https://github.com/auth0/auth0-PHP/pull/300) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix bad exception message generation [\#297](https://github.com/auth0/auth0-PHP/pull/297) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.3.0](https://github.com/auth0/auth0-PHP/tree/5.3.0) (2018-10-09)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.2.0...5.3.0)
 
