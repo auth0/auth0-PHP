@@ -2,19 +2,29 @@
 
 namespace Auth0\SDK\API\Helpers;
 
+/**
+ * Class InformationHeaders
+ * Builds, extends, modifies, and formats SDK telemetry data.
+ *
+ * @package Auth0\SDK\API\Helpers
+ */
 class InformationHeaders
 {
 
     /**
+     * Default header data to send.
      *
      * @var array
      */
-    protected $data = [];
+    protected $data = [ 'name' => 'Not set (PHP)', 'version' => 'Not set (PHP)' ];
 
     /**
+     * Set the main SDK name and version.
      *
-     * @param string $name
-     * @param string $version
+     * @param string $name    SDK name.
+     * @param string $version SDK version number.
+     *
+     * @return void
      */
     public function setPackage($name, $version)
     {
@@ -25,8 +35,10 @@ class InformationHeaders
     /**
      * Add an optional env property for SDK telemetry.
      *
-     * @param string $name    - Property name to set, name of dependency or platform.
-     * @param string $version - Version number.
+     * @param string $name    Property name to set, name of dependency or platform.
+     * @param string $version Version number of dependency or platform.
+     *
+     * @return void
      */
     public function setEnvProperty($name, $version)
     {
@@ -38,62 +50,63 @@ class InformationHeaders
     }
 
     /**
-     * TODO: Deprecate, not used.
+     * TODO: Deprecate and remove from all dependant libs.
      *
-     * @param string $name
-     * @param string $version
+     * @param string $name    Dependency or platform name.
+     * @param string $version Dependency or platform version.
+     *
+     * @return void
      *
      * @codeCoverageIgnore - Slated for deprecation
      */
     public function setEnvironment($name, $version)
     {
-        $this->data['environment'][] = [
-            'name' => $name,
-            'version' => $version,
-        ];
+        $this->setEnvProperty($name, $version);
     }
 
     /**
-     * TODO: Deprecate, not used.
+     * Replace the current env data with new data.
      *
-     * @param array $data
+     * @param array $data Env data to add.
      *
-     * @codeCoverageIgnore - Slated for deprecation
+     * @return void
      */
-    public function setEnvironmentData($data)
+    public function setEnvironmentData(array $data)
     {
-        $this->data['environment'] = $data;
+        $this->data['env'] = $data;
     }
 
     /**
      * TODO: Deprecate, not used.
      *
-     * @param string $name
-     * @param string $version
+     * @param string $name    Dependency name.
+     * @param string $version Dependency version.
+     *
+     * @return void
      *
      * @codeCoverageIgnore - Slated for deprecation
      */
     public function setDependency($name, $version)
     {
-        $this->data['dependencies'][] = [
-            'name' => $name,
-            'version' => $version,
-        ];
+        $this->setEnvProperty($name, $version);
     }
 
     /**
      * TODO: Deprecate, not used.
      *
-     * @param array $data
+     * @param array $data Dependency data to store.
+     *
+     * @return void
      *
      * @codeCoverageIgnore - Slated for deprecation
      */
-    public function setDependencyData($data)
+    public function setDependencyData(array $data)
     {
         $this->data['dependencies'] = $data;
     }
 
     /**
+     * Get the current header data as an array.
      *
      * @return array
      */
@@ -103,6 +116,7 @@ class InformationHeaders
     }
 
     /**
+     * Return a header-formatted string.
      *
      * @return string
      */
@@ -112,22 +126,24 @@ class InformationHeaders
     }
 
     /**
-     * TODO: Deprecate, not used.
+     * Extend an existing InformationHeaders object.
+     * Used in dependant modules to set a new SDK name and version but keep existing PHP SDK data.
      *
-     * @param  InformationHeaders $headers
+     * @param InformationHeaders $headers InformationHeaders object to extend.
+     *
      * @return InformationHeaders
-     *
-     * @codeCoverageIgnore - Slated for deprecation
      */
     public static function Extend(InformationHeaders $headers)
     {
-        $newHeaders = new InformationHeaders;
+        $new_headers = new InformationHeaders;
+        $old_headers = $headers->get();
 
-        $oldData = $headers->get();
+        if (! empty( $old_headers['env'] ) && is_array( $old_headers['env'] )) {
+            $new_headers->setEnvironmentData($old_headers['env']);
+        }
 
-        $newHeaders->setEnvironmentData($oldData['environment']);
-        $newHeaders->setDependency($oldData['name'], $oldData['version']);
+        $new_headers->setEnvProperty($old_headers['name'], $old_headers['version']);
 
-        return $newHeaders;
+        return $new_headers;
     }
 }
