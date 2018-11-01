@@ -54,7 +54,9 @@
         <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
     </rule>
     <rule ref="Generic.Metrics"/>
-    <rule ref="Generic.NamingConventions"/>
+    <rule ref="Generic.NamingConventions">
+        <exclude name="Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps"/>
+    </rule>
     <rule ref="Generic.PHP">
         <exclude name="Generic.PHP.ClosingPHPTag"/>
         <exclude name="Generic.PHP.UpperCaseConstant"/>
