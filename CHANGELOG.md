@@ -1,5 +1,14 @@
 # Change Log
 
+## [5.3.2](https://github.com/auth0/auth0-PHP/tree/5.3.2) (2018-11-2)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.1...5.3.2)
+
+**Closed issues**
+- Something is wrong with the latest release 5.3.1 [\#303](https://github.com/auth0/auth0-PHP/issues/303)
+
+**Fixed**
+- Fix info headers Extend error in dependant libs [\#304](https://github.com/auth0/auth0-PHP/pull/304) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.3.1](https://github.com/auth0/auth0-PHP/tree/5.3.1) (2018-10-31)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.0...5.3.1)
 

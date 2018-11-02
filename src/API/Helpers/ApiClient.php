@@ -14,7 +14,7 @@ use Auth0\SDK\API\Header\ContentType;
 class ApiClient
 {
 
-    const API_VERSION = '5.3.1';
+    const API_VERSION = '5.3.2';
 
     protected static $infoHeadersDataEnabled = true;
 
