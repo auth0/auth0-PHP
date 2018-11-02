@@ -16,7 +16,7 @@ class InformationHeaders
      *
      * @var array
      */
-    protected $data = [ 'name' => 'Not set (PHP)', 'version' => 'Not set (PHP)' ];
+    protected $data = [];
 
     /**
      * Set the main SDK name and version.
