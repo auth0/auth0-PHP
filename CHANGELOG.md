@@ -104,16 +104,11 @@
 ## [5.1.0](https://github.com/auth0/auth0-PHP/tree/5.1.0) (2018-03-02)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.6...5.1.0)
 
-[State validation](https://auth0.com/docs/protocols/oauth2/oauth-state) was added in 5.1.0 for improved security. By default, this uses session storage and will happen automatically if you are using a combination of `Auth0::login()` and any method which calls `Auth0::exchange()` in your callback.
-
-If you need to use a different storage method, implement your own [StateHandler](https://github.com/auth0/auth0-PHP/blob/master/src/API/Helpers/State/StateHandler.php) and set it using the `state_handler` config key when you initialize an `Auth0` instance.
-
-If you are using `Auth0::exchange()` and a method other than `Auth0::login()` to generate the Authorize URL, you can disable automatic state validation by setting the `state_handler` key to `false` when you initialize the `Auth0` instance. It is **highly recommended** to implement state validation, either automatically or otherwise
-
 **Closed issues**
 - Support for php-jwt 5 [\#210](https://github.com/auth0/auth0-PHP/issues/210)
 
 **Added**
+- Added XSRF State Storage / Validation [\#214](https://github.com/auth0/auth0-PHP/pull/214) ([cocojoe](https://github.com/cocojoe))
 - Adding tests for state handler; correcting storage method used [\#228](https://github.com/auth0/auth0-PHP/pull/228) ([joshcanhelp](https://github.com/joshcanhelp))
 
 **Changed**
