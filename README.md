@@ -10,12 +10,22 @@ The Auth0 PHP SDK provides straight-forward and tested methods for accessing Aut
 
 For more details about how to install this SDK into an existing project or how to download a preconfigured seed project, see:
 
+## Table of Contents
+
+- [Documentation](#documentation)
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Contributing](#contributing)
+- [Support + Feedback](#support--feedback)
+- [Vulnerability Reporting](#vulnerability-reporting)
+- [Thank You](#thank-you)
+- [What is Auth0](#what-is-auth0)
+- [License](#license)
+
+## Documentation
+
 * [Basic PHP application quickstart](https://auth0.com/docs/quickstart/webapp/php/)
 * [PHP API quickstart](https://auth0.com/docs/quickstart/backend/php/)
-
-## Upgrading Through 5.1.0?
-
-Please see the notes in the [changelog](CHANGELOG.md#510-2018-03-02) regarding state validation.
 
 ## Installation
 
@@ -40,6 +50,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Auth0\SDK\Auth0;
 ```
+
+## Getting Started
 
 The examples below use [PHP Dotenv](https://github.com/josegonzalez/php-dotenv) to store and load sensitive Auth0 credentials from the environment rather than hard-coding them into your application. PHP Dotenv is a dependency of this SDK, so if you followed the steps above to install via Composer, the class is available for you to use in your project. 
 
@@ -469,28 +481,11 @@ if (! empty($results)) {
 
 ## Contributing
 
-We provide and maintain SDKs for the benefit of our developer community. Feedback, detailed bug reports, and focused PRs are appreciated. Thank you in advance!
+We appreciate feedback and contribution to this repo! Before you get started, please see the following:
 
-When contributing to this SDK, please:
-
-- Maintain the minimum PHP version (found under `require.php` in `composer.json`).
-- Code to the [PSR-2 standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md).
-- Write tests and run them with `composer test`.
-- Keep PRs focused and change the minimum number of lines to achieve your goal.
-
-To run tests on the SDK, you'll need to create a `.env` file in the root of this package with the following entries:
-
-- `DOMAIN` - Auth0 domain for your test tenant
-- `APP_CLIENT_ID` - Client ID for a test Regular Web Application
-- `APP_CLIENT_SECRET` - Client Secret for a test Regular Web Application
-- `NIC_ID` - Client ID for a test Non-Interactive Client Application
-- `NIC_SECRET` - Client Secret for a test Non-Interactive Client Application
-- `GLOBAL_CLIENT_ID` - Client ID for your tenant (found in Tenant > Settings > Advanced)
-- `GLOBAL_CLIENT_SECRET` - Client Secret for your tenant (found in Tenant > Settings > Advanced)
-
-This file is automatically excluded from Git with the `.gitignore` for this repo. 
-
-We're working on test coverage and quality but please note that newer tenants might see errors (typically `404`) for endpoints that are no longer available. Another common error is a `429` for too many requests. 
+- [Auth0's general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
+- [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
+- [This repo's contribution guide](CONTRIBUTING.md)
 
 ## Troubleshooting
 
