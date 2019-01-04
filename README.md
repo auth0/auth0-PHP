@@ -18,12 +18,12 @@ For more details about how to install this SDK into an existing project or how t
 - [Contributing](#contributing)
 - [Support + Feedback](#support--feedback)
 - [Vulnerability Reporting](#vulnerability-reporting)
-- [Thank You](#thank-you)
 - [What is Auth0](#what-is-auth0)
 - [License](#license)
 
 ## Documentation
 
+* [Documentation](https://auth0.com/docs/libraries/auth0-php)
 * [Basic PHP application quickstart](https://auth0.com/docs/quickstart/webapp/php/)
 * [PHP API quickstart](https://auth0.com/docs/quickstart/backend/php/)
 
@@ -487,38 +487,29 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 - [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 - [This repo's contribution guide](CONTRIBUTING.md)
 
-## Troubleshooting
+## Support + Feedback
 
-> I am getting `curl error 60: SSL certificate problem: self-signed certificate in certificate chain` on Windows
+- Use [Community](https://community.auth0.com/) for usage, questions, specific cases
+- Use [Issues](https://github.com/auth0/auth0-PHP/issues) here for code-level support
+- Paid customers can use [Support](https://support.auth0.com/) to submit a trouble ticket for production-affecting issues. 
 
-This is a common issue with latest PHP versions under **Windows OS** (related to an incompatibility between windows and openssl CAs database).
+## Vulnerability Reporting
 
-1. Download this CA database `https://curl.haxx.se/ca/cacert.pem` to `c:/cacert.pem`.
-2. Edit your php.ini and add `openssl.cafile=c:/cacert.pem`. (It should point to the file you downloaded.)
-
-> My host does not allow using Composer
-
-This SDK uses Composer for maintaining dependencies (required external PHP libraries). If Composer is not allowed or installed on your host, install Composer locally, follow the installation instructions there, then upload your entire application, vendor folder included, to your host.
+Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ## What is Auth0?
 
-Auth0 helps you to:
+Auth0 helps you to easily:
 
-* Add authentication with [multiple authentication sources](https://auth0.com/docs/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, among others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
-* Add authentication through more traditional [username/password databases](https://auth0.com/docs/connections/database/custom-db).
-* Add support for [linking different user accounts](https://auth0.com/docs/link-accounts) with the same user.
-* Support for generating signed [JSON Web Tokens](https://auth0.com/docs/jwt) to call your APIs and **flow the user identity** securely.
-* Analytics of how, when, and where users are logging in.
-* Pull data from other sources and add it to the user profile, through [JavaScript rules](https://auth0.com/docs/rules/current).
+- implement authentication with multiple identity providers, including social (e.g., Google, Facebook, Microsoft, LinkedIn, GitHub, Twitter, etc), or enterprise (e.g., Windows Azure AD, Google Apps, Active Directory, ADFS, SAML, etc.)
+- log in users with username/password databases, passwordless, or multi-factor authentication
+- link multiple user accounts together
+- generate signed JSON Web Tokens to authorize your API calls and flow the user identity securely
+- access demographics and analytics detailing how, when, and where users are logging in
+- enrich user profiles from other data sources using customizable JavaScript rules
 
-## Issue Reporting
-
-If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
-
-## Author
-
-[Auth0](https://auth0.com)
+[Why Auth0?](https://auth0.com/why-auth0)
 
 ## License
 
-This project is licensed under the MIT license. See the [LICENSE](LICENSE.txt) file for more info.
+The Auth0-PHP SDK is licensed under MIT - [LICENSE](LICENSE)
