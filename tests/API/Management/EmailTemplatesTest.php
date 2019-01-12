@@ -8,11 +8,11 @@ use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Exception\ClientException;
 
 /**
- * Class EmailTemplateTest
+ * Class EmailTemplatesTest
  *
  * @package Auth0\Tests\API\Management
  */
-class EmailTemplateTest extends ApiTests
+class EmailTemplatesTest extends ApiTests
 {
     /**
      * Email template to test
