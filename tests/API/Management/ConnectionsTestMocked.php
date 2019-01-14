@@ -51,7 +51,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertCount( 10, json_decode($response->getBody()) );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
-        $this->assertEquals( 'https://'.$api::API_DOMAIN.'/api/v2/'.self::ENDPOINT, $api->getHistoryUrl() );
+        $this->assertEquals( $api::API_BASE_URL.self::ENDPOINT, $api->getHistoryUrl() );
     }
 
 
@@ -197,10 +197,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute( 'id', $response_body );
         $this->assertEquals( $id, $response_body->id );
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
-        $this->assertEquals(
-            'https://'.$api::API_DOMAIN.'/api/v2/'.self::ENDPOINT.'/'.$id,
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals( $api::API_BASE_URL.self::ENDPOINT.'/'.$id, $api->getHistoryUrl() );
     }
 
     /**
@@ -267,10 +264,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $api->call()->delete($id);
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
-        $this->assertEquals(
-            'https://'.$api::API_DOMAIN.'/api/v2/'.self::ENDPOINT.'/'.$id,
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals( $api::API_BASE_URL.self::ENDPOINT.'/'.$id, $api->getHistoryUrl() );
     }
 
     /**
@@ -289,13 +283,8 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $api->call()->deleteUser($id, $email);
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
-        $this->assertEquals( 'https', $api->getHistoryUrl( 0, PHP_URL_SCHEME ) );
-        $this->assertEquals( $api::API_DOMAIN, $api->getHistoryUrl( 0, PHP_URL_HOST ) );
-        $this->assertEquals(
-            '/api/v2/'.self::ENDPOINT.'/'.$id.'/users',
-            $api->getHistoryUrl( 0, PHP_URL_PATH )
-        );
-        $this->assertContains( 'email='.$email, $api->getHistoryQuery() );
+        $this->assertContains( $api::API_BASE_URL.self::ENDPOINT.'/'.$id.'/users', $api->getHistoryUrl() );
+        $this->assertEquals( 'email='.$email, $api->getHistoryQuery() );
     }
 
     /**
@@ -323,7 +312,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertEquals( $strategy, $request_body['strategy'] );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertEquals( 'https://'.$api::API_DOMAIN.'/api/v2/'.self::ENDPOINT, $api->getHistoryUrl() );
+        $this->assertEquals( $api::API_BASE_URL.self::ENDPOINT, $api->getHistoryUrl() );
     }
 
 
@@ -379,9 +368,6 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertEquals( $update_data, $request_body );
 
         $this->assertEquals( 'PATCH', $api->getHistoryMethod() );
-        $this->assertEquals(
-            'https://'.$api::API_DOMAIN.'/api/v2/'.self::ENDPOINT.'/'.$id,
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals( $api::API_BASE_URL.self::ENDPOINT.'/'.$id, $api->getHistoryUrl() );
     }
 }

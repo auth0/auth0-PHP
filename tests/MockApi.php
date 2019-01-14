@@ -33,19 +33,9 @@ class MockApi
 {
 
     /**
-     * Domain to use for the mock API.
-     */
-    const API_DOMAIN = 'api.test.local';
-
-    /**
      * Base API URL for the mock API.
      */
     const API_BASE_URL = 'https://api.test.local/api/v2/';
-
-    /**
-     * Dummy API token to use on mock requests.
-     */
-    const API_TOKEN = '__api_token__';
 
     /**
      * Guzzle request history container for mock API.
@@ -84,7 +74,7 @@ class MockApi
             $guzzleOptions['handler'] = $handler;
         }
 
-        $this->client   = new Management(self::API_TOKEN, self::API_DOMAIN, $guzzleOptions, 'object');
+        $this->client   = new Management('__api_token__', 'api.test.local', $guzzleOptions, 'object');
         $this->endpoint = $endpoint;
     }
 
