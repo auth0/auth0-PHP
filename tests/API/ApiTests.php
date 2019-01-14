@@ -1,10 +1,9 @@
 <?php
 namespace Auth0\Tests\API;
 
+use Auth0\Tests\Traits\ErrorHelpers;
 use Auth0\SDK\API\Helpers\TokenGenerator;
 use Auth0\SDK\API\Management;
-use Auth0\SDK\API\Management\GenericResource;
-
 use josegonzalez\Dotenv\Loader;
 
 /**
@@ -15,6 +14,7 @@ use josegonzalez\Dotenv\Loader;
  */
 class ApiTests extends \PHPUnit_Framework_TestCase
 {
+    use ErrorHelpers;
 
     /**
      * Environment variables.
@@ -72,7 +72,7 @@ class ApiTests extends \PHPUnit_Framework_TestCase
      * @param array  $actions    Actions required for token generation.
      * @param array  $returnType Return type.
      *
-     * @return GenericResource
+     * @return mixed
      */
     protected static function getApi($endpoint, array $actions, array $returnType = null)
     {
