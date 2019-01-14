@@ -74,7 +74,7 @@ class MockApi
             $guzzleOptions['handler'] = $handler;
         }
 
-        $this->client   = new Management('__api_token__', 'api.test.local', $guzzleOptions, 'object');
+        $this->client   = new Management('__api_token__', 'api.test.local', $guzzleOptions);
         $this->endpoint = $endpoint;
     }
 

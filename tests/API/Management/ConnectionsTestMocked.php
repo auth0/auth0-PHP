@@ -26,6 +26,13 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     protected static $mockJson;
 
     /**
+     * Instance of MockJsonBody.
+     *
+     * @var MockJsonBody
+     */
+    protected static $headers = [ 'content-type' => 'json' ];
+
+    /**
      * Run before the test suite starts.
      *
      * @return void
@@ -44,12 +51,10 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     public function testConnectionsGetAll()
     {
         $api = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->getClean() ),
+            new Response( 200, self::$headers, self::$mockJson->getClean() ),
         ] );
 
-        $response = $api->call()->getAll();
-        $this->assertCount( 10, json_decode($response->getBody()) );
-
+        $this->assertCount( 10, $api->call()->getAll() );
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( $api::API_BASE_URL.self::ENDPOINT, $api->getHistoryUrl() );
     }
@@ -64,14 +69,13 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $strategy = 'test-strategy-01';
         $api      = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->withFilter( 'strategy', $strategy )->getClean() ),
+            new Response( 200, self::$headers, self::$mockJson->withFilter( 'strategy', $strategy )->getClean() ),
         ] );
 
-        $response      = $api->call()->getAll($strategy);
-        $response_body = json_decode($response->getBody(), true);
+        $response = $api->call()->getAll($strategy);
 
-        $this->assertCount( 3, $response_body );
-        foreach ($response_body as $datum) {
+        $this->assertCount( 3, $response );
+        foreach ($response as $datum) {
             $this->assertEquals( $strategy, $datum['strategy'] );
         }
 
@@ -87,15 +91,14 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $fields = ['id', 'name'];
         $api    = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->withFields( $fields )->getClean() ),
-            new Response( 200, [], self::$mockJson->withFields( $fields )->getClean() ),
+            new Response( 200, self::$headers, self::$mockJson->withFields( $fields )->getClean() ),
+            new Response( 200, self::$headers, self::$mockJson->withFields( $fields )->getClean() ),
         ] );
 
-        $response      = $api->call()->getAll(null, $fields);
-        $response_body = json_decode($response->getBody(), true);
+        $response = $api->call()->getAll(null, $fields);
 
-        $this->assertCount( 10, $response_body );
-        foreach ($response_body as $datum) {
+        $this->assertCount( 10, $response );
+        foreach ($response as $datum) {
             foreach ($fields as $field) {
                 $this->assertTrue( isset( $datum[$field] ) );
             }
@@ -117,14 +120,13 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $fields = ['id', 'name'];
         $api    = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->withFields( $fields, false )->getClean() ),
+            new Response( 200, self::$headers, self::$mockJson->withFields( $fields, false )->getClean() ),
         ] );
 
-        $response      = $api->call()->getAll(null, $fields, false);
-        $response_body = json_decode($response->getBody(), true);
+        $response = $api->call()->getAll(null, $fields, false);
 
-        $this->assertCount( 10, $response_body );
-        foreach ($response_body as $datum) {
+        $this->assertCount( 10, $response );
+        foreach ($response as $datum) {
             foreach ($fields as $field) {
                 $this->assertFalse( isset( $datum[$field] ) );
             }
@@ -142,22 +144,20 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     public function testThatConnectionsGetAllPaginates()
     {
         $api = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->withPages( 0, 5 )->getClean() ),
-            new Response( 200, [], self::$mockJson->withPages( 1, 4 )->getClean() ),
+            new Response( 200, self::$headers, self::$mockJson->withPages( 0, 5 )->getClean() ),
+            new Response( 200, self::$headers, self::$mockJson->withPages( 1, 4 )->getClean() ),
         ] );
 
-        $response1      = $api->call()->getAll(null, null, null, 0, 5);
-        $response1_body = json_decode($response1->getBody(), true);
+        $response1 = $api->call()->getAll(null, null, null, 0, 5);
 
         $this->assertContains( 'page=0', $api->getHistoryQuery() );
         $this->assertContains( 'per_page=5', $api->getHistoryQuery() );
-        $this->assertCount( 5, $response1_body );
+        $this->assertCount( 5, $response1 );
 
-        $response2      = $api->call()->getAll(null, null, null, 1, 4);
-        $response2_body = json_decode($response2->getBody(), true);
+        $response2 = $api->call()->getAll(null, null, null, 1, 4);
 
-        $this->assertCount( 4, $response2_body );
-        $this->assertEquals( $response1_body[4], $response2_body[0] );
+        $this->assertCount( 4, $response2 );
+        $this->assertEquals( $response1[4], $response2[0] );
         $this->assertContains( 'page=1', $api->getHistoryQuery(1) );
         $this->assertContains( 'per_page=4', $api->getHistoryQuery(1) );
     }
@@ -171,7 +171,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $params = ['param1' => 'value1', 'param2' => 'value2'];
         $api    = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->getClean() ),
+            new Response( 200, self::$headers, self::$mockJson->getClean() ),
         ] );
 
         $api->call()->getAll(null, null, null, null, null, $params);
@@ -188,14 +188,13 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $id  = 'con_testConnection10';
         $api = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->withFilter( 'id', $id )->getClean( true ) ),
+            new Response( 200, self::$headers, self::$mockJson->withFilter( 'id', $id )->getClean( true ) ),
         ] );
 
-        $response      = $api->call()->get($id);
-        $response_body = json_decode($response->getBody());
+        $response = $api->call()->get($id);
 
-        $this->assertObjectHasAttribute( 'id', $response_body );
-        $this->assertEquals( $id, $response_body->id );
+        $this->assertArrayHasKey( 'id', $response );
+        $this->assertEquals( $id, $response['id'] );
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( $api::API_BASE_URL.self::ENDPOINT.'/'.$id, $api->getHistoryUrl() );
     }
@@ -211,14 +210,13 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $fields   = ['name', 'strategy'];
         $jsonBody = self::$mockJson->withFilter( 'id', $id )->withFields( $fields )->getClean( true );
         $api      = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], $jsonBody ),
+            new Response( 200, self::$headers, $jsonBody ),
         ] );
 
-        $response      = $api->call()->get($id, $fields);
-        $response_body = json_decode($response->getBody());
+        $response = $api->call()->get($id, $fields);
 
         foreach ($fields as $field) {
-            $this->assertObjectHasAttribute( $field, $response_body );
+            $this->assertArrayHasKey( $field, $response );
         }
 
         $this->assertContains( 'fields='.implode(',', $fields), $api->getHistoryQuery() );
@@ -235,14 +233,13 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $fields   = ['name', 'strategy'];
         $jsonBody = self::$mockJson->withFilter( 'id', $id )->withFields( $fields, false )->getClean( true );
         $api      = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], $jsonBody ),
+            new Response( 200, self::$headers, $jsonBody ),
         ] );
 
-        $response      = $api->call()->get($id, $fields, false);
-        $response_body = json_decode($response->getBody());
+        $response = $api->call()->get($id, $fields, false);
 
         foreach ($fields as $field) {
-            $this->assertObjectNotHasAttribute( $field, $response_body );
+            $this->assertArrayNotHasKey( $field, $response );
         }
 
         $this->assertContains( 'fields='.implode(',', $fields), $api->getHistoryQuery() );
@@ -271,6 +268,8 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      * Test a delete user for connection request.
      *
      * @return void
+     *
+     * @throws \Exception When HTTP call fails.
      */
     public function testConnectionsDeleteUser()
     {
@@ -297,16 +296,15 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $name     = 'TestConnection01';
         $strategy = 'test-strategy-01';
         $api      = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->getClean( true ) ),
+            new Response( 200, self::$headers, self::$mockJson->getClean( true ) ),
         ] );
 
-        $response      = $api->call()->create( [ 'name' => $name, 'strategy' => $strategy ] );
-        $response_body = json_decode($response->getBody(), true);
-        $request_body  = $api->getHistoryBody();
+        $response     = $api->call()->create( [ 'name' => $name, 'strategy' => $strategy ] );
+        $request_body = $api->getHistoryBody();
 
-        $this->assertEquals( $name, $response_body['name'] );
-        $this->assertEquals( $strategy, $response_body['strategy'] );
-        $this->assertArrayHasKey( 'id', $response_body );
+        $this->assertEquals( $name, $response['name'] );
+        $this->assertEquals( $strategy, $response['strategy'] );
+        $this->assertArrayHasKey( 'id', $response );
 
         $this->assertEquals( $name, $request_body['name'] );
         $this->assertEquals( $strategy, $request_body['strategy'] );
@@ -356,15 +354,14 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $id          = 'con_testConnection10';
         $update_data = [ 'metadata' => [ 'meta1' => 'value1' ] ];
         $api         = new MockApi( self::ENDPOINT, [
-            new Response( 200, [], self::$mockJson->withFilter( 'id', $id )->getClean( true ) ),
+            new Response( 200, self::$headers, self::$mockJson->withFilter( 'id', $id )->getClean( true ) ),
         ] );
 
-        $response      = $api->call()->update($id, $update_data);
-        $response_body = json_decode($response->getBody(), true);
-        $request_body  = $api->getHistoryBody();
+        $response     = $api->call()->update($id, $update_data);
+        $request_body = $api->getHistoryBody();
 
-        $this->assertEquals( $id, $response_body['id'] );
-        $this->assertEquals( $update_data['metadata'], $response_body['metadata'] );
+        $this->assertEquals( $id, $response['id'] );
+        $this->assertEquals( $update_data['metadata'], $response['metadata'] );
         $this->assertEquals( $update_data, $request_body );
 
         $this->assertEquals( 'PATCH', $api->getHistoryMethod() );
