@@ -2,23 +2,6 @@
 namespace Auth0\Tests;
 
 use Auth0\SDK\API\Management;
-use Auth0\SDK\API\Management\Blacklists as BL;
-use Auth0\SDK\API\Management\Clients as Cl;
-use Auth0\SDK\API\Management\ClientGrants as CG;
-use Auth0\SDK\API\Management\Connections as Co;
-use Auth0\SDK\API\Management\DeviceCredentials as DC;
-use Auth0\SDK\API\Management\Emails as Em;
-use Auth0\SDK\API\Management\EmailTemplates as ET;
-use Auth0\SDK\API\Management\Jobs as J;
-use Auth0\SDK\API\Management\Logs as L;
-use Auth0\SDK\API\Management\ResourceServers as RS;
-use Auth0\SDK\API\Management\Rules as R;
-use Auth0\SDK\API\Management\Stats as S;
-use Auth0\SDK\API\Management\Tenants as Te;
-use Auth0\SDK\API\Management\Tickets as Ti;
-use Auth0\SDK\API\Management\UserBlocks as UB;
-use Auth0\SDK\API\Management\Users as U;
-use Auth0\SDK\API\Management\UsersByEmail as UE;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -33,16 +16,18 @@ class MockApi
 {
 
     /**
-     * Base API URL for the mock API.
-     */
-    const API_BASE_URL = 'https://api.test.local/api/v2/';
-
-    /**
      * Guzzle request history container for mock API.
      *
      * @var array
      */
     protected $requestHistory = [];
+
+    /**
+     * History index to use.
+     *
+     * @var integer
+     */
+    protected $historyIndex = 0;
 
     /**
      * Management API object.
@@ -52,19 +37,11 @@ class MockApi
     protected $client;
 
     /**
-     * Management API endpoint name.
-     *
-     * @var string
-     */
-    protected $endpoint;
-
-    /**
      * MockApi constructor.
      *
-     * @param string $endpoint  Endpoint property name to call.
-     * @param array  $responses Responses to be loaded, an array of Response objects.
+     * @param array $responses Responses to be loaded, an array of Response objects.
      */
-    public function __construct($endpoint, array $responses = [])
+    public function __construct(array $responses = [])
     {
         $guzzleOptions = [];
         if (count( $responses )) {
@@ -74,31 +51,30 @@ class MockApi
             $guzzleOptions['handler'] = $handler;
         }
 
-        $this->client   = new Management('__api_token__', 'api.test.local', $guzzleOptions);
-        $this->endpoint = $endpoint;
+        $this->client = new Management('__api_token__', 'api.test.local', $guzzleOptions, 'object');
     }
 
     /**
      * Return the endpoint being used.
      *
-     * @return BL | Cl | CG | Co | DC | Em | ET | J | L | R | RS | S | Te | Ti | UB | U | UE
+     * @return Management
      */
     public function call()
     {
-        return $this->client->{$this->endpoint};
+        $this->historyIndex ++;
+        return $this->client;
     }
 
     /**
      * Get the URL from a mocked request.
      *
-     * @param integer $index           History index to get.
      * @param integer $parse_component Component for parse_url, null to return complete URL.
      *
      * @return string
      */
-    public function getHistoryUrl($index = 0, $parse_component = null)
+    public function getHistoryUrl($parse_component = null)
     {
-        $request     = $this->getHistory( $index );
+        $request     = $this->getHistory();
         $request_url = $request->getUri()->__toString();
         return is_null( $parse_component ) ? $request_url : parse_url( $request_url, $parse_component );
     }
@@ -106,49 +82,42 @@ class MockApi
     /**
      * Get the URL query from a mocked request.
      *
-     * @param integer $index History index to get.
-     *
      * @return string
      */
-    public function getHistoryQuery($index = 0)
+    public function getHistoryQuery()
     {
-        return $this->getHistoryUrl( $index, PHP_URL_QUERY );
+        return $this->getHistoryUrl( PHP_URL_QUERY );
     }
 
     /**
      * Get the HTTP method from a mocked request.
      *
-     * @param integer $index History index to get.
-     *
      * @return string
      */
-    public function getHistoryMethod($index = 0)
+    public function getHistoryMethod()
     {
-        return $this->getHistory($index)->getMethod();
+        return $this->getHistory()->getMethod();
     }
 
     /**
      * Get the body from a mocked request.
      *
-     * @param integer $index History index to get.
-     *
      * @return \stdClass|array
      */
-    public function getHistoryBody($index = 0)
+    public function getHistoryBody()
     {
-        $body = $this->getHistory($index)->getBody();
+        $body = $this->getHistory()->getBody();
         return json_decode( $body, true );
     }
 
     /**
      * Get a Guzzle history record from an array populated by Middleware::history().
      *
-     * @param integer $index History index to get.
-     *
      * @return Request
      */
-    protected function getHistory($index = 0)
+    protected function getHistory()
     {
-        return $this->requestHistory[$index]['request'];
+        $requestHistoryIndex = $this->historyIndex - 1;
+        return $this->requestHistory[$requestHistoryIndex]['request'];
     }
 }
