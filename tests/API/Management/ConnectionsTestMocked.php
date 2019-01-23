@@ -195,7 +195,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
         $this->assertContains( 'fields='.implode(',', $fields), $api->getHistoryQuery() );
-        $this->assertNotContains( 'include_fields=true', $api->getHistoryQuery() );
+        $this->assertNotContains( 'include_fields=', $api->getHistoryQuery() );
 
         // Test an explicit true for includeFields.
         $include_fields = true;
