@@ -31,7 +31,7 @@ class AuthApiTest extends ApiTests
 
     public function testAuthorizeWithRO()
     {
-        $env = $this->getEnv();
+        $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);
 
@@ -58,7 +58,7 @@ class AuthApiTest extends ApiTests
 
     public function testOauthToken()
     {
-        $env = $this->getEnv();
+        $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['NIC_ID'], $env['NIC_SECRET']);
 
@@ -75,7 +75,7 @@ class AuthApiTest extends ApiTests
 
     public function testImpersonation()
     {
-        $env = $this->getEnv();
+        $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 
@@ -95,7 +95,7 @@ class AuthApiTest extends ApiTests
 
     public function testLogoutLink()
     {
-        $env = $this->getEnv();
+        $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
 

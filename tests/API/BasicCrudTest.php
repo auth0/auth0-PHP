@@ -91,7 +91,7 @@ abstract class BasicCrudTest extends ApiTests
     public function __construct()
     {
         parent::__construct();
-        self::$env    = $this->getEnv();
+        self::$env    = self::getEnv();
         $this->domain = self::$env['DOMAIN'];
         $this->api    = $this->getApiClient();
         $this->rand   = rand();
