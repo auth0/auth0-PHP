@@ -13,7 +13,7 @@ To run tests on the SDK, you'll need to create a `.env` file in the root of this
 
 - `DOMAIN` - Auth0 domain for your test tenant
 - `APP_CLIENT_ID` - Client ID for a Regular Web Application within your test tenant
-- `APP_CLIENT_SECRET` - Client Secret for a Regular Web Application within your test tenan
+- `APP_CLIENT_SECRET` - Client Secret for a Regular Web Application within your test tenant
 - `NIC_ID` - Client ID for a test Non-Interactive Client Application
 - `NIC_SECRET` - Client Secret for a test Non-Interactive Client Application
 - `GLOBAL_CLIENT_ID` - Client ID for your tenant (found in Tenant > Settings > Advanced)

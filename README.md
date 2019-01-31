@@ -69,7 +69,7 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 
 - Use [Community](https://community.auth0.com/) for usage, questions, specific cases
 - Use [Issues](https://github.com/auth0/auth0-PHP/issues) here for code-level support and bug reports
-- Paid customers can use [Support](https://support.auth0.com/) to submit a trouble ticket for production-affecting issues. 
+- Customers with a paid Auth0 subscription can use the [Support Center](https://support.auth0.com/) to submit a ticket to our support specialists. 
 
 ## Vulnerability Reporting
 
