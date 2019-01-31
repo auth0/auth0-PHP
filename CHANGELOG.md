@@ -104,6 +104,10 @@
 ## [5.1.0](https://github.com/auth0/auth0-PHP/tree/5.1.0) (2018-03-02)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.0.6...5.1.0)
 
+**Notes on this release:**
+
+[State validation](https://auth0.com/docs/protocols/oauth2/oauth-state) was added for improved security. Please see our [troubleshooting page](https://auth0.com/docs/libraries/auth0-php/troubleshooting) for more information on how this works and potential issues.
+
 **Closed issues**
 - Support for php-jwt 5 [\#210](https://github.com/auth0/auth0-PHP/issues/210)
 
