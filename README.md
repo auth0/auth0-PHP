@@ -55,7 +55,7 @@ $auth0 = new Auth0([
 ]);
 ```
 
-The values above should not be hard-coded in a production application but will suffice for testing or local development. Please see our complete guide on the [main documentation page](https://auth0.com/docs/libraries/auth0-php#getting-started) for more information on how to store and use these values.
+**The values above should not be hard-coded in a production application** but will suffice for testing or local development. Please see our complete guide on the [main documentation page](https://auth0.com/docs/libraries/auth0-php#getting-started) for more information on how to store and use these values.
 
 ## Contributing
 
@@ -68,7 +68,7 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 ## Support + Feedback
 
 - Use [Community](https://community.auth0.com/) for usage, questions, specific cases
-- Use [Issues](https://github.com/auth0/auth0-PHP/issues) here for code-level support
+- Use [Issues](https://github.com/auth0/auth0-PHP/issues) here for code-level support and bug reports
 - Paid customers can use [Support](https://support.auth0.com/) to submit a trouble ticket for production-affecting issues. 
 
 ## Vulnerability Reporting
@@ -90,4 +90,4 @@ Auth0 helps you to easily:
 
 ## License
 
-The Auth0-PHP SDK is licensed under MIT - [LICENSE](LICENSE)
+The Auth0-PHP SDK is licensed under MIT - [LICENSE](LICENSE.txt)
