@@ -16,7 +16,8 @@ use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\API\Helpers\State\DummyStateHandler;
-use Firebase\JWT\JWT;
+
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Auth0
@@ -153,6 +154,13 @@ class Auth0
     protected $idToken;
 
     /**
+     * Decoded version of the ID token
+     *
+     * @var array
+     */
+    protected $idTokenDecoded;
+
+    /**
      * Storage engine for persistence
      *
      * @var StoreInterface
@@ -181,6 +189,13 @@ class Auth0
      * @see http://docs.guzzlephp.org/en/stable/request-options.html
      */
     protected $guzzleOptions;
+
+    /**
+     * Skip the /userinfo endpoint call and use the ID token.
+     *
+     * @var boolean
+     */
+    protected $skipUserinfo;
 
     /**
      * Algorithm used for ID token validation.
@@ -232,8 +247,11 @@ class Auth0
      *                                                  leave empty to default to SessionStore SessionStateHandler
      *     - debug                  (Boolean) Optional. Turn on debug mode, default false
      *     - guzzle_options         (Object)  Optional. Options passed to Guzzle
+     *     - skip_userinfo          (Boolean) Optional. True to use id_token for user, false to call the
+     *                                                  userinfo endpoint, default false
      *     - session_base_name      (String)  Optional. A common prefix for all session keys. Default `auth0_`
-     *     - session_cookie_expires (Integer) Optional. Seconds for session cookie to expire (if default store is used). Default `604800`
+     *     - session_cookie_expires (Integer) Optional. Seconds for session cookie to expire (if default store is used).
+     *                                                  Default `604800`
      * @throws CoreException If `domain` is not provided.
      * @throws CoreException If `client_id` is not provided.
      * @throws CoreException If `client_secret` is not provided.
@@ -281,6 +299,11 @@ class Auth0
 
         if (isset($config['guzzle_options'])) {
             $this->guzzleOptions = $config['guzzle_options'];
+        }
+
+        $this->skipUserinfo = false;
+        if (isset($config['skip_userinfo']) && is_bool($config['skip_userinfo'])) {
+            $this->skipUserinfo = $config['skip_userinfo'];
         }
 
         // If a token algorithm is passed, make sure it's a specific string.
@@ -492,8 +515,10 @@ class Auth0
     /**
      * Exchange authorization code for access, ID, and refresh tokens
      *
-     * @throws CoreException - if an active session already or state cannot be validated.
-     * @throws ApiException - if access token is invalid.
+     * @throws CoreException If the state value is missing or invalid.
+     * @throws CoreException If there is already an active session.
+     * @throws ApiException If access token is missing from the response.
+     * @throws RequestException If HTTP request fails (e.g. access token does not have userinfo scope).
      *
      * @return boolean
      *
@@ -507,7 +532,6 @@ class Auth0
         }
 
         $state = $this->getState();
-
         if (! $this->stateHandler->validate($state)) {
             throw new CoreException('Invalid state');
         }
@@ -522,24 +546,25 @@ class Auth0
             throw new ApiException('Invalid access_token - Retry login.');
         }
 
-        $accessToken = $response['access_token'];
+        $this->setAccessToken($response['access_token']);
 
-        $refreshToken = false;
         if (isset($response['refresh_token'])) {
-            $refreshToken = $response['refresh_token'];
+            $this->setRefreshToken($response['refresh_token']);
         }
 
-        $idToken = false;
-        if (isset($response['id_token'])) {
-            $idToken = $response['id_token'];
+        if (! empty($response['id_token'])) {
+            $this->setIdToken($response['id_token']);
         }
 
-        $this->setAccessToken($accessToken);
-        $this->setIdToken($idToken);
-        $this->setRefreshToken($refreshToken);
+        if ($this->skipUserinfo) {
+            $user = $this->idTokenDecoded;
+        } else {
+            $user = $this->authentication->userinfo($this->accessToken);
+        }
 
-        $user = $this->authentication->userinfo($accessToken);
-        $this->setUser($user);
+        if ($user) {
+            $this->setUser($user);
+        }
 
         return true;
     }
@@ -623,7 +648,7 @@ class Auth0
      */
     public function setIdToken($idToken)
     {
-        $jwtVerifier = new JWTVerifier([
+        $jwtVerifier          = new JWTVerifier([
             'valid_audiences' => ! empty($this->idTokenAud) ? $this->idTokenAud : [ $this->clientId ],
             'supported_algs' => $this->idTokenAlg ? [ $this->idTokenAlg ] : [ 'HS256', 'RS256' ],
             'authorized_iss' => $this->idTokenIss ? $this->idTokenIss : [ 'https://'.$this->domain.'/' ],
@@ -631,7 +656,7 @@ class Auth0
             'secret_base64_encoded' => $this->clientSecretEncoded,
             'guzzle_options' => $this->guzzleOptions,
         ]);
-        $jwtVerifier->verifyAndDecode( $idToken );
+        $this->idTokenDecoded = (array) $jwtVerifier->verifyAndDecode( $idToken );
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);

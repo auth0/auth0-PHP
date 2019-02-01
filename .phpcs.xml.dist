@@ -80,6 +80,9 @@
         <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
         <exclude name="Squiz.Commenting.FunctionCommentThrowTag.WrongNumber"/>
     </rule>
+    <rule ref="Squiz.Commenting.FunctionComment">
+        <exclude-pattern>tests/*\.php</exclude-pattern>
+    </rule>
     <rule ref="Squiz.ControlStructures"/>
     <rule ref="Squiz.Functions">
         <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.NewlineBeforeOpenBrace"/>
