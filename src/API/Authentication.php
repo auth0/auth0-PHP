@@ -70,8 +70,7 @@ class Authentication
         $this->setApiClient();
 
         $infoHeadersData = new InformationHeaders;
-        $infoHeadersData->setPackage('auth0-php', \Auth0\SDK\API\Helpers\ApiClient::API_VERSION);
-        $infoHeadersData->setEnvProperty('php', phpversion());
+        $infoHeadersData->setCorePackage();
         $this->telemetry = $infoHeadersData->build();
     }
 
