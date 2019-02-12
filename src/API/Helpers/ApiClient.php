@@ -10,6 +10,7 @@ namespace Auth0\SDK\API\Helpers;
 
 use Auth0\SDK\API\Header\Header;
 use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Header\Telemetry;
 
 class ApiClient
 {
@@ -67,7 +68,7 @@ class ApiClient
         $this->guzzleOptions = isset($config['guzzleOptions']) ? $config['guzzleOptions'] : [];
 
         if (self::$infoHeadersDataEnabled) {
-            $this->headers[] = new Header('Auth0-Client', self::getInfoHeadersData()->build());
+            $this->headers[] = new Telemetry(self::getInfoHeadersData()->build());
         }
     }
 

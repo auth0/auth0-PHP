@@ -3,6 +3,9 @@ namespace Auth0\Tests\API\Management;
 
 use Auth0\Tests\MockApi;
 use Auth0\Tests\Traits\ErrorHelpers;
+
+use Auth0\SDK\API\Helpers\InformationHeaders;
+
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -16,11 +19,28 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     use ErrorHelpers;
 
     /**
+     * Expected telemetry value.
+     *
+     * @var string
+     */
+    protected static $telemetry;
+
+    /**
      * Default request headers.
      *
      * @var array
      */
     protected static $headers = [ 'content-type' => 'json' ];
+
+    /**
+     * Runs before test suite starts.
+     */
+    public static function setUpBeforeClass()
+    {
+        $infoHeadersData = new InformationHeaders;
+        $infoHeadersData->setCorePackage();
+        self::$telemetry = $infoHeadersData->build();
+    }
 
     /**
      * Test a basic getAll connection call.
@@ -38,6 +58,10 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
         $this->assertEmpty( $api->getHistoryQuery() );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$telemetry, $headers['Auth0-Client'][0] );
     }
 
 

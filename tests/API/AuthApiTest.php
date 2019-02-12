@@ -7,22 +7,25 @@ use Auth0\Tests\API\ApiTests;
 
 class AuthApiTest extends ApiTests
 {
+
     public static $telemetry;
+
     public static $telemetryParam;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass()
+    {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
 
-        self::$telemetry = urlencode( $infoHeadersData->build() );
-        self::$telemetryParam = 'auth0Client=' . self::$telemetry;
+        self::$telemetry      = urlencode( $infoHeadersData->build() );
+        self::$telemetryParam = 'auth0Client='.self::$telemetry;
     }
 
     public function testThatBasicAuthorizeLinkIsBuiltCorrectly()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $authorize_url = $api->get_authorize_link('code', 'https://example.com/cb');
+        $authorize_url       = $api->get_authorize_link('code', 'https://example.com/cb');
         $authorize_url_parts = parse_url( $authorize_url );
 
         $this->assertEquals('https', $authorize_url_parts['scheme']);
@@ -42,7 +45,7 @@ class AuthApiTest extends ApiTests
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $authorize_url = $api->get_authorize_link('code', 'https://example.com/cb', 'test-connection');
+        $authorize_url       = $api->get_authorize_link('code', 'https://example.com/cb', 'test-connection');
         $authorize_url_query = parse_url( $authorize_url, PHP_URL_QUERY );
         $authorize_url_query = explode( '&', $authorize_url_query );
 
@@ -54,7 +57,7 @@ class AuthApiTest extends ApiTests
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $authorize_url = $api->get_authorize_link('code', 'https://example.com/cb', null, '__test_state__');
+        $authorize_url       = $api->get_authorize_link('code', 'https://example.com/cb', null, '__test_state__');
         $authorize_url_query = parse_url( $authorize_url, PHP_URL_QUERY );
         $authorize_url_query = explode( '&', $authorize_url_query );
 
@@ -66,8 +69,8 @@ class AuthApiTest extends ApiTests
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $additional_params = [ 'param1' => 'value1' ];
-        $authorize_url = $api->get_authorize_link('code', 'https://example.com/cb', null, null, $additional_params);
+        $additional_params   = [ 'param1' => 'value1' ];
+        $authorize_url       = $api->get_authorize_link('code', 'https://example.com/cb', null, null, $additional_params);
         $authorize_url_query = parse_url( $authorize_url, PHP_URL_QUERY );
         $authorize_url_query = explode( '&', $authorize_url_query );
 
@@ -169,7 +172,7 @@ class AuthApiTest extends ApiTests
         $logout_link_query = parse_url($api->get_logout_link(null, '__test_client_id__'), PHP_URL_QUERY);
         $logout_link_query = explode( '&', $logout_link_query );
 
-        $this->assertContains('client_id=' . '__test_client_id__', $logout_link_query);
+        $this->assertContains('client_id='.'__test_client_id__', $logout_link_query);
         $this->assertContains(self::$telemetryParam, $logout_link_query);
     }
 
