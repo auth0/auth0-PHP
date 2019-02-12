@@ -3,7 +3,6 @@ namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\Tests\API\ApiTests;
 
 class AuthApiTest extends ApiTests
@@ -13,33 +12,67 @@ class AuthApiTest extends ApiTests
 
     public static function setUpBeforeClass() {
         $infoHeadersData = new InformationHeaders;
-        $infoHeadersData->setPackage('auth0-php', ApiClient::API_VERSION);
-        $infoHeadersData->setEnvProperty('php', phpversion());
+        $infoHeadersData->setCorePackage();
 
         self::$telemetry = urlencode( $infoHeadersData->build() );
         self::$telemetryParam = 'auth0Client=' . self::$telemetry;
     }
 
-    public function testAuthorize()
+    public function testThatBasicAuthorizeLinkIsBuiltCorrectly()
     {
-        $domain    = 'dummy.auth0.com';
-        $client_id = '123456';
+        $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $api = new Authentication($domain, $client_id);
+        $authorize_url = $api->get_authorize_link('code', 'https://example.com/cb');
+        $authorize_url_parts = parse_url( $authorize_url );
 
-        $authorize_url = $api->get_authorize_link('code', 'http://lala.com');
+        $this->assertEquals('https', $authorize_url_parts['scheme']);
+        $this->assertEquals('test-domain.auth0.com', $authorize_url_parts['host']);
+        $this->assertEquals('/authorize', $authorize_url_parts['path']);
 
-        $this->assertEquals(
-            'https://dummy.auth0.com/authorize?response_type=code&redirect_uri=http%3A%2F%2Flala.com&client_id=123456&' . self::$telemetryParam,
-            $authorize_url
-        );
+        $authorize_url_query = explode( '&', $authorize_url_parts['query'] );
+        $this->assertContains('redirect_uri=https%3A%2F%2Fexample.com%2Fcb', $authorize_url_query);
+        $this->assertContains('response_type=code', $authorize_url_query);
+        $this->assertContains('client_id=__test_client_id__', $authorize_url_query);
+        $this->assertContains(self::$telemetryParam, $authorize_url_query);
+        $this->assertNotContains('connection=', $authorize_url_parts['query']);
+        $this->assertNotContains('state=', $authorize_url_parts['query']);
+    }
 
-        $authorize_url2 = $api->get_authorize_link('token', 'http://lala.com', 'facebook', 'dastate');
+    public function testThatAuthorizeLinkIncludesConnection()
+    {
+        $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $this->assertEquals(
-            'https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http%3A%2F%2Flala.com'.'&client_id=123456&connection=facebook&state=dastate&' . self::$telemetryParam,
-            $authorize_url2
-        );
+        $authorize_url = $api->get_authorize_link('code', 'https://example.com/cb', 'test-connection');
+        $authorize_url_query = parse_url( $authorize_url, PHP_URL_QUERY );
+        $authorize_url_query = explode( '&', $authorize_url_query );
+
+        $this->assertContains('connection=test-connection', $authorize_url_query);
+        $this->assertContains(self::$telemetryParam, $authorize_url_query);
+    }
+
+    public function testThatAuthorizeLinkIncludesState()
+    {
+        $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
+
+        $authorize_url = $api->get_authorize_link('code', 'https://example.com/cb', null, '__test_state__');
+        $authorize_url_query = parse_url( $authorize_url, PHP_URL_QUERY );
+        $authorize_url_query = explode( '&', $authorize_url_query );
+
+        $this->assertContains('state=__test_state__', $authorize_url_query);
+        $this->assertContains(self::$telemetryParam, $authorize_url_query);
+    }
+
+    public function testThatAuthorizeLinkIncludesAdditionalParams()
+    {
+        $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
+
+        $additional_params = [ 'param1' => 'value1' ];
+        $authorize_url = $api->get_authorize_link('code', 'https://example.com/cb', null, null, $additional_params);
+        $authorize_url_query = parse_url( $authorize_url, PHP_URL_QUERY );
+        $authorize_url_query = explode( '&', $authorize_url_query );
+
+        $this->assertContains('param1=value1', $authorize_url_query);
+        $this->assertContains(self::$telemetryParam, $authorize_url_query);
     }
 
     public function testAuthorizeWithRO()
@@ -106,25 +139,48 @@ class AuthApiTest extends ApiTests
         $this->assertStringStartsWith('https://'.$env['DOMAIN'], $url);
     }
 
-    public function testLogoutLink()
+    public function testThatBasicLogoutLinkIsBuiltCorrectly()
     {
-        $env = self::getEnv();
+        $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID']);
+        $logout_link_parts = parse_url($api->get_logout_link());
 
-        $this->assertEquals(
-            'https://'.$env['DOMAIN'].'/v2/logout?' . self::$telemetryParam,
-            $api->get_logout_link()
-        );
+        $this->assertEquals('https', $logout_link_parts['scheme']);
+        $this->assertEquals('test-domain.auth0.com', $logout_link_parts['host']);
+        $this->assertEquals('/v2/logout', $logout_link_parts['path']);
+        $this->assertEquals(self::$telemetryParam, $logout_link_parts['query']);
+    }
 
-        $this->assertEquals(
-            'https://'.$env['DOMAIN'].'/v2/logout?returnTo=http%3A%2F%2Fexample.com&' . self::$telemetryParam,
-            $api->get_logout_link('http://example.com')
-        );
+    public function testThatReturnToLogoutLinkIsBuiltCorrectly()
+    {
+        $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $this->assertEquals(
-            'https://'.$env['DOMAIN'].'/v2/logout?returnTo=http%3A%2F%2Fexample.com&client_id='.$env['GLOBAL_CLIENT_ID'] . '&' . self::$telemetryParam,
-            $api->get_logout_link('http://example.com', $env['GLOBAL_CLIENT_ID'])
-        );
+        $logout_link_query = parse_url($api->get_logout_link('https://example.com/return-to'), PHP_URL_QUERY);
+        $logout_link_query = explode( '&', $logout_link_query );
+
+        $this->assertContains('returnTo=https%3A%2F%2Fexample.com%2Freturn-to', $logout_link_query);
+        $this->assertContains(self::$telemetryParam, $logout_link_query);
+    }
+
+    public function testThatClientIdLogoutLinkIsBuiltCorrectly()
+    {
+        $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
+
+        $logout_link_query = parse_url($api->get_logout_link(null, '__test_client_id__'), PHP_URL_QUERY);
+        $logout_link_query = explode( '&', $logout_link_query );
+
+        $this->assertContains('client_id=' . '__test_client_id__', $logout_link_query);
+        $this->assertContains(self::$telemetryParam, $logout_link_query);
+    }
+
+    public function testThatFederatedogoutLinkIsBuiltCorrectly()
+    {
+        $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
+
+        $logout_link_query = parse_url($api->get_logout_link(null, null, true), PHP_URL_QUERY);
+        $logout_link_query = explode( '&', $logout_link_query );
+
+        $this->assertContains('federated=', $logout_link_query);
+        $this->assertContains(self::$telemetryParam, $logout_link_query);
     }
 }

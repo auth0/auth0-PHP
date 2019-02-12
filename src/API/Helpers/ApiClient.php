@@ -37,9 +37,7 @@ class ApiClient
 
         if (self::$infoHeadersData === null) {
             self::$infoHeadersData = new InformationHeaders;
-
-            self::$infoHeadersData->setPackage('auth0-php', self::API_VERSION);
-            self::$infoHeadersData->setEnvProperty('php', phpversion());
+            self::$infoHeadersData->setCorePackage();
         }
 
         return self::$infoHeadersData;

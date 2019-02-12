@@ -33,6 +33,17 @@ class InformationHeaders
     }
 
     /**
+     * Set the main SDK name and version to the PHP SDK.
+     *
+     * @return void
+     */
+    public function setCorePackage()
+    {
+        $this->setPackage('auth0-php', ApiClient::API_VERSION);
+        $this->setEnvProperty('php', phpversion());
+    }
+
+    /**
      * Add an optional env property for SDK telemetry.
      *
      * @param string $name    Property name to set, name of dependency or platform.

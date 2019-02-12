@@ -129,4 +129,25 @@ class InformationHeadersTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('auth0-php', $new_header_data['env']);
         $this->assertEquals(ApiClient::API_VERSION, $new_header_data['env']['auth0-php']);
     }
+
+    /**
+     * Check that setting the core package works correctly.
+     *
+     * @return void
+     */
+    public function testThatCorePackageIsSet()
+    {
+        $header = new InformationHeaders;
+        $header->setCorePackage();
+        $header_data = $header->get();
+
+        $this->assertArrayHasKey( 'name', $header_data );
+        $this->assertArrayHasKey( 'version', $header_data );
+        $this->assertArrayHasKey( 'env', $header_data );
+        $this->assertArrayHasKey( 'php', $header_data['env'] );
+
+        $this->assertEquals( 'auth0-php', $header_data['name'] );
+        $this->assertEquals( ApiClient::API_VERSION, $header_data['version'] );
+        $this->assertEquals( phpversion(), $header_data['env']['php'] );
+    }
 }
