@@ -14,6 +14,7 @@ use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\API\Helpers\InformationHeaders;
 use GuzzleHttp\Psr7;
 
 /**
@@ -37,6 +38,8 @@ class Authentication
     private $audience;
 
     private $scope;
+
+    private $telemetry;
 
     /**
      * Authentication constructor.
@@ -65,6 +68,11 @@ class Authentication
         $this->scope         = $scope;
 
         $this->setApiClient();
+
+        $infoHeadersData = new InformationHeaders;
+        $infoHeadersData->setPackage('auth0-php', \Auth0\SDK\API\Helpers\ApiClient::API_VERSION);
+        $infoHeadersData->setEnvProperty('php', phpversion());
+        $this->telemetry = $infoHeadersData->build();
     }
 
     /**
@@ -120,6 +128,8 @@ class Authentication
         if ($state !== null) {
             $additional_params['state'] = $state;
         }
+
+        $additional_params['auth0Client'] = $this->telemetry;
 
         $query_string = Psr7\build_query($additional_params);
 
@@ -210,6 +220,8 @@ class Authentication
         if ($federated) {
             $params['federated'] = '';
         }
+
+        $params['auth0Client'] = $this->telemetry;
 
         $query_string = Psr7\build_query($params);
 
