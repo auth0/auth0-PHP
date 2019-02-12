@@ -2,10 +2,23 @@
 namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\API\Helpers\InformationHeaders;
+use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\Tests\API\ApiTests;
 
 class AuthApiTest extends ApiTests
 {
+    public static $telemetry;
+    public static $telemetryParam;
+
+    public static function setUpBeforeClass() {
+        $infoHeadersData = new InformationHeaders;
+        $infoHeadersData->setPackage('auth0-php', ApiClient::API_VERSION);
+        $infoHeadersData->setEnvProperty('php', phpversion());
+
+        self::$telemetry = urlencode( $infoHeadersData->build() );
+        self::$telemetryParam = 'auth0Client=' . self::$telemetry;
+    }
 
     public function testAuthorize()
     {
@@ -17,14 +30,14 @@ class AuthApiTest extends ApiTests
         $authorize_url = $api->get_authorize_link('code', 'http://lala.com');
 
         $this->assertEquals(
-            'https://dummy.auth0.com/authorize?response_type=code&redirect_uri=http%3A%2F%2Flala.com&client_id=123456',
+            'https://dummy.auth0.com/authorize?response_type=code&redirect_uri=http%3A%2F%2Flala.com&client_id=123456&' . self::$telemetryParam,
             $authorize_url
         );
 
         $authorize_url2 = $api->get_authorize_link('token', 'http://lala.com', 'facebook', 'dastate');
 
         $this->assertEquals(
-            'https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http%3A%2F%2Flala.com'.'&client_id=123456&connection=facebook&state=dastate',
+            'https://dummy.auth0.com/authorize?response_type=token&redirect_uri=http%3A%2F%2Flala.com'.'&client_id=123456&connection=facebook&state=dastate&' . self::$telemetryParam,
             $authorize_url2
         );
     }
@@ -97,17 +110,20 @@ class AuthApiTest extends ApiTests
     {
         $env = self::getEnv();
 
-        $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET']);
+        $api = new Authentication($env['DOMAIN'], $env['GLOBAL_CLIENT_ID']);
 
-        $this->assertSame('https://'.$env['DOMAIN'].'/v2/logout?', $api->get_logout_link());
+        $this->assertEquals(
+            'https://'.$env['DOMAIN'].'/v2/logout?' . self::$telemetryParam,
+            $api->get_logout_link()
+        );
 
-        $this->assertSame(
-            'https://'.$env['DOMAIN'].'/v2/logout?returnTo=http%3A%2F%2Fexample.com',
+        $this->assertEquals(
+            'https://'.$env['DOMAIN'].'/v2/logout?returnTo=http%3A%2F%2Fexample.com&' . self::$telemetryParam,
             $api->get_logout_link('http://example.com')
         );
 
-        $this->assertSame(
-            'https://'.$env['DOMAIN'].'/v2/logout?returnTo=http%3A%2F%2Fexample.com&client_id='.$env['GLOBAL_CLIENT_ID'],
+        $this->assertEquals(
+            'https://'.$env['DOMAIN'].'/v2/logout?returnTo=http%3A%2F%2Fexample.com&client_id='.$env['GLOBAL_CLIENT_ID'] . '&' . self::$telemetryParam,
             $api->get_logout_link('http://example.com', $env['GLOBAL_CLIENT_ID'])
         );
     }
