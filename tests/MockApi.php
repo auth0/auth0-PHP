@@ -111,6 +111,16 @@ class MockApi
     }
 
     /**
+     * Get the headers from a mocked request.
+     *
+     * @return array
+     */
+    public function getHistoryHeaders()
+    {
+        return $this->getHistory()->getHeaders();
+    }
+
+    /**
      * Get a Guzzle history record from an array populated by Middleware::history().
      *
      * @return Request

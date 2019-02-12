@@ -5,6 +5,7 @@ namespace Auth0\Tests;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Header\Header;
+use Auth0\SDK\API\Header\Telemetry;
 
 class HeaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,5 +40,15 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Content-Type', $header->getHeader());
         $this->assertEquals($contentType, $header->getValue());
         $this->assertEquals("Content-Type: $contentType\n", $header->get());
+    }
+
+    public function testTelemetry()
+    {
+        $telemetry = uniqid();
+        $header    = new Telemetry($telemetry);
+
+        $this->assertEquals('Auth0-Client', $header->getHeader());
+        $this->assertEquals($telemetry, $header->getValue());
+        $this->assertEquals("Auth0-Client: $telemetry\n", $header->get());
     }
 }
