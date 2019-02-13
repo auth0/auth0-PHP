@@ -176,7 +176,7 @@ class AuthApiTest extends ApiTests
         $this->assertContains(self::$telemetryParam, $logout_link_query);
     }
 
-    public function testThatFederatedogoutLinkIsBuiltCorrectly()
+    public function testThatFederatedLogoutLinkIsBuiltCorrectly()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
