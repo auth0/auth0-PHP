@@ -44,11 +44,11 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
 
     public function testTelemetry()
     {
-        $telemetry = uniqid();
-        $header    = new Telemetry($telemetry);
+        $telemetryVal = uniqid();
+        $header       = new Telemetry($telemetryVal);
 
         $this->assertEquals('Auth0-Client', $header->getHeader());
-        $this->assertEquals($telemetry, $header->getValue());
-        $this->assertEquals("Auth0-Client: $telemetry\n", $header->get());
+        $this->assertEquals($telemetryVal, $header->getValue());
+        $this->assertEquals("Auth0-Client: $telemetryVal\n", $header->get());
     }
 }

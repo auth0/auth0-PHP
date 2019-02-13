@@ -23,7 +23,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @var string
      */
-    protected static $telemetry;
+    protected static $expectedTelemetry;
 
     /**
      * Default request headers.
@@ -39,7 +39,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
-        self::$telemetry = $infoHeadersData->build();
+        self::$expectedTelemetry = $infoHeadersData->build();
     }
 
     /**
@@ -61,7 +61,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( self::$telemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
     }
 
 
