@@ -1,7 +1,6 @@
 <?php
 namespace Auth0\Tests\API\Management;
 
-use Auth0\Tests\MockApi;
 use Auth0\Tests\Traits\ErrorHelpers;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -51,7 +50,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testConnectionsGetAll()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $api->call()->connections->getAll();
 
@@ -74,7 +73,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testThatConnectionsGetAllAddsFilters()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $strategy = 'test-strategy-01';
         $api->call()->connections->getAll($strategy);
@@ -93,7 +92,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testThatConnectionsGetAllIncludesFields()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ), new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ), new Response( 200, self::$headers ) ] );
 
         $strategy = null;
         $fields   = ['id', 'name'];
@@ -120,7 +119,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testThatConnectionsGetAllExcludesFields()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $strategy       = null;
         $fields         = ['id', 'name'];
@@ -142,7 +141,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testThatConnectionsGetAllPaginates()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $strategy       = null;
         $fields         = null;
@@ -166,7 +165,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testThatConnectionsGetAllAddsExtraParams()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $strategy       = null;
         $fields         = null;
@@ -191,7 +190,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testConnectionsGet()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $id = 'con_testConnection10';
         $api->call()->connections->get($id);
@@ -210,7 +209,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testThatConnectionsGetIncludesFields()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ), new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ), new Response( 200, self::$headers ) ] );
 
         $id     = 'con_testConnection10';
         $fields = ['name', 'strategy'];
@@ -237,7 +236,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testThatConnectionsGetExcludesFields()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $id             = 'con_testConnection10';
         $fields         = ['name', 'strategy'];
@@ -259,7 +258,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testConnectionsDelete()
     {
-        $api = new MockApi( [ new Response( 204 ) ] );
+        $api = new MockManagementApi( [ new Response( 204 ) ] );
 
         $id = 'con_testConnection10';
         $api->call()->connections->delete($id);
@@ -278,7 +277,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testConnectionsDeleteUser()
     {
-        $api = new MockApi( [ new Response( 204 ) ] );
+        $api = new MockManagementApi( [ new Response( 204 ) ] );
 
         $id    = 'con_testConnection10';
         $email = 'con_testConnection10@auth0.com';
@@ -298,7 +297,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testConnectionsCreate()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $name     = 'TestConnection01';
         $strategy = 'test-strategy-01';
@@ -321,7 +320,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testThatConnectionsCreateThrowsExceptions()
     {
-        $api = new MockApi();
+        $api = new MockManagementApi();
 
         $caught_no_name_exception = false;
         try {
@@ -351,7 +350,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
      */
     public function testConnectionsUpdate()
     {
-        $api = new MockApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $id          = 'con_testConnection10';
         $update_data = [ 'metadata' => [ 'meta1' => 'value1' ] ];
