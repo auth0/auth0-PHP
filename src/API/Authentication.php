@@ -452,6 +452,8 @@ class Authentication
      * Obtain an impersonation URL to login as another user.
      * Impersonation functionality may be disabled by default for your tenant.
      *
+     * TODO: Deprecate
+     *
      * @param string $access_token
      * @param string $user_id
      * @param string $protocol

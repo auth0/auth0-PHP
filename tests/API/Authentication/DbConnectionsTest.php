@@ -1,12 +1,10 @@
 <?php
-
-
-namespace Auth0\Tests\API\Management;
+namespace Auth0\Tests\API\Authentication;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\Tests\API\ApiTests;
 
-class AuthApiDBConnectionsTest extends ApiTests
+class DbConnectionsTest extends ApiTests
 {
 
     protected $email;
