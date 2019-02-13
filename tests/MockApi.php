@@ -1,10 +1,8 @@
 <?php
 namespace Auth0\Tests;
 
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 
 /**
@@ -32,32 +30,14 @@ class MockApi
     /**
      * Management API object.
      *
-     * @var Management
+     * @var Management|Authentication
      */
     protected $client;
 
     /**
-     * MockApi constructor.
-     *
-     * @param array $responses Responses to be loaded, an array of Response objects.
-     */
-    public function __construct(array $responses = [])
-    {
-        $guzzleOptions = [];
-        if (count( $responses )) {
-            $mock    = new MockHandler($responses);
-            $handler = HandlerStack::create($mock);
-            $handler->push( Middleware::history($this->requestHistory) );
-            $guzzleOptions['handler'] = $handler;
-        }
-
-        $this->client = new Management('__api_token__', 'api.test.local', $guzzleOptions, 'object');
-    }
-
-    /**
      * Return the endpoint being used.
      *
-     * @return Management
+     * @return Management|Authentication
      */
     public function call()
     {
