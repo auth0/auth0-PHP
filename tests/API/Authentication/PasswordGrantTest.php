@@ -105,7 +105,19 @@ class PasswordGrantTest extends ApiTests
      */
     public function testThatPasswordGrantLoginSetsForwardedForHeader()
     {
-        $api = new MockAuthenticationApi([new Response(200)]);
+        $api = new MockAuthenticationApi([new Response(200), new Response(200)]);
+
+        $api->call()->login_with_default_directory(
+            [
+                'username' => uniqid(),
+                'password' => uniqid(),
+            ],
+            '1.2.3.4'
+        );
+
+        $request_headers = $api->getHistoryHeaders();
+        $this->assertArrayHasKey( 'Auth0-Forwarded-For', $request_headers );
+        $this->assertEquals( '1.2.3.4', $request_headers['Auth0-Forwarded-For'][0] );
 
         $api->call()->login_with_default_directory( [
             'username' => uniqid(),
