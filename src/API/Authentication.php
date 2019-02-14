@@ -12,6 +12,7 @@ namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Header\ForwardedFor;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -67,7 +68,11 @@ class Authentication
         $this->audience      = $audience;
         $this->scope         = $scope;
 
-        $this->setApiClient();
+        $this->apiClient = new ApiClient( [
+            'domain' => 'https://'.$this->domain,
+            'basePath' => '/',
+            'guzzleOptions' => $guzzleOptions
+        ] );
 
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
@@ -76,6 +81,8 @@ class Authentication
 
     /**
      * Set an ApiClient for use in this object
+     *
+     * TODO: deprecate
      *
      * @return void
      */
@@ -452,8 +459,6 @@ class Authentication
      * Obtain an impersonation URL to login as another user.
      * Impersonation functionality may be disabled by default for your tenant.
      *
-     * TODO: Deprecate
-     *
      * @param string $access_token
      * @param string $user_id
      * @param string $protocol
@@ -509,7 +514,7 @@ class Authentication
      *
      * @throws ApiException
      */
-    public function oauth_token($options = [])
+    public function oauth_token(array $options = [])
     {
         if (! isset($options['client_id'])) {
             $options['client_id'] = $this->client_id;
@@ -523,12 +528,16 @@ class Authentication
             throw new ApiException('grant_type is mandatory');
         }
 
-        return $this->apiClient->post()
-        ->oauth()
-        ->token()
-        ->withHeader(new ContentType('application/json'))
-        ->withBody(json_encode($options))
-        ->call();
+        $request = $this->apiClient->method('post')
+            ->addPath( 'oauth/token' )
+            ->withBody(json_encode($options));
+
+        if (isset($options['auth0_forwarded_for'])) {
+            $request->withHeader( new ForwardedFor( $options['auth0_forwarded_for'] ) );
+        }
+
+        return $request->call();
+
     }
 
     /**
@@ -556,18 +565,19 @@ class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint with `password-realm` grant type
      *
-     * @param array $options - keys:
-     *                       - options.username
-     *                       - options.password
-     *                       - options.realm
-     *                       - options.scope [optional]
-     *                       - options.audience [optional]
+     * @param array       $options    Options for this grant:
+     *                                - options.username
+     *                                - options.password
+     *                                - options.realm
+     *                                - options.scope [optional]
+     *                                - options.audience [optional]
+     * @param string|null $ip_address Pass in an IP address to set an Auth0-Forwarded-For header
      *
      * @return mixed|string
      *
      * @throws ApiException
      */
-    public function login($options)
+    public function login($options, $ip_address = null)
     {
         if (! isset($options['username'])) {
             throw new ApiException('username is mandatory');
@@ -581,6 +591,10 @@ class Authentication
             throw new ApiException('realm is mandatory');
         }
 
+        if (! empty( $ip_address )) {
+            $options['auth0_forwarded_for'] = $ip_address;
+        }
+
         $options['grant_type'] = 'http://auth0.com/oauth/grant-type/password-realm';
 
         return $this->oauth_token($options);
@@ -589,11 +603,12 @@ class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint with `password` grant type
      *
-     * @param array $options - keys:
-     *                       - options.username
-     *                       - options.password
-     *                       - options.scope [optional]
-     *                       - options.scope [audience]
+     * @param array       $options    Options for this grant:
+     *                                - options.username
+     *                                - options.password
+     *                                - options.scope [optional]
+     *                                - options.audience [optional]
+     * @param string|null $ip_address Pass in an IP address to set an Auth0-Forwarded-For header
      *
      * @return mixed|string
      *
@@ -601,7 +616,7 @@ class Authentication
      *
      * @see https://auth0.com/docs/api-auth/grant/password
      */
-    public function login_with_default_directory($options)
+    public function login_with_default_directory($options, $ip_address = null)
     {
         if (! isset($options['username'])) {
             throw new ApiException('username is mandatory');
@@ -609,6 +624,10 @@ class Authentication
 
         if (! isset($options['password'])) {
             throw new ApiException('password is mandatory');
+        }
+
+        if (! empty( $ip_address )) {
+            $options['auth0_forwarded_for'] = $ip_address;
         }
 
         $options['grant_type'] = 'password';
