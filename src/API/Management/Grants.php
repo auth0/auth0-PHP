@@ -6,19 +6,22 @@ use Auth0\SDK\Exception\CoreException;
 class Grants extends GenericResource
 {
     /**
-     * @param array $params
-     * @param null $page
-     * @param null $per_page
+     * Get all Grants by page.
+     * Required scope: "read:grants"
+     *
+     * @param  integer      $page     The page number to return, zero-based.
+     * @param  null|integer $per_page The number of results per page, null to return all.
+     * @param  array        $params
      * @return mixed|string
      * @throws \Exception
      */
-    public function getAll(array $params = [], $page = null, $per_page = null)
+    public function getAll($page = 0, $per_page = null, array $params = [])
     {
-        if (null !== $page) {
+        if (! empty($page)) {
             $params['page'] = abs(intval($page));
         }
 
-        if (null !== $per_page) {
+        if (! empty($per_page)) {
             $params['per_page'] = abs(intval($per_page));
         }
 
@@ -29,9 +32,9 @@ class Grants extends GenericResource
     }
 
     /**
-     * @param $client_id
-     * @param null $page
-     * @param null $per_page
+     * @param  $client_id
+     * @param  null      $page
+     * @param  null      $per_page
      * @return mixed|string
      * @throws CoreException
      * @throws \Exception
@@ -46,9 +49,9 @@ class Grants extends GenericResource
     }
 
     /**
-     * @param $audience
-     * @param null $page
-     * @param null $per_page
+     * @param  $audience
+     * @param  null     $page
+     * @param  null     $per_page
      * @return mixed|string
      * @throws CoreException
      * @throws \Exception
@@ -63,9 +66,9 @@ class Grants extends GenericResource
     }
 
     /**
-     * @param $user_id
-     * @param null $page
-     * @param null $per_page
+     * @param  $user_id
+     * @param  null    $page
+     * @param  null    $per_page
      * @return mixed|string
      * @throws CoreException
      * @throws \Exception
@@ -80,19 +83,23 @@ class Grants extends GenericResource
     }
 
     /**
-     * @param $id
+     * @param  $id
      * @return mixed|string
      * @throws \Exception
      */
     public function delete($id)
     {
+        if (empty($id) || ! is_string($id)) {
+            throw new CoreException('Empty or invalid "id" parameter.');
+        }
+
         return $this->apiClient->method('delete')
             ->addPath('grants', $id)
             ->call();
     }
 
     /**
-     * @param $user_id
+     * @param  $user_id
      * @return mixed|string
      * @throws \Exception
      */
