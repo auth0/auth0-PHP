@@ -188,7 +188,7 @@ class Auth0
      *
      * @see http://docs.guzzlephp.org/en/stable/request-options.html
      */
-    protected $guzzleOptions;
+    protected $guzzleOptions = [];
 
     /**
      * Skip the /userinfo endpoint call and use the ID token.
