@@ -100,7 +100,7 @@ class Authentication
         $client_secret = null,
         $audience = null,
         $scope = null,
-        array $guzzleOptions = []
+        $guzzleOptions = []
     )
     {
         $this->domain        = $domain;
