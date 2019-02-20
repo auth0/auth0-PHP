@@ -11,7 +11,7 @@ use Auth0\SDK\Exception\CoreException;
 class Grants extends GenericResource
 {
     /**
-     * Get all Grants by page.
+     * Get all Grants with pagination.
      * Required scope: "read:grants"
      *
      * @param integer      $page     Page number to return, zero-based.
@@ -21,6 +21,8 @@ class Grants extends GenericResource
      * @return mixed
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
     public function getAll($page = 0, $per_page = null, array $params = [])
     {
@@ -39,7 +41,7 @@ class Grants extends GenericResource
     }
 
     /**
-     * Get Grants by Client ID.
+     * Get Grants by Client ID with pagination.
      * Required scope: "read:grants"
      *
      * @param string       $client_id Client ID to filter Grants.
@@ -50,6 +52,8 @@ class Grants extends GenericResource
      *
      * @throws CoreException If $client_id is empty or not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
     public function getByClientId($client_id, $page = 0, $per_page = null)
     {
@@ -61,7 +65,7 @@ class Grants extends GenericResource
     }
 
     /**
-     * Get Grants by Audience.
+     * Get Grants by Audience with pagination.
      * Required scope: "read:grants"
      *
      * @param string       $audience Audience to filter Grants.
@@ -72,6 +76,8 @@ class Grants extends GenericResource
      *
      * @throws CoreException If $audience is empty or not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
     public function getByAudience($audience, $page = null, $per_page = null)
     {
@@ -83,7 +89,7 @@ class Grants extends GenericResource
     }
 
     /**
-     * Get Grants by User ID.
+     * Get Grants by User ID with pagination.
      * Required scope: "read:grants"
      *
      * @param string       $user_id  User ID to filter Grants.
@@ -94,6 +100,8 @@ class Grants extends GenericResource
      *
      * @throws CoreException If $user_id is empty or not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
     public function getByUserId($user_id, $page = 0, $per_page = null)
     {
@@ -114,6 +122,8 @@ class Grants extends GenericResource
      *
      * @throws CoreException If $id is empty or not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Grants/delete_grants_by_id
      */
     public function delete($id)
     {
