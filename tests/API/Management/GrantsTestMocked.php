@@ -165,6 +165,15 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertTrue( $caught_exception );
+
+        try {
+            $caught_exception = false;
+            $api->grants->getByClientId( [ '__not_empty__' ] );
+        } catch (CoreException $e) {
+            $caught_exception = $this->errorHasString( $e, 'Empty or invalid "client_id" parameter' );
+        }
+
+        $this->assertTrue( $caught_exception );
     }
 
     /**
@@ -215,6 +224,15 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $caught_exception = false;
             $api->grants->getByAudience( '' );
+        } catch (CoreException $e) {
+            $caught_exception = $this->errorHasString( $e, 'Empty or invalid "audience" parameter' );
+        }
+
+        $this->assertTrue( $caught_exception );
+
+        try {
+            $caught_exception = false;
+            $api->grants->getByAudience( [ '__not_empty__' ] );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "audience" parameter' );
         }
@@ -275,6 +293,15 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertTrue( $caught_exception );
+
+        try {
+            $caught_exception = false;
+            $api->grants->getByUserId( [ '__not_empty__' ] );
+        } catch (CoreException $e) {
+            $caught_exception = $this->errorHasString( $e, 'Empty or invalid "user_id" parameter' );
+        }
+
+        $this->assertTrue( $caught_exception );
     }
 
     /**
@@ -314,6 +341,15 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $caught_exception = false;
             $api->grants->delete( '' );
+        } catch (CoreException $e) {
+            $caught_exception = $this->errorHasString( $e, 'Empty or invalid "id" parameter' );
+        }
+
+        $this->assertTrue( $caught_exception );
+
+        try {
+            $caught_exception = false;
+            $api->grants->delete( [ '__not_empty__' ] );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "id" parameter' );
         }
