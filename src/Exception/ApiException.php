@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: germanlena
- * Date: 4/23/15
- * Time: 12:03 PM
- */
 
 namespace Auth0\SDK\Exception;
 

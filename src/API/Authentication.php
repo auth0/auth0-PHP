@@ -2,8 +2,6 @@
 /**
  * Authentication API wrapper
  *
- * PHP Version 5
- *
  * @package Auth0\SDK\API
  *
  * @see https://auth0.com/docs/api/authentication
@@ -16,6 +14,7 @@ use Auth0\SDK\API\Header\ForwardedFor;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\API\Helpers\InformationHeaders;
+
 use GuzzleHttp\Psr7;
 
 /**
@@ -26,31 +25,74 @@ use GuzzleHttp\Psr7;
 class Authentication
 {
 
-    private $client_id;
-
-    private $client_secret;
-
+    /**
+     * Domain for the Auth0 Tenant.
+     *
+     * @var string
+     */
     private $domain;
 
-    private $apiClient;
+    /**
+     * Client ID for the Auth0 Application.
+     *
+     * @var null|string
+     */
+    private $client_id;
 
-    private $guzzleOptions;
+    /**
+     * Client Secret for the Auth0 Application.
+     *
+     * @var null|string
+     */
+    private $client_secret;
 
+    /**
+     * API audience identifier for the access token.
+     *
+     * @var null|string
+     */
     private $audience;
 
+    /**
+     * Scopes to request during login.
+     *
+     * @var null|string
+     */
     private $scope;
 
+    /**
+     * Options for the Guzzle HTTP client.
+     *
+     * @var array
+     */
+    private $guzzleOptions;
+
+    /**
+     * ApiClient instance.
+     *
+     * @var ApiClient
+     */
+    private $apiClient;
+
+    /**
+     * Telemetry data to add to headers and URL parameters.
+     *
+     * @var string
+     */
     private $telemetry;
 
     /**
      * Authentication constructor.
      *
-     * @param string $domain
-     * @param null   $client_id
-     * @param null   $client_secret
-     * @param null   $audience
-     * @param null   $scope
-     * @param array  $guzzleOptions
+     * @param string      $domain        Tenant domain, found in Application settings.
+     * @param null|string $client_id     Client ID, found in Application settings.
+     * @param null|string $client_secret Client Secret, found in Application settings.
+     * @param null|string $audience      API audience identifier for the access token, found in API settings.
+     * @param null|string $scope         Scopes to request during login.
+     * @param array       $guzzleOptions Options for the Guzzle HTTP client.
+     *
+     * @link https://auth0.com/docs/scopes/current
+     * @link http://docs.guzzlephp.org/en/stable/request-options.html
      */
     public function __construct(
         $domain,
@@ -58,15 +100,15 @@ class Authentication
         $client_secret = null,
         $audience = null,
         $scope = null,
-        $guzzleOptions = []
+        array $guzzleOptions = []
     )
     {
+        $this->domain        = $domain;
         $this->client_id     = $client_id;
         $this->client_secret = $client_secret;
-        $this->domain        = $domain;
-        $this->guzzleOptions = $guzzleOptions;
         $this->audience      = $audience;
         $this->scope         = $scope;
+        $this->guzzleOptions = $guzzleOptions;
 
         $this->apiClient = new ApiClient( [
             'domain' => 'https://'.$this->domain,
@@ -79,12 +121,15 @@ class Authentication
         $this->telemetry = $infoHeadersData->build();
     }
 
+    // phpcs:disable
     /**
      * Set an ApiClient for use in this object
      *
-     * TODO: deprecate
+     * TODO: Deprecated
      *
      * @return void
+     *
+     * @codeCoverageIgnore - To be deprecated
      */
     protected function setApiClient()
     {
@@ -100,32 +145,33 @@ class Authentication
 
         $this->apiClient = $client;
     }
+    // phpcs:enable
 
     /**
-     * Builds and returns the `/authorize` url in order to initialize a new
-     * authN/authZ transaction
+     * Builds and returns the authorization URL.
      *
-     * @param string $response_type
-     * @param string $redirect_uri
-     * @param string $connection        [optional]
-     * @param string $state             [optional]
-     * @param array  $additional_params [optional]
+     * @param string      $response_type     Response type requested, typically "code" for web application login.
+     * @param string      $redirect_uri      Redirect URI for login and consent, must be white-listed.
+     * @param null|string $connection        Connection parameter to send with the request.
+     * @param null|string $state             State parameter to send with the request.
+     * @param array       $additional_params Additional URL parameters to send with the request.
      *
      * @return string
      *
-     * @see https://auth0.com/docs/api/authentication#!#get--authorize_db
+     * @link https://auth0.com/docs/api/authentication#authorize-application
      */
     public function get_authorize_link(
         $response_type,
         $redirect_uri,
         $connection = null,
         $state = null,
-        $additional_params = []
+        array $additional_params = []
     )
     {
         $additional_params['response_type'] = $response_type;
         $additional_params['redirect_uri']  = $redirect_uri;
         $additional_params['client_id']     = $this->client_id;
+        $additional_params['auth0Client']   = $this->telemetry;
 
         if ($connection !== null) {
             $additional_params['connection'] = $connection;
@@ -135,54 +181,74 @@ class Authentication
             $additional_params['state'] = $state;
         }
 
-        $additional_params['auth0Client'] = $this->telemetry;
-
-        $query_string = Psr7\build_query($additional_params);
-
-        return "https://{$this->domain}/authorize?{$query_string}";
+        return sprintf(
+            'https://%s/authorize?%s',
+            $this->domain,
+            Psr7\build_query($additional_params)
+        );
     }
 
     /**
-     * Build and return a SAMLP link
+     * Build and return a SAMLP link.
      *
-     * @param string $client_id
-     * @param string $connection
+     * @param null|string $client_id  Client ID to use, null to use the value set during class initialization.
+     * @param string      $connection Connection parameter to add.
      *
      * @return string
      *
-     * @see https://auth0.com/docs/connections/enterprise/samlp
+     * @link https://auth0.com/docs/connections/enterprise/samlp
      */
-    public function get_samlp_link($client_id, $connection = '')
+    public function get_samlp_link($client_id = null, $connection = '')
     {
-        return "https://{$this->domain}/samlp/$client_id?connection=$connection";
+        return sprintf(
+            'https://%s/samlp/%s?connection=%s',
+            $this->domain,
+            empty($client_id) ? $this->client_id : $client_id,
+            $connection
+        );
     }
 
     /**
-     * Build and return a SAMLP metadata link
+     * Build and return a SAMLP metadata link.
      *
-     * @param string $client_id
+     * @param null|string $client_id Client ID to use, null to use the value set during class initialization.
      *
      * @return string
      *
-     * @see https://auth0.com/docs/connections/enterprise/samlp
+     * @link https://auth0.com/docs/connections/enterprise/samlp
      */
-    public function get_samlp_metadata_link($client_id)
+    public function get_samlp_metadata_link($client_id = null)
     {
-        return "https://{$this->domain}/samlp/metadata/$client_id";
+        return sprintf(
+            'https://%s/samlp/metadata/%s',
+            $this->domain,
+            empty($client_id) ? $this->client_id : $client_id
+        );
     }
 
     /**
      * Build and return a WS-Federation link
      *
-     * @param string $client_id
+     * @param null|string $client_id Client ID to use, null to use the value set during class initialization.
+     * @param array       $params    Request parameters for the WS-Fed request.
+     *      - params.client-id The client-id of your application.
+     *      - params.wtrealm   Can be used in place of client-id.
+     *      - params.whr       The name of the connection (used to skip the login page).
+     *      - params.wctx      Your application's state.
+     *      - params.wreply    The callback URL.
      *
      * @return string
      *
-     * @see https://auth0.com/docs/protocols/ws-fed
+     * @link https://auth0.com/docs/protocols/ws-fed
      */
-    public function get_wsfed_link($client_id)
+    public function get_wsfed_link($client_id = null, array $params = [])
     {
-        return "https://{$this->domain}/wsfed/$client_id";
+        return sprintf(
+            'https://%s/wsfed/%s?%s',
+            $this->domain,
+            empty($client_id) ? $this->client_id : $client_id,
+            Psr7\build_query($params)
+        );
     }
 
     /**
@@ -190,7 +256,7 @@ class Authentication
      *
      * @return string
      *
-     * @see https://auth0.com/docs/protocols/ws-fed
+     * @link https://auth0.com/docs/protocols/ws-fed
      */
     public function get_wsfed_metadata_link()
     {
@@ -198,23 +264,22 @@ class Authentication
     }
 
     /**
-     * Builds and returns the Logout url in order to terminate a SSO session
+     * Builds and returns a logout URL to terminate an SSO session.
      *
-     * @param null|string $returnTo
-     * @param null|string $client_id
-     * @param boolean     $federated
+     * @param null|string $returnTo  URL to return to after logging in; must be white-listed in Auth0.
+     * @param null|string $client_id Client ID to use Application-specific returnTo URLs.
+     * @param boolean     $federated Attempt a federated logout.
      *
      * @return string
      *
-     * @see https://auth0.com/docs/api/authentication#logout
+     * @link https://auth0.com/docs/api/authentication#logout
      */
-    public function get_logout_link(
-        $returnTo = null,
-        $client_id = null,
-        $federated = false
-    )
+    public function get_logout_link($returnTo = null, $client_id = null, $federated = false)
     {
-        $params = [];
+        $params = [
+            'auth0Client' => $this->telemetry,
+        ];
+
         if ($returnTo !== null) {
             $params['returnTo'] = $returnTo;
         }
@@ -227,13 +292,14 @@ class Authentication
             $params['federated'] = '';
         }
 
-        $params['auth0Client'] = $this->telemetry;
-
-        $query_string = Psr7\build_query($params);
-
-        return "https://{$this->domain}/v2/logout?$query_string";
+        return sprintf(
+            'https://%s/v2/logout?%s',
+            $this->domain,
+            Psr7\build_query($params)
+        );
     }
 
+    // phpcs:disable
     /**
      * Authorize using an access token
      *
@@ -244,7 +310,7 @@ class Authentication
      *
      * @return mixed
      *
-     * @deprecated - This feature is disabled by default for new tenants as of 8 June
+     * @deprecated - 5.1.1, This feature is disabled by default for new tenants as of 8 June
      * 2017. Open the browser to do social authentication instead, which is
      * what Google and Facebook are recommending.
      *
@@ -258,7 +324,7 @@ class Authentication
         $access_token,
         $connection,
         $scope = 'openid',
-        $additional_params = []
+        array $additional_params = []
     )
     {
         $data = array_merge(
@@ -278,19 +344,20 @@ class Authentication
         ->withBody(json_encode($data))
         ->call();
     }
+    // phpcs:enable
 
     /**
      * Start passwordless login process for email
      *
-     * @param string $email
-     * @param string $type
-     * @param array  $authParams
+     * @param string $email      Email address to use.
+     * @param string $type       Use null or "link" to send a link, use "code" to send a verification code.
+     * @param array  $authParams Link parameters (like scope, redirect_uri, protocol, response_type) to modify.
      *
      * @return mixed
      *
-     * @see https://auth0.com/docs/api/authentication#get-code-or-link
+     * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
-    public function email_passwordless_start($email, $type, $authParams = [])
+    public function email_passwordless_start($email, $type, array $authParams = [])
     {
         $data = [
             'client_id' => $this->client_id,
@@ -312,13 +379,13 @@ class Authentication
     }
 
     /**
-     * Start passwordless login process for SMS
+     * Start passwordless login process for SMS.
      *
-     * @param string $phone_number
+     * @param string $phone_number Phone number to use.
      *
      * @return mixed
      *
-     * @see https://auth0.com/docs/api/authentication#get-code-or-link
+     * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
     public function sms_passwordless_start($phone_number)
     {
@@ -336,8 +403,11 @@ class Authentication
         ->call();
     }
 
+    // phpcs:disable
     /**
      * Verify SMS code
+     *
+     * TODO: Deprecate
      *
      * @param string $phone_number
      * @param string $code
@@ -346,18 +416,20 @@ class Authentication
      * @return mixed
      *
      * @throws ApiException
+     *
+     * @codeCoverageIgnore - To be deprecated
      */
-    public function sms_code_passwordless_verify(
-        $phone_number,
-        $code,
-        $scope = 'openid'
-    )
+    public function sms_code_passwordless_verify($phone_number, $code, $scope = 'openid')
     {
         return $this->authorize_with_ro($phone_number, $code, $scope, 'sms');
     }
+    // phpcs:enable
 
+    // phpcs:disable
     /**
      * Verify email code
+     *
+     * TODO: Deprecate
      *
      * @param string $email
      * @param string $code
@@ -366,12 +438,16 @@ class Authentication
      * @return mixed
      *
      * @throws ApiException
+     *
+     * @codeCoverageIgnore - To be deprecated
      */
     public function email_code_passwordless_verify($email, $code, $scope = 'openid')
     {
         return $this->authorize_with_ro($email, $code, $scope, 'email');
     }
+    // phpcs:enable
 
+    // phpcs:disable
     /**
      * DEPRECATED - This endpoint is part of the legacy authentication pipeline and
      * has been replaced in favor of the Password Grant. For more information on the
@@ -436,15 +512,16 @@ class Authentication
         ->withBody(json_encode($data))
         ->call();
     }
+    // phpcs:enable
 
     /**
-     * Get the current user's info
+     * Make an authenticated request to the /userinfo endpoint.
      *
-     * @param string $access_token
+     * @param string $access_token Bearer token to use for the request.
      *
      * @return mixed
      *
-     * @see https://auth0.com/docs/api/authentication#user-profile
+     * @link https://auth0.com/docs/api/authentication#user-profile
      */
     public function userinfo($access_token)
     {
@@ -455,9 +532,12 @@ class Authentication
         ->call();
     }
 
+    // phpcs:disable
     /**
      * Obtain an impersonation URL to login as another user.
      * Impersonation functionality may be disabled by default for your tenant.
+     *
+     * TODO: Deprecate
      *
      * @param string $access_token
      * @param string $user_id
@@ -469,6 +549,8 @@ class Authentication
      * @return mixed
      *
      * @see https://auth0.com/docs/api/authentication#impersonation
+     *
+     * @codeCoverageIgnore - Deprecated
      */
     public function impersonate(
         $access_token,
@@ -476,7 +558,7 @@ class Authentication
         $protocol,
         $impersonator_id,
         $client_id,
-        $additionalParameters = []
+        array $additionalParameters = []
     )
     {
         $data = [
@@ -494,25 +576,21 @@ class Authentication
         ->withBody(json_encode($data))
         ->call();
     }
+    // phpcs:enable
 
     /**
-     * Makes a call to the `oauth/token` endpoint
+     * Makes a call to the `oauth/token` endpoint.
      *
-     * @param array $options - keys:
-     *                       - options.grantType
-     *                       - options.client_id
-     *                       - options.client_secret
-     *                       [optional] Only if grant type: client_credentials
-     *                       - options.username
-     *                       [optional] Only if grant type: password/password-realm
-     *                       - options.password
-     *                       [optional] Only if grant type: password/password-realm
-     *                       - options.scope     [optional]
-     *                       - options.audience  [optional]
+     * @param array $options Options for the token endpoint request.
+     *      - options.grant_type    Grant type to use; required.
+     *      - options.client_id     Application Client ID; required.
+     *      - options.client_secret Application Client Secret; required if token endpoint requires authentication.
+     *      - options.scope         Access token scope requested.
+     *      - options.audience      API audience identifier for access token.
      *
-     * @return mixed|string
+     * @return mixed
      *
-     * @throws ApiException
+     * @throws ApiException If grant_type is missing from $options.
      */
     public function oauth_token(array $options = [])
     {
@@ -543,12 +621,12 @@ class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type
      *
-     * @param string $code
-     * @param string $redirect_uri
+     * @param string $code         Authorization code received during login.
+     * @param string $redirect_uri Redirect URI sent with authorize request.
      *
-     * @return mixed|string
+     * @return mixed
      *
-     * @throws ApiException
+     * @throws ApiException If grant_type is missing.
      */
     public function code_exchange($code, $redirect_uri)
     {
@@ -563,21 +641,21 @@ class Authentication
     }
 
     /**
-     * Makes a call to the `oauth/token` endpoint with `password-realm` grant type
+     * Makes a call to the `oauth/token` endpoint with `password-realm` grant type.
      *
-     * @param array       $options    Options for this grant:
-     *                                - options.username
-     *                                - options.password
-     *                                - options.realm
-     *                                - options.scope [optional]
-     *                                - options.audience [optional]
-     * @param string|null $ip_address Pass in an IP address to set an Auth0-Forwarded-For header
+     * @param array       $options    Options for this grant.
+     *      - options.username Username or email of the user logging in; required.
+     *      - options.password Password of the user logging in; required.
+     *      - options.realm    Database realm to use; required.
+     *      - options.scope    Access token scope requested.
+     *      - options.audience API audience identifier for access token.
+     * @param string|null $ip_address Pass in an IP address to set an Auth0-Forwarded-For header.
      *
-     * @return mixed|string
+     * @return mixed
      *
-     * @throws ApiException
+     * @throws ApiException If username, password, or realm are missing from $options.
      */
-    public function login($options, $ip_address = null)
+    public function login(array $options, $ip_address = null)
     {
         if (! isset($options['username'])) {
             throw new ApiException('username is mandatory');
@@ -603,20 +681,20 @@ class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint with `password` grant type
      *
-     * @param array       $options    Options for this grant:
-     *                                - options.username
-     *                                - options.password
-     *                                - options.scope [optional]
-     *                                - options.audience [optional]
-     * @param string|null $ip_address Pass in an IP address to set an Auth0-Forwarded-For header
+     * @param array       $options    Options for this grant.
+     *      - options.username Username or email of the user logging in; required.
+     *      - options.password Password of the user logging in; required.
+     *      - options.scope    Access token scope requested.
+     *      - options.audience API audience identifier for access token.
+     * @param string|null $ip_address Pass in an IP address to set an Auth0-Forwarded-For header.
      *
-     * @return mixed|string
+     * @return mixed
      *
-     * @throws ApiException
+     * @throws ApiException If username or password is missing.
      *
-     * @see https://auth0.com/docs/api-auth/grant/password
+     * @link https://auth0.com/docs/api-auth/grant/password
      */
-    public function login_with_default_directory($options, $ip_address = null)
+    public function login_with_default_directory(array $options, $ip_address = null)
     {
         if (! isset($options['username'])) {
             throw new ApiException('username is mandatory');
@@ -636,21 +714,22 @@ class Authentication
     }
 
     /**
-     * Makes a call to the `oauth/token` endpoint with `client_credentials` grant type
+     * Makes a call to the `oauth/token` endpoint with `client_credentials` grant type.
      *
-     * @param array $options - keys:
-     *                       - options.client_id
-     *                       - options.client_secret
-     *                       - options.scope [optional]
-     *                       - options.audience [optional]
+     * TODO: MAJOR - Add a new ApiException for missing audience.
      *
-     * @return mixed|string
+     * @param array $options Information required for this grant.
+     *      - options.client_id     Application Client ID.
+     *      - options.client_secret Application Client Secret.
+     *      - options.audience      API Audience requested.
      *
-     * @throws ApiException
+     * @return mixed
      *
-     * @see https://auth0.com/docs/api-auth/grant/client-credentials
+     * @throws ApiException If client_id or client_secret are missing.
+     *
+     * @link https://auth0.com/docs/api-auth/grant/client-credentials
      */
-    public function client_credentials($options)
+    public function client_credentials(array $options)
     {
         if (! isset($options['client_secret'])) {
             $options['client_secret'] = $this->client_secret;
@@ -668,10 +747,6 @@ class Authentication
             throw new ApiException('client_id is mandatory');
         }
 
-        if (! isset($options['scope'])) {
-            $options['scope'] = $this->scope;
-        }
-
         if (! isset($options['audience'])) {
             $options['audience'] = $this->audience;
         }
@@ -685,13 +760,13 @@ class Authentication
      * Create a new user using active authentication.
      * This endpoint only works for database connections.
      *
-     * @param string $email
-     * @param string $password
-     * @param string $connection
+     * @param string $email      Email for the user signing up.
+     * @param string $password   New password for the user signing up.
+     * @param string $connection Database connection to create the user in.
      *
      * @return mixed
      *
-     * @see https://auth0.com/docs/api/authentication#signup
+     * @link https://auth0.com/docs/api/authentication#signup
      */
     public function dbconnections_signup($email, $password, $connection)
     {
@@ -714,13 +789,16 @@ class Authentication
      * Send a change password email.
      * This endpoint only works for database connections.
      *
-     * @param string      $email
-     * @param string      $connection
-     * @param null|string $password
+     * @param string      $email      Email for the user changing their password.
+     * @param string      $connection The name of the database connection this user is in.
+     * @param null|string $password   New password to use.
+     *      If this parameter is provided, when the user clicks on the confirm password change link,
+     *      this value will be set for the user.
+     *      If this parameter is NOT provided, the user will be asked for a new password.
      *
      * @return mixed
      *
-     * @see https://auth0.com/docs/api/authentication#change-password
+     * @link https://auth0.com/docs/api/authentication#change-password
      */
     public function dbconnections_change_password(
         $email,
