@@ -1,14 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: germanlena
- * Date: 4/22/15
- * Time: 3:06 PM
- */
-
 namespace Auth0\SDK\API\Helpers;
 
-use Auth0\SDK\API\Header\Header;
 use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Header\Telemetry;
 

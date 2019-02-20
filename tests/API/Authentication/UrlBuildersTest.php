@@ -121,4 +121,76 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('federated=', $logout_link_query);
         $this->assertContains(self::$telemetryParam, $logout_link_query);
     }
+
+    public function testThatSamlLinkIsBuiltProperly()
+    {
+        $api = new Authentication('test-domain.auth0.com', 'test-client-id-1');
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/samlp/test-client-id-1?connection=',
+            $api->get_samlp_link()
+        );
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/samlp/test-client-id-2?connection=',
+            $api->get_samlp_link( 'test-client-id-2' )
+        );
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/samlp/test-client-id-3?connection=test-connection',
+            $api->get_samlp_link( 'test-client-id-3', 'test-connection' )
+        );
+    }
+
+    public function testThatSamlMetadataLinkIsBuiltProperly()
+    {
+        $api = new Authentication('test-domain.auth0.com', 'test-client-id-1');
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/samlp/metadata/test-client-id-1',
+            $api->get_samlp_metadata_link()
+        );
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/samlp/metadata/test-client-id-2',
+            $api->get_samlp_metadata_link( 'test-client-id-2' )
+        );
+    }
+
+    public function testThatWsFedLinkIsBuiltProperly()
+    {
+        $api = new Authentication('test-domain.auth0.com', 'test-client-id-1');
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/wsfed/test-client-id-1?',
+            $api->get_wsfed_link()
+        );
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/wsfed/test-client-id-2?',
+            $api->get_wsfed_link( 'test-client-id-2' )
+        );
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/wsfed/test-client-id-3?wtrealm=test_wtrealm&whr=test_whr&wctx=test_wctx',
+            $api->get_wsfed_link(
+                'test-client-id-3',
+                [
+                    'wtrealm' => 'test_wtrealm',
+                    'whr' => 'test_whr',
+                    'wctx' => 'test_wctx',
+                ]
+            )
+        );
+    }
+
+    public function testThatWsFedMetadataLinkIsBuiltProperly()
+    {
+        $api = new Authentication('test-domain.auth0.com');
+
+        $this->assertEquals(
+            'https://test-domain.auth0.com/wsfed/FederationMetadata/2007-06/FederationMetadata.xml',
+            $api->get_wsfed_metadata_link()
+        );
+    }
 }

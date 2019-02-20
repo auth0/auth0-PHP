@@ -341,8 +341,6 @@ class Oauth2Client
      * To delete an attribute, just set it null. ie: [ 'old_attr' => null ]
      * It will only update the existing attrs and keep the others untouched
      *
-     * TODO: Replace Auth0Api with Management
-     *
      * @see https://auth0.com/docs/apiv2#!/users/patch_users_by_id
      *
      * @param array $metadata
