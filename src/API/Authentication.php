@@ -110,15 +110,14 @@ class Authentication
         $this->scope         = $scope;
         $this->guzzleOptions = $guzzleOptions;
 
-        $this->apiClient = new ApiClient( [
+        $apiClient = new ApiClient( [
             'domain' => 'https://'.$this->domain,
             'basePath' => '/',
             'guzzleOptions' => $guzzleOptions
         ] );
 
-        $infoHeadersData = new InformationHeaders;
-        $infoHeadersData->setCorePackage();
-        $this->telemetry = $infoHeadersData->build();
+        $this->apiClient = $apiClient;
+        $this->telemetry = $apiClient::getInfoHeadersData()->build();
     }
 
     /**
