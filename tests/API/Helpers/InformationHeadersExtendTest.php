@@ -78,38 +78,6 @@ class InformationHeadersExtendTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( $new_headers->build(), $headers['Auth0-Client'][0] );
     }
 
-    /**
-     * Test that extending the headers works for built authorize URLs.
-     *
-     * @throws \Exception Unsuccessful HTTP call or empty mock history queue.
-     */
-    public function testThatExtendedHeadersAreUsedForAuthorizeUrl()
-    {
-        $new_headers      = self::setExtendedHeaders('test-extend-sdk-4', '4.5.6');
-        $expect_telemetry = rawurlencode($new_headers->build());
-
-        $api      = new MockAuthenticationApi( [ new Response( 200 ) ] );
-        $auth_url = $api->call()->get_authorize_link( uniqid(), uniqid() );
-
-        $this->assertContains( 'auth0Client='.$expect_telemetry, $auth_url );
-    }
-
-    /**
-     * Test that extending the headers works for built logout URLs.
-     *
-     * @throws \Exception Unsuccessful HTTP call or empty mock history queue.
-     */
-    public function testThatExtendedHeadersAreUsedForLogoutUrl()
-    {
-        $new_headers      = self::setExtendedHeaders('test-extend-sdk-5', '5.6.7');
-        $expect_telemetry = rawurlencode($new_headers->build());
-
-        $api        = new MockAuthenticationApi( [ new Response( 200 ) ] );
-        $logout_url = $api->call()->get_logout_link();
-
-        $this->assertContains( 'auth0Client='.$expect_telemetry, $logout_url );
-    }
-
     /*
      * Test helper methods.
      */

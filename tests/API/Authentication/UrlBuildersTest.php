@@ -7,19 +7,6 @@ use Auth0\SDK\API\Helpers\InformationHeaders;
 class UrlBuildersTest extends \PHPUnit_Framework_TestCase
 {
 
-    public static $telemetry;
-
-    public static $telemetryParam;
-
-    public static function setUpBeforeClass()
-    {
-        $infoHeadersData = new InformationHeaders;
-        $infoHeadersData->setCorePackage();
-
-        self::$telemetry      = urlencode( $infoHeadersData->build() );
-        self::$telemetryParam = 'auth0Client='.self::$telemetry;
-    }
-
     public function testThatBasicAuthorizeLinkIsBuiltCorrectly()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -35,7 +22,6 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('redirect_uri=https%3A%2F%2Fexample.com%2Fcb', $authorize_url_query);
         $this->assertContains('response_type=code', $authorize_url_query);
         $this->assertContains('client_id=__test_client_id__', $authorize_url_query);
-        $this->assertContains(self::$telemetryParam, $authorize_url_query);
         $this->assertNotContains('connection=', $authorize_url_parts['query']);
         $this->assertNotContains('state=', $authorize_url_parts['query']);
     }
@@ -49,7 +35,6 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $authorize_url_query = explode( '&', $authorize_url_query );
 
         $this->assertContains('connection=test-connection', $authorize_url_query);
-        $this->assertContains(self::$telemetryParam, $authorize_url_query);
     }
 
     public function testThatAuthorizeLinkIncludesState()
@@ -61,7 +46,6 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $authorize_url_query = explode( '&', $authorize_url_query );
 
         $this->assertContains('state=__test_state__', $authorize_url_query);
-        $this->assertContains(self::$telemetryParam, $authorize_url_query);
     }
 
     public function testThatAuthorizeLinkIncludesAdditionalParams()
@@ -74,7 +58,6 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $authorize_url_query = explode( '&', $authorize_url_query );
 
         $this->assertContains('param1=value1', $authorize_url_query);
-        $this->assertContains(self::$telemetryParam, $authorize_url_query);
     }
 
     public function testThatBasicLogoutLinkIsBuiltCorrectly()
@@ -86,7 +69,6 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https', $logout_link_parts['scheme']);
         $this->assertEquals('test-domain.auth0.com', $logout_link_parts['host']);
         $this->assertEquals('/v2/logout', $logout_link_parts['path']);
-        $this->assertEquals(self::$telemetryParam, $logout_link_parts['query']);
     }
 
     public function testThatReturnToLogoutLinkIsBuiltCorrectly()
@@ -97,7 +79,6 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $logout_link_query = explode( '&', $logout_link_query );
 
         $this->assertContains('returnTo=https%3A%2F%2Fexample.com%2Freturn-to', $logout_link_query);
-        $this->assertContains(self::$telemetryParam, $logout_link_query);
     }
 
     public function testThatClientIdLogoutLinkIsBuiltCorrectly()
@@ -108,7 +89,6 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $logout_link_query = explode( '&', $logout_link_query );
 
         $this->assertContains('client_id='.'__test_client_id__', $logout_link_query);
-        $this->assertContains(self::$telemetryParam, $logout_link_query);
     }
 
     public function testThatFederatedLogoutLinkIsBuiltCorrectly()
@@ -119,7 +99,6 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $logout_link_query = explode( '&', $logout_link_query );
 
         $this->assertContains('federated=', $logout_link_query);
-        $this->assertContains(self::$telemetryParam, $logout_link_query);
     }
 
     public function testThatSamlLinkIsBuiltProperly()
