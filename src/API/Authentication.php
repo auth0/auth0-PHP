@@ -75,13 +75,6 @@ class Authentication
     private $apiClient;
 
     /**
-     * Telemetry data to add to headers and URL parameters.
-     *
-     * @var string
-     */
-    private $telemetry;
-
-    /**
      * Authentication constructor.
      *
      * @param string      $domain        Tenant domain, found in Application settings.
@@ -110,14 +103,11 @@ class Authentication
         $this->scope         = $scope;
         $this->guzzleOptions = $guzzleOptions;
 
-        $apiClient = new ApiClient( [
+        $this->apiClient = new ApiClient( [
             'domain' => 'https://'.$this->domain,
             'basePath' => '/',
             'guzzleOptions' => $guzzleOptions
         ] );
-
-        $this->apiClient = $apiClient;
-        $this->telemetry = $apiClient::getInfoHeadersData()->build();
     }
 
     /**
@@ -144,7 +134,6 @@ class Authentication
         $additional_params['response_type'] = $response_type;
         $additional_params['redirect_uri']  = $redirect_uri;
         $additional_params['client_id']     = $this->client_id;
-        $additional_params['auth0Client']   = $this->telemetry;
 
         if ($connection !== null) {
             $additional_params['connection'] = $connection;
@@ -249,9 +238,7 @@ class Authentication
      */
     public function get_logout_link($returnTo = null, $client_id = null, $federated = false)
     {
-        $params = [
-            'auth0Client' => $this->telemetry,
-        ];
+        $params = [];
 
         if ($returnTo !== null) {
             $params['returnTo'] = $returnTo;
