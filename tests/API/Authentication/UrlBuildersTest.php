@@ -24,6 +24,9 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('client_id=__test_client_id__', $authorize_url_query);
         $this->assertNotContains('connection=', $authorize_url_parts['query']);
         $this->assertNotContains('state=', $authorize_url_parts['query']);
+
+        // Telemetry should not be added to any browser URLs.
+        $this->assertNotContains('auth0Client=', $authorize_url_parts['query']);
     }
 
     public function testThatAuthorizeLinkIncludesConnection()
@@ -69,6 +72,10 @@ class UrlBuildersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https', $logout_link_parts['scheme']);
         $this->assertEquals('test-domain.auth0.com', $logout_link_parts['host']);
         $this->assertEquals('/v2/logout', $logout_link_parts['path']);
+
+        // Telemetry should not be added to browser URLs.
+        // If a query is added in the future, change this to check that auth0Client is not present.
+        $this->assertTrue( empty( $logout_link_parts['query'] ) );
     }
 
     public function testThatReturnToLogoutLinkIsBuiltCorrectly()
