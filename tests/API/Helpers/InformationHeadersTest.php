@@ -103,34 +103,6 @@ class InformationHeadersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Extend existing headers and make sure existing data stays intact.
-     *
-     * @link https://github.com/auth0/jwt-auth-bundle/blob/master/src/JWTAuthBundle.php
-     * @link https://github.com/auth0/laravel-auth0/blob/master/src/Auth0/Login/LoginServiceProvider.php
-     *
-     * @return void
-     */
-    public function testThatExtendedHeadersBuildCorrectly()
-    {
-        $headers     = ApiClient::getInfoHeadersData();
-        $new_headers = InformationHeaders::Extend($headers);
-
-        $new_headers->setEnvironment('test_env_name_5', '8.9.10');
-        $new_headers->setPackage('test_name_4', '7.8.9');
-
-        $new_header_data = $new_headers->get();
-
-        $this->assertEquals( 'test_name_4', $new_header_data['name'] );
-        $this->assertEquals( '7.8.9', $new_header_data['version'] );
-
-        $this->assertArrayHasKey('env', $new_header_data);
-        $this->assertArrayHasKey('php', $new_header_data['env']);
-        $this->assertEquals( phpversion(), $new_header_data['env']['php'] );
-        $this->assertArrayHasKey('auth0-php', $new_header_data['env']);
-        $this->assertEquals(ApiClient::API_VERSION, $new_header_data['env']['auth0-php']);
-    }
-
-    /**
      * Check that setting the core package works correctly.
      *
      * @return void
