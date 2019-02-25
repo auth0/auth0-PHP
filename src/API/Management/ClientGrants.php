@@ -169,9 +169,16 @@ class ClientGrants extends GenericResource
             ->call();
     }
 
+    /*
+     * Deprecated
+     */
+
+    // phpcs:disable
+
     /**
      * Get a Client Grant.
-     * TODO: Deprecate, cannot get a Client Grant by ID.
+     *
+     * @deprecated 5.4.0, no such endpoint.
      *
      * @param string      $id       Client Grant ID.
      * @param null|string $audience Client Grant audience to filter by.
@@ -179,6 +186,8 @@ class ClientGrants extends GenericResource
      * @return mixed
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @codeCoverageIgnore - Deprecated.
      */
     public function get($id, $audience = null)
     {
@@ -191,4 +200,6 @@ class ClientGrants extends GenericResource
 
         return $request->call();
     }
+
+    // phpcs:enable
 }
