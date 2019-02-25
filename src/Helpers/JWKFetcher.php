@@ -62,45 +62,6 @@ class JWKFetcher
         return $output;
     }
 
-    // phpcs:disable
-    /**
-     * Appends the default JWKS path to a token issuer to return all keys from a JWKS.
-     * TODO: Deprecate, use $this->getJwksX5c() instead and explain why/how.
-     *
-     * @param string $iss
-     *
-     * @return array|mixed|null
-     *
-     * @throws \Exception
-     *
-     * @codeCoverageIgnore
-     */
-    public function fetchKeys($iss)
-    {
-        $url = "{$iss}.well-known/jwks.json";
-
-        if (($secret = $this->cache->get($url)) === null) {
-            $secret = [];
-
-            $request = new RequestBuilder([
-                'domain' => $iss,
-                'basePath' => '.well-known/jwks.json',
-                'method' => 'GET',
-                'guzzleOptions' => $this->guzzleOptions
-            ]);
-            $jwks    = $request->call();
-
-            foreach ($jwks['keys'] as $key) {
-                $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
-            }
-
-            $this->cache->set($url, $secret);
-        }
-
-        return $secret;
-    }
-    // phpcs:enable
-
     /**
      * Fetch x509 cert for RS256 token decoding.
      *
@@ -195,4 +156,48 @@ class JWKFetcher
     {
         return empty($array) || ! is_array($array[$key]) || empty($array[$key][0]);
     }
+
+    /*
+     * Deprecated
+     */
+
+    // phpcs:disable
+    /**
+     * Appends the default JWKS path to a token issuer to return all keys from a JWKS.
+     *
+     * @deprecated 5.4.0, use requestJwkX5c instead.
+     *
+     * @param string $iss
+     *
+     * @return array|mixed|null
+     *
+     * @throws \Exception
+     *
+     * @codeCoverageIgnore
+     */
+    public function fetchKeys($iss)
+    {
+        $url = "{$iss}.well-known/jwks.json";
+
+        if (($secret = $this->cache->get($url)) === null) {
+            $secret = [];
+
+            $request = new RequestBuilder([
+                'domain' => $iss,
+                'basePath' => '.well-known/jwks.json',
+                'method' => 'GET',
+                'guzzleOptions' => $this->guzzleOptions
+            ]);
+            $jwks    = $request->call();
+
+            foreach ($jwks['keys'] as $key) {
+                $secret[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
+            }
+
+            $this->cache->set($url, $secret);
+        }
+
+        return $secret;
+    }
+    // phpcs:enable
 }
