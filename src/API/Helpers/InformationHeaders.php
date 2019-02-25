@@ -61,21 +61,6 @@ class InformationHeaders
     }
 
     /**
-     * TODO: Deprecate and remove from all dependant libs.
-     *
-     * @param string $name    Dependency or platform name.
-     * @param string $version Dependency or platform version.
-     *
-     * @return void
-     *
-     * @codeCoverageIgnore - Slated for deprecation
-     */
-    public function setEnvironment($name, $version)
-    {
-        $this->setEnvProperty($name, $version);
-    }
-
-    /**
      * Replace the current env data with new data.
      *
      * @param array $data Env data to add.
@@ -85,35 +70,6 @@ class InformationHeaders
     public function setEnvironmentData(array $data)
     {
         $this->data['env'] = $data;
-    }
-
-    /**
-     * TODO: Deprecate, not used.
-     *
-     * @param string $name    Dependency name.
-     * @param string $version Dependency version.
-     *
-     * @return void
-     *
-     * @codeCoverageIgnore - Slated for deprecation
-     */
-    public function setDependency($name, $version)
-    {
-        $this->setEnvProperty($name, $version);
-    }
-
-    /**
-     * TODO: Deprecate, not used.
-     *
-     * @param array $data Dependency data to store.
-     *
-     * @return void
-     *
-     * @codeCoverageIgnore - Slated for deprecation
-     */
-    public function setDependencyData(array $data)
-    {
-        $this->data['dependencies'] = $data;
     }
 
     /**
@@ -157,4 +113,56 @@ class InformationHeaders
 
         return $new_headers;
     }
+
+    /*
+     * Deprecated
+     */
+
+    // phpcs:disable
+
+    /**
+     * @deprecated 5.4.0, use $this->setEnvProperty() instead.
+     *
+     * @param string $name    Dependency or platform name.
+     * @param string $version Dependency or platform version.
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    public function setEnvironment($name, $version)
+    {
+        $this->setEnvProperty($name, $version);
+    }
+
+    /**
+     * @deprecated 5.4.0, use $this->setEnvProperty() instead.
+     *
+     * @param string $name    Dependency name.
+     * @param string $version Dependency version.
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    public function setDependency($name, $version)
+    {
+        $this->setEnvProperty($name, $version);
+    }
+
+    /**
+     * @deprecated 5.4.0, use $this->setEnvProperty() instead.
+     *
+     * @param array $data Dependency data to store.
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    public function setDependencyData(array $data)
+    {
+        $this->data['dependencies'] = $data;
+    }
+
+    // phpcs:enable
 }

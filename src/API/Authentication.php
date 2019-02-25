@@ -75,13 +75,6 @@ class Authentication
     private $apiClient;
 
     /**
-     * Telemetry data to add to headers and URL parameters.
-     *
-     * @var string
-     */
-    private $telemetry;
-
-    /**
      * Authentication constructor.
      *
      * @param string      $domain        Tenant domain, found in Application settings.
@@ -115,37 +108,7 @@ class Authentication
             'basePath' => '/',
             'guzzleOptions' => $guzzleOptions
         ] );
-
-        $infoHeadersData = new InformationHeaders;
-        $infoHeadersData->setCorePackage();
-        $this->telemetry = $infoHeadersData->build();
     }
-
-    // phpcs:disable
-    /**
-     * Set an ApiClient for use in this object
-     *
-     * TODO: Deprecated
-     *
-     * @return void
-     *
-     * @codeCoverageIgnore - To be deprecated
-     */
-    protected function setApiClient()
-    {
-        $apiDomain = "https://{$this->domain}";
-
-        $client = new ApiClient(
-            [
-                'domain' => $apiDomain,
-                'basePath' => '/',
-                'guzzleOptions' => $this->guzzleOptions
-            ]
-        );
-
-        $this->apiClient = $client;
-    }
-    // phpcs:enable
 
     /**
      * Builds and returns the authorization URL.
@@ -171,7 +134,6 @@ class Authentication
         $additional_params['response_type'] = $response_type;
         $additional_params['redirect_uri']  = $redirect_uri;
         $additional_params['client_id']     = $this->client_id;
-        $additional_params['auth0Client']   = $this->telemetry;
 
         if ($connection !== null) {
             $additional_params['connection'] = $connection;
@@ -276,9 +238,7 @@ class Authentication
      */
     public function get_logout_link($returnTo = null, $client_id = null, $federated = false)
     {
-        $params = [
-            'auth0Client' => $this->telemetry,
-        ];
+        $params = [];
 
         if ($returnTo !== null) {
             $params['returnTo'] = $returnTo;
@@ -298,53 +258,6 @@ class Authentication
             Psr7\build_query($params)
         );
     }
-
-    // phpcs:disable
-    /**
-     * Authorize using an access token
-     *
-     * @param string $access_token
-     * @param string $connection
-     * @param string $scope
-     * @param array  $additional_params
-     *
-     * @return mixed
-     *
-     * @deprecated - 5.1.1, This feature is disabled by default for new tenants as of 8 June
-     * 2017. Open the browser to do social authentication instead, which is
-     * what Google and Facebook are recommending.
-     *
-     * @see https://auth0.com/docs/api/authentication#social-with-provider-s-access-token
-     * @see https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html
-     * @see https://auth0.com/docs/api-auth/intro
-     *
-     * @codeCoverageIgnore - Deprecated
-     */
-    public function authorize_with_accesstoken(
-        $access_token,
-        $connection,
-        $scope = 'openid',
-        array $additional_params = []
-    )
-    {
-        $data = array_merge(
-            $additional_params,
-            [
-                'client_id' => $this->client_id,
-                'access_token' => $access_token,
-                'connection' => $connection,
-                'scope' => $scope,
-            ]
-        );
-
-        return $this->apiClient->post()
-        ->oauth()
-        ->access_token()
-        ->withHeader(new ContentType('application/json'))
-        ->withBody(json_encode($data))
-        ->call();
-    }
-    // phpcs:enable
 
     /**
      * Start passwordless login process for email
@@ -403,117 +316,6 @@ class Authentication
         ->call();
     }
 
-    // phpcs:disable
-    /**
-     * Verify SMS code
-     *
-     * TODO: Deprecate
-     *
-     * @param string $phone_number
-     * @param string $code
-     * @param string $scope
-     *
-     * @return mixed
-     *
-     * @throws ApiException
-     *
-     * @codeCoverageIgnore - To be deprecated
-     */
-    public function sms_code_passwordless_verify($phone_number, $code, $scope = 'openid')
-    {
-        return $this->authorize_with_ro($phone_number, $code, $scope, 'sms');
-    }
-    // phpcs:enable
-
-    // phpcs:disable
-    /**
-     * Verify email code
-     *
-     * TODO: Deprecate
-     *
-     * @param string $email
-     * @param string $code
-     * @param string $scope
-     *
-     * @return mixed
-     *
-     * @throws ApiException
-     *
-     * @codeCoverageIgnore - To be deprecated
-     */
-    public function email_code_passwordless_verify($email, $code, $scope = 'openid')
-    {
-        return $this->authorize_with_ro($email, $code, $scope, 'email');
-    }
-    // phpcs:enable
-
-    // phpcs:disable
-    /**
-     * DEPRECATED - This endpoint is part of the legacy authentication pipeline and
-     * has been replaced in favor of the Password Grant. For more information on the
-     * latest authentication pipeline refer to Introducing OIDC Conformant
-     * Authentication.
-     *
-     * @param string      $username
-     * @param string      $password
-     * @param string      $scope
-     * @param null|string $connection
-     * @param null|string $id_token
-     * @param null|string $device
-     *
-     * @return mixed
-     *
-     * @throws ApiException
-     *
-     * @deprecated Use `login` instead. Use only for passwordless verify
-     *
-     * @see https://auth0.com/docs/api/authentication#resource-owner
-     * @see https://auth0.com/docs/api-auth/intro
-     *
-     * @codeCoverageIgnore - Deprecated
-     */
-    public function authorize_with_ro(
-        $username,
-        $password,
-        $scope = 'openid',
-        $connection = null,
-        $id_token = null,
-        $device = null
-    )
-    {
-        $data = [
-            'client_id' => $this->client_id,
-            'username' => $username,
-            'password' => $password,
-            'scope' => $scope,
-        ];
-        if ($device !== null) {
-            $data['device'] = $device;
-        }
-
-        if ($id_token !== null) {
-            $data['id_token']   = $id_token;
-            $data['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
-        } else {
-            if ($connection === null) {
-                throw new ApiException(
-                    'You need to specify a connection for grant_type=password authentication'
-                );
-            }
-
-            $data['grant_type'] = 'password';
-            $data['connection'] = $connection;
-        }
-
-        return $this->apiClient->post()
-        ->oauth()
-        ->ro()
-        ->withHeader(new ContentType('application/json'))
-        ->withBody(json_encode($data))
-        ->call();
-    }
-    // phpcs:enable
-
     /**
      * Make an authenticated request to the /userinfo endpoint.
      *
@@ -531,52 +333,6 @@ class Authentication
         ->withHeader(new AuthorizationBearer($access_token))
         ->call();
     }
-
-    // phpcs:disable
-    /**
-     * Obtain an impersonation URL to login as another user.
-     * Impersonation functionality may be disabled by default for your tenant.
-     *
-     * TODO: Deprecate
-     *
-     * @param string $access_token
-     * @param string $user_id
-     * @param string $protocol
-     * @param string $impersonator_id
-     * @param string $client_id
-     * @param array  $additionalParameters
-     *
-     * @return mixed
-     *
-     * @see https://auth0.com/docs/api/authentication#impersonation
-     *
-     * @codeCoverageIgnore - Deprecated
-     */
-    public function impersonate(
-        $access_token,
-        $user_id,
-        $protocol,
-        $impersonator_id,
-        $client_id,
-        array $additionalParameters = []
-    )
-    {
-        $data = [
-            'protocol' => $protocol,
-            'impersonator_id' => $impersonator_id,
-            'client_id' => $client_id,
-            'additionalParameters' => $additionalParameters,
-        ];
-
-        return $this->apiClient->post()
-        ->users($user_id)
-        ->impersonate()
-        ->withHeader(new ContentType('application/json'))
-        ->withHeader(new AuthorizationBearer($access_token))
-        ->withBody(json_encode($data))
-        ->call();
-    }
-    // phpcs:enable
 
     /**
      * Makes a call to the `oauth/token` endpoint.
@@ -823,4 +579,228 @@ class Authentication
         ->withBody(json_encode($data))
         ->call();
     }
+
+    /*
+     * Deprecated
+     */
+
+    // phpcs:disable
+    /**
+     * Set an ApiClient for use in this object
+     *
+     * @deprecated 5.4.0, not used.
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    protected function setApiClient()
+    {
+        $apiDomain = "https://{$this->domain}";
+
+        $client = new ApiClient(
+            [
+                'domain' => $apiDomain,
+                'basePath' => '/',
+                'guzzleOptions' => $this->guzzleOptions
+            ]
+        );
+
+        $this->apiClient = $client;
+    }
+
+    /**
+     * Verify SMS code
+     *
+     * @deprecated 5.4.0, legacy authentication pipeline, no alternative provided.
+     *
+     * @param string $phone_number
+     * @param string $code
+     * @param string $scope
+     *
+     * @return mixed
+     *
+     * @throws ApiException
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    public function sms_code_passwordless_verify($phone_number, $code, $scope = 'openid')
+    {
+        return $this->authorize_with_ro($phone_number, $code, $scope, 'sms');
+    }
+
+    /**
+     * Verify email code
+     *
+     * @deprecated 5.4.0, legacy authentication pipeline, no alternative provided.
+     *
+     * @param string $email
+     * @param string $code
+     * @param string $scope
+     *
+     * @return mixed
+     *
+     * @throws ApiException
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    public function email_code_passwordless_verify($email, $code, $scope = 'openid')
+    {
+        return $this->authorize_with_ro($email, $code, $scope, 'email');
+    }
+
+    /**
+     * Obtain an impersonation URL to login as another user.
+     * Impersonation functionality may be disabled by default for your tenant.
+     *
+     * @deprecated 5.4.0, legacy authentication pipeline, no alternative provided.
+     *
+     * @param string $access_token
+     * @param string $user_id
+     * @param string $protocol
+     * @param string $impersonator_id
+     * @param string $client_id
+     * @param array  $additionalParameters
+     *
+     * @return mixed
+     *
+     * @see https://auth0.com/docs/api/authentication#impersonation
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    public function impersonate(
+        $access_token,
+        $user_id,
+        $protocol,
+        $impersonator_id,
+        $client_id,
+        array $additionalParameters = []
+    )
+    {
+        $data = [
+            'protocol' => $protocol,
+            'impersonator_id' => $impersonator_id,
+            'client_id' => $client_id,
+            'additionalParameters' => $additionalParameters,
+        ];
+
+        return $this->apiClient->post()
+            ->users($user_id)
+            ->impersonate()
+            ->withHeader(new ContentType('application/json'))
+            ->withHeader(new AuthorizationBearer($access_token))
+            ->withBody(json_encode($data))
+            ->call();
+    }
+
+    /**
+     * Authorize using an access token
+     *
+     * @deprecated - 5.1.1, This feature is disabled by default for new tenants as of 8 June
+     * 2017. Open the browser to do social authentication instead, which is
+     * what Google and Facebook are recommending.
+     *
+     * @param string $access_token
+     * @param string $connection
+     * @param string $scope
+     * @param array  $additional_params
+     *
+     * @return mixed
+     *
+     * @see https://auth0.com/docs/api/authentication#social-with-provider-s-access-token
+     * @see https://developers.googleblog.com/2016/08/modernizing-oauth-interactions-in-native-apps.html
+     * @see https://auth0.com/docs/api-auth/intro
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    public function authorize_with_accesstoken(
+        $access_token,
+        $connection,
+        $scope = 'openid',
+        array $additional_params = []
+    )
+    {
+        $data = array_merge(
+            $additional_params,
+            [
+                'client_id' => $this->client_id,
+                'access_token' => $access_token,
+                'connection' => $connection,
+                'scope' => $scope,
+            ]
+        );
+
+        return $this->apiClient->post()
+            ->oauth()
+            ->access_token()
+            ->withHeader(new ContentType('application/json'))
+            ->withBody(json_encode($data))
+            ->call();
+    }
+
+    /**
+     * DEPRECATED - This endpoint is part of the legacy authentication pipeline and
+     * has been replaced in favor of the Password Grant. For more information on the
+     * latest authentication pipeline refer to Introducing OIDC Conformant
+     * Authentication.
+     *
+     * @deprecated 5.0.0, use `login` instead. Use only for passwordless verify
+     *
+     * @param string      $username
+     * @param string      $password
+     * @param string      $scope
+     * @param null|string $connection
+     * @param null|string $id_token
+     * @param null|string $device
+     *
+     * @return mixed
+     *
+     * @throws ApiException
+     *
+     * @see https://auth0.com/docs/api/authentication#resource-owner
+     * @see https://auth0.com/docs/api-auth/intro
+     *
+     * @codeCoverageIgnore - Deprecated
+     */
+    public function authorize_with_ro(
+        $username,
+        $password,
+        $scope = 'openid',
+        $connection = null,
+        $id_token = null,
+        $device = null
+    )
+    {
+        $data = [
+            'client_id' => $this->client_id,
+            'username' => $username,
+            'password' => $password,
+            'scope' => $scope,
+        ];
+        if ($device !== null) {
+            $data['device'] = $device;
+        }
+
+        if ($id_token !== null) {
+            $data['id_token']   = $id_token;
+            $data['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
+        } else {
+            if ($connection === null) {
+                throw new ApiException(
+                    'You need to specify a connection for grant_type=password authentication'
+                );
+            }
+
+            $data['grant_type'] = 'password';
+            $data['connection'] = $connection;
+        }
+
+        return $this->apiClient->post()
+            ->oauth()
+            ->ro()
+            ->withHeader(new ContentType('application/json'))
+            ->withBody(json_encode($data))
+            ->call();
+    }
+    // phpcs:enable
 }
