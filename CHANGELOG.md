@@ -1,5 +1,36 @@
 # Change Log
 
+## [5.4.0](https://github.com/auth0/auth0-PHP/tree/5.4.0) (2019-02-28)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.2...5.4.0)
+
+**Notes for this release:**
+- `\Auth0\SDK\Auth0` now accepts a `$config` key called `skip_userinfo` that uses the decoded ID token for the user profile instead of a call to the `/userinfo` endpoint. This will save an HTTP call during login and should have no affect on most applications.
+
+**Closed issues**
+- Auth0::exchange() assumes a valid id_token [\#317](https://github.com/auth0/auth0-PHP/issues/317)
+- Feature Request: Support sending `auth0-forwarded-for` header [\#208](https://github.com/auth0/auth0-PHP/issues/208)
+
+**Added**
+- Authentication class cleanup and tests [\#322](https://github.com/auth0/auth0-PHP/pull/322) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Grants Management endpoint [\#321](https://github.com/auth0/auth0-PHP/pull/321) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add `Auth0-Forwarded-For` header for RO grant [\#320](https://github.com/auth0/auth0-PHP/pull/320) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve API Telemetry [\#319](https://github.com/auth0/auth0-PHP/pull/319) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Mock API Request Capability and Mocked Connections Tests [\#314](https://github.com/auth0/auth0-PHP/pull/314) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Test suite improvements [\#313](https://github.com/auth0/auth0-PHP/pull/313) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve repo documentation [\#312](https://github.com/auth0/auth0-PHP/pull/312) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Deprecated**
+- Official deprecation for \Auth0\SDK\Helpers\JWKFetcher::fetchKeys() [\#328](https://github.com/auth0/auth0-PHP/pull/328) ([joshcanhelp](https://github.com/joshcanhelp))
+- Official deprecation for User methods [\#327](https://github.com/auth0/auth0-PHP/pull/327) ([joshcanhelp](https://github.com/joshcanhelp))
+- Official deprecation of ClientGrants::get() [\#326](https://github.com/auth0/auth0-PHP/pull/326) ([joshcanhelp](https://github.com/joshcanhelp))
+- Official deprecation of legacy telemetry methods [\#325](https://github.com/auth0/auth0-PHP/pull/325) ([joshcanhelp](https://github.com/joshcanhelp))
+- Official deprecation of legacy Authentication API methods [\#324](https://github.com/auth0/auth0-PHP/pull/324) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix Auth0::exchange() to handle missing id_token [\#318](https://github.com/auth0/auth0-PHP/pull/318) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.3.2](https://github.com/auth0/auth0-PHP/tree/5.3.2) (2018-11-2)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.1...5.3.2)
 
