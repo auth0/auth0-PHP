@@ -7,7 +7,7 @@
 - `\Auth0\SDK\Auth0` now accepts a `$config` key called `skip_userinfo` that uses the decoded ID token for the user profile instead of a call to the `/userinfo` endpoint. This will save an HTTP call during login and should have no affect on most applications.
 
 **Closed issues**
-- Auth0::exchange() assumes a valid id_token [\#317](https://github.com/auth0/auth0-PHP/issues/317)
+- `Auth0::exchange()` assumes a valid id_token [\#317](https://github.com/auth0/auth0-PHP/issues/317)
 - Feature Request: Support sending `auth0-forwarded-for` header [\#208](https://github.com/auth0/auth0-PHP/issues/208)
 
 **Added**
@@ -22,14 +22,25 @@
 - Improve repo documentation [\#312](https://github.com/auth0/auth0-PHP/pull/312) ([joshcanhelp](https://github.com/joshcanhelp))
 
 **Deprecated**
-- Official deprecation for \Auth0\SDK\Helpers\JWKFetcher::fetchKeys() [\#328](https://github.com/auth0/auth0-PHP/pull/328) ([joshcanhelp](https://github.com/joshcanhelp))
-- Official deprecation for User methods [\#327](https://github.com/auth0/auth0-PHP/pull/327) ([joshcanhelp](https://github.com/joshcanhelp))
-- Official deprecation of ClientGrants::get() [\#326](https://github.com/auth0/auth0-PHP/pull/326) ([joshcanhelp](https://github.com/joshcanhelp))
-- Official deprecation of legacy telemetry methods [\#325](https://github.com/auth0/auth0-PHP/pull/325) ([joshcanhelp](https://github.com/joshcanhelp))
-- Official deprecation of legacy Authentication API methods [\#324](https://github.com/auth0/auth0-PHP/pull/324) ([joshcanhelp](https://github.com/joshcanhelp))
+- Official deprecation for `JWKFetcher` method [\#328](https://github.com/auth0/auth0-PHP/pull/328) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\Helpers\JWKFetcher::fetchKeys()`
+- Official deprecation for `User` methods [\#327](https://github.com/auth0/auth0-PHP/pull/327) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\API\Management\Users::search()`
+    - `\Auth0\SDK\API\Management\Users::unlinkDevice()`
+- Official deprecation of `ClientGrants` method [\#326](https://github.com/auth0/auth0-PHP/pull/326) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\API\Management\ClientGrants::get()`
+- Official deprecation of legacy `InformationHeaders` methods [\#325](https://github.com/auth0/auth0-PHP/pull/325) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\API\Helpers\InformationHeaders::setEnvironment()`
+    - `\Auth0\SDK\API\Helpers\InformationHeaders::setDependency()`
+    - `\Auth0\SDK\API\Helpers\InformationHeaders::setDependencyData()`
+- Official deprecation of legacy `Authentication` methods [\#324](https://github.com/auth0/auth0-PHP/pull/324) ([joshcanhelp](https://github.com/joshcanhelp))
+    - `\Auth0\SDK\API\Authentication::setApiClient()`
+    - `\Auth0\SDK\API\Authentication::sms_code_passwordless_verify()`
+    - `\Auth0\SDK\API\Authentication::email_code_passwordless_verify()`
+    - `\Auth0\SDK\API\Authentication::impersonate()`
 
 **Fixed**
-- Fix Auth0::exchange() to handle missing id_token [\#318](https://github.com/auth0/auth0-PHP/pull/318) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix `Auth0::exchange()` to handle missing id_token [\#318](https://github.com/auth0/auth0-PHP/pull/318) ([joshcanhelp](https://github.com/joshcanhelp))
 
 ## [5.3.2](https://github.com/auth0/auth0-PHP/tree/5.3.2) (2018-11-2)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.1...5.3.2)
