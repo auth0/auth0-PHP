@@ -7,7 +7,7 @@ use Auth0\SDK\API\Header\Telemetry;
 class ApiClient
 {
 
-    const API_VERSION = '5.3.2';
+    const API_VERSION = '5.4.0';
 
     protected static $infoHeadersDataEnabled = true;
 
