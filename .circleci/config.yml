@@ -1,0 +1,78 @@
+version: 2.1
+
+commands:
+  prepare:
+    parameters:
+      symfony_version:
+        type: string
+    steps:
+      - checkout
+      - run: sudo composer self-update
+      - run: composer require symfony/symfony:<< parameters.symfony_version >> --no-update
+      - restore_cache:
+          keys:
+            - composer-v1-{{ checksum "composer.json" }}
+            - composer-v1-
+      - run: composer install -n --prefer-dist
+      - run: composer update --prefer-dist --no-interaction
+      - persist_to_workspace:
+          root: .
+          paths:
+            - composer.*
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.json" }}
+          paths:
+            - vendor
+  run-tests:
+    steps:
+      - run: ./vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml
+      - run: 
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
+
+jobs: 
+  php_5: 
+    docker: 
+      - image: circleci/php:5.6
+    steps:
+      - prepare:
+          symfony_version: 2.8.*
+      - run-tests
+  php_7: 
+    docker: 
+      - image: circleci/php:7.1
+    steps:
+      - prepare:
+          symfony_version: 3.3.*
+      - run-tests
+  snyk:
+    docker:
+      - image: snyk/snyk-cli:composer
+    steps:
+      - attach_workspace:
+          at: .
+      - run: snyk test
+      - run:
+          command: |
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]
+            then
+            snyk monitor --org=auth0-sdks
+            fi
+          when: always
+
+#Each workflow represents a Github check
+workflows:
+  build_php_5:
+    jobs:
+      - php_5
+  build_php_7:
+    jobs:
+      - php_7
+  snyk:
+    jobs:
+      - php_7
+      - snyk:
+          # Must define SNYK_TOKEN env
+          context: snyk-env 
+          requires: 
+            - php_7 
