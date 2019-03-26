@@ -1,6 +1,7 @@
 bin
 build
 composer.phar
+composer.lock
 phpunit.xml
 vendor
 .env
