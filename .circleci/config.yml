@@ -11,8 +11,8 @@ commands:
       - run: composer require symfony/symfony:<< parameters.symfony_version >> --no-update
       - restore_cache:
           keys:
-            - composer-v1-{{ checksum "composer.json" }}
-            - composer-v1-
+            - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
+            - composer-v1-{{ .Environment.CIRCLE_JOB }}
       - run: composer install -n --prefer-dist
       - run: composer update --prefer-dist --no-interaction
       - persist_to_workspace:
@@ -20,7 +20,7 @@ commands:
           paths:
             - composer.*
       - save_cache:
-          key: composer-v1-{{ checksum "composer.json" }}
+          key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
   run-tests:
