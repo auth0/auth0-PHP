@@ -22,20 +22,22 @@ commands:
   run-tests:
     steps:
       - run: ./vendor/bin/phpunit --coverage-text --coverage-clover=build/coverage.xml
-      - run: 
+      - run:
           command: bash <(curl -s https://codecov.io/bash)
           when: on_success
 
-jobs: 
-  php_5: 
-    docker: 
+jobs:
+  php_5:
+    docker:
       - image: circleci/php:5.6
     steps:
+      - prepare
       - run-tests
-  php_7: 
-    docker: 
+  php_7:
+    docker:
       - image: circleci/php:7.1
     steps:
+      - prepare
       - run-tests
   snyk:
     docker:
@@ -65,6 +67,6 @@ workflows:
       - php_7
       - snyk:
           # Must define SNYK_TOKEN env
-          context: snyk-env 
-          requires: 
-            - php_7 
+          context: snyk-env
+          requires:
+            - php_7
