@@ -10,7 +10,7 @@ use GuzzleHttp\Psr7\Response;
 
 /**
  * Class RefreshTokenTest.
- * Tests the \Auth0\SDK\API\Authentication::refresh_tokens() method.
+ * Tests the \Auth0\SDK\API\Authentication::refresh_token() method.
  *
  * @package Auth0\Tests\API\Authentication
  */
@@ -50,10 +50,10 @@ class RefreshTokenTest extends ApiTests
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET']);
 
         try {
-            $api->refresh_tokens( null );
+            $api->refresh_token( null );
             $caught_exception = false;
         } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString( $e, 'client_secret is mandatory' );
+            $caught_exception = $this->errorHasString( $e, 'Refresh token cannot be blank' );
         }
 
         $this->assertTrue( $caught_exception );
@@ -68,7 +68,7 @@ class RefreshTokenTest extends ApiTests
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET']);
 
         try {
-            $api->refresh_tokens( null, [ 'client_secret' => null ] );
+            $api->refresh_token( uniqid(), [ 'client_secret' => '' ] );
             $caught_exception = false;
         } catch (ApiException $e) {
             $caught_exception = $this->errorHasString( $e, 'client_secret is mandatory' );
@@ -86,7 +86,7 @@ class RefreshTokenTest extends ApiTests
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET']);
 
         try {
-            $api->refresh_tokens( uniqid(), [ 'client_id' => null ] );
+            $api->refresh_token( uniqid(), [ 'client_id' => '' ] );
             $caught_exception = false;
         } catch (ApiException $e) {
             $caught_exception = $this->errorHasString( $e, 'client_id is mandatory' );
@@ -103,7 +103,7 @@ class RefreshTokenTest extends ApiTests
         $api = new MockAuthenticationApi( [ new Response( 200, self::$headers ) ] );
 
         $refresh_token = uniqid();
-        $api->call()->refresh_tokens( uniqid() );
+        $api->call()->refresh_token( $refresh_token );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://test-domain.auth0.com/oauth/token', $api->getHistoryUrl() );
