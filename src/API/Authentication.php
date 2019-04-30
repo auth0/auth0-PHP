@@ -512,6 +512,10 @@ class Authentication
         return $this->oauth_token($options);
     }
 
+    public function refresh_tokens($refresh_token, array $options = [])
+    {
+    }
+
     /**
      * Create a new user using active authentication.
      * This endpoint only works for database connections.
