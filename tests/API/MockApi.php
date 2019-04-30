@@ -1,5 +1,5 @@
 <?php
-namespace Auth0\Tests;
+namespace Auth0\Tests\Api;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
