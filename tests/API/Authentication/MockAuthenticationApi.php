@@ -1,7 +1,7 @@
 <?php
 namespace Auth0\Tests\API\Authentication;
 
-use Auth0\Tests\MockApi;
+use Auth0\Tests\Api\MockApi;
 
 use Auth0\SDK\API\Authentication;
 
