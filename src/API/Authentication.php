@@ -512,8 +512,44 @@ class Authentication
         return $this->oauth_token($options);
     }
 
-    public function refresh_tokens($refresh_token, array $options = [])
+    /**
+     * Use a refresh token grant to get new tokens.
+     *
+     * @param string $refresh_token Refresh token to use.
+     * @param array  $options       Array of options to override defaults.
+     *
+     * @return mixed
+     *
+     * @throws ApiException If $refresh_token, client_secret, or client_id is blank.
+     *
+     * @link https://auth0.com/docs/api/authentication#refresh-token
+     */
+    public function refresh_token($refresh_token, array $options = [])
     {
+        if (empty($refresh_token)) {
+            throw new ApiException('Refresh token cannot be blank');
+        }
+
+        if (! isset($options['client_secret'])) {
+            $options['client_secret'] = $this->client_secret;
+        }
+
+        if (empty($options['client_secret'])) {
+            throw new ApiException('client_secret is mandatory');
+        }
+
+        if (! isset($options['client_id'])) {
+            $options['client_id'] = $this->client_id;
+        }
+
+        if (empty($options['client_id'])) {
+            throw new ApiException('client_id is mandatory');
+        }
+
+        $options['refresh_token'] = $refresh_token;
+        $options['grant_type']    = 'refresh_token';
+
+        return $this->oauth_token($options);
     }
 
     /**
