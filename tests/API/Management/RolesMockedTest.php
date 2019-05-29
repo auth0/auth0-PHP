@@ -106,6 +106,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
         $body = $api->getHistoryBody();
@@ -196,6 +197,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
     }
 
@@ -238,6 +240,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
         $body = $api->getHistoryBody();
@@ -345,23 +348,12 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatAddRolePermissionsRequestWithInvalidPermissionsThrowsException()
+    public function testThatAddRolePermissionsRequestWithEmptyPermissionsThrowsException()
     {
         $api = new MockManagementApi();
 
         try {
-            $api->call()->roles->addPermissions(
-                '__test_role_id__',
-                [
-                    [
-                        'permission_name' => uniqid(),
-                        'resource_server_identifier' => uniqid(),
-                    ],
-                    [
-                        'permission_name' => uniqid(),
-                    ]
-                ]
-            );
+            $api->call()->roles->addPermissions( '__test_role_id__', [] );
             $exception_message = '';
         } catch (CoreException $e) {
             $exception_message = $e->getMessage();
@@ -402,6 +394,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
         $body = $api->getHistoryBody();
@@ -446,7 +439,10 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         $api = new MockManagementApi();
 
         try {
-            $api->call()->roles->removePermissions( '__test_role_id__', [ [ 'permission_name' => uniqid() ] ] );
+            $api->call()->roles->removePermissions(
+                '__test_role_id__',
+                [ [ 'permission_name' => uniqid() ] ]
+            );
             $exception_message = '';
         } catch (CoreException $e) {
             $exception_message = $e->getMessage();
@@ -502,6 +498,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
         $body = $api->getHistoryBody();
@@ -628,6 +625,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
         $body = $api->getHistoryBody();

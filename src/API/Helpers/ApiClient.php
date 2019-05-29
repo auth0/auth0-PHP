@@ -97,7 +97,7 @@ class ApiClient
         ]);
         $builder->withHeaders($this->headers);
 
-        if (in_array($method, [ 'patch', 'post', 'put' ])) {
+        if (in_array($method, [ 'patch', 'post', 'put', 'delete' ])) {
             $builder->withHeader(new ContentType('application/json'));
         }
 
