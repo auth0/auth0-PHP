@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\Grants;
 use Auth0\SDK\API\Management\Jobs;
 use Auth0\SDK\API\Management\Logs;
 use Auth0\SDK\API\Management\ResourceServers;
+use Auth0\SDK\API\Management\Roles;
 use Auth0\SDK\API\Management\Rules;
 use Auth0\SDK\API\Management\Stats;
 use Auth0\SDK\API\Management\Tenants;
@@ -118,6 +119,12 @@ class Management
 
     /**
      *
+     * @var Roles
+     */
+    public $roles;
+
+    /**
+     *
      * @var Rules
      */
     public $rules;
@@ -191,6 +198,7 @@ class Management
         $this->grants            = new Grants($this->apiClient);
         $this->jobs              = new Jobs($this->apiClient);
         $this->logs              = new Logs($this->apiClient);
+        $this->roles             = new Roles($this->apiClient);
         $this->rules             = new Rules($this->apiClient);
         $this->resource_servers  = new ResourceServers($this->apiClient);
         $this->stats             = new Stats($this->apiClient);
