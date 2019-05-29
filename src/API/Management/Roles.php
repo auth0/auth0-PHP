@@ -26,10 +26,8 @@ class Roles extends GenericResource
      */
     public function getAll(array $params = [])
     {
-        $params = array_merge( $params, $this->normalizePagination( $params ) );
-
         return $this->apiClient->method('get')
-            ->withDictParams($params)
+            ->withDictParams($this->normalizePagination( $params ))
             ->addPath('roles')
             ->call();
     }
@@ -156,7 +154,7 @@ class Roles extends GenericResource
             throw new CoreException('Invalid or missing role_id parameter.');
         }
 
-        $params = array_merge( $params, $this->normalizePagination( $params ) );
+        $params = $this->normalizePagination( $params );
 
         if (isset( $params['include_totals'] )) {
             $params['include_totals'] = boolval( $params['include_totals'] );
@@ -269,7 +267,7 @@ class Roles extends GenericResource
             throw new CoreException('Invalid or missing role_id parameter.');
         }
 
-        $params = array_merge( $params, $this->normalizePagination( $params ) );
+        $params = $this->normalizePagination( $params );
 
         if (isset( $params['include_totals'] )) {
             $params['include_totals'] = boolval( $params['include_totals'] );
