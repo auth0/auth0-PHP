@@ -85,7 +85,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "name" parameter', $exception_message );
+        $this->assertContains( 'Missing required name parameter', $exception_message );
     }
 
     /**
@@ -339,27 +339,6 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that an empty permissions array throws an exception when trying to add permissions for a role.
-     *
-     * @return void
-     *
-     * @throws \Exception Should not be thrown in this test.
-     */
-    public function testThatAddRolePermissionsRequestWithEmptyPermissionsThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        try {
-            $api->call()->roles->addPermissions( '__test_role_id__', [] );
-            $exception_message = '';
-        } catch (CoreException $e) {
-            $exception_message = $e->getMessage();
-        }
-
-        $this->assertContains( 'Empty "permissions" parameter', $exception_message );
-    }
-
-    /**
      * Test that an invalid permissions array throws an exception when trying to add permissions for a role.
      *
      * @return void
@@ -389,7 +368,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertContains(
-            'Permissions must include both "permission_name" and "resource_server_identifier" keys',
+            'All permissions must include both permission_name and resource_server_identifier keys',
             $exception_message
         );
     }
@@ -456,27 +435,6 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test that an empty permissions array throws an exception when trying to delete permissions from a role.
-     *
-     * @return void
-     *
-     * @throws \Exception Should not be thrown in this test.
-     */
-    public function testThatRemoveRolePermissionsRequestWithEmptyPermissionsThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        try {
-            $api->call()->roles->removePermissions( '__test_role_id__', [] );
-            $exception_message = '';
-        } catch (CoreException $e) {
-            $exception_message = $e->getMessage();
-        }
-
-        $this->assertContains( 'Empty "permissions" parameter', $exception_message );
-    }
-
-    /**
      * Test that an invalid permissions array throws an exception when trying to delete permissions from a role.
      *
      * @return void
@@ -495,7 +453,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertContains(
-            'Permissions must include both "permission_name" and "resource_server_identifier" keys',
+            'All permissions must include both permission_name and resource_server_identifier keys',
             $exception_message
         );
 
@@ -510,7 +468,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertContains(
-            'Permissions must include both "permission_name" and "resource_server_identifier" keys',
+            'All permissions must include both permission_name and resource_server_identifier keys',
             $exception_message
         );
     }
@@ -643,7 +601,7 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty "users" parameter', $exception_message );
+        $this->assertContains( 'Empty users parameter', $exception_message );
     }
 
     /**

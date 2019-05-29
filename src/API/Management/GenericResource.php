@@ -67,6 +67,10 @@ class GenericResource
      */
     protected function containsInvalidPermissions(array $permissions)
     {
+        if ( empty( $permissions ) ) {
+            return true;
+        }
+
         foreach ($permissions as $permission) {
             if (empty( $permission['permission_name'] )) {
                 return true;
