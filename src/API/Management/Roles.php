@@ -51,7 +51,7 @@ class Roles extends GenericResource
         $data['name'] = (string) $name;
 
         if (empty($data['name'])) {
-            throw new CoreException('Missing required "name" parameter.');
+            throw new CoreException('Missing required name parameter.');
         }
 
         return $this->apiClient->method('post')
@@ -187,13 +187,9 @@ class Roles extends GenericResource
             throw new CoreException('Invalid or missing role_id parameter.');
         }
 
-        if (empty($permissions)) {
-            throw new CoreException('Empty "permissions" parameter.');
-        }
-
         if ($this->containsInvalidPermissions( $permissions )) {
             throw new CoreException(
-                'Permissions must include both "permission_name" and "resource_server_identifier" keys.'
+                'All permissions must include both permission_name and resource_server_identifier keys.'
             );
         }
 
@@ -226,13 +222,9 @@ class Roles extends GenericResource
             throw new CoreException('Invalid or missing role_id parameter.');
         }
 
-        if (empty($permissions)) {
-            throw new CoreException('Empty "permissions" parameter.');
-        }
-
         if ($this->containsInvalidPermissions( $permissions )) {
             throw new CoreException(
-                'Permissions must include both "permission_name" and "resource_server_identifier" keys.'
+                'All permissions must include both permission_name and resource_server_identifier keys.'
             );
         }
 
@@ -301,7 +293,7 @@ class Roles extends GenericResource
         }
 
         if (empty($users)) {
-            throw new CoreException('Empty "users" parameter.');
+            throw new CoreException('Empty users parameter.');
         }
 
         $data = [ 'users' => array_unique( $users ) ];
