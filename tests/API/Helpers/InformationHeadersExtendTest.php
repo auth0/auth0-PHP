@@ -15,6 +15,14 @@ use GuzzleHttp\Psr7\Response;
 class InformationHeadersExtendTest extends \PHPUnit_Framework_TestCase
 {
 
+    public static function tearDownAfterClass()
+    {
+        $reset_headers = new InformationHeaders;
+        $reset_headers->setCorePackage();
+        ApiClient::setInfoHeadersData($reset_headers);
+        parent::tearDownAfterClass();
+    }
+
     /**
      * Extend existing headers and make sure existing data stays intact.
      *
