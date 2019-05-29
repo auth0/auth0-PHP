@@ -1,8 +1,10 @@
 <?php
-namespace Auth0\Tests\API;
+namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Exception\CoreException;
+
+use Auth0\Tests\API\ApiTests;
 
 /**
  * Class RulesTest.
