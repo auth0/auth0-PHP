@@ -55,7 +55,7 @@ class GenericResource
             $pagination[$pagination_key] = abs( intval( $pagination[$pagination_key] ) );
         }
 
-        return $pagination;
+        return array_merge( $params, $pagination );
     }
 
     /**
