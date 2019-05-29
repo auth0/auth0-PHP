@@ -2,6 +2,8 @@
 
 namespace Auth0\SDK\API\Management;
 
+use Auth0\SDK\Exception\CoreException;
+
 /**
  * Class Users.
  * Handles requests to the Users endpoint of the v2 Management API.
@@ -123,8 +125,6 @@ class Users extends GenericResource
      */
     public function getAll(array $params = [], $fields = null, $include_fields = null, $page = null, $per_page = null)
     {
-        $params = is_array($params) ? $params : [];
-
         // Fields to include/exclude.
         if (! isset($params['fields']) && null !== $fields) {
             $params['fields'] = $fields;
@@ -140,14 +140,7 @@ class Users extends GenericResource
             }
         }
 
-        // Keep existing pagination params if passed (backwards-compat), override with non-null function param if not.
-        if (! isset($params['page']) && null !== $page) {
-            $params['page'] = abs((int) $page);
-        }
-
-        if (! isset($params['per_page']) && null !== $per_page) {
-            $params['per_page'] = abs((int) $per_page);
-        }
+        $params = $this->normalizePagination( $params, $page, $per_page );
 
         return $this->apiClient->method('get')
             ->addPath('users')
@@ -233,12 +226,336 @@ class Users extends GenericResource
      * @return mixed|string
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/delete_multifactor_by_provider
      */
     public function deleteMultifactorProvider($user_id, $mfa_provider)
     {
         return $this->apiClient->method('delete')
             ->addPath('users', $user_id)
             ->addPath('multifactor', $mfa_provider)
+            ->call();
+    }
+
+    /**
+     * Get all roles assigned to a specific user.
+     * Required scopes:
+     *      - "read:users"
+     *      - "read:roles"
+     *
+     * @param string $user_id User ID to get roles for.
+     * @param array $params Additional listing params like page, per_page, and include_totals.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
+     */
+    public function getRoles( $user_id, array $params = [] )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        $params = $this->normalizePagination( $params );
+
+        if (isset( $params['include_totals'] )) {
+            $params['include_totals'] = boolval( $params['include_totals'] );
+        }
+
+        return $this->apiClient->method('get')
+            ->addPath('users', $user_id)
+            ->addPathVariable('roles')
+            ->withDictParams($params)
+            ->call();
+    }
+
+    /**
+     * Remove one or more roles from a specific user.
+     * Required scope: "update:users"
+     *
+     * @param string $user_id User ID to remove roles from.
+     * @param array $roles Array of permissions to remove.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/delete_user_roles
+     */
+    public function removeRoles( $user_id, array $roles )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        if (empty($roles)) {
+            throw new CoreException('Empty roles parameter.');
+        }
+
+        $data = [ 'roles' => $roles ];
+
+        return $this->apiClient->method('delete')
+            ->addPath('users', $user_id)
+            ->addPathVariable('roles')
+            ->withBody(json_encode($data))
+            ->call();
+    }
+
+    /**
+     * Add one or more roles to a specific user.
+     * Required scopes:
+     *      - "update:users"
+     *      - "read:roles"
+     *
+     * @param string $user_id User ID to add roles to.
+     * @param array $roles Array of roles to add.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
+     */
+    public function addRoles( $user_id, array $roles )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        if (empty($roles)) {
+            throw new CoreException('Empty roles parameter.');
+        }
+
+        $data = [ 'roles' => $roles ];
+
+        return $this->apiClient->method('post')
+            ->addPath('users', $user_id)
+            ->addPathVariable('roles')
+            ->withBody(json_encode($data))
+            ->call();
+    }
+
+    /**
+     * Get all Guardian enrollments for a specific user.
+     * Required scope: "read:users"
+     *
+     * @param string $user_id User ID to get enrollments for.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
+     */
+    public function getEnrollments( $user_id )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        return $this->apiClient->method('get')
+            ->addPath('users', $user_id)
+            ->addPathVariable('enrollments')
+            ->call();
+    }
+
+    /**
+     * Get all permissions for a specific user.
+     * Required scope: "read:users"
+     *
+     * @param string $user_id User ID to get permissions for.
+     * @param array $params Additional listing params like page, per_page, and include_totals.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/get_permissions
+     */
+    public function getPermissions( $user_id, array $params = [] )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        $params = $this->normalizePagination( $params );
+
+        if (isset( $params['include_totals'] )) {
+            $params['include_totals'] = boolval( $params['include_totals'] );
+        }
+
+        return $this->apiClient->method('get')
+            ->addPath('users', $user_id)
+            ->addPathVariable('permissions')
+            ->withDictParams($params)
+            ->call();
+    }
+
+    /**
+     * Remove one or more permissions from a specific user.
+     * Required scope: "update:users"
+     *
+     * @param string $user_id User ID to remove permissions from.
+     * @param array $permissions Array of permissions to remove.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/delete_permissions
+     */
+    public function removePermissions( $user_id, array $permissions )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        if (empty($permissions)) {
+            throw new CoreException('Empty permissions parameter.');
+        }
+
+        if ($this->containsInvalidPermissions( $permissions )) {
+            throw new CoreException(
+                'Permissions must include both permission_name and resource_server_identifier keys.'
+            );
+        }
+
+        $data = [ 'permissions' => $permissions ];
+
+        return $this->apiClient->method('delete')
+            ->addPath('users', $user_id)
+            ->addPathVariable('permissions')
+            ->withBody(json_encode($data))
+            ->call();
+    }
+
+    /**
+     * Add one or more permissions to a specific user.
+     * Required scope: "update:users"
+     *
+     * @param string $user_id User ID to add permissions to.
+     * @param array $permissions Array of permissions to add.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/post_permissions
+     */
+    public function addPermissions( $user_id, array $permissions )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        if (empty($permissions)) {
+            throw new CoreException('Empty permissions parameter.');
+        }
+
+        if ($this->containsInvalidPermissions( $permissions )) {
+            throw new CoreException(
+                'Permissions must include both permission_name and resource_server_identifier keys.'
+            );
+        }
+
+        $data = [ 'permissions' => $permissions ];
+
+        return $this->apiClient->method('post')
+            ->addPath('users', $user_id)
+            ->addPathVariable('permissions')
+            ->withBody(json_encode($data))
+            ->call();
+    }
+
+    /**
+     * Get log entries for a specific user.
+     * Required scope: "read:logs"
+     *
+     * @param string $user_id User ID to get logs entries for.
+     * @param array $params Additional listing params like page, per_page, sort, and include_totals.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/get_logs_by_user
+     */
+    public function getLogs( $user_id, array $params = [] )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        $params = $this->normalizePagination( $params );
+
+        if (isset( $params['include_totals'] )) {
+            $params['include_totals'] = boolval( $params['include_totals'] );
+        }
+
+        return $this->apiClient->method('get')
+            ->addPath('users', $user_id)
+            ->addPathVariable('logs')
+            ->withDictParams($params)
+            ->call();
+    }
+
+    /**
+     * Removes the current Guardian recovery code and generates and returns a new one.
+     * Required scope: "update:users"
+     *
+     * @param string $user_id User ID to remove and generate recovery codes for.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
+     */
+    public function generateRecoveryCode( $user_id )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        return $this->apiClient->method('post')
+            ->addPath('users', $user_id)
+            ->addPathVariable('recovery-code-regeneration')
+            ->call();
+    }
+
+    /**
+     * Invalidates all remembered browsers for all authentication factors for a specific user.
+     * Required scope: "update:users"
+     *
+     * @param string $user_id User ID to invalidate browsers for.
+     *
+     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/post_invalidate_remember_browser
+     */
+    public function invalidateBrowsers( $user_id )
+    {
+        if (empty($user_id) || ! is_string($user_id)) {
+            throw new CoreException('Invalid or missing user_id parameter.');
+        }
+
+        return $this->apiClient->method('post')
+            ->addPath('users', $user_id)
+            ->addPathVariable('multifactor/actions/invalidate-remember-browser')
             ->call();
     }
 
