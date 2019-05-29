@@ -314,26 +314,4 @@ class Roles extends GenericResource
             ->withBody(json_encode($data))
             ->call();
     }
-
-    /**
-     * Check for invalid permissions with an array of permissions.
-     *
-     * @param array $permissions Permissions array to check.
-     *
-     * @return boolean
-     */
-    private function containsInvalidPermissions(array $permissions)
-    {
-        foreach ($permissions as $permission) {
-            if (empty( $permission['permission_name'] )) {
-                return true;
-            }
-
-            if (empty( $permission['resource_server_identifier'] )) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
