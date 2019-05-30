@@ -79,19 +79,19 @@ class Users extends GenericResource
             throw new \Exception('Missing required "connection" field.');
         }
 
+        // A phone number is required for sms connections.
         if ('sms' === $data['connection'] && empty($data['phone_number'])) {
-            // "phone_number" field is required for an sms connection.
             throw new \Exception('Missing required "phone_number" field for sms connection.');
-        } else if ('sms' !== $data['connection']) {
-            // "email" field is required for email and DB connections.
-            if (empty($data['email'])) {
-                throw new \Exception('Missing required "email" field.');
-            }
+        }
 
-            // Passwords are required for DB connections.
-            if ('email' !== $data['connection'] && empty($data['password'])) {
-                throw new \Exception('Missing required "password" field for "'.$data['connection'].'" connection.');
-            }
+        // An email is required for email and DB connections.
+        if ('sms' !== $data['connection'] && empty($data['email'])) {
+            throw new \Exception('Missing required "email" field.');
+        }
+
+        // A password is required for DB connections.
+        if (! in_array( $data['connection'], [ 'email', 'sms' ] ) && empty($data['password'])) {
+            throw new \Exception('Missing required "password" field for "'.$data['connection'].'" connection.');
         }
 
         return $this->apiClient->method('post')
@@ -244,7 +244,7 @@ class Users extends GenericResource
      *      - "read:roles"
      *
      * @param string $user_id User ID to get roles for.
-     * @param array $params Additional listing params like page, per_page, and include_totals.
+     * @param array  $params  Additional listing params like page, per_page, and include_totals.
      *
      * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
@@ -253,7 +253,7 @@ class Users extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
      */
-    public function getRoles( $user_id, array $params = [] )
+    public function getRoles($user_id, array $params = [])
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
@@ -277,16 +277,17 @@ class Users extends GenericResource
      * Required scope: "update:users"
      *
      * @param string $user_id User ID to remove roles from.
-     * @param array $roles Array of permissions to remove.
+     * @param array  $roles   Array of permissions to remove.
      *
      * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws CoreException Thrown if the roles parameter is empty.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_user_roles
      */
-    public function removeRoles( $user_id, array $roles )
+    public function removeRoles($user_id, array $roles)
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
@@ -312,16 +313,17 @@ class Users extends GenericResource
      *      - "read:roles"
      *
      * @param string $user_id User ID to add roles to.
-     * @param array $roles Array of roles to add.
+     * @param array  $roles   Array of roles to add.
      *
      * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws CoreException Thrown if the roles parameter is empty.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
      */
-    public function addRoles( $user_id, array $roles )
+    public function addRoles($user_id, array $roles)
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
@@ -353,7 +355,7 @@ class Users extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
      */
-    public function getEnrollments( $user_id )
+    public function getEnrollments($user_id)
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
@@ -370,7 +372,7 @@ class Users extends GenericResource
      * Required scope: "read:users"
      *
      * @param string $user_id User ID to get permissions for.
-     * @param array $params Additional listing params like page, per_page, and include_totals.
+     * @param array  $params  Additional listing params like page, per_page, and include_totals.
      *
      * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
@@ -379,7 +381,7 @@ class Users extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_permissions
      */
-    public function getPermissions( $user_id, array $params = [] )
+    public function getPermissions($user_id, array $params = [])
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
@@ -402,24 +404,21 @@ class Users extends GenericResource
      * Remove one or more permissions from a specific user.
      * Required scope: "update:users"
      *
-     * @param string $user_id User ID to remove permissions from.
-     * @param array $permissions Array of permissions to remove.
+     * @param string $user_id     User ID to remove permissions from.
+     * @param array  $permissions Array of permissions to remove.
      *
      * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws CoreException Thrown if the permissions parameter is malformed.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_permissions
      */
-    public function removePermissions( $user_id, array $permissions )
+    public function removePermissions($user_id, array $permissions)
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
-        }
-
-        if (empty($permissions)) {
-            throw new CoreException('Empty permissions parameter.');
         }
 
         if ($this->containsInvalidPermissions( $permissions )) {
@@ -441,24 +440,21 @@ class Users extends GenericResource
      * Add one or more permissions to a specific user.
      * Required scope: "update:users"
      *
-     * @param string $user_id User ID to add permissions to.
-     * @param array $permissions Array of permissions to add.
+     * @param string $user_id     User ID to add permissions to.
+     * @param array  $permissions Array of permissions to add.
      *
      * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws CoreException Thrown if the permissions parameter is malformed.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_permissions
      */
-    public function addPermissions( $user_id, array $permissions )
+    public function addPermissions($user_id, array $permissions)
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
-        }
-
-        if (empty($permissions)) {
-            throw new CoreException('Empty permissions parameter.');
         }
 
         if ($this->containsInvalidPermissions( $permissions )) {
@@ -481,7 +477,7 @@ class Users extends GenericResource
      * Required scope: "read:logs"
      *
      * @param string $user_id User ID to get logs entries for.
-     * @param array $params Additional listing params like page, per_page, sort, and include_totals.
+     * @param array  $params  Additional listing params like page, per_page, sort, and include_totals.
      *
      * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
@@ -490,7 +486,7 @@ class Users extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_logs_by_user
      */
-    public function getLogs( $user_id, array $params = [] )
+    public function getLogs($user_id, array $params = [])
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
@@ -522,7 +518,7 @@ class Users extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
      */
-    public function generateRecoveryCode( $user_id )
+    public function generateRecoveryCode($user_id)
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
@@ -547,7 +543,7 @@ class Users extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_invalidate_remember_browser
      */
-    public function invalidateBrowsers( $user_id )
+    public function invalidateBrowsers($user_id)
     {
         if (empty($user_id) || ! is_string($user_id)) {
             throw new CoreException('Invalid or missing user_id parameter.');
