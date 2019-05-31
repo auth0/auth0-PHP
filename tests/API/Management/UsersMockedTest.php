@@ -2,6 +2,7 @@
 namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
+use Auth0\SDK\Exception\CoreException;
 use Auth0\Tests\Traits\ErrorHelpers;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -9,11 +10,11 @@ use Auth0\SDK\API\Helpers\InformationHeaders;
 use GuzzleHttp\Psr7\Response;
 
 /**
- * Class UsersTestMocked.
+ * Class UsersMockedTest.
  *
  * @package Auth0\Tests\API\Management
  */
-class UsersTestMocked extends \PHPUnit_Framework_TestCase
+class UsersMockedTest extends \PHPUnit_Framework_TestCase
 {
 
     use ErrorHelpers;
@@ -49,7 +50,7 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatGetUserRequestIsFormedProperly()
+    public function testThatGetUserRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
@@ -71,7 +72,7 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatUpdateUserRequestIsFormedProperly()
+    public function testThatUpdateUserRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
@@ -164,7 +165,7 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatCreateUserRequestIsFormedProperly()
+    public function testThatCreateUserRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
@@ -198,7 +199,7 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatGetAllUsersRequestIsFormedProperly()
+    public function testThatGetAllUsersRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
@@ -417,7 +418,7 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatDeleteUserRequestIsFormedProperly()
+    public function testThatDeleteUserRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
@@ -439,7 +440,7 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatLinkAccountRequestIsFormedProperly()
+    public function testThatLinkAccountRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
@@ -476,7 +477,7 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatUnlinkAccountRequestIsFormedProperly()
+    public function testThatUnlinkAccountRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
@@ -505,7 +506,7 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
      *
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatDeleteMfProviderIsFormedProperly()
+    public function testThatDeleteMfProviderIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
@@ -517,6 +518,611 @@ class UsersTestMocked extends \PHPUnit_Framework_TestCase
             $api->getHistoryUrl()
         );
         $this->assertEmpty( $api->getHistoryQuery() );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+    }
+
+    /**
+     * Test that a get roles call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetRolesThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->getRoles( '' );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that a get roles call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetRolesRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->getRoles( '__test_user_id__', [ 'per_page' => 5, 'page' => 1, 'include_totals' => 1 ] );
+
+        $this->assertEquals( 'GET', $api->getHistoryMethod() );
+        $this->assertStringStartsWith( 'https://api.test.local/api/v2/users/__test_user_id__', $api->getHistoryUrl() );
+
+        $query = $api->getHistoryQuery();
+        $this->assertContains( 'per_page=5', $query );
+        $this->assertContains( 'page=1', $query );
+        $this->assertContains( 'include_totals=true', $query );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+    }
+
+    /**
+     * Test that a remove roles call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatRemoveRolesThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->removeRoles( '', [] );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that a remove roles call throws an exception if roles are missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatRemoveRolesThrowsExceptionIfRolesAreMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->removeRoles( '__test_user_id__', [] );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Empty roles parameter', $caught_message );
+    }
+
+    /**
+     * Test that a remove roles call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatRemoveRolesRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->removeRoles( '__test_user_id__', [ '__test_role_id__' ] );
+
+        $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/roles',
+            $api->getHistoryUrl()
+        );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+
+        $body = $api->getHistoryBody();
+        $this->assertArrayHasKey( 'roles', $body );
+        $this->assertCount( 1, $body['roles'] );
+        $this->assertEquals( '__test_role_id__', $body['roles'][0] );
+    }
+
+    /**
+     * Test that an add roles call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatAddRolesThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->addRoles( '', [] );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that an add roles call throws an exception if roles are missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatAddRolesThrowsExceptionIfRolesAreMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->addRoles( '__test_user_id__', [] );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Empty roles parameter', $caught_message );
+    }
+
+    /**
+     * Test that an add roles call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatAddRolesRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->addRoles( '__test_user_id__', [ '__test_role_id__' ] );
+
+        $this->assertEquals( 'POST', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/roles',
+            $api->getHistoryUrl()
+        );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+
+        $body = $api->getHistoryBody();
+        $this->assertArrayHasKey( 'roles', $body );
+        $this->assertCount( 1, $body['roles'] );
+        $this->assertEquals( '__test_role_id__', $body['roles'][0] );
+    }
+
+    /**
+     * Test that a get enrollments call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetEnrollmentsThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->getEnrollments( '' );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that a get enrollments call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetEnrollmentsRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->getEnrollments( '__test_user_id__' );
+
+        $this->assertEquals( 'GET', $api->getHistoryMethod() );
+        $this->assertEquals(
+            'https://api.test.local/api/v2/users/__test_user_id__/enrollments',
+            $api->getHistoryUrl()
+        );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+    }
+
+    /**
+     * Test that a remove permissions call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetPermissionsThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->getPermissions( '' );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that a get permissions call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetPermissionsRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->getPermissions(
+            '__test_user_id__',
+            [ 'per_page' => 3, 'page' => 2, 'include_totals' => 0 ]
+        );
+
+        $this->assertEquals( 'GET', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/permissions',
+            $api->getHistoryUrl()
+        );
+
+        $query = $api->getHistoryQuery();
+        $this->assertContains( 'per_page=3', $query );
+        $this->assertContains( 'page=2', $query );
+        $this->assertContains( 'include_totals=false', $query );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+    }
+
+    /**
+     * Test that a remove permissions call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatRemovePermissionsThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->removePermissions( '', [] );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that a remove permissions call throws an exception if permissions are missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatRemovePermissionsThrowsExceptionIfPermissionsAreMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->removePermissions( '__test_user_id__', [] );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains(
+            'Permissions must include both permission_name and resource_server_identifier keys',
+            $caught_message
+        );
+    }
+
+    /**
+     * Test that a remove permissions call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatRemovePermissionsRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->removePermissions(
+            '__test_user_id__',
+            [
+                [
+                    'permission_name' => 'test:permission',
+                    'resource_server_identifier' => '__test_api_id__',
+                ]
+            ]
+        );
+
+        $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/permissions',
+            $api->getHistoryUrl()
+        );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+
+        $body = $api->getHistoryBody();
+        $this->assertArrayHasKey( 'permissions', $body );
+        $this->assertCount( 1, $body['permissions'] );
+        $this->assertArrayHasKey( 'permission_name', $body['permissions'][0] );
+        $this->assertEquals( 'test:permission', $body['permissions'][0]['permission_name'] );
+        $this->assertArrayHasKey( 'resource_server_identifier', $body['permissions'][0] );
+        $this->assertEquals( '__test_api_id__', $body['permissions'][0]['resource_server_identifier'] );
+    }
+
+    /**
+     * Test that an add permissions call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatAddPermissionsThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->addPermissions( '', [] );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that an add permissions call throws an exception if permissions are missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatAddPermissionsThrowsExceptionIfPermissionsAreMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->addPermissions( '__test_user_id__', [] );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains(
+            'Permissions must include both permission_name and resource_server_identifier keys',
+            $caught_message
+        );
+    }
+
+    /**
+     * Test that an add permissions call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatAddPermissionsRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->addPermissions(
+            '__test_user_id__',
+            [
+                [
+                    'permission_name' => 'test:permission',
+                    'resource_server_identifier' => '__test_api_id__',
+                ]
+            ]
+        );
+
+        $this->assertEquals( 'POST', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/permissions',
+            $api->getHistoryUrl()
+        );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+
+        $body = $api->getHistoryBody();
+        $this->assertArrayHasKey( 'permissions', $body );
+        $this->assertCount( 1, $body['permissions'] );
+        $this->assertArrayHasKey( 'permission_name', $body['permissions'][0] );
+        $this->assertEquals( 'test:permission', $body['permissions'][0]['permission_name'] );
+        $this->assertArrayHasKey( 'resource_server_identifier', $body['permissions'][0] );
+        $this->assertEquals( '__test_api_id__', $body['permissions'][0]['resource_server_identifier'] );
+    }
+
+    /**
+     * Test that a get logs call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetLogsThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->getLogs( '' );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that a get logs call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetLogsRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->getLogs(
+            '__test_user_id__',
+            [ 'per_page' => 3, 'page' => 2, 'include_totals' => 0, 'fields' => 'date,type,ip' ]
+        );
+
+        $this->assertEquals( 'GET', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/logs',
+            $api->getHistoryUrl()
+        );
+
+        $query = $api->getHistoryQuery();
+        $this->assertContains( 'per_page=3', $query );
+        $this->assertContains( 'page=2', $query );
+        $this->assertContains( 'include_totals=false', $query );
+        $this->assertContains( 'fields=date,type,ip', $query );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+    }
+
+    /**
+     * Test that a generate recovery code call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGenerateRecoveryCodeThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->generateRecoveryCode( '' );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that an generate recovery code call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGenerateRecoveryCodeRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->generateRecoveryCode( '__test_user_id__' );
+
+        $this->assertEquals( 'POST', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/recovery-code-regeneration',
+            $api->getHistoryUrl()
+        );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+    }
+
+    /**
+     * Test that an invalidate browsers call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatInvalidateBrowsersThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users->invalidateBrowsers( '' );
+            $caught_message = '';
+        } catch (CoreException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertContains( 'Invalid or missing user_id parameter', $caught_message );
+    }
+
+    /**
+     * Test that an invalidate browsers call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatInvalidateBrowsersRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users->invalidateBrowsers( '__test_user_id__' );
+
+        $this->assertEquals( 'POST', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/multifactor/actions/invalidate-remember-browser',
+            $api->getHistoryUrl()
+        );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
