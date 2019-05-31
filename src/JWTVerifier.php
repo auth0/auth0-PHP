@@ -217,7 +217,7 @@ class JWTVerifier
             }
 
             $jwks_url                   = $body_decoded->iss.$this->jwks_path;
-            $secret[$head_decoded->kid] = $this->JWKFetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
+            $secret[$head_decoded->kid] = $this->JWKFetcher->requestJwkSig($jwks_url, $head_decoded->kid);
         }
 
         try {

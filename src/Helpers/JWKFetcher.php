@@ -9,6 +9,9 @@ use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ClientException;
 
+use phpseclib\Crypt\RSA;
+use phpseclib\Math\BigInteger;
+
 /**
  * Class JWKFetcher.
  *
@@ -63,32 +66,73 @@ class JWKFetcher
     }
 
     /**
-     * Fetch x509 cert for RS256 token decoding.
+     * Fetch cert signature for token decoding.
      *
      * @param string      $jwks_url URL to the JWKS.
      * @param string|null $kid      Key ID to use; returns first JWK if $kid is null or empty.
      *
-     * @return string|null - Null if an x5c key could not be found for a key ID or if the JWKS is empty/invalid.
+     * @return string|null - Null if a key could not be found for a key ID or if the JWKS is empty/invalid.
      */
-    public function requestJwkX5c($jwks_url, $kid = null)
+    public function requestJwkSig($jwks_url, $kid = null)
     {
         $cache_key = $jwks_url.'|'.$kid;
 
-        $x5c = $this->cache->get($cache_key);
-        if (! is_null($x5c)) {
-            return $x5c;
+        $cert = $this->cache->get($cache_key);
+        if (! is_null($cert)) {
+            return $cert;
         }
 
         $jwks = $this->requestJwks($jwks_url);
         $jwk  = $this->findJwk($jwks, $kid);
 
-        if ($this->subArrayHasEmptyFirstItem($jwk, 'x5c')) {
+        if (!$this->subArrayHasEmptyFirstItem($jwk, 'x5c')) {
+            $cert = $this->requestJwkX5c($jwk);
+        } else if (!empty($jwk['kty']) && $jwk['kty'] == 'RSA') {
+            $cert = $this->requetJwkRsa($jwk);
+        } else {
             return null;
         }
 
+        $this->cache->set($cache_key, $cert);
+        return $cert;
+    }
+
+    /**
+     * Fetch x509 cert for RS256 token decoding.
+     *
+     * @param mixed $jwk JWK keys structure
+     *
+     * @return string|null - Null if the JWKS is empty/invalid.
+     */
+    protected function requestJwkX5c($jwk)
+    {
         $x5c = $this->convertCertToPem($jwk['x5c'][0]);
-        $this->cache->set($cache_key, $x5c);
         return $x5c;
+    }
+
+    /**
+     * Fetch RSA public key for RS256 token decoding.
+     *
+     * @param mixed $jwk JWK keys structure
+     *
+     * @return string|null - Null if the JWKS is empty/invalid.
+     */
+    protected function requetJwkRsa($jwk)
+    {
+        if (empty($jwk['n']) || empty($jwk['e'])) {
+            return null;
+        }
+
+        $n = base64_decode(strtr($jwk['n'], '-_', '+/'), true);
+        $e = base64_decode(strtr($jwk['e'], '-_', '+/'), true);
+        $rsa = new RSA();
+        $rsa->loadKey(
+            [
+                'e' => new BigInteger($e, 256),
+                'n' => new BigInteger($n, 256)
+            ]
+        );
+        return $rsa->getPublicKey();
     }
 
     /**
@@ -154,7 +198,7 @@ class JWKFetcher
      */
     private function subArrayHasEmptyFirstItem($array, $key)
     {
-        return empty($array) || ! is_array($array[$key]) || empty($array[$key][0]);
+        return empty($array) || empty($array[$key]) || ! is_array($array[$key]) || empty($array[$key][0]);
     }
 
     /*
