@@ -4,10 +4,17 @@ use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 
+/**
+ * Class GenericResource.
+ * Extended by Management API endpoints classes.
+ *
+ * @package Auth0\SDK\API\Management
+ */
 class GenericResource
 {
 
     /**
+     * Injected ApiClient instance to use.
      *
      * @var ApiClient
      */
@@ -16,7 +23,7 @@ class GenericResource
     /**
      * GenericResource constructor.
      *
-     * @param ApiClient $apiClient
+     * @param ApiClient $apiClient ApiClient instance to use.
      */
     public function __construct(ApiClient $apiClient)
     {
@@ -24,6 +31,7 @@ class GenericResource
     }
 
     /**
+     * Get the injected ApiClient instance.
      *
      * @return ApiClient
      */
@@ -48,14 +56,13 @@ class GenericResource
             'per_page' => isset( $params['per_page'] ) ? $params['per_page'] : $per_page,
         ];
 
-        foreach (array_keys( $pagination ) as $pagination_key) {
-            if (empty( $pagination[$pagination_key] )) {
-                unset( $pagination[$pagination_key] );
-                continue;
-            }
+        // Filter out empty values.
+        $pagination = array_filter( $pagination );
 
-            $pagination[$pagination_key] = abs( intval( $pagination[$pagination_key] ) );
-        }
+        // Make sure we have absolute integers.
+        $pagination = array_map( function ($val) {
+            return abs( intval( $val ) );
+        }, $pagination );
 
         return array_merge( $params, $pagination );
     }
@@ -88,7 +95,9 @@ class GenericResource
      *
      * @param array $permissions Permissions array to check.
      *
-     * @throws InvalidPermissionsArrayException
+     * @return void
+     *
+     * @throws InvalidPermissionsArrayException If permissions are empty or do not contain the necessary keys.
      */
     protected function checkInvalidPermissions(array $permissions)
     {
@@ -108,14 +117,18 @@ class GenericResource
     }
 
     /**
-     * @param mixed  $var      The variable to check
+     * Check that a variable is a string and is not empty.
+     *
+     * @param mixed  $var      The variable to check.
      * @param string $var_name The variable name.
+     *
+     * @return void
      *
      * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
     protected function checkEmptyOrInvalidString($var, $var_name)
     {
-        if (empty($var) || ! is_string($var)) {
+        if (! is_string($var) || empty($var)) {
             throw new EmptyOrInvalidParameterException($var_name);
         }
     }
