@@ -2,7 +2,8 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
+use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 
 /**
  * Class Users.
@@ -246,7 +247,7 @@ class Users extends GenericResource
      * @param string $user_id User ID to get roles for.
      * @param array  $params  Additional listing params like page, per_page, and include_totals.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -255,15 +256,10 @@ class Users extends GenericResource
      */
     public function getRoles($user_id, array $params = [])
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
         $params = $this->normalizePagination( $params );
-
-        if (isset( $params['include_totals'] )) {
-            $params['include_totals'] = boolval( $params['include_totals'] );
-        }
+        $params = $this->normalizeIncludeTotals( $params );
 
         return $this->apiClient->method('get')
             ->addPath('users', $user_id)
@@ -279,8 +275,8 @@ class Users extends GenericResource
      * @param string $user_id User ID to remove roles from.
      * @param array  $roles   Array of permissions to remove.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
-     * @throws CoreException Thrown if the roles parameter is empty.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the roles parameter is empty.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -289,12 +285,10 @@ class Users extends GenericResource
      */
     public function removeRoles($user_id, array $roles)
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
         if (empty($roles)) {
-            throw new CoreException('Empty roles parameter.');
+            throw new EmptyOrInvalidParameterException('roles');
         }
 
         $data = [ 'roles' => $roles ];
@@ -315,8 +309,8 @@ class Users extends GenericResource
      * @param string $user_id User ID to add roles to.
      * @param array  $roles   Array of roles to add.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
-     * @throws CoreException Thrown if the roles parameter is empty.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the roles parameter is empty.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -325,12 +319,10 @@ class Users extends GenericResource
      */
     public function addRoles($user_id, array $roles)
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
         if (empty($roles)) {
-            throw new CoreException('Empty roles parameter.');
+            throw new EmptyOrInvalidParameterException('roles');
         }
 
         $data = [ 'roles' => $roles ];
@@ -348,7 +340,7 @@ class Users extends GenericResource
      *
      * @param string $user_id User ID to get enrollments for.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -357,9 +349,7 @@ class Users extends GenericResource
      */
     public function getEnrollments($user_id)
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
         return $this->apiClient->method('get')
             ->addPath('users', $user_id)
@@ -374,7 +364,7 @@ class Users extends GenericResource
      * @param string $user_id User ID to get permissions for.
      * @param array  $params  Additional listing params like page, per_page, and include_totals.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -383,15 +373,10 @@ class Users extends GenericResource
      */
     public function getPermissions($user_id, array $params = [])
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
         $params = $this->normalizePagination( $params );
-
-        if (isset( $params['include_totals'] )) {
-            $params['include_totals'] = boolval( $params['include_totals'] );
-        }
+        $params = $this->normalizeIncludeTotals( $params );
 
         return $this->apiClient->method('get')
             ->addPath('users', $user_id)
@@ -407,8 +392,8 @@ class Users extends GenericResource
      * @param string $user_id     User ID to remove permissions from.
      * @param array  $permissions Array of permissions to remove.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
-     * @throws CoreException Thrown if the permissions parameter is malformed.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is malformed.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -417,15 +402,8 @@ class Users extends GenericResource
      */
     public function removePermissions($user_id, array $permissions)
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
-
-        if ($this->containsInvalidPermissions( $permissions )) {
-            throw new CoreException(
-                'Permissions must include both permission_name and resource_server_identifier keys.'
-            );
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
+        $this->checkInvalidPermissions( $permissions );
 
         $data = [ 'permissions' => $permissions ];
 
@@ -443,8 +421,8 @@ class Users extends GenericResource
      * @param string $user_id     User ID to add permissions to.
      * @param array  $permissions Array of permissions to add.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
-     * @throws CoreException Thrown if the permissions parameter is malformed.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is malformed.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -453,15 +431,8 @@ class Users extends GenericResource
      */
     public function addPermissions($user_id, array $permissions)
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
-
-        if ($this->containsInvalidPermissions( $permissions )) {
-            throw new CoreException(
-                'Permissions must include both permission_name and resource_server_identifier keys.'
-            );
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
+        $this->checkInvalidPermissions( $permissions );
 
         $data = [ 'permissions' => $permissions ];
 
@@ -479,7 +450,7 @@ class Users extends GenericResource
      * @param string $user_id User ID to get logs entries for.
      * @param array  $params  Additional listing params like page, per_page, sort, and include_totals.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -488,15 +459,10 @@ class Users extends GenericResource
      */
     public function getLogs($user_id, array $params = [])
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
         $params = $this->normalizePagination( $params );
-
-        if (isset( $params['include_totals'] )) {
-            $params['include_totals'] = boolval( $params['include_totals'] );
-        }
+        $params = $this->normalizeIncludeTotals( $params );
 
         return $this->apiClient->method('get')
             ->addPath('users', $user_id)
@@ -511,7 +477,7 @@ class Users extends GenericResource
      *
      * @param string $user_id User ID to remove and generate recovery codes for.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -520,9 +486,7 @@ class Users extends GenericResource
      */
     public function generateRecoveryCode($user_id)
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
         return $this->apiClient->method('post')
             ->addPath('users', $user_id)
@@ -536,7 +500,7 @@ class Users extends GenericResource
      *
      * @param string $user_id User ID to invalidate browsers for.
      *
-     * @throws CoreException Thrown if the user_id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
@@ -545,9 +509,7 @@ class Users extends GenericResource
      */
     public function invalidateBrowsers($user_id)
     {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Invalid or missing user_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
         return $this->apiClient->method('post')
             ->addPath('users', $user_id)
