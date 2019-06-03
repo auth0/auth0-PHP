@@ -17,7 +17,6 @@ use Firebase\JWT\JWT;
  */
 class JWTVerifier
 {
-
     /**
      * Instance of JWKFetcher, injected or instantiated with this class's config options.
      *
@@ -61,7 +60,7 @@ class JWTVerifier
      *
      * @var string
      */
-    protected $jwks_path = '.well-known/jwks.json';
+    protected $jwks_path;
 
     /**
      * JWTVerifier Constructor.
@@ -102,7 +101,7 @@ class JWTVerifier
             $this->JWKFetcher = new JWKFetcher($cache, $guzzleOptions);
         }
 
-        // JWKS path to use; see variable declaration above for default.
+        // JWKS path to use; if empty, default will fallback regarding .well-known/openid-configuration jwks_uri.
         if (isset($config['jwks_path'])) {
             $this->jwks_path = (string) $config['jwks_path'];
         }
@@ -216,7 +215,11 @@ class JWTVerifier
                 throw new CoreException('We cannot trust on a token issued by `'.$body_decoded->iss.'`');
             }
 
-            $jwks_url                   = $body_decoded->iss.$this->jwks_path;
+            if (empty($this->jwks_path)) {
+                $jwks_url = $this->JWKFetcher->getJwksUri($body_decoded->iss);
+            } else {
+                $jwks_url = $body_decoded->iss.$this->jwks_path;
+            }
             $secret[$head_decoded->kid] = $this->JWKFetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
         }
 

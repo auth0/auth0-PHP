@@ -16,6 +16,7 @@ use GuzzleHttp\Exception\ClientException;
  */
 class JWKFetcher
 {
+    const DEFAULT_JWK_PATH = '.well-known/jwks.json';
 
     /**
      * Cache handler or null for no caching.
@@ -157,6 +158,29 @@ class JWKFetcher
         return empty($array) || ! is_array($array[$key]) || empty($array[$key][0]);
     }
 
+    /**
+     * Get JWKS URI from openid configuration manifest
+     *
+     * @param string $iss Identity provider endpoint
+     *
+     * @return string
+     */
+    public function getJwksUri($iss)
+    {
+        $openIdConfig = '.well-known/openid-configuration';
+        $request = new RequestBuilder([
+            'domain' => rtrim($iss, '/') . '/' . $openIdConfig,
+            'method' => 'GET',
+            'guzzleOptions' => $this->guzzleOptions
+        ]);
+        $config = $request->call();
+        if (empty($config['jwks_uri'])) {
+            # Retrocompatibility fix
+            $config['jwks_uri'] = rtrim($iss, '/') . '/' . self::DEFAULT_JWK_PATH;
+        }
+        return $config['jwks_uri'];
+    }
+
     /*
      * Deprecated
      */
@@ -177,14 +201,13 @@ class JWKFetcher
      */
     public function fetchKeys($iss)
     {
-        $url = "{$iss}.well-known/jwks.json";
+        $url = "{$iss}" . self::DEFAULT_JWK_PATH;
 
         if (($secret = $this->cache->get($url)) === null) {
             $secret = [];
 
             $request = new RequestBuilder([
-                'domain' => $iss,
-                'basePath' => '.well-known/jwks.json',
+                'domain' => $this->getJwksUri($iss),
                 'method' => 'GET',
                 'guzzleOptions' => $this->guzzleOptions
             ]);
