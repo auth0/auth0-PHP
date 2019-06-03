@@ -1,7 +1,8 @@
 <?php
 namespace Auth0\Tests\API\Management;
 
-use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
+use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 use Auth0\Tests\Traits\ErrorHelpers;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -81,11 +82,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->create( '' );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required name parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid name', $exception_message );
     }
 
     /**
@@ -130,11 +131,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->get( '' );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Invalid or missing role_id parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -172,11 +173,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->delete( '' );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Invalid or missing role_id parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -215,11 +216,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->update( '', [] );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Invalid or missing role_id parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -262,11 +263,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->getPermissions( '' );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Invalid or missing role_id parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -334,11 +335,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->addPermissions( '', [] );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Invalid or missing role_id parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -354,15 +355,12 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $api->call()->roles->addPermissions( '__test_role_id__', [] );
-            $exception_message = '';
-        } catch (CoreException $e) {
-            $exception_message = $e->getMessage();
+            $caught_exception = false;
+        } catch (InvalidPermissionsArrayException $e) {
+            $caught_exception = true;
         }
 
-        $this->assertContains(
-            'All permissions must include both permission_name and resource_server_identifier keys',
-            $exception_message
-        );
+        $this->assertTrue( $caught_exception );
     }
 
     /**
@@ -420,11 +418,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->removePermissions( '', [] );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Invalid or missing role_id parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -443,30 +441,24 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
                 '__test_role_id__',
                 [ [ 'permission_name' => uniqid() ] ]
             );
-            $exception_message = '';
-        } catch (CoreException $e) {
-            $exception_message = $e->getMessage();
+            $caught_exception = false;
+        } catch (InvalidPermissionsArrayException $e) {
+            $caught_exception = true;
         }
 
-        $this->assertContains(
-            'All permissions must include both permission_name and resource_server_identifier keys',
-            $exception_message
-        );
+        $this->assertTrue( $caught_exception );
 
         try {
             $api->call()->roles->removePermissions(
                 '__test_role_id__',
                 [ [ 'resource_server_identifier' => uniqid() ] ]
             );
-            $exception_message = '';
-        } catch (CoreException $e) {
-            $exception_message = $e->getMessage();
+            $caught_exception = false;
+        } catch (InvalidPermissionsArrayException $e) {
+            $caught_exception = true;
         }
 
-        $this->assertContains(
-            'All permissions must include both permission_name and resource_server_identifier keys',
-            $exception_message
-        );
+        $this->assertTrue( $caught_exception );
     }
 
     /**
@@ -524,11 +516,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->getUsers( '' );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Invalid or missing role_id parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -573,11 +565,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->addUsers( '', [] );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Invalid or missing role_id parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -594,11 +586,11 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         try {
             $api->call()->roles->addUsers( '__test_role_id__', [] );
             $exception_message = '';
-        } catch (CoreException $e) {
+        } catch (EmptyOrInvalidParameterException $e) {
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty users parameter', $exception_message );
+        $this->assertContains( 'Empty or invalid users', $exception_message );
     }
 
     /**
