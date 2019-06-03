@@ -3,6 +3,8 @@
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
+use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 
 /**
  * Class Roles.
@@ -41,18 +43,16 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the identifier parameter or data field is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the name parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_roles
      */
     public function create($name, array $data = [])
     {
-        $data['name'] = (string) $name;
+        $this->checkEmptyOrInvalidString($name, 'name');
 
-        if (empty($data['name'])) {
-            throw new CoreException('Missing required name parameter.');
-        }
+        $data['name'] = $name;
 
         return $this->apiClient->method('post')
             ->addPath('roles')
@@ -68,16 +68,14 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_roles_by_id
      */
     public function get($role_id)
     {
-        if (empty($role_id) || ! is_string($role_id)) {
-            throw new CoreException('Invalid or missing role_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($role_id, 'role_id');
 
         return $this->apiClient->method('get')
             ->addPath('roles', $role_id)
@@ -92,16 +90,14 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/delete_roles_by_id
      */
     public function delete($role_id)
     {
-        if (empty($role_id) || ! is_string($role_id)) {
-            throw new CoreException('Invalid or missing role_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($role_id, 'role_id');
 
         return $this->apiClient->method('delete')
             ->addPath('roles', $role_id)
@@ -117,16 +113,14 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/patch_roles_by_id
      */
     public function update($role_id, array $data)
     {
-        if (empty($role_id) || ! is_string($role_id)) {
-            throw new CoreException('Invalid or missing role_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($role_id, 'role_id');
 
         return $this->apiClient->method('patch')
             ->addPath('roles', $role_id)
@@ -143,22 +137,17 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_role_permission
      */
     public function getPermissions($role_id, array $params = [])
     {
-        if (empty($role_id) || ! is_string($role_id)) {
-            throw new CoreException('Invalid or missing role_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($role_id, 'role_id');
 
         $params = $this->normalizePagination( $params );
-
-        if (isset( $params['include_totals'] )) {
-            $params['include_totals'] = boolval( $params['include_totals'] );
-        }
+        $params = $this->normalizeIncludeTotals( $params );
 
         return $this->apiClient->method('get')
             ->addPath('roles', $role_id)
@@ -176,22 +165,16 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the role_id parameter is empty or is not a string.
+     * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is empty or invalid.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_role_permission_assignment
      */
     public function addPermissions($role_id, array $permissions)
     {
-        if (empty($role_id) || ! is_string($role_id)) {
-            throw new CoreException('Invalid or missing role_id parameter.');
-        }
-
-        if ($this->containsInvalidPermissions( $permissions )) {
-            throw new CoreException(
-                'All permissions must include both permission_name and resource_server_identifier keys.'
-            );
-        }
+        $this->checkEmptyOrInvalidString($role_id, 'role_id');
+        $this->checkInvalidPermissions( $permissions );
 
         $data = [ 'permissions' => $permissions ];
 
@@ -211,22 +194,16 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the role_id parameter is empty or is not a string.
+     * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is empty or invalid.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/delete_role_permission_assignment
      */
     public function removePermissions($role_id, array $permissions)
     {
-        if (empty($role_id) || ! is_string($role_id)) {
-            throw new CoreException('Invalid or missing role_id parameter.');
-        }
-
-        if ($this->containsInvalidPermissions( $permissions )) {
-            throw new CoreException(
-                'All permissions must include both permission_name and resource_server_identifier keys.'
-            );
-        }
+        $this->checkEmptyOrInvalidString($role_id, 'role_id');
+        $this->checkInvalidPermissions( $permissions );
 
         $data = [ 'permissions' => $permissions ];
 
@@ -248,22 +225,17 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the id parameter is empty or is not a string.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_role_user
      */
     public function getUsers($role_id, array $params = [])
     {
-        if (empty($role_id) || ! is_string($role_id)) {
-            throw new CoreException('Invalid or missing role_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($role_id, 'role_id');
 
         $params = $this->normalizePagination( $params );
-
-        if (isset( $params['include_totals'] )) {
-            $params['include_totals'] = boolval( $params['include_totals'] );
-        }
+        $params = $this->normalizeIncludeTotals( $params );
 
         return $this->apiClient->method('get')
             ->addPath('roles', $role_id)
@@ -281,19 +253,18 @@ class Roles extends GenericResource
      *
      * @return mixed
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
+     * @throws EmptyOrInvalidParameterException Thrown if the role_id parameter is empty or is not a string.
+     * @throws CoreException Thrown if the users parameter is empty.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_role_users
      */
     public function addUsers($role_id, array $users)
     {
-        if (empty($role_id) || ! is_string($role_id)) {
-            throw new CoreException('Invalid or missing role_id parameter.');
-        }
+        $this->checkEmptyOrInvalidString($role_id, 'role_id');
 
         if (empty($users)) {
-            throw new CoreException('Empty users parameter.');
+            throw new EmptyOrInvalidParameterException('users');
         }
 
         $data = [ 'users' => array_unique( $users ) ];

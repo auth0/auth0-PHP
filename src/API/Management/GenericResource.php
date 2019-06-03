@@ -1,6 +1,8 @@
 <?php namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
+use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 
 class GenericResource
 {
@@ -59,28 +61,62 @@ class GenericResource
     }
 
     /**
+     * Normalize include_totals parameter.
+     *
+     * @param array      $params         Original parameters to normalize.
+     * @param null|mixed $include_totals Include totals parameter value, if any.
+     *
+     * @return array
+     */
+    protected function normalizeIncludeTotals(array $params, $include_totals = null)
+    {
+        // User parameter include_totals if params does not have the key.
+        if (! isset( $params['include_totals'] )) {
+            $params['include_totals'] = $include_totals;
+        }
+
+        // If include_totals is set (not null), then make sure we have a boolean.
+        if (isset( $params['include_totals'] )) {
+            $params['include_totals'] = boolval( $params['include_totals'] );
+        }
+
+        return $params;
+    }
+
+    /**
      * Check for invalid permissions with an array of permissions.
      *
      * @param array $permissions Permissions array to check.
      *
-     * @return boolean
+     * @throws InvalidPermissionsArrayException
      */
-    protected function containsInvalidPermissions(array $permissions)
+    protected function checkInvalidPermissions(array $permissions)
     {
-        if ( empty( $permissions ) ) {
-            return true;
+        if (empty( $permissions )) {
+            throw new InvalidPermissionsArrayException();
         }
 
         foreach ($permissions as $permission) {
             if (empty( $permission['permission_name'] )) {
-                return true;
+                throw new InvalidPermissionsArrayException();
             }
 
             if (empty( $permission['resource_server_identifier'] )) {
-                return true;
+                throw new InvalidPermissionsArrayException();
             }
         }
+    }
 
-        return false;
+    /**
+     * @param mixed  $var      The variable to check
+     * @param string $var_name The variable name.
+     *
+     * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
+     */
+    protected function checkEmptyOrInvalidString($var, $var_name)
+    {
+        if (empty($var) || ! is_string($var)) {
+            throw new EmptyOrInvalidParameterException($var_name);
+        }
     }
 }
