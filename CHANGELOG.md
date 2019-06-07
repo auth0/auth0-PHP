@@ -1,5 +1,18 @@
 # Change Log
 
+## [5.5.0](https://github.com/auth0/auth0-PHP/tree/5.5.0) (2019-06-07)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.0...5.5.0)
+
+**Closed issues**
+- Consider dropping PHP-5.x version supports [\#343](https://github.com/auth0/auth0-PHP/issues/343)
+- Auth0 Error:  'Invalid state' in /auth0/vendor/auth0/auth0-php/src/Auth0.php: line#537  [\#333](https://github.com/auth0/auth0-PHP/issues/333)
+
+**Added**
+- Add missing User endpoints for Management API [\#341](https://github.com/auth0/auth0-PHP/pull/341) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add all Management API Roles endpoints [\#337](https://github.com/auth0/auth0-PHP/pull/337) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add missing Users test and switch to mocked calls. [\#336](https://github.com/auth0/auth0-PHP/pull/336) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Authentication::refresh_token() method [\#335](https://github.com/auth0/auth0-PHP/pull/335) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.4.0](https://github.com/auth0/auth0-PHP/tree/5.4.0) (2019-02-28)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.3.2...5.4.0)
 
