@@ -60,7 +60,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/users/__test_user_id__', $api->getHistoryUrl() );
-        $this->assertEmpty( $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -90,7 +89,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( 'PATCH', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/users/__test_user_id__', $api->getHistoryUrl() );
-        $this->assertEmpty( $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -179,7 +177,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/users', $api->getHistoryUrl() );
-        $this->assertEmpty( $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -209,7 +206,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/users', $api->getHistoryUrl() );
-        $this->assertEmpty( $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -428,7 +424,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/users/__test_user_id__', $api->getHistoryUrl() );
-        $this->assertEmpty( $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -457,7 +452,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/users/__test_user_id__/identities', $api->getHistoryUrl() );
-        $this->assertEmpty( $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -494,7 +488,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
             'https://api.test.local/api/v2/users/__test_user_id__/identities/__test_provider__/__test_identity_id__',
             $api->getHistoryUrl()
         );
-        $this->assertEmpty( $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -519,7 +512,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
             'https://api.test.local/api/v2/users/__test_user_id__/multifactor/duo',
             $api->getHistoryUrl()
         );
-        $this->assertEmpty( $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -561,7 +553,10 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $api->call()->users->getRoles( '__test_user_id__', [ 'per_page' => 5, 'page' => 1, 'include_totals' => 1 ] );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
-        $this->assertStringStartsWith( 'https://api.test.local/api/v2/users/__test_user_id__', $api->getHistoryUrl() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/roles?',
+            $api->getHistoryUrl()
+        );
 
         $query = $api->getHistoryQuery();
         $this->assertContains( 'per_page=5', $query );
@@ -629,7 +624,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $api->call()->users->removeRoles( '__test_user_id__', [ '__test_role_id__' ] );
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
-        $this->assertStringStartsWith(
+        $this->assertEquals(
             'https://api.test.local/api/v2/users/__test_user_id__/roles',
             $api->getHistoryUrl()
         );
@@ -701,7 +696,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $api->call()->users->addRoles( '__test_user_id__', [ '__test_role_id__' ] );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertStringStartsWith(
+        $this->assertEquals(
             'https://api.test.local/api/v2/users/__test_user_id__/roles',
             $api->getHistoryUrl()
         );
@@ -801,7 +796,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith(
-            'https://api.test.local/api/v2/users/__test_user_id__/permissions',
+            'https://api.test.local/api/v2/users/__test_user_id__/permissions?',
             $api->getHistoryUrl()
         );
 
@@ -879,7 +874,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
-        $this->assertStringStartsWith(
+        $this->assertEquals(
             'https://api.test.local/api/v2/users/__test_user_id__/permissions',
             $api->getHistoryUrl()
         );
@@ -962,7 +957,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertStringStartsWith(
+        $this->assertEquals(
             'https://api.test.local/api/v2/users/__test_user_id__/permissions',
             $api->getHistoryUrl()
         );
@@ -1020,7 +1015,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith(
-            'https://api.test.local/api/v2/users/__test_user_id__/logs',
+            'https://api.test.local/api/v2/users/__test_user_id__/logs?',
             $api->getHistoryUrl()
         );
 
@@ -1070,7 +1065,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $api->call()->users->generateRecoveryCode( '__test_user_id__' );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertStringStartsWith(
+        $this->assertEquals(
             'https://api.test.local/api/v2/users/__test_user_id__/recovery-code-regeneration',
             $api->getHistoryUrl()
         );
@@ -1115,7 +1110,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $api->call()->users->invalidateBrowsers( '__test_user_id__' );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertStringStartsWith(
+        $this->assertEquals(
             'https://api.test.local/api/v2/users/__test_user_id__/multifactor/actions/invalidate-remember-browser',
             $api->getHistoryUrl()
         );
