@@ -31,11 +31,11 @@ class ResourceServers extends GenericResource
 
         // Pagination parameters.
         if (null !== $page) {
-            $params['page'] = abs((int) $page);
+            $params['page'] = abs( (int) $page);
         }
 
         if (null !== $per_page) {
-            $params['per_page'] = abs((int) $per_page);
+            $params['per_page'] = abs( (int) $per_page);
         }
 
         return $this->apiClient->method('get')
