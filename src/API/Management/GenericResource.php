@@ -75,17 +75,15 @@ class GenericResource
      *
      * @return array
      */
-    protected function normalizeIncludeTotals(array $params, $include_totals = null)
+    protected function normalizeIncludeTotals(array $params, $include_totals = false)
     {
         // User parameter include_totals if params does not have the key.
         if (! isset( $params['include_totals'] )) {
             $params['include_totals'] = $include_totals;
         }
 
-        // If include_totals is set (not null), then make sure we have a boolean.
-        if (isset( $params['include_totals'] )) {
-            $params['include_totals'] = boolval( $params['include_totals'] );
-        }
+        // Make sure we have a boolean.
+        $params['include_totals'] = boolval( $params['include_totals'] );
 
         return $params;
     }
