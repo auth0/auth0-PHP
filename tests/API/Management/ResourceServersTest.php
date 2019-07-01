@@ -49,10 +49,12 @@ class ResourceServersTest extends ApiTests
      * Sets up API client for the testing class.
      *
      * @return void
+     *
+     * @throws \Auth0\SDK\Exception\ApiException
      */
     public static function setUpBeforeClass()
     {
-        self::$api              = self::getApi( 'resource_servers', ['read', 'create', 'delete', 'update'] );
+        self::$api              = self::getApi( 'resource_servers' );
         self::$serverIdentifier = 'TEST_PHP_SDK_ID_'.uniqid();
     }
 

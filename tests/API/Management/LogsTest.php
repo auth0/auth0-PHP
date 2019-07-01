@@ -24,11 +24,13 @@ class LogsTest extends ApiTests
      * Sets up API client for entire testing class.
      *
      * @return void
+     *
+     * @throws \Auth0\SDK\Exception\ApiException
      */
     public static function setUpBeforeClass()
     {
         $env   = self::getEnv();
-        $token = self::getToken($env, [ 'logs' => [ 'actions' => ['read'] ] ]);
+        $token = self::getToken($env);
         $api   = new Management($token, $env['DOMAIN'], ['timeout' => 30]);
 
         self::$api = $api->logs;

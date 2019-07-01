@@ -1,6 +1,7 @@
 <?php
 namespace Auth0\Tests\API;
 
+use Auth0\SDK\API\Authentication;
 use Auth0\Tests\Traits\ErrorHelpers;
 use Auth0\SDK\API\Helpers\TokenGenerator;
 use Auth0\SDK\API\Management;
@@ -27,6 +28,8 @@ class ApiTests extends \PHPUnit_Framework_TestCase
      * Get all test suite environment variables.
      *
      * @return array
+     *
+     * @throws \Auth0\SDK\Exception\ApiException
      */
     protected static function getEnv()
     {
@@ -37,14 +40,14 @@ class ApiTests extends \PHPUnit_Framework_TestCase
                 $loader->parse()->putenv(true);
             }
 
+            $auth_api = new Authentication( getenv('DOMAIN'), getenv('APP_CLIENT_ID'), getenv('APP_CLIENT_SECRET') );
+            $response = $auth_api->client_credentials( [ 'audience' => 'https://' . getenv('DOMAIN') . '/api/v2/' ] );
+
             self::$env = [
-                'GLOBAL_CLIENT_ID' => getenv('GLOBAL_CLIENT_ID'),
-                'GLOBAL_CLIENT_SECRET' => getenv('GLOBAL_CLIENT_SECRET'),
+                'DOMAIN' => getenv('DOMAIN'),
                 'APP_CLIENT_ID' => getenv('APP_CLIENT_ID'),
                 'APP_CLIENT_SECRET' => getenv('APP_CLIENT_SECRET'),
-                'NIC_ID' => getenv('NIC_ID'),
-                'NIC_SECRET' => getenv('NIC_SECRET'),
-                'DOMAIN' => getenv('DOMAIN'),
+                'API_TOKEN' => $response['access_token'],
             ];
         }
 
@@ -55,30 +58,28 @@ class ApiTests extends \PHPUnit_Framework_TestCase
      * Get a Management API token for specific scopes.
      *
      * @param array $env    Environment variables.
-     * @param array $scopes Token scopes.
      *
      * @return string
      */
-    protected static function getToken(array $env, array $scopes)
+    protected static function getToken(array $env)
     {
-        $generator = new TokenGenerator( $env['GLOBAL_CLIENT_ID'], $env['GLOBAL_CLIENT_SECRET'] );
-        return $generator->generate($scopes);
+        return $env['API_TOKEN'];
     }
 
     /**
      * Return an API client used during self::setUpBeforeClass().
      *
      * @param string $endpoint   Endpoint name used for token generation.
-     * @param array  $actions    Actions required for token generation.
-     * @param array  $returnType Return type.
      *
      * @return mixed
+     *
+     * @throws \Auth0\SDK\Exception\ApiException
      */
-    protected static function getApi($endpoint, array $actions, array $returnType = null)
+    protected static function getApi($endpoint)
     {
         self::getEnv();
-        $token      = self::getToken(self::$env, [$endpoint => ['actions' => $actions]]);
-        $api_client = new Management($token, self::$env['DOMAIN'], [], $returnType);
+        $token      = self::getToken(self::$env);
+        $api_client = new Management($token, self::$env['DOMAIN']);
         return $api_client->$endpoint;
     }
 }

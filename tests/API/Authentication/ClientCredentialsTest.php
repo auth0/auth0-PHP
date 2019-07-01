@@ -11,7 +11,7 @@ class ClientCredentialsTest extends ApiTests
     {
         $env = self::getEnv();
 
-        $api = new Authentication($env['DOMAIN'], $env['NIC_ID'], $env['NIC_SECRET']);
+        $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET']);
 
         $token = $api->client_credentials(
             [
