@@ -27,7 +27,7 @@ class ClientsTest extends BasicCrudTest
      */
     protected function getApiClient()
     {
-        $token = self::getToken(self::$env, [ 'clients' => [ 'actions' => ['create', 'read', 'delete', 'update' ] ] ]);
+        $token = self::getToken(self::$env);
         $api   = new Management($token, $this->domain);
         return $api->clients;
     }
@@ -66,8 +66,8 @@ class ClientsTest extends BasicCrudTest
         // Make sure we only have one result, as requested.
         $this->assertEquals(1, count($paged_results));
 
-        // Make sure we only have the 4 fields we requested.
-        $this->assertEquals(count($fields), count($paged_results[0]));
+        // Make sure we only have the 4 fields we requested plus "tenant".
+        $this->assertEquals(count($fields) + 1, count($paged_results[0]));
 
         // Get many results (needs to include the created result if self::findCreatedItem === true).
         $many_results_per_page = 50;

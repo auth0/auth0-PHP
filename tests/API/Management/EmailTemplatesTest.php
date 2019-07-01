@@ -77,12 +77,7 @@ class EmailTemplatesTest extends ApiTests
         $env = self::getEnv();
 
         self::$domain = $env['DOMAIN'];
-        self::$token  = self::getToken(
-            $env, [
-                'email_templates' => [ 'actions' => ['create', 'read', 'update'] ],
-                'email_provider' => [ 'actions' => ['read'] ],
-            ]
-        );
+        self::$token  = self::getToken($env);
 
         self::$api = new Management(self::$token, self::$domain);
 

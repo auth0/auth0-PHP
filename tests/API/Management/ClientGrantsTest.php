@@ -37,11 +37,11 @@ class ClientGrantsTest extends ApiTests
     /**
      * Sets up API client for the testing class.
      *
-     * @return void
+     * @throws \Auth0\SDK\Exception\ApiException
      */
     public static function setUpBeforeClass()
     {
-        self::$api = self::getApi( 'client_grants', ['read', 'create', 'delete', 'update'] );
+        self::$api = self::getApi( 'client_grants' );
     }
 
     /**

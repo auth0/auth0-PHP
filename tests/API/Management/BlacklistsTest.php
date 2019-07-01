@@ -9,22 +9,19 @@ class BlacklistsTest extends ApiTests
 
     private $domain;
 
+    /**
+     * @throws \Auth0\SDK\Exception\ApiException
+     */
     public function testBlacklistAndGet()
     {
         $env   = self::getEnv();
-        $token = self::getToken(
-            $env, [
-                'tokens' => [
-                    'actions' => ['blacklist']
-                ]
-            ]
-        );
+        $token = self::getToken($env);
 
         $this->domain = $env['DOMAIN'];
 
         $api = new Management($token, $env['DOMAIN']);
 
-        $aud = $env['GLOBAL_CLIENT_ID'];
+        $aud = $env['APP_CLIENT_ID'];
         $jti = 'somerandomJTI'.rand();
 
         $api->blacklists->blacklist($aud, $jti);
