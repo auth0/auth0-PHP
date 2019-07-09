@@ -83,7 +83,7 @@ class GenericResource
         }
 
         // Make sure we have a boolean.
-        $params['include_totals'] = boolval( $params['include_totals'] );
+        $params['include_totals'] = filter_var( $params['include_totals'], FILTER_VALIDATE_BOOLEAN );
 
         return $params;
     }
