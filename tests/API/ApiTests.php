@@ -3,7 +3,6 @@ namespace Auth0\Tests\API;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\Tests\Traits\ErrorHelpers;
-use Auth0\SDK\API\Helpers\TokenGenerator;
 use Auth0\SDK\API\Management;
 use josegonzalez\Dotenv\Loader;
 
@@ -41,7 +40,7 @@ class ApiTests extends \PHPUnit_Framework_TestCase
             }
 
             $auth_api = new Authentication( getenv('DOMAIN'), getenv('APP_CLIENT_ID'), getenv('APP_CLIENT_SECRET') );
-            $response = $auth_api->client_credentials( [ 'audience' => 'https://' . getenv('DOMAIN') . '/api/v2/' ] );
+            $response = $auth_api->client_credentials( [ 'audience' => 'https://'.getenv('DOMAIN').'/api/v2/' ] );
 
             self::$env = [
                 'DOMAIN' => getenv('DOMAIN'),

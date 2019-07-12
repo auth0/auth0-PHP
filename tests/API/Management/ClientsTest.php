@@ -57,7 +57,7 @@ class ClientsTest extends BasicCrudTest
     protected function getAllEntities()
     {
         $fields   = array_keys($this->getCreateBody());
-        $fields[] = $this->id_name;
+        $fields   = array_merge( $fields, [ $this->id_name, 'tenant' ] );
         $page_num = 1;
 
         // Get the second page of Clients with 1 per page (second result).
@@ -67,7 +67,7 @@ class ClientsTest extends BasicCrudTest
         $this->assertEquals(1, count($paged_results));
 
         // Make sure we only have the 4 fields we requested plus "tenant".
-        $this->assertEquals(count($fields) + 1, count($paged_results[0]));
+        $this->assertEquals(count($fields), count($paged_results[0]));
 
         // Get many results (needs to include the created result if self::findCreatedItem === true).
         $many_results_per_page = 50;
