@@ -5,18 +5,28 @@ use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Exception\CoreException;
 
+/**
+ * Class RequestBuilderTest
+ * Tests the Auth0\SDK\API\Helpers\RequestBuilder class.
+ *
+ * @package Auth0\Tests\API
+ */
 class RequestBuilderTest extends ApiTests
 {
+    private static function getUrlBuilder($basePath = null)
+    {
+        return new RequestBuilder(
+            [
+                'domain' => 'api.local.test',
+                'method' => 'get',
+                'basePath' => $basePath,
+            ]
+        );
+    }
 
     public function testUrl()
     {
-        $builder = new RequestBuilder(
-            [
-                'domain' => 'www.domain.com',
-                'basePath' => '/api',
-                'method' => 'get',
-            ]
-        );
+        $builder = self::getUrlBuilder('/api');
 
         $this->assertEquals('', $builder->getUrl());
 
@@ -29,45 +39,87 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('path1/path2/3', $builder->getUrl());
     }
 
+    public function testThatASingleUrlParamIsAdded()
+    {
+        $builder = self::getUrlBuilder()->withParam('param1', 'value1');
+
+        $this->assertEquals('?param1=value1', $builder->getParams());
+    }
+
+    public function testThatEmptyStringParamsAreNotAdded()
+    {
+        $builder = self::getUrlBuilder()->withParam('param1', '');
+
+        $this->assertEmpty($builder->getParams());
+    }
+
+    public function testThatNullParamsAreNotAdded()
+    {
+        $builder = self::getUrlBuilder()->withParam('param1', null);
+
+        $this->assertEmpty($builder->getParams());
+    }
+
+    public function testThatTrueParamsAreAdded()
+    {
+        $builder = self::getUrlBuilder()->withParam('param1', true);
+
+        $this->assertEquals('?param1=true', $builder->getParams());
+    }
+
+    public function testThatFalseParamsAreAdded()
+    {
+        $builder = self::getUrlBuilder()->withParam('param1', false);
+
+        $this->assertEquals('?param1=false', $builder->getParams());
+    }
+
+    public function testThatZeroParamsAreAdded()
+    {
+        $builder = self::getUrlBuilder()->withParam('param1', 0);
+
+        $this->assertEquals('?param1=0', $builder->getParams());
+    }
+
+    public function testThatMultipleUrlParamsAreAdded()
+    {
+        $builder = self::getUrlBuilder();
+        $builder->withParam('param1', 'value1');
+        $builder->withParam('param2', 'value2');
+
+        $this->assertEquals('?param1=value1&param2=value2', $builder->getParams());
+    }
+
+    public function testThatASingleUrlParamValueIsReplaced()
+    {
+        $builder = self::getUrlBuilder();
+        $builder->withParam('param1', 'value1');
+        $builder->withParam('param1', 'value3');
+
+        $this->assertEquals('?param1=value3', $builder->getParams());
+    }
+
     public function testParams()
     {
-        $builder = new RequestBuilder(
-            [
-                'domain' => 'www.domain.com',
-                'method' => 'get',
-            ]
-        );
-
-        // Adding a parameter should be reflected in the RequestBuilder object.
-        $builder->withParam('param1', 'value1');
-        $this->assertEquals('?param1=value1', $builder->getParams());
-
-        // Adding a second parameter should be reflected in the RequestBuilder object.
-        $builder->withParam('param2', 'value2');
-        $this->assertEquals('?param1=value1&param2=value2', $builder->getParams());
+        $builder = self::getUrlBuilder('/api');
 
         // Adding a parameter array should be reflected in the RequestBuilder object.
         $builder->withParams(
             [
-                ['key' => 'param3','value' => 'value3'],
                 ['key' => 'param1','value' => 'value4'],
+                ['key' => 'param3','value' => 'value3'],
             ]
         );
-        $this->assertEquals('?param1=value4&param2=value2&param3=value3', $builder->getParams());
+        $this->assertEquals('?param1=value4&param3=value3', $builder->getParams());
 
         // Adding a parameter dictionary should be reflected in the RequestBuilder object.
         $builder->withDictParams([ 'param4' => 'value4', 'param2' => 'value5']);
-        $this->assertEquals('?param1=value4&param2=value5&param3=value3&param4=value4', $builder->getParams());
+        $this->assertEquals('?param1=value4&param3=value3&param4=value4&param2=value5', $builder->getParams());
     }
 
     public function testFullUrl()
     {
-        $builder = new RequestBuilder(
-            [
-                'domain' => 'www.domain.com',
-                'method' => 'get',
-            ]
-        );
+        $builder = self::getUrlBuilder('/api');
 
         $builder->path(2)
             ->subpath()
@@ -83,37 +135,24 @@ class RequestBuilderTest extends ApiTests
 
     public function testGetGuzzleOptions()
     {
-        $builder = new RequestBuilder(
-            [
-                'domain' => 'www.domain.com',
-                'method' => 'get',
-            ]
-        );
-
-        $options = $builder->getGuzzleOptions();
+        $options = self::getUrlBuilder()->getGuzzleOptions();
 
         $this->assertArrayHasKey('base_uri', $options);
-        $this->assertEquals('www.domain.com', $options['base_uri']);
+        $this->assertEquals('api.local.test', $options['base_uri']);
     }
 
     public function testgGetGuzzleOptionsWithBasePath()
     {
-        $builder = new RequestBuilder(
-            [
-                'domain' => 'www.domain.com',
-                'basePath' => '/api',
-                'method' => 'get',
-            ]
-        );
-
-        $options = $builder->getGuzzleOptions();
+        $options = self::getUrlBuilder('/api')->getGuzzleOptions();
 
         $this->assertArrayHasKey('base_uri', $options);
-        $this->assertEquals('www.domain.com/api', $options['base_uri']);
+        $this->assertEquals('api.local.test/api', $options['base_uri']);
     }
 
     /**
      * Test that the return type is set properly and returns the correct result.
+     *
+     * @throws \Auth0\SDK\Exception\ApiException Should not be thrown in this test.
      */
     public function testReturnType()
     {
