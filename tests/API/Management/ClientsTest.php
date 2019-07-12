@@ -66,7 +66,7 @@ class ClientsTest extends BasicCrudTest
         // Make sure we only have one result, as requested.
         $this->assertEquals(1, count($paged_results));
 
-        // Make sure we only have the 4 fields we requested plus "tenant".
+        // Make sure we only have the 6 fields we requested.
         $this->assertEquals(count($fields), count($paged_results[0]));
 
         // Get many results (needs to include the created result if self::findCreatedItem === true).
