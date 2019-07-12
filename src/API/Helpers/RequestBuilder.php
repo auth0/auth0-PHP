@@ -191,15 +191,14 @@ class RequestBuilder
      */
     public function getParams()
     {
-        if (empty($this->params)) {
-            return '';
+        $paramsClean = [];
+        foreach ( $this->params as $param => $value ) {
+            if ( ! is_null( $value ) && '' !== $value ) {
+                $paramsClean[] = sprintf( '%s=%s', $param, $value );
+            }
         }
 
-        $params = array_map(function ($key, $value) {
-            return "$key=$value";
-        }, array_keys($this->params), $this->params);
-
-        return '?'.implode('&', $params);
+        return empty($paramsClean) ? '' : '?'.implode('&', $paramsClean);
     }
 
     /**
