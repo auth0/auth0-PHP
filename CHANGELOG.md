@@ -1,7 +1,18 @@
 # Change Log
 
+## [5.5.1](https://github.com/auth0/auth0-PHP/tree/5.5.1) (2019-07-15)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.0...5.5.1)
+
+**Closed issues**
+- No packagist package created for 5.5.0 [\#346](https://github.com/auth0/auth0-PHP/issues/346)
+
+**Fixed**
+- Fix empty url params [\#349](https://github.com/auth0/auth0-PHP/pull/349) ([joshcanhelp](https://github.com/joshcanhelp))
+- Fix tests to reduce the number of sensitive credentials used [\#348](https://github.com/auth0/auth0-PHP/pull/348) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change normalizeIncludeTotals() in GenericResource to have sane defaults [\#347](https://github.com/auth0/auth0-PHP/pull/347) ([kler](https://github.com/kler))
+
 ## [5.5.0](https://github.com/auth0/auth0-PHP/tree/5.5.0) (2019-06-07)
-[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.0...5.5.0)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.4.0...5.5.0)
 
 **Closed issues**
 - Consider dropping PHP-5.x version supports [\#343](https://github.com/auth0/auth0-PHP/issues/343)
