@@ -23,7 +23,7 @@ class ClientsTest extends BasicCrudTest
     public function setUp()
     {
         parent::setUp();
-        sleep(1);
+        sleep(2);
     }
 
     /**
