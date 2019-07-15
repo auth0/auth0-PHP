@@ -61,9 +61,8 @@ class ResourceServersTest extends ApiTests
     public function setUp()
     {
         parent::setUp();
-        usleep(600000);
+        sleep(1);
     }
-
 
     /**
      * Test creating a Resource Server.

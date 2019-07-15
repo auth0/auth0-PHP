@@ -58,7 +58,7 @@ class ClientGrantsTest extends ApiTests
     public function setUp()
     {
         parent::setUp();
-        usleep(600000);
+        sleep(1);
     }
 
 

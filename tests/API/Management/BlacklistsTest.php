@@ -9,6 +9,12 @@ class BlacklistsTest extends ApiTests
 
     private $domain;
 
+    public function setUp()
+    {
+        parent::setUp();
+        sleep(1);
+    }
+
     /**
      * @throws \Auth0\SDK\Exception\ApiException
      */
