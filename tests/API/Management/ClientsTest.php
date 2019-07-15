@@ -57,7 +57,7 @@ class ClientsTest extends BasicCrudTest
     protected function getAllEntities()
     {
         $fields   = array_keys($this->getCreateBody());
-        $fields   = array_merge( $fields, [ $this->id_name, 'tenant' ] );
+        $fields[] = $this->id_name;
         $page_num = 1;
 
         // Get the second page of Clients with 1 per page (second result).

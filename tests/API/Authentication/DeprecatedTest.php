@@ -9,6 +9,8 @@ class DeprecatedTest extends ApiTests
 
     public function testAuthorizeWithRO()
     {
+        $this->markTestSkipped( 'New applications do not provide this grant.' );
+
         $env = self::getEnv();
 
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID']);

@@ -36,6 +36,12 @@ class LogsTest extends ApiTests
         self::$api = $api->logs;
     }
 
+    public function setUp()
+    {
+        parent::setUp();
+        usleep(400000);
+    }
+
     /**
      * Test a general search.
      *

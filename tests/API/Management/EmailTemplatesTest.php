@@ -122,7 +122,13 @@ class EmailTemplatesTest extends ApiTests
     {
         if (self::$mustCreate) {
             $from_email     = 'test@'.self::$domain;
-            self::$gotEmail = self::$api->emailTemplates->create(self::EMAIL_TEMPLATE_NAME, $from_email);
+            self::$gotEmail = self::$api->emailTemplates->create(
+                self::EMAIL_TEMPLATE_NAME,
+                true,
+                $from_email,
+                uniqid(),
+                uniqid()
+            );
             $this->assertEquals($from_email, self::$gotEmail['from']);
         }
 
