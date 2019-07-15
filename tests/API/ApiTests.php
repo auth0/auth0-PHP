@@ -76,6 +76,7 @@ class ApiTests extends \PHPUnit_Framework_TestCase
      */
     protected static function getApi($endpoint)
     {
+        usleep(600000);
         self::getEnv();
         $token      = self::getToken(self::$env);
         $api_client = new Management($token, self::$env['DOMAIN']);

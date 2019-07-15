@@ -15,16 +15,18 @@ class ClientGrantsTest extends ApiTests
 {
 
     /**
-     * Existing test API audience identifier.
-     */
-    const TESTS_API_AUDIENCE = 'tests';
-
-    /**
      * Client Grants API client.
      *
      * @var Management\ClientGrants
      */
     protected static $api;
+
+    /**
+     * Resource Server identifier.
+     *
+     * @var string
+     */
+    protected static $apiIdentifier;
 
     /**
      * Valid test scopes for the "tests" API.
@@ -39,9 +41,35 @@ class ClientGrantsTest extends ApiTests
      *
      * @throws \Auth0\SDK\Exception\ApiException
      */
-    public static function setUpBeforeClass()
-    {
+    public static function setUpBeforeClass() {
         self::$api = self::getApi( 'client_grants' );
+
+        $create_data = [
+            'name' => 'TEST_PHP_SDK_CREATE_'.uniqid(),
+            'token_lifetime' => rand( 10000, 20000 ),
+            'signing_alg' => 'RS256'
+        ];
+
+        $rs_api = self::getApi( 'resource_servers' );
+        self::$apiIdentifier = 'TEST_PHP_SDK_CLIENT_GRANT_API_'.uniqid();
+        $rs_api->create(self::$apiIdentifier, $create_data);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        usleep(400000);
+    }
+
+
+    /**
+     * @throws \Auth0\SDK\Exception\ApiException
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        $rs_api = self::getApi( 'resource_servers' );
+        $rs_api->delete( self::$apiIdentifier );
     }
 
     /**
@@ -123,7 +151,7 @@ class ClientGrantsTest extends ApiTests
     public function testCreateUpdateDeleteGrant()
     {
         $client_id = self::$env['APP_CLIENT_ID'];
-        $audience  = self::TESTS_API_AUDIENCE;
+        $audience  = self::$apiIdentifier;
 
         // Create a Client Grant with just one of the testing scopes.
         $create_result = self::$api->create($client_id, $audience, [self::$scopes[0]]);
@@ -154,7 +182,7 @@ class ClientGrantsTest extends ApiTests
     {
         $throws_missing_client_id_exception = false;
         try {
-            self::$api->create('', self::TESTS_API_AUDIENCE, []);
+            self::$api->create('', self::$apiIdentifier, []);
         } catch (CoreException $e) {
             $throws_missing_client_id_exception = $this->errorHasString($e, 'Empty or invalid "client_id" parameter');
         }

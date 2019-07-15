@@ -58,6 +58,13 @@ class ResourceServersTest extends ApiTests
         self::$serverIdentifier = 'TEST_PHP_SDK_ID_'.uniqid();
     }
 
+    public function setUp()
+    {
+        parent::setUp();
+        usleep(400000);
+    }
+
+
     /**
      * Test creating a Resource Server.
      *

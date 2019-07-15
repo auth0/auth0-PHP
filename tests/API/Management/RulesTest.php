@@ -33,6 +33,12 @@ class RulesTest extends ApiTests
         self::$api = self::getApi( 'rules' );
     }
 
+    public function setUp()
+    {
+        parent::setUp();
+        usleep(400000);
+    }
+
     /**
      * Test that get methods work as expected.
      *
