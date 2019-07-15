@@ -85,9 +85,10 @@ class RequestBuilderTest extends ApiTests
     {
         $builder = self::getUrlBuilder();
         $builder->withParam('param1', 'value1');
-        $builder->withParam('param2', 'value2');
+        $builder->withParam('param2', null);
+        $builder->withParam('param3', 'value3');
 
-        $this->assertEquals('?param1=value1&param2=value2', $builder->getParams());
+        $this->assertEquals('?param1=value1&param3=value3', $builder->getParams());
     }
 
     public function testThatASingleUrlParamValueIsReplaced()
