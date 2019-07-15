@@ -39,7 +39,7 @@ class LogsTest extends ApiTests
     public function setUp()
     {
         parent::setUp();
-        usleep(400000);
+        usleep(600000);
     }
 
     /**
