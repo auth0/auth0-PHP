@@ -20,6 +20,12 @@ class ClientsTest extends BasicCrudTest
      */
     protected $id_name = 'client_id';
 
+    public function setUp()
+    {
+        parent::setUp();
+        sleep(1);
+    }
+
     /**
      * Return the Clients API to test.
      *
