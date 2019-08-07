@@ -15,6 +15,7 @@ commands:
           root: .
           paths:
             - composer.*
+            - .snyk
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
