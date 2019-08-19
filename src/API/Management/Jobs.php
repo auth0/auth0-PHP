@@ -35,15 +35,19 @@ class Jobs extends GenericResource
      *
      * @param  string $file_path
      * @param  string $connection_id
+     * @param  boolean $upsert
+     * @param  boolean $send_completion_email
      * @return mixed
      */
-    public function importUsers($file_path, $connection_id)
+    public function importUsers($file_path, $connection_id, $upsert = false, $send_completion_email = true)
     {
         return $this->apiClient->post()
         ->jobs()
         ->addPath('users-imports')
         ->addFile('users', $file_path)
         ->addFormParam('connection_id', $connection_id)
+        ->addFormParam('upsert', $upsert)
+        ->addFormParam('send_completion_email', $send_completion_email)
         ->call();
     }
 
