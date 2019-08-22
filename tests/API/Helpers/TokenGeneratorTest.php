@@ -254,11 +254,11 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $payload_obj->aud = ['__invalid_aud__'];
         $jwt_payload      = JWT::urlsafeB64Encode(JWT::jsonEncode($payload_obj));
 
-        $error_msg        = 'No exception caught';
+        $error_msg = 'No exception caught';
         try {
             $verifier->verifyAndDecode( $jwt_head.'.'.$jwt_payload.'.'.uniqid() );
         } catch (InvalidTokenException $e) {
-            $error_msg        = $e->getMessage();
+            $error_msg = $e->getMessage();
         }
 
         $this->assertEquals('Invalid token audience', $error_msg);

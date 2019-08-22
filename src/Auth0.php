@@ -203,7 +203,7 @@ class Auth0
      *
      * @var string
      */
-    protected $idTokenAlg;
+    protected $idTokenAlg = 'RS256';
 
     /**
      * Valid audiences for ID tokens.
@@ -315,14 +315,20 @@ class Auth0
             $this->idTokenAlg = $config['id_token_alg'];
         }
 
+        // Make sure the Client ID is included as a valid audience
+        $this->idTokenAud = [ $this->clientId ];
+
         // If a token audience is passed, make sure it's an array.
         if (! empty($config['id_token_aud'])) {
             if (! is_array( $config['id_token_aud'] )) {
                 throw new CoreException('Invalid id_token_aud; must be an array of string values');
             }
 
-            $this->idTokenAud = $config['id_token_aud'];
+            $this->idTokenAud = array_filter( array_merge( $this->idTokenAud, $config['id_token_aud'] ) );
         }
+
+        // Make sure the Domain is included as a valid issuer
+        $this->idTokenIss = [ 'https://'.$this->domain.'/' ];
 
         // If a token issuer is passed, make sure it's an array.
         if (! empty($config['id_token_iss'])) {
@@ -330,7 +336,7 @@ class Auth0
                 throw new CoreException('Invalid id_token_iss; must be an array of string values');
             }
 
-            $this->idTokenIss = $config['id_token_iss'];
+            $this->idTokenIss = array_filter( array_merge( $this->idTokenIss, $config['id_token_iss'] ) );
         }
 
         $this->debugMode = isset($config['debug']) ? $config['debug'] : false;
@@ -643,14 +649,19 @@ class Auth0
      */
     public function setIdToken($idToken)
     {
-        $jwtVerifier          = new JWTVerifier([
-            'valid_audiences' => ! empty($this->idTokenAud) ? $this->idTokenAud : [ $this->clientId ],
-            'supported_algs' => $this->idTokenAlg ? [ $this->idTokenAlg ] : [ 'RS256' ],
-            'authorized_iss' => $this->idTokenIss ? $this->idTokenIss : [ 'https://'.$this->domain.'/' ],
-            'client_secret' => $this->clientSecret,
-            'secret_base64_encoded' => $this->clientSecretEncoded,
+        $verifier_config = [
+            'valid_audiences' => $this->idTokenAud,
+            'supported_algs' => [ $this->idTokenAlg ],
+            'authorized_iss' => $this->idTokenIss,
             'guzzle_options' => $this->guzzleOptions,
-        ]);
+        ];
+
+        if ('HS256' === $this->idTokenAlg) {
+            $verifier_config['client_secret']         = $this->clientSecret;
+            $verifier_config['secret_base64_encoded'] = $this->clientSecretEncoded;
+        }
+
+        $jwtVerifier          = new JWTVerifier( $verifier_config );
         $this->idTokenDecoded = (array) $jwtVerifier->verifyAndDecode( $idToken );
 
         if (in_array('id_token', $this->persistantMap)) {

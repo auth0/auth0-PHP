@@ -35,6 +35,7 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
         'store' => false,
         'state_handler' => false,
         'scope' => 'openid offline_access',
+        'id_token_alg' => 'HS256',
     ];
 
     /**
