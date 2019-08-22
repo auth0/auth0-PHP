@@ -11,11 +11,11 @@ use Auth0\SDK\Helpers\JWKFetcher;
 use Firebase\JWT\JWT;
 
 /**
- * Class TokenTest
+ * Class TokenGeneratorTest
  *
  * @package Auth0\Tests\Api\Helpers
  */
-class TokenTest extends \PHPUnit_Framework_TestCase
+class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
 
     use ErrorHelpers;
@@ -229,20 +229,13 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($caught_exception, $error_msg);
     }
 
-    /**
-     * Test that an invalid audience is rejected.
-     *
-     * @return void
-     *
-     * @throws CoreException See Auth0\SDK\JWTVerifier::verifyAndDecode().
-     */
     public function testThatTokenWithInvalidAudThrowsException()
     {
-        $verifier = new JWTVerifier( [
-            'valid_audiences' => [ '__valid_aud__' ],
-            'supported_algs' => [ 'RS256' ],
-            'authorized_iss' => [ '__valid_iss__' ],
-        ] );
+        $verifier = new JWTVerifier([
+            'valid_audiences' => ['__valid_aud__'],
+            'supported_algs' => ['RS256'],
+            'authorized_iss' => ['__valid_iss__'],
+        ]);
 
         // 1. A token with an invalid audience should throw an exception.
         $head_obj      = new \stdClass();
@@ -254,57 +247,65 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $payload_obj->aud = ['__invalid_aud__'];
         $jwt_payload      = JWT::urlsafeB64Encode(JWT::jsonEncode($payload_obj));
 
-        $error_msg = 'No exception caught';
-        try {
-            $verifier->verifyAndDecode( $jwt_head.'.'.$jwt_payload.'.'.uniqid() );
-        } catch (InvalidTokenException $e) {
-            $error_msg = $e->getMessage();
-        }
-
-        $this->assertEquals('Invalid token audience', $error_msg);
-
-        // 2. A token without a key ID should throw an exception.
-        $payload_obj->aud = '__valid_aud__';
-        $jwt_payload      = JWT::urlsafeB64Encode(JWT::jsonEncode($payload_obj));
-
         $caught_exception = false;
         $error_msg        = 'No exception caught';
         try {
-            $verifier->verifyAndDecode( $jwt_head.'.'.$jwt_payload.'.'.uniqid() );
-        } catch (CoreException $e) {
+            $verifier->verifyAndDecode($jwt_head.'.'.$jwt_payload.'.'.uniqid());
+        } catch (InvalidTokenException $e) {
             $error_msg        = $e->getMessage();
-            $caught_exception = $this->errorHasString($e, 'Token key ID is missing for RS256 token');
+            $caught_exception = $this->errorHasString( $e, 'Invalid token audience' );
         }
 
         $this->assertTrue($caught_exception, $error_msg);
+    }
 
-        // 3. A token with an invalid issuer should throw an exception.
+    public function testThatTokenWithInvalidIssThrowsException()
+    {
+        $verifier = new JWTVerifier([
+            'valid_audiences' => ['__valid_aud__'],
+            'supported_algs' => ['RS256'],
+            'authorized_iss' => ['__valid_iss__'],
+        ]);
+
+        $head_obj      = new \stdClass();
+        $head_obj->typ = 'JWT';
+        $head_obj->alg = 'RS256';
         $head_obj->kid = uniqid();
         $jwt_head      = JWT::urlsafeB64Encode(JWT::jsonEncode($head_obj));
 
+        $payload_obj      = new \stdClass();
+        $payload_obj->aud = ['__valid_aud__'];
         $payload_obj->iss = '__invalid_iss__';
         $jwt_payload      = JWT::urlsafeB64Encode(JWT::jsonEncode($payload_obj));
 
         $caught_exception = false;
         $error_msg        = 'No exception caught';
         try {
-            $verifier->verifyAndDecode( $jwt_head.'.'.$jwt_payload.'.'.uniqid() );
+            $verifier->verifyAndDecode($jwt_head.'.'.$jwt_payload.'.'.uniqid());
         } catch (CoreException $e) {
             $error_msg        = $e->getMessage();
-            $caught_exception = $this->errorHasString($e, 'We cannot trust on a token issued by');
+            $caught_exception = $this->errorHasString($e, 'Invalid token issuer');
         }
 
         $this->assertTrue($caught_exception, $error_msg);
+    }
 
-        // 4. A token with an invalid signature should throw an exception.
+    public function testThatTokenWithInvalidHS256SignatureThrowsException()
+    {
         $verifier = new JWTVerifier( [
             'valid_audiences' => [ '__valid_aud__' ],
             'client_secret' => self::CLIENT_SECRET,
+            'supported_algs' => ['HS256'],
+            'authorized_iss' => ['__valid_iss__'],
         ] );
 
+        $head_obj      = new \stdClass();
+        $head_obj->typ = 'JWT';
         $head_obj->alg = 'HS256';
         $jwt_head      = JWT::urlsafeB64Encode(JWT::jsonEncode($head_obj));
 
+        $payload_obj      = new \stdClass();
+        $payload_obj->aud = ['__valid_aud__'];
         $payload_obj->iss = '__valid_iss__';
         $jwt_payload      = JWT::urlsafeB64Encode(JWT::jsonEncode($payload_obj));
 
@@ -380,9 +381,9 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         // Mock the JWKFetcher object.
         $mocked_jwks = $this
             ->getMockBuilder( JWKFetcher::class )
-            ->setMethods( [ 'requestJwkX5c' ] )
+            ->setMethods( [ 'requestCompleteJwks' ] )
             ->getMock();
-        $mocked_jwks->method( 'requestJwkX5c' )->willReturn( uniqid() );
+        $mocked_jwks->method( 'requestCompleteJwks' )->willReturn( [ uniqid() => uniqid() ] );
 
         // Mock the JWT object.
         $expected_sub  = uniqid();

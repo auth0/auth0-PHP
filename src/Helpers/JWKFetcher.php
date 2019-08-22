@@ -92,6 +92,38 @@ class JWKFetcher
     }
 
     /**
+     * Get a complete set of keys from a JWKS URL.
+     *
+     * @param string $jwks_url - Complete JWKS URL.
+     *
+     * @return array|mixed|null
+     */
+    public function requestCompleteJwks($jwks_url)
+    {
+        $keys = $this->cache->get($jwks_url);
+        if (! is_null($keys)) {
+            return $keys;
+        }
+
+        $jwks = $this->requestJwks($jwks_url);
+        if (empty( $jwks ) || empty( $jwks['keys'] )) {
+            return [];
+        }
+
+        $keys = [];
+        foreach ($jwks['keys'] as $key) {
+            if (empty( $key['kid'] ) || empty( $key['x5c'] )) {
+                continue;
+            }
+
+            $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'] );
+        }
+
+        $this->cache->set($jwks_url, $keys);
+        return $keys;
+    }
+
+    /**
      * Get a JWKS from a specific URL.
      *
      * @param string $jwks_url URL to the JWKS.

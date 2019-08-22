@@ -164,9 +164,6 @@ class JWTVerifier
      * @throws InvalidTokenException If the token does not have 3 sections.
      * @throws InvalidTokenException If the algorithm used to sign the token is not supported.
      * @throws InvalidTokenException If the token does not have a valid audience.
-     * @throws CoreException If an RS256 token is missing a key ID.
-     * @throws CoreException If an RS256 token does not have a valid issuer.
-     * @throws CoreException If the token cannot be decoded.
      */
     public function verifyAndDecode($jwt)
     {
@@ -203,25 +200,22 @@ class JWTVerifier
             }
         }
 
-        if ('HS256' === $head_decoded->alg) {
-            $secret = $this->client_secret;
+        if ($this->client_secret) {
+            $secret               = $this->client_secret;
+            $this->supported_algs = [ 'HS256' ];
         } else {
-            if (empty($head_decoded->kid)) {
-                throw new CoreException('Token key ID is missing for RS256 token');
-            }
-
             if (empty($body_decoded->iss) || ! in_array($body_decoded->iss, $this->authorized_iss)) {
-                throw new CoreException('We cannot trust on a token issued by `'.$body_decoded->iss.'`');
+                throw new InvalidTokenException('Invalid token issuer');
             }
 
-            $jwks_url                   = $body_decoded->iss.$this->jwks_path;
-            $secret[$head_decoded->kid] = $this->JWKFetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
+            $jwks_url = $this->authorized_iss[0].$this->jwks_path;
+            $secret   = $this->JWKFetcher->requestCompleteJwks($jwks_url);
         }
 
         try {
             return $this->decodeToken($jwt, $secret);
         } catch (\Exception $e) {
-            throw new CoreException($e->getMessage());
+            throw new InvalidTokenException($e->getMessage());
         }
     }
 
