@@ -645,7 +645,7 @@ class Auth0
     {
         $jwtVerifier          = new JWTVerifier([
             'valid_audiences' => ! empty($this->idTokenAud) ? $this->idTokenAud : [ $this->clientId ],
-            'supported_algs' => $this->idTokenAlg ? [ $this->idTokenAlg ] : [ 'HS256', 'RS256' ],
+            'supported_algs' => $this->idTokenAlg ? [ $this->idTokenAlg ] : [ 'RS256' ],
             'authorized_iss' => $this->idTokenIss ? $this->idTokenIss : [ 'https://'.$this->domain.'/' ],
             'client_secret' => $this->clientSecret,
             'secret_base64_encoded' => $this->clientSecretEncoded,
