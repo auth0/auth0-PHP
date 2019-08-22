@@ -31,6 +31,37 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( '-----END CERTIFICATE-----', $pem_parts[2] );
         $this->assertEquals( '__test_x5c_1__', $pem_parts[1] );
     }
+    /**
+     * Test that a standard JWKS path returns the first x5c.
+     *
+     * @return void
+     */
+    public function testGetCompleteJwks()
+    {
+        $jwksFetcher = $this->getStub();
+
+        $jwks = $jwksFetcher->requestCompleteJwks( 'https://localhost/.well-known/jwks.json' );
+
+        $this->assertNotEmpty($jwks);
+        $this->assertCount(2, $jwks);
+
+        $this->assertArrayHasKey( '__test_kid_1__', $jwks );
+        $this->assertArrayHasKey( '__test_kid_2__', $jwks );
+
+        $pem_1 = explode( PHP_EOL, $jwks['__test_kid_1__'] );
+
+        $this->assertEquals( 4, count($pem_1) );
+        $this->assertEquals( '-----BEGIN CERTIFICATE-----', $pem_1[0] );
+        $this->assertEquals( '__test_x5c_1__', $pem_1[1] );
+        $this->assertEquals( '-----END CERTIFICATE-----', $pem_1[2] );
+
+        $pem_2 = explode( PHP_EOL, $jwks['__test_kid_2__'] );
+
+        $this->assertEquals( 4, count($pem_2) );
+        $this->assertEquals( '-----BEGIN CERTIFICATE-----', $pem_2[0] );
+        $this->assertEquals( '__test_x5c_2__', $pem_2[1] );
+        $this->assertEquals( '-----END CERTIFICATE-----', $pem_2[2] );
+    }
 
     /**
      * Test that a standard JWKS path returns the correct x5c when given a kid.
@@ -118,12 +149,7 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( '-----END CERTIFICATE-----', $pem_parts[3] );
     }
 
-    /**
-     * Test that the requestJwkX5c method returns a cached value, if set.
-     *
-     * @return void
-     */
-    public function testCacheReturn()
+    public function testThatRequestJwkX5cWillGetFromCache()
     {
         $jwks_url    = 'https://localhost/.well-known/jwks.json';
         $kid         = '__test_kid_2__';
@@ -156,6 +182,44 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
         // Test that the set method was called with the correct parameters.
         $set_invocations = $set_spy->getInvocations();
         $this->assertEquals( $jwks_url.'|'.$kid, $set_invocations[0]->parameters[0] );
+        $this->assertEquals( $pem_not_cached, $set_invocations[0]->parameters[1] );
+
+        // Test that the get method was only called twice.
+        $this->assertEquals( 2, $get_spy->getInvocationCount() );
+    }
+
+    public function testThatRequestCompleteJwksWillGetFromCache()
+    {
+        $jwks_url    = 'https://localhost/.well-known/jwks.json';
+        $cache_value = '__cached_value__';
+        $set_spy     = $this->once();
+        $get_spy     = $this->any();
+
+        // Mock the CacheHandler interface.
+        $cache_handler = $this->getMockBuilder(CacheHandler::class)
+            ->getMock();
+
+        // The set method should only be called once.
+        $cache_handler->expects($set_spy)
+            ->method('set')
+            ->willReturn( null );
+
+        // The get method should be called once and return no cache first, then a cache value after.
+        $cache_handler->expects($get_spy)
+            ->method('get')
+            ->will( $this->onConsecutiveCalls( null, $cache_value ) );
+
+        $jwksFetcher = $this->getStub($cache_handler);
+
+        $pem_not_cached = $jwksFetcher->requestCompleteJwks( $jwks_url );
+        $this->assertNotEmpty( $pem_not_cached );
+
+        $pem_cached = $jwksFetcher->requestCompleteJwks( $jwks_url );
+        $this->assertEquals( $cache_value, $pem_cached );
+
+        // Test that the set method was called with the correct parameters.
+        $set_invocations = $set_spy->getInvocations();
+        $this->assertEquals( $jwks_url, $set_invocations[0]->parameters[0] );
         $this->assertEquals( $pem_not_cached, $set_invocations[0]->parameters[1] );
 
         // Test that the get method was only called twice.

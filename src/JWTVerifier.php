@@ -174,22 +174,9 @@ class JWTVerifier
         }
 
         try {
-            $head_decoded = $this->decodeTokenSegment($tks[0]);
             $body_decoded = $this->decodeTokenSegment($tks[1]);
         } catch (\DomainException $e) {
             throw new InvalidTokenException('Malformed token.');
-        }
-
-        if (! is_object($head_decoded) || ! is_object($body_decoded)) {
-            throw new InvalidTokenException('Malformed token.');
-        }
-
-        if (empty($head_decoded->alg)) {
-            throw new InvalidTokenException('Token algorithm not found');
-        }
-
-        if (! $this->supportsAlg($head_decoded->alg)) {
-            throw new InvalidTokenException('Token algorithm not supported');
         }
 
         // Validate the token audience, if present.

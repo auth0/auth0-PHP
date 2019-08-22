@@ -128,8 +128,6 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
      * Test that a malformed token is rejected.
      *
      * @return void
-     *
-     * @throws CoreException See Auth0\SDK\JWTVerifier::verifyAndDecode().
      */
     public function testThatTokenWithIncorrectSegmentsThrowsException()
     {
@@ -208,7 +206,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
             $verifier->verifyAndDecode( $jwt_head.'.'.$dummy_segment.'.'.uniqid() );
         } catch (InvalidTokenException $e) {
             $error_msg        = $e->getMessage();
-            $caught_exception = $this->errorHasString($e, 'Token algorithm not found');
+            $caught_exception = $this->errorHasString($e, 'Empty algorithm');
         }
 
         $this->assertTrue($caught_exception, $error_msg);
@@ -223,7 +221,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
             $verifier->verifyAndDecode( $jwt_head.'.'.$dummy_segment.'.'.uniqid() );
         } catch (InvalidTokenException $e) {
             $error_msg        = $e->getMessage();
-            $caught_exception = $this->errorHasString($e, 'Token algorithm not supported');
+            $caught_exception = $this->errorHasString($e, 'Algorithm not allowed');
         }
 
         $this->assertTrue($caught_exception, $error_msg);
