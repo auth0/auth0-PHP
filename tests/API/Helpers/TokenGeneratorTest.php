@@ -203,7 +203,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
         $caught_exception = false;
         $error_msg        = 'No exception caught';
         try {
-            $verifier->verifyAndDecode( $jwt_head.'.'.$dummy_segment.'.'.uniqid() );
+            $verifier->verifyAndDecode( $jwt_head.'.'.$dummy_segment.'.'.JWT::urlsafeB64Encode(uniqid()) );
         } catch (InvalidTokenException $e) {
             $error_msg        = $e->getMessage();
             $caught_exception = $this->errorHasString($e, 'Empty algorithm');
@@ -218,7 +218,7 @@ class TokenGeneratorTest extends \PHPUnit_Framework_TestCase
         $caught_exception = false;
         $error_msg        = 'No exception caught';
         try {
-            $verifier->verifyAndDecode( $jwt_head.'.'.$dummy_segment.'.'.uniqid() );
+            $verifier->verifyAndDecode( $jwt_head.'.'.$dummy_segment.'.'.JWT::urlsafeB64Encode(uniqid()) );
         } catch (InvalidTokenException $e) {
             $error_msg        = $e->getMessage();
             $caught_exception = $this->errorHasString($e, 'Algorithm not allowed');
