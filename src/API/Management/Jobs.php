@@ -46,8 +46,16 @@ class Jobs extends GenericResource
         ->addFile('users', $file_path)
         ->addFormParam('connection_id', $connection_id);
 
-        foreach ($params as $key => $value) {
-            $request->addFormParam($key, $value);
+        if (isset($params['upsert'])) {
+            $request->addFormParam('upsert', filter_var($params['upsert'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if (isset($params['send_completion_email'])) {
+            $request->addFormParam('send_completion_email', filter_var($params['send_completion_email'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if (!empty($params['external_id']) && is_string($params['external_id'])) {
+            $request->addFormParam('external_id', $params['external_id']);
         }
 
         return $request->call();
