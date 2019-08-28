@@ -41,7 +41,8 @@ class ClientGrantsTest extends ApiTests
      *
      * @throws \Auth0\SDK\Exception\ApiException
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass()
+    {
         self::$api = self::getApi( 'client_grants' );
 
         $create_data = [
@@ -50,7 +51,7 @@ class ClientGrantsTest extends ApiTests
             'signing_alg' => 'RS256'
         ];
 
-        $rs_api = self::getApi( 'resource_servers' );
+        $rs_api              = self::getApi( 'resource_servers' );
         self::$apiIdentifier = 'TEST_PHP_SDK_CLIENT_GRANT_API_'.uniqid();
         $rs_api->create(self::$apiIdentifier, $create_data);
     }

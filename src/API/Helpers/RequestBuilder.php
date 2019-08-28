@@ -192,8 +192,8 @@ class RequestBuilder
     public function getParams()
     {
         $paramsClean = [];
-        foreach ( $this->params as $param => $value ) {
-            if ( ! is_null( $value ) && '' !== $value ) {
+        foreach ($this->params as $param => $value) {
+            if (! is_null( $value ) && '' !== $value) {
                 $paramsClean[] = sprintf( '%s=%s', $param, $value );
             }
         }
@@ -202,6 +202,7 @@ class RequestBuilder
     }
 
     /**
+     * TODO: Deprecate
      *
      * @return RequestBuilder
      */
@@ -244,7 +245,7 @@ class RequestBuilder
      */
     public function addFormParam($key, $value)
     {
-        $this->form_params[$key] = $value;
+        $this->form_params[$key] = $this->prepareBoolParam( $value );
         return $this;
     }
 
@@ -355,10 +356,7 @@ class RequestBuilder
      */
     public function withParam($key, $value)
     {
-        $value = ($value === true ? 'true' : $value);
-        $value = ($value === false ? 'false' : $value);
-
-        $this->params[$key] = $value;
+        $this->params[$key] = $this->prepareBoolParam( $value );
         return $this;
     }
 
@@ -435,5 +433,21 @@ class RequestBuilder
         }
 
         return $multipart;
+    }
+
+    /**
+     * Translate a boolean value to a string for use in a URL or form parameter.
+     *
+     * @param mixed $value Parameter value to check.
+     *
+     * @return mixed string
+     */
+    private function prepareBoolParam($value)
+    {
+        if (is_bool( $value )) {
+            return true === $value ? 'true' : 'false';
+        }
+
+        return $value;
     }
 }
