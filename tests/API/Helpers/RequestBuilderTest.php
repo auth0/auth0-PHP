@@ -5,6 +5,11 @@ use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Exception\CoreException;
 
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
+
 /**
  * Class RequestBuilderTest
  * Tests the Auth0\SDK\API\Helpers\RequestBuilder class.
@@ -72,6 +77,33 @@ class RequestBuilderTest extends ApiTests
         $builder = self::getUrlBuilder()->withParam('param1', false);
 
         $this->assertEquals('?param1=false', $builder->getParams());
+    }
+
+    public function testThatBooleanFormParamsAreAdded()
+    {
+        $history = [];
+        $mock    = new MockHandler( [ new Response( 200 ), new Response( 200 ) ] );
+        $handler = HandlerStack::create($mock);
+        $handler->push( Middleware::history($history) );
+
+        $builder = new RequestBuilder( [
+            'domain' => 'api.test.local',
+            'method' => 'post',
+            'returnType' => 'object',
+            'guzzleOptions' => [
+                'handler' => $handler
+            ]
+        ] );
+
+        $builder->addFormParam( 'test', true );
+        $builder->call();
+
+        $this->assertEquals( 'test=true', $history[0]['request']->getBody() );
+
+        $builder->addFormParam( 'test', false );
+        $builder->call();
+
+        $this->assertEquals( 'test=false', $history[1]['request']->getBody() );
     }
 
     public function testThatZeroParamsAreAdded()
