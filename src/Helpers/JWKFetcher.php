@@ -94,9 +94,12 @@ class JWKFetcher
     /**
      * Get a complete set of keys from a JWKS URL.
      *
-     * @param string $jwks_url - Complete JWKS URL.
+     * @param string $jwks_url Complete JWKS URL.
      *
      * @return array|mixed|null
+     *
+     * @throws RequestException If $jwks_url is empty or malformed.
+     * @throws ClientException  If the JWKS cannot be retrieved.
      */
     public function requestCompleteJwks($jwks_url)
     {
@@ -112,14 +115,15 @@ class JWKFetcher
 
         $keys = [];
         foreach ($jwks['keys'] as $key) {
-            if (empty( $key['kid'] ) || empty( $key['x5c'] )) {
-                continue;
+            if (! empty( $key['kid'] ) && ! empty( $key['x5c'] )) {
+                $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
             }
-
-            $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
         }
 
-        $this->cache->set($jwks_url, $keys);
+        if (! empty( $keys )) {
+            $this->cache->set($jwks_url, $keys);
+        }
+
         return $keys;
     }
 
