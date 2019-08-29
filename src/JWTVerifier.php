@@ -144,6 +144,9 @@ class JWTVerifier
                 throw new CoreException('The client_secret is required when accepting HS256 signed tokens');
             }
 
+            // Ensure that we only allow a single algorithm.
+            $this->supported_algs = [ 'HS256' ];
+
             if (! isset($config['secret_base64_encoded']) || $config['secret_base64_encoded']) {
                 // If secret_base64_encoded is not passed or it is passed as truth-y, decode the client secret.
                 $this->client_secret = $this->decodeB64($config['client_secret']);
@@ -188,8 +191,7 @@ class JWTVerifier
         }
 
         if ($this->client_secret) {
-            $secret               = $this->client_secret;
-            $this->supported_algs = [ 'HS256' ];
+            $secret = $this->client_secret;
         } else {
             if (empty($body_decoded->iss) || ! in_array($body_decoded->iss, $this->authorized_iss)) {
                 throw new InvalidTokenException('Invalid token issuer');
