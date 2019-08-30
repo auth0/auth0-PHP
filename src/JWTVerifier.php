@@ -138,6 +138,7 @@ class JWTVerifier
         }
 
         // Only store the client_secret if this is an HS256 token.
+        // This only runs if $this->supported_algs is ['HS256'] or ['HS256', 'RS256']
         if ($this->supportsAlg( 'HS256' )) {
             // HS256 tokens require a client_secret.
             if (empty($config['client_secret'])) {
@@ -190,7 +191,8 @@ class JWTVerifier
             }
         }
 
-        if ($this->client_secret) {
+        // At this point, the constructor has set the supported algs to ensure only one.
+        if ($this->supportsAlg( 'HS256' )) {
             $secret = $this->client_secret;
         } else {
             if (empty($body_decoded->iss) || ! in_array($body_decoded->iss, $this->authorized_iss)) {
