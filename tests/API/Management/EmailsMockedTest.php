@@ -45,7 +45,8 @@ class EmailsMockedTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatGetEmailProviderRequestIsFormattedProperly() {
+    public function testThatGetEmailProviderRequestIsFormattedProperly()
+    {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
         $api->call()->emails->getEmailProvider();
 
@@ -60,7 +61,8 @@ class EmailsMockedTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatGetEmailProviderRequestAddsFieldsParams() {
+    public function testThatGetEmailProviderRequestAddsFieldsParams()
+    {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
         $api->call()->emails->getEmailProvider( [ 'name', 'credentials' ], true );
 

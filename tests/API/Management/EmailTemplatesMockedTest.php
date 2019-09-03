@@ -45,7 +45,8 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatGetTemplateRequestIsFormattedProperly() {
+    public function testThatGetTemplateRequestIsFormattedProperly()
+    {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
         $api->call()->emailTemplates->get( EmailTemplates::TEMPLATE_VERIFY_EMAIL );
 
@@ -60,8 +61,9 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatPatchTemplateRequestIsFormattedProperly() {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+    public function testThatPatchTemplateRequestIsFormattedProperly()
+    {
+        $api        = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
         $patch_data = [
             'body' => '__test_email_body__',
             'from' => 'test@auth0.com',
@@ -85,7 +87,8 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws \Exception Should not be thrown in this test.
      */
-    public function testThatCreateTemplateRequestIsFormattedProperly() {
+    public function testThatCreateTemplateRequestIsFormattedProperly()
+    {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $api->call()->emailTemplates->create(
