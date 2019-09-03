@@ -54,7 +54,7 @@ class Jobs extends GenericResource
             $request->addFormParam('send_completion_email', filter_var($params['send_completion_email'], FILTER_VALIDATE_BOOLEAN));
         }
 
-        if (!empty($params['external_id']) && is_string($params['external_id'])) {
+        if (!empty($params['external_id'])) {
             $request->addFormParam('external_id', $params['external_id']);
         }
 
