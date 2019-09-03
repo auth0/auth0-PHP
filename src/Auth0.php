@@ -318,15 +318,6 @@ class Auth0
         // Make sure the Client ID is included as a valid audience
         $this->idTokenAud = [ $this->clientId ];
 
-        // If a token audience is passed, make sure it's an array.
-        if (! empty($config['id_token_aud'])) {
-            if (! is_array( $config['id_token_aud'] )) {
-                throw new CoreException('Invalid id_token_aud; must be an array of string values');
-            }
-
-            $this->idTokenAud = array_filter( array_merge( $this->idTokenAud, $config['id_token_aud'] ) );
-        }
-
         // Make sure the Domain is included as a valid issuer
         $this->idTokenIss = [ 'https://'.$this->domain.'/' ];
 

@@ -138,7 +138,7 @@ class JWTVerifier
         }
 
         // Only store the client_secret if this is an HS256 token.
-        // This only runs if $this->supported_algs is ['HS256'] or ['HS256', 'RS256']
+        // This only runs if $this->supported_algs is ['HS256'] or ['HS256', 'RS256'].
         if ($this->supportsAlg( 'HS256' )) {
             // HS256 tokens require a client_secret.
             if (empty($config['client_secret'])) {
@@ -193,18 +193,18 @@ class JWTVerifier
 
         // At this point, the constructor has set the supported algs to ensure only one.
         if ($this->supportsAlg( 'HS256' )) {
-            $secret = $this->client_secret;
+            $signature_key = $this->client_secret;
         } else {
             if (empty($body_decoded->iss) || ! in_array($body_decoded->iss, $this->authorized_iss)) {
                 throw new InvalidTokenException('Invalid token issuer');
             }
 
-            $jwks_url = $this->authorized_iss[0].$this->jwks_path;
-            $secret   = $this->JWKFetcher->requestCompleteJwks($jwks_url);
+            $jwks_url      = $this->authorized_iss[0].$this->jwks_path;
+            $signature_key = $this->JWKFetcher->requestCompleteJwks($jwks_url);
         }
 
         try {
-            return $this->decodeToken($jwt, $secret);
+            return $this->decodeToken($jwt, $signature_key);
         } catch (\Exception $e) {
             throw new InvalidTokenException($e->getMessage());
         }
