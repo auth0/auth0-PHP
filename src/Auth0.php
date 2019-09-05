@@ -441,7 +441,6 @@ class Auth0
         );
 
         header('Location: '.$url);
-        exit;
     }
 
     /**
