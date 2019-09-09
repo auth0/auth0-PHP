@@ -171,43 +171,32 @@ class JWTVerifier
      */
     public function verifyAndDecode($jwt)
     {
-        $tks = explode('.', $jwt);
-
-        if (count($tks) !== 3) {
-            throw new InvalidTokenException('Wrong number of segments');
-        }
-
-        try {
-            $body_decoded = $this->decodeTokenSegment($tks[1]);
-        } catch (\DomainException $e) {
-            throw new InvalidTokenException('Malformed token.');
-        }
-
-        // Validate the token audience, if present.
-        if (! empty($body_decoded->aud)) {
-            $audience = is_array($body_decoded->aud) ? $body_decoded->aud : [$body_decoded->aud];
-            if (! count(array_intersect($audience, $this->valid_audiences))) {
-                throw new InvalidTokenException('Invalid token audience');
-            }
-        }
-
         // At this point, the constructor has set the supported algs to ensure only one.
         if ($this->supportsAlg( 'HS256' )) {
             $signature_key = $this->client_secret;
         } else {
-            if (empty($body_decoded->iss) || ! in_array($body_decoded->iss, $this->authorized_iss)) {
-                throw new InvalidTokenException('Invalid token issuer');
-            }
-
             $jwks_url      = $this->authorized_iss[0].$this->jwks_path;
             $signature_key = $this->JWKFetcher->requestCompleteJwks($jwks_url);
         }
 
         try {
-            return $this->decodeToken($jwt, $signature_key);
+            $valid_token = $this->decodeToken($jwt, $signature_key);
         } catch (\Exception $e) {
             throw new InvalidTokenException($e->getMessage());
         }
+
+        // Validate the token audience, if present.
+        $audience = is_array($valid_token->aud) ? $valid_token->aud : [$valid_token->aud];
+        if (! count(array_intersect($audience, $this->valid_audiences))) {
+            throw new InvalidTokenException('Invalid token audience');
+        }
+
+        // Validate the token audience, if authorized issuers have been passed to this class.
+        if ($this->authorized_iss && ! in_array($valid_token->iss, $this->authorized_iss)) {
+            throw new InvalidTokenException('Invalid token issuer');
+        }
+
+        return $valid_token;
     }
 
     /**
