@@ -74,7 +74,7 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
      */
     public function testThatExchangeSucceedsWithIdToken()
     {
-        $id_token_payload = ['sub' => '123'];
+        $id_token_payload = ['sub' => '123', 'aud' => '__test_client_id__', 'iss' => 'https://__test_domain__/'];
         $id_token         = JWT::encode( $id_token_payload, '__test_client_secret__' );
         $response_body    = '{"access_token":"1.2.3","id_token":"'.$id_token.'","refresh_token":"4.5.6"}';
 
@@ -134,7 +134,7 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
      */
     public function testThatExchangeSkipsUserinfo()
     {
-        $id_token_payload = ['sub' => 'correct_sub'];
+        $id_token_payload = ['sub' => 'correct_sub', 'aud' => '__test_client_id__', 'iss' => 'https://__test_domain__/'];
         $id_token         = JWT::encode( $id_token_payload, '__test_client_secret__' );
 
         $mock = new MockHandler( [
@@ -151,7 +151,7 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
         $_GET['code'] = uniqid();
 
         $this->assertTrue( $auth0->exchange() );
-        $this->assertEquals( ['sub' => 'correct_sub'], $auth0->getUser() );
+        $this->assertEquals( $id_token_payload, $auth0->getUser() );
         $this->assertEquals( $id_token, $auth0->getIdToken() );
         $this->assertEquals( '1.2.3', $auth0->getAccessToken() );
     }
@@ -269,7 +269,14 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
      */
     public function testThatRenewTokensSucceeds()
     {
-        $id_token = JWT::encode( ['sub' => uniqid()], '__test_client_secret__' );
+        $id_token = JWT::encode(
+            [
+                'sub' => uniqid(),
+                'aud' => '__test_client_id__',
+                'iss' => 'https://__test_domain__/'
+            ],
+            '__test_client_secret__'
+        );
 
         $mock = new MockHandler( [
             // Code exchange response.
