@@ -35,16 +35,30 @@ class Jobs extends GenericResource
      *
      * @param  string $file_path
      * @param  string $connection_id
+     * @param  array  $params
      * @return mixed
      */
-    public function importUsers($file_path, $connection_id)
+    public function importUsers($file_path, $connection_id, $params = [])
     {
-        return $this->apiClient->post()
+        $request = $this->apiClient->post()
         ->jobs()
         ->addPath('users-imports')
         ->addFile('users', $file_path)
-        ->addFormParam('connection_id', $connection_id)
-        ->call();
+        ->addFormParam('connection_id', $connection_id);
+
+        if (isset($params['upsert'])) {
+            $request->addFormParam('upsert', filter_var($params['upsert'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if (isset($params['send_completion_email'])) {
+            $request->addFormParam('send_completion_email', filter_var($params['send_completion_email'], FILTER_VALIDATE_BOOLEAN));
+        }
+
+        if (!empty($params['external_id'])) {
+            $request->addFormParam('external_id', $params['external_id']);
+        }
+
+        return $request->call();
     }
 
     /**
