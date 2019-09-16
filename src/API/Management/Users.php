@@ -526,7 +526,7 @@ class Users extends GenericResource
     /**
      * Wrapper for self::getAll().
      *
-     * @deprecated 5.4.0, use $this->>getAll instead.
+     * @deprecated 5.4.0, use $this->getAll instead.
      *
      * @param array $params Search parameters to send.
      *
