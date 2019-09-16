@@ -628,7 +628,7 @@ class Authentication
     /**
      * Set an ApiClient for use in this object
      *
-     * @deprecated 5.4.0, not used.
+     * @deprecated 5.4.0, not used and no replacement provided.
      *
      * @return void
      *
@@ -736,7 +736,7 @@ class Authentication
     /**
      * Authorize using an access token
      *
-     * @deprecated - 5.1.1, This feature is disabled by default for new tenants as of 8 June
+     * @deprecated 5.1.1, disabled by default for new tenants as of 8 June
      * 2017. Open the browser to do social authentication instead, which is
      * what Google and Facebook are recommending.
      *

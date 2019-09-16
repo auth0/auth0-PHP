@@ -11,7 +11,7 @@ use OAuth2\Client;
 /**
  * This class provides access to Auth0 Platform.
  *
- * @deprecated - Deprecated in 5.2.1; use \Auth0\SDK\Auth0 instead.
+ * @deprecated 5.2.1, use \Auth0\SDK\Auth0 instead.
  *
  * @codeCoverageIgnore - Deprecated
  */
@@ -131,7 +131,7 @@ class Oauth2Client
     /**
      * BaseAuth0 Constructor.
      *
-     * @deprecated - Deprecated in 5.2.1; use \Auth0\SDK\Auth0 instead.
+     * @deprecated 5.2.1, use \Auth0\SDK\Auth0 instead.
      *
      * Configuration:
      *     - domain (String) - Required. Should match your Auth0 domain

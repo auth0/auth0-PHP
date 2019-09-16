@@ -7,7 +7,7 @@ use Firebase\JWT\JWT;
  * Class TokenGenerator.
  * Generates HS256 ID tokens.
  *
- * TODO: Deprecate
+ * @deprecated 5.6.0, not used and no replacement provided.
  *
  * @package Auth0\SDK\API\Helpers
  */
