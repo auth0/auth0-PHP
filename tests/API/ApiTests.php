@@ -49,7 +49,7 @@ class ApiTests extends \PHPUnit_Framework_TestCase
             'API_TOKEN' => getenv('API_TOKEN'),
         ];
 
-        if (!$env['API_TOKEN'] && $env['APP_CLIENT_SECRET']) {
+        if (! $env['API_TOKEN'] && $env['APP_CLIENT_SECRET']) {
             $auth_api         = new Authentication( $env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET'] );
             $response         = $auth_api->client_credentials( [ 'audience' => 'https://'.$env['DOMAIN'].'/api/v2/' ] );
             $env['API_TOKEN'] = $response['access_token'];

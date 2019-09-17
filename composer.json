@@ -34,8 +34,8 @@
     }
   },
   "scripts": {
-    "test": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --colors=always --coverage-text --verbose ",
-    "test-ci": "\"vendor/bin/phpunit\" --colors=always --coverage-clover=build/coverage.xml",
+    "test": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text ",
+    "test-ci": "\"vendor/bin/phpunit\" --coverage-clover=build/coverage.xml",
     "phpcs": "\"vendor/bin/phpcs\"",
     "phpcbf": "\"vendor/bin/phpcbf\"",
     "sniffs": "\"vendor/bin/phpcs\" -e",
