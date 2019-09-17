@@ -1,18 +1,80 @@
 <?php
 namespace Auth0\Tests\API\Management;
 
+use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Management;
 use Auth0\Tests\API\ApiTests;
+use GuzzleHttp\Psr7\Response;
 
 class BlacklistsTest extends ApiTests
 {
 
-    private $domain;
+    /**
+     * Expected telemetry value.
+     *
+     * @var string
+     */
+    protected static $expectedTelemetry;
 
-    public function setUp()
+    /**
+     * Default request headers.
+     *
+     * @var array
+     */
+    protected static $headers = [ 'content-type' => 'json' ];
+
+    /**
+     * Runs before test suite starts.
+     */
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
-        sleep(1);
+        $infoHeadersData = new InformationHeaders;
+        $infoHeadersData->setCorePackage();
+        self::$expectedTelemetry = $infoHeadersData->build();
+    }
+
+    /**
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetAllRequestIsFormedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->blacklists->getAll( '__test_aud__' );
+
+        $this->assertEquals( 'GET', $api->getHistoryMethod() );
+        $this->assertStringStartsWith( 'https://api.test.local/api/v2/blacklists/tokens', $api->getHistoryUrl() );
+
+        $this->assertEquals( 'aud=__test_aud__', $api->getHistoryQuery() );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+    }
+
+    /**
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatBlacklistRequestIsFormedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->blacklists->blacklist( '__test_aud__', '__test_jti__' );
+
+        $this->assertEquals( 'POST', $api->getHistoryMethod() );
+        $this->assertEquals( 'https://api.test.local/api/v2/blacklists/tokens', $api->getHistoryUrl() );
+        $this->assertEmpty( $api->getHistoryQuery() );
+
+        $body = $api->getHistoryBody();
+        $this->assertArrayHasKey( 'aud', $body );
+        $this->assertEquals( '__test_aud__', $body['aud'] );
+        $this->assertArrayHasKey( 'jti', $body );
+        $this->assertEquals( '__test_jti__', $body['jti'] );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
     }
 
     /**
@@ -20,28 +82,32 @@ class BlacklistsTest extends ApiTests
      */
     public function testBlacklistAndGet()
     {
-        $env   = self::getEnv();
-        $token = self::getToken($env);
+        $env = self::getEnv();
 
-        $this->domain = $env['DOMAIN'];
+        if (! $env['API_TOKEN']) {
+            $this->markTestSkipped( 'No client secret; integration test skipped' );
+        }
 
-        $api = new Management($token, $env['DOMAIN']);
+        $api      = new Management($env['API_TOKEN'], $env['DOMAIN']);
+        $test_jti = uniqid().uniqid().uniqid();
 
-        $aud = $env['APP_CLIENT_ID'];
-        $jti = 'somerandomJTI'.rand();
+        $api->blacklists->blacklist($env['APP_CLIENT_ID'], $test_jti);
+        sleep(0.2);
 
-        $api->blacklists->blacklist($aud, $jti);
+        $blacklisted = $api->blacklists->getAll($env['APP_CLIENT_ID']);
+        sleep(0.2);
 
-        $all = $api->blacklists->getAll($aud);
+        $this->assertGreaterThan( 0, count( $blacklisted ) );
+        $this->assertEquals( $env['APP_CLIENT_ID'], $blacklisted[0]['aud'] );
 
         $found = false;
-        foreach ($all as $value) {
-            if ($value['aud'] === $aud && $value['jti'] === $jti) {
+        foreach ($blacklisted as $token) {
+            if ($test_jti === $token['jti']) {
                 $found = true;
                 break;
             }
         }
 
-        $this->assertTrue($found, 'Blacklisted token not found');
+        $this->assertTrue( $found );
     }
 }
