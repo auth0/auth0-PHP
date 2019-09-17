@@ -3,9 +3,8 @@
 namespace Auth0\Tests\API\Management;
 
 use Auth0\Tests\Traits\ErrorHelpers;
-use Auth0\SDK\API\Management\Emails;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-
+use Auth0\SDK\API\Management;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -40,6 +39,15 @@ class EmailsMockedTest extends \PHPUnit_Framework_TestCase
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
         self::$expectedTelemetry = $infoHeadersData->build();
+    }
+
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\Emails::class, $api->emails );
+        $this->assertInstanceOf( Management\Emails::class, $api->emails() );
+        $api->emails = null;
+        $this->assertInstanceOf( Management\Emails::class, $api->emails() );
     }
 
     /**

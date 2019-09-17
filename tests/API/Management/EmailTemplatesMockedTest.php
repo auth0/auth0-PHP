@@ -3,9 +3,8 @@
 namespace Auth0\Tests\API\Management;
 
 use Auth0\Tests\Traits\ErrorHelpers;
-use Auth0\SDK\API\Management\EmailTemplates;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-
+use Auth0\SDK\API\Management;
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -42,13 +41,22 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\EmailTemplates::class, $api->emailTemplates );
+        $this->assertInstanceOf( Management\EmailTemplates::class, $api->emailTemplates() );
+        $api->emailTemplates = null;
+        $this->assertInstanceOf( Management\EmailTemplates::class, $api->emailTemplates() );
+    }
+
     /**
      * @throws \Exception Should not be thrown in this test.
      */
     public function testThatGetTemplateRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-        $api->call()->emailTemplates->get( EmailTemplates::TEMPLATE_VERIFY_EMAIL );
+        $api->call()->emailTemplates->get( Management\EmailTemplates::TEMPLATE_VERIFY_EMAIL );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/email-templates/verify_email', $api->getHistoryUrl() );
@@ -71,7 +79,7 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
             'subject' => '__test_email_subject__',
         ];
 
-        $api->call()->emailTemplates->patch( EmailTemplates::TEMPLATE_RESET_EMAIL, $patch_data );
+        $api->call()->emailTemplates->patch( Management\EmailTemplates::TEMPLATE_RESET_EMAIL, $patch_data );
 
         $this->assertEquals( 'PATCH', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/email-templates/reset_email', $api->getHistoryUrl() );
@@ -92,7 +100,7 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $api->call()->emailTemplates->create(
-            EmailTemplates::TEMPLATE_WELCOME_EMAIL,
+            Management\EmailTemplates::TEMPLATE_WELCOME_EMAIL,
             true,
             'test@auth0.com',
             '__test_email_subject__',

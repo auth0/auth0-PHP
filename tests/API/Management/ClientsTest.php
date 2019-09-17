@@ -26,6 +26,15 @@ class ClientsTest extends BasicCrudTest
         sleep(2);
     }
 
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\Clients::class, $api->clients );
+        $this->assertInstanceOf( Management\Clients::class, $api->clients() );
+        $api->clients = null;
+        $this->assertInstanceOf( Management\Clients::class, $api->clients() );
+    }
+
     /**
      * Return the Clients API to test.
      *
