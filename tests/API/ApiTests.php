@@ -32,24 +32,30 @@ class ApiTests extends \PHPUnit_Framework_TestCase
      */
     protected static function getEnv()
     {
-        if (empty( self::$env )) {
-            $env_path = '.env';
-            if (file_exists($env_path)) {
-                $loader = new Loader($env_path);
-                $loader->parse()->putenv(true);
-            }
-
-            $auth_api = new Authentication( getenv('DOMAIN'), getenv('APP_CLIENT_ID'), getenv('APP_CLIENT_SECRET') );
-            $response = $auth_api->client_credentials( [ 'audience' => 'https://'.getenv('DOMAIN').'/api/v2/' ] );
-
-            self::$env = [
-                'DOMAIN' => getenv('DOMAIN'),
-                'APP_CLIENT_ID' => getenv('APP_CLIENT_ID'),
-                'APP_CLIENT_SECRET' => getenv('APP_CLIENT_SECRET'),
-                'API_TOKEN' => $response['access_token'],
-            ];
+        if (self::$env) {
+            return self::$env;
         }
 
+        $env_path = '.env';
+        if (file_exists($env_path)) {
+            $loader = new Loader($env_path);
+            $loader->parse()->putenv(true);
+        }
+
+        $env = [
+            'DOMAIN' => getenv('DOMAIN'),
+            'APP_CLIENT_ID' => getenv('APP_CLIENT_ID'),
+            'APP_CLIENT_SECRET' => getenv('APP_CLIENT_SECRET'),
+            'API_TOKEN' => getenv('API_TOKEN'),
+        ];
+
+        if (!$env['API_TOKEN'] && $env['APP_CLIENT_SECRET']) {
+            $auth_api         = new Authentication( $env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET'] );
+            $response         = $auth_api->client_credentials( [ 'audience' => 'https://'.$env['DOMAIN'].'/api/v2/' ] );
+            $env['API_TOKEN'] = $response['access_token'];
+        }
+
+        self::$env = $env;
         return self::$env;
     }
 
