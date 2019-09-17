@@ -91,6 +91,16 @@ class MockApi
     }
 
     /**
+     * Get the form body from a mocked request.
+     *
+     * @return string
+     */
+    public function getHistoryBodyAsString()
+    {
+        return $this->getHistory()->getBody()->getContents();
+    }
+
+    /**
      * Get the headers from a mocked request.
      *
      * @return array
