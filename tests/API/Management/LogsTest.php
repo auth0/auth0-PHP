@@ -42,6 +42,15 @@ class LogsTest extends ApiTests
         sleep(1);
     }
 
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\Logs::class, $api->logs );
+        $this->assertInstanceOf( Management\Logs::class, $api->logs() );
+        $api->logs = null;
+        $this->assertInstanceOf( Management\Logs::class, $api->logs() );
+    }
+
     /**
      * Test a general search.
      *

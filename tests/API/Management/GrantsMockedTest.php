@@ -36,6 +36,15 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
         self::$telemetry = $infoHeadersData->build();
     }
 
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\Grants::class, $api->grants );
+        $this->assertInstanceOf( Management\Grants::class, $api->grants() );
+        $api->grants = null;
+        $this->assertInstanceOf( Management\Grants::class, $api->grants() );
+    }
+
     /**
      * Test that getAll requests properly.
      *

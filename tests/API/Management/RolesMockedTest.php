@@ -1,12 +1,11 @@
 <?php
 namespace Auth0\Tests\API\Management;
 
+use Auth0\SDK\API\Helpers\InformationHeaders;
+use Auth0\SDK\API\Management;
 use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 use Auth0\Tests\Traits\ErrorHelpers;
-
-use Auth0\SDK\API\Helpers\InformationHeaders;
-
 use GuzzleHttp\Psr7\Response;
 
 /**
@@ -41,6 +40,15 @@ class RolesTestMocked extends \PHPUnit_Framework_TestCase
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
         self::$expectedTelemetry = $infoHeadersData->build();
+    }
+
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\Roles::class, $api->roles );
+        $this->assertInstanceOf( Management\Roles::class, $api->roles() );
+        $api->roles = null;
+        $this->assertInstanceOf( Management\Roles::class, $api->roles() );
     }
 
     /**

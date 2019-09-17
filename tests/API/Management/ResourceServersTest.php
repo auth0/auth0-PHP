@@ -64,6 +64,15 @@ class ResourceServersTest extends ApiTests
         sleep(1);
     }
 
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\ResourceServers::class, $api->resource_servers );
+        $this->assertInstanceOf( Management\ResourceServers::class, $api->resourceServers() );
+        $api->resource_servers = null;
+        $this->assertInstanceOf( Management\ResourceServers::class, $api->resourceServers() );
+    }
+
     /**
      * Test creating a Resource Server.
      *
