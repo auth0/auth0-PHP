@@ -2,8 +2,6 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Header\ContentType;
-
 class DeviceCredentials extends GenericResource
 {
     const TYPE_PUBLIC_KEY   = 'public_key';
@@ -20,7 +18,7 @@ class DeviceCredentials extends GenericResource
      */
     public function getAll($user_id = null, $client_id = null, $type = null, $fields = null, $include_fields = null)
     {
-        $request = $this->apiClient->get()
+        $request = $this->apiClient->method('get')
         ->addPath('device-credentials');
 
         if ($fields !== null) {
@@ -57,9 +55,8 @@ class DeviceCredentials extends GenericResource
      */
     public function createPublicKey($data)
     {
-        return $this->apiClient->post()
+        return $this->apiClient->method('post')
         ->addPath('device-credentials')
-        ->withHeader(new ContentType('application/json'))
         ->withBody(json_encode($data))
         ->call();
     }
@@ -71,7 +68,7 @@ class DeviceCredentials extends GenericResource
      */
     public function deleteDeviceCredential($id)
     {
-        return $this->apiClient->delete()
+        return $this->apiClient->method('delete')
         ->addPath('device-credentials', $id)
         ->call();
     }
