@@ -191,7 +191,7 @@ class ClientGrants extends GenericResource
      */
     public function get($id, $audience = null)
     {
-        $request = $this->apiClient->get()
+        $request = $this->apiClient->method('get')
             ->addPath('client-grants');
 
         if ($audience !== null) {

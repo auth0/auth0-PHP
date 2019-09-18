@@ -631,7 +631,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
         $body = $api->getHistoryBody();
@@ -881,7 +880,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
         $body = $api->getHistoryBody();

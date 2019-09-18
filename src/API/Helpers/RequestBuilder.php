@@ -146,6 +146,8 @@ class RequestBuilder
     /**
      * Add a path and an optional argument to this request.
      *
+     * TODO: Allow array or unlimited arguments
+     *
      * @param string      $name     Path to add.
      * @param string|null $argument Optional argument to add.
      *
@@ -163,6 +165,8 @@ class RequestBuilder
 
     /**
      * Add a path variable.
+     *
+     * @deprecated 5.6.0, use $this->addPath() instead.
      *
      * @param string $variable Path variable to add.
      *
@@ -202,7 +206,7 @@ class RequestBuilder
     }
 
     /**
-     * TODO: Deprecate
+     * @deprecated 5.6.0, no alternative provided.
      *
      * @return RequestBuilder
      */
