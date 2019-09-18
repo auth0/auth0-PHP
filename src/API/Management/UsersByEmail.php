@@ -6,7 +6,7 @@ class UsersByEmail extends GenericResource
 {
     public function get($params = [])
     {
-        $client = $this->apiClient->get()
+        $client = $this->apiClient->method('get')
             ->addPath('users-by-email');
 
         foreach ($params as $param => $value) {

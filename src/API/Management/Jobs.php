@@ -2,8 +2,6 @@
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Header\ContentType;
-
 class Jobs extends GenericResource
 {
     /**
@@ -40,8 +38,8 @@ class Jobs extends GenericResource
      */
     public function importUsers($file_path, $connection_id, $params = [])
     {
-        $request = $this->apiClient->post()
-        ->jobs()
+        $request = $this->apiClient->method('post', false)
+        ->addPath('jobs')
         ->addPath('users-imports')
         ->addFile('users', $file_path)
         ->addFormParam('connection_id', $connection_id);
@@ -68,10 +66,9 @@ class Jobs extends GenericResource
      */
     public function sendVerificationEmail($user_id)
     {
-        return $this->apiClient->post()
-        ->jobs()
+        return $this->apiClient->method('post')
+        ->addPath('jobs')
         ->addPath('verification-email')
-        ->withHeader(new ContentType('application/json'))
         ->withBody(json_encode([
             'user_id' => $user_id
         ]))

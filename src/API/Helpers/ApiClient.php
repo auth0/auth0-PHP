@@ -64,6 +64,16 @@ class ApiClient
         }
     }
 
+    /**
+     * Magic method to map HTTP verbs to request types.
+     *
+     * @deprecated 5.6.0, use $this->method().
+     *
+     * @param string $name      - Method name used to call the magic method.
+     * @param array  $arguments - Arguments used in the magic method call.
+     *
+     * @return RequestBuilder
+     */
     public function __call($name, $arguments)
     {
         $builder = new RequestBuilder([
@@ -81,11 +91,12 @@ class ApiClient
      * Create a new RequestBuilder.
      * Similar to the above but does not use a magic method.
      *
-     * @param string $method - HTTP method to use (GET, POST, PATCH, etc).
+     * @param string  $method           - HTTP method to use (GET, POST, PATCH, etc).
+     * @param boolean $set_content_type - Automatically set a content-type header.
      *
      * @return RequestBuilder
      */
-    public function method($method)
+    public function method($method, $set_content_type = true)
     {
         $method  = strtolower($method);
         $builder = new RequestBuilder([
@@ -97,7 +108,7 @@ class ApiClient
         ]);
         $builder->withHeaders($this->headers);
 
-        if (in_array($method, [ 'patch', 'post', 'put', 'delete' ])) {
+        if ($set_content_type && in_array($method, [ 'patch', 'post', 'put' ])) {
             $builder->withHeader(new ContentType('application/json'));
         }
 

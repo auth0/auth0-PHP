@@ -10,8 +10,8 @@ class Stats extends GenericResource
      */
     public function getActiveUsersCount()
     {
-        return $this->apiClient->get()
-        ->stats()
+        return $this->apiClient->method('get')
+        ->addPath('stats')
         ->addPath('active-users')
         ->call();
     }
@@ -24,9 +24,9 @@ class Stats extends GenericResource
      */
     public function getDailyStats($from, $to)
     {
-        return $this->apiClient->get()
-        ->stats()
-        ->daily()
+        return $this->apiClient->method('get')
+        ->addPath('stats')
+        ->addPath('daily')
         ->withParam('from', $from)
         ->withParam('to', $to)
         ->call();
