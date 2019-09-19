@@ -11,7 +11,12 @@ class JobsTest extends ApiTests
 
     const FORM_DATA_VALUE_KEY_OFFSET = 3;
 
-    const TEST_IMPORT_USERS_JSON_PATH = AUTH0_PHP_TEST_JSON_DIR.'test-import-users-file.json';
+    /**
+     * Expected telemetry value.
+     *
+     * @var string
+     */
+    protected static $testImportUsersJsonPath;
 
     /**
      * Expected telemetry value.
@@ -32,6 +37,7 @@ class JobsTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
+        self::$testImportUsersJsonPath = AUTH0_PHP_TEST_JSON_DIR.'test-import-users-file.json';
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
         self::$expectedTelemetry = $infoHeadersData->build();
@@ -88,7 +94,7 @@ class JobsTest extends ApiTests
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $api->call()->jobs()->importUsers(
-            self::TEST_IMPORT_USERS_JSON_PATH,
+            self::$testImportUsersJsonPath,
             '__test_conn_id__',
             [
                 'upsert' => true,
@@ -109,7 +115,7 @@ class JobsTest extends ApiTests
         $form_body_arr = explode( "\r\n", $form_body );
 
         // Test that the form data contains our import file content.
-        $import_content = file_get_contents( self::TEST_IMPORT_USERS_JSON_PATH );
+        $import_content = file_get_contents( self::$testImportUsersJsonPath );
         $this->assertContains( 'name="users"; filename="test-import-users-file.json"', $form_body );
         $this->assertContains( $import_content, $form_body );
 
@@ -180,7 +186,7 @@ class JobsTest extends ApiTests
             'external_id' => '__test_ext_id__',
         ];
 
-        $import_job_result = $api->jobs()->importUsers(self::TEST_IMPORT_USERS_JSON_PATH, $conn_id, $import_user_params);
+        $import_job_result = $api->jobs()->importUsers(self::$testImportUsersJsonPath, $conn_id, $import_user_params);
         sleep(0.2);
 
         $this->assertEquals( $conn_id, $import_job_result['connection_id'] );

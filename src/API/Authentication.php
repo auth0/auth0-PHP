@@ -283,10 +283,9 @@ class Authentication
             $data['authParams'] = $authParams;
         }
 
-        return $this->apiClient->post()
-        ->passwordless()
-        ->start()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+        ->addPath('passwordless')
+        ->addPath('start')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -308,10 +307,9 @@ class Authentication
             'phone_number' => $phone_number,
         ];
 
-        return $this->apiClient->post()
-        ->passwordless()
-        ->start()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+        ->addPath('passwordless')
+        ->addPath('start')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -327,9 +325,8 @@ class Authentication
      */
     public function userinfo($access_token)
     {
-        return $this->apiClient->get()
-        ->userinfo()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('get')
+        ->addPath('userinfo')
         ->withHeader(new AuthorizationBearer($access_token))
         ->call();
     }
@@ -573,10 +570,9 @@ class Authentication
             'connection' => $connection,
         ];
 
-        return $this->apiClient->post()
-        ->dbconnections()
-        ->signup()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+        ->addPath('dbconnections')
+        ->addPath('signup')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -612,10 +608,9 @@ class Authentication
             $data['password'] = $password;
         }
 
-        return $this->apiClient->post()
-        ->dbconnections()
-        ->change_password()
-        ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+        ->addPath('dbconnections')
+        ->addPath('change_password')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -724,10 +719,9 @@ class Authentication
             'additionalParameters' => $additionalParameters,
         ];
 
-        return $this->apiClient->post()
-            ->users($user_id)
-            ->impersonate()
-            ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+            ->addPath('users', $user_id)
+            ->addPath('impersonate')
             ->withHeader(new AuthorizationBearer($access_token))
             ->withBody(json_encode($data))
             ->call();
@@ -770,10 +764,9 @@ class Authentication
             ]
         );
 
-        return $this->apiClient->post()
-            ->oauth()
-            ->access_token()
-            ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+            ->addPath('oauth')
+            ->addPath('access_token')
             ->withBody(json_encode($data))
             ->call();
     }
@@ -835,10 +828,9 @@ class Authentication
             $data['connection'] = $connection;
         }
 
-        return $this->apiClient->post()
-            ->oauth()
-            ->ro()
-            ->withHeader(new ContentType('application/json'))
+        return $this->apiClient->method('post')
+            ->addPath('oauth')
+            ->addPath('ro')
             ->withBody(json_encode($data))
             ->call();
     }

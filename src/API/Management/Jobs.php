@@ -11,8 +11,8 @@ class Jobs extends GenericResource
      */
     public function get($id)
     {
-        return $this->apiClient->get()
-        ->jobs($id)
+        return $this->apiClient->method('get')
+        ->addPath('jobs', $id)
         ->call();
     }
 
@@ -23,9 +23,9 @@ class Jobs extends GenericResource
      */
     public function getErrors($id)
     {
-        return $this->apiClient->get()
-        ->jobs($id)
-        ->errors()
+        return $this->apiClient->method('get')
+        ->addPath('jobs', $id)
+        ->addPath('errors')
         ->call();
     }
 

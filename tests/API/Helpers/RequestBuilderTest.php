@@ -35,11 +35,11 @@ class RequestBuilderTest extends ApiTests
 
         $this->assertEquals('', $builder->getUrl());
 
-        $builder->path1();
+        $builder->addPath('path1');
 
         $this->assertEquals('path1', $builder->getUrl());
 
-        $builder->path2(3);
+        $builder->addPath('path2', 3);
 
         $this->assertEquals('path1/path2/3', $builder->getUrl());
     }
@@ -154,8 +154,8 @@ class RequestBuilderTest extends ApiTests
     {
         $builder = self::getUrlBuilder('/api');
 
-        $builder->path(2)
-            ->subpath()
+        $builder->addPath('path', 2)
+            ->addPath('subpath')
             ->withParams(
                 [
                     ['key' => 'param1', 'value' => 'value1'],
