@@ -125,6 +125,8 @@ class RequestBuilder
     /**
      * Magic method to overload method calls to paths.
      *
+     * @deprecated 5.6.0, use $this->addPath() to add paths.
+     *
      * @param string     $name      Method invoked.
      * @param array|null $arguments Arguments to add to the path.
      *
