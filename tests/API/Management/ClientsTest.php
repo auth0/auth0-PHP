@@ -3,29 +3,15 @@
 namespace Auth0\Tests\API\Management;
 
 use Auth0\SDK\API\Management;
-use Auth0\Tests\API\BasicCrudTest;
+use Auth0\Tests\API\ApiTests;
 
 /**
  * Class ClientsTest
  *
  * @package Auth0\Tests\API\Management
  */
-class ClientsTest extends BasicCrudTest
+class ClientsTest extends ApiTests
 {
-
-    /**
-     * Unique identifier name for Clients.
-     *
-     * @var string
-     */
-    protected $id_name = 'client_id';
-
-    public function setUp()
-    {
-        parent::setUp();
-        sleep(2);
-    }
-
     public function testThatMethodAndPropertyReturnSameClass()
     {
         $api = new Management(uniqid(), uniqid());
@@ -36,46 +22,73 @@ class ClientsTest extends BasicCrudTest
     }
 
     /**
-     * Return the Clients API to test.
-     *
-     * @return Management\Clients
+     * @throws \Auth0\SDK\Exception\ApiException
+     * @throws \Exception
      */
-    protected function getApiClient()
+    public function testIntegrationCreateGetUpdateDelete()
     {
-        $token = self::getToken(self::$env);
-        $api   = new Management($token, $this->domain);
-        return $api->clients();
-    }
+        $env = self::getEnv();
 
-    /**
-     * Get the Client create data to send with the test create call.
-     *
-     * @return array
-     */
-    protected function getCreateBody()
-    {
-        return [
-            'name' => 'TEST-CREATE-CLIENT-'.$this->rand,
+        if (! $env['API_TOKEN']) {
+            $this->markTestSkipped( 'No client secret; integration test skipped' );
+        }
+
+        $api = new Management($env['API_TOKEN'], $env['DOMAIN']);
+
+        $unique_id   = uniqid();
+        $create_body = [
+            'name' => 'TEST-CREATE-CLIENT-'.$unique_id,
             'app_type' => 'regular_web',
-            'sso' => false,
-            'description' => '__Auth0_PHP_initial_app_description__',
         ];
+
+        $created_client = $api->clients->create($create_body);
+        sleep(0.2);
+
+        $this->assertNotEmpty($created_client['client_id']);
+        $this->assertEquals($create_body['name'], $created_client['name']);
+        $this->assertEquals($create_body['app_type'], $created_client['app_type']);
+
+        $created_client_id = $created_client['client_id'];
+        $got_entity        = $api->clients->get($created_client_id);
+        sleep(0.2);
+
+        // Make sure what we got matches what we created.
+        $this->assertEquals($created_client_id, $got_entity['client_id']);
+
+        $update_body = [
+            'name' => 'TEST-UPDATE-CLIENT-'.$unique_id,
+            'app_type' => 'native',
+        ];
+
+        $updated_client = $api->clients->update($created_client_id, $update_body );
+        sleep(0.2);
+
+        $this->assertEquals($created_client_id, $updated_client['client_id']);
+        $this->assertEquals($update_body['name'], $updated_client['name']);
+        $this->assertEquals($update_body['app_type'], $updated_client['app_type']);
+
+        $api->clients->delete($created_client_id);
+        sleep(0.2);
     }
 
     /**
-     * Tests the \Auth0\SDK\API\Management\Clients::getAll() method.
-     *
-     * @return mixed
-     *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Exception
      */
-    protected function getAllEntities()
+    public function testIntegrationGetAllMethod()
     {
-        $fields   = [ 'name', 'tenant', $this->id_name ];
-        $page_num = 1;
+        $env = self::getEnv();
+
+        if (! $env['API_TOKEN']) {
+            $this->markTestSkipped( 'No client secret; integration test skipped' );
+        }
+
+        $api      = new Management($env['API_TOKEN'], $env['DOMAIN']);
+        $fields   = ['client_id', 'tenant', 'name', 'app_type'];
+        $page_num = 3;
 
         // Get the second page of Clients with 1 per page (second result).
-        $paged_results = $this->api->getAll($fields, true, $page_num, 1);
+        $paged_results = $api->clients->getAll($fields, true, $page_num, 1);
+        sleep(0.2);
 
         // Make sure we only have one result, as requested.
         $this->assertEquals(1, count($paged_results));
@@ -85,63 +98,14 @@ class ClientsTest extends BasicCrudTest
 
         // Get many results (needs to include the created result if self::findCreatedItem === true).
         $many_results_per_page = 50;
-        $many_results          = $this->api->getAll($fields, true, 0, $many_results_per_page);
+        $many_results          = $api->clients->getAll($fields, true, 0, $many_results_per_page);
+        sleep(0.2);
 
         // Make sure we have at least as many results as we requested.
         $this->assertLessThanOrEqual($many_results_per_page, count($many_results));
 
         // Make sure our paged result above appears in the right place.
         // $page_num here represents the expected location for the single entity retrieved above.
-        $this->assertEquals($this->getId($paged_results[0]), $this->getId($many_results[$page_num]));
-
-        return $many_results;
-    }
-
-    /**
-     * Check that the Client created matches the initial values sent.
-     *
-     * @param array $entity The created Client to check against initial values.
-     *
-     * @return void
-     */
-    protected function afterCreate(array $entity)
-    {
-        $expected = $this->getCreateBody();
-        $this->assertNotEmpty($this->getId($entity));
-        $this->assertEquals($expected['name'], $entity['name']);
-        $this->assertEquals($expected['app_type'], $entity['app_type']);
-        $this->assertEquals($expected['sso'], $entity['sso']);
-        $this->assertEquals($expected['description'], $entity['description']);
-    }
-
-    /**
-     * Get the Client values that should be updated.
-     *
-     * @return array
-     */
-    protected function getUpdateBody()
-    {
-        return [
-            'name' => 'TEST-UPDATE-CLIENT-',
-            'app_type' => 'native',
-            'sso' => true,
-            'description' => '__Auth0_PHP_updated_app_description__',
-        ];
-    }
-
-    /**
-     * Update entity returned values check.
-     *
-     * @param array $entity Client that was updated.
-     *
-     * @return void
-     */
-    protected function afterUpdate(array $entity)
-    {
-        $expected = $this->getUpdateBody();
-        $this->assertEquals($expected['name'], $entity['name']);
-        $this->assertEquals($expected['app_type'], $entity['app_type']);
-        $this->assertEquals($expected['sso'], $entity['sso']);
-        $this->assertEquals($expected['description'], $entity['description']);
+        $this->assertEquals($paged_results[0]['client_id'], $many_results[$page_num]['client_id']);
     }
 }
