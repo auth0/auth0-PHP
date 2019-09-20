@@ -58,114 +58,133 @@ class Management
     private $returnType;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->blacklists() instead.
      *
      * @var Blacklists
      */
     public $blacklists;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->clients() instead.
      *
      * @var Clients
      */
     public $clients;
 
     /**
+     * @deprecated 5.6.0, will be renamed and lose public access; use $this->clientGrants() instead.
      *
      * @var ClientGrants
      */
     public $client_grants;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->connections() instead.
      *
      * @var Connections
      */
     public $connections;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->deviceCredentials() instead.
      *
      * @var DeviceCredentials
      */
     public $deviceCredentials;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->emails() instead.
      *
      * @var Emails
      */
     public $emails;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->emailTemplates() instead.
      *
      * @var EmailTemplates
      */
     public $emailTemplates;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->jobs() instead.
      *
      * @var Jobs
      */
     public $jobs;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->grants() instead.
      *
      * @var Grants
      */
     public $grants;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->logs() instead.
      *
      * @var Logs
      */
     public $logs;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->roles() instead.
      *
      * @var Roles
      */
     public $roles;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->rules() instead.
      *
      * @var Rules
      */
     public $rules;
 
     /**
+     * @deprecated 5.6.0, will be renamed and lose public access; use $this->resourceServers() instead.
      *
      * @var ResourceServers
      */
     public $resource_servers;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->stats() instead.
      *
      * @var Stats
      */
     public $stats;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->tenants() instead.
      *
      * @var Tenants
      */
     public $tenants;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->tickets() instead.
      *
      * @var Tickets
      */
     public $tickets;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->userBlocks() instead.
      *
      * @var UserBlocks
      */
     public $userBlocks;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->users() instead.
      *
      * @var Users
      */
     public $users;
 
     /**
+     * @deprecated 5.6.0, will lose public access; use $this->usersByEmail() instead.
      *
      * @var UsersByEmail
      */
