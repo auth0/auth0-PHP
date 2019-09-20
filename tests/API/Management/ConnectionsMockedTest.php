@@ -60,7 +60,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->connections->getAll();
+        $api->call()->connections()->getAll();
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
@@ -84,7 +84,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $strategy = 'test-strategy-01';
-        $api->call()->connections->getAll($strategy);
+        $api->call()->connections()->getAll($strategy);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
@@ -104,7 +104,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         $strategy = null;
         $fields   = ['id', 'name'];
-        $api->call()->connections->getAll($strategy, $fields);
+        $api->call()->connections()->getAll($strategy, $fields);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
@@ -113,7 +113,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         // Test an explicit true for includeFields.
         $include_fields = true;
-        $api->call()->connections->getAll($strategy, $fields, $include_fields);
+        $api->call()->connections()->getAll($strategy, $fields, $include_fields);
 
         $this->assertContains( 'include_fields=true', $api->getHistoryQuery() );
     }
@@ -132,7 +132,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $strategy       = null;
         $fields         = ['id', 'name'];
         $include_fields = false;
-        $api->call()->connections->getAll($strategy, $fields, $include_fields);
+        $api->call()->connections()->getAll($strategy, $fields, $include_fields);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
@@ -156,7 +156,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $include_fields = null;
         $page           = 0;
         $per_page       = 5;
-        $api->call()->connections->getAll($strategy, $fields, $include_fields, $page, $per_page);
+        $api->call()->connections()->getAll($strategy, $fields, $include_fields, $page, $per_page);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
@@ -181,7 +181,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $page           = null;
         $per_page       = null;
         $add_params     = ['param1' => 'value1', 'param2' => 'value2'];
-        $api->call()->connections->getAll($strategy, $fields, $include_fields, $page, $per_page, $add_params);
+        $api->call()->connections()->getAll($strategy, $fields, $include_fields, $page, $per_page, $add_params);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
@@ -201,7 +201,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
         $id = 'con_testConnection10';
-        $api->call()->connections->get($id);
+        $api->call()->connections()->get($id);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
@@ -221,7 +221,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         $id     = 'con_testConnection10';
         $fields = ['name', 'strategy'];
-        $api->call()->connections->get($id, $fields);
+        $api->call()->connections()->get($id, $fields);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
@@ -230,7 +230,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         // Test an explicit true for includeFields.
         $include_fields = true;
-        $api->call()->connections->get($id, $fields, $include_fields);
+        $api->call()->connections()->get($id, $fields, $include_fields);
 
         $this->assertContains( 'include_fields=true', $api->getHistoryQuery() );
     }
@@ -249,7 +249,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $id             = 'con_testConnection10';
         $fields         = ['name', 'strategy'];
         $include_fields = false;
-        $api->call()->connections->get($id, $fields, $include_fields);
+        $api->call()->connections()->get($id, $fields, $include_fields);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
@@ -269,7 +269,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $api = new MockManagementApi( [ new Response( 204 ) ] );
 
         $id = 'con_testConnection10';
-        $api->call()->connections->delete($id);
+        $api->call()->connections()->delete($id);
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
@@ -289,7 +289,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         $id    = 'con_testConnection10';
         $email = 'con_testConnection10@auth0.com';
-        $api->call()->connections->deleteUser($id, $email);
+        $api->call()->connections()->deleteUser($id, $email);
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
         $this->assertContains( 'https://api.test.local/api/v2/connections/'.$id.'/users', $api->getHistoryUrl() );
@@ -309,7 +309,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         $name     = 'TestConnection01';
         $strategy = 'test-strategy-01';
-        $api->call()->connections->create( [ 'name' => $name, 'strategy' => $strategy ] );
+        $api->call()->connections()->create( [ 'name' => $name, 'strategy' => $strategy ] );
         $request_body = $api->getHistoryBody();
 
         $this->assertEquals( $name, $request_body['name'] );
@@ -332,7 +332,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         $caught_no_name_exception = false;
         try {
-            $api->call()->connections->create(['strategy' => uniqid()]);
+            $api->call()->connections()->create(['strategy' => uniqid()]);
         } catch (\Exception $e) {
             $caught_no_name_exception = $this->errorHasString($e, 'Missing required "name" field');
         }
@@ -341,7 +341,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         $caught_no_strategy_exception = false;
         try {
-            $api->call()->connections->create(['name' => uniqid()]);
+            $api->call()->connections()->create(['name' => uniqid()]);
         } catch (\Exception $e) {
             $caught_no_strategy_exception = $this->errorHasString($e, 'Missing required "strategy" field');
         }
@@ -362,7 +362,7 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
 
         $id          = 'con_testConnection10';
         $update_data = [ 'metadata' => [ 'meta1' => 'value1' ] ];
-        $api->call()->connections->update($id, $update_data);
+        $api->call()->connections()->update($id, $update_data);
         $request_body = $api->getHistoryBody();
 
         $this->assertEquals( $update_data, $request_body );

@@ -29,11 +29,10 @@ class LogsTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        $env   = self::getEnv();
-        $token = self::getToken($env);
-        $api   = new Management($token, $env['DOMAIN'], ['timeout' => 30]);
+        $env = self::getEnv();
+        $api = new Management($env['API_TOKEN'], $env['DOMAIN'], ['timeout' => 30]);
 
-        self::$api = $api->logs;
+        self::$api = $api->logs();
     }
 
     public function setUp()

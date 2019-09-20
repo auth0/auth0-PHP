@@ -56,7 +56,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200 ) ] );
 
-        $api->call()->grants->getAll();
+        $api->call()->grants()->getAll();
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/grants', $api->getHistoryUrl() );
@@ -80,7 +80,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         $page     = 1;
         $per_page = 5;
-        $api->call()->grants->getAll($page, $per_page);
+        $api->call()->grants()->getAll($page, $per_page);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/grants', $api->getHistoryUrl() );
@@ -89,14 +89,14 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         $page     = 2;
         $per_page = null;
-        $api->call()->grants->getAll($page, $per_page);
+        $api->call()->grants()->getAll($page, $per_page);
 
         $this->assertContains( 'page=2', $api->getHistoryQuery() );
         $this->assertNotContains( 'per_page=', $api->getHistoryQuery() );
 
         $page     = false;
         $per_page = false;
-        $api->call()->grants->getAll($page, $per_page);
+        $api->call()->grants()->getAll($page, $per_page);
 
         $this->assertNull( $api->getHistoryQuery() );
     }
@@ -113,7 +113,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
         $api = new MockManagementApi( [ new Response( 200 ) ] );
 
         $add_params = ['param1' => 'value1', 'param2' => 'value2'];
-        $api->call()->grants->getAll(null, null, $add_params);
+        $api->call()->grants()->getAll(null, null, $add_params);
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/grants', $api->getHistoryUrl() );
@@ -132,7 +132,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200 ) ] );
 
-        $api->call()->grants->getByClientId('__test_client_id__');
+        $api->call()->grants()->getByClientId('__test_client_id__');
 
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/grants', $api->getHistoryUrl() );
         $this->assertEquals( 'client_id=__test_client_id__', $api->getHistoryQuery() );
@@ -149,7 +149,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200 ) ] );
 
-        $api->call()->grants->getByClientId('__test_client_id__', 1, 2);
+        $api->call()->grants()->getByClientId('__test_client_id__', 1, 2);
 
         $this->assertContains( 'page=1', $api->getHistoryQuery() );
         $this->assertContains( 'per_page=2', $api->getHistoryQuery() );
@@ -168,7 +168,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $caught_exception = false;
-            $api->grants->getByClientId( '' );
+            $api->grants()->getByClientId( '' );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "client_id" parameter' );
         }
@@ -177,7 +177,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $caught_exception = false;
-            $api->grants->getByClientId( [ '__not_empty__' ] );
+            $api->grants()->getByClientId( [ '__not_empty__' ] );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "client_id" parameter' );
         }
@@ -196,7 +196,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200 ) ] );
 
-        $api->call()->grants->getByAudience('__test_audience__');
+        $api->call()->grants()->getByAudience('__test_audience__');
 
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/grants', $api->getHistoryUrl() );
         $this->assertEquals( 'audience=__test_audience__', $api->getHistoryQuery() );
@@ -213,7 +213,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200 ) ] );
 
-        $api->call()->grants->getByAudience('__test_audience__', 1, 2);
+        $api->call()->grants()->getByAudience('__test_audience__', 1, 2);
 
         $this->assertContains( 'page=1', $api->getHistoryQuery() );
         $this->assertContains( 'per_page=2', $api->getHistoryQuery() );
@@ -232,7 +232,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $caught_exception = false;
-            $api->grants->getByAudience( '' );
+            $api->grants()->getByAudience( '' );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "audience" parameter' );
         }
@@ -241,7 +241,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $caught_exception = false;
-            $api->grants->getByAudience( [ '__not_empty__' ] );
+            $api->grants()->getByAudience( [ '__not_empty__' ] );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "audience" parameter' );
         }
@@ -260,7 +260,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200 ) ] );
 
-        $api->call()->grants->getByUserId('__test_user_id__');
+        $api->call()->grants()->getByUserId('__test_user_id__');
 
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/grants', $api->getHistoryUrl() );
         $this->assertEquals( 'user_id=__test_user_id__', $api->getHistoryQuery() );
@@ -277,7 +277,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200 ) ] );
 
-        $api->call()->grants->getByUserId('__test_user_id__', 1, 2);
+        $api->call()->grants()->getByUserId('__test_user_id__', 1, 2);
 
         $this->assertContains( 'page=1', $api->getHistoryQuery() );
         $this->assertContains( 'per_page=2', $api->getHistoryQuery() );
@@ -296,7 +296,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $caught_exception = false;
-            $api->grants->getByUserId( '' );
+            $api->grants()->getByUserId( '' );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "user_id" parameter' );
         }
@@ -305,7 +305,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $caught_exception = false;
-            $api->grants->getByUserId( [ '__not_empty__' ] );
+            $api->grants()->getByUserId( [ '__not_empty__' ] );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "user_id" parameter' );
         }
@@ -325,7 +325,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
         $api = new MockManagementApi( [ new Response( 204 ) ] );
 
         $id = uniqid();
-        $api->call()->grants->delete($id);
+        $api->call()->grants()->delete($id);
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/grants/'.$id, $api->getHistoryUrl() );
@@ -349,7 +349,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $caught_exception = false;
-            $api->grants->delete( '' );
+            $api->grants()->delete( '' );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "id" parameter' );
         }
@@ -358,7 +358,7 @@ class GrantsTestMocked extends \PHPUnit_Framework_TestCase
 
         try {
             $caught_exception = false;
-            $api->grants->delete( [ '__not_empty__' ] );
+            $api->grants()->delete( [ '__not_empty__' ] );
         } catch (CoreException $e) {
             $caught_exception = $this->errorHasString( $e, 'Empty or invalid "id" parameter' );
         }

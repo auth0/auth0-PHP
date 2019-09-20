@@ -56,7 +56,7 @@ class EmailsMockedTest extends \PHPUnit_Framework_TestCase
     public function testThatGetEmailProviderRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-        $api->call()->emails->getEmailProvider();
+        $api->call()->emails()->getEmailProvider();
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/emails/provider', $api->getHistoryUrl() );
@@ -72,7 +72,7 @@ class EmailsMockedTest extends \PHPUnit_Framework_TestCase
     public function testThatGetEmailProviderRequestAddsFieldsParams()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-        $api->call()->emails->getEmailProvider( [ 'name', 'credentials' ], true );
+        $api->call()->emails()->getEmailProvider( [ 'name', 'credentials' ], true );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/emails/provider', $api->getHistoryUrl() );

@@ -40,7 +40,7 @@ class BlacklistsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->blacklists->getAll( '__test_aud__' );
+        $api->call()->blacklists()->getAll( '__test_aud__' );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/blacklists/tokens', $api->getHistoryUrl() );
@@ -59,7 +59,7 @@ class BlacklistsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->blacklists->blacklist( '__test_aud__', '__test_jti__' );
+        $api->call()->blacklists()->blacklist( '__test_aud__', '__test_jti__' );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/blacklists/tokens', $api->getHistoryUrl() );
@@ -100,10 +100,10 @@ class BlacklistsTest extends ApiTests
         $api      = new Management($env['API_TOKEN'], $env['DOMAIN']);
         $test_jti = uniqid().uniqid().uniqid();
 
-        $api->blacklists->blacklist($env['APP_CLIENT_ID'], $test_jti);
+        $api->blacklists()->blacklist($env['APP_CLIENT_ID'], $test_jti);
         sleep(0.2);
 
-        $blacklisted = $api->blacklists->getAll($env['APP_CLIENT_ID']);
+        $blacklisted = $api->blacklists()->getAll($env['APP_CLIENT_ID']);
         sleep(0.2);
 
         $this->assertGreaterThan( 0, count( $blacklisted ) );
