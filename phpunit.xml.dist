@@ -1,6 +1,5 @@
 <phpunit
-  coverage-text="true"
-  colors="always"
+  colors="true"
   verbose="true"
   bootstrap="./tests/bootstrap.php">
   <testsuites>
