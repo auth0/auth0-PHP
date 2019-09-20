@@ -56,7 +56,7 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
     public function testThatGetTemplateRequestIsFormattedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-        $api->call()->emailTemplates->get( Management\EmailTemplates::TEMPLATE_VERIFY_EMAIL );
+        $api->call()->emailTemplates()->get( Management\EmailTemplates::TEMPLATE_VERIFY_EMAIL );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/email-templates/verify_email', $api->getHistoryUrl() );
@@ -79,7 +79,7 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
             'subject' => '__test_email_subject__',
         ];
 
-        $api->call()->emailTemplates->patch( Management\EmailTemplates::TEMPLATE_RESET_EMAIL, $patch_data );
+        $api->call()->emailTemplates()->patch( Management\EmailTemplates::TEMPLATE_RESET_EMAIL, $patch_data );
 
         $this->assertEquals( 'PATCH', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/email-templates/reset_email', $api->getHistoryUrl() );
@@ -99,7 +99,7 @@ class EmailTemplatesMockedTest extends \PHPUnit_Framework_TestCase
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->emailTemplates->create(
+        $api->call()->emailTemplates()->create(
             Management\EmailTemplates::TEMPLATE_WELCOME_EMAIL,
             true,
             'test@auth0.com',

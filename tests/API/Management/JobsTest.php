@@ -37,6 +37,15 @@ class JobsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\Jobs::class, $api->jobs );
+        $this->assertInstanceOf( Management\Jobs::class, $api->jobs() );
+        $api->jobs = null;
+        $this->assertInstanceOf( Management\Jobs::class, $api->jobs() );
+    }
+
     /**
      * @throws \Exception Should not be thrown in this test.
      */
@@ -44,7 +53,7 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->jobs->get( '__test_id__' );
+        $api->call()->jobs()->get( '__test_id__' );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/jobs/__test_id__', $api->getHistoryUrl() );
@@ -61,7 +70,7 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->jobs->getErrors( '__test_id__' );
+        $api->call()->jobs()->getErrors( '__test_id__' );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/jobs/__test_id__/errors', $api->getHistoryUrl() );
@@ -78,7 +87,7 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->jobs->importUsers(
+        $api->call()->jobs()->importUsers(
             self::TEST_IMPORT_USERS_JSON_PATH,
             '__test_conn_id__',
             [
@@ -129,7 +138,7 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->jobs->sendVerificationEmail( '__test_user_id__' );
+        $api->call()->jobs()->sendVerificationEmail( '__test_user_id__' );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/jobs/verification-email', $api->getHistoryUrl() );
@@ -171,7 +180,7 @@ class JobsTest extends ApiTests
             'external_id' => '__test_ext_id__',
         ];
 
-        $import_job_result = $api->jobs->importUsers(self::TEST_IMPORT_USERS_JSON_PATH, $conn_id, $import_user_params);
+        $import_job_result = $api->jobs()->importUsers(self::TEST_IMPORT_USERS_JSON_PATH, $conn_id, $import_user_params);
         sleep(0.2);
 
         $this->assertEquals( $conn_id, $import_job_result['connection_id'] );
@@ -179,7 +188,7 @@ class JobsTest extends ApiTests
         $this->assertEquals( '__test_ext_id__', $import_job_result['external_id'] );
         $this->assertEquals( 'users_import', $import_job_result['type'] );
 
-        $get_job_result = $api->jobs->get($import_job_result['id']);
+        $get_job_result = $api->jobs()->get($import_job_result['id']);
         sleep(0.2);
 
         $this->assertEquals( $conn_id, $get_job_result['connection_id'] );
@@ -204,7 +213,7 @@ class JobsTest extends ApiTests
 
         $create_user_data   = [
             'connection' => 'Username-Password-Authentication',
-            'email' => 'php-sdk-test-email-verification-job-' . uniqid() . '@auth0.com',
+            'email' => 'php-sdk-test-email-verification-job-'.uniqid().'@auth0.com',
             'password' => uniqid().uniqid().uniqid(),
         ];
         $create_user_result = $api->users->create( $create_user_data );
@@ -212,12 +221,12 @@ class JobsTest extends ApiTests
 
         $user_id = $create_user_result['user_id'];
 
-        $email_job_result = $api->jobs->sendVerificationEmail($user_id);
+        $email_job_result = $api->jobs()->sendVerificationEmail($user_id);
         sleep(0.2);
 
         $this->assertEquals( 'verification_email', $email_job_result['type'] );
 
-        $get_job_result = $api->jobs->get($email_job_result['id']);
+        $get_job_result = $api->jobs()->get($email_job_result['id']);
         sleep(0.2);
 
         $this->assertEquals( 'verification_email', $get_job_result['type'] );

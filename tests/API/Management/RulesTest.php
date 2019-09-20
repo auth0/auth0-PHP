@@ -30,7 +30,10 @@ class RulesTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        self::$api = self::getApi( 'rules' );
+        $env = self::getEnv();
+        $api = new Management($env['API_TOKEN'], $env['DOMAIN'], ['timeout' => 30]);
+
+        self::$api = $api->rules();
     }
 
     public function setUp()
