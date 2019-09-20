@@ -6,7 +6,6 @@ use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Management;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
-use Http\Client\Exception;
 
 /**
  * Class ClientsTest
@@ -15,14 +14,6 @@ use Http\Client\Exception;
  */
 class ClientsTest extends ApiTests
 {
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Clients::class, $api->clients );
-        $this->assertInstanceOf( Management\Clients::class, $api->clients() );
-        $api->clients = null;
-        $this->assertInstanceOf( Management\Clients::class, $api->clients() );
-    }
 
     /**
      * Expected telemetry value.
@@ -48,6 +39,15 @@ class ClientsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
+    public function testThatMethodAndPropertyReturnSameClass()
+    {
+        $api = new Management(uniqid(), uniqid());
+        $this->assertInstanceOf( Management\Clients::class, $api->clients );
+        $this->assertInstanceOf( Management\Clients::class, $api->clients() );
+        $api->clients = null;
+        $this->assertInstanceOf( Management\Clients::class, $api->clients() );
+    }
+
     /**
      * @throws \Exception
      */
@@ -55,7 +55,7 @@ class ClientsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->clients->getAll();
+        $api->call()->clients()->getAll();
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/clients', $api->getHistoryUrl() );
@@ -72,7 +72,7 @@ class ClientsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->clients->getAll( [ 'field1', 'field2' ], false, 1, 5, [ 'include_totals' => true ] );
+        $api->call()->clients()->getAll( [ 'field1', 'field2' ], false, 1, 5, [ 'include_totals' => true ] );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/clients', $api->getHistoryUrl() );
@@ -96,7 +96,7 @@ class ClientsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->clients->get( '__test_id__', [ 'field3', 'field4' ], true );
+        $api->call()->clients()->get( '__test_id__', [ 'field3', 'field4' ], true );
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/clients/__test_id__', $api->getHistoryUrl() );
@@ -117,7 +117,7 @@ class ClientsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->clients->delete( '__test_id__' );
+        $api->call()->clients()->delete( '__test_id__' );
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/clients/__test_id__', $api->getHistoryUrl() );
@@ -135,7 +135,7 @@ class ClientsTest extends ApiTests
         $api = new Management( uniqid(), uniqid() );
 
         try {
-            $api->clients->create( [ 'app_type' => '__test_app_type__' ] );
+            $api->clients()->create( [ 'app_type' => '__test_app_type__' ] );
             $exception_message = 'No exception caught';
         } catch (\Exception $e) {
             $exception_message = $e->getMessage();
@@ -151,7 +151,7 @@ class ClientsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->clients->create( [ 'name' => '__test_name__', 'app_type' => '__test_app_type__' ] );
+        $api->call()->clients()->create( [ 'name' => '__test_name__', 'app_type' => '__test_app_type__' ] );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/clients', $api->getHistoryUrl() );
@@ -175,7 +175,7 @@ class ClientsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->clients->update( '__test_id__', [ 'name' => '__test_new_name__' ] );
+        $api->call()->clients()->update( '__test_id__', [ 'name' => '__test_new_name__' ] );
 
         $this->assertEquals( 'PATCH', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/clients/__test_id__', $api->getHistoryUrl() );
@@ -210,16 +210,16 @@ class ClientsTest extends ApiTests
             'app_type' => 'regular_web',
         ];
 
-        $created_client = $api->clients->create($create_body);
-        sleep(0.2);
+        $created_client = $api->clients()->create($create_body);
+        sleep(0.3);
 
         $this->assertNotEmpty($created_client['client_id']);
         $this->assertEquals($create_body['name'], $created_client['name']);
         $this->assertEquals($create_body['app_type'], $created_client['app_type']);
 
         $created_client_id = $created_client['client_id'];
-        $got_entity        = $api->clients->get($created_client_id);
-        sleep(0.2);
+        $got_entity        = $api->clients()->get($created_client_id);
+        sleep(0.3);
 
         // Make sure what we got matches what we created.
         $this->assertEquals($created_client_id, $got_entity['client_id']);
@@ -229,15 +229,15 @@ class ClientsTest extends ApiTests
             'app_type' => 'native',
         ];
 
-        $updated_client = $api->clients->update($created_client_id, $update_body );
-        sleep(0.2);
+        $updated_client = $api->clients()->update($created_client_id, $update_body );
+        sleep(0.3);
 
         $this->assertEquals($created_client_id, $updated_client['client_id']);
         $this->assertEquals($update_body['name'], $updated_client['name']);
         $this->assertEquals($update_body['app_type'], $updated_client['app_type']);
 
-        $api->clients->delete($created_client_id);
-        sleep(0.2);
+        $api->clients()->delete($created_client_id);
+        sleep(0.3);
     }
 
     /**
@@ -256,8 +256,8 @@ class ClientsTest extends ApiTests
         $page_num = 3;
 
         // Get the second page of Clients with 1 per page (second result).
-        $paged_results = $api->clients->getAll($fields, true, $page_num, 1);
-        sleep(0.2);
+        $paged_results = $api->clients()->getAll($fields, true, $page_num, 1);
+        sleep(0.3);
 
         // Make sure we only have one result, as requested.
         $this->assertEquals(1, count($paged_results));
@@ -267,8 +267,8 @@ class ClientsTest extends ApiTests
 
         // Get many results (needs to include the created result if self::findCreatedItem === true).
         $many_results_per_page = 50;
-        $many_results          = $api->clients->getAll($fields, true, 0, $many_results_per_page);
-        sleep(0.2);
+        $many_results          = $api->clients()->getAll($fields, true, 0, $many_results_per_page);
+        sleep(0.3);
 
         // Make sure we have at least as many results as we requested.
         $this->assertLessThanOrEqual($many_results_per_page, count($many_results));
