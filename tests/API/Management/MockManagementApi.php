@@ -26,10 +26,10 @@ class MockManagementApi extends MockApi
 
     /**
      * MockManagementApi constructor.
-     *
      * @param array $responses Responses to be loaded, an array of GuzzleHttp\Psr7\Response objects.
+     * @param string $returnType
      */
-    public function __construct(array $responses = [])
+    public function __construct(array $responses = [], $returnType = 'object')
     {
         $guzzleOptions = [];
         if (count( $responses )) {
@@ -39,6 +39,6 @@ class MockManagementApi extends MockApi
             $guzzleOptions['handler'] = $handler;
         }
 
-        $this->client = new Management('__api_token__', 'api.test.local', $guzzleOptions, 'object');
+        $this->client = new Management('__api_token__', 'api.test.local', $guzzleOptions, $returnType);
     }
 }

@@ -58,34 +58,4 @@ class ApiTests extends \PHPUnit_Framework_TestCase
         self::$env = $env;
         return self::$env;
     }
-
-    /**
-     * Get a Management API token for specific scopes.
-     *
-     * @param array $env    Environment variables.
-     *
-     * @return string
-     */
-    protected static function getToken(array $env)
-    {
-        return $env['API_TOKEN'];
-    }
-
-    /**
-     * Return an API client used during self::setUpBeforeClass().
-     *
-     * @param string $endpoint   Endpoint name used for token generation.
-     *
-     * @return mixed
-     *
-     * @throws \Auth0\SDK\Exception\ApiException
-     */
-    protected static function getApi($endpoint)
-    {
-        sleep(2);
-        self::getEnv();
-        $token      = self::getToken(self::$env);
-        $api_client = new Management($token, self::$env['DOMAIN']);
-        return $api_client->$endpoint;
-    }
 }
