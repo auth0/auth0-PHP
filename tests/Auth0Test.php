@@ -292,4 +292,83 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
         $this->assertEquals( '__test_access_token__', $auth0->getAccessToken() );
         $this->assertEquals( $id_token, $auth0->getIdToken() );
     }
+
+    public function testThatGetLoginUrlUsesDefaultValues()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+
+        $parsed_url = parse_url( $auth0->getLoginUrl() );
+
+        $this->assertEquals( 'https', $parsed_url['scheme'] );
+        $this->assertEquals( '__test_domain__', $parsed_url['host'] );
+        $this->assertEquals( '/authorize', $parsed_url['path'] );
+
+        $url_query = explode( '&', $parsed_url['query'] );
+
+        $this->assertContains( 'scope=openid%20offline_access', $url_query );
+        $this->assertContains( 'response_type=code', $url_query );
+        $this->assertContains( 'redirect_uri=__test_redirect_uri__', $url_query );
+        $this->assertContains( 'client_id=__test_client_id__', $url_query );
+    }
+
+    public function testThatGetLoginUrlAddsValues()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+
+        $custom_params = [
+            'connection' => '__test_connection__',
+            'prompt' => 'none',
+            'audience' => '__test_audience__',
+            'state' => '__test_state__',
+        ];
+
+        $auth_url         = $auth0->getLoginUrl( $custom_params );
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertContains( 'redirect_uri=__test_redirect_uri__', $url_query );
+        $this->assertContains( 'client_id=__test_client_id__', $url_query );
+        $this->assertContains( 'connection=__test_connection__', $url_query );
+        $this->assertContains( 'prompt=none', $url_query );
+        $this->assertContains( 'audience=__test_audience__', $url_query );
+        $this->assertContains( 'state=__test_state__', $url_query );
+    }
+
+    public function testThatGetLoginUrlOverridesDefaultValues()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+
+        $override_params = [
+            'scope' => 'openid profile email',
+            'response_type' => 'id_token',
+            'response_mode' => 'form_post',
+        ];
+
+        $auth_url         = $auth0->getLoginUrl( $override_params );
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertContains( 'scope=openid%20profile%20email', $url_query );
+        $this->assertContains( 'response_type=id_token', $url_query );
+        $this->assertContains( 'response_mode=form_post', $url_query );
+        $this->assertContains( 'redirect_uri=__test_redirect_uri__', $url_query );
+        $this->assertContains( 'client_id=__test_client_id__', $url_query );
+    }
+
+    public function testThatGetLoginUrlGeneratesState()
+    {
+        $custom_config = self::$baseConfig;
+        unset( $custom_config['state_handler'] );
+
+        $auth0 = new Auth0( $custom_config );
+
+        // Ignore cookie error triggered when session is started.
+        // phpcs:ignore
+        $auth_url = @$auth0->getLoginUrl();
+
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertContains( 'state='.$_SESSION['auth0__webauth_state'], $url_query );
+    }
 }
