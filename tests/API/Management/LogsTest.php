@@ -56,7 +56,7 @@ class LogsTest extends ApiTests
             'fields' => '_id,log_id,date',
             'include_fields' => true,
         ]);
-        usleep(700000);
+        usleep(150000);
         $this->assertNotEmpty($search_results);
         $this->assertNotEmpty($search_results[0]['_id']);
         $this->assertNotEmpty($search_results[0]['log_id']);
@@ -65,7 +65,7 @@ class LogsTest extends ApiTests
 
         // Test getting a single log result with a valid ID from above.
         $one_log = self::$api->get($search_results[0]['log_id']);
-        usleep(700000);
+        usleep(150000);
         $this->assertNotEmpty($one_log);
         $this->assertEquals($search_results[0]['log_id'], $one_log['log_id']);
     }
@@ -90,7 +90,7 @@ class LogsTest extends ApiTests
             // Include totals to check pagination.
             'include_totals' => true,
         ]);
-        usleep(700000);
+        usleep(150000);
 
         $this->assertCount($expected_count, $search_results['logs']);
         $this->assertEquals($expected_count, $search_results['length']);
