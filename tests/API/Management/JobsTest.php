@@ -38,7 +38,7 @@ class JobsTest extends ApiTests
     public static function setUpBeforeClass()
     {
         self::$testImportUsersJsonPath = AUTH0_PHP_TEST_JSON_DIR.'test-import-users-file.json';
-        $infoHeadersData = new InformationHeaders;
+        $infoHeadersData               = new InformationHeaders;
         $infoHeadersData->setCorePackage();
         self::$expectedTelemetry = $infoHeadersData->build();
     }

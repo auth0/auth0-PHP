@@ -54,8 +54,8 @@ class ResourceServersTest extends ApiTests
      */
     public static function setUpBeforeClass()
     {
-        $env   = self::getEnv();
-        $api   = new Management($env['API_TOKEN'], $env['DOMAIN'], ['timeout' => 30]);
+        $env = self::getEnv();
+        $api = new Management($env['API_TOKEN'], $env['DOMAIN'], ['timeout' => 30]);
 
         self::$api              = $api->resourceServers();
         self::$serverIdentifier = 'TEST_PHP_SDK_ID_'.uniqid();

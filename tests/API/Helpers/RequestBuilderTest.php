@@ -188,30 +188,30 @@ class RequestBuilderTest extends ApiTests
         $response = [ new Response( 200, [ 'Content-Type' => 'application/json' ], '{"key":"__test_value__"}' ) ];
 
         // Test default return type matches "body".
-        $api = new MockManagementApi( $response, null );
+        $api             = new MockManagementApi( $response, [ 'return_type' => null ] );
         $results_default = $api->call()->tenants()->get();
         $this->assertTrue( is_array( $results_default ) );
         $this->assertArrayHasKey( 'key', $results_default );
         $this->assertEquals( '__test_value__', $results_default['key'] );
 
         // Test that "body" return type gives us the same result.
-        $api = new MockManagementApi( $response, 'body' );
+        $api          = new MockManagementApi( $response, [ 'return_type' => 'body' ] );
         $results_body = $api->call()->tenants()->get();
         $this->assertEquals( $results_default, $results_body );
 
         // Test that "headers" return type contains expected keys.
-        $api = new MockManagementApi( $response, 'headers' );
+        $api             = new MockManagementApi( $response, [ 'return_type' => 'headers' ] );
         $results_headers = $api->call()->tenants()->get();
         $this->assertArrayHasKey( 'Content-Type', $results_headers );
         $this->assertEquals( 'application/json', $results_headers['Content-Type'][0] );
 
         // Test that "object" return type returns the correct object type.
-        $api = new MockManagementApi( $response, 'object' );
+        $api            = new MockManagementApi( $response, [ 'return_type' => 'object' ] );
         $results_object = $api->call()->tenants()->get();
         $this->assertInstanceOf( 'GuzzleHttp\Psr7\Response', $results_object );
 
         // Test that an invalid return type throws an error.
-        $api = new MockManagementApi( $response, '__invalid_return_type__' );
+        $api = new MockManagementApi( $response, [ 'return_type' => '__invalid_return_type__' ] );
         try {
             $api->call()->tenants()->get();
             $error_msg = 'No exception caught';

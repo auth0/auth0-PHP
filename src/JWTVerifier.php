@@ -216,8 +216,8 @@ class JWTVerifier
                 throw new CoreException('We cannot trust on a token issued by `'.$body_decoded->iss.'`');
             }
 
-            $jwks_url                   = $body_decoded->iss.$this->jwks_path;
-            $secret[$head_decoded->kid] = $this->JWKFetcher->requestJwkX5c($jwks_url, $head_decoded->kid);
+            $jwks_url = $body_decoded->iss.$this->jwks_path;
+            $secret   = $this->JWKFetcher->getFormatted($jwks_url);
         }
 
         try {

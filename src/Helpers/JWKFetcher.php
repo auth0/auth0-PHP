@@ -63,7 +63,42 @@ class JWKFetcher
     }
 
     /**
+     * Get a JWKS from a URL and format for JWT::decode().
+     *
+     * @param string $jwks_url Full URL to the JWKS.
+     *
+     * @return array
+     */
+    public function getFormatted($jwks_url)
+    {
+        $keys = $this->cache->get($jwks_url);
+        if (is_array($keys) && ! empty($keys)) {
+            return $keys;
+        }
+
+        $jwks = $this->requestJwks($jwks_url);
+
+        if (empty( $jwks ) || empty( $jwks['keys'] )) {
+            return [];
+        }
+
+        $keys = [];
+        foreach ($jwks['keys'] as $key) {
+            if (empty( $key['kid'] ) || empty( $key['x5c'] ) || empty( $key['x5c'][0] )) {
+                continue;
+            }
+
+            $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
+        }
+
+        $this->cache->set($jwks_url, $keys);
+        return $keys;
+    }
+
+    /**
      * Fetch x509 cert for RS256 token decoding.
+     *
+     * TODO: Deprecate, use $this->getFormatted()
      *
      * @param string      $jwks_url URL to the JWKS.
      * @param string|null $kid      Key ID to use; returns first JWK if $kid is null or empty.
@@ -116,6 +151,8 @@ class JWKFetcher
     /**
      * Get a JWK from a JWKS using a key ID, if provided.
      *
+     * TODO: Deprecate
+     *
      * @param array       $jwks JWKS to parse.
      * @param null|string $kid  Key ID to return; returns first JWK if $kid is null or empty.
      *
@@ -144,6 +181,8 @@ class JWKFetcher
 
     /**
      * Check if an array within an array has a non-empty first item.
+     *
+     * TODO: Deprecate
      *
      * @param array|null $array Main array to check.
      * @param string     $key   Key pointing to a sub-array.
