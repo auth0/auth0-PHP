@@ -412,36 +412,58 @@ class Auth0
     public function login($state = null, $connection = null, array $additionalParams = [])
     {
         $params = [];
-        if ($this->audience) {
-            $params['audience'] = $this->audience;
-        }
 
-        if ($this->scope) {
-            $params['scope'] = $this->scope;
-        }
-
-        if ($state === null) {
-            $state = $this->stateHandler->issue();
-        } else {
+        if ($state) {
             $this->stateHandler->store($state);
+            $params['state'] = $state;
         }
 
-        $params['response_mode'] = $this->responseMode;
+        if ($connection) {
+            $params['connection'] = $connection;
+        }
 
         if (! empty($additionalParams) && is_array($additionalParams)) {
             $params = array_replace($params, $additionalParams);
         }
 
-        $url = $this->authentication->get_authorize_link(
-            $this->responseType,
-            $this->redirectUri,
-            $connection,
-            $state,
-            $params
-        );
+        $login_url = $this->getLoginUrl($params);
 
-        header('Location: '.$url);
+        header('Location: '.$login_url);
         exit;
+    }
+
+    /**
+     * Build the login URL.
+     *
+     * @param array $params Array of authorize parameters to use.
+     *
+     * @return string
+     */
+    public function getLoginUrl(array $params = [])
+    {
+        $default_params = [
+            'scope' => $this->scope,
+            'audience' => $this->audience,
+            'response_mode' => $this->responseMode,
+            'response_type' => $this->responseType,
+            'redirect_uri' => $this->redirectUri,
+        ];
+
+        $auth_params = array_replace( $default_params, $params );
+
+        if (empty( $auth_params['state'] )) {
+            $auth_params['state'] = $this->stateHandler->issue();
+        }
+
+        $auth_params = array_filter( $auth_params );
+
+        return $this->authentication->get_authorize_link(
+            $auth_params['response_type'],
+            $auth_params['redirect_uri'],
+            null,
+            null,
+            $auth_params
+        );
     }
 
     /**
