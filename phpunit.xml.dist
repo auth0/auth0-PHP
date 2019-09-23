@@ -1,7 +1,6 @@
 <phpunit
   colors="true"
   verbose="true"
-  stopOnFailure="true"
   bootstrap="./tests/bootstrap.php">
   <testsuites>
     <testsuite name="Auth0 PHP SDK Test Suite">
