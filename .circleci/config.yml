@@ -58,7 +58,6 @@ jobs:
             fi
           when: always
 
-# Each workflow represents a Github check
 workflows:
   build-and-test:
     jobs:
