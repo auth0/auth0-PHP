@@ -25,20 +25,12 @@ class MockManagementApi extends MockApi
     protected $client;
 
     /**
-     * MockManagementApi constructor.
-     * @param array $responses Responses to be loaded, an array of GuzzleHttp\Psr7\Response objects.
-     * @param string $returnType
+     * @param array $guzzleOptions
+     * @param array $config
      */
-    public function __construct(array $responses = [], $returnType = 'object')
+    public function setClient(array $guzzleOptions, array $config = [])
     {
-        $guzzleOptions = [];
-        if (count( $responses )) {
-            $mock    = new MockHandler($responses);
-            $handler = HandlerStack::create($mock);
-            $handler->push( Middleware::history($this->requestHistory) );
-            $guzzleOptions['handler'] = $handler;
-        }
-
+        $returnType   = isset( $config['return_type'] ) ? $config['return_type'] : null;
         $this->client = new Management('__api_token__', 'api.test.local', $guzzleOptions, $returnType);
     }
 }

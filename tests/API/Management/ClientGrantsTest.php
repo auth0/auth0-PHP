@@ -44,7 +44,7 @@ class ClientGrantsTest extends ApiTests
     public static function setUpBeforeClass()
     {
         self::getEnv();
-        $api = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
+        $api       = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
         self::$api = $api->clientGrants();
 
         $create_data = [

@@ -130,7 +130,7 @@ class RulesTest extends ApiTests
      */
     public function testGetAllPagination()
     {
-        $api = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
+        $api           = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
         $paged_results = $api->rules()->getAll(null, null, null, 0, 2);
         usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
         $this->assertCount(2, $paged_results);
@@ -152,7 +152,7 @@ class RulesTest extends ApiTests
      */
     public function testCreateUpdateDelete()
     {
-        $api = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
+        $api         = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
         $create_data = [
             'name' => 'test-create-rule-'.rand(),
             'script' => 'function (user, context, callback) { callback(null, user, context); }',

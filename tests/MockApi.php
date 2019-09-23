@@ -3,6 +3,10 @@ namespace Auth0\Tests;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
+use Auth0\SDK\Helpers\JWKFetcher;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 
 /**
@@ -10,7 +14,7 @@ use GuzzleHttp\Psr7\Request;
  *
  * @package Auth0\Tests
  */
-class MockApi
+abstract class MockApi
 {
 
     /**
@@ -30,14 +34,41 @@ class MockApi
     /**
      * Management API object.
      *
-     * @var Management|Authentication
+     * @var Management|Authentication|JWKFetcher
      */
     protected $client;
 
     /**
+     * MockApi constructor.
+     *
+     * @param array $responses Array of GuzzleHttp\Psr7\Response objects.
+     * @param array $config Additional optional configuration needed for mocked class.
+     */
+    public function __construct(array $responses = [], array $config = [])
+    {
+        $guzzleOptions = [];
+        if (count( $responses )) {
+            $mock    = new MockHandler($responses);
+            $handler = HandlerStack::create($mock);
+            $handler->push( Middleware::history($this->requestHistory) );
+            $guzzleOptions['handler'] = $handler;
+        }
+
+        $this->setClient( $guzzleOptions, $config );
+    }
+
+    /**
+     * @param array $guzzleOptions
+     * @param array $config
+     *
+     * @return mixed
+     */
+    abstract public function setClient(array $guzzleOptions, array $config = []);
+
+    /**
      * Return the endpoint being used.
      *
-     * @return Management|Authentication
+     * @return Management|Authentication|JWKFetcher
      */
     public function call()
     {
