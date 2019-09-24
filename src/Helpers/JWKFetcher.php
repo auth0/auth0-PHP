@@ -63,13 +63,13 @@ class JWKFetcher
     }
 
     /**
-     * Get a JWKS from a URL and format for JWT::decode().
+     * Gets an array of keys from the JWKS as kid => x5c.
      *
      * @param string $jwks_url Full URL to the JWKS.
      *
      * @return array
      */
-    public function getFormatted($jwks_url)
+    public function getKeys($jwks_url)
     {
         $keys = $this->cache->get($jwks_url);
         if (is_array($keys) && ! empty($keys)) {
