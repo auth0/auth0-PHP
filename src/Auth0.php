@@ -414,7 +414,6 @@ class Auth0
         $params = [];
 
         if ($state) {
-            $this->stateHandler->store($state);
             $params['state'] = $state;
         }
 
@@ -450,12 +449,13 @@ class Auth0
         ];
 
         $auth_params = array_replace( $default_params, $params );
+        $auth_params = array_filter( $auth_params );
 
         if (empty( $auth_params['state'] )) {
             $auth_params['state'] = $this->stateHandler->issue();
+        } else {
+            $this->stateHandler->store($auth_params['state']);
         }
-
-        $auth_params = array_filter( $auth_params );
 
         return $this->authentication->get_authorize_link(
             $auth_params['response_type'],
