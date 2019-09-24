@@ -19,7 +19,7 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
         $test_jwks = file_get_contents( AUTH0_PHP_TEST_JSON_DIR.'localhost--well-known-jwks-json.json' );
         $jwks      = new MockJwks( [ new Response( 200, [ 'Content-Type' => 'application/json' ], $test_jwks ) ] );
 
-        $jwks_formatted = $jwks->call()->getFormatted( uniqid() );
+        $jwks_formatted = $jwks->call()->getKeys( uniqid() );
 
         $this->assertCount( 2, $jwks_formatted );
         $this->assertArrayHasKey( '__test_kid_1__', $jwks_formatted );
@@ -44,10 +44,10 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
             new Response( 200, [ 'Content-Type' => 'application/json' ], '{keys:[]}' ),
         ] );
 
-        $jwks_formatted = $jwks->call()->getFormatted( uniqid() );
+        $jwks_formatted = $jwks->call()->getKeys( uniqid() );
         $this->assertEquals( [], $jwks_formatted );
 
-        $jwks_formatted = $jwks->call()->getFormatted( uniqid() );
+        $jwks_formatted = $jwks->call()->getKeys( uniqid() );
         $this->assertEquals( [], $jwks_formatted );
     }
 
@@ -65,11 +65,11 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $jwks_formatted_1 = $jwks->call()->getFormatted( '__test_url__' );
+        $jwks_formatted_1 = $jwks->call()->getKeys( '__test_url__' );
         $this->assertArrayHasKey( 'abc', $jwks_formatted_1 );
         $this->assertContains( '123', $jwks_formatted_1['abc'] );
 
-        $jwks_formatted_2 = $jwks->call()->getFormatted( '__test_url__' );
+        $jwks_formatted_2 = $jwks->call()->getKeys( '__test_url__' );
         $this->assertEquals( $jwks_formatted_1, $jwks_formatted_2 );
     }
 

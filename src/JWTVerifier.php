@@ -217,7 +217,7 @@ class JWTVerifier
             }
 
             $jwks_url = $body_decoded->iss.$this->jwks_path;
-            $secret   = $this->JWKFetcher->getFormatted($jwks_url);
+            $secret   = $this->JWKFetcher->getKeys($jwks_url);
         }
 
         try {
