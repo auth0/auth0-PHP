@@ -98,7 +98,7 @@ class JWKFetcher
     /**
      * Fetch x509 cert for RS256 token decoding.
      *
-     * TODO: Deprecate, use $this->getFormatted()
+     * @deprecated 5.6.0, use $this->getKeys().
      *
      * @param string      $jwks_url URL to the JWKS.
      * @param string|null $kid      Key ID to use; returns first JWK if $kid is null or empty.
@@ -151,7 +151,7 @@ class JWKFetcher
     /**
      * Get a JWK from a JWKS using a key ID, if provided.
      *
-     * TODO: Deprecate
+     * @deprecated 5.6.0, use $this->getKeys().
      *
      * @param array       $jwks JWKS to parse.
      * @param null|string $kid  Key ID to return; returns first JWK if $kid is null or empty.
@@ -182,7 +182,7 @@ class JWKFetcher
     /**
      * Check if an array within an array has a non-empty first item.
      *
-     * TODO: Deprecate
+     * @deprecated 5.6.0, not used.
      *
      * @param array|null $array Main array to check.
      * @param string     $key   Key pointing to a sub-array.
