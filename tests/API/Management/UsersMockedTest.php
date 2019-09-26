@@ -102,6 +102,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
 
         $body = $api->getHistoryBody();
         $this->assertArrayHasKey( 'given_name', $body );
@@ -190,6 +191,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
 
         $body = $api->getHistoryBody();
         $this->assertArrayHasKey( 'connection', $body );
@@ -465,6 +467,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
 
         $body = $api->getHistoryBody();
         $this->assertArrayHasKey( 'provider', $body );
@@ -641,6 +644,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
 
         $body = $api->getHistoryBody();
         $this->assertArrayHasKey( 'roles', $body );
@@ -890,6 +894,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
 
         $body = $api->getHistoryBody();
         $this->assertArrayHasKey( 'permissions', $body );
@@ -1080,6 +1085,7 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
     }
 
     /**
@@ -1125,5 +1131,6 @@ class UsersMockedTest extends \PHPUnit_Framework_TestCase
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
     }
 }

@@ -274,6 +274,10 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
         $this->assertEmpty( $api->getHistoryQuery() );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
     }
 
     /**
@@ -294,6 +298,10 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
         $this->assertContains( 'https://api.test.local/api/v2/connections/'.$id.'/users', $api->getHistoryUrl() );
         $this->assertEquals( 'email='.$email, $api->getHistoryQuery() );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
     }
 
     /**
@@ -317,6 +325,11 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
         $this->assertEmpty( $api->getHistoryQuery() );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
     }
 
     /**
@@ -369,5 +382,10 @@ class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'PATCH', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
         $this->assertEmpty( $api->getHistoryQuery() );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
     }
 }
