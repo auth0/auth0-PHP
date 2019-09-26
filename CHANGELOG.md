@@ -4,7 +4,7 @@
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.1...5.6.0)
 
 **Closed issues**
-- `Auth0\SDK\Exception\CoreException` Invalid domain when trying to run unit tests with Codeception 3.1.0 [\#358](https://github.com/auth0/auth0-PHP/issues/358)
+- [Auth0\SDK\Exception\CoreException] Invalid domain when trying to run unit tests with Codeception 3.1.0 [\#358](https://github.com/auth0/auth0-PHP/issues/358)
 - JWT Verification fails everytime [\#356](https://github.com/auth0/auth0-PHP/issues/356)
 - Bulk User Imports - I can't Use `upsert` as a paramater for the `importUsers` feature [\#353](https://github.com/auth0/auth0-PHP/issues/353)
 
@@ -14,6 +14,7 @@
 - Add additional API params to Jobs > importUsers [\#354](https://github.com/auth0/auth0-PHP/pull/354) ([pinodex](https://github.com/pinodex))
 
 **Deprecated**
+- Deprecated unused JWKFetcher methods [\#373](https://github.com/auth0/auth0-PHP/pull/373) ([joshcanhelp](https://github.com/joshcanhelp))
 - Deprecate magic __call method on RequestBuilder class [\#366](https://github.com/auth0/auth0-PHP/pull/366) ([joshcanhelp](https://github.com/joshcanhelp))
 - Deprecate Management properties; add lazy-load methods [\#363](https://github.com/auth0/auth0-PHP/pull/363) ([joshcanhelp](https://github.com/joshcanhelp))
 - Deprecate and stop using magic call method on ApiClient [\#362](https://github.com/auth0/auth0-PHP/pull/362) ([joshcanhelp](https://github.com/joshcanhelp))
