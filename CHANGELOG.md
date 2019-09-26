@@ -1,5 +1,28 @@
 # Change Log
 
+## [5.6.0](https://github.com/auth0/auth0-PHP/tree/5.6.0) (2019-09-26)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.1...5.6.0)
+
+**Closed issues**
+- `Auth0\SDK\Exception\CoreException` Invalid domain when trying to run unit tests with Codeception 3.1.0 [\#358](https://github.com/auth0/auth0-PHP/issues/358)
+- JWT Verification fails everytime [\#356](https://github.com/auth0/auth0-PHP/issues/356)
+- Bulk User Imports - I can't Use `upsert` as a paramater for the `importUsers` feature [\#353](https://github.com/auth0/auth0-PHP/issues/353)
+
+**Added**
+- Add \Auth0\SDK\Auth0::getLoginUrl() method and switch login() to use it [\#371](https://github.com/auth0/auth0-PHP/pull/371) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add JWKFetcher::getFormatted() method and switch validator to use [\#369](https://github.com/auth0/auth0-PHP/pull/369) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add additional API params to Jobs > importUsers [\#354](https://github.com/auth0/auth0-PHP/pull/354) ([pinodex](https://github.com/pinodex))
+
+**Deprecated**
+- Deprecate magic __call method on RequestBuilder class [\#366](https://github.com/auth0/auth0-PHP/pull/366) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate Management properties; add lazy-load methods [\#363](https://github.com/auth0/auth0-PHP/pull/363) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate and stop using magic call method on ApiClient [\#362](https://github.com/auth0/auth0-PHP/pull/362) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate addPathVariable and dump methods on RequestBuilder [\#361](https://github.com/auth0/auth0-PHP/pull/361) ([joshcanhelp](https://github.com/joshcanhelp))
+- Deprecate TokenGenerator class [\#360](https://github.com/auth0/auth0-PHP/pull/360) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix boolean form parameters not sending as strings [\#357](https://github.com/auth0/auth0-PHP/pull/357) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [5.5.1](https://github.com/auth0/auth0-PHP/tree/5.5.1) (2019-07-15)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.0...5.5.1)
 
