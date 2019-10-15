@@ -43,15 +43,6 @@ class JobsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Jobs::class, $api->jobs );
-        $this->assertInstanceOf( Management\Jobs::class, $api->jobs() );
-        $api->jobs = null;
-        $this->assertInstanceOf( Management\Jobs::class, $api->jobs() );
-    }
-
     /**
      * @throws \Exception Should not be thrown in this test.
      */
@@ -176,7 +167,7 @@ class JobsTest extends ApiTests
 
         // Get a single, active database connection.
         $default_db_name       = 'Username-Password-Authentication';
-        $get_connection_result = $api->connections->getAll( 'auth0', ['id'], true, 0, 1, ['name' => $default_db_name] );
+        $get_connection_result = $api->connections()->getAll( 'auth0', ['id'], true, 0, 1, ['name' => $default_db_name] );
         usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
 
         $conn_id            = $get_connection_result[0]['id'];
@@ -222,7 +213,7 @@ class JobsTest extends ApiTests
             'email' => 'php-sdk-test-email-verification-job-'.uniqid().'@auth0.com',
             'password' => uniqid().uniqid().uniqid(),
         ];
-        $create_user_result = $api->users->create( $create_user_data );
+        $create_user_result = $api->users()->create( $create_user_data );
         usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
 
         $user_id = $create_user_result['user_id'];
@@ -237,7 +228,7 @@ class JobsTest extends ApiTests
 
         $this->assertEquals( 'verification_email', $get_job_result['type'] );
 
-        $api->users->delete( $user_id );
+        $api->users()->delete( $user_id );
         usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     }
 }

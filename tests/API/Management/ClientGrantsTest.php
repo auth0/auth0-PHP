@@ -63,16 +63,6 @@ class ClientGrantsTest extends ApiTests
         parent::setUp();
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\ClientGrants::class, $api->client_grants );
-        $this->assertInstanceOf( Management\ClientGrants::class, $api->clientGrants() );
-        $api->client_grants = null;
-        $this->assertInstanceOf( Management\ClientGrants::class, $api->clientGrants() );
-    }
-
-
     /**
      * @throws CoreException
      * @throws \Exception
