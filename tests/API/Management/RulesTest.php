@@ -33,15 +33,6 @@ class RulesTest extends ApiTests
         self::getEnv();
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Rules::class, $api->rules );
-        $this->assertInstanceOf( Management\Rules::class, $api->rules() );
-        $api->rules = null;
-        $this->assertInstanceOf( Management\Rules::class, $api->rules() );
-    }
-
     /**
      * Test that get methods work as expected.
      *

@@ -39,15 +39,6 @@ class ClientsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Clients::class, $api->clients );
-        $this->assertInstanceOf( Management\Clients::class, $api->clients() );
-        $api->clients = null;
-        $this->assertInstanceOf( Management\Clients::class, $api->clients() );
-    }
-
     /**
      * @throws \Exception
      */
