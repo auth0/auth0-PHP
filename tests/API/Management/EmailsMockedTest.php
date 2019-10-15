@@ -2,17 +2,18 @@
 
 namespace Auth0\Tests\API\Management;
 
-use Auth0\Tests\Traits\ErrorHelpers;
 use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Management;
+use Auth0\Tests\Traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class EmailsMockedTest
  *
  * @package Auth0\Tests\API\Management
  */
-class EmailsMockedTest extends \PHPUnit_Framework_TestCase
+class EmailsMockedTest extends TestCase
 {
 
     use ErrorHelpers;
