@@ -3,13 +3,14 @@ namespace Auth0\Tests\Api\Helpers;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Helpers\ApiClient;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class InformationHeadersTest
  *
  * @package Auth0\Tests\Api\Helpers
  */
-class InformationHeadersTest extends \PHPUnit_Framework_TestCase
+class InformationHeadersTest extends TestCase
 {
 
     /**

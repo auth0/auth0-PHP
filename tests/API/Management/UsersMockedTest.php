@@ -1,22 +1,20 @@
 <?php
 namespace Auth0\Tests\API\Management;
 
+use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Management;
-use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 use Auth0\Tests\Traits\ErrorHelpers;
-
-use Auth0\SDK\API\Helpers\InformationHeaders;
-
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class UsersMockedTest.
  *
  * @package Auth0\Tests\API\Management
  */
-class UsersMockedTest extends \PHPUnit_Framework_TestCase
+class UsersMockedTest extends TestCase
 {
 
     use ErrorHelpers;

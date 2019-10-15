@@ -3,8 +3,8 @@ namespace Auth0\Tests\API;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\Tests\Traits\ErrorHelpers;
-use Auth0\SDK\API\Management;
 use josegonzalez\Dotenv\Loader;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ApiTests.
@@ -12,7 +12,7 @@ use josegonzalez\Dotenv\Loader;
  *
  * @package Auth0\Tests\API
  */
-class ApiTests extends \PHPUnit_Framework_TestCase
+class ApiTests extends TestCase
 {
     use ErrorHelpers;
 

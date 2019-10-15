@@ -1,17 +1,18 @@
 <?php
 namespace Auth0\Tests\API\Management;
 
-use Auth0\Tests\Traits\ErrorHelpers;
 use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Management;
+use Auth0\Tests\Traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ConnectionsTestMocked.
  *
  * @package Auth0\Tests\API\Management
  */
-class ConnectionsTestMocked extends \PHPUnit_Framework_TestCase
+class ConnectionsTestMocked extends TestCase
 {
 
     use ErrorHelpers;
