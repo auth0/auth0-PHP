@@ -423,22 +423,4 @@ class TokenTest extends TestCase
         $this->assertObjectHasAttribute('sub', $decoded);
         $this->assertEquals($expected_sub, $decoded->sub);
     }
-
-    /**
-     * Test the deprecated Auth0JWT::decode() method.
-     *
-     * @return void
-     */
-    public function testDeprecatedTestTokenGenerationDecode()
-    {
-        $token_generator = new TokenGenerator( self::CLIENT_ID, self::CLIENT_SECRET );
-        $jwt             = $token_generator->generate(['users' => ['actions' => ['read']]]);
-        $decoded         = Auth0JWT::decode($jwt, self::CLIENT_ID, self::CLIENT_SECRET);
-        $this->assertObjectHasAttribute('aud', $decoded);
-        $this->assertEquals(self::CLIENT_ID, $decoded->aud);
-        $this->assertObjectHasAttribute('scopes', $decoded);
-        $this->assertObjectHasAttribute('users', $decoded->scopes);
-        $this->assertObjectHasAttribute('actions', $decoded->scopes->users);
-        $this->assertArraySubset(['read'], $decoded->scopes->users->actions);
-    }
 }
