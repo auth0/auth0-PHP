@@ -3,8 +3,9 @@ namespace Auth0\Tests\Helpers\Cache;
 
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Helpers\Cache\FileSystemCacheHandler;
+use PHPUnit\Framework\TestCase;
 
-class CacheTest extends \PHPUnit_Framework_TestCase
+class CacheTest extends TestCase
 {
     public function testNoCache()
     {

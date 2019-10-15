@@ -2,13 +2,14 @@
 namespace Auth0\Tests\Api\Helpers\State;
 
 use Auth0\SDK\API\Helpers\State\DummyStateHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class DummyStateHandlerTest
  *
  * @package Auth0\Tests\Api\Helpers\State
  */
-class DummyStateHandlerTest extends \PHPUnit_Framework_TestCase
+class DummyStateHandlerTest extends TestCase
 {
 
     /**

@@ -1,21 +1,22 @@
 <?php
 namespace Auth0\Tests\Api\Helpers;
 
-use Auth0\SDK\API\Helpers\TokenGenerator;
-use Auth0\SDK\JWTVerifier;
 use Auth0\SDK\Auth0JWT;
+use Auth0\SDK\API\Helpers\TokenGenerator;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\Tests\Traits\ErrorHelpers;
 use Auth0\SDK\Helpers\JWKFetcher;
+use Auth0\SDK\JWTVerifier;
+use Auth0\Tests\Traits\ErrorHelpers;
 use Firebase\JWT\JWT;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TokenTest
  *
  * @package Auth0\Tests\Api\Helpers
  */
-class TokenTest extends \PHPUnit_Framework_TestCase
+class TokenTest extends TestCase
 {
 
     use ErrorHelpers;

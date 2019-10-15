@@ -2,9 +2,9 @@
 namespace Auth0\Tests\API\Authentication;
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\API\Helpers\InformationHeaders;
+use PHPUnit\Framework\TestCase;
 
-class UrlBuildersTest extends \PHPUnit_Framework_TestCase
+class UrlBuildersTest extends TestCase
 {
 
     public function testThatBasicAuthorizeLinkIsBuiltCorrectly()

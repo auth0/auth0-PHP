@@ -1,17 +1,18 @@
 <?php
 namespace Auth0\Tests\Helpers;
 
-use \Auth0\SDK\Helpers\Cache\CacheHandler;
+use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\Helpers\Cache\FileSystemCacheHandler;
-use \Auth0\SDK\Helpers\JWKFetcher;
-use \GuzzleHttp\Psr7\Response;
+use Auth0\SDK\Helpers\JWKFetcher;
+use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class JWKFetcherTest.
  *
  * @package Auth0\Tests\Helpers\Cache
  */
-class JWKFetcherTest extends \PHPUnit_Framework_TestCase
+class JWKFetcherTest extends TestCase
 {
 
     public function testThatGetFormattedReturnsKeys()
@@ -217,8 +218,8 @@ class JWKFetcherTest extends \PHPUnit_Framework_TestCase
 
         // Test that the set method was called with the correct parameters.
         $set_invocations = $set_spy->getInvocations();
-        $this->assertEquals( $jwks_url.'|'.$kid, $set_invocations[0]->parameters[0] );
-        $this->assertEquals( $pem_not_cached, $set_invocations[0]->parameters[1] );
+        $this->assertEquals( $jwks_url.'|'.$kid, $set_invocations[0]->getParameters()[0] );
+        $this->assertEquals( $pem_not_cached, $set_invocations[0]->getParameters()[1] );
 
         // Test that the get method was only called twice.
         $this->assertEquals( 2, $get_spy->getInvocationCount() );
