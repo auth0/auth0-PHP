@@ -1,6 +1,10 @@
 <?php
+declare(strict_types=1);
+
 namespace Auth0\SDK\API;
 
+use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Management\Blacklists;
 use Auth0\SDK\API\Management\Clients;
 use Auth0\SDK\API\Management\ClientGrants;
@@ -21,108 +25,150 @@ use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
 
-use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
-
+/**
+ * Class Management
+ *
+ * @package Auth0\SDK\API
+ */
 class Management
 {
 
     /**
+     * Instance of Auth0\SDK\API\Helpers\ApiClient
+     *
      * @var ApiClient
      */
     private $apiClient;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Blacklists
+     *
      * @var Blacklists
      */
     private $blacklists;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Clients
+     *
      * @var Clients
      */
     private $clients;
 
     /**
+     * Instance of Auth0\SDK\API\Management\ClientGrants
+     *
      * @var ClientGrants
      */
-    private $client_grants;
+    private $clientGrants;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Connections
+     *
      * @var Connections
      */
     private $connections;
 
     /**
+     * Instance of Auth0\SDK\API\Management\DeviceCredentials
+     *
      * @var DeviceCredentials
      */
     private $deviceCredentials;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Emails
+     *
      * @var Emails
      */
     private $emails;
 
     /**
+     * Instance of Auth0\SDK\API\Management\EmailTemplates
+     *
      * @var EmailTemplates
      */
     private $emailTemplates;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Jobs
+     *
      * @var Jobs
      */
     private $jobs;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Grants
+     *
      * @var Grants
      */
     private $grants;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Logs
+     *
      * @var Logs
      */
     private $logs;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Roles
+     *
      * @var Roles
      */
     private $roles;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Rules
+     *
      * @var Rules
      */
     private $rules;
 
     /**
+     * Instance of Auth0\SDK\API\Management\ResourceServers
+     *
      * @var ResourceServers
      */
-    private $resource_servers;
+    private $resourceServers;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Stats
+     *
      * @var Stats
      */
     private $stats;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Tenants
+     *
      * @var Tenants
      */
     private $tenants;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Tickets
+     *
      * @var Tickets
      */
     private $tickets;
 
     /**
+     * Instance of Auth0\SDK\API\Management\UserBlocks
+     *
      * @var UserBlocks
      */
     private $userBlocks;
 
     /**
+     * Instance of Auth0\SDK\API\Management\Users
+     *
      * @var Users
      */
     private $users;
 
     /**
+     * Instance of Auth0\SDK\API\Management\UsersByEmail
+     *
      * @var UsersByEmail
      */
     private $usersByEmail;
@@ -130,10 +176,13 @@ class Management
     /**
      * Management constructor.
      *
-     * @param string      $token
-     * @param string      $domain
-     * @param array       $guzzleOptions
-     * @param string|null $returnType
+     * @param string      $token         Access token for the Management API.
+     * @param string      $domain        Management API domain.
+     * @param array       $guzzleOptions Options for the Guzzle HTTP library.
+     * @param null|string $returnType    Return type for the HTTP request. Can be one of:
+     *         - `headers` to return only the response headers.
+     *         - `body` (default) to return only the response body.
+     *         - `object` to return the entire Reponse object.
      */
     public function __construct(string $token, string $domain, array $guzzleOptions = [], ?string $returnType = null)
     {
@@ -183,11 +232,11 @@ class Management
      */
     public function clientGrants() : ClientGrants
     {
-        if (! $this->client_grants instanceof ClientGrants) {
-            $this->client_grants = new ClientGrants($this->apiClient);
+        if (! $this->clientGrants instanceof ClientGrants) {
+            $this->clientGrants = new ClientGrants($this->apiClient);
         }
 
-        return $this->client_grants;
+        return $this->clientGrants;
     }
 
     /**
@@ -323,11 +372,11 @@ class Management
      */
     public function resourceServers() : ResourceServers
     {
-        if (! $this->resource_servers instanceof ResourceServers) {
-            $this->resource_servers = new ResourceServers($this->apiClient);
+        if (! $this->resourceServers instanceof ResourceServers) {
+            $this->resourceServers = new ResourceServers($this->apiClient);
         }
 
-        return $this->resource_servers;
+        return $this->resourceServers;
     }
 
     /**
