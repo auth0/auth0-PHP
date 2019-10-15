@@ -4,11 +4,12 @@ namespace Auth0\Tests;
 
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
+use Auth0\SDK\API\Header\ForwardedFor;
 use Auth0\SDK\API\Header\Header;
 use Auth0\SDK\API\Header\Telemetry;
-use Auth0\SDK\API\Header\ForwardedFor;
+use PHPUnit\Framework\TestCase;
 
-class HeaderTest extends \PHPUnit_Framework_TestCase
+class HeaderTest extends TestCase
 {
 
     public function testHeader()

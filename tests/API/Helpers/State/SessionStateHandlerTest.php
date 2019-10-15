@@ -3,13 +3,14 @@ namespace Auth0\Tests\Api\Helpers\State;
 
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\Store\SessionStore;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SessionStateHandlerTest
  *
  * @package Auth0\Tests\Api\Helpers\State
  */
-class SessionStateHandlerTest extends \PHPUnit_Framework_TestCase
+class SessionStateHandlerTest extends TestCase
 {
 
     /**

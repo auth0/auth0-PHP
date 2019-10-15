@@ -1,18 +1,19 @@
 <?php
 namespace Auth0\Tests\Api\Helpers;
 
-use Auth0\Tests\API\Management\MockManagementApi;
-use Auth0\Tests\API\Authentication\MockAuthenticationApi;
-use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\API\Helpers\InformationHeaders;
+use Auth0\Tests\API\Authentication\MockAuthenticationApi;
+use Auth0\Tests\API\Management\MockManagementApi;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class InformationHeadersExtendTest
  *
  * @package Auth0\Tests\Api\Helpers
  */
-class InformationHeadersExtendTest extends \PHPUnit_Framework_TestCase
+class InformationHeadersExtendTest extends TestCase
 {
 
     public static function tearDownAfterClass()

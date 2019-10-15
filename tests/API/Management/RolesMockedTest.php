@@ -7,13 +7,14 @@ use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 use Auth0\Tests\Traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RolesTestMocked.
  *
  * @package Auth0\Tests\API\Management
  */
-class RolesTestMocked extends \PHPUnit_Framework_TestCase
+class RolesTestMocked extends TestCase
 {
 
     use ErrorHelpers;
