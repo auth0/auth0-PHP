@@ -42,15 +42,6 @@ class EmailsMockedTest extends TestCase
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Emails::class, $api->emails );
-        $this->assertInstanceOf( Management\Emails::class, $api->emails() );
-        $api->emails = null;
-        $this->assertInstanceOf( Management\Emails::class, $api->emails() );
-    }
-
     /**
      * @throws \Exception Should not be thrown in this test.
      */

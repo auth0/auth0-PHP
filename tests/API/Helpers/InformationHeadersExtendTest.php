@@ -65,7 +65,7 @@ class InformationHeadersExtendTest extends TestCase
         $new_headers = self::setExtendedHeaders('test-extend-sdk-2', '2.3.4');
 
         $api = new MockManagementApi( [ new Response( 200 ) ] );
-        $api->call()->connections->getAll();
+        $api->call()->connections()->getAll();
         $headers = $api->getHistoryHeaders();
 
         $this->assertEquals( $new_headers->build(), $headers['Auth0-Client'][0] );

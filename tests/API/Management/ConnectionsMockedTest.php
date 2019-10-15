@@ -41,15 +41,6 @@ class ConnectionsTestMocked extends TestCase
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Connections::class, $api->connections );
-        $this->assertInstanceOf( Management\Connections::class, $api->connections() );
-        $api->connections = null;
-        $this->assertInstanceOf( Management\Connections::class, $api->connections() );
-    }
-
     /**
      * Test a basic getAll connection call.
      *

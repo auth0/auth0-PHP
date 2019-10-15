@@ -77,15 +77,6 @@ class BlacklistsTest extends ApiTests
         $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Blacklists::class, $api->blacklists );
-        $this->assertInstanceOf( Management\Blacklists::class, $api->blacklists() );
-        $api->blacklists = null;
-        $this->assertInstanceOf( Management\Blacklists::class, $api->blacklists() );
-    }
-
     /**
      * @throws \Auth0\SDK\Exception\ApiException
      */

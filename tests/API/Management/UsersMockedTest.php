@@ -43,15 +43,6 @@ class UsersMockedTest extends TestCase
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Users::class, $api->users );
-        $this->assertInstanceOf( Management\Users::class, $api->users() );
-        $api->users = null;
-        $this->assertInstanceOf( Management\Users::class, $api->users() );
-    }
-
     /**
      * Test a get user call.
      *
