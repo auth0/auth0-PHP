@@ -336,22 +336,22 @@ class TokenTest extends TestCase
      */
     public function testSuccessfulHs256TokenDecoding()
     {
-        $token_generator = new TokenGenerator( self::CLIENT_ID, self::CLIENT_SECRET );
+        $token_payload = [
+            'sub' => '__test_sub__',
+            'aud' => self::CLIENT_ID
+        ];
 
         // 1. Test that an encoded client secret can be used.
         $verifier = new JWTVerifier( [
             'valid_audiences' => [ self::CLIENT_ID ],
-            'client_secret' => self::CLIENT_SECRET,
+            'client_secret' => JWT::urlsafeB64Encode( self::CLIENT_SECRET ),
         ] );
-        $jwt      = $token_generator->generate( ['users' => ['actions' => ['read']]] );
+
+        $jwt      = JWT::encode( $token_payload, self::CLIENT_SECRET );
         $decoded  = $verifier->verifyAndDecode($jwt);
 
-        $this->assertObjectHasAttribute('aud', $decoded);
-        $this->assertEquals(self::CLIENT_ID, $decoded->aud);
-        $this->assertObjectHasAttribute('scopes', $decoded);
-        $this->assertObjectHasAttribute('users', $decoded->scopes);
-        $this->assertObjectHasAttribute('actions', $decoded->scopes->users);
-        $this->assertArraySubset(['read'], $decoded->scopes->users->actions);
+        $this->assertObjectHasAttribute('sub', $decoded);
+        $this->assertEquals('__test_sub__', $decoded->sub);
 
         // 2. Test that a non-encoded client secret can be used.
         $verifier = new JWTVerifier( [
@@ -359,19 +359,12 @@ class TokenTest extends TestCase
             'client_secret' => self::CLIENT_SECRET,
             'secret_base64_encoded' => false,
         ] );
-        $jwt      = $token_generator->generate(
-            ['users' => ['actions' => ['read']]],
-            TokenGenerator::DEFAULT_LIFETIME,
-            false
-        );
+
+        $jwt      = JWT::encode( $token_payload, self::CLIENT_SECRET );
         $decoded  = $verifier->verifyAndDecode($jwt);
 
-        $this->assertObjectHasAttribute('aud', $decoded);
-        $this->assertEquals(self::CLIENT_ID, $decoded->aud);
-        $this->assertObjectHasAttribute('scopes', $decoded);
-        $this->assertObjectHasAttribute('users', $decoded->scopes);
-        $this->assertObjectHasAttribute('actions', $decoded->scopes->users);
-        $this->assertArraySubset(['read'], $decoded->scopes->users->actions);
+        $this->assertObjectHasAttribute('sub', $decoded);
+        $this->assertEquals('__test_sub__', $decoded->sub);
     }
 
     /**
