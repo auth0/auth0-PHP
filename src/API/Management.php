@@ -28,167 +28,104 @@ class Management
 {
 
     /**
-     *
-     * @var string
-     */
-    private $token;
-
-    /**
-     *
-     * @var string
-     */
-    private $domain;
-
-    /**
-     *
      * @var ApiClient
      */
     private $apiClient;
 
     /**
-     *
-     * @var array
-     */
-    private $guzzleOptions;
-
-    /**
-     *
-     * @var string
-     */
-    private $returnType;
-
-    /**
-     * @deprecated 5.6.0, will lose public access; use $this->blacklists() instead.
-     *
      * @var Blacklists
      */
-    public $blacklists;
+    private $blacklists;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->clients() instead.
-     *
      * @var Clients
      */
-    public $clients;
+    private $clients;
 
     /**
-     * @deprecated 5.6.0, will be renamed and lose public access; use $this->clientGrants() instead.
-     *
      * @var ClientGrants
      */
-    public $client_grants;
+    private $client_grants;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->connections() instead.
-     *
      * @var Connections
      */
-    public $connections;
+    private $connections;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->deviceCredentials() instead.
-     *
      * @var DeviceCredentials
      */
-    public $deviceCredentials;
+    private $deviceCredentials;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->emails() instead.
-     *
      * @var Emails
      */
-    public $emails;
+    private $emails;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->emailTemplates() instead.
-     *
      * @var EmailTemplates
      */
-    public $emailTemplates;
+    private $emailTemplates;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->jobs() instead.
-     *
      * @var Jobs
      */
-    public $jobs;
+    private $jobs;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->grants() instead.
-     *
      * @var Grants
      */
-    public $grants;
+    private $grants;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->logs() instead.
-     *
      * @var Logs
      */
-    public $logs;
+    private $logs;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->roles() instead.
-     *
      * @var Roles
      */
-    public $roles;
+    private $roles;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->rules() instead.
-     *
      * @var Rules
      */
-    public $rules;
+    private $rules;
 
     /**
-     * @deprecated 5.6.0, will be renamed and lose public access; use $this->resourceServers() instead.
-     *
      * @var ResourceServers
      */
-    public $resource_servers;
+    private $resource_servers;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->stats() instead.
-     *
      * @var Stats
      */
-    public $stats;
+    private $stats;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->tenants() instead.
-     *
      * @var Tenants
      */
-    public $tenants;
+    private $tenants;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->tickets() instead.
-     *
      * @var Tickets
      */
-    public $tickets;
+    private $tickets;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->userBlocks() instead.
-     *
      * @var UserBlocks
      */
-    public $userBlocks;
+    private $userBlocks;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->users() instead.
-     *
      * @var Users
      */
-    public $users;
+    private $users;
 
     /**
-     * @deprecated 5.6.0, will lose public access; use $this->usersByEmail() instead.
-     *
      * @var UsersByEmail
      */
-    public $usersByEmail;
+    private $usersByEmail;
 
     /**
      * Management constructor.
@@ -198,34 +135,17 @@ class Management
      * @param array       $guzzleOptions
      * @param string|null $returnType
      */
-    public function __construct($token, $domain, $guzzleOptions = [], $returnType = null)
+    public function __construct(string $token, string $domain, array $guzzleOptions = [], ?string $returnType = null)
     {
-        $this->token         = $token;
-        $this->domain        = $domain;
-        $this->guzzleOptions = $guzzleOptions;
-        $this->returnType    = $returnType;
-
-        $this->setApiClient();
-
-        $this->blacklists        = new Blacklists($this->apiClient);
-        $this->clients           = new Clients($this->apiClient);
-        $this->client_grants     = new ClientGrants($this->apiClient);
-        $this->connections       = new Connections($this->apiClient);
-        $this->deviceCredentials = new DeviceCredentials($this->apiClient);
-        $this->emails            = new Emails($this->apiClient);
-        $this->emailTemplates    = new EmailTemplates($this->apiClient);
-        $this->grants            = new Grants($this->apiClient);
-        $this->jobs              = new Jobs($this->apiClient);
-        $this->logs              = new Logs($this->apiClient);
-        $this->roles             = new Roles($this->apiClient);
-        $this->rules             = new Rules($this->apiClient);
-        $this->resource_servers  = new ResourceServers($this->apiClient);
-        $this->stats             = new Stats($this->apiClient);
-        $this->tenants           = new Tenants($this->apiClient);
-        $this->tickets           = new Tickets($this->apiClient);
-        $this->userBlocks        = new UserBlocks($this->apiClient);
-        $this->users             = new Users($this->apiClient);
-        $this->usersByEmail      = new UsersByEmail($this->apiClient);
+        $this->apiClient = new ApiClient([
+            'domain' => 'https://'.$domain,
+            'basePath' => '/api/v2/',
+            'guzzleOptions' => $guzzleOptions,
+            'returnType' => $returnType,
+            'headers' => [
+                new AuthorizationBearer($token)
+            ]
+        ]);
     }
 
     /**
@@ -233,7 +153,7 @@ class Management
      *
      * @return Blacklists
      */
-    public function blacklists()
+    public function blacklists() : Blacklists
     {
         if (! $this->blacklists instanceof Blacklists) {
             $this->blacklists = new Blacklists($this->apiClient);
@@ -247,7 +167,7 @@ class Management
      *
      * @return Clients
      */
-    public function clients()
+    public function clients() : Clients
     {
         if (! $this->clients instanceof Clients) {
             $this->clients = new Clients($this->apiClient);
@@ -261,7 +181,7 @@ class Management
      *
      * @return ClientGrants
      */
-    public function clientGrants()
+    public function clientGrants() : ClientGrants
     {
         if (! $this->client_grants instanceof ClientGrants) {
             $this->client_grants = new ClientGrants($this->apiClient);
@@ -275,7 +195,7 @@ class Management
      *
      * @return Connections
      */
-    public function connections()
+    public function connections() : Connections
     {
         if (! $this->connections instanceof Connections) {
             $this->connections = new Connections($this->apiClient);
@@ -289,7 +209,7 @@ class Management
      *
      * @return DeviceCredentials
      */
-    public function deviceCredentials()
+    public function deviceCredentials() : DeviceCredentials
     {
         if (! $this->deviceCredentials instanceof DeviceCredentials) {
             $this->deviceCredentials = new DeviceCredentials($this->apiClient);
@@ -303,7 +223,7 @@ class Management
      *
      * @return Emails
      */
-    public function emails()
+    public function emails() : Emails
     {
         if (! $this->emails instanceof Emails) {
             $this->emails = new Emails($this->apiClient);
@@ -317,7 +237,7 @@ class Management
      *
      * @return EmailTemplates
      */
-    public function emailTemplates()
+    public function emailTemplates() : EmailTemplates
     {
         if (! $this->emailTemplates instanceof EmailTemplates) {
             $this->emailTemplates = new EmailTemplates($this->apiClient);
@@ -331,7 +251,7 @@ class Management
      *
      * @return Grants
      */
-    public function grants()
+    public function grants() : Grants
     {
         if (! $this->grants instanceof Grants) {
             $this->grants = new Grants($this->apiClient);
@@ -345,7 +265,7 @@ class Management
      *
      * @return Jobs
      */
-    public function jobs()
+    public function jobs() : Jobs
     {
         if (! $this->jobs instanceof Jobs) {
             $this->jobs = new Jobs($this->apiClient);
@@ -359,7 +279,7 @@ class Management
      *
      * @return Logs
      */
-    public function logs()
+    public function logs() : Logs
     {
         if (! $this->logs instanceof Logs) {
             $this->logs = new Logs($this->apiClient);
@@ -373,7 +293,7 @@ class Management
      *
      * @return Roles
      */
-    public function roles()
+    public function roles() : Roles
     {
         if (! $this->roles instanceof Roles) {
             $this->roles = new Roles($this->apiClient);
@@ -387,7 +307,7 @@ class Management
      *
      * @return Rules
      */
-    public function rules()
+    public function rules() : Rules
     {
         if (! $this->rules instanceof Rules) {
             $this->rules = new Rules($this->apiClient);
@@ -401,7 +321,7 @@ class Management
      *
      * @return ResourceServers
      */
-    public function resourceServers()
+    public function resourceServers() : ResourceServers
     {
         if (! $this->resource_servers instanceof ResourceServers) {
             $this->resource_servers = new ResourceServers($this->apiClient);
@@ -415,7 +335,7 @@ class Management
      *
      * @return Stats
      */
-    public function stats()
+    public function stats() : Stats
     {
         if (! $this->stats instanceof Stats) {
             $this->stats = new Stats($this->apiClient);
@@ -429,7 +349,7 @@ class Management
      *
      * @return Tenants
      */
-    public function tenants()
+    public function tenants() : Tenants
     {
         if (! $this->tenants instanceof Tenants) {
             $this->tenants = new Tenants($this->apiClient);
@@ -443,7 +363,7 @@ class Management
      *
      * @return Tickets
      */
-    public function tickets()
+    public function tickets() : Tickets
     {
         if (! $this->tickets instanceof Tickets) {
             $this->tickets = new Tickets($this->apiClient);
@@ -457,7 +377,7 @@ class Management
      *
      * @return UserBlocks
      */
-    public function userBlocks()
+    public function userBlocks() : UserBlocks
     {
         if (! $this->userBlocks instanceof UserBlocks) {
             $this->userBlocks = new UserBlocks($this->apiClient);
@@ -471,7 +391,7 @@ class Management
      *
      * @return Users
      */
-    public function users()
+    public function users() : Users
     {
         if (! $this->users instanceof Users) {
             $this->users = new Users($this->apiClient);
@@ -485,29 +405,12 @@ class Management
      *
      * @return UsersByEmail
      */
-    public function usersByEmail()
+    public function usersByEmail() : UsersByEmail
     {
         if (! $this->usersByEmail instanceof UsersByEmail) {
             $this->usersByEmail = new UsersByEmail($this->apiClient);
         }
 
         return $this->usersByEmail;
-    }
-
-    protected function setApiClient()
-    {
-        $apiDomain = "https://{$this->domain}";
-
-        $client = new ApiClient([
-            'domain' => $apiDomain,
-            'basePath' => '/api/v2/',
-            'guzzleOptions' => $this->guzzleOptions,
-            'returnType' => $this->returnType,
-            'headers' => [
-                new AuthorizationBearer($this->token)
-            ]
-        ]);
-
-        $this->apiClient = $client;
     }
 }

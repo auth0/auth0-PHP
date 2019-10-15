@@ -43,15 +43,6 @@ class RolesTestMocked extends TestCase
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testThatMethodAndPropertyReturnSameClass()
-    {
-        $api = new Management(uniqid(), uniqid());
-        $this->assertInstanceOf( Management\Roles::class, $api->roles );
-        $this->assertInstanceOf( Management\Roles::class, $api->roles() );
-        $api->roles = null;
-        $this->assertInstanceOf( Management\Roles::class, $api->roles() );
-    }
-
     /**
      * Test a basic getAll roles call.
      *
