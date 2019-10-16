@@ -137,34 +137,9 @@ class RequestBuilderTest extends ApiTests
     {
         $builder = self::getUrlBuilder('/api');
 
-        // Adding a parameter array should be reflected in the RequestBuilder object.
-        $builder->withParams(
-            [
-                ['key' => 'param1','value' => 'value4'],
-                ['key' => 'param3','value' => 'value3'],
-            ]
-        );
-        $this->assertEquals('?param1=value4&param3=value3', $builder->getParams());
-
         // Adding a parameter dictionary should be reflected in the RequestBuilder object.
         $builder->withDictParams([ 'param4' => 'value4', 'param2' => 'value5']);
-        $this->assertEquals('?param1=value4&param3=value3&param4=value4&param2=value5', $builder->getParams());
-    }
-
-    public function testFullUrl()
-    {
-        $builder = self::getUrlBuilder('/api');
-
-        $builder->addPath('path', 2)
-            ->addPath('subpath')
-            ->withParams(
-                [
-                    ['key' => 'param1', 'value' => 'value1'],
-                    ['key' => 'param2', 'value' => 'value2'],
-                ]
-            );
-
-        $this->assertEquals('path/2/subpath?param1=value1&param2=value2', $builder->getUrl());
+        $this->assertEquals('?param4=value4&param2=value5', $builder->getParams());
     }
 
     public function testGetGuzzleOptions()
@@ -209,16 +184,5 @@ class RequestBuilderTest extends ApiTests
         $api            = new MockManagementApi( $response, [ 'return_type' => 'object' ] );
         $results_object = $api->call()->tenants()->get();
         $this->assertInstanceOf( 'GuzzleHttp\Psr7\Response', $results_object );
-
-        // Test that an invalid return type throws an error.
-        $api = new MockManagementApi( $response, [ 'return_type' => '__invalid_return_type__' ] );
-        try {
-            $api->call()->tenants()->get();
-            $error_msg = 'No exception caught';
-        } catch (CoreException $e) {
-            $error_msg = $e->getMessage();
-        }
-
-        $this->assertStringStartsWith( 'Invalid returnType', $error_msg );
     }
 }
