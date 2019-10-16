@@ -22,7 +22,10 @@ class ApiClient
         self::$infoHeadersData = $infoHeadersData;
     }
 
-    public static function getInfoHeadersData()
+    /**
+     * @return InformationHeaders|null
+     */
+    public static function getInfoHeadersData() : ?InformationHeaders
     {
         if (! self::$infoHeadersDataEnabled) {
             return null;
@@ -55,36 +58,13 @@ class ApiClient
     {
         $this->basePath      = $config['basePath'];
         $this->domain        = $config['domain'];
-        $this->returnType    = isset( $config['returnType'] ) ? $config['returnType'] : null;
-        $this->headers       = isset($config['headers']) ? $config['headers'] : [];
-        $this->guzzleOptions = isset($config['guzzleOptions']) ? $config['guzzleOptions'] : [];
+        $this->returnType    = $config['returnType'] ?? null;
+        $this->headers       = $config['headers'] ?? [];
+        $this->guzzleOptions = $config['guzzleOptions'] ?? [];
 
         if (self::$infoHeadersDataEnabled) {
             $this->headers[] = new Telemetry(self::getInfoHeadersData()->build());
         }
-    }
-
-    /**
-     * Magic method to map HTTP verbs to request types.
-     *
-     * @deprecated 5.6.0, use $this->method().
-     *
-     * @param string $name      - Method name used to call the magic method.
-     * @param array  $arguments - Arguments used in the magic method call.
-     *
-     * @return RequestBuilder
-     */
-    public function __call($name, $arguments)
-    {
-        $builder = new RequestBuilder([
-            'domain' => $this->domain,
-            'basePath' => $this->basePath,
-            'method' => $name,
-            'guzzleOptions' => $this->guzzleOptions,
-            'returnType' => $this->returnType,
-        ]);
-
-        return $builder->withHeaders($this->headers);
     }
 
     /**
@@ -96,7 +76,7 @@ class ApiClient
      *
      * @return RequestBuilder
      */
-    public function method($method, $set_content_type = true)
+    public function method(string $method, bool $set_content_type = true) : RequestBuilder
     {
         $method  = strtolower($method);
         $builder = new RequestBuilder([
