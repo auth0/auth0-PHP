@@ -36,7 +36,9 @@
     <rule ref="Generic.Classes.DuplicateClassName"/>
     <rule ref="Generic.CodeAnalysis"/>
     <rule ref="Generic.Commenting"/>
-    <rule ref="Generic.ControlStructures"/>
+    <rule ref="Generic.ControlStructures">
+        <exclude name="Generic.ControlStructures.DisallowYodaConditions"/>
+    </rule>
     <rule ref="Generic.Files">
         <exclude name="Generic.Files.EndFileNoNewline"/>
         <exclude name="Generic.Files.LowercasedFilename"/>
