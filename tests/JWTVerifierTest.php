@@ -1,8 +1,6 @@
 <?php
-namespace Auth0\Tests\Api\Helpers;
+namespace Auth0\Tests;
 
-use Auth0\SDK\Auth0JWT;
-use Auth0\SDK\API\Helpers\TokenGenerator;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
@@ -12,11 +10,11 @@ use Firebase\JWT\JWT;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TokenTest
+ * Class JWTVerifierTest
  *
  * @package Auth0\Tests\Api\Helpers
  */
-class TokenTest extends TestCase
+class JWTVerifierTest extends TestCase
 {
 
     use ErrorHelpers;
@@ -347,8 +345,8 @@ class TokenTest extends TestCase
             'client_secret' => JWT::urlsafeB64Encode( self::CLIENT_SECRET ),
         ] );
 
-        $jwt      = JWT::encode( $token_payload, self::CLIENT_SECRET );
-        $decoded  = $verifier->verifyAndDecode($jwt);
+        $jwt     = JWT::encode( $token_payload, self::CLIENT_SECRET );
+        $decoded = $verifier->verifyAndDecode($jwt);
 
         $this->assertObjectHasAttribute('sub', $decoded);
         $this->assertEquals('__test_sub__', $decoded->sub);
@@ -360,8 +358,8 @@ class TokenTest extends TestCase
             'secret_base64_encoded' => false,
         ] );
 
-        $jwt      = JWT::encode( $token_payload, self::CLIENT_SECRET );
-        $decoded  = $verifier->verifyAndDecode($jwt);
+        $jwt     = JWT::encode( $token_payload, self::CLIENT_SECRET );
+        $decoded = $verifier->verifyAndDecode($jwt);
 
         $this->assertObjectHasAttribute('sub', $decoded);
         $this->assertEquals('__test_sub__', $decoded->sub);
