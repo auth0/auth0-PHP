@@ -13,8 +13,7 @@ class Tenants extends GenericResource
     public function get($fields = null, $include_fields = null)
     {
         $request = $this->apiClient->method('get')
-        ->addPath('tenants')
-        ->addPath('settings');
+        ->addPath('tenants', 'settings');
 
         if ($fields !== null) {
             if (is_array($fields)) {
@@ -39,8 +38,7 @@ class Tenants extends GenericResource
     public function update($data)
     {
         return $this->apiClient->method('patch')
-        ->addPath('tenants')
-        ->addPath('settings')
+        ->addPath('tenants', 'settings')
         ->withBody(json_encode($data))
         ->call();
     }

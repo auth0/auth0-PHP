@@ -284,8 +284,7 @@ class Authentication
         }
 
         return $this->apiClient->method('post')
-        ->addPath('passwordless')
-        ->addPath('start')
+        ->addPath('passwordless', 'start')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -308,8 +307,7 @@ class Authentication
         ];
 
         return $this->apiClient->method('post')
-        ->addPath('passwordless')
-        ->addPath('start')
+        ->addPath('passwordless', 'start')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -360,7 +358,7 @@ class Authentication
         }
 
         $request = $this->apiClient->method('post')
-            ->addPath( 'oauth/token' )
+            ->addPath( 'oauth', 'token' )
             ->withBody(json_encode($options));
 
         if (isset($options['auth0_forwarded_for'])) {
@@ -571,8 +569,7 @@ class Authentication
         ];
 
         return $this->apiClient->method('post')
-        ->addPath('dbconnections')
-        ->addPath('signup')
+        ->addPath('dbconnections', 'signup')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -609,8 +606,7 @@ class Authentication
         }
 
         return $this->apiClient->method('post')
-        ->addPath('dbconnections')
-        ->addPath('change_password')
+        ->addPath('dbconnections', 'change_password')
         ->withBody(json_encode($data))
         ->call();
     }
@@ -720,8 +716,7 @@ class Authentication
         ];
 
         return $this->apiClient->method('post')
-            ->addPath('users', $user_id)
-            ->addPath('impersonate')
+            ->addPath('users', $user_id, 'impersonate')
             ->withHeader(new AuthorizationBearer($access_token))
             ->withBody(json_encode($data))
             ->call();
@@ -765,8 +760,7 @@ class Authentication
         );
 
         return $this->apiClient->method('post')
-            ->addPath('oauth')
-            ->addPath('access_token')
+            ->addPath('oauth', 'access_token')
             ->withBody(json_encode($data))
             ->call();
     }
@@ -829,8 +823,7 @@ class Authentication
         }
 
         return $this->apiClient->method('post')
-            ->addPath('oauth')
-            ->addPath('ro')
+            ->addPath('oauth', 'ro')
             ->withBody(json_encode($data))
             ->call();
     }

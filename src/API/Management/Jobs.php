@@ -24,8 +24,7 @@ class Jobs extends GenericResource
     public function getErrors($id)
     {
         return $this->apiClient->method('get')
-        ->addPath('jobs', $id)
-        ->addPath('errors')
+        ->addPath('jobs', $id, 'errors')
         ->call();
     }
 
@@ -39,8 +38,7 @@ class Jobs extends GenericResource
     public function importUsers($file_path, $connection_id, $params = [])
     {
         $request = $this->apiClient->method('post', false)
-        ->addPath('jobs')
-        ->addPath('users-imports')
+        ->addPath('jobs', 'users-imports')
         ->addFile('users', $file_path)
         ->addFormParam('connection_id', $connection_id);
 
@@ -67,8 +65,7 @@ class Jobs extends GenericResource
     public function sendVerificationEmail($user_id)
     {
         return $this->apiClient->method('post')
-        ->addPath('jobs')
-        ->addPath('verification-email')
+        ->addPath('jobs', 'verification-email')
         ->withBody(json_encode([
             'user_id' => $user_id
         ]))
