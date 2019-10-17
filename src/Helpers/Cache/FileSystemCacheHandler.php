@@ -19,7 +19,10 @@ class FileSystemCacheHandler implements CacheHandler
     public function __construct($temp_directory_prefix = 'auth0-php')
     {
         $this->tmp_dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.$temp_directory_prefix.DIRECTORY_SEPARATOR;
-        if (! is_dir($this->tmp_dir) && ! @mkdir($this->tmp_dir, 0777, true) && ! is_dir($this->tmp_dir) ) {
+        if (! is_dir($this->tmp_dir)
+            && ! @mkdir($this->tmp_dir, 0777, true)
+            && ! is_dir($this->tmp_dir) // If mkdir failed it means that another process created it in between
+        ) {
             throw new \RuntimeException("Cache Handler was not able to create directory '$this->tmp_dir'");
         }
     }
