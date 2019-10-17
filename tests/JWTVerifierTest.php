@@ -379,7 +379,7 @@ class JWTVerifierTest extends TestCase
             ->getMockBuilder( JWKFetcher::class )
             ->setMethods( [ 'getKeys' ] )
             ->getMock();
-        $mocked_jwks->method( 'getKeys' )->willReturn( uniqid() );
+        $mocked_jwks->method( 'getKeys' )->willReturn( [] );
 
         // Mock the JWT object.
         $expected_sub  = uniqid();
