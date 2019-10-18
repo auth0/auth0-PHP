@@ -49,7 +49,10 @@ class InformationHeadersExtendTest extends TestCase
     {
         $new_headers = self::setExtendedHeaders('test-extend-sdk-3', '3.4.5');
 
-        $api = new MockAuthenticationApi( [ new Response( 200 ) ] );
+        $api = new MockAuthenticationApi( [
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' )
+        ] );
+
         $api->call()->oauth_token( [ 'grant_type' => uniqid() ] );
         $headers = $api->getHistoryHeaders();
 
