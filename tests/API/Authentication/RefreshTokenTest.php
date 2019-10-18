@@ -50,7 +50,7 @@ class RefreshTokenTest extends ApiTests
         $api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET']);
 
         try {
-            $api->refresh_token( null );
+            $api->refresh_token( '' );
             $caught_exception = false;
         } catch (ApiException $e) {
             $caught_exception = $this->errorHasString( $e, 'Refresh token cannot be blank' );
@@ -97,10 +97,14 @@ class RefreshTokenTest extends ApiTests
 
     /**
      * Test that the refresh token request is made successfully.
+     *
+     * @throws ApiException
      */
     public function testThatRefreshTokenRequestIsMadeCorrectly()
     {
-        $api = new MockAuthenticationApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockAuthenticationApi( [
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' )
+        ] );
 
         $refresh_token = uniqid();
         $api->call()->refresh_token( $refresh_token );
