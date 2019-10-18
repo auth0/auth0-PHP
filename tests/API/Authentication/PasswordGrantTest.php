@@ -42,7 +42,7 @@ class PasswordGrantTest extends ApiTests
 
     public function testThatPasswordGrantLoginEnforcesUsername()
     {
-        $api = new Authentication( 'test-domain.auth0.com' );
+        $api = new Authentication( 'test-domain.auth0.com', '__test_client_id__' );
 
         try {
             $caught_exception = false;
@@ -65,7 +65,7 @@ class PasswordGrantTest extends ApiTests
 
     public function testThatPasswordGrantLoginEnforcesPassword()
     {
-        $api = new Authentication( 'test-domain.auth0.com' );
+        $api = new Authentication( 'test-domain.auth0.com', '__test_client_id__' );
 
         try {
             $caught_exception = false;
@@ -88,7 +88,7 @@ class PasswordGrantTest extends ApiTests
 
     public function testThatPasswordGrantRealmLoginEnforcesRealm()
     {
-        $api = new Authentication( 'test-domain.auth0.com' );
+        $api = new Authentication( 'test-domain.auth0.com', '__test_client_id__' );
 
         try {
             $caught_exception = false;
@@ -107,7 +107,9 @@ class PasswordGrantTest extends ApiTests
      */
     public function testThatPasswordGrantLoginSendsBasicRequestCorrectly()
     {
-        $api = new MockAuthenticationApi([new Response(200)]);
+        $api = new MockAuthenticationApi( [
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' )
+        ] );
 
         $api->call()->login_with_default_directory( [
             'username' => 'the_username',
@@ -137,7 +139,9 @@ class PasswordGrantTest extends ApiTests
      */
     public function testThatPasswordGrantRealmLoginSendsBasicRequestCorrectly()
     {
-        $api = new MockAuthenticationApi([new Response(200)]);
+        $api = new MockAuthenticationApi( [
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' )
+        ] );
 
         $api->call()->login( [
             'username' => 'the_username',
@@ -159,7 +163,10 @@ class PasswordGrantTest extends ApiTests
      */
     public function testThatPasswordGrantLoginSetsForwardedForHeader()
     {
-        $api = new MockAuthenticationApi([new Response(200), new Response(200)]);
+        $api = new MockAuthenticationApi( [
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' ),
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' ),
+        ] );
 
         $api->call()->login_with_default_directory(
             [
@@ -191,7 +198,10 @@ class PasswordGrantTest extends ApiTests
      */
     public function testThatPasswordGrantRealmLoginSetsForwardedForHeader()
     {
-        $api = new MockAuthenticationApi([new Response(200), new Response(200)]);
+        $api = new MockAuthenticationApi( [
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' ),
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' ),
+        ] );
 
         $api->call()->login(
             [
