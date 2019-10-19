@@ -7,6 +7,7 @@ use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
 use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
+use Lcobucci\JWT\Token;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,7 +26,7 @@ class JwksVerifierTest extends TestCase
         openssl_pkey_export($pkey_resource, $rsa_private_key);
 
         $error_msg   = 'No exception caught';
-        $hs256_token = self::getTokenBuilder()->getToken( new HsSigner(), new Key( '__test_secret__' ));
+        $hs256_token = SymmetricVerifierTest::getToken();
 
         try {
             $verifier = new JwksVerifier( [ '__test_kid__' => '__test_pem__' ] );
@@ -44,7 +45,7 @@ class JwksVerifierTest extends TestCase
     {
         $error_msg = 'No exception caught';
         $rsa_keys  = self::getRsaKeys();
-        $token     = self::getTokenBuilder()->getToken( new RsSigner(), new Key( $rsa_keys['private'] ));
+        $token     = self::getToken($rsa_keys['private']);
 
         try {
             $verifier = new JwksVerifier( [ '__invalid_kid__' => $rsa_keys['public'] ] );
@@ -60,7 +61,7 @@ class JwksVerifierTest extends TestCase
     {
         $error_msg = 'No exception caught';
         $rsa_keys  = self::getRsaKeys();
-        $token     = self::getTokenBuilder()->getToken( new RsSigner(), new Key( $rsa_keys['private'] ));
+        $token     = self::getToken($rsa_keys['private']);
 
         try {
             $verifier = new JwksVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
@@ -78,7 +79,7 @@ class JwksVerifierTest extends TestCase
     public function testThatTokenClaimsAreReturned()
     {
         $rsa_keys = self::getRsaKeys();
-        $token    = self::getTokenBuilder()->getToken( new RsSigner(), new Key( $rsa_keys['private'] ));
+        $token    = self::getToken($rsa_keys['private']);
 
         $verifier     = new JwksVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
         $decodedToken = $verifier->verifyAndDecode( $token );
@@ -86,12 +87,11 @@ class JwksVerifierTest extends TestCase
         $this->assertEquals('__test_sub__', $decodedToken->getClaim('sub'));
     }
 
-    private static function getTokenBuilder() : Builder
-    {
-        return (new Builder())->withClaim('sub', '__test_sub__')->withHeader('kid', '__test_kid__');
-    }
+    /*
+     * Helper methods
+     */
 
-    private static function getRsaKeys() : array
+    public static function getRsaKeys() : array
     {
         $pkey_resource = openssl_pkey_new( [
             'digest_alg' => 'sha256',
@@ -105,5 +105,16 @@ class JwksVerifierTest extends TestCase
             'private' => $rsa_private_key,
             'public' => $public_key['key'],
         ];
+    }
+
+    public static function getTokenBuilder() : Builder
+    {
+        return (new Builder())->withClaim('sub', '__test_sub__')->withHeader('kid', '__test_kid__');
+    }
+
+    public static function getToken(string $rsa_private_key, Builder $builder = null) : Token
+    {
+        $builder = $builder ?? self::getTokenBuilder();
+        return $builder->getToken( new RsSigner(), new Key( $rsa_private_key ));
     }
 }

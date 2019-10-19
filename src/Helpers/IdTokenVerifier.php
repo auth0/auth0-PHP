@@ -12,7 +12,6 @@ use Auth0\SDK\Exception\InvalidTokenException;
  */
 final class IdTokenVerifier
 {
-    const DEFAULT_LEEWAY = 60;
 
     /**
      * Token issuer base URL expected.
@@ -36,6 +35,13 @@ final class IdTokenVerifier
     private $verifier;
 
     /**
+     * Clock tolerance for time-base token checks.
+     *
+     * @var integer
+     */
+    private $leeway = 60;
+
+    /**
      * IdTokenVerifier constructor.
      *
      * @param string            $issuer   Token issuer base URL expected.
@@ -50,16 +56,34 @@ final class IdTokenVerifier
     }
 
     /**
-     * @param string $token
-     * @param array  $options
+     * Set a new leeway time for all token checks.
+     *
+     * @param integer $newLeeway New leeway time for class instance.
+     *
+     * @return void
+     */
+    public function setLeeway(int $newLeeway) : void
+    {
+        $this->leeway = $newLeeway;
+    }
+
+    /**
+     * Verifies and decodes an OIDC-compliant ID token.
+     *
+     * @param string $token   Raw JWT string.
+     * @param array  $options Options to adjust the verification. Can be:
+     *      - "time" to set the current time used for exp, iat, and auth_time checks.
+     *      - "leeway" to adjust the clock tolerance for a single check.
+     *      - "nonce" to check the nonce contained in the token (recommended)
+     *      - "max_age" to check the auth_time of the token.
      *
      * @return \stdClass
      *
-     * @throws InvalidTokenException
+     * @throws InvalidTokenException If signature verification or any claim test fails.
      */
     public function decode(string $token, array $options = []) : \stdClass
     {
-        if (! empty($token)) {
+        if (empty($token)) {
             throw new InvalidTokenException('ID token is required but missing');
         }
 
@@ -68,6 +92,7 @@ final class IdTokenVerifier
         /*
          * Issuer checks
          */
+
         $tokenIss = $verifiedToken->getClaim('iss', false);
         if (! $tokenIss || ! is_string($tokenIss)) {
             throw new InvalidTokenException('Issuer (iss) claim must be a string present in the ID token');
@@ -82,6 +107,7 @@ final class IdTokenVerifier
         /*
          * Subject check
          */
+
         $tokenSub = $verifiedToken->getClaim('sub', false);
         if (! $tokenSub || ! is_string($tokenSub)) {
             throw new InvalidTokenException('Subject (sub) claim must be a string present in the ID token');
@@ -90,6 +116,7 @@ final class IdTokenVerifier
         /*
          * Audience checks
          */
+
         $tokenAud = $verifiedToken->getClaim('aud', false);
         if (! $tokenAud || (! is_string($tokenAud) && ! is_array($tokenAud))) {
             throw new InvalidTokenException(
@@ -97,7 +124,7 @@ final class IdTokenVerifier
             );
         }
 
-        if (is_array($tokenAud) && in_array($this->audience, $tokenAud)) {
+        if (is_array($tokenAud) && ! in_array($this->audience, $tokenAud)) {
             throw new InvalidTokenException( sprintf(
                 'Audience (aud) claim mismatch in the ID token; expected "%s" was not one of "%s"',
                 $this->audience,
@@ -112,8 +139,9 @@ final class IdTokenVerifier
         /*
          * Clock checks
          */
+
         $now    = $options['time'] ?? time();
-        $leeway = $options['leeway'] ?? self::DEFAULT_LEEWAY;
+        $leeway = $options['leeway'] ?? $this->leeway;
 
         $tokenExp = $verifiedToken->getClaim('exp', false);
         if (! $tokenExp || ! is_int($tokenExp)) {
@@ -146,6 +174,7 @@ final class IdTokenVerifier
         /*
          * Nonce check
          */
+
         if (! empty($options['nonce'])) {
             $tokenNonce = $verifiedToken->getClaim('nonce', false);
             if (! $tokenNonce || ! is_string($tokenNonce)) {
@@ -164,6 +193,7 @@ final class IdTokenVerifier
         /*
          * Authorized party check
          */
+
         if (is_array($tokenAud) && count($tokenAud) > 1) {
             $tokenAzp = $verifiedToken->getClaim('azp', false);
             if (! $tokenAzp || ! is_string($tokenAzp)) {
@@ -184,6 +214,7 @@ final class IdTokenVerifier
         /*
          * Authentication time check
          */
+
         if (! empty($options['max_age'])) {
             $tokenAuthTime = $verifiedToken->getClaim('auth_time', false);
             if (! $tokenAuthTime || ! is_int($tokenAuthTime)) {
