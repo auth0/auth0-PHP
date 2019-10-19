@@ -373,7 +373,6 @@ class Authentication
      */
     public function code_exchange(string $code, string $redirect_uri) : array
     {
-
         if (empty($this->client_secret)) {
             throw new ApiException('client_secret is mandatory');
         }
