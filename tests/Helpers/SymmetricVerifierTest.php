@@ -6,7 +6,7 @@ use Auth0\SDK\Helpers\SymmetricVerifier;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
-use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
+use Lcobucci\JWT\Token;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -50,14 +50,9 @@ class SymmetricVerifierTest extends TestCase
 
     public function testThatWrongAlgorithmFails()
     {
-        $pkey_resource = openssl_pkey_new( [
-            'digest_alg' => 'sha256',
-            'private_key_type' => OPENSSL_KEYTYPE_RSA,
-        ] );
-        openssl_pkey_export($pkey_resource, $rsa_private_key);
-
+        $rsa_keys    = JwksVerifierTest::getRsaKeys();
+        $rs256_token = JwksVerifierTest::getToken( $rsa_keys['private'] );
         $error_msg   = 'No exception caught';
-        $rs256_token = self::getTokenBuilder()->getToken( new RsSigner(), new Key( $rsa_private_key ));
 
         try {
             $verifier = new SymmetricVerifier( '__test_secret__' );
@@ -75,11 +70,9 @@ class SymmetricVerifierTest extends TestCase
     public function testThatInvalidSignatureFails()
     {
         $error_msg = 'No exception caught';
-        $token     = self::getTokenBuilder()->getToken( new HsSigner(), new Key( '__invalid_secret__' ));
-
         try {
             $verifier = new SymmetricVerifier( '__test_secret__' );
-            $verifier->verifyAndDecode( $token );
+            $verifier->verifyAndDecode( self::getToken( '__invalid_secret__' ) );
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -92,16 +85,35 @@ class SymmetricVerifierTest extends TestCase
      */
     public function testThatTokenClaimsAreReturned()
     {
-        $token = self::getTokenBuilder()->getToken( new HsSigner(), new Key( '__test_secret__' ));
-
         $verifier     = new SymmetricVerifier( '__test_secret__' );
-        $decodedToken = $verifier->verifyAndDecode( $token );
+        $decodedToken = $verifier->verifyAndDecode( self::getToken() );
 
         $this->assertEquals('__test_sub__', $decodedToken->getClaim('sub'));
     }
 
-    private static function getTokenBuilder() : Builder
+    /*
+     * Helper methods
+     */
+
+    /**
+     * Returns a token builder with a default sub claim.
+     *
+     * @return Builder
+     */
+    public static function getTokenBuilder() : Builder
     {
         return (new Builder())->withClaim('sub', '__test_sub__');
+    }
+
+    /**
+     * @param string $secret Symmetric key to sign.
+     * @param Builder $builder Builder to use, null to create
+     *
+     * @return Token
+     */
+    public static function getToken(string $secret = '__test_secret__', Builder $builder = null) : Token
+    {
+        $builder = $builder ?? self::getTokenBuilder();
+        return $builder->getToken( new HsSigner(), new Key($secret));
     }
 }
