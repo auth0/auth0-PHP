@@ -51,7 +51,7 @@ abstract class SignatureVerifier
             throw new InvalidTokenException( 'ID token could not be decoded' );
         }
 
-        $tokenAlg    = $parsedToken->getHeader('alg');
+        $tokenAlg    = $parsedToken->getHeader('alg', false);
         $expectedAlg = $this->getAlgorithm();
         if ($tokenAlg !== $expectedAlg) {
             throw new InvalidTokenException( sprintf(

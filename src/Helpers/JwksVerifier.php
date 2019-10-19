@@ -44,7 +44,7 @@ final class JwksVerifier extends SignatureVerifier
      */
     protected function checkSignature(Token $token) : bool
     {
-        $tokenKid = $token->getHeader('kid');
+        $tokenKid = $token->getHeader('kid', false);
         if (! array_key_exists($tokenKid, $this->jwks)) {
             throw new InvalidTokenException( 'ID token key ID "'.$tokenKid.'" was not found in the JWKS' );
         }
