@@ -1,11 +1,10 @@
 <?php
-namespace Auth0\Tests\Helpers;
+namespace Auth0\Tests\Helpers\Tokens;
 
 use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\SDK\Helpers\JwksVerifier;
+use Auth0\SDK\Helpers\Tokens\JwksVerifier;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
 use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
 use Lcobucci\JWT\Token;
 use PHPUnit\Framework\TestCase;
