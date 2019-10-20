@@ -570,7 +570,7 @@ class Auth0
             $this->setRefreshToken($response['refresh_token']);
         }
 
-        if (! empty($response['id_token'])) {
+        if (isset($response['id_token'])) {
             $this->setIdToken($response['id_token']);
         }
 
@@ -612,7 +612,10 @@ class Auth0
         }
 
         $this->setAccessToken($response['access_token']);
-        $this->setIdToken($response['id_token']);
+
+        if (isset($response['id_token'])) {
+            $this->setIdToken($response['id_token']);
+        }
     }
 
     /**
