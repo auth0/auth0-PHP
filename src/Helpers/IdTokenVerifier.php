@@ -234,6 +234,11 @@ final class IdTokenVerifier
             }
         }
 
-        return (object) $verifiedToken->getClaims();
+        $profile = (object) [];
+        foreach ($verifiedToken->getClaims() as $claim => $value) {
+            $profile->$claim = $value->getValue();
+        }
+
+        return $profile;
     }
 }
