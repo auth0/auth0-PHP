@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Auth0\SDK\Helpers;
+namespace Auth0\SDK\Helpers\Tokens;
 
 use Auth0\SDK\Exception\InvalidTokenException;
+use stdClass;
 
 /**
  * Class IdTokenVerifier
@@ -35,7 +36,7 @@ final class IdTokenVerifier
     private $verifier;
 
     /**
-     * Clock tolerance for time-base token checks.
+     * Clock tolerance for time-base token checks in seconds.
      *
      * @var integer
      */
@@ -72,16 +73,16 @@ final class IdTokenVerifier
      *
      * @param string $token   Raw JWT string.
      * @param array  $options Options to adjust the verification. Can be:
-     *      - "time" to set the current time used for exp, iat, and auth_time checks.
-     *      - "leeway" to adjust the clock tolerance for a single check.
-     *      - "nonce" to check the nonce contained in the token (recommended)
+     *      - "nonce" to check the nonce contained in the token (recommended).
      *      - "max_age" to check the auth_time of the token.
+     *      - "time" Unix timestamp to use as the current time for exp, iat, and auth_time checks.
+     *      - "leeway" to adjust the clock tolerance in seconds for the current check only.
      *
-     * @return \stdClass
+     * @return stdClass
      *
      * @throws InvalidTokenException If signature verification or any claim test fails.
      */
-    public function decode(string $token, array $options = []) : \stdClass
+    public function decode(string $token, array $options = []) : stdClass
     {
         if (empty($token)) {
             throw new InvalidTokenException('ID token is required but missing');
@@ -234,7 +235,7 @@ final class IdTokenVerifier
             }
         }
 
-        $profile = (object) [];
+        $profile = new stdClass();
         foreach ($verifiedToken->getClaims() as $claim => $value) {
             $profile->$claim = $value->getValue();
         }

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Auth0\SDK\Helpers;
+namespace Auth0\SDK\Helpers\Tokens;
 
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
 use Lcobucci\JWT\Token;
