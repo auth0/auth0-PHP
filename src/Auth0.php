@@ -9,6 +9,12 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Helpers\Cache\CacheHandler;
+use Auth0\SDK\Helpers\Cache\NoCacheHandler;
+use Auth0\SDK\Helpers\IdTokenVerifier;
+use Auth0\SDK\Helpers\JWKFetcher;
+use Auth0\SDK\Helpers\JwksVerifier;
+use Auth0\SDK\Helpers\SymmetricVerifier;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
@@ -206,18 +212,11 @@ class Auth0
     protected $idTokenAlg;
 
     /**
-     * Valid audiences for ID tokens.
+     * Valid issuer for ID tokens.
      *
-     * @var array
+     * @var string
      */
-    protected $idTokenAud = [];
-
-    /**
-     * Valid issuer(s) for ID tokens.
-     *
-     * @var array
-     */
-    protected $idTokenIss = [];
+    protected $idTokenIss;
 
     /**
      * State Handler.
@@ -225,6 +224,13 @@ class Auth0
      * @var StateHandler
      */
     protected $stateHandler;
+
+    /**
+     * Cache Handler.
+     *
+     * @var CacheHandler
+     */
+    protected $cacheHandler;
 
     /**
      * BaseAuth0 Constructor.
@@ -306,31 +312,16 @@ class Auth0
             $this->skipUserinfo = $config['skip_userinfo'];
         }
 
-        // If a token algorithm is passed, make sure it's a specific string.
-        if (! empty($config['id_token_alg'])) {
-            if (! in_array( $config['id_token_alg'], ['HS256', 'RS256'] )) {
-                throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
-            }
-
-            $this->idTokenAlg = $config['id_token_alg'];
+        $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
+        if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
+            throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
         }
 
-        // If a token audience is passed, make sure it's an array.
-        if (! empty($config['id_token_aud'])) {
-            if (! is_array( $config['id_token_aud'] )) {
-                throw new CoreException('Invalid id_token_aud; must be an array of string values');
-            }
+        $this->idTokenIss = $config['id_token_iss'] ?? 'https://'.$this->domain.'/';
 
-            $this->idTokenAud = $config['id_token_aud'];
-        }
-
-        // If a token issuer is passed, make sure it's an array.
-        if (! empty($config['id_token_iss'])) {
-            if (! is_array( $config['id_token_iss'] )) {
-                throw new CoreException('Invalid id_token_iss; must be an array of string values');
-            }
-
-            $this->idTokenIss = $config['id_token_iss'];
+        // Custom issuers were arrays previously, this provides some backward-compatibility.
+        if (is_array($this->idTokenIss)) {
+            $this->idTokenIss = $this->idTokenIss[0];
         }
 
         $this->debugMode = isset($config['debug']) ? $config['debug'] : false;
@@ -380,6 +371,11 @@ class Auth0
         } else {
             $stateStore         = new SessionStore($session_base_name, $session_cookie_expires);
             $this->stateHandler = new SessionStateHandler($stateStore);
+        }
+
+        $this->cacheHandler = new NoCacheHandler();
+        if (isset($config['cache_handler']) && $config['cache_handler']) {
+            $this->cacheHandler = $config['cache_handler'];
         }
 
         $this->authentication = new Authentication(
@@ -665,15 +661,17 @@ class Auth0
      */
     public function setIdToken($idToken)
     {
-        $jwtVerifier          = new JWTVerifier([
-            'valid_audiences' => ! empty($this->idTokenAud) ? $this->idTokenAud : [ $this->clientId ],
-            'supported_algs' => $this->idTokenAlg ? [ $this->idTokenAlg ] : [ 'HS256', 'RS256' ],
-            'authorized_iss' => $this->idTokenIss ? $this->idTokenIss : [ 'https://'.$this->domain.'/' ],
-            'client_secret' => $this->clientSecret,
-            'secret_base64_encoded' => $this->clientSecretEncoded,
-            'guzzle_options' => $this->guzzleOptions,
-        ]);
-        $this->idTokenDecoded = (array) $jwtVerifier->verifyAndDecode( $idToken );
+        $sigVerifier = null;
+        if ('RS256' === $this->idTokenAlg) {
+            $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
+            $jwks        = $jwksFetcher->getKeys($this->idTokenIss.'.well-known/jwks.json');
+            $sigVerifier = new JwksVerifier( $jwks );
+        } else if ('HS256' === $this->idTokenAlg) {
+            $sigVerifier = new SymmetricVerifier($this->clientSecret);
+        }
+
+        $idTokenVerifier      = new IdTokenVerifier( $this->idTokenIss, $this->clientId, $sigVerifier );
+        $this->idTokenDecoded = (array) $idTokenVerifier->decode( $idToken );
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);

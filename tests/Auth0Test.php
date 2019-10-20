@@ -72,23 +72,27 @@ class Auth0Test extends TestCase
      */
     public function testThatExchangeSucceedsWithIdToken()
     {
-        $id_token_payload = ['sub' => '123'];
-        $id_token         = JWT::encode( $id_token_payload, '__test_client_secret__' );
-        $response_body    = '{"access_token":"1.2.3","id_token":"'.$id_token.'","refresh_token":"4.5.6"}';
+        $id_token      = self::getIdToken();
+        $response_body = '{"access_token":"1.2.3","id_token":"'.$id_token.'","refresh_token":"4.5.6"}';
 
         $mock = new MockHandler( [
             // Code exchange response.
             new Response( 200, self::$headers, $response_body ),
             // Userinfo response.
-            new Response( 200, self::$headers, json_encode( $id_token_payload ) ),
+            new Response( 200, self::$headers, json_encode( ['sub' => '__test_sub__'] ) ),
         ] );
 
-        $add_config   = ['guzzle_options' => ['handler' => HandlerStack::create($mock)]];
+        $add_config   = [
+            'id_token_alg' => 'HS256',
+            'guzzle_options' => [
+                'handler' => HandlerStack::create($mock)
+            ]
+        ];
         $auth0        = new Auth0( self::$baseConfig + $add_config );
         $_GET['code'] = uniqid();
 
         $this->assertTrue( $auth0->exchange() );
-        $this->assertEquals( $id_token_payload, $auth0->getUser() );
+        $this->assertEquals( ['sub' => '__test_sub__'], $auth0->getUser() );
         $this->assertEquals( $id_token, $auth0->getIdToken() );
         $this->assertEquals( '1.2.3', $auth0->getAccessToken() );
         $this->assertEquals( '4.5.6', $auth0->getRefreshToken() );
@@ -132,8 +136,7 @@ class Auth0Test extends TestCase
      */
     public function testThatExchangeSkipsUserinfo()
     {
-        $id_token_payload = ['sub' => 'correct_sub'];
-        $id_token         = JWT::encode( $id_token_payload, '__test_client_secret__' );
+        $id_token = self::getIdToken();
 
         $mock = new MockHandler( [
             // Code exchange response.
@@ -143,13 +146,15 @@ class Auth0Test extends TestCase
         $add_config   = [
             'scope' => 'openid',
             'skip_userinfo' => true,
+            'id_token_alg' => 'HS256',
             'guzzle_options' => [ 'handler' => HandlerStack::create($mock) ]
         ];
         $auth0        = new Auth0( self::$baseConfig + $add_config );
         $_GET['code'] = uniqid();
 
         $this->assertTrue( $auth0->exchange() );
-        $this->assertEquals( ['sub' => 'correct_sub'], $auth0->getUser() );
+
+        $this->assertEquals( '__test_sub__', $auth0->getUser()['sub'] );
         $this->assertEquals( $id_token, $auth0->getIdToken() );
         $this->assertEquals( '1.2.3', $auth0->getAccessToken() );
     }
@@ -267,7 +272,7 @@ class Auth0Test extends TestCase
      */
     public function testThatRenewTokensSucceeds()
     {
-        $id_token = JWT::encode( ['sub' => uniqid()], '__test_client_secret__' );
+        $id_token = self::getIdToken();
 
         $mock = new MockHandler( [
             // Code exchange response.
@@ -277,6 +282,7 @@ class Auth0Test extends TestCase
         ] );
 
         $add_config = [
+            'id_token_alg' => 'HS256',
             'skip_userinfo' => true,
             'persist_access_token' => true,
             'guzzle_options' => [ 'handler' => HandlerStack::create($mock) ]
@@ -369,5 +375,21 @@ class Auth0Test extends TestCase
         $url_query        = explode( '&', $parsed_url_query );
 
         $this->assertContains( 'state='.$_SESSION['auth0__webauth_state'], $url_query );
+    }
+
+    /*
+     * Test helper methods.
+     */
+
+    public static function getIdToken()
+    {
+        $id_token_payload = [
+            'sub' => '__test_sub__',
+            'iss' => 'https://__test_domain__/',
+            'aud' => '__test_client_id__',
+            'exp' => time() + 1000,
+            'iat' => time() - 1000,
+        ];
+        return JWT::encode( $id_token_payload, '__test_client_secret__' );
     }
 }
