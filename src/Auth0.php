@@ -803,4 +803,25 @@ class Auth0
     {
         $this->debugger = $debugger;
     }
+    
+    /**
+     * Gets the store interface
+     *
+     * @return StoreInterface
+     */
+    public function getStore(): StoreInterface 
+    {
+        return $this->store;
+    }
+    
+    /**
+     * Gets the State Handler
+     *
+     * @return StateHandler
+     */
+    public function getStateHandler(): StateHandler
+    {
+        return $this->stateHandler; 
+    }
+        
 }
