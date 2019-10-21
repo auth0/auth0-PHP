@@ -34,14 +34,19 @@ class SessionStateHandler implements StateHandler
     }
 
     /**
-     * Generate state value to be used for the state param value during authorization.
+     * Generate state value to be used for the state param value during authorization 
+     * if one does not already exist.
      *
      * @return string
      */
     public function issue()
     {
-        $state = uniqid('', true);
-        $this->store($state);
+        $state = $this->store->get(self::STATE_NAME);
+        if ($state === null) {
+            $state = uniqid('', true);
+            $this->store($state);
+        }
+        
         return $state;
     }
 
