@@ -674,7 +674,7 @@ class Auth0
         }
 
         $idTokenVerifier      = new IdTokenVerifier( $this->idTokenIss, $this->clientId, $sigVerifier );
-        $this->idTokenDecoded = (array) $idTokenVerifier->decode( $idToken );
+        $this->idTokenDecoded = $idTokenVerifier->decode( $idToken );
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
