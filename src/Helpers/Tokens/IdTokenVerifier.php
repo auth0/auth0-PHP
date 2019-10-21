@@ -78,11 +78,11 @@ final class IdTokenVerifier
      *      - "time" Unix timestamp to use as the current time for exp, iat, and auth_time checks.
      *      - "leeway" to adjust the clock tolerance in seconds for the current check only.
      *
-     * @return stdClass
+     * @return array
      *
      * @throws InvalidTokenException If signature verification or any claim test fails.
      */
-    public function decode(string $token, array $options = []) : stdClass
+    public function decode(string $token, array $options = []) : array
     {
         if (empty($token)) {
             throw new InvalidTokenException('ID token is required but missing');
@@ -235,9 +235,9 @@ final class IdTokenVerifier
             }
         }
 
-        $profile = new stdClass();
+        $profile = [];
         foreach ($verifiedToken->getClaims() as $claim => $value) {
-            $profile->$claim = $value->getValue();
+            $profile[$claim] = $value->getValue();
         }
 
         return $profile;
