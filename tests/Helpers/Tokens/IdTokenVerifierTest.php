@@ -510,6 +510,6 @@ class IdTokenVerifierTest extends TestCase
 
         $decoded_token = $verifier->decode($token);
 
-        $this->assertEquals('__test_sub__', $decoded_token->sub);
+        $this->assertEquals('__test_sub__', $decoded_token['sub']);
     }
 }
