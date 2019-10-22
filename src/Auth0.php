@@ -809,7 +809,7 @@ class Auth0
      *
      * @return StoreInterface
      */
-    public function getStore(): StoreInterface 
+    public function getStore() 
     {
         return $this->store;
     }
@@ -819,7 +819,7 @@ class Auth0
      *
      * @return StateHandler
      */
-    public function getStateHandler(): StateHandler
+    public function getStateHandler()
     {
         return $this->stateHandler; 
     }
