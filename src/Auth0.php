@@ -13,7 +13,7 @@ use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
-use Auth0\SDK\Helpers\Tokens\JwksVerifier;
+use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
@@ -373,9 +373,10 @@ class Auth0
             $this->stateHandler = new SessionStateHandler($stateStore);
         }
 
-        $this->cacheHandler = new NoCacheHandler();
         if (isset($config['cache_handler']) && $config['cache_handler']) {
             $this->cacheHandler = $config['cache_handler'];
+        } else {
+            $this->cacheHandler = new NoCacheHandler();
         }
 
         $this->authentication = new Authentication(
@@ -668,13 +669,13 @@ class Auth0
         if ('RS256' === $this->idTokenAlg) {
             $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
             $jwks        = $jwksFetcher->getKeys($this->idTokenIss.'.well-known/jwks.json');
-            $sigVerifier = new JwksVerifier( $jwks );
+            $sigVerifier = new AsymmetricVerifier( $jwks );
         } else if ('HS256' === $this->idTokenAlg) {
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
         }
 
         $idTokenVerifier      = new IdTokenVerifier( $this->idTokenIss, $this->clientId, $sigVerifier );
-        $this->idTokenDecoded = $idTokenVerifier->decode( $idToken );
+        $this->idTokenDecoded = $idTokenVerifier->verify( $idToken );
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
