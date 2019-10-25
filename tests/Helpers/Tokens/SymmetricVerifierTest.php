@@ -50,8 +50,8 @@ class SymmetricVerifierTest extends TestCase
 
     public function testThatWrongAlgorithmFails()
     {
-        $rsa_keys    = JwksVerifierTest::getRsaKeys();
-        $rs256_token = JwksVerifierTest::getToken( $rsa_keys['private'] );
+        $rsa_keys    = AsymmetricVerifierTest::getRsaKeys();
+        $rs256_token = AsymmetricVerifierTest::getToken( $rsa_keys['private'] );
         $error_msg   = 'No exception caught';
 
         try {
