@@ -9,11 +9,11 @@ use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
 use Lcobucci\JWT\Token;
 
 /**
- * Class JwksVerifier
+ * Class AsymmetricVerifier
  *
  * @package Auth0\SDK\Helpers
  */
-final class JwksVerifier extends SignatureVerifier
+final class AsymmetricVerifier extends SignatureVerifier
 {
 
     /**
@@ -31,6 +31,7 @@ final class JwksVerifier extends SignatureVerifier
     public function __construct(array $jwks)
     {
         $this->jwks = $jwks;
+        parent::__construct('RS256');
     }
 
     /**
@@ -50,15 +51,5 @@ final class JwksVerifier extends SignatureVerifier
         }
 
         return $token->verify(new RsSigner(), new Key($this->jwks[$tokenKid]));
-    }
-
-    /**
-     * Algorithm for signature check.
-     *
-     * @return string
-     */
-    protected function getAlgorithm() : string
-    {
-        return 'RS256';
     }
 }

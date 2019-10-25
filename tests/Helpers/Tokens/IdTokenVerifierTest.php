@@ -15,7 +15,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode('');
+            $verifier->verify('');
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -30,7 +30,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -46,7 +46,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -62,7 +62,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -81,7 +81,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -97,7 +97,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -113,7 +113,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -132,7 +132,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -153,7 +153,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -174,7 +174,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -195,7 +195,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -214,7 +214,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -233,7 +233,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token, ['time' => 10000, 'leeway' => 10]);
+            $verifier->verify($token, ['time' => 10000, 'leeway' => 10]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -255,7 +255,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -275,7 +275,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token, ['time' => 20000, 'leeway' => 20]);
+            $verifier->verify($token, ['time' => 20000, 'leeway' => 20]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -298,7 +298,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token, ['nonce' => uniqid()]);
+            $verifier->verify($token, ['nonce' => uniqid()]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -319,7 +319,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token, ['nonce' => uniqid()]);
+            $verifier->verify($token, ['nonce' => uniqid()]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -340,7 +340,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token, ['nonce' => '__test_nonce__']);
+            $verifier->verify($token, ['nonce' => '__test_nonce__']);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -363,7 +363,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -387,7 +387,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -411,7 +411,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token);
+            $verifier->verify($token);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -434,7 +434,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token, ['max_age' => uniqid()]);
+            $verifier->verify($token, ['max_age' => uniqid()]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -458,7 +458,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->decode($token, ['max_age' => uniqid()]);
+            $verifier->verify($token, ['max_age' => uniqid()]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -483,7 +483,7 @@ class IdTokenVerifierTest extends TestCase
 
         try {
             $verifier->setLeeway(0);
-            $verifier->decode($token, ['time' => 10000, 'max_age' => 100]);
+            $verifier->verify($token, ['time' => 10000, 'max_age' => 100]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -508,7 +508,7 @@ class IdTokenVerifierTest extends TestCase
             ->withClaim('auth_time', 9000);
         $token    = SymmetricVerifierTest::getToken('__test_secret__', $builder);
 
-        $decoded_token = $verifier->decode($token);
+        $decoded_token = $verifier->verify($token);
 
         $this->assertEquals('__test_sub__', $decoded_token['sub']);
     }

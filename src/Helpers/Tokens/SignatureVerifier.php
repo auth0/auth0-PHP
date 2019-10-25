@@ -17,11 +17,18 @@ abstract class SignatureVerifier
 {
 
     /**
-     * Return the algorithm used for decoding.
+     * Token algorithm value.
      *
-     * @return string
+     * @var string
      */
-    abstract protected function getAlgorithm() : string;
+    private $alg;
+
+    /**
+     * Token parser.
+     *
+     * @var Token
+     */
+    private $parser;
 
     /**
      * Check the token's signature.
@@ -31,6 +38,17 @@ abstract class SignatureVerifier
      * @return boolean
      */
     abstract protected function checkSignature(Token $parsedToken) : bool;
+
+    /**
+     * SignatureVerifier constructor.
+     *
+     * @param string $alg
+     */
+    public function __construct(string $alg)
+    {
+        $this->alg    = $alg;
+        $this->parser = new Parser();
+    }
 
     /**
      * Format, algorithm, and signature checks.
@@ -46,18 +64,17 @@ abstract class SignatureVerifier
     final public function verifyAndDecode(string $token) : Token
     {
         try {
-            $parsedToken = (new Parser())->parse($token);
+            $parsedToken = $this->parser->parse($token);
         } catch (InvalidArgumentException $e) {
             throw new InvalidTokenException( 'ID token could not be decoded' );
         }
 
-        $tokenAlg    = $parsedToken->getHeader('alg', false);
-        $expectedAlg = $this->getAlgorithm();
-        if ($tokenAlg !== $expectedAlg) {
+        $tokenAlg = $parsedToken->getHeader('alg', false);
+        if ($tokenAlg !== $this->alg) {
             throw new InvalidTokenException( sprintf(
                 'Signature algorithm of "%s" is not supported. Expected the ID token to be signed with "%s".',
                 $tokenAlg,
-                $expectedAlg
+                $this->alg
             ) );
         }
 

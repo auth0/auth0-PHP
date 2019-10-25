@@ -2,7 +2,7 @@
 namespace Auth0\Tests\Helpers\Tokens;
 
 use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\SDK\Helpers\Tokens\JwksVerifier;
+use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
@@ -10,11 +10,11 @@ use Lcobucci\JWT\Token;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class JwksVerifierTest.
+ * Class AsymmetricVerifierTest.
  *
  * @package Auth0\Tests\Helpers
  */
-class JwksVerifierTest extends TestCase
+class AsymmetricVerifierTest extends TestCase
 {
     public function testThatWrongAlgorithmFails()
     {
@@ -28,7 +28,7 @@ class JwksVerifierTest extends TestCase
         $hs256_token = SymmetricVerifierTest::getToken();
 
         try {
-            $verifier = new JwksVerifier( [ '__test_kid__' => '__test_pem__' ] );
+            $verifier = new AsymmetricVerifier( [ '__test_kid__' => '__test_pem__' ] );
             $verifier->verifyAndDecode( $hs256_token );
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
@@ -47,7 +47,7 @@ class JwksVerifierTest extends TestCase
         $token     = self::getToken($rsa_keys['private']);
 
         try {
-            $verifier = new JwksVerifier( [ '__invalid_kid__' => $rsa_keys['public'] ] );
+            $verifier = new AsymmetricVerifier( [ '__invalid_kid__' => $rsa_keys['public'] ] );
             $verifier->verifyAndDecode( $token );
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
@@ -63,7 +63,7 @@ class JwksVerifierTest extends TestCase
         $token     = self::getToken($rsa_keys['private']);
 
         try {
-            $verifier = new JwksVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
+            $verifier = new AsymmetricVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
             $verifier->verifyAndDecode( $token.'__invalid_signature__' );
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
@@ -80,7 +80,7 @@ class JwksVerifierTest extends TestCase
         $rsa_keys = self::getRsaKeys();
         $token    = self::getToken($rsa_keys['private']);
 
-        $verifier     = new JwksVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
+        $verifier     = new AsymmetricVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
         $decodedToken = $verifier->verifyAndDecode( $token );
 
         $this->assertEquals('__test_sub__', $decodedToken->getClaim('sub'));

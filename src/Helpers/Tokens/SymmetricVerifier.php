@@ -29,6 +29,7 @@ final class SymmetricVerifier extends SignatureVerifier
     public function __construct(string $clientSecret)
     {
         $this->clientSecret = $clientSecret;
+        parent::__construct('HS256');
     }
 
     /**
