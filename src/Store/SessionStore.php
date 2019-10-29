@@ -15,11 +15,6 @@ class SessionStore implements StoreInterface
     const BASE_NAME = 'auth0_';
 
     /**
-     * Default session cookie expiration.
-     */
-    const COOKIE_EXPIRES = 604800;
-
-    /**
      * Session base name, configurable on instantiation.
      *
      * @var string
@@ -27,22 +22,13 @@ class SessionStore implements StoreInterface
     protected $session_base_name = self::BASE_NAME;
 
     /**
-     * Session cookie expiration, configurable on instantiation.
-     *
-     * @var integer
-     */
-    protected $session_cookie_expires;
-
-    /**
      * SessionStore constructor.
      *
-     * @param string  $base_name      Session base name.
-     * @param integer $cookie_expires Session expiration in seconds; default is 1 week.
+     * @param string $base_name Session base name.
      */
-    public function __construct($base_name = self::BASE_NAME, $cookie_expires = self::COOKIE_EXPIRES)
+    public function __construct($base_name = self::BASE_NAME)
     {
-        $this->session_base_name      = (string) $base_name;
-        $this->session_cookie_expires = (int) $cookie_expires;
+        $this->session_base_name = (string) $base_name;
     }
 
     /**
@@ -54,10 +40,6 @@ class SessionStore implements StoreInterface
     private function initSession()
     {
         if (! session_id()) {
-            if (! empty( $this->session_cookie_expires )) {
-                session_set_cookie_params($this->session_cookie_expires);
-            }
-
             session_start();
         }
     }
