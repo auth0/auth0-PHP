@@ -334,8 +334,6 @@ class Auth0
 
         $session_base_name = ! empty( $config['session_base_name'] ) ? $config['session_base_name'] : SessionStore::BASE_NAME;
 
-        $session_cookie_expires = isset( $config['session_cookie_expires'] ) ? $config['session_cookie_expires'] : SessionStore::COOKIE_EXPIRES;
-
         if (isset($config['store'])) {
             if ($config['store'] === false) {
                 $emptyStore = new EmptyStore();
@@ -344,7 +342,7 @@ class Auth0
                 $this->setStore($config['store']);
             }
         } else {
-            $sessionStore = new SessionStore($session_base_name, $session_cookie_expires);
+            $sessionStore = new SessionStore($session_base_name);
             $this->setStore($sessionStore);
         }
 
@@ -355,7 +353,7 @@ class Auth0
                 $this->stateHandler = $config['state_handler'];
             }
         } else {
-            $stateStore         = new SessionStore($session_base_name, $session_cookie_expires);
+            $stateStore         = new SessionStore($session_base_name);
             $this->stateHandler = new SessionStateHandler($stateStore);
         }
 
