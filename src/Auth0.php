@@ -212,13 +212,6 @@ class Auth0
     protected $idTokenAlg;
 
     /**
-     * Valid issuer for ID tokens.
-     *
-     * @var string
-     */
-    protected $idTokenIss;
-
-    /**
      * State Handler.
      *
      * @var StateHandler
@@ -315,13 +308,6 @@ class Auth0
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
             throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
-        }
-
-        $this->idTokenIss = $config['id_token_iss'] ?? 'https://'.$this->domain.'/';
-
-        // Custom issuers were arrays previously, this provides some backward-compatibility.
-        if (is_array($this->idTokenIss)) {
-            $this->idTokenIss = $this->idTokenIss[0];
         }
 
         $this->debugMode = isset($config['debug']) ? $config['debug'] : false;
@@ -665,17 +651,18 @@ class Auth0
      */
     public function setIdToken($idToken)
     {
+        $idTokenIss  = 'https://'.$this->domain.'/';
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
             $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
-            $jwks        = $jwksFetcher->getKeys($this->idTokenIss.'.well-known/jwks.json');
-            $sigVerifier = new AsymmetricVerifier( $jwks );
+            $jwks        = $jwksFetcher->getKeys($idTokenIss.'.well-known/jwks.json');
+            $sigVerifier = new AsymmetricVerifier($jwks);
         } else if ('HS256' === $this->idTokenAlg) {
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
         }
 
-        $idTokenVerifier      = new IdTokenVerifier( $this->idTokenIss, $this->clientId, $sigVerifier );
-        $this->idTokenDecoded = $idTokenVerifier->verify( $idToken );
+        $idTokenVerifier      = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
+        $this->idTokenDecoded = $idTokenVerifier->verify($idToken);
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
