@@ -23,6 +23,7 @@ use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\API\Helpers\State\DummyStateHandler;
 
+use Firebase\JWT\JWT;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -78,14 +79,6 @@ class Auth0
      * @var string
      */
     protected $clientSecret;
-
-    /**
-     * True if the client secret is base64 encoded, false if not.
-     * This information can be found in your Auth0 Application settings below the Client Secret field.
-     *
-     * @var boolean
-     */
-    protected $clientSecretEncoded;
 
     /**
      * Response mode
@@ -266,19 +259,18 @@ class Auth0
             throw new CoreException('Invalid client_id');
         }
 
-        if (empty($config['client_secret'])) {
-            throw new CoreException('Invalid client_secret');
-        }
-
         if (empty($config['redirect_uri'])) {
             throw new CoreException('Invalid redirect_uri');
         }
 
-        $this->domain              = $config['domain'];
-        $this->clientId            = $config['client_id'];
-        $this->clientSecret        = $config['client_secret'];
-        $this->clientSecretEncoded = ! empty( $config['secret_base64_encoded'] );
-        $this->redirectUri         = $config['redirect_uri'];
+        $this->domain      = $config['domain'];
+        $this->clientId    = $config['client_id'];
+        $this->redirectUri = $config['redirect_uri'];
+
+        $this->clientSecret = $config['client_secret'] ?? null;
+        if ($config['secret_base64_encoded'] ?? false) {
+            $this->clientSecret = JWT::urlsafeB64Decode($this->clientSecret);
+        }
 
         if (isset($config['audience'])) {
             $this->audience = $config['audience'];
