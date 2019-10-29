@@ -387,6 +387,70 @@ class Auth0Test extends TestCase
         $this->assertContains( 'state='.$_SESSION['auth0__webauth_state'], $url_query );
     }
 
+    /**
+     * @throws ApiException Should not be thrown in this test.
+     * @throws CoreException Should not be thrown in this test.
+     */
+    public function testThatClientSecretIsNotDecodedByDefault()
+    {
+        $request_history = [];
+        $mock            = new MockHandler([
+            new Response(200, [ 'Content-Type' => 'json' ], '{"access_token":"1.2.3"}'),
+        ]);
+        $handler         = HandlerStack::create($mock);
+        $handler->push( Middleware::history($request_history) );
+
+        $_GET['code']  = uniqid();
+        $custom_config = array_merge(self::$baseConfig, [
+            'skip_userinfo' => true,
+            'guzzle_options' => [
+                'handler' => $handler,
+            ]
+        ]);
+
+        $auth0 = new Auth0( $custom_config );
+        $auth0->exchange();
+
+        $request_body = $request_history[0]['request']->getBody()->getContents();
+        $request_body = json_decode($request_body, true);
+
+        $this->assertArrayHasKey( 'client_secret', $request_body );
+        $this->assertEquals( '__test_client_secret__', $request_body['client_secret'] );
+    }
+
+    /**
+     * @throws ApiException Should not be thrown in this test.
+     * @throws CoreException Should not be thrown in this test.
+     */
+    public function testThatClientSecretIsDecodedBeforeSending()
+    {
+        $request_history = [];
+        $mock            = new MockHandler([
+            new Response(200, [ 'Content-Type' => 'json' ], '{"access_token":"1.2.3"}'),
+        ]);
+        $handler         = HandlerStack::create($mock);
+        $handler->push( Middleware::history($request_history) );
+
+        $_GET['code']  = uniqid();
+        $custom_config = array_merge(self::$baseConfig, [
+            'client_secret' => JWT::urlsafeB64Encode( '__test_encoded_client_secret__' ),
+            'secret_base64_encoded' => true,
+            'skip_userinfo' => true,
+            'guzzle_options' => [
+                'handler' => $handler,
+            ]
+        ]);
+
+        $auth0 = new Auth0( $custom_config );
+        $auth0->exchange();
+
+        $request_body = $request_history[0]['request']->getBody()->getContents();
+        $request_body = json_decode($request_body, true);
+
+        $this->assertArrayHasKey( 'client_secret', $request_body );
+        $this->assertEquals( '__test_encoded_client_secret__', $request_body['client_secret'] );
+    }
+
     /*
      * Test helper methods.
      */
