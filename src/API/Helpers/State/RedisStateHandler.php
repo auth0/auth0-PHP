@@ -5,34 +5,25 @@ namespace Auth0\SDK\API\Helpers\State;
 use Predis\Client;
 use Auth0\SDK\API\Helpers\State\StateHandler;
 
-/*
- * This file is part of Auth0-PHP package.
- *
- * (c) Auth0
- *
- * For the full copyright and license information, please view the LICENSE file
- * that was distributed with this source code.
- */
-
 /**
  * Redis based implementation of StateHandler.
  *
- * @author Auth0
+ * @author Brian Anderson
  */
 class RedisStateHandler implements StateHandler
 {
     const STATE_NAME = 'webauth_state';
 
-    private $cache;
+    private $redis;
 
     /**
-     * Auth0RedisStateHandler constructor.
+     * RedisStateHandler constructor.
      *
-     * @param Client $cache
+     * @param Client $redis
      */
-    public function __construct(Client $cache)
+    public function __construct(Client $redis)
     {
-        $this->cache = $cache;
+        $this->redis = $redis;
     }
 
     /**
@@ -56,7 +47,7 @@ class RedisStateHandler implements StateHandler
      */
     public function store($state)
     {
-        $this->cache->sadd(self::STATE_NAME, $state);
+        $this->redis->sadd(self::STATE_NAME, $state);
     }
 
     /**
@@ -68,8 +59,8 @@ class RedisStateHandler implements StateHandler
      */
     public function validate($state)
     {
-        $valid = $this->cache->sismember(self::STATE_NAME, $state) > 0;
-        $this->cache->srem(self::STATE_NAME, $state);
+        $valid = $this->redis->sismember(self::STATE_NAME, $state) > 0;
+        $this->redis->srem(self::STATE_NAME, $state);
         return $valid;
     }
 }
