@@ -803,4 +803,20 @@ class Auth0
     {
         $this->debugger = $debugger;
     }
+    
+    /**
+     * @return string
+     */
+    public function getRedirectUri() {
+        return $this->redirectUri;
+    }
+
+    /**
+     * @param string $redirectUri
+     *
+     * @return void
+     */
+    public function setRedirectUri($redirectUri) {
+        $this->redirectUri = $redirectUri;
+    }
 }
