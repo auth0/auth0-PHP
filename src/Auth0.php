@@ -359,7 +359,7 @@ class Auth0
             $this->stateHandler = new SessionStateHandler($stateStore);
         }
 
-        if (isset($config['cache_handler']) && $config['cache_handler']) {
+        if (isset($config['cache_handler']) && $config['cache_handler'] instanceof CacheHandler ) {
             $this->cacheHandler = $config['cache_handler'];
         } else {
             $this->cacheHandler = new NoCacheHandler();
