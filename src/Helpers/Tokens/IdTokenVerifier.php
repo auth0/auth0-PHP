@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\Helpers\Tokens;
 
 use Auth0\SDK\Exception\InvalidTokenException;
-use stdClass;
 
 /**
  * Class IdTokenVerifier
