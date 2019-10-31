@@ -84,6 +84,7 @@ class Auth0Test extends TestCase
         ] );
 
         $add_config   = [
+            'skip_userinfo' => false,
             'id_token_alg' => 'HS256',
             'guzzle_options' => [
                 'handler' => HandlerStack::create($mock)
@@ -116,6 +117,7 @@ class Auth0Test extends TestCase
         ] );
 
         $add_config   = [
+            'skip_userinfo' => false,
             'scope' => 'offline_access read:messages',
             'audience' => 'https://api.identifier',
             'guzzle_options' => [ 'handler' => HandlerStack::create($mock) ]
