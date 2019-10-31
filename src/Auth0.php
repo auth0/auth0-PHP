@@ -123,21 +123,6 @@ class Auth0
     protected $redirectUri;
 
     /**
-     * Debug mode flag.
-     *
-     * @var boolean
-     */
-    protected $debugMode;
-
-    /**
-     * Debugger function.
-     * Will be called only if $debug_mode is true.
-     *
-     * @var \Closure
-     */
-    protected $debugger;
-
-    /**
      * The access token retrieved after authorization.
      * NULL means that there is no authorization yet.
      *
@@ -237,7 +222,6 @@ class Auth0
      *                                                  leave empty to default to SessionStore
      *     - state_handler          (Mixed)   Optional. A class that implements StateHandler of false for none;
      *                                                  leave empty to default to SessionStore SessionStateHandler
-     *     - debug                  (Boolean) Optional. Turn on debug mode, default false
      *     - guzzle_options         (Object)  Optional. Options passed to Guzzle
      *     - skip_userinfo          (Boolean) Optional. True to use id_token for user, false to call the
      *                                                  userinfo endpoint, default false
@@ -301,8 +285,6 @@ class Auth0
         if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
             throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
         }
-
-        $this->debugMode = isset($config['debug']) ? $config['debug'] : false;
 
         // User info is persisted by default.
         if (isset($config['persist_user']) && false === $config['persist_user']) {
@@ -772,17 +754,5 @@ class Auth0
     {
         $this->store = $store;
         return $this;
-    }
-
-    /**
-     * Set the debugger closure
-     *
-     * @param \Closure $debugger - debugger closure to use.
-     *
-     * @return void
-     */
-    public function setDebugger(\Closure $debugger)
-    {
-        $this->debugger = $debugger;
     }
 }
