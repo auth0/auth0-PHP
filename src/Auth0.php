@@ -225,7 +225,6 @@ class Auth0
      *     - guzzle_options         (Object)  Optional. Options passed to Guzzle
      *     - skip_userinfo          (Boolean) Optional. True to use id_token for user, false to call the
      *                                                  userinfo endpoint, default false
-     *     - session_base_name      (String)  Optional. A common prefix for all session keys. Default `auth0_`
      *     - session_cookie_expires (Integer) Optional. Seconds for session cookie to expire (if default store is used).
      *                                                  Default `604800`
      * @throws CoreException If `domain` is not provided.
@@ -235,21 +234,20 @@ class Auth0
      */
     public function __construct(array $config)
     {
-        if (empty($config['domain'])) {
+        $this->domain = $config['domain'] ?? $_ENV['AUTH0_DOMAIN'] ?? null;
+        if (empty($this->domain)) {
             throw new CoreException('Invalid domain');
         }
 
-        if (empty($config['client_id'])) {
+        $this->clientId = $config['client_id'] ?? $_ENV['AUTH0_CLIENT_ID'] ?? null;
+        if (empty($this->clientId)) {
             throw new CoreException('Invalid client_id');
         }
 
-        if (empty($config['redirect_uri'])) {
+        $this->redirectUri = $config['redirect_uri'] ?? $_ENV['AUTH0_REDIRECT_URI'] ?? null;
+        if (empty($this->redirectUri)) {
             throw new CoreException('Invalid redirect_uri');
         }
-
-        $this->domain      = $config['domain'];
-        $this->clientId    = $config['client_id'];
-        $this->redirectUri = $config['redirect_uri'];
 
         $this->clientSecret = $config['client_secret'] ?? null;
         if ($this->clientSecret && ($config['secret_base64_encoded'] ?? false)) {
