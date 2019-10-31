@@ -268,7 +268,7 @@ class Auth0
         $this->redirectUri = $config['redirect_uri'];
 
         $this->clientSecret = $config['client_secret'] ?? null;
-        if ($config['secret_base64_encoded'] ?? false) {
+        if ($this->clientSecret && ($config['secret_base64_encoded'] ?? false)) {
             $this->clientSecret = JWT::urlsafeB64Decode($this->clientSecret);
         }
 
@@ -349,7 +349,7 @@ class Auth0
             $this->stateHandler = new SessionStateHandler($stateStore);
         }
 
-        if (isset($config['cache_handler']) && $config['cache_handler'] instanceof CacheHandler ) {
+        if (isset($config['cache_handler']) && $config['cache_handler'] instanceof CacheHandler) {
             $this->cacheHandler = $config['cache_handler'];
         } else {
             $this->cacheHandler = new NoCacheHandler();
