@@ -85,14 +85,14 @@ class Auth0
      *
      * @var string
      */
-    protected $responseMode = 'query';
+    protected $responseMode;
 
     /**
      * Response type
      *
      * @var string
      */
-    protected $responseType = 'code';
+    protected $responseType;
 
     /**
      * Audience for the API being used
@@ -172,7 +172,7 @@ class Auth0
      *
      * @see http://docs.guzzlephp.org/en/stable/request-options.html
      */
-    protected $guzzleOptions = [];
+    protected $guzzleOptions;
 
     /**
      * Skip the /userinfo endpoint call and use the ID token.
@@ -254,30 +254,12 @@ class Auth0
             $this->clientSecret = JWT::urlsafeB64Decode($this->clientSecret);
         }
 
-        if (isset($config['audience'])) {
-            $this->audience = $config['audience'];
-        }
-
-        if (isset($config['response_mode'])) {
-            $this->responseMode = $config['response_mode'];
-        }
-
-        if (isset($config['response_type'])) {
-            $this->responseType = $config['response_type'];
-        }
-
-        if (isset($config['scope'])) {
-            $this->scope = $config['scope'];
-        }
-
-        if (isset($config['guzzle_options'])) {
-            $this->guzzleOptions = $config['guzzle_options'];
-        }
-
-        $this->skipUserinfo = false;
-        if (isset($config['skip_userinfo']) && is_bool($config['skip_userinfo'])) {
-            $this->skipUserinfo = $config['skip_userinfo'];
-        }
+        $this->audience = $config['audience'] ?? null;
+        $this->responseMode = $config['response_mode'] ?? 'query';
+        $this->responseType = $config['response_type'] ?? 'code';
+        $this->scope = $config['scope'] ?? 'openid profile email';
+        $this->guzzleOptions = $config['guzzle_options'] ?? [];
+        $this->skipUserinfo = $config['skip_userinfo'] ?? true;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
