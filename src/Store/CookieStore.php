@@ -18,17 +18,23 @@ class CookieStore implements StoreInterface
      * @var string
      */
     protected $cookie_base_name;
+
+    /**
+     * Cookie expiration, configurable on instantiation.
+     *
+     * @var integer
+     */
     protected $cookie_expiration;
 
     /**
      * CookieStore constructor.
      *
-     * @param string $base_name Cookie base name.
-     * @param int $expires Cookie expiration length, in seconds.
+     * @param string  $base_name Cookie base name.
+     * @param integer $expires   Cookie expiration length, in seconds.
      */
     public function __construct(?string $base_name = self::BASE_NAME, ?int $expires = 600)
     {
-        $this->cookie_base_name = $base_name;
+        $this->cookie_base_name  = $base_name;
         $this->cookie_expiration = $expires;
     }
 
@@ -79,10 +85,10 @@ class CookieStore implements StoreInterface
     /**
      * Set or delete a cookie.
      *
-     * @param string $key_name Cookie name to set.
-     * @param string|null $value Cookie value; set to null to delete the cookie.
+     * @param string      $key_name Cookie name to set.
+     * @param string|null $value    Cookie value; set to null to delete the cookie.
      *
-     * @return bool
+     * @return boolean
      */
     protected function setCookie(string $key_name, ?string $value = null) : bool
     {
