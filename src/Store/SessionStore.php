@@ -4,8 +4,6 @@ namespace Auth0\SDK\Store;
 
 /**
  * This class provides a layer to persist user access using PHP Sessions.
- *
- * @author Auth0
  */
 class SessionStore implements StoreInterface
 {
@@ -19,7 +17,7 @@ class SessionStore implements StoreInterface
      *
      * @var string
      */
-    protected $session_base_name = self::BASE_NAME;
+    protected $session_base_name;
 
     /**
      * SessionStore constructor.
