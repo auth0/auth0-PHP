@@ -25,7 +25,6 @@ use Auth0\SDK\API\Helpers\State\StateHandler;
 use Auth0\SDK\API\Helpers\State\SessionStateHandler;
 use Auth0\SDK\API\Helpers\State\DummyStateHandler;
 
-use Firebase\JWT\JWT;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -281,7 +280,7 @@ class Auth0
 
         $this->clientSecret = $config['client_secret'] ?? null;
         if ($this->clientSecret && ($config['secret_base64_encoded'] ?? false)) {
-            $this->clientSecret = JWT::urlsafeB64Decode($this->clientSecret);
+            $this->clientSecret = self::urlSafeBase64Decode($this->clientSecret);
         }
 
         $this->audience      = $config['audience'] ?? null;
@@ -812,5 +811,22 @@ class Auth0
         }
 
         return bin2hex($random_bytes);
+    }
+
+    /**
+     * Decode a URL-safe base64-encoded string.
+     *
+     * @param string $input Base64 encoded string to decode.
+     *
+     * @return string
+     */
+    public static function urlSafeBase64Decode(string $input) : string
+    {
+        $remainder = strlen($input) % 4;
+        if ($remainder) {
+            $input .= str_repeat('=', 4 - $remainder);
+        }
+        $input = strtr($input, '-_', '+/');
+        return base64_decode($input);
     }
 }
