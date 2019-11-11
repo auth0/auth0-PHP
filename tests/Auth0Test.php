@@ -6,8 +6,8 @@ use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Store\SessionStore;
+use Auth0\Tests\Helpers\Tokens\SymmetricVerifierTest;
 use Auth0\Tests\Traits\ErrorHelpers;
-use Firebase\JWT\JWT;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -448,7 +448,7 @@ class Auth0Test extends TestCase
 
         $_GET['code']  = uniqid();
         $custom_config = array_merge(self::$baseConfig, [
-            'client_secret' => JWT::urlsafeB64Encode( '__test_encoded_client_secret__' ),
+            'client_secret' => base64_encode( '__test_encoded_client_secret__' ),
             'secret_base64_encoded' => true,
             'skip_userinfo' => true,
             'guzzle_options' => [
@@ -611,7 +611,7 @@ class Auth0Test extends TestCase
 
     public static function getIdToken(array $overrides = [])
     {
-        $id_token_payload = [
+        $defaults = [
             'sub' => '__test_sub__',
             'iss' => 'https://__test_domain__/',
             'aud' => '__test_client_id__',
@@ -620,6 +620,12 @@ class Auth0Test extends TestCase
             'exp' => time() + 1000,
             'iat' => time() - 1000,
         ];
-        return JWT::encode( array_merge($id_token_payload, $overrides), '__test_client_secret__' );
+        $builder = SymmetricVerifierTest::getTokenBuilder();
+
+        foreach (array_merge($defaults, $overrides) as $claim => $value) {
+            $builder->withClaim($claim, $value);
+        }
+
+        return SymmetricVerifierTest::getToken('__test_client_secret__', $builder);
     }
 }
