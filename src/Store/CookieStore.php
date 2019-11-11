@@ -93,7 +93,7 @@ class CookieStore implements StoreInterface
     protected function setCookie(string $key_name, ?string $value = null) : bool
     {
         if (is_null($value)) {
-            return setcookie($key_name);
+            return setcookie($key_name, '', 0, '/');
         }
 
         return setcookie($key_name, $value, time() + $this->cookie_expiration, '/', '', false, true);
