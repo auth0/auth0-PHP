@@ -4,19 +4,8 @@ namespace Auth0\SDK\API\Helpers\State;
 
 use Auth0\SDK\Store\StoreInterface;
 
-/*
- * This file is part of Auth0-PHP package.
- *
- * (c) Auth0
- *
- * For the full copyright and license information, please view the LICENSE file
- * that was distributed with this source code.
- */
-
 /**
  * Session based implementation of StateHandler.
- *
- * @author Auth0
  */
 class SessionStateHandler implements StateHandler
 {
@@ -25,7 +14,6 @@ class SessionStateHandler implements StateHandler
     private $store;
 
     /**
-     *
      * @param StoreInterface $store
      */
     public function __construct(StoreInterface $store)
