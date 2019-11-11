@@ -9,12 +9,14 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
+use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
@@ -197,6 +199,13 @@ class Auth0
     protected $stateHandler;
 
     /**
+     * Authorization storage used for state, nonce, and max_age.
+     *
+     * @var StoreInterface
+     */
+    protected $authStore;
+
+    /**
      * Cache Handler.
      *
      * @var CacheHandler
@@ -254,12 +263,12 @@ class Auth0
             $this->clientSecret = JWT::urlsafeB64Decode($this->clientSecret);
         }
 
-        $this->audience = $config['audience'] ?? null;
-        $this->responseMode = $config['response_mode'] ?? 'query';
-        $this->responseType = $config['response_type'] ?? 'code';
-        $this->scope = $config['scope'] ?? 'openid profile email';
+        $this->audience      = $config['audience'] ?? null;
+        $this->responseMode  = $config['response_mode'] ?? 'query';
+        $this->responseType  = $config['response_type'] ?? 'code';
+        $this->scope         = $config['scope'] ?? 'openid profile email';
         $this->guzzleOptions = $config['guzzle_options'] ?? [];
-        $this->skipUserinfo = $config['skip_userinfo'] ?? true;
+        $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
@@ -288,11 +297,19 @@ class Auth0
 
         $session_base_name = $config['session_base_name'] ?? SessionStore::BASE_NAME;
 
-        $sessionStore = $config['store'] ?? new SessionStore($session_base_name);
-        if (! $sessionStore instanceof StoreInterface) {
-            $sessionStore = new EmptyStore();
+        $userStore = $config['store'] ?? new SessionStore($session_base_name);
+        if (! $userStore instanceof StoreInterface) {
+            $userStore = new EmptyStore();
         }
-        $this->setStore($sessionStore);
+
+        $this->setStore($userStore);
+
+        $authStore = $config['auth_store'] ?? new CookieStore();
+        if (! $authStore instanceof StoreInterface) {
+            $authStore = new EmptyStore();
+        }
+
+        $this->authStore = $authStore;
 
         if (isset($config['state_handler'])) {
             if ($config['state_handler'] === false) {
@@ -385,6 +402,9 @@ class Auth0
         } else {
             $this->stateHandler->store($auth_params['state']);
         }
+
+        $auth_params['nonce'] = self::getNonce();
+        $this->authStore->set( 'nonce', $auth_params['nonce'] );
 
         return $this->authentication->get_authorize_link(
             $auth_params['response_type'],
@@ -596,7 +616,7 @@ class Auth0
      * @return \Auth0\SDK\Auth0
      *
      * @throws CoreException
-     * @throws Exception\InvalidTokenException
+     * @throws InvalidTokenException
      */
     public function setIdToken($idToken)
     {
@@ -728,5 +748,21 @@ class Auth0
     {
         $this->store = $store;
         return $this;
+    }
+
+    /**
+     * @param integer $length
+     *
+     * @return string
+     */
+    public static function getNonce(int $length = 16) : string
+    {
+        try {
+            $random_bytes = random_bytes($length);
+        } catch (\Exception $e) {
+            $random_bytes = openssl_random_pseudo_bytes($length);
+        }
+
+        return bin2hex($random_bytes);
     }
 }
