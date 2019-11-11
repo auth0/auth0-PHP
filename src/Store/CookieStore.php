@@ -44,7 +44,7 @@ class CookieStore implements StoreInterface
     {
         $key_name           = $this->getCookieName($key);
         $_COOKIE[$key_name] = $value;
-        setcookie($key_name, $value, time() + $this->cookie_expiration, '/', '', false, true);
+        $this->setCookie( $key_name, $value );
     }
 
     /**
@@ -73,7 +73,24 @@ class CookieStore implements StoreInterface
     {
         $key_name = $this->getCookieName($key);
         unset($_COOKIE[$key_name]);
-        setcookie($key_name);
+        $this->setCookie( $key_name );
+    }
+
+    /**
+     * Set or delete a cookie.
+     *
+     * @param string $key_name Cookie name to set.
+     * @param string|null $value Cookie value; set to null to delete the cookie.
+     *
+     * @return bool
+     */
+    protected function setCookie(string $key_name, ?string $value = null) : bool
+    {
+        if (is_null($value)) {
+            return setcookie($key_name);
+        }
+
+        return setcookie($key_name, $value, time() + $this->cookie_expiration, '/', '', false, true);
     }
 
     /**
@@ -83,7 +100,7 @@ class CookieStore implements StoreInterface
      *
      * @return string
      */
-    public function getCookieName($key)
+    protected function getCookieName(string $key) : string
     {
         $key_name = $key;
         if (! empty( $this->cookie_base_name )) {
