@@ -223,26 +223,32 @@ class Auth0
      * BaseAuth0 Constructor.
      *
      * @param  array $config - Required configuration options.
-     * Configuration:
      *     - domain                 (String)  Required. Auth0 domain for your tenant
      *     - client_id              (String)  Required. Client ID found in the Application settings
-     *     - client_secret          (String)  Required. Client Secret found in the Application settings
      *     - redirect_uri           (String)  Required. Authentication callback URI
-     *     - response_mode          (String)  Optional. Default `query`
-     *     - response_type          (String)  Optional. Default `code`
+     *     - client_secret          (String)  Optional. Client Secret found in the Application settings
+     *     - secret_base64_encoded  (Boolean) Optional. Client Secret base64 encoded (true) or not (false, default)
+     *     - audience               (String)  Optional. API identifier to generate an access token
+     *     - response_mode          (String)  Optional. Response mode from the authorization server
+     *     - response_type          (String)  Optional. Response type from the authorization server
+     *     - scope                  (String)  Optional. Scope for ID and access tokens.
+     *     - guzzle_options         (Object)  Optional. Options passed to the Guzzle HTTP library
+     *     - skip_userinfo          (Boolean) Optional. Use the ID token for user identity (true, default) or the
+     *                                                  userinfo endpoint (false)
+     *     - max_age                (Integer) Optional. Maximum time allowed between authentication and callback
+     *     - id_token_alg           (String)  Optional. ID token algorithm expected; RS256 (default) or HS256 only
+     *     - session_base_name      (String)  Optional. Base name for session keys
+     *     - store                  (Mixed)   Optional. StorageInterface for identity and token persistence;
+     *                                                  leave empty to default to SessionStore, false for none
+     *     - auth_store             (Mixed)  Optional.  StorageInterface for transient auth data;
+     *                                                  leave empty to default to CookieStore, false for none
+     *     - state_handler          (Mixed)   Optional. A class that implements StateHandler or false for none;
+     *                                                  leave empty to default to SessionStore SessionStateHandler
+     *     - cache_handler          (Mixed)   Optional. A class that implements CacheHandler of false for none
      *     - persist_user           (Boolean) Optional. Persist the user info, default true
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
      *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
      *     - persist_id_token       (Boolean) Optional. Persist the ID token, default false
-     *     - store                  (Mixed)   Optional. A class that implements StorageInterface or false for none;
-     *                                                  leave empty to default to SessionStore
-     *     - state_handler          (Mixed)   Optional. A class that implements StateHandler of false for none;
-     *                                                  leave empty to default to SessionStore SessionStateHandler
-     *     - guzzle_options         (Object)  Optional. Options passed to Guzzle
-     *     - skip_userinfo          (Boolean) Optional. True to use id_token for user, false to call the
-     *                                                  userinfo endpoint, default false
-     *     - session_cookie_expires (Integer) Optional. Seconds for session cookie to expire (if default store is used).
-     *                                                  Default `604800`
      * @throws CoreException If `domain` is not provided.
      * @throws CoreException If `client_id` is not provided.
      * @throws CoreException If `client_secret` is not provided.
@@ -303,14 +309,19 @@ class Auth0
             $this->dontPersist('id_token');
         }
 
-        $session_base_name = $config['session_base_name'] ?? SessionStore::BASE_NAME;
+        $session_base_name = ! empty( $config['session_base_name'] ) ? $config['session_base_name'] : SessionStore::BASE_NAME;
 
-        $userStore = $config['store'] ?? new SessionStore($session_base_name);
-        if (! $userStore instanceof StoreInterface) {
-            $userStore = new EmptyStore();
+        if (isset($config['store'])) {
+            if ($config['store'] === false) {
+                $emptyStore = new EmptyStore();
+                $this->setStore($emptyStore);
+            } else {
+                $this->setStore($config['store']);
+            }
+        } else {
+            $sessionStore = new SessionStore($session_base_name);
+            $this->setStore($sessionStore);
         }
-
-        $this->setStore($userStore);
 
         $authStore = $config['auth_store'] ?? new CookieStore();
         if (! $authStore instanceof StoreInterface) {
@@ -401,7 +412,6 @@ class Auth0
             'response_type' => $this->responseType,
             'redirect_uri' => $this->redirectUri,
             'max_age' => $this->maxAge,
-            'nonce' => self::getNonce(),
         ];
 
         $auth_params = array_replace( $default_params, $params );
@@ -413,6 +423,7 @@ class Auth0
             $this->stateHandler->store($auth_params['state']);
         }
 
+        $auth_params['nonce'] = self::getNonce();
         $this->authStore->set( 'nonce', $auth_params['nonce'] );
 
         if (isset($auth_params['max_age'])) {
