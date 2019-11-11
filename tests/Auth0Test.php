@@ -4,6 +4,7 @@ namespace Auth0\Tests;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Store\SessionStore;
 use Auth0\Tests\Traits\ErrorHelpers;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Handler\MockHandler;
@@ -27,14 +28,7 @@ class Auth0Test extends TestCase
      *
      * @var array
      */
-    public static $baseConfig = [
-        'domain'        => '__test_domain__',
-        'client_id'     => '__test_client_id__',
-        'client_secret' => '__test_client_secret__',
-        'redirect_uri'  => '__test_redirect_uri__',
-        'store' => false,
-        'state_handler' => false,
-    ];
+    public static $baseConfig;
 
     /**
      * Default request headers.
@@ -42,6 +36,24 @@ class Auth0Test extends TestCase
      * @var array
      */
     protected static $headers = [ 'content-type' => 'json' ];
+
+    /**
+     * Runs after each test completes.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        self::$baseConfig = [
+            'domain'        => '__test_domain__',
+            'client_id'     => '__test_client_id__',
+            'client_secret' => '__test_client_secret__',
+            'redirect_uri'  => '__test_redirect_uri__',
+            'store' => false,
+            'auth_store' => new SessionStore(),
+            'state_handler' => false,
+            'scope' => 'openid offline_access',
+        ];
+    }
 
     /**
      * Runs after each test completes.
@@ -372,7 +384,7 @@ class Auth0Test extends TestCase
         $this->assertContains( 'client_id=__test_client_id__', $url_query );
     }
 
-    public function testThatGetLoginUrlGeneratesState()
+    public function testThatGetLoginUrlGeneratesStateAndNonce()
     {
         $custom_config = self::$baseConfig;
         unset( $custom_config['state_handler'] );
@@ -387,6 +399,7 @@ class Auth0Test extends TestCase
         $url_query        = explode( '&', $parsed_url_query );
 
         $this->assertContains( 'state='.$_SESSION['auth0__webauth_state'], $url_query );
+        $this->assertContains( 'nonce='.$_SESSION['auth0__nonce'], $url_query );
     }
 
     /**
