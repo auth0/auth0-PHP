@@ -286,19 +286,13 @@ class Auth0
             $this->dontPersist('id_token');
         }
 
-        $session_base_name = ! empty( $config['session_base_name'] ) ? $config['session_base_name'] : SessionStore::BASE_NAME;
+        $session_base_name = $config['session_base_name'] ?? SessionStore::BASE_NAME;
 
-        if (isset($config['store'])) {
-            if ($config['store'] === false) {
-                $emptyStore = new EmptyStore();
-                $this->setStore($emptyStore);
-            } else {
-                $this->setStore($config['store']);
-            }
-        } else {
-            $sessionStore = new SessionStore($session_base_name);
-            $this->setStore($sessionStore);
+        $sessionStore = $config['store'] ?? new SessionStore($session_base_name);
+        if (! $sessionStore instanceof StoreInterface) {
+            $sessionStore = new EmptyStore();
         }
+        $this->setStore($sessionStore);
 
         if (isset($config['state_handler'])) {
             if ($config['state_handler'] === false) {
