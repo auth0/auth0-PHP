@@ -4,6 +4,7 @@ namespace Auth0\Tests;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\Tests\Traits\ErrorHelpers;
 use Firebase\JWT\JWT;
@@ -61,7 +62,8 @@ class Auth0Test extends TestCase
     public function tearDown()
     {
         parent::tearDown();
-        $_GET = [];
+        $_GET     = [];
+        $_SESSION = [];
     }
 
     /**
@@ -492,6 +494,73 @@ class Auth0Test extends TestCase
         $this->assertEquals( 1001, $_SESSION['auth0__max_age'] );
     }
 
+    /**
+     * @throws ApiException
+     * @throws CoreException
+     * @throws InvalidTokenException
+     */
+    public function testThatIdTokenIsPersistedWhenSet()
+    {
+        $custom_config = array_merge( self::$baseConfig, [
+            'id_token_alg' => 'HS256',
+            'persist_id_token' => true,
+            'store' => new SessionStore(),
+        ]);
+
+        $auth0    = new Auth0( $custom_config );
+        $id_token = self::getIdToken();
+
+        $_SESSION['auth0__nonce']   = '__test_nonce__';
+        $_SESSION['auth0__max_age'] = 1000;
+        $auth0->setIdToken( $id_token );
+
+        $this->assertEquals($id_token, $auth0->getIdToken());
+        $this->assertEquals($id_token, $_SESSION['auth0__id_token']);
+    }
+
+    /**
+     * @throws CoreException
+     */
+    public function testThatIdTokenNonceIsCheckedWhenSet()
+    {
+        $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256'];
+        $auth0         = new Auth0( $custom_config );
+        $id_token      = self::getIdToken();
+
+        $_SESSION['auth0__nonce'] = '__invalid_nonce__';
+        $e_message                = 'No exception caught';
+        try {
+            $auth0->setIdToken( $id_token );
+        } catch (InvalidTokenException $e) {
+            $e_message = $e->getMessage();
+        }
+
+        $this->assertStringStartsWith('Nonce (nonce) claim mismatch in the ID token', $e_message);
+    }
+
+    /**
+     * @throws CoreException
+     */
+    public function testThatIdTokenAuthTimeIsCheckedWhenSet()
+    {
+        $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256'];
+        $auth0         = new Auth0( $custom_config );
+        $id_token      = self::getIdToken();
+
+        $_SESSION['auth0__max_age'] = 10;
+        $e_message                  = 'No exception caught';
+        try {
+            $auth0->setIdToken( $id_token );
+        } catch (InvalidTokenException $e) {
+            $e_message = $e->getMessage();
+        }
+
+        $this->assertStringStartsWith(
+            'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed',
+            $e_message
+        );
+    }
+
     /*
      * Test helper methods.
      */
@@ -502,6 +571,8 @@ class Auth0Test extends TestCase
             'sub' => '__test_sub__',
             'iss' => 'https://__test_domain__/',
             'aud' => '__test_client_id__',
+            'nonce' => '__test_nonce__',
+            'auth_time' => time() - 100,
             'exp' => time() + 1000,
             'iat' => time() - 1000,
         ];
