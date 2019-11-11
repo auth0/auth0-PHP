@@ -388,7 +388,9 @@ class Auth0Test extends TestCase
         $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
         $url_query        = explode( '&', $parsed_url_query );
 
+        $this->assertArrayHasKey( 'auth0__webauth_state', $_SESSION );
         $this->assertContains( 'state='.$_SESSION['auth0__webauth_state'], $url_query );
+        $this->assertArrayHasKey( 'auth0__nonce', $_SESSION );
         $this->assertContains( 'nonce='.$_SESSION['auth0__nonce'], $url_query );
     }
 
@@ -454,6 +456,40 @@ class Auth0Test extends TestCase
 
         $this->assertArrayHasKey( 'client_secret', $request_body );
         $this->assertEquals( '__test_encoded_client_secret__', $request_body['client_secret'] );
+    }
+
+    public function testThatMaxAgeIsSetInLoginUrlFromInitialConfig()
+    {
+        $custom_config            = self::$baseConfig;
+        $custom_config['max_age'] = 1000;
+        $auth0                    = new Auth0( $custom_config );
+
+        $auth_url = @$auth0->getLoginUrl();
+
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertContains( 'max_age=1000', $url_query );
+        $this->assertArrayHasKey( 'auth0__max_age', $_SESSION );
+        $this->assertEquals( 1000, $_SESSION['auth0__max_age'] );
+    }
+
+    public function testThatMaxAgeIsOverriddenInLoginUrl()
+    {
+        $custom_config            = self::$baseConfig;
+        $custom_config['max_age'] = 1000;
+        $auth0                    = new Auth0( $custom_config );
+
+        // Ignore cookie error triggered when session is started.
+        // phpcs:ignore
+        $auth_url = @$auth0->getLoginUrl(['max_age' => 1001]);
+
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertContains( 'max_age=1001', $url_query );
+        $this->assertArrayHasKey( 'auth0__max_age', $_SESSION );
+        $this->assertEquals( 1001, $_SESSION['auth0__max_age'] );
     }
 
     /*
