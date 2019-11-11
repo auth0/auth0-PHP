@@ -199,6 +199,13 @@ class Auth0
     protected $stateHandler;
 
     /**
+     * Maximum time allowed between authentication and ID token verification.
+     *
+     * @var integer
+     */
+    protected $maxAge;
+
+    /**
      * Authorization storage used for state, nonce, and max_age.
      *
      * @var StoreInterface
@@ -269,6 +276,7 @@ class Auth0
         $this->scope         = $config['scope'] ?? 'openid profile email';
         $this->guzzleOptions = $config['guzzle_options'] ?? [];
         $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
+        $this->maxAge        = $config['max_age'] ?? null;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
@@ -392,6 +400,8 @@ class Auth0
             'response_mode' => $this->responseMode,
             'response_type' => $this->responseType,
             'redirect_uri' => $this->redirectUri,
+            'max_age' => $this->maxAge,
+            'nonce' => self::getNonce(),
         ];
 
         $auth_params = array_replace( $default_params, $params );
@@ -403,8 +413,11 @@ class Auth0
             $this->stateHandler->store($auth_params['state']);
         }
 
-        $auth_params['nonce'] = self::getNonce();
         $this->authStore->set( 'nonce', $auth_params['nonce'] );
+
+        if (isset($auth_params['max_age'])) {
+            $this->authStore->set( 'max_age', $auth_params['max_age'] );
+        }
 
         return $this->authentication->get_authorize_link(
             $auth_params['response_type'],
@@ -627,8 +640,15 @@ class Auth0
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
         }
 
+        $verifierOptions = [
+            'nonce' => $this->authStore->get('nonce'),
+            'max_age' => $this->authStore->get('max_age'),
+        ];
+        $this->authStore->delete('nonce');
+        $this->authStore->delete('max_age');
+
         $idTokenVerifier      = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
-        $this->idTokenDecoded = $idTokenVerifier->verify($idToken);
+        $this->idTokenDecoded = $idTokenVerifier->verify($idToken, $verifierOptions);
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
