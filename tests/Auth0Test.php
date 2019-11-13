@@ -44,6 +44,7 @@ class Auth0Test extends TestCase
     public function setUp()
     {
         parent::setUp();
+
         self::$baseConfig = [
             'domain'        => '__test_domain__',
             'client_id'     => '__test_client_id__',
@@ -54,6 +55,10 @@ class Auth0Test extends TestCase
             'state_handler' => false,
             'scope' => 'openid offline_access',
         ];
+
+        if (! session_id()) {
+            session_start();
+        }
     }
 
     /**
@@ -96,15 +101,16 @@ class Auth0Test extends TestCase
             new Response( 200, self::$headers, json_encode( ['sub' => '__test_sub__'] ) ),
         ] );
 
-        $add_config   = [
+        $add_config               = [
             'skip_userinfo' => false,
             'id_token_alg' => 'HS256',
             'guzzle_options' => [
                 'handler' => HandlerStack::create($mock)
             ]
         ];
-        $auth0        = new Auth0( self::$baseConfig + $add_config );
-        $_GET['code'] = uniqid();
+        $auth0                    = new Auth0( self::$baseConfig + $add_config );
+        $_GET['code']             = uniqid();
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
 
         $this->assertTrue( $auth0->exchange() );
         $this->assertEquals( ['sub' => '__test_sub__'], $auth0->getUser() );
@@ -159,14 +165,15 @@ class Auth0Test extends TestCase
             new Response( 200, self::$headers, '{"access_token":"1.2.3","id_token":"'.$id_token.'"}' ),
         ] );
 
-        $add_config   = [
+        $add_config               = [
             'scope' => 'openid',
             'skip_userinfo' => true,
             'id_token_alg' => 'HS256',
             'guzzle_options' => [ 'handler' => HandlerStack::create($mock) ]
         ];
-        $auth0        = new Auth0( self::$baseConfig + $add_config );
-        $_GET['code'] = uniqid();
+        $auth0                    = new Auth0( self::$baseConfig + $add_config );
+        $_GET['code']             = uniqid();
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
 
         $this->assertTrue( $auth0->exchange() );
 
@@ -305,7 +312,8 @@ class Auth0Test extends TestCase
         ];
         $auth0      = new Auth0( self::$baseConfig + $add_config );
 
-        $_GET['code'] = uniqid();
+        $_GET['code']             = uniqid();
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
 
         $this->assertTrue( $auth0->exchange() );
         $auth0->renewTokens();
@@ -521,6 +529,27 @@ class Auth0Test extends TestCase
     /**
      * @throws CoreException
      */
+    public function testThatEmptyApplicationNonceFailsIdTokenValidation()
+    {
+        $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256'];
+        $auth0         = new Auth0( $custom_config );
+        $id_token      = self::getIdToken();
+
+        $this->assertArrayNotHasKey('auth0__nonce', $_SESSION);
+
+        $e_message = 'No exception caught';
+        try {
+            $auth0->setIdToken( $id_token );
+        } catch (InvalidTokenException $e) {
+            $e_message = $e->getMessage();
+        }
+
+        $this->assertStringStartsWith('Nonce value not found in application store', $e_message);
+    }
+
+    /**
+     * @throws CoreException
+     */
     public function testThatIdTokenNonceIsCheckedWhenSet()
     {
         $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256'];
@@ -547,6 +576,7 @@ class Auth0Test extends TestCase
         $auth0         = new Auth0( $custom_config );
         $id_token      = self::getIdToken();
 
+        $_SESSION['auth0__nonce']   = '__test_nonce__';
         $_SESSION['auth0__max_age'] = 10;
         $e_message                  = 'No exception caught';
         try {
