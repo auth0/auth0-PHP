@@ -32,7 +32,7 @@ class CookieStore implements StoreInterface
      * @param string  $base_name Cookie base name.
      * @param integer $expires   Cookie expiration length, in seconds.
      */
-    public function __construct(?string $base_name = self::BASE_NAME, ?int $expires = 600)
+    public function __construct(string $base_name = self::BASE_NAME, int $expires = 600)
     {
         $this->cookie_base_name  = $base_name;
         $this->cookie_expiration = $expires;
@@ -50,7 +50,7 @@ class CookieStore implements StoreInterface
     {
         $key_name           = $this->getCookieName($key);
         $_COOKIE[$key_name] = $value;
-        $this->setCookie( $key_name, $value );
+        $this->setCookie( $key_name, $value, $this->cookie_expiration );
     }
 
     /**
@@ -85,18 +85,15 @@ class CookieStore implements StoreInterface
     /**
      * Set or delete a cookie.
      *
-     * @param string      $key_name Cookie name to set.
-     * @param string|null $value    Cookie value; set to null to delete the cookie.
+     * @param string  $name    Cookie name to set.
+     * @param string  $value   Cookie value.
+     * @param integer $expires Cookie expiration.
      *
      * @return boolean
      */
-    protected function setCookie(string $key_name, ?string $value = null) : bool
+    protected function setCookie(string $name, string $value = '', int $expires = 0) : bool
     {
-        if (is_null($value)) {
-            return setcookie($key_name, '', 0, '/');
-        }
-
-        return setcookie($key_name, $value, time() + $this->cookie_expiration, '/', '', false, true);
+        return setcookie($name, $value, time() + $expires, '/', '', false, true);
     }
 
     /**
@@ -106,7 +103,7 @@ class CookieStore implements StoreInterface
      *
      * @return string
      */
-    protected function getCookieName(string $key) : string
+    public function getCookieName(string $key) : string
     {
         $key_name = $key;
         if (! empty( $this->cookie_base_name )) {
