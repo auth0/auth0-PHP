@@ -670,7 +670,7 @@ class Auth0
         $verifierOptions = [
             // Set a custom leeway if one was passed to the constructor.
             'leeway' => $this->idTokenLeeway,
-            'max_age' => $this->authStore->get('max_age'),
+            'max_age' => $this->authStore->get('max_age') ?? $this->maxAge,
         ];
         $this->authStore->delete('max_age');
 
