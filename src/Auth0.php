@@ -194,7 +194,7 @@ class Auth0
     /**
      * Leeway for ID token validation.
      *
-     * @var int
+     * @var integer
      */
     protected $idTokenLeeway;
 
@@ -332,12 +332,10 @@ class Auth0
             $this->setStore($sessionStore);
         }
 
-        $authStore = $config['auth_store'] ?? new CookieStore();
-        if (! $authStore instanceof StoreInterface) {
-            $authStore = new EmptyStore();
+        $this->authStore = $config['auth_store'] ?? null;
+        if (! $this->authStore instanceof StoreInterface) {
+            $this->authStore = new CookieStore();
         }
-
-        $this->authStore = $authStore;
 
         if (isset($config['state_handler'])) {
             if ($config['state_handler'] === false) {
@@ -427,12 +425,18 @@ class Auth0
         $auth_params = array_filter( $auth_params );
 
         if (empty( $auth_params['state'] )) {
+            // No state provided by application so generate, store, and send one.
             $auth_params['state'] = $this->stateHandler->issue();
         } else {
+            // Store the passed-in value.
             $this->stateHandler->store($auth_params['state']);
         }
 
-        $auth_params['nonce'] = self::getNonce();
+        // ID token nonce validation is required so auth params must include one.
+        if (empty( $auth_params['nonce'] )) {
+            $auth_params['nonce'] = self::getNonce();
+        }
+
         $this->authStore->set( 'nonce', $auth_params['nonce'] );
 
         if (isset($auth_params['max_age'])) {
@@ -664,12 +668,18 @@ class Auth0
         }
 
         $verifierOptions = [
-            'nonce' => $this->authStore->get('nonce'),
-            'max_age' => $this->authStore->get('max_age'),
+            // Set a custom leeway if one was passed to the constructor.
             'leeway' => $this->idTokenLeeway,
+            'max_age' => $this->authStore->get('max_age'),
         ];
-        $this->authStore->delete('nonce');
         $this->authStore->delete('max_age');
+
+        $verifierOptions['nonce'] = $this->authStore->get('nonce');
+        if (empty( $verifierOptions['nonce'] )) {
+            throw new InvalidTokenException('Nonce value not found in application store');
+        }
+
+        $this->authStore->delete('nonce');
 
         $idTokenVerifier      = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
         $this->idTokenDecoded = $idTokenVerifier->verify($idToken, $verifierOptions);
