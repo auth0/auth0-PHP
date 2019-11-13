@@ -391,9 +391,7 @@ class Auth0Test extends TestCase
 
         $auth0 = new Auth0( $custom_config );
 
-        // Ignore cookie error triggered when session is started.
-        // phpcs:ignore
-        $auth_url = @$auth0->getLoginUrl();
+        $auth_url = $auth0->getLoginUrl();
 
         $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
         $url_query        = explode( '&', $parsed_url_query );
@@ -474,7 +472,7 @@ class Auth0Test extends TestCase
         $custom_config['max_age'] = 1000;
         $auth0                    = new Auth0( $custom_config );
 
-        $auth_url = @$auth0->getLoginUrl();
+        $auth_url = $auth0->getLoginUrl();
 
         $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
         $url_query        = explode( '&', $parsed_url_query );
@@ -490,9 +488,7 @@ class Auth0Test extends TestCase
         $custom_config['max_age'] = 1000;
         $auth0                    = new Auth0( $custom_config );
 
-        // Ignore cookie error triggered when session is started.
-        // phpcs:ignore
-        $auth_url = @$auth0->getLoginUrl(['max_age' => 1001]);
+        $auth_url = $auth0->getLoginUrl(['max_age' => 1001]);
 
         $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
         $url_query        = explode( '&', $parsed_url_query );
@@ -572,13 +568,12 @@ class Auth0Test extends TestCase
      */
     public function testThatIdTokenAuthTimeIsCheckedWhenSet()
     {
-        $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256'];
+        $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256', 'max_age' => 10 ];
         $auth0         = new Auth0( $custom_config );
         $id_token      = self::getIdToken();
 
-        $_SESSION['auth0__nonce']   = '__test_nonce__';
-        $_SESSION['auth0__max_age'] = 10;
-        $e_message                  = 'No exception caught';
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $e_message                = 'No exception caught';
         try {
             $auth0->setIdToken( $id_token );
         } catch (InvalidTokenException $e) {
@@ -591,11 +586,30 @@ class Auth0Test extends TestCase
         );
     }
 
+    /**
+     * @throws ApiException
+     * @throws CoreException
+     * @throws InvalidTokenException
+     */
+    public function testThatIdTokenLeewayFromConstructorIsUsed()
+    {
+        $custom_config = self::$baseConfig + ['id_token_leeway' => 120, 'id_token_alg' => 'HS256'];
+        $auth0         = new Auth0( $custom_config );
+
+        // Set the token expiration time past the default leeway of 60 seconds.
+        $id_token = self::getIdToken(['exp' => time() - 100]);
+
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
+
+        $auth0->setIdToken( $id_token );
+        $this->assertEquals( $id_token, $auth0->getIdToken() );
+    }
+
     /*
      * Test helper methods.
      */
 
-    public static function getIdToken()
+    public static function getIdToken(array $overrides = [])
     {
         $id_token_payload = [
             'sub' => '__test_sub__',
@@ -606,6 +620,6 @@ class Auth0Test extends TestCase
             'exp' => time() + 1000,
             'iat' => time() - 1000,
         ];
-        return JWT::encode( $id_token_payload, '__test_client_secret__' );
+        return JWT::encode( array_merge($id_token_payload, $overrides), '__test_client_secret__' );
     }
 }
