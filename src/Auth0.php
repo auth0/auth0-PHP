@@ -192,6 +192,13 @@ class Auth0
     protected $idTokenAlg;
 
     /**
+     * Leeway for ID token validation.
+     *
+     * @var int
+     */
+    protected $idTokenLeeway;
+
+    /**
      * State Handler.
      *
      * @var StateHandler
@@ -237,6 +244,7 @@ class Auth0
      *                                                  userinfo endpoint (false)
      *     - max_age                (Integer) Optional. Maximum time allowed between authentication and callback
      *     - id_token_alg           (String)  Optional. ID token algorithm expected; RS256 (default) or HS256 only
+     *     - id_token_leeway        (Integer) Optional. Leeway, in seconds, for ID token validation.
      *     - session_base_name      (String)  Optional. Base name for session keys
      *     - store                  (Mixed)   Optional. StorageInterface for identity and token persistence;
      *                                                  leave empty to default to SessionStore, false for none
@@ -283,6 +291,7 @@ class Auth0
         $this->guzzleOptions = $config['guzzle_options'] ?? [];
         $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
         $this->maxAge        = $config['max_age'] ?? null;
+        $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
@@ -657,6 +666,7 @@ class Auth0
         $verifierOptions = [
             'nonce' => $this->authStore->get('nonce'),
             'max_age' => $this->authStore->get('max_age'),
+            'leeway' => $this->idTokenLeeway,
         ];
         $this->authStore->delete('nonce');
         $this->authStore->delete('max_age');
