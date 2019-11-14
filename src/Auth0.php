@@ -212,11 +212,11 @@ class Auth0
     protected $maxAge;
 
     /**
-     * Authorization storage used for state, nonce, and max_age.
+     * Transient authorization storage used for state, nonce, and max_age.
      *
      * @var StoreInterface
      */
-    protected $authStore;
+    protected $transientStore;
 
     /**
      * Cache Handler.
@@ -246,7 +246,7 @@ class Auth0
      *     - id_token_leeway        (Integer) Optional. Leeway, in seconds, for ID token validation.
      *     - store                  (Mixed)   Optional. StorageInterface for identity and token persistence;
      *                                                  leave empty to default to SessionStore, false for none
-     *     - auth_store             (Mixed)  Optional.  StorageInterface for transient auth data;
+     *     - transient_store        (Mixed)  Optional.  StorageInterface for transient auth data;
      *                                                  leave empty to default to CookieStore, false for none
      *     - state_handler          (Mixed)   Optional. A class that implements StateHandler or false for none;
      *                                                  leave empty to default to SessionStore SessionStateHandler
@@ -322,9 +322,9 @@ class Auth0
             $this->store = new SessionStore();
         }
 
-        $this->authStore = $config['auth_store'] ?? null;
-        if (! $this->authStore instanceof StoreInterface) {
-            $this->authStore = new CookieStore();
+        $this->transientStore = $config['transient_store'] ?? null;
+        if (! $this->transientStore instanceof StoreInterface) {
+            $this->transientStore = new CookieStore();
         }
 
         if (isset($config['state_handler'])) {
@@ -427,10 +427,10 @@ class Auth0
             $auth_params['nonce'] = self::getNonce();
         }
 
-        $this->authStore->set( 'nonce', $auth_params['nonce'] );
+        $this->transientStore->set( 'nonce', $auth_params['nonce'] );
 
         if (isset($auth_params['max_age'])) {
-            $this->authStore->set( 'max_age', $auth_params['max_age'] );
+            $this->transientStore->set( 'max_age', $auth_params['max_age'] );
         }
 
         return $this->authentication->get_authorize_link(
@@ -657,16 +657,16 @@ class Auth0
         $verifierOptions = [
             // Set a custom leeway if one was passed to the constructor.
             'leeway' => $this->idTokenLeeway,
-            'max_age' => $this->authStore->get('max_age') ?? $this->maxAge,
+            'max_age' => $this->transientStore->get('max_age') ?? $this->maxAge,
         ];
-        $this->authStore->delete('max_age');
+        $this->transientStore->delete('max_age');
 
-        $verifierOptions['nonce'] = $this->authStore->get('nonce');
+        $verifierOptions['nonce'] = $this->transientStore->get('nonce');
         if (empty( $verifierOptions['nonce'] )) {
             throw new InvalidTokenException('Nonce value not found in application store');
         }
 
-        $this->authStore->delete('nonce');
+        $this->transientStore->delete('nonce');
 
         $idTokenVerifier      = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
         $this->idTokenDecoded = $idTokenVerifier->verify($idToken, $verifierOptions);
