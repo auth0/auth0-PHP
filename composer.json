@@ -41,6 +41,6 @@
     "compat": "\"vendor/bin/phpcs\" --standard=.phpcs-compat.xml.dist",
     "sniffs": "\"vendor/bin/phpcs\" -e",
     "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
-    "pre-commit": [ "@phpcbf", "@compat", "@test" ]
+    "pre-commit": [ "@test", "@compat", "@phpcbf"  ]
   }
 }
