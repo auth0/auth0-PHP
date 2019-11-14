@@ -51,7 +51,7 @@ class Auth0Test extends TestCase
             'client_secret' => '__test_client_secret__',
             'redirect_uri'  => '__test_redirect_uri__',
             'store' => false,
-            'auth_store' => new SessionStore(),
+            'transient_store' => new SessionStore(),
             'state_handler' => false,
             'scope' => 'openid offline_access',
         ];
