@@ -10,7 +10,7 @@ class CookieStore implements StoreInterface
     /**
      * Default cookie base name.
      */
-    const BASE_NAME = 'auth0';
+    const BASE_NAME = 'auth0_';
 
     /**
      * Cookie base name, configurable on instantiation.
