@@ -41,10 +41,6 @@ class Auth0StoreTest extends TestCase
             'redirect_uri'  => '__test_redirect_uri__',
             'scope' => 'openid',
         ];
-
-        if (! session_id()) {
-            session_start();
-        }
     }
 
     /**
@@ -120,5 +116,21 @@ class Auth0StoreTest extends TestCase
 
         $auth0 = new Auth0(self::$baseConfig + ['store' => false]);
         $this->assertNull($auth0->getUser());
+    }
+
+    public function testThatCookieStoreIsUsedAsDefaultTransient()
+    {
+        $auth0 = new Auth0(self::$baseConfig);
+        @$auth0->getLoginUrl(['nonce' => '__test_cookie_nonce__']);
+
+        $this->assertEquals('__test_cookie_nonce__', $_COOKIE['auth0_nonce']);
+    }
+
+    public function testThatTransientCanBeSetToAnotherStoreInterface()
+    {
+        $auth0 = new Auth0(self::$baseConfig + ['transient_store' => new SessionStore()]);
+        @$auth0->getLoginUrl(['nonce' => '__test_session_nonce__']);
+
+        $this->assertEquals('__test_session_nonce__', $_SESSION['auth0__nonce']);
     }
 }
