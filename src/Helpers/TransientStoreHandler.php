@@ -64,7 +64,7 @@ class TransientStoreHandler
      *
      * @return string|null
      */
-    public function getOnce(string $key) : ?string
+    public function getOnce(string $key)
     {
         $value = $this->store->get($key);
         $this->store->delete($key);

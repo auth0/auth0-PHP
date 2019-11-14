@@ -123,7 +123,7 @@ class Auth0StoreTest extends TestCase
         $auth0 = new Auth0(self::$baseConfig);
         @$auth0->getLoginUrl(['nonce' => '__test_cookie_nonce__']);
 
-        $this->assertEquals('__test_cookie_nonce__', $_COOKIE['auth0_nonce']);
+        $this->assertEquals('__test_cookie_nonce__', $_COOKIE['auth0__nonce']);
     }
 
     public function testThatTransientCanBeSetToAnotherStoreInterface()
