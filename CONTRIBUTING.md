@@ -6,8 +6,12 @@ When contributing to this SDK, please:
 
 - Maintain the minimum PHP version (found under `require.php` in `composer.json` for the branch).
 - Code to the [PSR-2 standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md).
-- Write tests and run them with `composer test`.
-- Run `composer phpcbf` for the whole project before submitting your PR for review. 
+- Run `composer pre-commit` for the whole project before submitting your PR for review. You can add this to a pre-commit hook with the following:
+
+```bash
+echo '#!/bin/sh' > .git/hooks/pre-commit && echo 'composer pre-commit' >> .git/hooks/pre-commit
+```
+
 - Run `composer phpcs` for the changed PHP files before submitting your PR for review (optional). 
 - Keep PRs focused and change the minimum number of lines to achieve your goal.
 
