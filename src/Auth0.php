@@ -16,6 +16,7 @@ use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
+use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
@@ -214,9 +215,9 @@ class Auth0
     /**
      * Transient authorization storage used for state, nonce, and max_age.
      *
-     * @var StoreInterface
+     * @var TransientStoreHandler
      */
-    protected $transientStore;
+    protected $transientHandler;
 
     /**
      * Cache Handler.
@@ -322,10 +323,12 @@ class Auth0
             $this->store = new SessionStore();
         }
 
-        $this->transientStore = $config['transient_store'] ?? null;
-        if (! $this->transientStore instanceof StoreInterface) {
-            $this->transientStore = new CookieStore();
+        $transientStore = $config['transient_store'] ?? null;
+        if (! $transientStore instanceof StoreInterface) {
+            $transientStore = new CookieStore();
         }
+
+        $this->transientHandler = new TransientStoreHandler( $transientStore );
 
         if (isset($config['state_handler'])) {
             if ($config['state_handler'] === false) {
@@ -424,13 +427,13 @@ class Auth0
 
         // ID token nonce validation is required so auth params must include one.
         if (empty( $auth_params['nonce'] )) {
-            $auth_params['nonce'] = self::getNonce();
+            $auth_params['nonce'] = $this->transientHandler->issue('nonce');
+        } else {
+            $this->transientHandler->store('nonce', $auth_params['nonce']);
         }
 
-        $this->transientStore->set( 'nonce', $auth_params['nonce'] );
-
         if (isset($auth_params['max_age'])) {
-            $this->transientStore->set( 'max_age', $auth_params['max_age'] );
+            $this->transientHandler->store( 'max_age', $auth_params['max_age'] );
         }
 
         return $this->authentication->get_authorize_link(
@@ -660,16 +663,13 @@ class Auth0
         $verifierOptions = [
             // Set a custom leeway if one was passed to the constructor.
             'leeway' => $this->idTokenLeeway,
-            'max_age' => $this->transientStore->get('max_age') ?? $this->maxAge,
+            'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
         ];
-        $this->transientStore->delete('max_age');
 
-        $verifierOptions['nonce'] = $this->transientStore->get('nonce');
+        $verifierOptions['nonce'] = $this->transientHandler->getOnce('nonce');
         if (empty( $verifierOptions['nonce'] )) {
             throw new InvalidTokenException('Nonce value not found in application store');
         }
-
-        $this->transientStore->delete('nonce');
 
         $idTokenVerifier      = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
         $this->idTokenDecoded = $idTokenVerifier->verify($idToken, $verifierOptions);
