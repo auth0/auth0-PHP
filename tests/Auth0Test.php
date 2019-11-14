@@ -620,7 +620,7 @@ class Auth0Test extends TestCase
             'exp' => time() + 1000,
             'iat' => time() - 1000,
         ];
-        $builder = SymmetricVerifierTest::getTokenBuilder();
+        $builder  = SymmetricVerifierTest::getTokenBuilder();
 
         foreach (array_merge($defaults, $overrides) as $claim => $value) {
             $builder->withClaim($claim, $value);
