@@ -52,7 +52,6 @@ class Auth0Test extends TestCase
             'redirect_uri'  => '__test_redirect_uri__',
             'store' => false,
             'transient_store' => new SessionStore(),
-            'state_handler' => false,
             'scope' => 'openid offline_access',
         ];
 
@@ -111,6 +110,8 @@ class Auth0Test extends TestCase
         $auth0                    = new Auth0( self::$baseConfig + $add_config );
         $_GET['code']             = uniqid();
         $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
 
         $this->assertTrue( $auth0->exchange() );
         $this->assertEquals( ['sub' => '__test_sub__'], $auth0->getUser() );
@@ -135,14 +136,16 @@ class Auth0Test extends TestCase
             new Response( 200, self::$headers, '{"sub":"123"}' ),
         ] );
 
-        $add_config   = [
+        $add_config               = [
             'skip_userinfo' => false,
             'scope' => 'offline_access read:messages',
             'audience' => 'https://api.identifier',
             'guzzle_options' => [ 'handler' => HandlerStack::create($mock) ]
         ];
-        $auth0        = new Auth0( self::$baseConfig + $add_config );
-        $_GET['code'] = uniqid();
+        $auth0                    = new Auth0( self::$baseConfig + $add_config );
+        $_GET['code']             = uniqid();
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
 
         $this->assertTrue( $auth0->exchange() );
         $this->assertEquals( ['sub' => '123'], $auth0->getUser() );
@@ -174,6 +177,8 @@ class Auth0Test extends TestCase
         $auth0                    = new Auth0( self::$baseConfig + $add_config );
         $_GET['code']             = uniqid();
         $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
 
         $this->assertTrue( $auth0->exchange() );
 
@@ -221,7 +226,10 @@ class Auth0Test extends TestCase
         ];
         $auth0      = new Auth0( self::$baseConfig + $add_config );
 
-        $_GET['code'] = uniqid();
+        $_GET['code']             = uniqid();
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
+
         $this->assertTrue( $auth0->exchange() );
 
         try {
@@ -260,7 +268,10 @@ class Auth0Test extends TestCase
         ];
         $auth0      = new Auth0( self::$baseConfig + $add_config );
 
-        $_GET['code'] = uniqid();
+        $_GET['code']             = uniqid();
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
+
         $this->assertTrue( $auth0->exchange() );
 
         try {
@@ -316,6 +327,8 @@ class Auth0Test extends TestCase
 
         $_GET['code']             = uniqid();
         $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
 
         $this->assertTrue( $auth0->exchange() );
         $auth0->renewTokens(['scope' => 'openid']);
@@ -397,7 +410,6 @@ class Auth0Test extends TestCase
     public function testThatGetLoginUrlGeneratesStateAndNonce()
     {
         $custom_config = self::$baseConfig;
-        unset( $custom_config['state_handler'] );
 
         $auth0 = new Auth0( $custom_config );
 
@@ -406,8 +418,8 @@ class Auth0Test extends TestCase
         $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
         $url_query        = explode( '&', $parsed_url_query );
 
-        $this->assertArrayHasKey( 'auth0__webauth_state', $_SESSION );
-        $this->assertContains( 'state='.$_SESSION['auth0__webauth_state'], $url_query );
+        $this->assertArrayHasKey( 'auth0__state', $_SESSION );
+        $this->assertContains( 'state='.$_SESSION['auth0__state'], $url_query );
         $this->assertArrayHasKey( 'auth0__nonce', $_SESSION );
         $this->assertContains( 'nonce='.$_SESSION['auth0__nonce'], $url_query );
     }
@@ -425,15 +437,18 @@ class Auth0Test extends TestCase
         $handler         = HandlerStack::create($mock);
         $handler->push( Middleware::history($request_history) );
 
-        $_GET['code']  = uniqid();
         $custom_config = array_merge(self::$baseConfig, [
             'skip_userinfo' => true,
             'guzzle_options' => [
                 'handler' => $handler,
             ]
         ]);
+        $auth0         = new Auth0( $custom_config );
 
-        $auth0 = new Auth0( $custom_config );
+        $_GET['code']             = uniqid();
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
+
         $auth0->exchange();
 
         $request_body = $request_history[0]['request']->getBody()->getContents();
@@ -467,6 +482,10 @@ class Auth0Test extends TestCase
         ]);
 
         $auth0 = new Auth0( $custom_config );
+
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
+
         $auth0->exchange();
 
         $request_body = $request_history[0]['request']->getBody()->getContents();

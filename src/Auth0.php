@@ -22,9 +22,6 @@ use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\API\Helpers\State\StateHandler;
-use Auth0\SDK\API\Helpers\State\SessionStateHandler;
-use Auth0\SDK\API\Helpers\State\DummyStateHandler;
 
 use GuzzleHttp\Exception\RequestException;
 
@@ -199,13 +196,6 @@ class Auth0
     protected $idTokenLeeway;
 
     /**
-     * State Handler.
-     *
-     * @var StateHandler
-     */
-    protected $stateHandler;
-
-    /**
      * Maximum time allowed between authentication and ID token verification.
      *
      * @var integer
@@ -249,8 +239,6 @@ class Auth0
      *                                                  leave empty to default to SessionStore, false for none
      *     - transient_store        (Mixed)  Optional.  StorageInterface for transient auth data;
      *                                                  leave empty to default to CookieStore, false for none
-     *     - state_handler          (Mixed)   Optional. A class that implements StateHandler or false for none;
-     *                                                  leave empty to default to SessionStore SessionStateHandler
      *     - cache_handler          (Mixed)   Optional. A class that implements CacheHandler of false for none
      *     - persist_user           (Boolean) Optional. Persist the user info, default true
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
@@ -330,17 +318,6 @@ class Auth0
 
         $this->transientHandler = new TransientStoreHandler( $transientStore );
 
-        if (isset($config['state_handler'])) {
-            if ($config['state_handler'] === false) {
-                $this->stateHandler = new DummyStateHandler();
-            } else {
-                $this->stateHandler = $config['state_handler'];
-            }
-        } else {
-            $stateStore         = new SessionStore();
-            $this->stateHandler = new SessionStateHandler($stateStore);
-        }
-
         if (isset($config['cache_handler']) && $config['cache_handler'] instanceof CacheHandler) {
             $this->cacheHandler = $config['cache_handler'];
         } else {
@@ -419,10 +396,10 @@ class Auth0
 
         if (empty( $auth_params['state'] )) {
             // No state provided by application so generate, store, and send one.
-            $auth_params['state'] = $this->stateHandler->issue();
+            $auth_params['state'] = $this->transientHandler->issue('state');
         } else {
             // Store the passed-in value.
-            $this->stateHandler->store($auth_params['state']);
+            $this->transientHandler->store('state', $auth_params['state']);
         }
 
         // ID token nonce validation is required so auth params must include one.
@@ -533,7 +510,7 @@ class Auth0
         }
 
         $state = $this->getState();
-        if (! $this->stateHandler->validate($state)) {
+        if (! $state || ! $this->transientHandler->verify('state', $state)) {
             throw new CoreException('Invalid state');
         }
 
