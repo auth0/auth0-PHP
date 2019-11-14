@@ -228,7 +228,7 @@ class Auth0
     /**
      * BaseAuth0 Constructor.
      *
-     * @param  array $config - Required configuration options.
+     * @param array $config - Required configuration options.
      *     - domain                 (String)  Required. Auth0 domain for your tenant
      *     - client_id              (String)  Required. Client ID found in the Application settings
      *     - redirect_uri           (String)  Required. Authentication callback URI
@@ -244,7 +244,6 @@ class Auth0
      *     - max_age                (Integer) Optional. Maximum time allowed between authentication and callback
      *     - id_token_alg           (String)  Optional. ID token algorithm expected; RS256 (default) or HS256 only
      *     - id_token_leeway        (Integer) Optional. Leeway, in seconds, for ID token validation.
-     *     - session_base_name      (String)  Optional. Base name for session keys
      *     - store                  (Mixed)   Optional. StorageInterface for identity and token persistence;
      *                                                  leave empty to default to SessionStore, false for none
      *     - auth_store             (Mixed)  Optional.  StorageInterface for transient auth data;
@@ -256,10 +255,9 @@ class Auth0
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
      *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
      *     - persist_id_token       (Boolean) Optional. Persist the ID token, default false
-     * @throws CoreException If `domain` is not provided.
-     * @throws CoreException If `client_id` is not provided.
-     * @throws CoreException If `client_secret` is not provided.
-     * @throws CoreException If `redirect_uri` is not provided.
+     *
+     * @throws CoreException If `domain`, `client_id`, or `redirect_uri` is not provided.
+     * @throws CoreException If `id_token_alg` is provided and is not supported.
      */
     public function __construct(array $config)
     {
@@ -317,18 +315,11 @@ class Auth0
             $this->dontPersist('id_token');
         }
 
-        $session_base_name = ! empty( $config['session_base_name'] ) ? $config['session_base_name'] : SessionStore::BASE_NAME;
-
-        if (isset($config['store'])) {
-            if ($config['store'] === false) {
-                $emptyStore = new EmptyStore();
-                $this->setStore($emptyStore);
-            } else {
-                $this->setStore($config['store']);
-            }
-        } else {
-            $sessionStore = new SessionStore($session_base_name);
-            $this->setStore($sessionStore);
+        $this->store = $config['store'] ?? null;
+        if ($this->store === false) {
+            $this->store = new EmptyStore();
+        } else if (! $this->store instanceof StoreInterface) {
+            $this->store = new SessionStore();
         }
 
         $this->authStore = $config['auth_store'] ?? null;
@@ -343,7 +334,7 @@ class Auth0
                 $this->stateHandler = $config['state_handler'];
             }
         } else {
-            $stateStore         = new SessionStore($session_base_name);
+            $stateStore         = new SessionStore();
             $this->stateHandler = new SessionStateHandler($stateStore);
         }
 
@@ -826,6 +817,7 @@ class Auth0
         if ($remainder) {
             $input .= str_repeat('=', 4 - $remainder);
         }
+
         $input = strtr($input, '-_', '+/');
         return base64_decode($input);
     }
