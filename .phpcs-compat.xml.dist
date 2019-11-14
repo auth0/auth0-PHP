@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ruleset name="Auth0-PHP-PHPCompatibility" namespace="Auth0PHP\CS\Standard">
+    <description>PHPCompatibility check for Auth0 PHP SDK</description>
+    <file>./src</file>
+    <arg name="extensions" value="php"/>
+    <arg value="sp"/>
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+
+    <!--
+    PHPCompatibility sniffs to check for PHP cross-version incompatible code.
+    https://github.com/PHPCompatibility/PHPCompatibility
+    -->
+    <config name="testVersion" value="7.1-"/>
+    <rule ref="PHPCompatibility"/>
+</ruleset>
