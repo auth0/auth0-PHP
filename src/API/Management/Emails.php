@@ -17,8 +17,8 @@ class Emails extends GenericResource
         ->addPath('provider');
 
         if ($fields !== null) {
-            if (is_array($fields)) {
-                $fields = implode(',', $fields);
+            if (\is_array($fields)) {
+                $fields = \implode(',', $fields);
             }
 
             $request->withParam('fields', $fields);
@@ -41,7 +41,7 @@ class Emails extends GenericResource
         return $this->apiClient->method('post')
         ->addPath('emails')
         ->addPath('provider')
-        ->withBody(json_encode($data))
+        ->withBody(\json_encode($data))
         ->call();
     }
 
@@ -55,7 +55,7 @@ class Emails extends GenericResource
         return $this->apiClient->method('patch')
         ->addPath('emails')
         ->addPath('provider')
-        ->withBody(json_encode($data))
+        ->withBody(\json_encode($data))
         ->call();
     }
 

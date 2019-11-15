@@ -98,7 +98,7 @@ class ApiClient
      */
     public function method($method, $set_content_type = true)
     {
-        $method  = strtolower($method);
+        $method  = \strtolower($method);
         $builder = new RequestBuilder([
             'domain' => $this->domain,
             'basePath' => $this->basePath,
@@ -108,7 +108,7 @@ class ApiClient
         ]);
         $builder->withHeaders($this->headers);
 
-        if ($set_content_type && in_array($method, [ 'patch', 'post', 'put', 'delete' ])) {
+        if ($set_content_type && \in_array($method, [ 'patch', 'post', 'put', 'delete' ])) {
             $builder->withHeader(new ContentType('application/json'));
         }
 

@@ -17,8 +17,8 @@ class Tenants extends GenericResource
         ->addPath('settings');
 
         if ($fields !== null) {
-            if (is_array($fields)) {
-                $fields = implode(',', $fields);
+            if (\is_array($fields)) {
+                $fields = \implode(',', $fields);
             }
 
             $request->withParam('fields', $fields);
@@ -41,7 +41,7 @@ class Tenants extends GenericResource
         return $this->apiClient->method('patch')
         ->addPath('tenants')
         ->addPath('settings')
-        ->withBody(json_encode($data))
+        ->withBody(\json_encode($data))
         ->call();
     }
 }

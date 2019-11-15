@@ -57,14 +57,14 @@ class GenericResource
         ];
 
         // Filter out empty values.
-        $pagination = array_filter( $pagination );
+        $pagination = \array_filter( $pagination );
 
         // Make sure we have absolute integers.
-        $pagination = array_map( function ($val) {
-            return abs( intval( $val ) );
+        $pagination = \array_map( function ($val) {
+            return \abs( \intval( $val ) );
         }, $pagination );
 
-        return array_merge( $params, $pagination );
+        return \array_merge( $params, $pagination );
     }
 
     /**
@@ -83,7 +83,7 @@ class GenericResource
         }
 
         // Make sure we have a boolean.
-        $params['include_totals'] = filter_var( $params['include_totals'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+        $params['include_totals'] = \filter_var( $params['include_totals'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
 
         return $params;
     }
@@ -126,7 +126,7 @@ class GenericResource
      */
     protected function checkEmptyOrInvalidString($var, $var_name)
     {
-        if (! is_string($var) || empty($var)) {
+        if (! \is_string($var) || empty($var)) {
             throw new EmptyOrInvalidParameterException($var_name);
         }
     }

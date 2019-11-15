@@ -115,7 +115,7 @@ class RequestBuilder
         $this->guzzleOptions = isset($config['guzzleOptions']) ? $config['guzzleOptions'] : [];
         $this->headers       = isset($config['headers']) ? $config['headers'] : [];
 
-        if (array_key_exists('path', $config)) {
+        if (\array_key_exists('path', $config)) {
             $this->path = $config['path'];
         }
 
@@ -136,7 +136,7 @@ class RequestBuilder
     {
         $argument = null;
 
-        if (count($arguments) > 0) {
+        if (\count($arguments) > 0) {
             $argument = $arguments[0];
         }
 
@@ -187,7 +187,7 @@ class RequestBuilder
      */
     public function getUrl()
     {
-        return trim(implode('/', $this->path), '/').$this->getParams();
+        return \trim(\implode('/', $this->path), '/').$this->getParams();
     }
 
     /**
@@ -199,12 +199,12 @@ class RequestBuilder
     {
         $paramsClean = [];
         foreach ($this->params as $param => $value) {
-            if (! is_null( $value ) && '' !== $value) {
-                $paramsClean[] = sprintf( '%s=%s', $param, $value );
+            if (! \is_null( $value ) && '' !== $value) {
+                $paramsClean[] = \sprintf( '%s=%s', $param, $value );
             }
         }
 
-        return empty($paramsClean) ? '' : '?'.implode('&', $paramsClean);
+        return empty($paramsClean) ? '' : '?'.\implode('&', $paramsClean);
     }
 
     /**
@@ -219,9 +219,9 @@ class RequestBuilder
         echo "URL: {$this->getUrl()}\n";
 
         echo "HEADERS:\n\t";
-        echo implode("\n\t", array_map(function ($k, $v) {
+        echo \implode("\n\t", \array_map(function ($k, $v) {
             return "$k: $v";
-        }, array_keys($this->headers), $this->headers));
+        }, \array_keys($this->headers), $this->headers));
         echo "\n";
 
         echo "BODY: {$this->body}\n";
@@ -261,7 +261,7 @@ class RequestBuilder
      */
     public function getGuzzleOptions()
     {
-        return array_merge(
+        return \array_merge(
             ['base_uri' => $this->domain.$this->basePath],
             $this->guzzleOptions
         );
@@ -302,8 +302,8 @@ class RequestBuilder
                 case 'body':
                 default:
                     $body = (string) $response->getBody();
-                    if (strpos($response->getHeaderLine('content-type'), 'json') !== false) {
-                        return json_decode($body, true);
+                    if (\strpos($response->getHeaderLine('content-type'), 'json') !== false) {
+                        return \json_decode($body, true);
                     }
                 return $body;
             }
@@ -408,7 +408,7 @@ class RequestBuilder
             $type = 'body';
         }
 
-        if (! in_array($type, $this->returnTypes)) {
+        if (! \in_array($type, $this->returnTypes)) {
             throw new CoreException('Invalid returnType');
         }
 
@@ -427,7 +427,7 @@ class RequestBuilder
         foreach ($this->files as $field => $file) {
             $multipart[] = [
                 'name' => $field,
-                'contents' => fopen($file, 'r')
+                'contents' => \fopen($file, 'r')
             ];
         }
 
@@ -450,7 +450,7 @@ class RequestBuilder
      */
     private function prepareBoolParam($value)
     {
-        if (is_bool( $value )) {
+        if (\is_bool( $value )) {
             return true === $value ? 'true' : 'false';
         }
 

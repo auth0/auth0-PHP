@@ -40,7 +40,7 @@ class SessionStateHandler implements StateHandler
      */
     public function issue()
     {
-        $state = uniqid('', true);
+        $state = \uniqid('', true);
         $this->store($state);
         return $state;
     }

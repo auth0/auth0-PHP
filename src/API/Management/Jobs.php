@@ -45,11 +45,11 @@ class Jobs extends GenericResource
         ->addFormParam('connection_id', $connection_id);
 
         if (isset($params['upsert'])) {
-            $request->addFormParam('upsert', filter_var($params['upsert'], FILTER_VALIDATE_BOOLEAN));
+            $request->addFormParam('upsert', \filter_var($params['upsert'], FILTER_VALIDATE_BOOLEAN));
         }
 
         if (isset($params['send_completion_email'])) {
-            $request->addFormParam('send_completion_email', filter_var($params['send_completion_email'], FILTER_VALIDATE_BOOLEAN));
+            $request->addFormParam('send_completion_email', \filter_var($params['send_completion_email'], FILTER_VALIDATE_BOOLEAN));
         }
 
         if (! empty($params['external_id'])) {
@@ -69,7 +69,7 @@ class Jobs extends GenericResource
         return $this->apiClient->method('post')
         ->addPath('jobs')
         ->addPath('verification-email')
-        ->withBody(json_encode([
+        ->withBody(\json_encode([
             'user_id' => $user_id
         ]))
         ->call();

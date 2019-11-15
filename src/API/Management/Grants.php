@@ -27,11 +27,11 @@ class Grants extends GenericResource
     public function getAll($page = 0, $per_page = null, array $params = [])
     {
         if (! empty($page)) {
-            $params['page'] = abs(intval($page));
+            $params['page'] = \abs(\intval($page));
         }
 
         if (! empty($per_page)) {
-            $params['per_page'] = abs(intval($per_page));
+            $params['per_page'] = \abs(\intval($per_page));
         }
 
         return $this->apiClient->method('get')
@@ -57,7 +57,7 @@ class Grants extends GenericResource
      */
     public function getByClientId($client_id, $page = 0, $per_page = null)
     {
-        if (empty($client_id) || ! is_string($client_id)) {
+        if (empty($client_id) || ! \is_string($client_id)) {
             throw new CoreException('Empty or invalid "client_id" parameter.');
         }
 
@@ -81,7 +81,7 @@ class Grants extends GenericResource
      */
     public function getByAudience($audience, $page = null, $per_page = null)
     {
-        if (empty($audience) || ! is_string($audience)) {
+        if (empty($audience) || ! \is_string($audience)) {
             throw new CoreException('Empty or invalid "audience" parameter.');
         }
 
@@ -105,7 +105,7 @@ class Grants extends GenericResource
      */
     public function getByUserId($user_id, $page = 0, $per_page = null)
     {
-        if (empty($user_id) || ! is_string($user_id)) {
+        if (empty($user_id) || ! \is_string($user_id)) {
             throw new CoreException('Empty or invalid "user_id" parameter.');
         }
 
@@ -127,7 +127,7 @@ class Grants extends GenericResource
      */
     public function delete($id)
     {
-        if (empty($id) || ! is_string($id)) {
+        if (empty($id) || ! \is_string($id)) {
             throw new CoreException('Empty or invalid "id" parameter.');
         }
 

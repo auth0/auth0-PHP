@@ -302,13 +302,13 @@ class Auth0
         }
 
         $this->skipUserinfo = false;
-        if (isset($config['skip_userinfo']) && is_bool($config['skip_userinfo'])) {
+        if (isset($config['skip_userinfo']) && \is_bool($config['skip_userinfo'])) {
             $this->skipUserinfo = $config['skip_userinfo'];
         }
 
         // If a token algorithm is passed, make sure it's a specific string.
         if (! empty($config['id_token_alg'])) {
-            if (! in_array( $config['id_token_alg'], ['HS256', 'RS256'] )) {
+            if (! \in_array( $config['id_token_alg'], ['HS256', 'RS256'] )) {
                 throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
             }
 
@@ -317,7 +317,7 @@ class Auth0
 
         // If a token audience is passed, make sure it's an array.
         if (! empty($config['id_token_aud'])) {
-            if (! is_array( $config['id_token_aud'] )) {
+            if (! \is_array( $config['id_token_aud'] )) {
                 throw new CoreException('Invalid id_token_aud; must be an array of string values');
             }
 
@@ -326,7 +326,7 @@ class Auth0
 
         // If a token issuer is passed, make sure it's an array.
         if (! empty($config['id_token_iss'])) {
-            if (! is_array( $config['id_token_iss'] )) {
+            if (! \is_array( $config['id_token_iss'] )) {
                 throw new CoreException('Invalid id_token_iss; must be an array of string values');
             }
 
@@ -421,13 +421,13 @@ class Auth0
             $params['connection'] = $connection;
         }
 
-        if (! empty($additionalParams) && is_array($additionalParams)) {
-            $params = array_replace($params, $additionalParams);
+        if (! empty($additionalParams) && \is_array($additionalParams)) {
+            $params = \array_replace($params, $additionalParams);
         }
 
         $login_url = $this->getLoginUrl($params);
 
-        header('Location: '.$login_url);
+        \header('Location: '.$login_url);
         exit;
     }
 
@@ -448,8 +448,8 @@ class Auth0
             'redirect_uri' => $this->redirectUri,
         ];
 
-        $auth_params = array_replace( $default_params, $params );
-        $auth_params = array_filter( $auth_params );
+        $auth_params = \array_replace( $default_params, $params );
+        $auth_params = \array_filter( $auth_params );
 
         if (empty( $auth_params['state'] )) {
             $auth_params['state'] = $this->stateHandler->issue();
@@ -628,7 +628,7 @@ class Auth0
      */
     public function setUser(array $user)
     {
-        if (in_array('user', $this->persistantMap)) {
+        if (\in_array('user', $this->persistantMap)) {
             $this->store->set('user', $user);
         }
 
@@ -645,7 +645,7 @@ class Auth0
      */
     public function setAccessToken($accessToken)
     {
-        if (in_array('access_token', $this->persistantMap)) {
+        if (\in_array('access_token', $this->persistantMap)) {
             $this->store->set('access_token', $accessToken);
         }
 
@@ -675,7 +675,7 @@ class Auth0
         ]);
         $this->idTokenDecoded = (array) $jwtVerifier->verifyAndDecode( $idToken );
 
-        if (in_array('id_token', $this->persistantMap)) {
+        if (\in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
         }
 
@@ -692,7 +692,7 @@ class Auth0
      */
     public function setRefreshToken($refreshToken)
     {
-        if (in_array('refresh_token', $this->persistantMap)) {
+        if (\in_array('refresh_token', $this->persistantMap)) {
             $this->store->set('refresh_token', $refreshToken);
         }
 
@@ -773,7 +773,7 @@ class Auth0
      */
     private function dontPersist($name)
     {
-        $key = array_search($name, $this->persistantMap);
+        $key = \array_search($name, $this->persistantMap);
         if ($key !== false) {
             unset($this->persistantMap[$key]);
         }

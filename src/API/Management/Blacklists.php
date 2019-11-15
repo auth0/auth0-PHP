@@ -29,7 +29,7 @@ class Blacklists extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('blacklists')
             ->addPath('tokens')
-            ->withBody(json_encode([
+            ->withBody(\json_encode([
                 'aud' => $aud,
                 'jti' => $jti
             ]))

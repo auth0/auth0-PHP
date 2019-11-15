@@ -39,7 +39,7 @@ class Connections extends GenericResource
     )
     {
         // Set additional parameters first so they are over-written by function parameters.
-        $params = is_array($add_params) ? $add_params : [];
+        $params = \is_array($add_params) ? $add_params : [];
 
         // Connection strategy to filter results by.
         if (! empty($strategy)) {
@@ -48,7 +48,7 @@ class Connections extends GenericResource
 
         // Results fields.
         if (! empty($fields)) {
-            $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
+            $params['fields'] = \is_array($fields) ? \implode(',', $fields) : $fields;
             if (null !== $include_fields) {
                 $params['include_fields'] = $include_fields;
             }
@@ -56,7 +56,7 @@ class Connections extends GenericResource
 
         // Pagination.
         if (null !== $page) {
-            $params['page'] = abs( (int) $page);
+            $params['page'] = \abs( (int) $page);
             if (null !== $per_page) {
                 $params['per_page'] = $per_page;
             }
@@ -90,7 +90,7 @@ class Connections extends GenericResource
 
         // Results fields.
         if (! empty($fields)) {
-            $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
+            $params['fields'] = \is_array($fields) ? \implode(',', $fields) : $fields;
             if (null !== $include_fields) {
                 $params['include_fields'] = $include_fields;
             }
@@ -167,7 +167,7 @@ class Connections extends GenericResource
 
         return $this->apiClient->method('post')
             ->addPath('connections')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -188,7 +188,7 @@ class Connections extends GenericResource
     {
         return $this->apiClient->method('patch')
             ->addPath('connections', $id)
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 }

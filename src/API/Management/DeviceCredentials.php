@@ -22,8 +22,8 @@ class DeviceCredentials extends GenericResource
         ->addPath('device-credentials');
 
         if ($fields !== null) {
-            if (is_array($fields)) {
-                $fields = implode(',', $fields);
+            if (\is_array($fields)) {
+                $fields = \implode(',', $fields);
             }
 
             $request->withParam('fields', $fields);
@@ -57,7 +57,7 @@ class DeviceCredentials extends GenericResource
     {
         return $this->apiClient->method('post')
         ->addPath('device-credentials')
-        ->withBody(json_encode($data))
+        ->withBody(\json_encode($data))
         ->call();
     }
 

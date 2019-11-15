@@ -108,7 +108,7 @@ class EmailTemplates extends GenericResource
     {
         return $this->apiClient->method('patch')
             ->addPath('email-templates', $templateName)
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -151,16 +151,16 @@ class EmailTemplates extends GenericResource
             'subject' => (string) $subject,
             'body' => (string) $body,
             'syntax' => (string) $syntax,
-            'urlLifetimeInSeconds' => abs( (int) $urlLifetime)
+            'urlLifetimeInSeconds' => \abs( (int) $urlLifetime)
         ];
 
         if (! empty($resultUrl)) {
-            $data['resultUrl'] = filter_var($resultUrl, FILTER_SANITIZE_URL);
+            $data['resultUrl'] = \filter_var($resultUrl, FILTER_SANITIZE_URL);
         }
 
         return $this->apiClient->method('post')
             ->addPath('email-templates')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 }

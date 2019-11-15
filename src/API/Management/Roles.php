@@ -56,7 +56,7 @@ class Roles extends GenericResource
 
         return $this->apiClient->method('post')
             ->addPath('roles')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -124,7 +124,7 @@ class Roles extends GenericResource
 
         return $this->apiClient->method('patch')
             ->addPath('roles', $role_id)
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -181,7 +181,7 @@ class Roles extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('roles', $role_id)
             ->addPath('permissions')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -210,7 +210,7 @@ class Roles extends GenericResource
         return $this->apiClient->method('delete')
             ->addPath('roles', $role_id)
             ->addPath('permissions')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -267,12 +267,12 @@ class Roles extends GenericResource
             throw new EmptyOrInvalidParameterException('users');
         }
 
-        $data = [ 'users' => array_unique( $users ) ];
+        $data = [ 'users' => \array_unique( $users ) ];
 
         return $this->apiClient->method('post')
             ->addPath('roles', $role_id)
             ->addPath('users')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 }

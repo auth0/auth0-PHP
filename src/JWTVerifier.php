@@ -95,7 +95,7 @@ class JWTVerifier
             }
 
             // Pass in Guzzle client options, if present.
-            if (isset($config['guzzle_options']) && is_array($config['guzzle_options'])) {
+            if (isset($config['guzzle_options']) && \is_array($config['guzzle_options'])) {
                 $guzzleOptions = $config['guzzle_options'];
             }
 
@@ -125,9 +125,9 @@ class JWTVerifier
         }
 
         // Check for algorithms that are not HS256 or RS256.
-        $unsupported_algs = array_diff( $this->supported_algs, [ 'HS256', 'RS256' ] );
+        $unsupported_algs = \array_diff( $this->supported_algs, [ 'HS256', 'RS256' ] );
         if (! empty( $unsupported_algs )) {
-            throw new CoreException('Cannot support the following algorithm(s): '.implode( ', ', $unsupported_algs ));
+            throw new CoreException('Cannot support the following algorithm(s): '.\implode( ', ', $unsupported_algs ));
         }
 
         // Set if the authorized issuer is passed; enforce if RS256.
@@ -170,9 +170,9 @@ class JWTVerifier
      */
     public function verifyAndDecode($jwt)
     {
-        $tks = explode('.', $jwt);
+        $tks = \explode('.', $jwt);
 
-        if (count($tks) !== 3) {
+        if (\count($tks) !== 3) {
             throw new InvalidTokenException('Wrong number of segments');
         }
 
@@ -183,7 +183,7 @@ class JWTVerifier
             throw new InvalidTokenException('Malformed token.');
         }
 
-        if (! is_object($head_decoded) || ! is_object($body_decoded)) {
+        if (! \is_object($head_decoded) || ! \is_object($body_decoded)) {
             throw new InvalidTokenException('Malformed token.');
         }
 
@@ -197,10 +197,10 @@ class JWTVerifier
 
         // Validate the token audience, if present.
         if (! empty($body_decoded->aud)) {
-            $audience = is_array($body_decoded->aud) ? $body_decoded->aud : [$body_decoded->aud];
-            if (! count(array_intersect($audience, $this->valid_audiences))) {
-                $message  = 'Invalid token audience '.implode( ', ', $audience );
-                $message .= '; expected '.implode( ', ', $this->valid_audiences );
+            $audience = \is_array($body_decoded->aud) ? $body_decoded->aud : [$body_decoded->aud];
+            if (! \count(\array_intersect($audience, $this->valid_audiences))) {
+                $message  = 'Invalid token audience '.\implode( ', ', $audience );
+                $message .= '; expected '.\implode( ', ', $this->valid_audiences );
                 throw new InvalidTokenException($message);
             }
         }
@@ -212,7 +212,7 @@ class JWTVerifier
                 throw new CoreException('Token key ID is missing for RS256 token');
             }
 
-            if (empty($body_decoded->iss) || ! in_array($body_decoded->iss, $this->authorized_iss)) {
+            if (empty($body_decoded->iss) || ! \in_array($body_decoded->iss, $this->authorized_iss)) {
                 throw new CoreException('We cannot trust on a token issued by `'.$body_decoded->iss.'`');
             }
 
@@ -281,6 +281,6 @@ class JWTVerifier
      */
     private function supportsAlg($alg)
     {
-        return in_array( $alg, $this->supported_algs );
+        return \in_array( $alg, $this->supported_algs );
     }
 }

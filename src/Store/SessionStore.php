@@ -53,12 +53,12 @@ class SessionStore implements StoreInterface
      */
     private function initSession()
     {
-        if (! session_id()) {
+        if (! \session_id()) {
             if (! empty( $this->session_cookie_expires )) {
-                session_set_cookie_params($this->session_cookie_expires);
+                \session_set_cookie_params($this->session_cookie_expires);
             }
 
-            session_start();
+            \session_start();
         }
     }
 

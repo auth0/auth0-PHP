@@ -39,7 +39,7 @@ class Rules extends GenericResource
 
         // Fields to include or exclude from results.
         if (! empty($fields)) {
-            $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
+            $params['fields'] = \is_array($fields) ? \implode(',', $fields) : $fields;
             if (null !== $include_fields) {
                 $params['include_fields'] = $include_fields;
             }
@@ -47,11 +47,11 @@ class Rules extends GenericResource
 
         // Pagination parameters.
         if (null !== $page) {
-            $params['page'] = abs( (int) $page);
+            $params['page'] = \abs( (int) $page);
         }
 
         if (null !== $per_page) {
-            $params['per_page'] = abs( (int) $per_page);
+            $params['per_page'] = \abs( (int) $per_page);
         }
 
         return $this->apiClient->method('get')
@@ -77,7 +77,7 @@ class Rules extends GenericResource
      */
     public function get($id, $fields = null, $include_fields = null)
     {
-        if (empty($id) || ! is_string($id)) {
+        if (empty($id) || ! \is_string($id)) {
             throw new CoreException('Invalid "id" parameter.');
         }
 
@@ -85,7 +85,7 @@ class Rules extends GenericResource
 
         // Fields to include or exclude from results.
         if (! empty($fields)) {
-            $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
+            $params['fields'] = \is_array($fields) ? \implode(',', $fields) : $fields;
             if (null !== $include_fields) {
                 $params['include_fields'] = $include_fields;
             }
@@ -112,7 +112,7 @@ class Rules extends GenericResource
      */
     public function delete($id)
     {
-        if (empty($id) || ! is_string($id)) {
+        if (empty($id) || ! \is_string($id)) {
             throw new CoreException('Invalid "id" parameter.');
         }
 
@@ -147,7 +147,7 @@ class Rules extends GenericResource
 
         return $this->apiClient->method('post')
             ->addPath('rules')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -165,13 +165,13 @@ class Rules extends GenericResource
      */
     public function update($id, array $data)
     {
-        if (empty($id) || ! is_string($id)) {
+        if (empty($id) || ! \is_string($id)) {
             throw new CoreException('Invalid "id" parameter.');
         }
 
         return $this->apiClient->method('patch')
             ->addPath('rules', $id)
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 }

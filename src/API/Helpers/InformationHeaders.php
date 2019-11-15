@@ -40,7 +40,7 @@ class InformationHeaders
     public function setCorePackage()
     {
         $this->setPackage('auth0-php', ApiClient::API_VERSION);
-        $this->setEnvProperty('php', phpversion());
+        $this->setEnvProperty('php', \phpversion());
     }
 
     /**
@@ -53,7 +53,7 @@ class InformationHeaders
      */
     public function setEnvProperty($name, $version)
     {
-        if (! isset($this->data['env']) || ! is_array($this->data['env'])) {
+        if (! isset($this->data['env']) || ! \is_array($this->data['env'])) {
             $this->data['env'] = [];
         }
 
@@ -89,7 +89,7 @@ class InformationHeaders
      */
     public function build()
     {
-        return base64_encode(json_encode($this->get()));
+        return \base64_encode(\json_encode($this->get()));
     }
 
     /**
@@ -105,7 +105,7 @@ class InformationHeaders
         $new_headers = new InformationHeaders;
         $old_headers = $headers->get();
 
-        if (! empty( $old_headers['env'] ) && is_array( $old_headers['env'] )) {
+        if (! empty( $old_headers['env'] ) && \is_array( $old_headers['env'] )) {
             $new_headers->setEnvironmentData($old_headers['env']);
         }
 

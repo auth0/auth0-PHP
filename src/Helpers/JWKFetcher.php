@@ -57,7 +57,7 @@ class JWKFetcher
     protected function convertCertToPem($cert)
     {
         $output  = '-----BEGIN CERTIFICATE-----'.PHP_EOL;
-        $output .= chunk_split($cert, 64, PHP_EOL);
+        $output .= \chunk_split($cert, 64, PHP_EOL);
         $output .= '-----END CERTIFICATE-----'.PHP_EOL;
         return $output;
     }
@@ -72,7 +72,7 @@ class JWKFetcher
     public function getKeys($jwks_url)
     {
         $keys = $this->cache->get($jwks_url);
-        if (is_array($keys) && ! empty($keys)) {
+        if (\is_array($keys) && ! empty($keys)) {
             return $keys;
         }
 
@@ -110,7 +110,7 @@ class JWKFetcher
         $cache_key = $jwks_url.'|'.$kid;
 
         $x5c = $this->cache->get($cache_key);
-        if (! is_null($x5c)) {
+        if (! \is_null($x5c)) {
             return $x5c;
         }
 
@@ -193,7 +193,7 @@ class JWKFetcher
      */
     private function subArrayHasEmptyFirstItem($array, $key)
     {
-        return empty($array) || ! is_array($array[$key]) || empty($array[$key][0]);
+        return empty($array) || ! \is_array($array[$key]) || empty($array[$key][0]);
     }
 
     /*

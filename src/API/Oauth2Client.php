@@ -241,7 +241,7 @@ class Oauth2Client
      */
     private function dontPersist($name)
     {
-        $key = array_search($name, $this->persistantMap);
+        $key = \array_search($name, $this->persistantMap);
         if ($key !== false) {
             unset($this->persistantMap[$key]);
         }
@@ -284,7 +284,7 @@ class Oauth2Client
             }
         }
 
-        $this->debugInfo(json_encode($auth0_response));
+        $this->debugInfo(\json_encode($auth0_response));
         $access_token  = (isset($auth0_response['access_token'])) ? $auth0_response['access_token'] : false;
         $refresh_token = (isset($auth0_response['refresh_token'])) ? $auth0_response['refresh_token'] : false;
         $id_token      = (isset($auth0_response['id_token'])) ? $auth0_response['id_token'] : false;
@@ -329,7 +329,7 @@ class Oauth2Client
             $this->exchangeCode();
         }
 
-        if (! is_array($this->user)) {
+        if (! \is_array($this->user)) {
             return null;
         }
 
@@ -381,7 +381,7 @@ class Oauth2Client
      */
     public function setUser($user)
     {
-        $key = array_search('user', $this->persistantMap);
+        $key = \array_search('user', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('user', $user);
         }
@@ -400,7 +400,7 @@ class Oauth2Client
      */
     public function setAccessToken($access_token)
     {
-        $key = array_search('access_token', $this->persistantMap);
+        $key = \array_search('access_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('access_token', $access_token);
         }
@@ -419,7 +419,7 @@ class Oauth2Client
      */
     public function setRefreshToken($refresh_token)
     {
-        $key = array_search('refresh_token', $this->persistantMap);
+        $key = \array_search('refresh_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('refresh_token', $refresh_token);
         }
@@ -464,7 +464,7 @@ class Oauth2Client
      */
     public function setIdToken($id_token)
     {
-        $key = array_search('id_token', $this->persistantMap);
+        $key = \array_search('id_token', $this->persistantMap);
         if ($key !== false) {
             $this->store->set('id_token', $id_token);
         }
@@ -514,10 +514,10 @@ class Oauth2Client
     final protected function generateUrl($domain_key, $path = '/')
     {
         $base_domain = self::$URL_MAP[$domain_key];
-        $base_domain = str_replace('{domain}', $this->domain, $base_domain);
+        $base_domain = \str_replace('{domain}', $this->domain, $base_domain);
 
         if ($path[0] === '/') {
-            $path = substr($path, 1);
+            $path = \substr($path, 1);
         }
 
         return $base_domain.$path;
@@ -531,11 +531,11 @@ class Oauth2Client
      */
     final public function checkRequirements()
     {
-        if (! function_exists('curl_version')) {
+        if (! \function_exists('curl_version')) {
             throw new CoreException('CURL extension is needed to use Auth0 SDK. Not found.');
         }
 
-        if (! function_exists('json_decode')) {
+        if (! \function_exists('json_decode')) {
             throw new CoreException('JSON extension is needed to use Auth0 SDK. Not found.');
         }
     }
@@ -547,8 +547,8 @@ class Oauth2Client
      */
     public function debugInfo($info)
     {
-        if ($this->debug_mode && (is_object($this->debugger) && ($this->debugger instanceof \Closure))) {
-            list(, $caller) = debug_backtrace(false);
+        if ($this->debug_mode && (\is_object($this->debugger) && ($this->debugger instanceof \Closure))) {
+            list(, $caller) = \debug_backtrace(false);
 
             $caller_function = $caller['function'];
             $caller_class    = $caller['class'];

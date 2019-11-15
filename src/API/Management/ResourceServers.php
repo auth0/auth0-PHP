@@ -31,11 +31,11 @@ class ResourceServers extends GenericResource
 
         // Pagination parameters.
         if (null !== $page) {
-            $params['page'] = abs( (int) $page);
+            $params['page'] = \abs( (int) $page);
         }
 
         if (null !== $per_page) {
-            $params['per_page'] = abs( (int) $per_page);
+            $params['per_page'] = \abs( (int) $per_page);
         }
 
         return $this->apiClient->method('get')
@@ -59,7 +59,7 @@ class ResourceServers extends GenericResource
      */
     public function get($id)
     {
-        if (empty($id) || ! is_string($id)) {
+        if (empty($id) || ! \is_string($id)) {
             throw new CoreException('Invalid "id" parameter.');
         }
 
@@ -89,13 +89,13 @@ class ResourceServers extends GenericResource
             $data['identifier'] = $identifier;
         }
 
-        if (empty($data['identifier']) || ! is_string($data['identifier'])) {
+        if (empty($data['identifier']) || ! \is_string($data['identifier'])) {
             throw new CoreException('Invalid "identifier" field.');
         }
 
         return $this->apiClient->method('post')
             ->addPath('resource-servers')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -114,7 +114,7 @@ class ResourceServers extends GenericResource
      */
     public function delete($id)
     {
-        if (empty($id) || ! is_string($id)) {
+        if (empty($id) || ! \is_string($id)) {
             throw new CoreException('Invalid "id" parameter.');
         }
 
@@ -139,13 +139,13 @@ class ResourceServers extends GenericResource
      */
     public function update($id, array $data)
     {
-        if (empty($id) || ! is_string($id)) {
+        if (empty($id) || ! \is_string($id)) {
             throw new CoreException('Invalid "id" parameter.');
         }
 
         return $this->apiClient->method('patch')
             ->addPath('resource-servers', $id)
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 }

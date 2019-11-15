@@ -143,7 +143,7 @@ class Authentication
             $additional_params['state'] = $state;
         }
 
-        return sprintf(
+        return \sprintf(
             'https://%s/authorize?%s',
             $this->domain,
             Psr7\build_query($additional_params)
@@ -162,7 +162,7 @@ class Authentication
      */
     public function get_samlp_link($client_id = null, $connection = '')
     {
-        return sprintf(
+        return \sprintf(
             'https://%s/samlp/%s?connection=%s',
             $this->domain,
             empty($client_id) ? $this->client_id : $client_id,
@@ -181,7 +181,7 @@ class Authentication
      */
     public function get_samlp_metadata_link($client_id = null)
     {
-        return sprintf(
+        return \sprintf(
             'https://%s/samlp/metadata/%s',
             $this->domain,
             empty($client_id) ? $this->client_id : $client_id
@@ -205,7 +205,7 @@ class Authentication
      */
     public function get_wsfed_link($client_id = null, array $params = [])
     {
-        return sprintf(
+        return \sprintf(
             'https://%s/wsfed/%s?%s',
             $this->domain,
             empty($client_id) ? $this->client_id : $client_id,
@@ -252,7 +252,7 @@ class Authentication
             $params['federated'] = '';
         }
 
-        return sprintf(
+        return \sprintf(
             'https://%s/v2/logout?%s',
             $this->domain,
             Psr7\build_query($params)
@@ -286,7 +286,7 @@ class Authentication
         return $this->apiClient->method('post')
         ->addPath('passwordless')
         ->addPath('start')
-        ->withBody(json_encode($data))
+        ->withBody(\json_encode($data))
         ->call();
     }
 
@@ -310,7 +310,7 @@ class Authentication
         return $this->apiClient->method('post')
         ->addPath('passwordless')
         ->addPath('start')
-        ->withBody(json_encode($data))
+        ->withBody(\json_encode($data))
         ->call();
     }
 
@@ -361,7 +361,7 @@ class Authentication
 
         $request = $this->apiClient->method('post')
             ->addPath( 'oauth/token' )
-            ->withBody(json_encode($options));
+            ->withBody(\json_encode($options));
 
         if (isset($options['auth0_forwarded_for'])) {
             $request->withHeader( new ForwardedFor( $options['auth0_forwarded_for'] ) );
@@ -573,7 +573,7 @@ class Authentication
         return $this->apiClient->method('post')
         ->addPath('dbconnections')
         ->addPath('signup')
-        ->withBody(json_encode($data))
+        ->withBody(\json_encode($data))
         ->call();
     }
 
@@ -611,7 +611,7 @@ class Authentication
         return $this->apiClient->method('post')
         ->addPath('dbconnections')
         ->addPath('change_password')
-        ->withBody(json_encode($data))
+        ->withBody(\json_encode($data))
         ->call();
     }
 
@@ -723,7 +723,7 @@ class Authentication
             ->addPath('users', $user_id)
             ->addPath('impersonate')
             ->withHeader(new AuthorizationBearer($access_token))
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -754,7 +754,7 @@ class Authentication
         array $additional_params = []
     )
     {
-        $data = array_merge(
+        $data = \array_merge(
             $additional_params,
             [
                 'client_id' => $this->client_id,
@@ -767,7 +767,7 @@ class Authentication
         return $this->apiClient->method('post')
             ->addPath('oauth')
             ->addPath('access_token')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -831,7 +831,7 @@ class Authentication
         return $this->apiClient->method('post')
             ->addPath('oauth')
             ->addPath('ro')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
     // phpcs:enable

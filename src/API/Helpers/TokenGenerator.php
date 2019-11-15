@@ -55,16 +55,16 @@ class TokenGenerator
      */
     public function generate(array $scopes, $lifetime = self::DEFAULT_LIFETIME, $secret_encoded = true)
     {
-        $time           = time();
+        $time           = \time();
         $payload        = [
             'iat' => $time,
             'scopes' => $scopes,
             'exp' => $time + $lifetime,
             'aud' => $this->audience,
         ];
-        $payload['jti'] = md5(json_encode($payload));
+        $payload['jti'] = \md5(\json_encode($payload));
 
-        $secret = $secret_encoded ? base64_decode(strtr($this->secret, '-_', '+/')) : $this->secret;
+        $secret = $secret_encoded ? \base64_decode(\strtr($this->secret, '-_', '+/')) : $this->secret;
 
         return JWT::encode($payload, $secret);
     }

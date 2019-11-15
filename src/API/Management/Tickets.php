@@ -20,7 +20,7 @@ class Tickets extends GenericResource
         $request = $this->apiClient->method('post')
             ->addPath('tickets')
             ->addPath('email-verification')
-            ->withBody(json_encode($body));
+            ->withBody(\json_encode($body));
 
         return $request->call();
     }
@@ -103,7 +103,7 @@ class Tickets extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('tickets')
             ->addPath('password-change')
-            ->withBody(json_encode($body))
+            ->withBody(\json_encode($body))
             ->call();
     }
 }

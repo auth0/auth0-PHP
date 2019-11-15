@@ -53,7 +53,7 @@ class Users extends GenericResource
     {
         return $this->apiClient->method('patch')
             ->addPath('users', $user_id)
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -91,13 +91,13 @@ class Users extends GenericResource
         }
 
         // A password is required for DB connections.
-        if (! in_array( $data['connection'], [ 'email', 'sms' ] ) && empty($data['password'])) {
+        if (! \in_array( $data['connection'], [ 'email', 'sms' ] ) && empty($data['password'])) {
             throw new \Exception('Missing required "password" field for "'.$data['connection'].'" connection.');
         }
 
         return $this->apiClient->method('post')
             ->addPath('users')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -132,8 +132,8 @@ class Users extends GenericResource
         }
 
         if (isset($params['fields'])) {
-            if (is_array($params['fields'])) {
-                $params['fields'] = implode(',', $params['fields']);
+            if (\is_array($params['fields'])) {
+                $params['fields'] = \implode(',', $params['fields']);
             }
 
             if (! isset($params['include_fields']) && null !== $include_fields) {
@@ -189,7 +189,7 @@ class Users extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('users', $user_id)
             ->addPath('identities')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -296,7 +296,7 @@ class Users extends GenericResource
         return $this->apiClient->method('delete')
             ->addPath('users', $user_id)
             ->addPath('roles')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -330,7 +330,7 @@ class Users extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('users', $user_id)
             ->addPath('roles')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -410,7 +410,7 @@ class Users extends GenericResource
         return $this->apiClient->method('delete')
             ->addPath('users', $user_id)
             ->addPath('permissions')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 
@@ -439,7 +439,7 @@ class Users extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('users', $user_id)
             ->addPath('permissions')
-            ->withBody(json_encode($data))
+            ->withBody(\json_encode($data))
             ->call();
     }
 

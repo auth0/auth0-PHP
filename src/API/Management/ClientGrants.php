@@ -33,11 +33,11 @@ class ClientGrants extends GenericResource
     public function getAll(array $params = [], $page = null, $per_page = null)
     {
         if (null !== $page) {
-            $params['page'] = abs( (int) $page);
+            $params['page'] = \abs( (int) $page);
         }
 
         if (null !== $per_page) {
-            $params['per_page'] = abs( (int) $per_page);
+            $params['per_page'] = \abs( (int) $per_page);
         }
 
         return $this->apiClient->method('get')
@@ -63,7 +63,7 @@ class ClientGrants extends GenericResource
      */
     public function getByAudience($audience, $page = null, $per_page = null)
     {
-        if (empty($audience) || ! is_string($audience)) {
+        if (empty($audience) || ! \is_string($audience)) {
             throw new CoreException('Empty or invalid "audience" parameter.');
         }
 
@@ -87,7 +87,7 @@ class ClientGrants extends GenericResource
      */
     public function getByClientId($client_id, $page = null, $per_page = null)
     {
-        if (empty($client_id) || ! is_string($client_id)) {
+        if (empty($client_id) || ! \is_string($client_id)) {
             throw new CoreException('Empty or invalid "client_id" parameter.');
         }
 
@@ -111,17 +111,17 @@ class ClientGrants extends GenericResource
      */
     public function create($client_id, $audience, array $scope = [])
     {
-        if (empty($client_id) || ! is_string($client_id)) {
+        if (empty($client_id) || ! \is_string($client_id)) {
             throw new CoreException('Empty or invalid "client_id" parameter.');
         }
 
-        if (empty($audience) || ! is_string($audience)) {
+        if (empty($audience) || ! \is_string($audience)) {
             throw new CoreException('Empty or invalid "audience" parameter.');
         }
 
         return $this->apiClient->method('post')
             ->addPath('client-grants')
-            ->withBody(json_encode([
+            ->withBody(\json_encode([
                 'client_id' => $client_id,
                 'audience' => $audience,
                 'scope' => $scope,
@@ -165,7 +165,7 @@ class ClientGrants extends GenericResource
     {
         return $this->apiClient->method('patch')
             ->addPath('client-grants', $id)
-            ->withBody(json_encode(['scope' => $scope,]))
+            ->withBody(\json_encode(['scope' => $scope,]))
             ->call();
     }
 
