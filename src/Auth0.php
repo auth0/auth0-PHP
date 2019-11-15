@@ -33,6 +33,8 @@ use GuzzleHttp\Exception\RequestException;
  */
 class Auth0
 {
+    const TRANSIENT_STATE_KEY = 'state';
+    const TRANSIENT_NONCE_KEY = 'nonce';
 
     /**
      * Available keys to persist data.
@@ -44,18 +46,6 @@ class Auth0
         'access_token',
         'user',
         'id_token',
-    ];
-
-    /**
-     * Auth0 URL Map (not currently used in the SDK)
-     *
-     * @var array
-     */
-    public static $URL_MAP = [
-        'api'           => 'https://{domain}/api/',
-        'authorize'     => 'https://{domain}/authorize/',
-        'token'     => 'https://{domain}/oauth/token/',
-        'user_info'     => 'https://{domain}/userinfo/',
     ];
 
     /**
@@ -356,7 +346,7 @@ class Auth0
         $params = [];
 
         if ($state) {
-            $params['state'] = $state;
+            $params[self::TRANSIENT_STATE_KEY] = $state;
         }
 
         if ($connection) {
@@ -394,19 +384,19 @@ class Auth0
         $auth_params = array_replace( $default_params, $params );
         $auth_params = array_filter( $auth_params );
 
-        if (empty( $auth_params['state'] )) {
+        if (empty( $auth_params[self::TRANSIENT_STATE_KEY] )) {
             // No state provided by application so generate, store, and send one.
-            $auth_params['state'] = $this->transientHandler->issue('state');
+            $auth_params[self::TRANSIENT_STATE_KEY] = $this->transientHandler->issue(self::TRANSIENT_STATE_KEY);
         } else {
             // Store the passed-in value.
-            $this->transientHandler->store('state', $auth_params['state']);
+            $this->transientHandler->store(self::TRANSIENT_STATE_KEY, $auth_params[self::TRANSIENT_STATE_KEY]);
         }
 
         // ID token nonce validation is required so auth params must include one.
-        if (empty( $auth_params['nonce'] )) {
-            $auth_params['nonce'] = $this->transientHandler->issue('nonce');
+        if (empty( $auth_params[self::TRANSIENT_NONCE_KEY] )) {
+            $auth_params[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->issue(self::TRANSIENT_NONCE_KEY);
         } else {
-            $this->transientHandler->store('nonce', $auth_params['nonce']);
+            $this->transientHandler->store(self::TRANSIENT_NONCE_KEY, $auth_params[self::TRANSIENT_NONCE_KEY]);
         }
 
         if (isset($auth_params['max_age'])) {
@@ -510,7 +500,7 @@ class Auth0
         }
 
         $state = $this->getState();
-        if (! $state || ! $this->transientHandler->verify('state', $state)) {
+        if (! $state || ! $this->transientHandler->verify(self::TRANSIENT_STATE_KEY, $state)) {
             throw new CoreException('Invalid state');
         }
 
@@ -643,8 +633,8 @@ class Auth0
             'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
         ];
 
-        $verifierOptions['nonce'] = $this->transientHandler->getOnce('nonce');
-        if (empty( $verifierOptions['nonce'] )) {
+        $verifierOptions[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY);
+        if (empty( $verifierOptions[self::TRANSIENT_NONCE_KEY] )) {
             throw new InvalidTokenException('Nonce value not found in application store');
         }
 
@@ -705,10 +695,10 @@ class Auth0
     protected function getState()
     {
         $state = null;
-        if ($this->responseMode === 'query' && isset($_GET['state'])) {
-            $state = $_GET['state'];
-        } else if ($this->responseMode === 'form_post' && isset($_POST['state'])) {
-            $state = $_POST['state'];
+        if ($this->responseMode === 'query' && isset($_GET[self::TRANSIENT_STATE_KEY])) {
+            $state = $_GET[self::TRANSIENT_STATE_KEY];
+        } else if ($this->responseMode === 'form_post' && isset($_POST[self::TRANSIENT_STATE_KEY])) {
+            $state = $_POST[self::TRANSIENT_STATE_KEY];
         }
 
         return $state;
