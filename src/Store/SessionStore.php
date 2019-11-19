@@ -4,6 +4,10 @@ namespace Auth0\SDK\Store;
 
 /**
  * This class provides a layer to persist user access using PHP Sessions.
+ *
+ * NOTE: If you are using this storage method for the transient_store option in the Auth0 class along with a
+ * response_mode of form_post, the session cookie MUST be set to SameSite=None and Secure using
+ * session_set_cookie_params() or another method. This combination will be enforced by browsers in early 2020.
  */
 class SessionStore implements StoreInterface
 {
