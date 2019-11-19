@@ -51,21 +51,8 @@ class CookieStoreTest extends TestCase
 
     public function testCustomBaseName()
     {
-        $store = new CookieStore('custom_base');
+        $store = new CookieStore(['base_name' => 'custom_base']);
         $this->assertEquals('custom_base_test_key', $store->getCookieName('test_key'));
-    }
-
-    public function testCustomExpiration()
-    {
-        $mockStore = $this->getMockBuilder(CookieStore::class)
-            ->setConstructorArgs([uniqid(), 1200])
-            ->setMethods(['setCookie'])
-            ->getMock();
-        $mockStore->expects($mockSpy = $this->any())->method('setCookie')->willReturn(true);
-        $mockStore->set(uniqid(), uniqid());
-
-        $setCookieParams = $mockSpy->getInvocations()[0]->getParameters();
-        $this->assertEquals(1200, $setCookieParams[2]);
     }
 
     public function testSet()
@@ -79,7 +66,6 @@ class CookieStoreTest extends TestCase
 
         $this->assertEquals('auth0__test_set_key', $setCookieParams[0]);
         $this->assertEquals('__test_set_value__', $setCookieParams[1]);
-        $this->assertEquals(600, $setCookieParams[2]);
     }
 
     public function testGet()
@@ -105,6 +91,38 @@ class CookieStoreTest extends TestCase
 
         $this->assertEquals('auth0__test_delete_key', $setCookieParams[0]);
         $this->assertEquals('', $setCookieParams[1]);
-        $this->assertEquals(0, $setCookieParams[2]);
+    }
+
+    public function testGetSetCookieHeaderDefault()
+    {
+        $store        = new CookieStore(['now' => 303943620, 'expiration' => 0]);
+
+        $header = $store->getSetCookieHeader('__test_name_1__', '__test_value_1__');
+        $this->assertEquals(
+            '__test_name_1__=__test_value_1__; path=/; expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=Lax',
+            $header
+        );
+    }
+
+    public function testGetSetCookieHeaderStrict()
+    {
+        $store        = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'strict']);
+
+        $header = $store->getSetCookieHeader('__test_name_1__', '__test_value_1__');
+        $this->assertEquals(
+            '__test_name_1__=__test_value_1__; path=/; expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=Strict',
+            $header
+        );
+    }
+
+    public function testGetSetCookieHeaderNone()
+    {
+        $store        = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'none']);
+
+        $header = $store->getSetCookieHeader('__test_name_1__', '__test_value_1__');
+        $this->assertEquals(
+            '__test_name_1__=__test_value_1__; path=/; expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=None; Secure',
+            $header
+        );
     }
 }
