@@ -103,21 +103,6 @@ class Auth0StoreTest extends TestCase
         $this->assertEquals($_SESSION['auth0__user'], $auth0->getUser());
     }
 
-    /**
-     * Data should not be persisted across multiple version of the class if store is false.
-     *
-     * @throws ApiException Should not be thrown in this test.
-     * @throws CoreException Should not be thrown in this test.
-     */
-    public function testThatEmptyStoreIsUsedIfStoreSetFalse()
-    {
-        $auth0 = new Auth0(self::$baseConfig + ['store' => false]);
-        $auth0->setUser(['sub' => '__test_user__']);
-
-        $auth0 = new Auth0(self::$baseConfig + ['store' => false]);
-        $this->assertNull($auth0->getUser());
-    }
-
     public function testThatCookieStoreIsUsedAsDefaultTransient()
     {
         $auth0 = new Auth0(self::$baseConfig);
