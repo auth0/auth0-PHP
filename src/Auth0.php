@@ -136,7 +136,7 @@ class Auth0
     /**
      * Storage engine for persistence
      *
-     * @var StoreInterface
+     * @var null|StoreInterface
      */
     protected $store;
 
@@ -226,9 +226,9 @@ class Auth0
      *     - id_token_alg           (String)  Optional. ID token algorithm expected; RS256 (default) or HS256 only
      *     - id_token_leeway        (Integer) Optional. Leeway, in seconds, for ID token validation.
      *     - store                  (Mixed)   Optional. StorageInterface for identity and token persistence;
-     *                                                  leave empty to default to SessionStore, false for none
+     *                                                  leave empty to default to SessionStore
      *     - transient_store        (Mixed)  Optional.  StorageInterface for transient auth data;
-     *                                                  leave empty to default to CookieStore, false for none
+     *                                                  leave empty to default to CookieStore
      *     - cache_handler          (Mixed)   Optional. A class that implements CacheHandler of false for none
      *     - persist_user           (Boolean) Optional. Persist the user info, default true
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
@@ -295,9 +295,8 @@ class Auth0
         }
 
         $this->store = $config['store'] ?? null;
-        if ($this->store === false) {
-            $this->store = new EmptyStore();
-        } else if (! $this->store instanceof StoreInterface) {
+        if ($this->persistantMap && ! $this->store instanceof StoreInterface) {
+            // Need to have some kind of storage if user data needs to be persisted.
             $this->store = new SessionStore();
         }
 
