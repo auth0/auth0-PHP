@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
 
@@ -93,11 +94,13 @@ class CookieStore implements StoreInterface
         $_COOKIE[$key_name] = $value;
 
         if ($this->sameSite) {
+            // Core setcookie() does not handle SameSite before PHP 7.3.
             $this->setCookieHeader($key_name, $value, $this->getExpTimecode());
         } else {
             $this->setCookie($key_name, $value, $this->getExpTimecode());
         }
 
+        // If we're using SameSite=None, set a fallback cookie with no SameSite attribute.
         if ($this->legacySameSiteNone && 'None' === $this->sameSite) {
             $_COOKIE['_'.$key_name] = $value;
             $this->setCookie('_'.$key_name, $value, $this->getExpTimecode());
@@ -118,7 +121,7 @@ class CookieStore implements StoreInterface
         $key_name = $this->getCookieName($key);
         $value    = $default;
 
-        // If we're handling legacy browsers, check for fallback value first.
+        // If handling legacy browsers, check for fallback value.
         if ($this->legacySameSiteNone) {
             $value = $_COOKIE['_'.$key_name] ?? $value;
         }
@@ -139,6 +142,7 @@ class CookieStore implements StoreInterface
         unset($_COOKIE[$key_name]);
         $this->setCookie( $key_name, '', 0 );
 
+        // If we set a legacy fallback value, remove that as well.
         if ($this->legacySameSiteNone) {
             unset($_COOKIE['_'.$key_name]);
             $this->setCookie( '_'.$key_name, '', 0 );
@@ -147,7 +151,6 @@ class CookieStore implements StoreInterface
 
     /**
      * Build the header to use when setting SameSite cookies.
-     * Core setcookie() function does not handle SameSite before PHP 7.3.
      *
      * @param string  $name   Cookie name.
      * @param string  $value  Cookie value.
@@ -155,7 +158,7 @@ class CookieStore implements StoreInterface
      *
      * @return string
      */
-    public function getSameSiteCookieHeader(string $name, string $value, int $expire) : string
+    protected function getSameSiteCookieHeader(string $name, string $value, int $expire) : string
     {
         $date = new \Datetime();
         $date->setTimestamp($expire)
@@ -176,7 +179,7 @@ class CookieStore implements StoreInterface
      *
      * @return integer
      */
-    private function getExpTimecode() : int
+    protected function getExpTimecode() : int
     {
         return ($this->now ?? time()) + $this->expiration;
     }
