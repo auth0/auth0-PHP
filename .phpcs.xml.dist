@@ -2,10 +2,7 @@
 <ruleset name="Auth0-PHP" namespace="Auth0PHP\CS\Standard">
     <description>A custom coding standard for the Auth0 PHP SDK</description>
 
-    <file>.</file>
-
-    <exclude-pattern>/examples/*</exclude-pattern>
-    <exclude-pattern>/vendor/*</exclude-pattern>
+    <file>./src</file>
 
     <!-- Only check PHP files. -->
     <arg name="extensions" value="php"/>
