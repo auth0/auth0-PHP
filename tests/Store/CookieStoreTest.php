@@ -202,22 +202,26 @@ class CookieStoreTest extends TestCase
 
     public function testGetSetCookieHeaderStrict()
     {
-        $store = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'lax']);
+        $store  = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'lax']);
+        $method = new \ReflectionMethod(CookieStore::class, 'getSameSiteCookieHeader');
+        $method->setAccessible(true);
+        $header = $method->invokeArgs($store, ['__test_name_1__', '__test_value_1__', 303943620]);
 
-        $header = $store->getSameSiteCookieHeader('__test_name_1__', '__test_value_1__', 303943620);
         $this->assertEquals(
-            'Set-Cookie: __test_name_1__=__test_value_1__; path=/; expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=Lax',
+            'Set-Cookie: __test_name_1__=__test_value_1__; path=/; '.'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=Lax',
             $header
         );
     }
 
     public function testGetSetCookieHeaderNone()
     {
-        $store = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'none']);
+        $store  = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'none']);
+        $method = new \ReflectionMethod(CookieStore::class, 'getSameSiteCookieHeader');
+        $method->setAccessible(true);
+        $header = $method->invokeArgs($store, ['__test_name_2__', '__test_value_2__', 303943620]);
 
-        $header = $store->getSameSiteCookieHeader('__test_name_1__', '__test_value_1__', 303943620);
         $this->assertEquals(
-            'Set-Cookie: __test_name_1__=__test_value_1__; path=/; expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=None; Secure',
+            'Set-Cookie: __test_name_2__=__test_value_2__; path=/; '.'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=None; Secure',
             $header
         );
     }

@@ -303,6 +303,7 @@ class Auth0
         $transientStore = $config['transient_store'] ?? null;
         if (! $transientStore instanceof StoreInterface) {
             $transientStore = new CookieStore([
+                // Use configuration option or class default.
                 'legacy_samesite_none' => $config['legacy_samesite_none_cookie'] ?? null,
                 'samesite' => 'form_post' === $this->responseMode ? 'None' : 'Lax',
             ]);
