@@ -1,16 +1,16 @@
 <?php
-declare(strict_types=1);
-
-namespace Auth0\SDK\Helpers\Tokens;
-
-use Auth0\SDK\Exception\InvalidTokenException;
+/**
+ * Contains Trait WP_Auth0_IdTokenVerifier.
+ *
+ * @package WP-Auth0
+ *
+ * @since 4.0.0
+ */
 
 /**
- * Class IdTokenVerifier
- *
- * @package Auth0\SDK\Helpers
+ * Class WP_Auth0_IdTokenVerifier
  */
-final class IdTokenVerifier
+final class WP_Auth0_IdTokenVerifier
 {
 
     /**
@@ -30,7 +30,7 @@ final class IdTokenVerifier
     /**
      * Token signature verifier.
      *
-     * @var SignatureVerifier
+     * @var WP_Auth0_SignatureVerifier
      */
     private $verifier;
 
@@ -46,9 +46,9 @@ final class IdTokenVerifier
      *
      * @param string            $issuer   Token issuer base URL expected.
      * @param string            $audience Token audience expected.
-     * @param SignatureVerifier $verifier Token signature verifier.
+     * @param WP_Auth0_SignatureVerifier $verifier Token signature verifier.
      */
-    public function __construct(string $issuer, string $audience, SignatureVerifier $verifier)
+    public function __construct(string $issuer, string $audience, WP_Auth0_SignatureVerifier $verifier)
     {
         $this->issuer   = $issuer;
         $this->audience = $audience;
@@ -62,7 +62,7 @@ final class IdTokenVerifier
      *
      * @return void
      */
-    public function setLeeway(int $newLeeway) : void
+    public function setLeeway(int $newLeeway)
     {
         $this->leeway = $newLeeway;
     }
@@ -79,7 +79,7 @@ final class IdTokenVerifier
      *
      * @return array
      *
-     * @throws InvalidTokenException Thrown if:
+     * @throws WP_Auth0_InvalidIdTokenException Thrown if:
      *      - ID token is missing (expected but none provided)
      *      - Signature cannot be verified
      *      - Token algorithm is not supported
@@ -88,7 +88,7 @@ final class IdTokenVerifier
     public function verify(string $token, array $options = []) : array
     {
         if (empty($token)) {
-            throw new InvalidTokenException('ID token is required but missing');
+            throw new WP_Auth0_InvalidIdTokenException('ID token is required but missing');
         }
 
         $verifiedToken = $this->verifier->verifyAndDecode( $token );
@@ -99,11 +99,11 @@ final class IdTokenVerifier
 
         $tokenIss = $verifiedToken->getClaim('iss', false);
         if (! $tokenIss || ! is_string($tokenIss)) {
-            throw new InvalidTokenException('Issuer (iss) claim must be a string present in the ID token');
+            throw new WP_Auth0_InvalidIdTokenException('Issuer (iss) claim must be a string present in the ID token');
         }
 
         if ($tokenIss !== $this->issuer) {
-            throw new InvalidTokenException( sprintf(
+            throw new WP_Auth0_InvalidIdTokenException(sprintf(
                 'Issuer (iss) claim mismatch in the ID token; expected "%s", found "%s"', $this->issuer, $tokenIss
             ) );
         }
@@ -114,7 +114,7 @@ final class IdTokenVerifier
 
         $tokenSub = $verifiedToken->getClaim('sub', false);
         if (! $tokenSub || ! is_string($tokenSub)) {
-            throw new InvalidTokenException('Subject (sub) claim must be a string present in the ID token');
+            throw new WP_Auth0_InvalidIdTokenException('Subject (sub) claim must be a string present in the ID token');
         }
 
         /*
@@ -123,19 +123,19 @@ final class IdTokenVerifier
 
         $tokenAud = $verifiedToken->getClaim('aud', false);
         if (! $tokenAud || (! is_string($tokenAud) && ! is_array($tokenAud))) {
-            throw new InvalidTokenException(
+            throw new WP_Auth0_InvalidIdTokenException(
                 'Audience (aud) claim must be a string or array of strings present in the ID token'
             );
         }
 
         if (is_array($tokenAud) && ! in_array($this->audience, $tokenAud)) {
-            throw new InvalidTokenException( sprintf(
+            throw new WP_Auth0_InvalidIdTokenException( sprintf(
                 'Audience (aud) claim mismatch in the ID token; expected "%s" was not one of "%s"',
                 $this->audience,
                 implode(', ', $tokenAud)
             ) );
         } else if (is_string($tokenAud) && $tokenAud !== $this->audience) {
-            throw new InvalidTokenException( sprintf(
+            throw new WP_Auth0_InvalidIdTokenException( sprintf(
                 'Audience (aud) claim mismatch in the ID token; expected "%s", found "%s"', $this->audience, $tokenAud
             ) );
         }
@@ -149,12 +149,12 @@ final class IdTokenVerifier
 
         $tokenExp = $verifiedToken->getClaim('exp', false);
         if (! $tokenExp || ! is_int($tokenExp)) {
-            throw new InvalidTokenException('Expiration Time (exp) claim must be a number present in the ID token');
+            throw new WP_Auth0_InvalidIdTokenException('Expiration Time (exp) claim must be a number present in the ID token');
         }
 
         $expireTime = $tokenExp + $leeway;
         if ($now > $expireTime) {
-            throw new InvalidTokenException( sprintf(
+            throw new WP_Auth0_InvalidIdTokenException( sprintf(
                 'Expiration Time (exp) claim error in the ID token; current time (%d) is after expiration time (%d)',
                 $now,
                 $expireTime
@@ -163,12 +163,12 @@ final class IdTokenVerifier
 
         $tokenIat = $verifiedToken->getClaim('iat', false);
         if (! $tokenIat || ! is_int($tokenIat)) {
-            throw new InvalidTokenException('Issued At (iat) claim must be a number present in the ID token');
+            throw new WP_Auth0_InvalidIdTokenException('Issued At (iat) claim must be a number present in the ID token');
         }
 
         $issuedTime = $tokenIat - $leeway;
         if ($now < $issuedTime) {
-            throw new InvalidTokenException( sprintf(
+            throw new WP_Auth0_InvalidIdTokenException( sprintf(
                 'Issued At (iat) claim error in the ID token; current time (%d) is before issued at time (%d)',
                 $now,
                 $issuedTime
@@ -182,11 +182,11 @@ final class IdTokenVerifier
         if (! empty($options['nonce'])) {
             $tokenNonce = $verifiedToken->getClaim('nonce', false);
             if (! $tokenNonce || ! is_string($tokenNonce)) {
-                throw new InvalidTokenException('Nonce (nonce) claim must be a string present in the ID token');
+                throw new WP_Auth0_InvalidIdTokenException('Nonce (nonce) claim must be a string present in the ID token');
             }
 
-            if ($tokenNonce !== $options['nonce']) {
-                throw new InvalidTokenException( sprintf(
+            if (WP_Auth0_Nonce_Handler::get_instance()->validate($tokenNonce)) {
+                throw new WP_Auth0_InvalidIdTokenException( sprintf(
                     'Nonce (nonce) claim mismatch in the ID token; expected "%s", found "%s"',
                     $options['nonce'],
                     $tokenNonce
@@ -201,13 +201,13 @@ final class IdTokenVerifier
         if (is_array($tokenAud) && count($tokenAud) > 1) {
             $tokenAzp = $verifiedToken->getClaim('azp', false);
             if (! $tokenAzp || ! is_string($tokenAzp)) {
-                throw new InvalidTokenException(
+                throw new WP_Auth0_InvalidIdTokenException(
                     'Authorized Party (azp) claim must be a string present in the ID token when Audience (aud) claim has multiple values'
                 );
             }
 
             if ($tokenAzp !== $this->audience) {
-                throw new InvalidTokenException( sprintf(
+                throw new WP_Auth0_InvalidIdTokenException( sprintf(
                     'Authorized Party (azp) claim mismatch in the ID token; expected "%s", found "%s"',
                     $this->audience,
                     $tokenAzp
@@ -222,7 +222,7 @@ final class IdTokenVerifier
         if (! empty($options['max_age'])) {
             $tokenAuthTime = $verifiedToken->getClaim('auth_time', false);
             if (! $tokenAuthTime || ! is_int($tokenAuthTime)) {
-                throw new InvalidTokenException(
+                throw new WP_Auth0_InvalidIdTokenException(
                     'Authentication Time (auth_time) claim must be a number present in the ID token when Max Age (max_age) is specified'
                 );
             }
@@ -230,7 +230,7 @@ final class IdTokenVerifier
             $authValidUntil = $tokenAuthTime + $options['max_age'] + $leeway;
 
             if ($now > $authValidUntil) {
-                throw new InvalidTokenException( sprintf(
+                throw new WP_Auth0_InvalidIdTokenException( sprintf(
                     'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed since the last end-user authentication. Current time (%d) is after last auth at %d',
                     $now,
                     $authValidUntil

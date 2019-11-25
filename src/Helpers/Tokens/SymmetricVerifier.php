@@ -1,17 +1,19 @@
 <?php
-declare(strict_types=1);
-
-namespace Auth0\SDK\Helpers\Tokens;
+/**
+ * Contains Trait WP_Auth0_SymmetricVerifier.
+ *
+ * @package WP-Auth0
+ *
+ * @since 4.0.0
+ */
 
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
 use Lcobucci\JWT\Token;
 
 /**
- * Class SymmetricVerifier
- *
- * @package Auth0\SDK\Helpers
+ * Class WP_Auth0_SymmetricVerifier
  */
-final class SymmetricVerifier extends SignatureVerifier
+final class WP_Auth0_SymmetricVerifier extends WP_Auth0_SignatureVerifier
 {
 
     /**

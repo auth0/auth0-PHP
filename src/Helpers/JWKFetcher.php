@@ -1,50 +1,22 @@
 <?php
-declare(strict_types=1);
-
-namespace Auth0\SDK\Helpers;
-
-use Auth0\SDK\API\Helpers\RequestBuilder;
-use Auth0\SDK\Helpers\Cache\CacheHandler;
-use Auth0\SDK\Helpers\Cache\NoCacheHandler;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class JWKFetcher.
- *
- * @package Auth0\SDK\Helpers
  */
-class JWKFetcher
+class WP_Auth0_JwksFetcher
 {
 
     /**
-     * Cache handler or null for no caching.
-     *
-     * @var CacheHandler|null
+     * @var WP_Auth0_Options
      */
-    private $cache;
+    private $options;
 
     /**
-     * Options for the Guzzle HTTP client.
-     *
-     * @var array
+     * WP_Auth0_JwksFetcher constructor.
      */
-    private $guzzleOptions;
-
-    /**
-     * JWKFetcher constructor.
-     *
-     * @param CacheHandler|null $cache         Cache handler or null for no caching.
-     * @param array             $guzzleOptions Options for the Guzzle HTTP client.
-     */
-    public function __construct(CacheHandler $cache = null, array $guzzleOptions = [])
+    public function __construct()
     {
-        if ($cache === null) {
-            $cache = new NoCacheHandler();
-        }
-
-        $this->cache         = $cache;
-        $this->guzzleOptions = $guzzleOptions;
+        $this->options = WP_Auth0_Options::Instance();
     }
 
     /**
@@ -65,18 +37,16 @@ class JWKFetcher
     /**
      * Gets an array of keys from the JWKS as kid => x5c.
      *
-     * @param string $jwks_url Full URL to the JWKS.
-     *
      * @return array
      */
-    public function getKeys(string $jwks_url) : array
+    public function getKeys() : array
     {
-        $keys = $this->cache->get($jwks_url);
+        $keys = get_transient(WPA0_JWKS_CACHE_TRANSIENT_NAME);
         if (is_array($keys) && ! empty($keys)) {
             return $keys;
         }
 
-        $jwks = $this->requestJwks($jwks_url);
+        $jwks = $this->requestJwks();
 
         if (empty( $jwks ) || empty( $jwks['keys'] )) {
             return [];
@@ -91,27 +61,21 @@ class JWKFetcher
             $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
         }
 
-        $this->cache->set($jwks_url, $keys);
+        $cache_expiration = $this->options->get('cache_expiration');
+        if ($keys && $cache_expiration) {
+            set_transient(WPA0_JWKS_CACHE_TRANSIENT_NAME, $keys, $cache_expiration * MINUTE_IN_SECONDS);
+        }
+
         return $keys;
     }
 
     /**
      * Get a JWKS from a specific URL.
      *
-     * @param string $jwks_url URL to the JWKS.
-     *
      * @return array
-     *
-     * @throws RequestException If $jwks_url is empty or malformed.
-     * @throws ClientException  If the JWKS cannot be retrieved.
      */
-    protected function requestJwks(string $jwks_url) : array
+    protected function requestJwks() : array
     {
-        $request = new RequestBuilder([
-            'domain' => $jwks_url,
-            'method' => 'GET',
-            'guzzleOptions' => $this->guzzleOptions
-        ]);
-        return $request->call();
+        return (new WP_Auth0_Api_Get_Jwks($this->options))->call();
     }
 }
