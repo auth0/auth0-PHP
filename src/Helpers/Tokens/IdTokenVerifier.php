@@ -185,7 +185,7 @@ final class WP_Auth0_IdTokenVerifier
                 throw new WP_Auth0_InvalidIdTokenException('Nonce (nonce) claim must be a string present in the ID token');
             }
 
-            if (WP_Auth0_Nonce_Handler::get_instance()->validate($tokenNonce)) {
+            if ($tokenNonce !== $options['nonce']) {
                 throw new WP_Auth0_InvalidIdTokenException( sprintf(
                     'Nonce (nonce) claim mismatch in the ID token; expected "%s", found "%s"',
                     $options['nonce'],
