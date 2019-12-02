@@ -21,9 +21,9 @@ class FileSystemCacheHandler implements CacheHandler
         $this->tmp_dir = sys_get_temp_dir().DIRECTORY_SEPARATOR.$temp_directory_prefix.DIRECTORY_SEPARATOR;
         if (! is_dir($this->tmp_dir)
             && ! @mkdir($this->tmp_dir, 0777, true)
-            && ! is_dir($this->tmp_dir) // If mkdir failed it means that another process created it in between
+            && ! is_dir($this->tmp_dir) // If mkdir failed it means that another process created it in between or the directory is not writeable
         ) {
-            throw new \RuntimeException("Cache Handler was not able to create directory '$this->tmp_dir'");
+            trigger_error("Cache Handler was not able to create directory '$this->tmp_dir'", E_USER_WARNING);
         }
     }
 
