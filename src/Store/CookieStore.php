@@ -16,15 +16,17 @@ class CookieStore implements StoreInterface
     /**
      * Cookie base name.
      * Use config key 'base_name' to set this during instantiation.
+     * Default is self::BASE_NAME.
      *
      * @var string
      */
     protected $baseName;
 
     /**
-     * Cookie expiration length.
+     * Cookie expiration length, in seconds.
      * This will be added to current time or $this->now to set cookie expiration time.
      * Use config key 'expiration' to set this during instantiation.
+     * Default is 600.
      *
      * @var integer
      */
@@ -34,6 +36,7 @@ class CookieStore implements StoreInterface
      * SameSite attribute for all cookies set with class instance.
      * Must be one of None, Strict, Lax (default is no SameSite attribute).
      * Use config key 'samesite' to set this during instantiation.
+     * Default is no SameSite attribute set.
      *
      * @var null|string
      */
@@ -43,6 +46,7 @@ class CookieStore implements StoreInterface
      * Time to use as "now" in expiration calculations.
      * Used primarily for testing.
      * Use config key 'now' to set this during instantiation.
+     * Default is current server time.
      *
      * @var null|integer
      */
@@ -52,6 +56,7 @@ class CookieStore implements StoreInterface
      * Support legacy browsers for SameSite=None.
      * This will set/get/delete a fallback cookie with no SameSite attribute if $this->sameSite is None.
      * Use config key 'legacy_samesite_none' to set this during instantiation.
+     * Default is true.
      *
      * @var boolean
      */
@@ -157,12 +162,27 @@ class CookieStore implements StoreInterface
      * @param integer $expire Cookie expiration timecode.
      *
      * @return string
+     *
+     * @see https://github.com/php/php-src/blob/master/ext/standard/head.c#L77
      */
     protected function getSameSiteCookieHeader(string $name, string $value, int $expire) : string
     {
         $date = new \Datetime();
         $date->setTimestamp($expire)
             ->setTimezone(new \DateTimeZone('GMT'));
+
+        $illegalChars    = ",; \t\r\n\013\014";
+        $illegalCharsMsg = ",; \\t\\r\\n\\013\\014";
+
+        if (strpbrk($name, $illegalChars) != null) {
+            trigger_error("Cookie names cannot contain any of the following '{$illegalCharsMsg}'", E_USER_WARNING);
+            return '';
+        }
+
+        if (strpbrk($value, $illegalChars) != null) {
+            trigger_error("Cookie values cannot contain any of the following '{$illegalCharsMsg}'", E_USER_WARNING);
+            return '';
+        }
 
         return sprintf(
             'Set-Cookie: %s=%s; path=/; expires=%s; HttpOnly; SameSite=%s%s',

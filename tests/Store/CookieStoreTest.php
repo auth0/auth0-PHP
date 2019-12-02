@@ -3,7 +3,7 @@ namespace Auth0\Tests\Store;
 
 use Auth0\SDK\Store\CookieStore;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\MockObject\Matcher\AnyInvokedCount;
+use PHPUnit\Framework\Error\Warning;
 
 /**
  * Class CookieStoreTest.
@@ -224,5 +224,45 @@ class CookieStoreTest extends TestCase
             'Set-Cookie: __test_name_2__=__test_value_2__; path=/; '.'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=None; Secure',
             $header
         );
+    }
+
+    public function testSetCookieHeaderFailsWithInvalidCookieName()
+    {
+        $store  = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'none']);
+        $method = new \ReflectionMethod(CookieStore::class, 'getSameSiteCookieHeader');
+        $method->setAccessible(true);
+        $methodArgs = ['__test_invalid_name_;__', uniqid(), mt_rand(1000, 9999)];
+
+        try {
+            $method->invokeArgs($store, $methodArgs);
+            $error_msg = 'No warning caught';
+        } catch (Warning $e) {
+            $error_msg = $e->getMessage();
+        }
+
+        $this->assertEquals("Cookie names cannot contain any of the following ',; \\t\\r\\n\\013\\014'", $error_msg);
+
+        $header = @$method->invokeArgs($store, $methodArgs);
+        $this->assertEquals('', $header);
+    }
+
+    public function testSetCookieHeaderFailsWithInvalidCookieValue()
+    {
+        $store  = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'none']);
+        $method = new \ReflectionMethod(CookieStore::class, 'getSameSiteCookieHeader');
+        $method->setAccessible(true);
+        $methodArgs = [uniqid(), '__test_invalid_value_;__', mt_rand(1000, 9999)];
+
+        try {
+            $method->invokeArgs($store, $methodArgs);
+            $error_msg = 'No warning caught';
+        } catch (Warning $e) {
+            $error_msg = $e->getMessage();
+        }
+
+        $this->assertEquals("Cookie values cannot contain any of the following ',; \\t\\r\\n\\013\\014'", $error_msg);
+
+        $header = @$method->invokeArgs($store, $methodArgs);
+        $this->assertEquals('', $header);
     }
 }
