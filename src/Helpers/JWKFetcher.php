@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace Auth0\SDK\Helpers;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
-use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Class JWKFetcher.
@@ -20,7 +20,7 @@ class JWKFetcher
     /**
      * Cache handler or null for no caching.
      *
-     * @var CacheHandler|null
+     * @var CacheInterface|null
      */
     private $cache;
 
@@ -34,10 +34,10 @@ class JWKFetcher
     /**
      * JWKFetcher constructor.
      *
-     * @param CacheHandler|null $cache         Cache handler or null for no caching.
-     * @param array             $guzzleOptions Options for the Guzzle HTTP client.
+     * @param CacheInterface|null $cache         Cache handler or null for no caching.
+     * @param array               $guzzleOptions Options for the Guzzle HTTP client.
      */
-    public function __construct(CacheHandler $cache = null, array $guzzleOptions = [])
+    public function __construct(CacheInterface $cache = null, array $guzzleOptions = [])
     {
         if ($cache === null) {
             $cache = new NoCacheHandler();
@@ -71,7 +71,8 @@ class JWKFetcher
      */
     public function getKeys(string $jwks_url) : array
     {
-        $keys = $this->cache->get($jwks_url);
+        $cache_key = md5($jwks_url);
+        $keys      = $this->cache->get($cache_key);
         if (is_array($keys) && ! empty($keys)) {
             return $keys;
         }
@@ -91,7 +92,7 @@ class JWKFetcher
             $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
         }
 
-        $this->cache->set($jwks_url, $keys);
+        $this->cache->set($cache_key, $keys);
         return $keys;
     }
 
