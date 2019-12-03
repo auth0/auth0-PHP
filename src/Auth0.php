@@ -228,7 +228,7 @@ class Auth0
      *                                                  leave empty to default to SessionStore
      *     - transient_store        (Mixed)  Optional.  StorageInterface for transient auth data;
      *                                                  leave empty to default to CookieStore
-     *     - cache_handler          (Mixed)   Optional. A class that implements CacheInterface of false for none
+     *     - cache_handler          (Mixed)   Optional. CacheInterface instance or false for none
      *     - persist_user           (Boolean) Optional. Persist the user info, default true
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
      *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
@@ -310,9 +310,8 @@ class Auth0
 
         $this->transientHandler = new TransientStoreHandler( $transientStore );
 
-        if (isset($config['cache_handler']) && $config['cache_handler'] instanceof CacheInterface) {
-            $this->cacheHandler = $config['cache_handler'];
-        } else {
+        $this->cacheHandler = $config['cache_handler'] ?? null;
+        if (! $this->cacheHandler instanceof CacheInterface) {
             $this->cacheHandler = new NoCacheHandler();
         }
 
