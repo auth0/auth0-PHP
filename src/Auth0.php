@@ -10,7 +10,6 @@ namespace Auth0\SDK;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\SDK\Helpers\Cache\CacheHandler;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
@@ -18,12 +17,12 @@ use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Store\CookieStore;
-use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
 use Auth0\SDK\API\Authentication;
 
 use GuzzleHttp\Exception\RequestException;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Class Auth0
@@ -202,7 +201,7 @@ class Auth0
     /**
      * Cache Handler.
      *
-     * @var CacheHandler
+     * @var CacheInterface
      */
     protected $cacheHandler;
 
@@ -229,7 +228,7 @@ class Auth0
      *                                                  leave empty to default to SessionStore
      *     - transient_store        (Mixed)  Optional.  StorageInterface for transient auth data;
      *                                                  leave empty to default to CookieStore
-     *     - cache_handler          (Mixed)   Optional. A class that implements CacheHandler of false for none
+     *     - cache_handler          (Mixed)   Optional. A class that implements CacheInterface of false for none
      *     - persist_user           (Boolean) Optional. Persist the user info, default true
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
      *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
@@ -311,7 +310,7 @@ class Auth0
 
         $this->transientHandler = new TransientStoreHandler( $transientStore );
 
-        if (isset($config['cache_handler']) && $config['cache_handler'] instanceof CacheHandler) {
+        if (isset($config['cache_handler']) && $config['cache_handler'] instanceof CacheInterface) {
             $this->cacheHandler = $config['cache_handler'];
         } else {
             $this->cacheHandler = new NoCacheHandler();
