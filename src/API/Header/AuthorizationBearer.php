@@ -1,7 +1,5 @@
 <?php
-namespace Auth0\SDK\API\Header\Authorization;
-
-use Auth0\SDK\API\Header\Header;
+namespace Auth0\SDK\API\Header;
 
 class AuthorizationBearer extends Header
 {
