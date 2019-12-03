@@ -1,9 +1,7 @@
 <?php
 namespace Auth0\Tests\Helpers;
 
-use Auth0\SDK\Helpers\Cache\CacheHandler;
-use Auth0\SDK\Helpers\Cache\FileSystemCacheHandler;
-use Auth0\SDK\Helpers\JWKFetcher;
+use Cache\Adapter\PHPArray\ArrayCachePool;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -62,7 +60,7 @@ class JWKFetcherTest extends TestCase
                 new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body_2 ),
             ],
             [
-                'cache' => new FileSystemCacheHandler()
+                'cache' => new ArrayCachePool()
             ]
         );
 
@@ -72,5 +70,9 @@ class JWKFetcherTest extends TestCase
 
         $jwks_formatted_2 = $jwks->call()->getKeys( '__test_url__' );
         $this->assertEquals( $jwks_formatted_1, $jwks_formatted_2 );
+
+        $jwks_formatted_2 = $jwks->call()->getKeys( '__test_url_2__' );
+        $this->assertArrayHasKey( 'def', $jwks_formatted_2 );
+        $this->assertContains( '456', $jwks_formatted_2['def'] );
     }
 }
