@@ -8,10 +8,12 @@ use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\Tests\Helpers\Tokens\SymmetricVerifierTest;
 use Auth0\Tests\Traits\ErrorHelpers;
+use Cache\Adapter\PHPArray\ArrayCachePool;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Exception;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -622,6 +624,38 @@ class Auth0Test extends TestCase
 
         $auth0->setIdToken( $id_token );
         $this->assertEquals( $id_token, $auth0->getIdToken() );
+    }
+
+    public function testThatCacheHandlerCanBeSet()
+    {
+        $request_history = [];
+        $mock            = new MockHandler([
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{"keys":[{"kid":"abc","x5c":["123"]}]}' ),
+        ]);
+        $handler = HandlerStack::create($mock);
+        $handler->push( Middleware::history($request_history) );
+
+        $pool = new ArrayCachePool();
+        $auth0 = new Auth0([
+            'domain' => 'test.auth0.com',
+            'client_id' => uniqid(),
+            'redirect_uri' => uniqid(),
+            'cache_handler' => $pool,
+            'guzzle_options' => [
+                'handler' => $handler
+            ]
+        ]);
+
+        try {
+            @$auth0->setIdToken(uniqid());
+        } catch ( \Exception $e ) {
+            // ...
+        }
+
+        $stored_jwks = $pool->get(md5('https://test.auth0.com/.well-known/jwks.json'));
+
+        $this->assertArrayHasKey('abc', $stored_jwks);
+        $this->assertEquals("-----BEGIN CERTIFICATE-----\n123\n-----END CERTIFICATE-----\n", $stored_jwks['abc']);
     }
 
     /*
