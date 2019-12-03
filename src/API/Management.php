@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API;
 
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Auth0\SDK\API\Header\AuthorizationBearer;
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Management\Blacklists;
 use Auth0\SDK\API\Management\Clients;

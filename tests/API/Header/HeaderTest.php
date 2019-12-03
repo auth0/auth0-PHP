@@ -2,7 +2,7 @@
 
 namespace Auth0\Tests;
 
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Auth0\SDK\API\Header\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Header\ForwardedFor;
 use Auth0\SDK\API\Header\Header;
