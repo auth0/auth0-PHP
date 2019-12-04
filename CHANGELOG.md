@@ -1,4 +1,10 @@
-# Change Log
+# CHANGELOG
+
+## [5.6.1](https://github.com/auth0/auth0-PHP/tree/5.6.1) (2019-12-05)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.6.0...5.6.1)
+
+**Fixed**
+- Fix mkdir race condition in FileSystemCacheHandler [\#375](https://github.com/auth0/auth0-PHP/pull/375) ([B-Galati](https://github.com/B-Galati))
 
 ## [5.6.0](https://github.com/auth0/auth0-PHP/tree/5.6.0) (2019-09-26)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.1...5.6.0)
