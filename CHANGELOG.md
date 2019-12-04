@@ -1,4 +1,17 @@
-# Change Log
+# CHANGELOG
+
+## [5.7.0](https://github.com/auth0/auth0-PHP/tree/5.7.0) (2019-12-09)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.6.0...5.7.0)
+
+**Added**
+- Add default scopes to Auth0 class [\#406](https://github.com/auth0/auth0-PHP/pull/406) ([joshcanhelp](https://github.com/joshcanhelp))
+- fix: add missing options for renewTokens method [\#405](https://github.com/auth0/auth0-PHP/pull/405) ([bkotrys](https://github.com/bkotrys))
+
+**Deprecated**
+- Add deprecation notices for removals in v7 major release [\#407](https://github.com/auth0/auth0-PHP/pull/407) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix mkdir race condition in FileSystemCacheHandler [\#375](https://github.com/auth0/auth0-PHP/pull/375) ([B-Galati](https://github.com/B-Galati))
 
 ## [5.6.0](https://github.com/auth0/auth0-PHP/tree/5.6.0) (2019-09-26)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.1...5.6.0)
