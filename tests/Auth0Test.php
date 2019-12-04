@@ -268,15 +268,15 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
      */
     public function testThatRenewTokensSucceeds()
     {
-        $id_token = JWT::encode( ['sub' => uniqid()], '__test_client_secret__' );
+        $id_token        = JWT::encode( ['sub' => uniqid()], '__test_client_secret__' );
         $request_history = [];
-        $mock = new MockHandler( [
+        $mock            = new MockHandler( [
             // Code exchange response.
             new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4"}' ),
             // Refresh token response.
             new Response( 200, self::$headers, '{"access_token":"__test_access_token__","id_token":"'.$id_token.'"}' ),
         ] );
-        $handler = HandlerStack::create($mock);
+        $handler         = HandlerStack::create($mock);
         $handler->push( Middleware::history($request_history) );
 
         $add_config = [
@@ -295,7 +295,7 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
         $this->assertEquals( $id_token, $auth0->getIdToken() );
 
         $renew_request = $request_history[1]['request'];
-        $renew_body = json_decode($renew_request->getBody(), true);
+        $renew_body    = json_decode($renew_request->getBody(), true);
         $this->assertEquals( 'openid', $renew_body['scope'] );
         $this->assertEquals( '__test_client_secret__', $renew_body['client_secret'] );
         $this->assertEquals( '__test_client_id__', $renew_body['client_id'] );
