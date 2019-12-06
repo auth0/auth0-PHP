@@ -2,6 +2,9 @@
 
 namespace Auth0\SDK\Helpers\Cache;
 
+/**
+ * @deprecated 5.7.0, use a Psr\SimpleCache\CacheInterface in 7.0.0.
+ */
 class FileSystemCacheHandler implements CacheHandler
 {
 
