@@ -37,7 +37,7 @@ class SessionStore implements StoreInterface
      * SessionStore constructor.
      *
      * @param string  $base_name      Session base name.
-     * @param integer $cookie_expires Session expiration in seconds; default is 1 week.
+     * @param integer $cookie_expires Session expiration in seconds; default is 1 week - @deprecated 5.7.0
      */
     public function __construct($base_name = self::BASE_NAME, $cookie_expires = self::COOKIE_EXPIRES)
     {
