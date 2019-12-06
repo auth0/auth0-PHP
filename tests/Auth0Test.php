@@ -34,7 +34,6 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
         'redirect_uri'  => '__test_redirect_uri__',
         'store' => false,
         'state_handler' => false,
-        'scope' => 'openid offline_access',
     ];
 
     /**
@@ -305,7 +304,7 @@ class Auth0Test extends \PHPUnit_Framework_TestCase
 
         $url_query = explode( '&', $parsed_url['query'] );
 
-        $this->assertContains( 'scope=openid%20offline_access', $url_query );
+        $this->assertContains( 'scope=openid%20profile%20email', $url_query );
         $this->assertContains( 'response_type=code', $url_query );
         $this->assertContains( 'redirect_uri=__test_redirect_uri__', $url_query );
         $this->assertContains( 'client_id=__test_client_id__', $url_query );
