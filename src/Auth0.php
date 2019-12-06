@@ -107,7 +107,7 @@ class Auth0
      *
      * @var string
      */
-    protected $scope;
+    protected $scope = 'openid profile email';
 
     /**
      * Auth0 Refresh Token
