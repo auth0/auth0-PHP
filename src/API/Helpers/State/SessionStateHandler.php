@@ -16,6 +16,8 @@ use Auth0\SDK\Store\StoreInterface;
 /**
  * Session based implementation of StateHandler.
  *
+ * @deprecated 5.7.0, replaced by Auth0\SDK\Helpers\TransientStoreHandler
+ *
  * @author Auth0
  */
 class SessionStateHandler implements StateHandler

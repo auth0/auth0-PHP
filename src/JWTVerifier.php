@@ -13,6 +13,8 @@ use Firebase\JWT\JWT;
  * Class JWTVerifier.
  * Used to validate JWTs issued by Auth0.
  *
+ * @deprecated 5.7.0, replacement available in upcoming 7.0.0: Auth0\SDK\Helpers\Tokens\IdTokenVerifier
+ *
  * @package Auth0\SDK
  */
 class JWTVerifier
