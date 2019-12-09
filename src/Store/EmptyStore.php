@@ -17,6 +17,8 @@ namespace Auth0\SDK\Store;
  * This class is a mockup store, that discards the values, its a way of saying no store.
  *
  * @author Auth0
+ *
+ * @deprecated 5.7.0, no replacement provided.
  */
 class EmptyStore implements StoreInterface
 {

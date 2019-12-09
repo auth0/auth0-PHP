@@ -14,6 +14,8 @@ namespace Auth0\SDK\API\Helpers\State;
 /**
  * Dummy implementation of the StateHandler
  *
+ * @deprecated 5.7.0, no replacement provided.
+ *
  * @author Auth0
  */
 class DummyStateHandler implements StateHandler

@@ -14,6 +14,8 @@ namespace Auth0\SDK\API\Helpers\State;
 /**
  * This interface must be implemented by state handlers.
  *
+ * @deprecated 5.7.0, replaced by Auth0\SDK\Helpers\TransientStoreHandler
+ *
  * @author Auth0
  */
 interface StateHandler
