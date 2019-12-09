@@ -594,12 +594,9 @@ class Auth0
     /**
      * Renews the access token and ID token using an existing refresh token.
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
+     * 
      * @param array $options Options for the token endpoint request.
-     *      - options.grant_type    Grant type to use; required.
-     *      - options.client_id     Application Client ID; required.
-     *      - options.client_secret Application Client Secret; required if token endpoint requires authentication.
-     *      - options.scope         Access token scope requested.
-     *      - options.audience      API audience identifier for access token.
+     *      - options.scope         Access token scope requested; optional.
      * 
      * @throws CoreException If the Auth0 object does not have access token and refresh token
      * @throws ApiException If the Auth0 API did not renew access and ID token properly
