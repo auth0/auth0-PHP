@@ -594,10 +594,10 @@ class Auth0
     /**
      * Renews the access token and ID token using an existing refresh token.
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
-     * 
+     *
      * @param array $options Options for the token endpoint request.
      *      - options.scope         Access token scope requested; optional.
-     * 
+     *
      * @throws CoreException If the Auth0 object does not have access token and refresh token
      * @throws ApiException If the Auth0 API did not renew access and ID token properly
      * @link   https://auth0.com/docs/tokens/refresh-token/current
@@ -612,7 +612,7 @@ class Auth0
             throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
         }
 
-        $response = $this->authentication->refresh_token( $this->refreshToken, $options);
+        $response = $this->authentication->refresh_token( $this->refreshToken, $options );
 
         if (empty($response['access_token']) || empty($response['id_token'])) {
             throw new ApiException('Token did not refresh correctly. Access or ID token not provided.');
