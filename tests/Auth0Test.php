@@ -607,6 +607,23 @@ class Auth0Test extends TestCase
         );
     }
 
+    public function testThatDecodeIdTokenOptionsAreUsed()
+    {
+        $auth0                    = new Auth0( self::$baseConfig + ['id_token_alg' => 'HS256'] );
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $e_message                = 'No exception caught';
+        try {
+            $auth0->decodeIdToken( self::getIdToken(), ['max_age' => 10 ] );
+        } catch (InvalidTokenException $e) {
+            $e_message = $e->getMessage();
+        }
+
+        $this->assertStringStartsWith(
+            'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed',
+            $e_message
+        );
+    }
+
     /**
      * @throws ApiException
      * @throws CoreException
