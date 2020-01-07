@@ -618,6 +618,28 @@ class Auth0
      */
     public function setIdToken($idToken)
     {
+        $this->idTokenDecoded = $this->decodeIdToken($idToken);
+
+        if (in_array('id_token', $this->persistantMap)) {
+            $this->store->set('id_token', $idToken);
+        }
+
+        $this->idToken = $idToken;
+        return $this;
+    }
+
+    /**
+     * Verifies and decodes an ID token using the properties in this class.
+     *
+     * @param string $idToken         ID token to verify and decode.
+     * @param array  $verifierOptions Options passed to verifier.
+     *
+     * @return array
+     *
+     * @throws InvalidTokenException
+     */
+    public function decodeIdToken(string $idToken, array $verifierOptions = []) : array
+    {
         $idTokenIss  = 'https://'.$this->domain.'/';
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
@@ -628,7 +650,7 @@ class Auth0
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
         }
 
-        $verifierOptions = [
+        $verifierOptions = $verifierOptions + [
             // Set a custom leeway if one was passed to the constructor.
             'leeway' => $this->idTokenLeeway,
             'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
@@ -639,15 +661,8 @@ class Auth0
             throw new InvalidTokenException('Nonce value not found in application store');
         }
 
-        $idTokenVerifier      = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
-        $this->idTokenDecoded = $idTokenVerifier->verify($idToken, $verifierOptions);
-
-        if (in_array('id_token', $this->persistantMap)) {
-            $this->store->set('id_token', $idToken);
-        }
-
-        $this->idToken = $idToken;
-        return $this;
+        $idTokenVerifier = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
+        return $idTokenVerifier->verify($idToken, $verifierOptions);
     }
 
     /**
