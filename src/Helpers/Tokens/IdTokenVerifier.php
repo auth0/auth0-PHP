@@ -166,15 +166,6 @@ final class IdTokenVerifier
             throw new InvalidTokenException('Issued At (iat) claim must be a number present in the ID token');
         }
 
-        $issuedTime = $tokenIat - $leeway;
-        if ($now < $issuedTime) {
-            throw new InvalidTokenException( sprintf(
-                'Issued At (iat) claim error in the ID token; current time (%d) is before issued at time (%d)',
-                $now,
-                $issuedTime
-            ) );
-        }
-
         /*
          * Nonce check
          */

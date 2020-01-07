@@ -263,29 +263,6 @@ class IdTokenVerifierTest extends TestCase
         $this->assertEquals('Issued At (iat) claim must be a number present in the ID token', $error_msg);
     }
 
-    public function testThatTokenIatInTheFutureFails()
-    {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()
-            ->issuedBy('__test_iss__')
-            ->permittedFor('__test_aud__')
-            ->withClaim('exp', 20000)
-            ->withClaim('iat', 200000);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
-        $error_msg = 'No exception caught';
-
-        try {
-            $verifier->verify($token, ['time' => 20000, 'leeway' => 20]);
-        } catch (InvalidTokenException $e) {
-            $error_msg = $e->getMessage();
-        }
-
-        $this->assertEquals(
-            'Issued At (iat) claim error in the ID token; current time (20000) is before issued at time (199980)',
-            $error_msg
-        );
-    }
-
     public function testThatTokenWithoutNonceFails()
     {
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
