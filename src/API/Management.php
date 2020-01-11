@@ -13,6 +13,7 @@ use Auth0\SDK\API\Management\DeviceCredentials;
 use Auth0\SDK\API\Management\Emails;
 use Auth0\SDK\API\Management\EmailTemplates;
 use Auth0\SDK\API\Management\Grants;
+use Auth0\SDK\API\Management\Guardian;
 use Auth0\SDK\API\Management\Jobs;
 use Auth0\SDK\API\Management\Logs;
 use Auth0\SDK\API\Management\ResourceServers;
@@ -102,6 +103,13 @@ class Management
      * @var Grants
      */
     private $grants;
+
+    /**
+     * Instance of Auth0\SDK\API\Management\Guardian
+     *
+     * @var Guardian
+     */
+    private $guardian;
 
     /**
      * Instance of Auth0\SDK\API\Management\Logs
@@ -307,6 +315,20 @@ class Management
         }
 
         return $this->grants;
+    }
+
+    /**
+     * Return an instance of the Guardian class.
+     *
+     * @return Guardian
+     */
+    public function guardian() : Guardian
+    {
+        if (! $this->guardian instanceof Guardian) {
+            $this->guardian = new Guardian($this->apiClient);
+        }
+
+        return $this->guardian;
     }
 
     /**
