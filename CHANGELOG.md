@@ -13,6 +13,54 @@
 **Fixed**
 - Fix mkdir race condition in FileSystemCacheHandler [\#375](https://github.com/auth0/auth0-PHP/pull/375) ([B-Galati](https://github.com/B-Galati))
 
+## [7.0.0](https://github.com/auth0/auth0-PHP/tree/7.0.0) (2020-01-14)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.7.0...7.0.0)
+
+**BEFORE YOU UPGRADE**
+
+This is a major release with several breaking changes. Please see the [v5 to v7 migration guide here](https://github.com/auth0/auth0-PHP/blob/master/MIGRATE-v5-TO-v7.md) before you upgrade.
+
+**Added**
+- Add select Guardian management endpoints [\#412](https://github.com/auth0/auth0-PHP/pull/412) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Auth0->decodeIdToken() method for ID token decoding by deps [\#410](https://github.com/auth0/auth0-PHP/pull/410) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add SameSite cookie attribute handling [\#400](https://github.com/auth0/auth0-PHP/pull/400) ([joshcanhelp](https://github.com/joshcanhelp))
+- Nonce and max_age handling with new CookieStore class [\#395](https://github.com/auth0/auth0-PHP/pull/395) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Changed**
+- Convert caching to PSR-16 interface [\#403](https://github.com/auth0/auth0-PHP/pull/403) ([joshcanhelp](https://github.com/joshcanhelp))
+- Move AuthorizationBearer to new namespace [\#402](https://github.com/auth0/auth0-PHP/pull/402) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improve transient authorization data handling [\#397](https://github.com/auth0/auth0-PHP/pull/397) ([joshcanhelp](https://github.com/joshcanhelp))
+- Cleanup Auth0 class constructor for clarification and better defaults [\#394](https://github.com/auth0/auth0-PHP/pull/394) ([joshcanhelp](https://github.com/joshcanhelp))
+- Change client secret requirements [\#390](https://github.com/auth0/auth0-PHP/pull/390) ([joshcanhelp](https://github.com/joshcanhelp))
+- Improved OIDC compliance [\#386](https://github.com/auth0/auth0-PHP/pull/386) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update minimum PHP from 5.5 to 7.1 [\#377](https://github.com/auth0/auth0-PHP/pull/377) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Removed**
+- Remove future iat check [\#411](https://github.com/auth0/auth0-PHP/pull/411) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove Firebase JWT library [\#396](https://github.com/auth0/auth0-PHP/pull/396) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove session cookie expiration option [\#389](https://github.com/auth0/auth0-PHP/pull/389) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated Authentication methods and add types [\#385](https://github.com/auth0/auth0-PHP/pull/385) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated JWKS methods and adjust tests [\#384](https://github.com/auth0/auth0-PHP/pull/384) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated M-API methods [\#383](https://github.com/auth0/auth0-PHP/pull/383) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated InformationHeaders methods and add types [\#382](https://github.com/auth0/auth0-PHP/pull/382) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated methods and add types to RequestBuilder [\#381](https://github.com/auth0/auth0-PHP/pull/381) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated token generator [\#380](https://github.com/auth0/auth0-PHP/pull/380) ([joshcanhelp](https://github.com/joshcanhelp))
+- Remove deprecated legacy classes [\#379](https://github.com/auth0/auth0-PHP/pull/379) ([joshcanhelp](https://github.com/joshcanhelp))
+- Update management props [\#378](https://github.com/auth0/auth0-PHP/pull/378) ([joshcanhelp](https://github.com/joshcanhelp))
+
+## [5.7.0](https://github.com/auth0/auth0-PHP/tree/5.7.0) (2019-12-09)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.6.0...5.7.0)
+
+**Added**
+- Add default scopes to Auth0 class [\#406](https://github.com/auth0/auth0-PHP/pull/406) ([joshcanhelp](https://github.com/joshcanhelp))
+- fix: add missing options for renewTokens method [\#405](https://github.com/auth0/auth0-PHP/pull/405) ([bkotrys](https://github.com/bkotrys))
+
+**Deprecated**
+- Add deprecation notices for removals in v7 major release [\#407](https://github.com/auth0/auth0-PHP/pull/407) ([joshcanhelp](https://github.com/joshcanhelp))
+
+**Fixed**
+- Fix mkdir race condition in FileSystemCacheHandler [\#375](https://github.com/auth0/auth0-PHP/pull/375) ([B-Galati](https://github.com/B-Galati))
+
 ## [5.6.0](https://github.com/auth0/auth0-PHP/tree/5.6.0) (2019-09-26)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.5.1...5.6.0)
 
