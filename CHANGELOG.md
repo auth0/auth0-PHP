@@ -1,6 +1,6 @@
 # Change Log
 
-## [7.0.0](https://github.com/auth0/auth0-PHP/tree/7.0.0) (2020-01-14)
+## [7.0.0](https://github.com/auth0/auth0-PHP/tree/7.0.0) (2020-01-15)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.7.0...7.0.0)
 
 **BEFORE YOU UPGRADE**
@@ -8,6 +8,7 @@
 This is a major release with several breaking changes. Please see the [v5 to v7 migration guide here](https://github.com/auth0/auth0-PHP/blob/master/MIGRATE-v5-TO-v7.md) before you upgrade.
 
 **Added**
+- Add types for StoreInterface and implementors; add back EmptyStore [\#414](https://github.com/auth0/auth0-PHP/pull/414) ([joshcanhelp](https://github.com/joshcanhelp))
 - Add select Guardian management endpoints [\#412](https://github.com/auth0/auth0-PHP/pull/412) ([joshcanhelp](https://github.com/joshcanhelp))
 - Add Auth0->decodeIdToken() method for ID token decoding by deps [\#410](https://github.com/auth0/auth0-PHP/pull/410) ([joshcanhelp](https://github.com/joshcanhelp))
 - Add SameSite cookie attribute handling [\#400](https://github.com/auth0/auth0-PHP/pull/400) ([joshcanhelp](https://github.com/joshcanhelp))
