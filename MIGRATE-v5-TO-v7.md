@@ -28,7 +28,7 @@ The `id_token_aud` and `id_token_iss` configuration keys have been removed and t
 
 The `state_handler` configuration key has been removed and the `transient_store` configuration key has been added. See the **State and nonce handling** section below for more information about the changes with state handling.
 
-The ability to pass `false` in the `store` configuration key has been removed. Set the `persist_user` configuration key to `false` to skip all persistence.
+The ability to pass `false` in the `store` configuration key has been removed. Set `store` to an instance of `EmptyStore` or set all `persist_*` configuration keys to `false` to skip all persistence.
 
 The `cache_handler` configuration key must now be an instance of `Psr\SimpleCache\CacheInterface`. See the **Cache handling** section below for more information.
 
@@ -71,7 +71,6 @@ The following classes were removed in v7:
 - Class `DummyStateHandler` was removed, see the **State and nonce handling** section above for more information
 - Interface `CacheHandler` was removed, see the **Cache handling** section above for more information
 - Class `FileSystemCacheHandler` was removed, see the **Cache handling** section above for more information
-- Class `EmptyStore ` was removed, no replacement provided
 - Class `TokenGenerator` was removed, no replacement provided
 - Class `Oauth2Client` was removed, no replacement provided
 - Class `Auth0Api` was removed, no replacement provided
