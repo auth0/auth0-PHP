@@ -8,12 +8,6 @@
 
 The Auth0 PHP SDK provides straight-forward and tested methods for accessing Authentication and Management API endpoints. This README describes how to get started and provides simple examples of how to use the SDK.
 
-**Branches**
-
-- `master` - Work in progress for minor and patch releases
-- [`7.0.0-dev`](https://github.com/auth0/auth0-PHP/tree/7.0.0-dev) - Work in progress for upcoming major release
-- **All other branches are not maintained and will be removed**
-
 ## Table of Contents
 
 - [Documentation](#documentation)
