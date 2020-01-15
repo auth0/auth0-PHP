@@ -1,13 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
 
 /**
- * This class provides a layer to persist user access using PHP Sessions.
+ * Class SessionStore
+ * This class provides a layer to persist data using PHP Sessions.
  *
  * NOTE: If you are using this storage method for the transient_store option in the Auth0 class along with a
  * response_mode of form_post, the session cookie MUST be set to SameSite=None and Secure using
  * session_set_cookie_params() or another method. This combination will be enforced by browsers in early 2020.
+ *
+ * @package Auth0\SDK\Store
  */
 class SessionStore implements StoreInterface
 {
@@ -39,7 +43,7 @@ class SessionStore implements StoreInterface
      *
      * @return void
      */
-    private function initSession()
+    private function initSession() : void
     {
         if (! session_id()) {
             session_start();
@@ -54,7 +58,7 @@ class SessionStore implements StoreInterface
      *
      * @return void
      */
-    public function set($key, $value)
+    public function set(string $key, $value) : void
     {
         $this->initSession();
         $key_name            = $this->getSessionKeyName($key);
@@ -70,7 +74,7 @@ class SessionStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         $this->initSession();
         $key_name = $this->getSessionKeyName($key);
@@ -89,7 +93,7 @@ class SessionStore implements StoreInterface
      *
      * @return void
      */
-    public function delete($key)
+    public function delete(string $key) : void
     {
         $this->initSession();
         $key_name = $this->getSessionKeyName($key);
@@ -103,7 +107,7 @@ class SessionStore implements StoreInterface
      *
      * @return string
      */
-    public function getSessionKeyName($key)
+    public function getSessionKeyName(string $key) : string
     {
         $key_name = $key;
         if (! empty( $this->session_base_name )) {

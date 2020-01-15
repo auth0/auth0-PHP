@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace Auth0\SDK\Store;
 
 /**
+ * Class CookieStore.
  * This class provides a layer to persist transient auth data using cookies.
+ *
+ * @package Auth0\SDK\Store
  */
 class CookieStore implements StoreInterface
 {
@@ -93,7 +96,7 @@ class CookieStore implements StoreInterface
      *
      * @return void
      */
-    public function set($key, $value)
+    public function set(string $key, $value) : void
     {
         $key_name           = $this->getCookieName($key);
         $_COOKIE[$key_name] = $value;
@@ -121,7 +124,7 @@ class CookieStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         $key_name = $this->getCookieName($key);
         $value    = $default;
@@ -141,7 +144,7 @@ class CookieStore implements StoreInterface
      *
      * @return void
      */
-    public function delete($key)
+    public function delete(string $key) : void
     {
         $key_name = $this->getCookieName($key);
         unset($_COOKIE[$key_name]);
@@ -175,12 +178,12 @@ class CookieStore implements StoreInterface
         $illegalCharsMsg = ",; \\t\\r\\n\\013\\014";
 
         if (strpbrk($name, $illegalChars) != null) {
-            trigger_error("Cookie names cannot contain any of the following '{$illegalCharsMsg}'", E_USER_WARNING);
+            trigger_error("Cookie names cannot contain any of the following '".$illegalCharsMsg."'", E_USER_WARNING);
             return '';
         }
 
         if (strpbrk($value, $illegalChars) != null) {
-            trigger_error("Cookie values cannot contain any of the following '{$illegalCharsMsg}'", E_USER_WARNING);
+            trigger_error("Cookie values cannot contain any of the following '".$illegalCharsMsg."'", E_USER_WARNING);
             return '';
         }
 
