@@ -4,38 +4,46 @@ declare(strict_types=1);
 namespace Auth0\SDK\Store;
 
 /**
- * Interface StoreInterface
+ * Class EmptyStore.
+ * Used to fulfill an interface without providing actual storage.
  *
  * @package Auth0\SDK\Store
  */
-interface StoreInterface
+class EmptyStore implements StoreInterface
 {
     /**
-     * Set a value on the store
+     * Do nothing.
      *
      * @param string $key   Key to set.
      * @param mixed  $value Value to set.
      *
      * @return void
      */
-    public function set(string $key, $value);
+    public function set(string $key, $value) : void
+    {
+    }
 
     /**
-     * Get a value from the store by a given key.
+     * Return the default.
      *
      * @param string      $key     Key to get.
      * @param null|string $default Return value if key not found.
      *
      * @return mixed
      */
-    public function get(string $key, $default = null);
+    public function get(string $key, $default = null)
+    {
+        return $default;
+    }
 
     /**
-     * Remove a value from the store
+     * Do nothing.
      *
      * @param string $key Key to delete.
      *
      * @return void
      */
-    public function delete(string $key);
+    public function delete(string $key) : void
+    {
+    }
 }

@@ -17,6 +17,7 @@ use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Store\CookieStore;
+use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
 use Auth0\SDK\API\Authentication;
@@ -135,7 +136,7 @@ class Auth0
     /**
      * Storage engine for persistence
      *
-     * @var null|StoreInterface
+     * @var StoreInterface
      */
     protected $store;
 
@@ -294,7 +295,10 @@ class Auth0
         }
 
         $this->store = $config['store'] ?? null;
-        if ($this->persistantMap && ! $this->store instanceof StoreInterface) {
+        if (empty($this->persistantMap)) {
+            // No need for storage, nothing to persist.
+            $this->store = new EmptyStore();
+        } else if (! $this->store instanceof StoreInterface) {
             // Need to have some kind of storage if user data needs to be persisted.
             $this->store = new SessionStore();
         }
