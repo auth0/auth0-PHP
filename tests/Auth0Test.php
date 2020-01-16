@@ -54,7 +54,6 @@ class Auth0Test extends TestCase
             'redirect_uri'  => '__test_redirect_uri__',
             'store' => false,
             'transient_store' => new SessionStore(),
-            'scope' => 'openid offline_access',
         ];
 
         if (! session_id()) {
@@ -309,6 +308,7 @@ class Auth0Test extends TestCase
     public function testThatRenewTokensSucceeds()
     {
         $id_token = self::getIdToken();
+        $request_history = [];
 
         $mock = new MockHandler( [
             // Code exchange response.
