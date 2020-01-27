@@ -679,7 +679,7 @@ class Auth0Test extends TestCase
             // ...
         }
 
-        $stored_jwks = $pool->get(md5('https://test.auth0.com/.well-known/jwks.json'));
+        $stored_jwks = $pool->get(md5('https://test.auth0.com/.well-known/openid-configuration'));
 
         $this->assertArrayHasKey('abc', $stored_jwks);
         $this->assertEquals("-----BEGIN CERTIFICATE-----\n123\n-----END CERTIFICATE-----\n", $stored_jwks['abc']);
