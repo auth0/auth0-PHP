@@ -283,7 +283,7 @@ class Auth0
         $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
-        if (!in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
+        if (! in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
             throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
         }
 
@@ -293,17 +293,17 @@ class Auth0
         }
 
         // Access token is not persisted by default.
-        if (!isset($config['persist_access_token']) || false === $config['persist_access_token']) {
+        if (! isset($config['persist_access_token']) || false === $config['persist_access_token']) {
             $this->dontPersist('access_token');
         }
 
         // Refresh token is not persisted by default.
-        if (!isset($config['persist_refresh_token']) || false === $config['persist_refresh_token']) {
+        if (! isset($config['persist_refresh_token']) || false === $config['persist_refresh_token']) {
             $this->dontPersist('refresh_token');
         }
 
         // ID token is not persisted by default.
-        if (!isset($config['persist_id_token']) || false === $config['persist_id_token']) {
+        if (! isset($config['persist_id_token']) || false === $config['persist_id_token']) {
             $this->dontPersist('id_token');
         }
 
@@ -311,13 +311,13 @@ class Auth0
         if (empty($this->persistantMap)) {
             // No need for storage, nothing to persist.
             $this->store = new EmptyStore();
-        } else if (!$this->store instanceof StoreInterface) {
+        } else if (! $this->store instanceof StoreInterface) {
             // Need to have some kind of storage if user data needs to be persisted.
             $this->store = new SessionStore();
         }
 
         $transientStore = $config['transient_store'] ?? null;
-        if (!$transientStore instanceof StoreInterface) {
+        if (! $transientStore instanceof StoreInterface) {
             $transientStore = new CookieStore([
                 // Use configuration option or class default.
                 'legacy_samesite_none' => $config['legacy_samesite_none_cookie'] ?? null,
@@ -328,7 +328,7 @@ class Auth0
         $this->transientHandler = new TransientStoreHandler($transientStore);
 
         $this->cacheHandler = $config['cache_handler'] ?? null;
-        if (!$this->cacheHandler instanceof CacheInterface) {
+        if (! $this->cacheHandler instanceof CacheInterface) {
             $this->cacheHandler = new NoCacheHandler();
         }
 
@@ -371,13 +371,13 @@ class Auth0
             $params['connection'] = $connection;
         }
 
-        if (!empty($additionalParams) && is_array($additionalParams)) {
+        if (! empty($additionalParams) && is_array($additionalParams)) {
             $params = array_replace($params, $additionalParams);
         }
 
         $login_url = $this->getLoginUrl($params);
 
-        header('Location: ' . $login_url);
+        header('Location: '.$login_url);
         exit;
     }
 
@@ -440,7 +440,7 @@ class Auth0
      */
     public function getUser()
     {
-        if (!$this->user) {
+        if (! $this->user) {
             $this->exchange();
         }
 
@@ -457,7 +457,7 @@ class Auth0
      */
     public function getAccessToken()
     {
-        if (!$this->accessToken) {
+        if (! $this->accessToken) {
             $this->exchange();
         }
 
@@ -474,7 +474,7 @@ class Auth0
      */
     public function getIdToken()
     {
-        if (!$this->idToken) {
+        if (! $this->idToken) {
             $this->exchange();
         }
 
@@ -491,7 +491,7 @@ class Auth0
      */
     public function getRefreshToken()
     {
-        if (!$this->refreshToken) {
+        if (! $this->refreshToken) {
             $this->exchange();
         }
 
@@ -513,12 +513,12 @@ class Auth0
     public function exchange()
     {
         $code = $this->getAuthorizationCode();
-        if (!$code) {
+        if (! $code) {
             return false;
         }
 
         $state = $this->getState();
-        if (!$state || !$this->transientHandler->verify(self::TRANSIENT_STATE_KEY, $state)) {
+        if (! $state || ! $this->transientHandler->verify(self::TRANSIENT_STATE_KEY, $state)) {
             throw new CoreException('Invalid state');
         }
 
@@ -568,11 +568,11 @@ class Auth0
      */
     public function renewTokens(array $options = [])
     {
-        if (!$this->accessToken) {
+        if (! $this->accessToken) {
             throw new CoreException('Can\'t renew the access token if there isn\'t one valid');
         }
 
-        if (!$this->refreshToken) {
+        if (! $this->refreshToken) {
             throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
         }
 
@@ -657,12 +657,12 @@ class Auth0
      */
     public function decodeIdToken(string $idToken, array $verifierOptions = []): array
     {
-        $idTokenIss = 'https://' . $this->domain . '/';
+        $idTokenIss = 'https://'.$this->domain.'/';
 
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
             $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
-            $document    = $jwksFetcher->getDocument($idTokenIss . $this->discoveryDocumentUri);
+            $document    = $jwksFetcher->getDocument($idTokenIss.$this->discoveryDocumentUri);
             $jwks        = $jwksFetcher->getKeys($document['jwks_uri']);
             $sigVerifier = new AsymmetricVerifier($jwks);
         } else if ('HS256' === $this->idTokenAlg) {

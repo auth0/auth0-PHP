@@ -110,6 +110,7 @@ class JWKFetcher
         if (! empty($contents)) {
             return $contents;
         }
+
         $contents = $this->request($url);
 
         $this->cache->set($cache_key, $contents);
