@@ -657,6 +657,7 @@ class Auth0Test extends TestCase
     {
         $request_history = [];
         $mock            = new MockHandler([
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{"jwks_uri":"https://test.auth0.com/.well-known/jwks.json"}' ),
             new Response( 200, [ 'Content-Type' => 'application/json' ], '{"keys":[{"kid":"abc","x5c":["123"]}]}' ),
         ]);
         $handler = HandlerStack::create($mock);
@@ -680,7 +681,9 @@ class Auth0Test extends TestCase
         }
 
         $stored_jwks = $pool->get(md5('https://test.auth0.com/.well-known/openid-configuration'));
+        $this->assertArrayHasKey('jwks_uri', $stored_jwks);
 
+        $stored_jwks = $pool->get(md5('https://test.auth0.com/.well-known/jwks.json'));
         $this->assertArrayHasKey('abc', $stored_jwks);
         $this->assertEquals("-----BEGIN CERTIFICATE-----\n123\n-----END CERTIFICATE-----\n", $stored_jwks['abc']);
     }
