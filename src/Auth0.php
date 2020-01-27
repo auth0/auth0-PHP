@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Main entry point to the Auth0 SDK
  *
@@ -164,12 +165,11 @@ class Auth0
     protected $guzzleOptions;
 
     /**
-     * JWKS uri
+     * Discovery document uri
      *
      * @var string
-     *
      */
-    protected $jwskUri;
+    protected $discoveryDocumentUri;
 
     /**
      * Skip the /userinfo endpoint call and use the ID token.
@@ -221,6 +221,7 @@ class Auth0
      *     - domain                 (String)  Required. Auth0 domain for your tenant
      *     - client_id              (String)  Required. Client ID found in the Application settings
      *     - redirect_uri           (String)  Required. Authentication callback URI
+     *     - discovery_document_uri (String)  Required. Discovery document uri (Use as domain + discovery_uri)
      *     - client_secret          (String)  Optional. Client Secret found in the Application settings
      *     - secret_base64_encoded  (Boolean) Optional. Client Secret base64 encoded (true) or not (false, default)
      *     - audience               (String)  Optional. API identifier to generate an access token
@@ -242,7 +243,6 @@ class Auth0
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
      *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
      *     - persist_id_token       (Boolean) Optional. Persist the ID token, default false
-     *     - jwks_uri               (String) Optional. Use custom jwks_uri
      *
      * @throws CoreException If `domain`, `client_id`, or `redirect_uri` is not provided.
      * @throws CoreException If `id_token_alg` is provided and is not supported.
@@ -252,6 +252,12 @@ class Auth0
         $this->domain = $config['domain'] ?? $_ENV['AUTH0_DOMAIN'] ?? null;
         if (empty($this->domain)) {
             throw new CoreException('Invalid domain');
+        }
+
+        $this->discoveryDocumentUri = '.well-known/openid-configuration';
+        // $config['discovery_document_uri'] ?? $_ENV['AUTH0_DISCOVERY_DOCUMENT_URI'] ?? null;
+        if (empty($this->discoveryDocumentUri)) {
+            // throw new CoreException('Invalid discovery document');
         }
 
         $this->clientId = $config['client_id'] ?? $_ENV['AUTH0_CLIENT_ID'] ?? null;
@@ -280,7 +286,7 @@ class Auth0
         $this->jwskUri       = $config['jwsk_uri'] ?? null;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
-        if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
+        if (! in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
             throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
         }
 
@@ -322,7 +328,7 @@ class Auth0
             ]);
         }
 
-        $this->transientHandler = new TransientStoreHandler( $transientStore );
+        $this->transientHandler = new TransientStoreHandler($transientStore);
 
         $this->cacheHandler = $config['cache_handler'] ?? null;
         if (! $this->cacheHandler instanceof CacheInterface) {
@@ -396,10 +402,10 @@ class Auth0
             'max_age' => $this->maxAge,
         ];
 
-        $auth_params = array_replace( $default_params, $params );
-        $auth_params = array_filter( $auth_params );
+        $auth_params = array_replace($default_params, $params);
+        $auth_params = array_filter($auth_params);
 
-        if (empty( $auth_params[self::TRANSIENT_STATE_KEY] )) {
+        if (empty($auth_params[self::TRANSIENT_STATE_KEY])) {
             // No state provided by application so generate, store, and send one.
             $auth_params[self::TRANSIENT_STATE_KEY] = $this->transientHandler->issue(self::TRANSIENT_STATE_KEY);
         } else {
@@ -408,14 +414,14 @@ class Auth0
         }
 
         // ID token nonce validation is required so auth params must include one.
-        if (empty( $auth_params[self::TRANSIENT_NONCE_KEY] )) {
+        if (empty($auth_params[self::TRANSIENT_NONCE_KEY])) {
             $auth_params[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->issue(self::TRANSIENT_NONCE_KEY);
         } else {
             $this->transientHandler->store(self::TRANSIENT_NONCE_KEY, $auth_params[self::TRANSIENT_NONCE_KEY]);
         }
 
         if (isset($auth_params['max_age'])) {
-            $this->transientHandler->store( 'max_age', $auth_params['max_age'] );
+            $this->transientHandler->store('max_age', $auth_params['max_age']);
         }
 
         return $this->authentication->get_authorize_link(
@@ -573,7 +579,7 @@ class Auth0
             throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
         }
 
-        $response = $this->authentication->refresh_token( $this->refreshToken, $options );
+        $response = $this->authentication->refresh_token($this->refreshToken, $options);
 
         if (empty($response['access_token']) || empty($response['id_token'])) {
             throw new ApiException('Token did not refresh correctly. Access or ID token not provided.');
@@ -652,16 +658,15 @@ class Auth0
      *
      * @throws InvalidTokenException
      */
-    public function decodeIdToken(string $idToken, array $verifierOptions = []) : array
+    public function decodeIdToken(string $idToken, array $verifierOptions = []): array
     {
-        $idTokenIss  = 'https://'.$this->domain.'/';
-
-        $this->jwskUri = $this->jwskUri ?? $idTokenIss.'.well-known/jwks.json';
+        $idTokenIss = 'https://'.$this->domain.'/';
 
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
             $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
-            $jwks        = $jwksFetcher->getKeys($this->jwskUri);
+            $document    = $jwksFetcher->getDocument($idTokenIss . $this->discoveryDocumentUri);
+            $jwks        = $jwksFetcher->getKeys($document['jwks_uri']);
             $sigVerifier = new AsymmetricVerifier($jwks);
         } else if ('HS256' === $this->idTokenAlg) {
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
@@ -674,7 +679,7 @@ class Auth0
         ];
 
         $verifierOptions[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY);
-        if (empty( $verifierOptions[self::TRANSIENT_NONCE_KEY] )) {
+        if (empty($verifierOptions[self::TRANSIENT_NONCE_KEY])) {
             throw new InvalidTokenException('Nonce value not found in application store');
         }
 
@@ -796,7 +801,7 @@ class Auth0
      *
      * @return string
      */
-    public static function getNonce(int $length = 16) : string
+    public static function getNonce(int $length = 16): string
     {
         try {
             $random_bytes = random_bytes($length);
@@ -814,7 +819,7 @@ class Auth0
      *
      * @return string
      */
-    public static function urlSafeBase64Decode(string $input) : string
+    public static function urlSafeBase64Decode(string $input): string
     {
         $remainder = strlen($input) % 4;
         if ($remainder) {

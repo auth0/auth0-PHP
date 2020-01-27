@@ -77,7 +77,7 @@ class JWKFetcher
             return $keys;
         }
 
-        $jwks = $this->requestJwks($jwks_url);
+        $jwks = $this->request($jwks_url);
 
         if (empty( $jwks ) || empty( $jwks['keys'] )) {
             return [];
@@ -97,6 +97,22 @@ class JWKFetcher
     }
 
     /**
+     * 
+     */
+    public function getDocument(string $url) : array
+    {
+        $cache_key = md5($url);
+        $contents  = $this->cache->get($cache_key);
+        if (! empty($contents)) {
+            return $contents;
+        }
+        $contents = $this->request($url);
+
+        $this->cache->set($cache_key, $contents);
+        return json_decode(json_encode($contents), true);
+    }
+
+    /**
      * Get a JWKS from a specific URL.
      *
      * @param string $jwks_url URL to the JWKS.
@@ -106,10 +122,10 @@ class JWKFetcher
      * @throws RequestException If $jwks_url is empty or malformed.
      * @throws ClientException  If the JWKS cannot be retrieved.
      */
-    protected function requestJwks(string $jwks_url) : array
+    protected function request(string $url) : array
     {
         $request = new RequestBuilder([
-            'domain' => $jwks_url,
+            'domain' => $url,
             'method' => 'GET',
             'guzzleOptions' => $this->guzzleOptions
         ]);

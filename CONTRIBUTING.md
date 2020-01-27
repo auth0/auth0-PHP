@@ -21,4 +21,5 @@ To run integration tests on the SDK, you'll need to create a `.env` file in the 
 - `APP_CLIENT_ID` - Client ID for a Regular Web Application within your test tenant
 - `APP_CLIENT_SECRET` - Client Secret for a Regular Web Application within your test tenant
 
+
 This file is automatically excluded from Git with the `.gitignore` for this repo.
