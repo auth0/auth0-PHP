@@ -40,6 +40,7 @@ class Auth0StoreTest extends TestCase
             'domain'        => '__test_domain__',
             'client_id'     => '__test_client_id__',
             'redirect_uri'  => '__test_redirect_uri__',
+            'discovery_document_uri' => '__test_discovery_document_uri__',
             'scope' => 'openid',
         ];
     }

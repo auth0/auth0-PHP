@@ -52,6 +52,7 @@ class Auth0Test extends TestCase
             'client_id'     => '__test_client_id__',
             'client_secret' => '__test_client_secret__',
             'redirect_uri'  => '__test_redirect_uri__',
+            'discovery_document_uri' => '__test_discovery_document_uri__',
             'store' => false,
             'transient_store' => new SessionStore(),
         ];
@@ -668,6 +669,7 @@ class Auth0Test extends TestCase
             'domain' => 'test.auth0.com',
             'client_id' => uniqid(),
             'redirect_uri' => uniqid(),
+            'discovery_document_uri' => '.well-known/openid-configuration', 
             'cache_handler' => $pool,
             'guzzle_options' => [
                 'handler' => $handler
