@@ -97,7 +97,11 @@ class JWKFetcher
     }
 
     /**
-     * 
+     * Gets an array of keys from the discovery document server
+     *
+     * @param string $url Full URL to the server.
+     *
+     * @return array
      */
     public function getDocument(string $url) : array
     {
@@ -115,11 +119,11 @@ class JWKFetcher
     /**
      * Get a JWKS from a specific URL.
      *
-     * @param string $jwks_url URL to the JWKS.
+     * @param string $jurl URL to fetch.
      *
      * @return array
      *
-     * @throws RequestException If $jwks_url is empty or malformed.
+     * @throws RequestException If $url is empty or malformed.
      * @throws ClientException  If the JWKS cannot be retrieved.
      */
     protected function request(string $url) : array
