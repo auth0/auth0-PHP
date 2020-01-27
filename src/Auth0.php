@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Main entry point to the Auth0 SDK
  *
@@ -282,7 +281,6 @@ class Auth0
         $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
         $this->maxAge        = $config['max_age'] ?? null;
         $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
-        $this->jwskUri       = $config['jwsk_uri'] ?? null;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (!in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
