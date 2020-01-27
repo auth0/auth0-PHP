@@ -164,6 +164,14 @@ class Auth0
     protected $guzzleOptions;
 
     /**
+     * JWKS uri
+     *
+     * @var string
+     *
+     */
+    protected $jwskUri;
+
+    /**
      * Skip the /userinfo endpoint call and use the ID token.
      *
      * @var boolean
@@ -234,6 +242,7 @@ class Auth0
      *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
      *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
      *     - persist_id_token       (Boolean) Optional. Persist the ID token, default false
+     *     - jwks_uri               (String) Optional. Use custom jwks_uri
      *
      * @throws CoreException If `domain`, `client_id`, or `redirect_uri` is not provided.
      * @throws CoreException If `id_token_alg` is provided and is not supported.
@@ -268,6 +277,7 @@ class Auth0
         $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
         $this->maxAge        = $config['max_age'] ?? null;
         $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
+        $this->jwskUri       = $config['jwsk_uri'] ?? null;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
@@ -645,10 +655,13 @@ class Auth0
     public function decodeIdToken(string $idToken, array $verifierOptions = []) : array
     {
         $idTokenIss  = 'https://'.$this->domain.'/';
+
+        $this->jwskUri = $this->jwskUri ?? $idTokenIss.'.well-known/jwks.json';
+
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
             $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
-            $jwks        = $jwksFetcher->getKeys($idTokenIss.'.well-known/jwks.json');
+            $jwks        = $jwksFetcher->getKeys($this->jwskUri);
             $sigVerifier = new AsymmetricVerifier($jwks);
         } else if ('HS256' === $this->idTokenAlg) {
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
