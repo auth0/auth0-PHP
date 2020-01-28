@@ -271,7 +271,7 @@ class Auth0
         $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
-        if (! in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
+        if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
             throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
         }
 
@@ -387,8 +387,8 @@ class Auth0
             'max_age' => $this->maxAge,
         ];
 
-        $auth_params = array_replace($default_params, $params);
-        $auth_params = array_filter($auth_params);
+        $auth_params = array_replace( $default_params, $params );
+        $auth_params = array_filter( $auth_params );
 
         if (empty($auth_params[self::TRANSIENT_STATE_KEY])) {
             // No state provided by application so generate, store, and send one.
@@ -399,14 +399,14 @@ class Auth0
         }
 
         // ID token nonce validation is required so auth params must include one.
-        if (empty($auth_params[self::TRANSIENT_NONCE_KEY])) {
+        if (empty( $auth_params[self::TRANSIENT_NONCE_KEY] )) {
             $auth_params[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->issue(self::TRANSIENT_NONCE_KEY);
         } else {
             $this->transientHandler->store(self::TRANSIENT_NONCE_KEY, $auth_params[self::TRANSIENT_NONCE_KEY]);
         }
 
         if (isset($auth_params['max_age'])) {
-            $this->transientHandler->store('max_age', $auth_params['max_age']);
+            $this->transientHandler->store( 'max_age', $auth_params['max_age'] );
         }
 
         return $this->authentication->get_authorize_link(
@@ -677,7 +677,7 @@ class Auth0
         ];
 
         $verifierOptions[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY);
-        if (empty($verifierOptions[self::TRANSIENT_NONCE_KEY])) {
+        if (empty( $verifierOptions[self::TRANSIENT_NONCE_KEY] )) {
             throw new InvalidTokenException('Nonce value not found in application store');
         }
 
