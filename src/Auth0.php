@@ -390,7 +390,7 @@ class Auth0
         $auth_params = array_replace( $default_params, $params );
         $auth_params = array_filter( $auth_params );
 
-        if (empty($auth_params[self::TRANSIENT_STATE_KEY])) {
+        if (empty( $auth_params[self::TRANSIENT_STATE_KEY] )) {
             // No state provided by application so generate, store, and send one.
             $auth_params[self::TRANSIENT_STATE_KEY] = $this->transientHandler->issue(self::TRANSIENT_STATE_KEY);
         } else {
