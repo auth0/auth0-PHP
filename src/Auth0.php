@@ -220,7 +220,6 @@ class Auth0
      *     - domain                 (String)  Required. Auth0 domain for your tenant
      *     - client_id              (String)  Required. Client ID found in the Application settings
      *     - redirect_uri           (String)  Required. Authentication callback URI
-     *     - discovery_document_uri (String)  Required. Discovery document uri (Use as domain + discovery_uri)
      *     - client_secret          (String)  Optional. Client Secret found in the Application settings
      *     - secret_base64_encoded  (Boolean) Optional. Client Secret base64 encoded (true) or not (false, default)
      *     - audience               (String)  Optional. API identifier to generate an access token
@@ -253,11 +252,6 @@ class Auth0
             throw new CoreException('Invalid domain');
         }
 
-        $this->discoveryDocumentUri = $config['discovery_document_uri'] ?? $_ENV['AUTH0_DISCOVERY_DOCUMENT_URI'] ?? null;
-        if (empty($this->discoveryDocumentUri)) {
-            throw new CoreException('Invalid discovery document');
-        }
-
         $this->clientId = $config['client_id'] ?? $_ENV['AUTH0_CLIENT_ID'] ?? null;
         if (empty($this->clientId)) {
             throw new CoreException('Invalid client_id');
@@ -273,14 +267,15 @@ class Auth0
             $this->clientSecret = self::urlSafeBase64Decode($this->clientSecret);
         }
 
-        $this->audience      = $config['audience'] ?? null;
-        $this->responseMode  = $config['response_mode'] ?? 'query';
-        $this->responseType  = $config['response_type'] ?? 'code';
-        $this->scope         = $config['scope'] ?? 'openid profile email';
-        $this->guzzleOptions = $config['guzzle_options'] ?? [];
-        $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
-        $this->maxAge        = $config['max_age'] ?? null;
-        $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
+        $this->audience             = $config['audience'] ?? null;
+        $this->responseMode         = $config['response_mode'] ?? 'query';
+        $this->responseType         = $config['response_type'] ?? 'code';
+        $this->scope                = $config['scope'] ?? 'openid profile email';
+        $this->guzzleOptions        = $config['guzzle_options'] ?? [];
+        $this->skipUserinfo         = $config['skip_userinfo'] ?? true;
+        $this->maxAge               = $config['max_age'] ?? null;
+        $this->idTokenLeeway        = $config['id_token_leeway'] ?? null;
+        $this->discoveryDocumentUri = '.well-known/openid-configuration';
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
