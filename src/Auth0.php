@@ -24,6 +24,7 @@ use Auth0\SDK\API\Authentication;
 
 use GuzzleHttp\Exception\RequestException;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * Class Auth0
@@ -432,6 +433,7 @@ class Auth0
      *
      * @throws ApiException (see self::exchange()).
      * @throws CoreException (see self::exchange()).
+     * @throws InvalidArgumentException
      */
     public function getUser()
     {
@@ -449,6 +451,7 @@ class Auth0
      *
      * @throws ApiException (see self::exchange()).
      * @throws CoreException (see self::exchange()).
+     * @throws InvalidArgumentException
      */
     public function getAccessToken()
     {
@@ -466,6 +469,7 @@ class Auth0
      *
      * @throws ApiException (see self::exchange()).
      * @throws CoreException (see self::exchange()).
+     * @throws InvalidArgumentException
      */
     public function getIdToken()
     {
@@ -483,6 +487,7 @@ class Auth0
      *
      * @throws ApiException (see self::exchange()).
      * @throws CoreException (see self::exchange()).
+     * @throws InvalidArgumentException
      */
     public function getRefreshToken()
     {
@@ -496,14 +501,15 @@ class Auth0
     /**
      * Exchange authorization code for access, ID, and refresh tokens
      *
-     * @throws CoreException If the state value is missing or invalid.
+     * @return boolean
+     *
      * @throws CoreException If there is already an active session.
      * @throws ApiException If access token is missing from the response.
      * @throws RequestException If HTTP request fails (e.g. access token does not have userinfo scope).
+     * @throws InvalidArgumentException
      *
-     * @return boolean
-     *
-     * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
+     * @throws CoreException If the state value is missing or invalid.
+     * @see    https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
     public function exchange()
     {
@@ -559,6 +565,7 @@ class Auth0
      *
      * @throws CoreException If the Auth0 object does not have access token and refresh token
      * @throws ApiException If the Auth0 API did not renew access and ID token properly
+     * @throws InvalidArgumentException
      * @link   https://auth0.com/docs/tokens/refresh-token/current
      */
     public function renewTokens(array $options = [])
@@ -606,7 +613,7 @@ class Auth0
      *
      * @param string $accessToken - access token returned from the code exchange.
      *
-     * @return \Auth0\SDK\Auth0
+     * @return Auth0
      */
     public function setAccessToken($accessToken)
     {
@@ -623,10 +630,11 @@ class Auth0
      *
      * @param string $idToken - ID token returned from the code exchange.
      *
-     * @return \Auth0\SDK\Auth0
+     * @return Auth0
      *
      * @throws CoreException
      * @throws InvalidTokenException
+     * @throws InvalidArgumentException
      */
     public function setIdToken($idToken)
     {
@@ -649,6 +657,7 @@ class Auth0
      * @return array
      *
      * @throws InvalidTokenException
+     * @throws InvalidArgumentException
      */
     public function decodeIdToken(string $idToken, array $verifierOptions = []): array
     {
@@ -657,8 +666,13 @@ class Auth0
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
             $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
-            $document    = $jwksFetcher->getDocument($idTokenIss.$this->discoveryDocumentUri);
-            $jwks        = $jwksFetcher->getKeys($document['jwks_uri']);
+            try {
+                $document = $jwksFetcher->getDocument($idTokenIss.$this->discoveryDocumentUri);
+                $jwks     = $jwksFetcher->getKeys($document['jwks_uri']);
+            } catch (RequestException $ex) {
+                $jwks = $jwksFetcher->getKeys($idTokenIss.'.well-known/jwks.json');
+            }
+
             $sigVerifier = new AsymmetricVerifier($jwks);
         } else if ('HS256' === $this->idTokenAlg) {
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
@@ -684,7 +698,7 @@ class Auth0
      *
      * @param string $refreshToken - refresh token returned from the code exchange.
      *
-     * @return \Auth0\SDK\Auth0
+     * @return Auth0
      */
     public function setRefreshToken($refreshToken)
     {
@@ -780,7 +794,7 @@ class Auth0
      *
      * @param StoreInterface $store - storage engine to use.
      *
-     * @return \Auth0\SDK\Auth0
+     * @return Auth0
      */
     public function setStore(StoreInterface $store)
     {

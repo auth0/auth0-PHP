@@ -8,6 +8,7 @@ use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * Class JWKFetcher.
@@ -68,6 +69,7 @@ class JWKFetcher
      * @param string $jwks_url Full URL to the JWKS.
      *
      * @return array
+     * @throws InvalidArgumentException
      */
     public function getKeys(string $jwks_url) : array
     {
@@ -102,6 +104,7 @@ class JWKFetcher
      * @param string $url Full URL to the server.
      *
      * @return array
+     * @throws InvalidArgumentException
      */
     public function getDocument(string $url) : array
     {
@@ -118,14 +121,14 @@ class JWKFetcher
     }
 
     /**
-     * Get a JWKS from a specific URL.
+     * Get a data from a specific URL.
      *
-     * @param string $jurl URL to fetch.
+     * @param string $url URL to fetch.
      *
      * @return array
      *
      * @throws RequestException If $url is empty or malformed.
-     * @throws ClientException  If the JWKS cannot be retrieved.
+     * @throws ClientException  If the data cannot be retrieved.
      */
     protected function request(string $url) : array
     {
