@@ -165,13 +165,6 @@ class Auth0
     protected $guzzleOptions;
 
     /**
-     * Discovery document uri
-     *
-     * @var string
-     */
-    protected $discoveryDocumentUri;
-
-    /**
      * Skip the /userinfo endpoint call and use the ID token.
      *
      * @var boolean
@@ -276,7 +269,6 @@ class Auth0
         $this->skipUserinfo         = $config['skip_userinfo'] ?? true;
         $this->maxAge               = $config['max_age'] ?? null;
         $this->idTokenLeeway        = $config['id_token_leeway'] ?? null;
-        $this->discoveryDocumentUri = '.well-known/openid-configuration';
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
@@ -667,7 +659,7 @@ class Auth0
         if ('RS256' === $this->idTokenAlg) {
             $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
             try {
-                $document = $jwksFetcher->getDocument($idTokenIss.$this->discoveryDocumentUri);
+                $document = $jwksFetcher->getDocument($idTokenIss.'.well-known/openid-configuration');
                 $jwks     = $jwksFetcher->getKeys($document['jwks_uri']);
             } catch (RequestException $ex) {
                 $jwks = $jwksFetcher->getKeys($idTokenIss.'.well-known/jwks.json');
