@@ -570,7 +570,7 @@ class Auth0
             throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
         }
 
-        $response = $this->authentication->refresh_token($this->refreshToken, $options);
+        $response = $this->authentication->refresh_token( $this->refreshToken, $options );
 
         if (empty($response['access_token']) || empty($response['id_token'])) {
             throw new ApiException('Token did not refresh correctly. Access or ID token not provided.');
