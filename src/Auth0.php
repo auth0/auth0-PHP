@@ -261,14 +261,14 @@ class Auth0
             $this->clientSecret = self::urlSafeBase64Decode($this->clientSecret);
         }
 
-        $this->audience             = $config['audience'] ?? null;
-        $this->responseMode         = $config['response_mode'] ?? 'query';
-        $this->responseType         = $config['response_type'] ?? 'code';
-        $this->scope                = $config['scope'] ?? 'openid profile email';
-        $this->guzzleOptions        = $config['guzzle_options'] ?? [];
-        $this->skipUserinfo         = $config['skip_userinfo'] ?? true;
-        $this->maxAge               = $config['max_age'] ?? null;
-        $this->idTokenLeeway        = $config['id_token_leeway'] ?? null;
+        $this->audience      = $config['audience'] ?? null;
+        $this->responseMode  = $config['response_mode'] ?? 'query';
+        $this->responseType  = $config['response_type'] ?? 'code';
+        $this->scope         = $config['scope'] ?? 'openid profile email';
+        $this->guzzleOptions = $config['guzzle_options'] ?? [];
+        $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
+        $this->maxAge        = $config['max_age'] ?? null;
+        $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
@@ -313,7 +313,7 @@ class Auth0
             ]);
         }
 
-        $this->transientHandler = new TransientStoreHandler($transientStore);
+        $this->transientHandler = new TransientStoreHandler( $transientStore );
 
         $this->cacheHandler = $config['cache_handler'] ?? null;
         if (! $this->cacheHandler instanceof CacheInterface) {
