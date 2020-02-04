@@ -135,7 +135,7 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->jobs()->sendVerificationEmail( '__test_user_id__' );
+        $api->call()->jobs()->sendVerificationEmail( '__test_user_id__', [ 'client_id' => '__test_client_id__' ] );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/jobs/verification-email', $api->getHistoryUrl() );
@@ -144,6 +144,8 @@ class JobsTest extends ApiTests
         $body = $api->getHistoryBody();
         $this->assertArrayHasKey( 'user_id', $body );
         $this->assertEquals( '__test_user_id__', $body['user_id'] );
+        $this->assertArrayHasKey( 'client_id', $body );
+        $this->assertEquals( '__test_client_id__', $body['client_id'] );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
