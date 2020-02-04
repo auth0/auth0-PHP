@@ -58,17 +58,28 @@ class Jobs extends GenericResource
     }
 
     /**
+     * Create a verification email job.
+     * Required scope: "update:users"
      *
-     * @param  string $user_id
+     * @param string $user_id User ID of the user to send the verification email to.
+     * @param array  $params  Array of optional parameters to add.
+     *        - client_id: Client ID of the requesting application.
+     *
      * @return mixed
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_verification_email
      */
-    public function sendVerificationEmail($user_id)
+    public function sendVerificationEmail($user_id, array $params = [])
     {
+        $body = [ 'user_id' => $user_id ];
+
+        if (! empty( $params['client_id'] )) {
+            $body['client_id'] = $params['client_id'];
+        }
+
         return $this->apiClient->method('post')
-        ->addPath('jobs', 'verification-email')
-        ->withBody(json_encode([
-            'user_id' => $user_id
-        ]))
-        ->call();
+            ->addPath('jobs', 'verification-email')
+            ->withBody(json_encode($body))
+            ->call();
     }
 }
