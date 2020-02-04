@@ -493,6 +493,21 @@ class Auth0
     }
 
     /**
+     * Get the current UNIX expiration time of the current access token from the persisted session.
+     *
+     * If the not enabled with 'persist_expires_at' config option, will always be null.
+     *
+     * Does not perform a code exchange if not present, unlike getRefreshToken, getAccessToken and getUser
+     *
+     *
+     * @return int|null
+     */
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
+    /**
      * Either performs a code token exchange (if no access token is present) or if a refresh token is present
      * and the current token is expired, renew the token
      *
