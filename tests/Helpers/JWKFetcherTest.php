@@ -1,6 +1,7 @@
 <?php
 namespace Auth0\Tests\Helpers;
 
+use Auth0\SDK\Helpers\JWKFetcher;
 use Cache\Adapter\PHPArray\ArrayCachePool;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class JWKFetcherTest extends TestCase
 {
 
-    public function testThatGetFormattedReturnsKeys()
+    public function testThatGetKeysReturnsKeys()
     {
         $test_jwks = file_get_contents( AUTH0_PHP_TEST_JSON_DIR.'localhost--well-known-jwks-json.json' );
         $jwks      = new MockJwks( [ new Response( 200, [ 'Content-Type' => 'application/json' ], $test_jwks ) ] );
@@ -36,7 +37,7 @@ class JWKFetcherTest extends TestCase
         $this->assertEquals( '-----END CERTIFICATE-----', $pem_parts_2[2] );
     }
 
-    public function testThatGetFormattedEmptyJwksReturnsEmptyArray()
+    public function testThatGetKeysEmptyJwksReturnsEmptyArray()
     {
         $jwks = new MockJwks( [
             new Response( 200, [ 'Content-Type' => 'application/json' ], '{}' ),
@@ -50,7 +51,7 @@ class JWKFetcherTest extends TestCase
         $this->assertEquals( [], $jwks_formatted );
     }
 
-    public function testThatGetFormattedUsesCache()
+    public function testThatGetKeysUsesCache()
     {
         $jwks_body_1 = '{"keys":[{"kid":"abc","x5c":["123"]}]}';
         $jwks_body_2 = '{"keys":[{"kid":"def","x5c":["456"]}]}';
@@ -74,5 +75,76 @@ class JWKFetcherTest extends TestCase
         $jwks_formatted_2 = $jwks->call()->getKeys( '__test_url_2__' );
         $this->assertArrayHasKey( 'def', $jwks_formatted_2 );
         $this->assertContains( '456', $jwks_formatted_2['def'] );
+    }
+
+    public function testThatGetKeyBreaksCache()
+    {
+        $jwks_body_1 = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]}]}';
+        $jwks_body_2 = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]},{"kid":"__kid_2__","x5c":["__x5c_2__"]}]}';
+        $jwks        = new MockJwks(
+            [
+                new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body_1 ),
+                new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body_2 ),
+            ],
+            [
+                'cache' => new ArrayCachePool()
+            ]
+        );
+
+        $jwks_formatted_1 = $jwks->call()->getKeys( '__test_url__' );
+        $this->assertArrayHasKey( '__kid_1__', $jwks_formatted_1 );
+        $this->assertArrayNotHasKey( '__kid_2__', $jwks_formatted_1 );
+
+        $jwks_formatted_2 = $jwks->call()->getKeys( '__test_url__' );
+        $this->assertEquals( $jwks_formatted_1, $jwks_formatted_2 );
+
+        $jwks_formatted_3 = $jwks->call()->getKeys( '__test_url__', false );
+        $this->assertArrayHasKey( '__kid_1__', $jwks_formatted_3 );
+        $this->assertArrayHasKey( '__kid_2__', $jwks_formatted_3 );
+    }
+
+    public function testThatGetKeysUsesOptionsUrl()
+    {
+        $jwks_body = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]}]}';
+        $jwks = new MockJwks(
+            [ new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body ) ],
+            [
+                'cache' => new ArrayCachePool(),
+                'jwks_uri' => '__test_custom_uri__',
+            ]
+        );
+
+        $jwks->call()->getKeys();
+        $this->assertEquals( '__test_custom_uri__', $jwks->getHistoryUrl() );
+    }
+
+    public function testThatGetKeyGetsSpecificKid() {
+        $cache = new ArrayCachePool();
+        $jwks = new JWKFetcher( $cache, [ 'jwks_uri' => '__test_jwks_url__' ] );
+        $cache->set(md5('__test_jwks_url__'), ['__test_kid_1__' => '__test_x5c_1__']);
+        $this->assertEquals('__test_x5c_1__', $jwks->getKey('__test_kid_1__'));
+    }
+
+    public function testThatGetKeyBreaksCacheIsKidMissing() {
+        $cache = new ArrayCachePool();
+
+        $jwks_body = '{"keys":[{"kid":"__test_kid_2__","x5c":["__test_x5c_2__"]}]}';
+        $jwks = new MockJwks(
+            [ new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body ) ],
+            [
+                'cache' => $cache,
+                'jwks_uri' => '__test_jwks_url__',
+            ]
+        );
+
+        $cache->set(md5('__test_jwks_url__'), ['__test_kid_1__' => '__test_x5c_1__']);
+
+        $this->assertContains('__test_x5c_2__', $jwks->call()->getKey('__test_kid_2__'));
+    }
+
+    public function testThatEmptyUrlReturnsEmptyKeys()
+    {
+        $jwks_formatted_1 = (new JWKFetcher())->getKeys();
+        $this->assertEquals( [], $jwks_formatted_1 );
     }
 }
