@@ -111,8 +111,9 @@ class AsymmetricVerifierTest extends TestCase
         return (new Builder())->withClaim('sub', '__test_sub__')->withHeader('kid', '__test_kid__');
     }
 
-    public static function getToken(string $rsa_private_key, Builder $builder = null) : Token
+    public static function getToken(string $rsa_private_key = null, Builder $builder = null) : Token
     {
+        $rsa_private_key = $rsa_private_key ?? self::getRsaKeys()['private'];
         $builder = $builder ?? self::getTokenBuilder();
         return $builder->getToken( new RsSigner(), new Key( $rsa_private_key ));
     }

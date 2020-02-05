@@ -186,6 +186,13 @@ class Auth0
     protected $idTokenLeeway;
 
     /**
+     * URI to the JWKS when accepting RS256 ID tokens.
+     *
+     * @var string
+     */
+    protected $jwksUri;
+
+    /**
      * Maximum time allowed between authentication and ID token verification.
      *
      * @var integer
@@ -225,9 +232,10 @@ class Auth0
      *     - max_age                (Integer) Optional. Maximum time allowed between authentication and callback
      *     - id_token_alg           (String)  Optional. ID token algorithm expected; RS256 (default) or HS256 only
      *     - id_token_leeway        (Integer) Optional. Leeway, in seconds, for ID token validation.
+     *     - jwks_uri               (String)  Optional. URI to the JWKS when accepting RS256 ID tokens.
      *     - store                  (Mixed)   Optional. StorageInterface for identity and token persistence;
      *                                                  leave empty to default to SessionStore
-     *     - transient_store        (Mixed)  Optional.  StorageInterface for transient auth data;
+     *     - transient_store        (Mixed)   Optional.  StorageInterface for transient auth data;
      *                                                  leave empty to default to CookieStore
      *     - cache_handler          (Mixed)   Optional. CacheInterface instance or false for none
      *     - persist_user           (Boolean) Optional. Persist the user info, default true
@@ -268,6 +276,7 @@ class Auth0
         $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
         $this->maxAge        = $config['max_age'] ?? null;
         $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
+        $this->jwksUri       = $config['jwks_uri'] ?? 'https://'.$this->domain.'/.well-known/jwks.json';
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
         if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
@@ -647,9 +656,9 @@ class Auth0
         $idTokenIss  = 'https://'.$this->domain.'/';
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
-            $jwksFetcher = new JWKFetcher($this->cacheHandler, $this->guzzleOptions);
-            $jwks        = $jwksFetcher->getKeys($idTokenIss.'.well-known/jwks.json');
-            $sigVerifier = new AsymmetricVerifier($jwks);
+            $jwksHttpOptions = array_merge( [ 'jwks_uri' => $this->jwksUri ], $this->guzzleOptions );
+            $jwksFetcher     = new JWKFetcher($this->cacheHandler, $jwksHttpOptions);
+            $sigVerifier     = new AsymmetricVerifier($jwksFetcher);
         } else if ('HS256' === $this->idTokenAlg) {
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
         }

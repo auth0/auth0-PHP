@@ -6,6 +6,7 @@ use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Store\SessionStore;
+use Auth0\Tests\Helpers\Tokens\AsymmetricVerifierTest;
 use Auth0\Tests\Helpers\Tokens\SymmetricVerifierTest;
 use Auth0\Tests\Traits\ErrorHelpers;
 use Cache\Adapter\PHPArray\ArrayCachePool;
@@ -657,7 +658,7 @@ class Auth0Test extends TestCase
     {
         $request_history = [];
         $mock            = new MockHandler([
-            new Response( 200, [ 'Content-Type' => 'application/json' ], '{"keys":[{"kid":"abc","x5c":["123"]}]}' ),
+            new Response( 200, [ 'Content-Type' => 'application/json' ], '{"keys":[{"kid":"__test_kid__","x5c":["123"]}]}' ),
         ]);
         $handler = HandlerStack::create($mock);
         $handler->push( Middleware::history($request_history) );
@@ -668,21 +669,24 @@ class Auth0Test extends TestCase
             'client_id' => uniqid(),
             'redirect_uri' => uniqid(),
             'cache_handler' => $pool,
+            'transient_store' => new SessionStore(),
             'guzzle_options' => [
                 'handler' => $handler
             ]
         ]);
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
 
         try {
-            @$auth0->setIdToken(uniqid());
+            @$auth0->setIdToken(AsymmetricVerifierTest::getToken());
         } catch ( \Exception $e ) {
             // ...
         }
 
         $stored_jwks = $pool->get(md5('https://test.auth0.com/.well-known/jwks.json'));
 
-        $this->assertArrayHasKey('abc', $stored_jwks);
-        $this->assertEquals("-----BEGIN CERTIFICATE-----\n123\n-----END CERTIFICATE-----\n", $stored_jwks['abc']);
+        $this->assertNotEmpty($stored_jwks);
+        $this->assertArrayHasKey('__test_kid__', $stored_jwks);
+        $this->assertEquals("-----BEGIN CERTIFICATE-----\n123\n-----END CERTIFICATE-----\n", $stored_jwks['__test_kid__']);
     }
 
     /*
