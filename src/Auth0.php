@@ -130,7 +130,7 @@ class Auth0
     /**
      * UNIX time when the current access token expires if known
      *
-     * @var int
+     * @var integer
      */
     protected $expiresAt;
 
@@ -499,8 +499,7 @@ class Auth0
      *
      * Does not perform a code exchange if not present, unlike getRefreshToken, getAccessToken and getUser
      *
-     *
-     * @return int|null
+     * @return integer|null
      */
     public function getExpiresAt()
     {
@@ -514,10 +513,11 @@ class Auth0
      * @throws ApiException
      * @throws CoreException
      */
-    protected function exchangeOrRefreshIfRequired() {
-        if (! $this-> accessToken ) {
+    protected function exchangeOrRefreshIfRequired()
+    {
+        if (! $this-> accessToken) {
             $this->exchange();
-        } else if ( $this->expiresAt && $this->refreshToken && $this->expiresAt < time() ) {
+        } else if ($this->expiresAt && $this->refreshToken && $this->expiresAt < time()) {
             $this->renewTokens();
         }
     }
@@ -556,6 +556,20 @@ class Auth0
             throw new ApiException('Invalid access_token - Retry login.');
         }
 
+        $this->handleTokenResponse($response);
+
+        return true;
+    }
+
+    /**
+     * Internal method to handle response from token exchange (either initial code exchange or refresh token exchange)
+     *
+     * @param  $response
+     * @throws CoreException
+     * @throws InvalidTokenException
+     */
+    protected function handleTokenResponse($response)
+    {
         $this->setAccessToken($response['access_token']);
 
         if (isset($response['refresh_token'])) {
@@ -569,7 +583,9 @@ class Auth0
         if (isset($response['expires_in'])) {
             $this->setExpiresAt(time() + $response['expires_in']);
         } else if ($this->idTokenDecoded && isset($this->idTokenDecoded['exp'])) {
-            $this->setExpiresAt(strtotime($this->idTokenDecoded['exp']));
+            $this->setExpiresAt($this->idTokenDecoded['exp']);
+        } else {
+            $this->setExpiresAt(null);
         }
 
         if ($this->skipUserinfo) {
@@ -581,8 +597,6 @@ class Auth0
         if ($user) {
             $this->setUser($user);
         }
-
-        return true;
     }
 
     /**
@@ -612,24 +626,7 @@ class Auth0
             throw new ApiException('Token did not refresh correctly. Access or ID token not provided.');
         }
 
-        $this->setAccessToken($response['access_token']);
-        $this->setIdToken($response['id_token']);
-
-        if (isset($response['expires_in'])) {
-            $this->setExpiresAt(time() + $response['expires_in']);
-        } else if ($this->idTokenDecoded && isset($this->idTokenDecoded['exp'])) {
-            $this->setExpiresAt(strtotime($this->idTokenDecoded['exp']));
-        }
-
-        if ($this->skipUserinfo) {
-            $user = $this->idTokenDecoded;
-        } else {
-            $user = $this->authentication->userinfo($this->accessToken);
-        }
-
-        if ($user) {
-            $this->setUser($user);
-        }
+        $this->handleTokenResponse($response);
     }
 
     /**
@@ -691,20 +688,25 @@ class Auth0
     /**
      * Sets the time at which the token expires
      *
-     * @param int $expiresAt - The UNIX time at which the token expires calculated from the 'expires_in' of the code exchange
-     * or from the 'exp' field of the id token if not present during the code exchange
+     * @param integer $expiresAt - The UNIX time at which the token expires calculated from the 'expires_in' of the code exchange
+     *     or from the 'exp' field of the id token if not present during the code exchange
      *
      * @return \Auth0\SDK\Auth0
-     *
      */
-    public function setExpiresAt($expiresAt) {
+    public function setExpiresAt($expiresAt)
+    {
         if (in_array('expires_at', $this->persistantMap)) {
-            $this->store->set('expires_at', $expiresAt);
+            if ($expiresAt) {
+                $this->store->set('expires_at', $expiresAt);
+            } else {
+                $this->store->delete('expires_at');
+            }
         }
 
         $this->expiresAt = $expiresAt;
         return $this;
     }
+
 
     /**
      * Verifies and decodes an ID token using the properties in this class.

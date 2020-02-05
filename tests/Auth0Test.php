@@ -15,6 +15,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Exception;
 use PHPUnit\Framework\TestCase;
+use phpmock\phpunit\PHPMock;
 
 /**
  * Class Auth0Test
@@ -25,6 +26,8 @@ class Auth0Test extends TestCase
 {
 
     use ErrorHelpers;
+
+    use PHPMock;
 
     /**
      * Basic Auth0 class config options.
@@ -300,21 +303,45 @@ class Auth0Test extends TestCase
     }
 
     /**
-     * Test that renewTokens succeeds with non-empty access_token and refresh_token stored.
+     * Test that renewTokens succeeds with non-empty access_token and refresh_token stored with proper expiration and
+     * additional automatic refresh.
      *
      * @throws ApiException Should not be thrown in this test.
      * @throws CoreException Should not be thrown in this test.
      */
     public function testThatRenewTokensSucceeds()
     {
-        $id_token = self::getIdToken();
+        $id_token1 = self::getIdToken([
+            "first_name" => "James",
+            "last_name" => "Dean",
+        ]);
+        // change in names
+        $id_token2 = self::getIdToken([
+            "first_name" => "Bob",
+            "last_name" => "Loblaw",
+        ]);
+        // change in names again
+        $id_token3 = self::getIdToken([
+            "first_name" => "John",
+            "last_name" => "Smith",
+        ]);
+        //and again
+        $id_token4 = self::getIdToken([
+            "first_name" => "Mary",
+            "last_name" => "Jane",
+            "exp" => time() + 5000,
+        ]);
         $request_history = [];
 
         $mock = new MockHandler( [
             // Code exchange response.
-            new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4"}' ),
+            new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"'.$id_token1.'"}' ),
             // Refresh token response.
-            new Response( 200, self::$headers, '{"access_token":"__test_access_token__","id_token":"'.$id_token.'"}' ),
+            new Response( 200, self::$headers, '{"access_token":"__test_access_token__","id_token":"'.$id_token2.'","expires_in":1}' ),
+            // Refresh after expires_in response.
+            new Response( 200, self::$headers, '{"access_token":"__test_access_token__","id_token":"'.$id_token3.'"}' ),
+            // Refresh after token 'exp' expiration
+            new Response( 200, self::$headers, '{"access_token":"__test_access_token__","id_token":"'.$id_token4.'"}' ),
         ] );
         $handler         = HandlerStack::create($mock);
         $handler->push( Middleware::history($request_history) );
@@ -323,9 +350,14 @@ class Auth0Test extends TestCase
             'id_token_alg' => 'HS256',
             'skip_userinfo' => true,
             'persist_access_token' => true,
+            'persist_expires_at' => true,
             'guzzle_options' => [ 'handler' => $handler ]
         ];
         $auth0      = new Auth0( self::$baseConfig + $add_config );
+
+        $now = time();
+        $time = $this->getFunctionMock("Auth0\SDK", "time");
+        $time->expects($this->any())->willReturnReference($now);
 
         $_GET['code']             = uniqid();
         $_SESSION['auth0__nonce'] = '__test_nonce__';
@@ -333,10 +365,22 @@ class Auth0Test extends TestCase
         $_SESSION['auth0__state'] = '__test_state__';
 
         $this->assertTrue( $auth0->exchange() );
+        $this->assertEquals( $id_token1, $auth0->getIdToken() );
+        $this->assertEquals( "James", $auth0->getUser()["first_name"]);
+        $this->assertEquals( "Dean", $auth0->getUser()["last_name"]);
+
+        $now = $now + 100;
+        $this->assertEquals( $id_token1, $auth0->getIdToken() );
+        $this->assertEquals( "James", $auth0->getUser()["first_name"]);
+        $this->assertEquals( "Dean", $auth0->getUser()["last_name"]);
+
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
         $auth0->renewTokens(['scope' => 'openid']);
 
         $this->assertEquals( '__test_access_token__', $auth0->getAccessToken() );
-        $this->assertEquals( $id_token, $auth0->getIdToken() );
+        $this->assertEquals( $id_token2->__toString(), $auth0->getIdToken() );
+        $this->assertEquals( "Bob", $auth0->getUser()["first_name"]);
+        $this->assertEquals( "Loblaw", $auth0->getUser()["last_name"]);
 
         $renew_request = $request_history[1]['request'];
         $renew_body    = json_decode($renew_request->getBody(), true);
@@ -345,6 +389,29 @@ class Auth0Test extends TestCase
         $this->assertEquals( '__test_client_id__', $renew_body['client_id'] );
         $this->assertEquals( '2.3.4', $renew_body['refresh_token'] );
         $this->assertEquals( 'https://__test_domain__/oauth/token', (string) $renew_request->getUri() );
+
+        // Expiration from "expires_in" in token exchange response
+        $now = $now + 4;
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $this->assertEquals( $id_token3, $auth0->getIdToken() );
+        $this->assertEquals( "John", $auth0->getUser()["first_name"]);
+        $this->assertEquals( "Smith", $auth0->getUser()["last_name"]);
+
+        // Unchanged as still before JWT token expiration
+        $now = $now + 100;
+        $this->assertEquals( "John", $auth0->getUser()["first_name"]);
+        $this->assertEquals( "Smith", $auth0->getUser()["last_name"]);
+
+        // JWT token expiration in UNIX time
+        $now = $now + 1000;
+        $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $this->assertEquals( "Mary", $auth0->getUser()["first_name"]);
+        $this->assertEquals( "Jane", $auth0->getUser()["last_name"]);
+
+        // Still within the JWT expiration time
+        $now = $now + 1000;
+        $this->assertEquals( "Mary", $auth0->getUser()["first_name"]);
+        $this->assertEquals( "Jane", $auth0->getUser()["last_name"]);
     }
 
     public function testThatGetLoginUrlUsesDefaultValues()
@@ -683,6 +750,12 @@ class Auth0Test extends TestCase
 
         $this->assertArrayHasKey('abc', $stored_jwks);
         $this->assertEquals("-----BEGIN CERTIFICATE-----\n123\n-----END CERTIFICATE-----\n", $stored_jwks['abc']);
+    }
+
+    public function testThatGetExpiresAtReturnsNullByDefault()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+        $this->assertNull( $auth0->getExpiresAt() );
     }
 
     /*
