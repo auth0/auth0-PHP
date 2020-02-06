@@ -564,11 +564,12 @@ class Auth0
     /**
      * Internal method to handle response from token exchange (either initial code exchange or refresh token exchange)
      *
-     * @param  $response
+     * @param  array  $response        Response received from token exchange
+     * @param  bool   $requireNonce    Is nonce validation required (default true)
      * @throws CoreException
      * @throws InvalidTokenException
      */
-    protected function handleTokenResponse($response)
+    protected function handleTokenResponse($response, bool $requireNonce = true)
     {
         $this->setAccessToken($response['access_token']);
 
@@ -577,7 +578,7 @@ class Auth0
         }
 
         if (isset($response['id_token'])) {
-            $this->setIdToken($response['id_token']);
+            $this->setIdToken($response['id_token'], $requireNonce);
         }
 
         if (isset($response['expires_in'])) {
@@ -626,7 +627,8 @@ class Auth0
             throw new ApiException('Token did not refresh correctly. Access or ID token not provided.');
         }
 
-        $this->handleTokenResponse($response);
+        // nonce validation is not required when doing a refresh token exchange
+        $this->handleTokenResponse($response, false);
     }
 
     /**
@@ -667,15 +669,16 @@ class Auth0
      * Sets, validates, and persists the ID token.
      *
      * @param string $idToken - ID token returned from the code exchange.
+     * @param bool   $requireNonce    Is nonce validation required (default true)
      *
      * @return \Auth0\SDK\Auth0
      *
      * @throws CoreException
      * @throws InvalidTokenException
      */
-    public function setIdToken($idToken)
+    public function setIdToken(string $idToken, bool $requireNonce = true)
     {
-        $this->idTokenDecoded = $this->decodeIdToken($idToken);
+        $this->idTokenDecoded = $this->decodeIdToken($idToken, [], $requireNonce);
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
@@ -713,12 +716,13 @@ class Auth0
      *
      * @param string $idToken         ID token to verify and decode.
      * @param array  $verifierOptions Options passed to verifier.
+     * @param bool   $requireNonce    Is nonce validation required (default true)
      *
      * @return array
      *
      * @throws InvalidTokenException
      */
-    public function decodeIdToken(string $idToken, array $verifierOptions = []) : array
+    public function decodeIdToken(string $idToken, array $verifierOptions = [], bool $requireNonce = true) : array
     {
         $idTokenIss  = 'https://'.$this->domain.'/';
         $sigVerifier = null;
@@ -736,9 +740,11 @@ class Auth0
             'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
         ];
 
-        $verifierOptions[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY);
-        if (empty( $verifierOptions[self::TRANSIENT_NONCE_KEY] )) {
-            throw new InvalidTokenException('Nonce value not found in application store');
+        if ($requireNonce) {
+            $verifierOptions[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY);
+            if (empty( $verifierOptions[self::TRANSIENT_NONCE_KEY] )) {
+                throw new InvalidTokenException('Nonce value not found in application store');
+            }
         }
 
         $idTokenVerifier = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);

@@ -353,7 +353,7 @@ class Auth0Test extends TestCase
             'persist_expires_at' => true,
             'guzzle_options' => [ 'handler' => $handler ]
         ];
-        $auth0      = new Auth0( self::$baseConfig + $add_config );
+        $auth0      = new Auth0(self::$baseConfig + $add_config);
 
         $now = time();
         $time = $this->getFunctionMock("Auth0\SDK", "time");
@@ -374,7 +374,6 @@ class Auth0Test extends TestCase
         $this->assertEquals( "James", $auth0->getUser()["first_name"]);
         $this->assertEquals( "Dean", $auth0->getUser()["last_name"]);
 
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
         $auth0->renewTokens(['scope' => 'openid']);
 
         $this->assertEquals( '__test_access_token__', $auth0->getAccessToken() );
@@ -392,7 +391,6 @@ class Auth0Test extends TestCase
 
         // Expiration from "expires_in" in token exchange response
         $now = $now + 4;
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
         $this->assertEquals( $id_token3, $auth0->getIdToken() );
         $this->assertEquals( "John", $auth0->getUser()["first_name"]);
         $this->assertEquals( "Smith", $auth0->getUser()["last_name"]);
@@ -404,7 +402,6 @@ class Auth0Test extends TestCase
 
         // JWT token expiration in UNIX time
         $now = $now + 1000;
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
         $this->assertEquals( "Mary", $auth0->getUser()["first_name"]);
         $this->assertEquals( "Jane", $auth0->getUser()["last_name"]);
 
