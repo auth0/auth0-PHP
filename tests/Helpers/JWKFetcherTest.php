@@ -108,19 +108,17 @@ class JWKFetcherTest extends TestCase
         $jwks_body = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]}]}';
         $jwks = new MockJwks(
             [ new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body ) ],
-            [
-                'cache' => new ArrayCachePool(),
-                'jwks_uri' => '__test_custom_uri__',
-            ]
+            [ 'cache' => new ArrayCachePool() ],
+            [ 'base_uri' => '__test_jwks_url__' ]
         );
 
         $jwks->call()->getKeys();
-        $this->assertEquals( '__test_custom_uri__', $jwks->getHistoryUrl() );
+        $this->assertEquals( '__test_jwks_url__', $jwks->getHistoryUrl() );
     }
 
     public function testThatGetKeyGetsSpecificKid() {
         $cache = new ArrayCachePool();
-        $jwks = new JWKFetcher( $cache, [ 'jwks_uri' => '__test_jwks_url__' ] );
+        $jwks = new JWKFetcher( $cache, [ 'base_uri' => '__test_jwks_url__' ] );
         $cache->set(md5('__test_jwks_url__'), ['__test_kid_1__' => '__test_x5c_1__']);
         $this->assertEquals('__test_x5c_1__', $jwks->getKey('__test_kid_1__'));
     }
@@ -131,10 +129,8 @@ class JWKFetcherTest extends TestCase
         $jwks_body = '{"keys":[{"kid":"__test_kid_2__","x5c":["__test_x5c_2__"]}]}';
         $jwks = new MockJwks(
             [ new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body ) ],
-            [
-                'cache' => $cache,
-                'jwks_uri' => '__test_jwks_url__',
-            ]
+            [ 'cache' => $cache ],
+            [ 'base_uri' => '__test_jwks_url__' ]
         );
 
         $cache->set(md5('__test_jwks_url__'), ['__test_kid_1__' => '__test_x5c_1__']);
@@ -142,8 +138,7 @@ class JWKFetcherTest extends TestCase
         $this->assertContains('__test_x5c_2__', $jwks->call()->getKey('__test_kid_2__'));
     }
 
-    public function testThatEmptyUrlReturnsEmptyKeys()
-    {
+    public function testThatEmptyUrlReturnsEmptyKeys() {
         $jwks_formatted_1 = (new JWKFetcher())->getKeys();
         $this->assertEquals( [], $jwks_formatted_1 );
     }

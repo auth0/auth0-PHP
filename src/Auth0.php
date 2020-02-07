@@ -656,7 +656,7 @@ class Auth0
         $idTokenIss  = 'https://'.$this->domain.'/';
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
-            $jwksHttpOptions = array_merge( [ 'jwks_uri' => $this->jwksUri ], $this->guzzleOptions );
+            $jwksHttpOptions = array_merge( $this->guzzleOptions, [ 'base_uri' => $this->jwksUri ] );
             $jwksFetcher     = new JWKFetcher($this->cacheHandler, $jwksHttpOptions);
             $sigVerifier     = new AsymmetricVerifier($jwksFetcher);
         } else if ('HS256' === $this->idTokenAlg) {
