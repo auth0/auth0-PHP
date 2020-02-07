@@ -87,8 +87,7 @@ class JWKFetcher
      */
     public function getKey(string $kid, string $jwksUri = null)
     {
-        $jwksUri = $jwksUri ?? $this->jwksUri;
-        $keys    = $this->getKeys( $jwksUri );
+        $keys = $this->getKeys( $jwksUri );
 
         if (! empty( $keys ) && empty( $keys[$kid] )) {
             $keys = $this->getKeys( $jwksUri, false );
@@ -112,10 +111,10 @@ class JWKFetcher
             return [];
         }
 
-        $cache_key = md5($jwks_url);
-        $keys      = $use_cache ? $this->cache->get($cache_key) : [];
-        if (is_array($keys) && ! empty($keys)) {
-            return $keys;
+        $cache_key    = md5($jwks_url);
+        $cached_value = $use_cache ? $this->cache->get($cache_key) : null;
+        if (! empty($cached_value) && is_array($cached_value)) {
+            return $cached_value;
         }
 
         $jwks = $this->requestJwks($jwks_url);
