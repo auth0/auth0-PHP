@@ -43,10 +43,10 @@ abstract class MockApi
      *
      * @param array $responses Array of GuzzleHttp\Psr7\Response objects.
      * @param array $config Additional optional configuration needed for mocked class.
+     * @param array $guzzleOptions Additional Guzzle HTTP options.
      */
-    public function __construct(array $responses = [], array $config = [])
+    public function __construct(array $responses = [], array $config = [], array $guzzleOptions = [])
     {
-        $guzzleOptions = [];
         if (count( $responses )) {
             $mock    = new MockHandler($responses);
             $handler = HandlerStack::create($mock);

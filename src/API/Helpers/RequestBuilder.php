@@ -109,7 +109,7 @@ class RequestBuilder
     public function __construct(array $config)
     {
         $this->method        = $config['method'];
-        $this->domain        = $config['domain'];
+        $this->domain        = $config['domain'] ?? '';
         $this->basePath      = $config['basePath'] ?? '';
         $this->guzzleOptions = $config['guzzleOptions'] ?? [];
         $this->headers       = $config['headers'] ?? [];

@@ -35,31 +35,22 @@ class JWKFetcher
      *
      * @var array
      */
-    private $httpOptions;
-
-    /**
-     * JWKS URI to use, set in $httpOptions['jwks_uri'].
-     *
-     * @var array
-     */
-    private $jwksUri;
+    private $guzzleOptions;
 
     /**
      * JWKFetcher constructor.
      *
-     * @param CacheInterface|null $cache      Cache handler or null for no caching.
-     * @param array               $httOptions HTTP options, including Guzzle options.
+     * @param CacheInterface|null $cache         Cache handler or null for no caching.
+     * @param array               $guzzleOptions Guzzle HTTP options.
      */
-    public function __construct(CacheInterface $cache = null, array $httOptions = [])
+    public function __construct(CacheInterface $cache = null, array $guzzleOptions = [])
     {
         if ($cache === null) {
             $cache = new NoCacheHandler();
         }
 
-        $this->cache       = $cache;
-        $this->httpOptions = $httOptions;
-        $this->jwksUri     = $this->httpOptions['jwks_uri'] ?? null;
-        unset( $this->httpOptions['jwks_uri'] );
+        $this->cache         = $cache;
+        $this->guzzleOptions = $guzzleOptions;
     }
 
     /**
@@ -106,7 +97,7 @@ class JWKFetcher
      */
     public function getKeys(string $jwks_url = null, bool $use_cache = true) : array
     {
-        $jwks_url = $jwks_url ?? $this->jwksUri;
+        $jwks_url = $jwks_url ?? $this->guzzleOptions['base_uri'] ?? '';
         if (empty( $jwks_url )) {
             return [];
         }
@@ -148,11 +139,13 @@ class JWKFetcher
      */
     protected function requestJwks(string $jwks_url) : array
     {
+        $options = array_merge( $this->guzzleOptions, [ 'base_uri' => $jwks_url ] );
+
         $request = new RequestBuilder([
-            'domain' => $jwks_url,
             'method' => 'GET',
-            'guzzleOptions' => $this->httpOptions
+            'guzzleOptions' => $options,
         ]);
+
         return $request->call();
     }
 }
