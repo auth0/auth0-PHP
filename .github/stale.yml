@@ -9,6 +9,8 @@ daysUntilClose: 21
 # Issues or Pull Requests with these labels will never be considered stale. Set to `[]` to disable
 exemptLabels:
   - no-stalebot
+  - enhancement
+  - work in progress
 
 # Set to true to ignore issues with an assignee (defaults to false)
 exemptAssignees: true
