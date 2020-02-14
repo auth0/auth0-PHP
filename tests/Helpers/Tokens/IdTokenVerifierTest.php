@@ -11,7 +11,7 @@ class IdTokenVerifierTest extends TestCase
 {
     public function testThatEmptyTokenFails()
     {
-        $verifier  = new IdTokenVerifier( uniqid(), uniqid(), new SymmetricVerifier( uniqid() ) );
+        $verifier  = new IdTokenVerifier( '__test_iss__', '__test_aud__', new SymmetricVerifier( uniqid() ) );
         $error_msg = 'No exception caught';
 
         try {
@@ -25,7 +25,7 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenMissingIssuerFails()
     {
-        $verifier  = new IdTokenVerifier(uniqid(), uniqid(), new SymmetricVerifier('__test_secret__'));
+        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
         $token     = SymmetricVerifierTest::getToken();
         $error_msg = 'No exception caught';
 
@@ -40,7 +40,7 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenWithNonStringIssuerFails()
     {
-        $verifier  = new IdTokenVerifier(uniqid(), uniqid(), new SymmetricVerifier('__test_secret__'));
+        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
         $builder   = (new Builder())->withClaim('iss', 123);
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
@@ -56,7 +56,7 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenWithInvalidIssuerFails()
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', uniqid(), new SymmetricVerifier('__test_secret__'));
+        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
         $builder   = (new Builder())->issuedBy('__invalid_issuer__');
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
@@ -75,8 +75,11 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenWithMissingSubFails()
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', uniqid(), new SymmetricVerifier('__test_secret__'));
-        $builder   = (new Builder())->issuedBy('__test_iss__');
+        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder   = (new Builder())
+            ->issuedBy('__test_iss__')
+            ->permittedFor('__test_aud__')
+            ->withClaim('exp', time() + 1000);
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
@@ -91,8 +94,12 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenWithNonStringSubFails()
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', uniqid(), new SymmetricVerifier('__test_secret__'));
-        $builder   = (new Builder())->issuedBy('__test_iss__')->withClaim('sub', 123);
+        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder   = SymmetricVerifierTest::getTokenBuilder()
+            ->withClaim('sub', 123)
+            ->issuedBy('__test_iss__')
+            ->permittedFor('__test_aud__')
+            ->withClaim('exp', time() + 1000);
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
@@ -107,7 +114,7 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenWithMissingAudFails()
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', uniqid(), new SymmetricVerifier('__test_secret__'));
+        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
         $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__');
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
