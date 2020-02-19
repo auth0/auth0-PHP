@@ -1,17 +1,17 @@
 # CHANGELOG
 
-## [5.7.0](https://github.com/auth0/auth0-PHP/tree/5.7.0) (2019-12-09)
-[Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.6.0...5.7.0)
+## [7.1.0](https://github.com/auth0/auth0-PHP/tree/7.1.0) (2020-02-19)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.0.0...7.1.0)
+
+**Closed issues**
+- Authorized Party (azp) claim mismatch in the ID token [\#422](https://github.com/auth0/auth0-PHP/issues/422)
+- JWTVerifier alternatives [\#419](https://github.com/auth0/auth0-PHP/issues/419)
+- Consider to customize the jwks path [\#417](https://github.com/auth0/auth0-PHP/issues/417)
 
 **Added**
-- Add default scopes to Auth0 class [\#406](https://github.com/auth0/auth0-PHP/pull/406) ([joshcanhelp](https://github.com/joshcanhelp))
-- fix: add missing options for renewTokens method [\#405](https://github.com/auth0/auth0-PHP/pull/405) ([bkotrys](https://github.com/bkotrys))
-
-**Deprecated**
-- Add deprecation notices for removals in v7 major release [\#407](https://github.com/auth0/auth0-PHP/pull/407) ([joshcanhelp](https://github.com/joshcanhelp))
-
-**Fixed**
-- Fix mkdir race condition in FileSystemCacheHandler [\#375](https://github.com/auth0/auth0-PHP/pull/375) ([B-Galati](https://github.com/B-Galati))
+- Add TokenVerifier for non-OIDC-compliant JWTs [\#428](https://github.com/auth0/auth0-PHP/pull/428) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add signing key rotation and custom JWKS URI support [\#426](https://github.com/auth0/auth0-PHP/pull/426) ([joshcanhelp](https://github.com/joshcanhelp))
+- Add Client ID to verification email method [\#423](https://github.com/auth0/auth0-PHP/pull/423) ([joshcanhelp](https://github.com/joshcanhelp))
 
 ## [7.0.0](https://github.com/auth0/auth0-PHP/tree/7.0.0) (2020-01-15)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/5.7.0...7.0.0)
