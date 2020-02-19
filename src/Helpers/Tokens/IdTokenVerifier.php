@@ -12,11 +12,22 @@ use Auth0\SDK\Exception\InvalidTokenException;
  */
 final class IdTokenVerifier extends TokenVerifier
 {
-
     /**
      * Verifies and decodes an OIDC-compliant ID token.
      *
-     * {@inheritdoc}
+     * @param string $token   Raw JWT string.
+     * @param array  $options Options to adjust the verification. Can be:
+     *      - "nonce" to check the nonce contained in the token (recommended).
+     *      - "max_age" to check the auth_time of the token.
+     *      - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
+     *
+     * @return array
+     *
+     * @throws InvalidTokenException Thrown if:
+     *      - ID token is missing (expected but none provided)
+     *      - Signature cannot be verified
+     *      - Token algorithm is not supported
+     *      - Any claim-based test fails
      */
     public function verify(string $token, array $options = []) : array
     {
