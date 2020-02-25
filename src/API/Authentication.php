@@ -271,6 +271,10 @@ class Authentication
             'email' => $email,
         ];
 
+        if (! empty($this->client_secret)) {
+            $data['client_secret'] = $this->client_secret;
+        }
+
         if (! empty($authParams)) {
             $data['authParams'] = $authParams;
         }
@@ -297,6 +301,10 @@ class Authentication
             'connection' => 'sms',
             'phone_number' => $phone_number,
         ];
+
+        if (! empty($this->client_secret)) {
+            $data['client_secret'] = $this->client_secret;
+        }
 
         return $this->apiClient->method('post')
         ->addPath('passwordless', 'start')
