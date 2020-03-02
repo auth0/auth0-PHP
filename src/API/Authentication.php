@@ -289,7 +289,7 @@ class Authentication
             $request->withHeader( new ForwardedFor( $auth0_forwarded_for ) );
         }
 
-        $request->call();
+        return $request->call();
     }
 
     /**
@@ -322,7 +322,7 @@ class Authentication
             $request->withHeader( new ForwardedFor( $auth0_forwarded_for ) );
         }
 
-        $request->call();
+        return $request->call();
     }
 
     /**
