@@ -4,6 +4,7 @@ composer.phar
 composer.lock
 phpunit.xml
 vendor
+.idea
 .env
 .phpcs.xml
 phpcs.xml
