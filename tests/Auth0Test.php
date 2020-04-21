@@ -294,7 +294,7 @@ class Auth0Test extends TestCase
 
         $mock = new MockHandler( [
             // Code exchange response.
-            new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4"}' ),
+            new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"'.$id_token.'"}' ),
             // Refresh token response.
             new Response( 200, self::$headers, '{"access_token":"__test_access_token__","id_token":"'.$id_token.'"}' ),
         ] );
@@ -315,6 +315,10 @@ class Auth0Test extends TestCase
         $_SESSION['auth0__state'] = '__test_state__';
 
         $this->assertTrue( $auth0->exchange() );
+
+        $this->assertArrayNotHasKey('auth0__nonce', $_SESSION);
+        $this->assertArrayNotHasKey('auth0__state', $_SESSION);
+
         $auth0->renewTokens(['scope' => 'openid']);
 
         $this->assertEquals( '__test_access_token__', $auth0->getAccessToken() );
