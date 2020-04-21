@@ -90,6 +90,34 @@ class Auth0Test extends TestCase
      * @throws ApiException
      * @throws CoreException
      */
+    public function testThatExchangeFailsWithNoStoredNonce()
+    {
+        $id_token      = self::getIdToken();
+        $response_body = '{"access_token":"1.2.3","id_token":"'.$id_token.'","refresh_token":"4.5.6"}';
+
+        $mock = new MockHandler( [ new Response( 200, self::$headers, $response_body ) ] );
+
+        $add_config               = [
+            'skip_userinfo' => true,
+            'id_token_alg' => 'HS256',
+            'guzzle_options' => [
+                'handler' => HandlerStack::create($mock)
+            ]
+        ];
+        $auth0                    = new Auth0( self::$baseConfig + $add_config );
+        $_GET['code']             = uniqid();
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
+
+        $this->expectExceptionMessage('Nonce value not found in application store');
+        $auth0->exchange();
+    }
+    /**
+     * Test that the exchanges succeeds when there is both and access token and an ID token present.
+     *
+     * @throws ApiException
+     * @throws CoreException
+     */
     public function testThatExchangeSucceedsWithIdToken()
     {
         $id_token      = self::getIdToken();
