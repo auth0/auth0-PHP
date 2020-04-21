@@ -190,25 +190,6 @@ class Auth0Test extends TestCase
     }
 
     /**
-     * Test that renewTokens fails if there is no access_token stored.
-     *
-     * @throws ApiException Should not be thrown in this test.
-     */
-    public function testThatRenewTokensFailsIfThereIsNoAccessToken()
-    {
-        $auth0 = new Auth0( self::$baseConfig );
-
-        try {
-            $caught_exception = false;
-            $auth0->renewTokens();
-        } catch (CoreException $e) {
-            $caught_exception = $this->errorHasString( $e, "Can't renew the access token if there isn't one valid" );
-        }
-
-        $this->assertTrue( $caught_exception );
-    }
-
-    /**
      * Test that renewTokens fails if there is no refresh_token stored.
      *
      * @throws ApiException Should not be thrown in this test.
