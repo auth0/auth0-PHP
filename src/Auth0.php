@@ -564,10 +564,6 @@ class Auth0
      */
     public function renewTokens(array $options = [])
     {
-        if (! $this->accessToken) {
-            throw new CoreException('Can\'t renew the access token if there isn\'t one valid');
-        }
-
         if (! $this->refreshToken) {
             throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
         }
