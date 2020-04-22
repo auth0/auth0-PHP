@@ -85,7 +85,7 @@ class Auth0Test extends TestCase
     }
 
     /**
-     * Test that the exchanges succeeds when there is both and access token and an ID token present.
+     * Test that the exchanges fails when there is not a stored nonce value.
      *
      * @throws ApiException
      * @throws CoreException
