@@ -535,6 +535,10 @@ class Auth0
         }
 
         if (isset($response['id_token'])) {
+            if (! $this->transientHandler->isset(self::TRANSIENT_NONCE_KEY)) {
+                throw new InvalidTokenException('Nonce value not found in application store');
+            }
+
             $this->setIdToken($response['id_token']);
         }
 
@@ -577,7 +581,7 @@ class Auth0
         $this->setAccessToken($response['access_token']);
 
         if (isset($response['id_token'])) {
-            $this->setIdToken($response['id_token'], [self::TRANSIENT_NONCE_KEY => false]);
+            $this->setIdToken($response['id_token']);
         }
     }
 
@@ -618,17 +622,16 @@ class Auth0
     /**
      * Sets, validates, and persists the ID token.
      *
-     * @param string $idToken         - ID token returned from the code exchange.
-     * @param string $verifierOptions - ID token verifier options.
+     * @param string $idToken - ID token returned from the code exchange.
      *
      * @return \Auth0\SDK\Auth0
      *
      * @throws CoreException
      * @throws InvalidTokenException
      */
-    public function setIdToken($idToken, array $verifierOptions = [])
+    public function setIdToken($idToken)
     {
-        $this->idTokenDecoded = $this->decodeIdToken($idToken, $verifierOptions);
+        $this->idTokenDecoded = $this->decodeIdToken($idToken);
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
@@ -665,10 +668,6 @@ class Auth0
             'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
             self::TRANSIENT_NONCE_KEY => $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY)
         ];
-
-        if (false !== $verifierOptions[self::TRANSIENT_NONCE_KEY] && empty( $verifierOptions[self::TRANSIENT_NONCE_KEY] )) {
-            throw new InvalidTokenException('Nonce value not found in application store');
-        }
 
         $idTokenVerifier = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
         return $idTokenVerifier->verify($idToken, $verifierOptions);
