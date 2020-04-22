@@ -548,27 +548,6 @@ class Auth0Test extends TestCase
     /**
      * @throws CoreException
      */
-    public function testThatEmptyApplicationNonceFailsIdTokenValidation()
-    {
-        $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256'];
-        $auth0         = new Auth0( $custom_config );
-        $id_token      = self::getIdToken();
-
-        $this->assertArrayNotHasKey('auth0__nonce', $_SESSION);
-
-        $e_message = 'No exception caught';
-        try {
-            $auth0->setIdToken( $id_token );
-        } catch (InvalidTokenException $e) {
-            $e_message = $e->getMessage();
-        }
-
-        $this->assertStringStartsWith('Nonce value not found in application store', $e_message);
-    }
-
-    /**
-     * @throws CoreException
-     */
     public function testThatIdTokenNonceIsCheckedWhenSet()
     {
         $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256'];
