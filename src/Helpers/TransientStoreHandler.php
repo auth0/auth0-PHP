@@ -58,6 +58,18 @@ class TransientStoreHandler
     }
 
     /**
+     * Check if a key has a stored value or not.
+     *
+     * @param string $key Key to check.
+     *
+     * @return boolean
+     */
+    public function isset(string $key) : bool
+    {
+        return ! is_null($this->store->get($key));
+    }
+
+    /**
      * Get a value and delete it from storage.
      *
      * @param string $key Key to get and delete.
