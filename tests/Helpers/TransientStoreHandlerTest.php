@@ -59,4 +59,21 @@ class TransientStoreHandlerTest extends TestCase
         $this->assertNull($transientStore->getOnce('test_verify_key'));
         $this->assertArrayNotHasKey('test_store_test_verify_key', $_SESSION);
     }
+
+    public function testThatTransientIssetReturnsCorrectly()
+    {
+        $sessionStore   = new SessionStore('test_store');
+        $transientStore = new TransientStoreHandler($sessionStore);
+
+        $this->assertFalse($transientStore->isset('test_verify_key'));
+
+        $transientStore->store('test_verify_key', '__test_get_value__');
+
+        $this->assertTrue($transientStore->isset('test_verify_key'));
+
+        $transientStore->getOnce('test_verify_key');
+
+        $this->assertFalse($transientStore->isset('test_verify_key'));
+
+    }
 }
