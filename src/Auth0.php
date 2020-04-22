@@ -577,7 +577,7 @@ class Auth0
         $this->setAccessToken($response['access_token']);
 
         if (isset($response['id_token'])) {
-            $this->setIdToken($response['id_token']);
+            $this->setIdToken($response['id_token'], [self::TRANSIENT_NONCE_KEY => false]);
         }
     }
 
@@ -618,16 +618,17 @@ class Auth0
     /**
      * Sets, validates, and persists the ID token.
      *
-     * @param string $idToken - ID token returned from the code exchange.
+     * @param string $idToken         - ID token returned from the code exchange.
+     * @param string $verifierOptions - ID token verifier options.
      *
      * @return \Auth0\SDK\Auth0
      *
      * @throws CoreException
      * @throws InvalidTokenException
      */
-    public function setIdToken($idToken)
+    public function setIdToken($idToken, array $verifierOptions = [])
     {
-        $this->idTokenDecoded = $this->decodeIdToken($idToken);
+        $this->idTokenDecoded = $this->decodeIdToken($idToken, $verifierOptions);
 
         if (in_array('id_token', $this->persistantMap)) {
             $this->store->set('id_token', $idToken);
@@ -660,13 +661,13 @@ class Auth0
         }
 
         $verifierOptions = $verifierOptions + [
-            // Set a custom leeway if one was passed to the constructor.
             'leeway' => $this->idTokenLeeway,
+        // Set a custom leeway if one was passed to the constructor.
             'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
+            self::TRANSIENT_NONCE_KEY => $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY)
         ];
 
-        $verifierOptions[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY);
-        if (empty( $verifierOptions[self::TRANSIENT_NONCE_KEY] )) {
+        if (false !== $verifierOptions[self::TRANSIENT_NONCE_KEY] && empty( $verifierOptions[self::TRANSIENT_NONCE_KEY] )) {
             throw new InvalidTokenException('Nonce value not found in application store');
         }
 
