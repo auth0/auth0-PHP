@@ -570,8 +570,8 @@ class Auth0
 
         $response = $this->authentication->refresh_token( $this->refreshToken, $options );
 
-        if (empty($response['access_token']) || empty($response['id_token'])) {
-            throw new ApiException('Token did not refresh correctly. Access or ID token not provided.');
+        if (empty($response['access_token'])) {
+            throw new ApiException('Token did not refresh correctly. Access token not returned.');
         }
 
         $this->setAccessToken($response['access_token']);
@@ -662,7 +662,6 @@ class Auth0
 
         $verifierOptions = $verifierOptions + [
             'leeway' => $this->idTokenLeeway,
-        // Set a custom leeway if one was passed to the constructor.
             'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
             self::TRANSIENT_NONCE_KEY => $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY)
         ];

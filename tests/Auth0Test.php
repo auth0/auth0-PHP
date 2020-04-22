@@ -261,15 +261,13 @@ class Auth0Test extends TestCase
      * @throws ApiException Should not be thrown in this test.
      * @throws CoreException Should not be thrown in this test.
      */
-    public function testThatRenewTokensFailsIfNoAccessOrIdTokenReturned()
+    public function testThatRenewTokensFailsIfNoAccessTokenReturned()
     {
         $mock = new MockHandler( [
             // Code exchange response.
             new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4"}' ),
-            // Refresh token response without ID token.
-            new Response( 200, self::$headers, '{"access_token":"1.2.3"}' ),
             // Refresh token response without access token.
-            new Response( 200, self::$headers, '{"id_token":"1.2.3"}' ),
+            new Response( 200, self::$headers, '{}' ),
         ] );
 
         $add_config = [
@@ -285,28 +283,8 @@ class Auth0Test extends TestCase
 
         $this->assertTrue( $auth0->exchange() );
 
-        try {
-            $caught_exception = false;
-            $auth0->renewTokens();
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString(
-                $e,
-                'Token did not refresh correctly. Access or ID token not provided' );
-        }
-
-        $this->assertTrue( $caught_exception );
-
-        // Run the same method again to get next queued response without an access token.
-        try {
-            $caught_exception = false;
-            $auth0->renewTokens();
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString(
-                $e,
-                'Token did not refresh correctly. Access or ID token not provided' );
-        }
-
-        $this->assertTrue( $caught_exception );
+        $this->expectExceptionMessage('Token did not refresh correctly. Access token not returned.');
+        $auth0->renewTokens();
     }
 
     /**
