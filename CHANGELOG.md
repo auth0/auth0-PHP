@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [7.2.0](https://github.com/auth0/auth0-PHP/tree/7.2.0) (2020-04-23)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.1.0...7.2.0)
+
+**Closed issues**
+- Renew Tokens throws nonce error [\#432](https://github.com/auth0/auth0-PHP/issues/432)
+- email_passwordless_start not setting client_secret  [\#431](https://github.com/auth0/auth0-PHP/issues/431)
+
+**Added**
+- /passwordless/start accepts client_secret now [\#430](https://github.com/auth0/auth0-PHP/pull/430) ([abbaspour](https://github.com/abbaspour))
+
+**Fixed**
+- Allow no nonce option [\#434](https://github.com/auth0/auth0-PHP/pull/434) ([joshcanhelp](https://github.com/joshcanhelp))
+
 ## [7.1.0](https://github.com/auth0/auth0-PHP/tree/7.1.0) (2020-02-19)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.0.0...7.1.0)
 
