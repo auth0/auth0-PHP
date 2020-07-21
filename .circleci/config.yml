@@ -30,7 +30,7 @@ commands:
 jobs:
   php_7:
     docker:
-      - image: circleci/php:7.2
+      - image: circleci/php:7.1
     steps:
       - prepare
       - run-tests
