@@ -65,7 +65,7 @@ abstract class SignatureVerifier
     {
         try {
             $parsedToken = $this->parser->parse($token);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException | \RuntimeException $e) {
             throw new InvalidTokenException( 'ID token could not be decoded' );
         }
 

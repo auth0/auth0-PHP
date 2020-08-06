@@ -86,6 +86,18 @@ class AsymmetricVerifierTest extends TestCase
         $this->assertEquals('__test_sub__', $decodedToken->getClaim('sub'));
     }
 
+    public function testThatMalformedTokenFails()
+    {
+        $rsa_keys = self::getRsaKeys();
+        $verifier = new AsymmetricVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
+        $token    = 'a'.(string) self::getToken($rsa_keys['private']);
+
+        $this->expectException(InvalidTokenException::class);
+        $this->expectExceptionMessage('ID token could not be decoded');
+
+        $verifier->verifyAndDecode( $token );
+    }
+
     /*
      * Helper methods
      */
