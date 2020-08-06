@@ -83,7 +83,7 @@ class JobsIntegrationTest extends ApiTests
         $create_user_data   = [
             'connection' => 'Username-Password-Authentication',
             'email' => 'php-sdk-test-email-verification-job-'.uniqid().'@auth0.com',
-            'password' => uniqid().uniqid().uniqid(),
+            'password' => uniqid().'&*@'.uniqid().uniqid(),
         ];
         $create_user_result = $api->users()->create( $create_user_data );
         usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
