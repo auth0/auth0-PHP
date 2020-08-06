@@ -38,8 +38,10 @@
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text",
     "test-ci": "\"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml",
-    "test-unit  ": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text --testsuite=unit",
-    "test-integration": "\"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml --testsuite=integration",
+    "test-unit": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text --testsuite=unit",
+    "test-unit-ci": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml --testsuite=unit",
+    "test-integration": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text --testsuite=integration",
+    "test-integration-ci": "\"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml --testsuite=integration",
     "phpcs": "\"vendor/bin/phpcs\"",
     "phpcbf": "\"vendor/bin/phpcbf\"",
     "compat": "\"vendor/bin/phpcs\" --standard=.phpcs-compat.xml.dist",

@@ -22,7 +22,7 @@ commands:
             - vendor
   run-tests:
     steps:
-      - run: composer test-ci
+      - run: composer test-unit-ci
       - store_artifacts:
           path:  build/coverage.xml
 
