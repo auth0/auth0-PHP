@@ -74,4 +74,7 @@ workflows:
   integration-tests:
     jobs:
       - php_7_integration_tests:
-          type: approval
+          filters:
+            branches:
+              only:
+                - master
