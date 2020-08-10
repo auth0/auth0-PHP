@@ -20,12 +20,16 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
-  run-tests:
+  run-unit-tests:
     steps:
       - run: composer test-unit-ci
       - store_artifacts:
           path:  build/coverage.xml
-
+  run-integration-tests:
+    steps:
+      - run: composer test-integration-ci
+      - store_artifacts:
+          path:  build/coverage.xml
 
 jobs:
   php_7:
@@ -33,10 +37,16 @@ jobs:
       - image: circleci/php:7.1
     steps:
       - prepare
-      - run-tests
+      - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
           when: on_success
+  php_7_integration_tests:
+    docker:
+      - image: circleci/php:7.1
+    steps:
+      - prepare
+      - run-integration-tests
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
@@ -61,3 +71,7 @@ workflows:
           context: snyk-env
           requires:
             - php_7
+  integration-tests:
+    jobs:
+      - php_7_integration_tests:
+          type: approval
