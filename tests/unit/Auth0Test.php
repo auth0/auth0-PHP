@@ -111,6 +111,30 @@ class Auth0Test extends TestCase
         $this->expectExceptionMessage('Nonce value not found in application store');
         $auth0->exchange();
     }
+
+    /**
+     * Test that the exchanges fails when there is not a stored nonce value.
+     *
+     * @throws ApiException
+     * @throws CoreException
+     */
+    public function testThatExchangeFailsWhenPkceIsEnabledAndNoCodeVerifierWasFound()
+    {
+        $add_config               = [
+            'enable_pkce' => true,
+        ];
+        $auth0                    = new Auth0( self::$baseConfig + $add_config );
+
+        $_GET['code']             = uniqid();
+        $_GET['state']            = '__test_state__';
+        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0__code_verifier'] = null;
+
+        $this->expectException(CoreException::class);
+        $this->expectExceptionMessage('Missing code_verifier');
+        $auth0->exchange();
+    }
+
     /**
      * Test that the exchanges succeeds when there is both and access token and an ID token present.
      *
@@ -178,6 +202,77 @@ class Auth0Test extends TestCase
 
         $this->assertTrue( $auth0->exchange() );
         $this->assertEquals( ['sub' => '123'], $auth0->getUser() );
+        $this->assertEquals( '1.2.3', $auth0->getAccessToken() );
+        $this->assertEquals( '4.5.6', $auth0->getRefreshToken() );
+    }
+
+    /**
+     * Test that the exchanges succeeds when PKCE is enabled.
+     *
+     * @throws ApiException
+     * @throws CoreException
+     */
+    public function testThatExchangeSucceedsWithPkceEnabled()
+    {
+        $mock = new MockHandler( [
+            // Code exchange response.
+            // Respond with no ID token, access token with correct number of segments.
+            new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"4.5.6"}' ),
+            // Userinfo response.
+            new Response( 200, self::$headers, '{"sub":"__test_sub__"}' ),
+        ] );
+
+        $add_config                       = [
+            'skip_userinfo' => false,
+            'enable_pkce' => true,
+            'guzzle_options' => [
+                'handler' => HandlerStack::create($mock)
+            ]
+        ];
+        $auth0                            = new Auth0( self::$baseConfig + $add_config );
+        $_GET['code']                     = uniqid();
+        $_SESSION['auth0__nonce']         = '__test_nonce__';
+        $_GET['state']                    = '__test_state__';
+        $_SESSION['auth0__state']         = '__test_state__';
+        $_SESSION['auth0__code_verifier'] = '__test_code_verifier__';
+
+        $this->assertTrue( $auth0->exchange() );
+        $this->assertEquals( ['sub' => '__test_sub__'], $auth0->getUser() );
+        $this->assertEquals( '1.2.3', $auth0->getAccessToken() );
+        $this->assertEquals( '4.5.6', $auth0->getRefreshToken() );
+    }
+
+    /**
+     * Test that the exchanges succeeds when PKCE is disabled.
+     *
+     * @throws ApiException
+     * @throws CoreException
+     */
+    public function testThatExchangeSucceedsWithoutPkceEnabled()
+    {
+        $mock = new MockHandler( [
+            // Code exchange response.
+            // Respond with no ID token, access token with correct number of segments.
+            new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"4.5.6"}' ),
+            // Userinfo response.
+            new Response( 200, self::$headers, '{"sub":"__test_sub__"}' ),
+        ] );
+
+        $add_config                       = [
+            'skip_userinfo' => false,
+            'enable_pkce' => false,
+            'guzzle_options' => [
+                'handler' => HandlerStack::create($mock)
+            ]
+        ];
+        $auth0                            = new Auth0( self::$baseConfig + $add_config );
+        $_GET['code']                     = uniqid();
+        $_SESSION['auth0__nonce']         = '__test_nonce__';
+        $_GET['state']                    = '__test_state__';
+        $_SESSION['auth0__state']         = '__test_state__';
+
+        $this->assertTrue( $auth0->exchange() );
+        $this->assertEquals( ['sub' => '__test_sub__'], $auth0->getUser() );
         $this->assertEquals( '1.2.3', $auth0->getAccessToken() );
         $this->assertEquals( '4.5.6', $auth0->getRefreshToken() );
     }
@@ -415,6 +510,23 @@ class Auth0Test extends TestCase
         $this->assertContains( 'state='.$_SESSION['auth0__state'], $url_query );
         $this->assertArrayHasKey( 'auth0__nonce', $_SESSION );
         $this->assertContains( 'nonce='.$_SESSION['auth0__nonce'], $url_query );
+    }
+
+    public function testThatGetLoginUrlGeneratesChallengeAndChallengeMethodWhenPkceIsEnabled()
+    {
+        $add_config = [
+            'enable_pkce' =>  true,
+        ];
+        $auth0 = new Auth0( self::$baseConfig + $add_config );
+
+        $auth_url = $auth0->getLoginUrl();
+
+        $parsed_url_query = parse_url( $auth_url, PHP_URL_QUERY );
+        $url_query        = explode( '&', $parsed_url_query );
+
+        $this->assertArrayHasKey( 'auth0__code_verifier', $_SESSION );
+        $this->assertContains( 'code_challenge=', $parsed_url_query );
+        $this->assertContains( 'code_challenge_method=S256', $url_query );
     }
 
     /**
