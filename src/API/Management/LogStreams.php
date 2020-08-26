@@ -14,6 +14,16 @@ class LogStreams extends GenericResource {
 
     private const LOG_STREAMS_PATH = 'log-streams';
 
+    /**
+     * Get all Log Streams.
+     * Required scope: "read:log_streams"
+     *
+     * @return mixed
+     *
+     * @throws \Exception Thrown by Guzzle for API errors.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/get_log_streams
+     */
     public function getAll()
     {
         return $this->apiClient->method('get')
@@ -90,7 +100,7 @@ class LogStreams extends GenericResource {
      * @throws EmptyOrInvalidParameterException Thrown if the log_stream_id parameter is empty.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
-     * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/post_log_streams
+     * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/patch_log_streams_by_id
      */
     public function update($log_stream_id, array $data)
     {
