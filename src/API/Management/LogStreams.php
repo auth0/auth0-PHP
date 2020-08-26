@@ -47,7 +47,7 @@ class LogStreams extends GenericResource {
      * Required scope: "create:log_streams"
      *
      * @param array $data Log Stream data to create:
-     *      - "name" if not specified, a name of the Log Stream will be assigned by the Log Stream endpoint .
+     *      - "name" if not specified, a name of the Log Stream will be assigned by the Log Stream endpoint.
      *      - "type" field is required.
      *      - "sink" field is required. It's value and requirements depends upon the type of Log Stream to create; see the linked documentation below.
      *
