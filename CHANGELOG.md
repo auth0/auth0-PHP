@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [7.3.0](https://github.com/auth0/auth0-PHP/tree/7.3.0) (2020-08-27)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.2.0...7.3.0)
+
+**Closed issues**
+- TokenVerifier::verify throws a \RuntimeException instead of an InvalidTokenException [\#438](https://github.com/auth0/auth0-PHP/issues/438)
+- Support Guzzle 7 [\#421](https://github.com/auth0/auth0-PHP/issues/421)
+
+**Added**
+- Add Support for Log Streams Management APIs [\#451](https://github.com/auth0/auth0-PHP/pull/451) ([jimmyjames](https://github.com/jimmyjames))
+- Update composer requirements to support guzzle ~7.0 [\#443](https://github.com/auth0/auth0-PHP/pull/443) ([banderon1](https://github.com/banderon1))
+
+**Fixed**
+- Throw InvalidTokenException instead of RuntimeException when parsing malformed token [\#439](https://github.com/auth0/auth0-PHP/pull/439) ([B-Galati](https://github.com/B-Galati))
+
 ## [7.2.0](https://github.com/auth0/auth0-PHP/tree/7.2.0) (2020-04-23)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.1.0...7.2.0)
 
