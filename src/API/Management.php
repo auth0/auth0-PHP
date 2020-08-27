@@ -16,6 +16,7 @@ use Auth0\SDK\API\Management\Grants;
 use Auth0\SDK\API\Management\Guardian;
 use Auth0\SDK\API\Management\Jobs;
 use Auth0\SDK\API\Management\Logs;
+use Auth0\SDK\API\Management\LogStreams;
 use Auth0\SDK\API\Management\ResourceServers;
 use Auth0\SDK\API\Management\Roles;
 use Auth0\SDK\API\Management\Rules;
@@ -117,6 +118,13 @@ class Management
      * @var Logs
      */
     private $logs;
+
+    /**
+     * Instance of Auth0\SDK\API\Management\LogStreams
+     *
+     * @var LogStreams
+     */
+    private $logStreams;
 
     /**
      * Instance of Auth0\SDK\API\Management\Roles
@@ -357,6 +365,20 @@ class Management
         }
 
         return $this->logs;
+    }
+
+    /**
+     * Return an instance of the LogStreams class.
+     *
+     * @return LogStreams
+     */
+    public function logStreams() : LogStreams
+    {
+        if (! $this->logStreams instanceof LogStreams) {
+            $this->logStreams = new LogStreams($this->apiClient);
+        }
+
+        return $this->logStreams;
     }
 
     /**
