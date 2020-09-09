@@ -5,6 +5,7 @@
 [![codecov](https://codecov.io/gh/auth0/auth0-PHP/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/auth0-PHP)
 [![License](https://poser.pugx.org/auth0/auth0-php/license)](https://packagist.org/packages/auth0/auth0-php)
 [![Total Downloads](https://poser.pugx.org/auth0/auth0-php/downloads)](https://packagist.org/packages/auth0/auth0-php)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP?ref=badge_shield)
 
 The Auth0 PHP SDK provides straight-forward and tested methods for accessing Authentication and Management API endpoints. This README describes how to get started and provides simple examples of how to use the SDK.
 
@@ -90,3 +91,6 @@ Auth0 helps you to easily:
 ## License
 
 The Auth0-PHP SDK is licensed under MIT - [LICENSE](LICENSE.txt)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP?ref=badge_large)
