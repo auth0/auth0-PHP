@@ -2,7 +2,7 @@
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Management;
+use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
 
@@ -135,7 +135,13 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->jobs()->sendVerificationEmail( '__test_user_id__', [ 'client_id' => '__test_client_id__' ] );
+        $api->call()->jobs()->sendVerificationEmail( '__test_user_id__', [
+            'client_id' => '__test_client_id__',
+            'identity' => [
+                'user_id' => '__test_secondary_user_id__',
+                'provider' => '__test_provider__'
+            ]
+        ] );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/jobs/verification-email', $api->getHistoryUrl() );
@@ -146,6 +152,11 @@ class JobsTest extends ApiTests
         $this->assertEquals( '__test_user_id__', $body['user_id'] );
         $this->assertArrayHasKey( 'client_id', $body );
         $this->assertEquals( '__test_client_id__', $body['client_id'] );
+        $this->assertArrayHasKey( 'identity', $body);
+        $this->assertEquals( [
+            'user_id' => '__test_secondary_user_id__',
+            'provider' => '__test_provider__'
+        ], $body['identity']);
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -153,4 +164,77 @@ class JobsTest extends ApiTests
         $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
     }
 
+    public function testIdentityParamRequiresUserId()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+        $exception_message = '';
+
+        try {
+            $api->call()->jobs()->sendVerificationEmail( '__test_user_id__', [
+              'identity' => [
+                  'provider' => '__test_provider__'
+              ]
+            ] );
+        } catch (EmptyOrInvalidParameterException $e) {
+            $exception_message = $e->getMessage();
+        }
+
+        $this->assertStringContainsString( 'Missing required "user_id" field of the "identity" object.', $exception_message );
+    }
+
+    public function testIdentityParamRequiresUserIdAsString()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+        $exception_message = '';
+
+        try {
+            $api->call()->jobs()->sendVerificationEmail( '__test_user_id__', [
+                'identity' => [
+                    'user_id' => 42,
+                    'provider' => '__test_provider__'
+                ]
+            ] );
+        } catch (EmptyOrInvalidParameterException $e) {
+            $exception_message = $e->getMessage();
+        }
+
+        $this->assertStringContainsString( 'Missing required "user_id" field of the "identity" object.', $exception_message );
+    }
+
+    public function testIdentityParamRequiresProvider()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+        $exception_message = '';
+
+        try {
+            $api->call()->jobs()->sendVerificationEmail( '__test_user_id__', [
+                'identity' => [
+                    'user_id' => '__test_secondary_user_id__'
+                ]
+            ] );
+        } catch (EmptyOrInvalidParameterException $e) {
+            $exception_message = $e->getMessage();
+        }
+
+        $this->assertStringContainsString( 'Missing required "provider" field of the "identity" object.', $exception_message );
+    }
+
+    public function testIdentityParamRequiresProviderAsString()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+        $exception_message = '';
+
+        try {
+            $api->call()->jobs()->sendVerificationEmail( '__test_user_id__', [
+                'identity' => [
+                    'user_id' => '__test_secondary_user_id__',
+                    'provider' => 42
+                ]
+            ] );
+        } catch (EmptyOrInvalidParameterException $e) {
+            $exception_message = $e->getMessage();
+        }
+
+        $this->assertStringContainsString( 'Missing required "provider" field of the "identity" object.', $exception_message );
+    }
 }

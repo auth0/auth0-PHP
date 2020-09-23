@@ -2,6 +2,8 @@
 
 namespace Auth0\SDK\API\Management;
 
+use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
+
 class Jobs extends GenericResource
 {
     /**
@@ -64,6 +66,12 @@ class Jobs extends GenericResource
      * @param string $user_id User ID of the user to send the verification email to.
      * @param array  $params  Array of optional parameters to add.
      *        - client_id: Client ID of the requesting application.
+     *        - identity:  The optional identity of the user, as an array. Required to verify primary identities when using social, enterprise, or passwordless connections. It is also required to verify secondary identities.
+     *              - user_id: User ID of the identity to be verified.
+     *              - provider: Identity provider name of the identity (e.g. google-oauth2).
+     *
+     * @throws EmptyOrInvalidParameterException Thrown if any required parameters are empty or invalid.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
      *
@@ -75,6 +83,16 @@ class Jobs extends GenericResource
 
         if (! empty( $params['client_id'] )) {
             $body['client_id'] = $params['client_id'];
+        }
+
+        if (! empty( $params['identity'] )) {
+            if ( empty( $params['identity']['user_id']) || ! is_string($params['identity']['user_id']) ) {
+                throw new EmptyOrInvalidParameterException('Missing required "user_id" field of the "identity" object.');
+            }
+            if ( empty( $params['identity']['provider'] ) || ! is_string($params['identity']['provider']) ) {
+                throw new EmptyOrInvalidParameterException('Missing required "provider" field of the "identity" object.');
+            }
+            $body['identity'] = $params['identity'];
         }
 
         return $this->apiClient->method('post')
