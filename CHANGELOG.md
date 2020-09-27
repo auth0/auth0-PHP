@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [7.4.0](https://github.com/auth0/auth0-PHP/tree/7.4.0) (2020-09-28)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.3.0...7.4.0)
+
+**Added**
+- Add support for new identity field for email verifications [\#455](https://github.com/auth0/auth0-PHP/pull/455) ([jimmyjames](https://github.com/jimmyjames))
+
 ## [7.3.0](https://github.com/auth0/auth0-PHP/tree/7.3.0) (2020-08-27)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.2.0...7.3.0)
 
