@@ -32,7 +32,7 @@ commands:
           path: build/coverage.xml
 
 jobs:
-  php_7_1:
+  php_7:
     docker:
       - image: circleci/php:7.1
     steps:
@@ -92,7 +92,7 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - php_7_1
+      - php_7
       - php_7_2
       - php_7_3
       - php_7_4
@@ -100,7 +100,7 @@ workflows:
           # Must define SNYK_TOKEN env
           context: snyk-env
           requires:
-            - php_7_1
+            - php_7
   integration-tests:
     jobs:
       - php_7_integration_tests:
