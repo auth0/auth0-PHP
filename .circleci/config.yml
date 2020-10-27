@@ -24,17 +24,44 @@ commands:
     steps:
       - run: composer test-unit-ci
       - store_artifacts:
-          path:  build/coverage.xml
+          path: build/coverage.xml
   run-integration-tests:
     steps:
       - run: composer test-integration-ci
       - store_artifacts:
-          path:  build/coverage.xml
+          path: build/coverage.xml
 
 jobs:
   php_7:
     docker:
       - image: circleci/php:7.1
+    steps:
+      - prepare
+      - run-unit-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
+  php_7_2:
+    docker:
+      - image: circleci/php:7.2
+    steps:
+      - prepare
+      - run-unit-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
+  php_7_3:
+    docker:
+      - image: circleci/php:7.3
+    steps:
+      - prepare
+      - run-unit-tests
+      - run:
+          command: bash <(curl -s https://codecov.io/bash)
+          when: on_success
+  php_7_4:
+    docker:
+      - image: circleci/php:7.4
     steps:
       - prepare
       - run-unit-tests
@@ -66,6 +93,9 @@ workflows:
   build-and-test:
     jobs:
       - php_7
+      - php_7_2
+      - php_7_3
+      - php_7_4
       - snyk:
           # Must define SNYK_TOKEN env
           context: snyk-env
