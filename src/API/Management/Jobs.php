@@ -59,6 +59,40 @@ class Jobs extends GenericResource
         return $request->call();
     }
 
+
+    /**
+     * Create an export users job.
+     * Required scope: "read:users"
+     *
+     * @param  array  $params
+     * @return mixed
+     */
+    public function exportUsers($params = [])
+    {
+        $request = $this->apiClient->method('post')
+        ->addPath('jobs', 'users-exports');
+
+        $body = [];
+
+        if (!empty($params['connection_id'])) {
+            $body['connection_id'] = filter_var($params['connection_id'], FILTER_SANITIZE_STRING);
+        }
+
+        if (!empty($params['format']) && in_array($params['format'], ['json', 'csv'])) {
+            $body['format'] = $params['format'];
+        }
+
+        if (!empty($params['limit']) && is_numeric($params['limit'])) {
+            $body['limit'] = $params['limit'];
+        }
+
+        if (!empty($params['fields']) && is_array($params['fields'])) {
+            $body['fields'] = $params['fields'];
+        }
+
+        return $request->withBody(json_encode($body))->call();
+    }
+
     /**
      * Create a verification email job.
      * Required scope: "update:users"

@@ -39,9 +39,9 @@ class RequestBuilder
     /**
      * HTTP method to use for the request.
      *
-     * @var array
+     * @var string
      */
-    protected $method = [];
+    protected $method;
 
     /**
      * Headers to include for the request.
