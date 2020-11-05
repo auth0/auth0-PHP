@@ -80,6 +80,7 @@ class JobsIntegrationTest extends ApiTests
 
         $api = new Management($env['API_TOKEN'], $env['DOMAIN']);
 
+        $default_db_name       = 'Username-Password-Authentication';
         $get_connection_result = $api->connections()->getAll( 'auth0', ['id'], true, 0, 1, ['name' => $default_db_name] );
         usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
 
