@@ -90,7 +90,7 @@ class Jobs extends GenericResource
             $body['fields'] = $params['fields'];
         }
 
-        return $request->withBody(json_encode($body))->call();
+        return $request->withBody(json_encode($body), JSON_FORCE_OBJECT)->call();
     }
 
     /**
