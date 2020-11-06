@@ -101,7 +101,7 @@ class Jobs extends GenericResource
         $body = [];
 
         if (!empty($params['connection_id'])) {
-            $body['connection_id'] = filter_var($params['connection_id'], FILTER_SANITIZE_STRING);
+            $body['connection_id'] = $params['connection_id'];
         }
 
         if (!empty($params['format']) && in_array($params['format'], ['json', 'csv'])) {
