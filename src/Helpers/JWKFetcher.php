@@ -17,11 +17,11 @@ use Psr\SimpleCache\CacheInterface;
 class JWKFetcher
 {
     /**
-     * How long should the cache persist? Set to 10 minutes.
+     * How long should the cache persist? Defaults to 10 minutes.
      *
      * @see https://www.php-fig.org/psr/psr-16/#12-definitions
      */
-    const CACHE_TTL = 600;
+    private $ttl = 600;
 
     /**
      * Cache handler or null for no caching.
@@ -42,8 +42,9 @@ class JWKFetcher
      *
      * @param CacheInterface|null $cache         Cache handler or null for no caching.
      * @param array               $guzzleOptions Guzzle HTTP options.
+     * @param options             $options       Class options to apply at initializion.
      */
-    public function __construct(CacheInterface $cache = null, array $guzzleOptions = [])
+    public function __construct(CacheInterface $cache = null, array $guzzleOptions = [], array $options = [])
     {
         if ($cache === null) {
             $cache = new NoCacheHandler();
@@ -51,6 +52,10 @@ class JWKFetcher
 
         $this->cache         = $cache;
         $this->guzzleOptions = $guzzleOptions;
+
+        if (!empty($options['ttl'])) {
+            $this->ttl = $options['ttl'];
+        }
     }
 
     /**
@@ -123,7 +128,7 @@ class JWKFetcher
             $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
         }
 
-        $this->cache->set($cache_key, $keys, self::CACHE_TTL);
+        $this->cache->set($cache_key, $keys, $this->ttl);
         return $keys;
     }
 
@@ -147,5 +152,38 @@ class JWKFetcher
         ]);
 
         return $request->call();
+    }
+
+    /**
+     * Set how long to cache JWKs in seconds.
+     *
+     * @param string  $ttlSeconds  Number of seconds to keep a JWK in memory.
+     */
+    public function setTtl(int $ttlSeconds)
+    {
+        $this->ttl = $ttlSeconds;
+        return $this;
+    }
+
+    /**
+     * Clear a specific JWK from the cache,
+     *
+     * @param string  $jwks_url  Full URL to the JWKS.
+     *
+     * @return boolean
+     */
+    public function cacheDelete(string $jwksUri)
+    {
+        return $this->cache->delete(md5($jwksUri));
+    }
+
+    /**
+     * Clear the JWK cache.
+     *
+     * @return boolean
+     */
+    public function cacheClear()
+    {
+        return $this->cache->clear();
     }
 }
