@@ -67,34 +67,6 @@ class TicketsTest extends ApiTests
         $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
     }
 
-    public function testThatPasswordChangeTicketRequestIsFormedProperly()
-    {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-
-        $api->call()->tickets()->createPasswordChangeTicket( '__test_user_id__', '__test_password__', '__test_result_url__', '__test_connection_id__', 8675309 );
-
-        $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertEquals( 'https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl() );
-        $this->assertEmpty( $api->getHistoryQuery() );
-
-        $body = $api->getHistoryBody();
-        $this->assertArrayHasKey( 'user_id', $body );
-        $this->assertEquals( '__test_user_id__', $body['user_id'] );
-        $this->assertArrayHasKey( 'new_password', $body );
-        $this->assertEquals( '__test_password__', $body['new_password'] );
-        $this->assertArrayHasKey( 'result_url', $body );
-        $this->assertEquals( '__test_result_url__', $body['result_url'] );
-        $this->assertArrayHasKey( 'connection_id', $body );
-        $this->assertEquals( '__test_connection_id__', $body['connection_id'] );
-        $this->assertArrayHasKey( 'ttl_sec', $body );
-        $this->assertEquals( 8675309, $body['ttl_sec'] );
-
-        $headers = $api->getHistoryHeaders();
-        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
-        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
-    }
-
     public function testIdentityParamRequiresUserId()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
