@@ -165,6 +165,27 @@ class JobsTest extends ApiTests
     /**
      * @throws \Exception Should not be thrown in this test.
      */
+    public function testThatExportUsersRequestIsFilteringProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->jobs()->exportUsers(
+            [
+                'connection_id' => '__test_conn_id__',
+                'limit' => 'invalid limit',
+                'format' => 'invalid format',
+            ]
+        );
+
+        $request_body = $api->getHistoryBody();
+
+        $this->assertArrayNotHasKey('limit', $request_body);
+        $this->assertArrayNotHasKey('format', $request_body);
+    }
+
+    /**
+     * @throws \Exception Should not be thrown in this test.
+     */
     public function testThatSendVerificationEmailIsFormedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
