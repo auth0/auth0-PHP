@@ -389,14 +389,15 @@ class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type
      *
-     * @param string $code         Authorization code received during login.
-     * @param string $redirect_uri Redirect URI sent with authorize request.
+     * @param string $code               Authorization code received during login.
+     * @param string $redirect_uri       Redirect URI sent with authorize request.
+     * @param string|null $code_verifier The clear-text version of the code_challenge from the /authorize call
      *
      * @return array
      *
      * @throws ApiException If grant_type is missing.
      */
-    public function code_exchange(string $code, string $redirect_uri) : array
+    public function code_exchange(string $code, string $redirect_uri, string $code_verifier = null) : array
     {
         if (empty($this->client_secret)) {
             throw new ApiException('client_secret is mandatory');
@@ -408,6 +409,10 @@ class Authentication
             'code' => $code,
             'grant_type' => 'authorization_code',
         ];
+
+        if ($code_verifier) {
+            $options += ['code_verifier' => $code_verifier];
+        }
 
         return $this->oauth_token($options);
     }
