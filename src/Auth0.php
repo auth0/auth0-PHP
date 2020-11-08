@@ -12,6 +12,7 @@ use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Helpers\JWKFetcher;
+use Auth0\SDK\Helpers\PKCE;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
@@ -35,6 +36,7 @@ class Auth0
 {
     const TRANSIENT_STATE_KEY = 'state';
     const TRANSIENT_NONCE_KEY = 'nonce';
+    const TRANSIENT_CODE_VERIFIER_KEY = 'code_verifier';
 
     /**
      * Available keys to persist data.
@@ -170,6 +172,13 @@ class Auth0
      */
     protected $skipUserinfo;
 
+	/**
+	 * Enable Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+	 *
+	 * @var boolean
+	 */
+	protected $enablePkce;
+
     /**
      * Algorithm used for ID token validation.
      * Can be "HS256" or "RS256" only.
@@ -229,6 +238,7 @@ class Auth0
      *     - guzzle_options         (Object)  Optional. Options passed to the Guzzle HTTP library
      *     - skip_userinfo          (Boolean) Optional. Use the ID token for user identity (true, default) or the
      *                                                  userinfo endpoint (false)
+     *     - enable_pkce            (Boolean) Optional. Enable Authorization Code Flow with Proof Key for Code Exchange
      *     - max_age                (Integer) Optional. Maximum time allowed between authentication and callback
      *     - id_token_alg           (String)  Optional. ID token algorithm expected; RS256 (default) or HS256 only
      *     - id_token_leeway        (Integer) Optional. Leeway, in seconds, for ID token validation.
@@ -274,6 +284,7 @@ class Auth0
         $this->scope         = $config['scope'] ?? 'openid profile email';
         $this->guzzleOptions = $config['guzzle_options'] ?? [];
         $this->skipUserinfo  = $config['skip_userinfo'] ?? true;
+        $this->enablePkce    = $config['enable_pkce'] ?? false;
         $this->maxAge        = $config['max_age'] ?? null;
         $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
         $this->jwksUri       = $config['jwks_uri'] ?? 'https://'.$this->domain.'/.well-known/jwks.json';
@@ -413,6 +424,15 @@ class Auth0
             $this->transientHandler->store(self::TRANSIENT_NONCE_KEY, $auth_params[self::TRANSIENT_NONCE_KEY]);
         }
 
+        if ($this->enablePkce) {
+            $codeVerifier = PKCE::generateCodeVerifier(128);
+            $auth_params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
+            // The PKCE spec defines two methods, S256 and plain, the former is
+            // the only one supported by Auth0 since the latter is discouraged.
+            $auth_params['code_challenge_method'] = 'S256';
+            $this->transientHandler->store(self::TRANSIENT_CODE_VERIFIER_KEY, $codeVerifier);
+        }
+
         if (isset($auth_params['max_age'])) {
             $this->transientHandler->store( 'max_age', $auth_params['max_age'] );
         }
@@ -518,11 +538,19 @@ class Auth0
             throw new CoreException('Invalid state');
         }
 
+        $code_verifier = null;
+        if ($this->enablePkce) {
+            $code_verifier = $this->transientHandler->getOnce(self::TRANSIENT_CODE_VERIFIER_KEY);
+            if (!$code_verifier) {
+                throw new CoreException('Missing code_verifier');
+            }
+        }
+
         if ($this->user) {
             throw new CoreException('Can\'t initialize a new session while there is one active session already');
         }
 
-        $response = $this->authentication->code_exchange($code, $this->redirectUri);
+        $response = $this->authentication->code_exchange($code, $this->redirectUri, $code_verifier);
 
         if (empty($response['access_token'])) {
             throw new ApiException('Invalid access_token - Retry login.');
