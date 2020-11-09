@@ -166,6 +166,8 @@ class JWKFetcher
      * Set how long to cache JWKs in seconds.
      *
      * @param string  $ttlSeconds  Number of seconds to keep a JWK in memory.
+     *
+     * @return $this
      */
     public function setTtl(int $ttlSeconds)
     {
@@ -174,7 +176,17 @@ class JWKFetcher
     }
 
     /**
-     * Clear a specific JWK from the cache,
+     * Returns how long we are caching JWKs in seconds.
+     *
+     * @return integer
+     */
+    public function getTtl()
+    {
+        return $this->ttl;
+    }
+
+    /**
+     * Remove a specific JWK from the cache,
      *
      * @param string  $jwks_url  Full URL to the JWKS.
      *
