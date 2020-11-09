@@ -17,7 +17,14 @@ use Psr\SimpleCache\CacheInterface;
 class JWKFetcher
 {
     /**
-     * How long should the cache persist? Defaults to 10 minutes.
+     * Default length of cache persistence. Defaults to 10 minutes.
+     *
+     * @see https://www.php-fig.org/psr/psr-16/#12-definitions
+     */
+    const CACHE_TTL = 600;
+
+    /**
+     * How long should the cache persist? Defaults to value of CACHE_TTL.
      *
      * @see https://www.php-fig.org/psr/psr-16/#12-definitions
      */
@@ -52,6 +59,7 @@ class JWKFetcher
 
         $this->cache         = $cache;
         $this->guzzleOptions = $guzzleOptions;
+        $this->ttl           = self::CACHE_TTL;
 
         if (!empty($options['ttl'])) {
             $this->ttl = $options['ttl'];
