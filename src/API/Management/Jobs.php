@@ -7,9 +7,16 @@ use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 class Jobs extends GenericResource
 {
     /**
+     * Retrieves a job. Useful to check its status.
+     * Required scopes: "create:users" "read:users"
      *
-     * @param  string $id
+     * @param  string  $id
+     *
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
      * @return mixed
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id
      */
     public function get($id)
     {
@@ -19,9 +26,16 @@ class Jobs extends GenericResource
     }
 
     /**
+     * Retrieve error details of a failed job.
+     * Required scopes: "create:users" "read:users"
      *
-     * @param  string $id
+     * @param  string  $id
+     *
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
      * @return mixed
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_errors
      */
     public function getErrors($id)
     {
@@ -31,11 +45,18 @@ class Jobs extends GenericResource
     }
 
     /**
+     * Import users from a formatted file into a connection via a long-running job.
+     * Required scopes: "create:users" "read:users"
      *
-     * @param  string $file_path
-     * @param  string $connection_id
-     * @param  array  $params
+     * @param  string  $file_path
+     * @param  string  $connection_id
+     * @param  array   $params
+     *
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
      * @return mixed
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_imports
      */
     public function importUsers($file_path, $connection_id, $params = [])
     {
@@ -57,6 +78,45 @@ class Jobs extends GenericResource
         }
 
         return $request->call();
+    }
+
+
+    /**
+     * Export all users to a file via a long-running job.
+     * Required scopes: "read:users"
+     *
+     * @param  array  $params
+     *
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports
+     */
+    public function exportUsers($params = [])
+    {
+        $request = $this->apiClient->method('post')
+        ->addPath('jobs', 'users-exports');
+
+        $body = [];
+
+        if (!empty($params['connection_id'])) {
+            $body['connection_id'] = $params['connection_id'];
+        }
+
+        if (!empty($params['format']) && in_array($params['format'], ['json', 'csv'])) {
+            $body['format'] = $params['format'];
+        }
+
+        if (!empty($params['limit']) && is_numeric($params['limit'])) {
+            $body['limit'] = $params['limit'];
+        }
+
+        if (!empty($params['fields']) && is_array($params['fields'])) {
+            $body['fields'] = $params['fields'];
+        }
+
+        return $request->withBody(json_encode($body), JSON_FORCE_OBJECT)->call();
     }
 
     /**
