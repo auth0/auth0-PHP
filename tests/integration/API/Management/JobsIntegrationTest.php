@@ -70,40 +70,6 @@ class JobsIntegrationTest extends ApiTests
      * @throws \Auth0\SDK\Exception\ApiException
      * @throws \Exception
      */
-    public function testIntegrationExportUsersJob()
-    {
-        $env = self::getEnv();
-
-        if (! $env['API_TOKEN']) {
-            $this->markTestSkipped( 'No client secret; integration test skipped' );
-        }
-
-        $api = new Management($env['API_TOKEN'], $env['DOMAIN']);
-
-        $default_db_name       = 'Username-Password-Authentication';
-        $get_connection_result = $api->connections()->getAll( 'auth0', ['id'], true, 0, 1, ['name' => $default_db_name] );
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
-
-        $connectionId = $get_connection_result[0]['id'];
-        $export_users_result = $api->jobs()->exportUsers([
-            'connection_id' => $connectionId,
-            'limit' => 5,
-            'format' => 'json',
-            'fields' => [['name' => 'user_id']],
-        ]);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
-
-        $this->assertEquals( 'users_export', $export_users_result['type'] );
-        $this->assertEquals( $connectionId, $export_users_result['connection_id'] );
-        $this->assertEquals( 'json', $export_users_result['format'] );
-        $this->assertEquals( 5, $export_users_result['limit'] );
-        $this->assertEquals( [['name' => 'user_id']], $export_users_result['fields'] );
-    }
-
-    /**
-     * @throws \Auth0\SDK\Exception\ApiException
-     * @throws \Exception
-     */
     public function testIntegrationSendEmailVerificationJob()
     {
         $env = self::getEnv();
