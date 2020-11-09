@@ -127,6 +127,61 @@ class JobsTest extends ApiTests
         $this->assertEquals( '__test_ext_id__', $form_body_arr[$ext_id_key + self::FORM_DATA_VALUE_KEY_OFFSET] );
     }
 
+    /**
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatExportUsersRequestIsFormedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->jobs()->exportUsers(
+            [
+                'connection_id' => '__test_conn_id__',
+                'limit' => 5,
+                'format' => 'json',
+                'fields' => [['name' => 'user_id']],
+            ]
+        );
+
+        $this->assertEquals( 'POST', $api->getHistoryMethod() );
+        $this->assertEquals( 'https://api.test.local/api/v2/jobs/users-exports', $api->getHistoryUrl() );
+        $this->assertEmpty( $api->getHistoryQuery() );
+
+        $request_body = $api->getHistoryBody();
+
+        $this->assertNotEmpty( $request_body['connection_id'] );
+        $this->assertEquals( '__test_conn_id__', $request_body['connection_id'] );
+
+        $this->assertNotEmpty( $request_body['limit'] );
+        $this->assertEquals( '5', $request_body['limit'] );
+
+        $this->assertNotEmpty( $request_body['format'] );
+        $this->assertEquals( 'json', $request_body['format'] );
+
+        $this->assertNotEmpty( $request_body['fields'] );
+        $this->assertEquals( [['name' => 'user_id']], $request_body['fields'] );
+    }
+
+    /**
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatExportUsersRequestIsFilteringProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->jobs()->exportUsers(
+            [
+                'connection_id' => '__test_conn_id__',
+                'limit' => 'invalid limit',
+                'format' => 'invalid format',
+            ]
+        );
+
+        $request_body = $api->getHistoryBody();
+
+        $this->assertArrayNotHasKey('limit', $request_body);
+        $this->assertArrayNotHasKey('format', $request_body);
+    }
 
     /**
      * @throws \Exception Should not be thrown in this test.
