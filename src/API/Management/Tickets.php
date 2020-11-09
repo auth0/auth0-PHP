@@ -60,10 +60,11 @@ class Tickets extends GenericResource
         $user_id,
         $new_password = null,
         $result_url = null,
-        $connection_id = null
+        $connection_id = null,
+        $ttl = null
     )
     {
-        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id);
+        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id, $ttl);
     }
 
     /**
@@ -72,16 +73,18 @@ class Tickets extends GenericResource
      * @param  null|string $new_password
      * @param  null|string $result_url
      * @param  null|string $connection_id
+     * @param  null|integer $ttl
      * @return mixed
      */
     public function createPasswordChangeTicketByEmail(
         $email,
         $new_password = null,
         $result_url = null,
-        $connection_id = null
+        $connection_id = null,
+        $ttl = null
     )
     {
-        return $this->createPasswordChangeTicketRaw(null, $email, $new_password, $result_url, $connection_id);
+        return $this->createPasswordChangeTicketRaw(null, $email, $new_password, $result_url, $connection_id, $ttl);
     }
 
     /**
@@ -91,6 +94,7 @@ class Tickets extends GenericResource
      * @param  null|string $new_password
      * @param  null|string $result_url
      * @param  null|string $connection_id
+     * @param  null|integer $ttl
      * @return mixed
      */
     public function createPasswordChangeTicketRaw(
@@ -98,7 +102,8 @@ class Tickets extends GenericResource
         $email = null,
         $new_password = null,
         $result_url = null,
-        $connection_id = null
+        $connection_id = null,
+        $ttl = null
     )
     {
         $body = [];
@@ -121,6 +126,10 @@ class Tickets extends GenericResource
 
         if ($connection_id) {
             $body['connection_id'] = $connection_id;
+        }
+
+        if ($ttl) {
+            $body['ttl_sec'] = $ttl;
         }
 
         return $this->apiClient->method('post')
