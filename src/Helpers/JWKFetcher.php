@@ -192,7 +192,7 @@ class JWKFetcher
      *
      * @return boolean
      */
-    public function cacheDelete(string $jwksUri)
+    public function removeCacheEntry(string $jwksUri)
     {
         return $this->cache->delete(md5($jwksUri));
     }
@@ -202,7 +202,7 @@ class JWKFetcher
      *
      * @return boolean
      */
-    public function cacheClear()
+    public function clearCache()
     {
         return $this->cache->clear();
     }
