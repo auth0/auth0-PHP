@@ -38,6 +38,14 @@ class JWKFetcher
     private $cache;
 
     /**
+     * Cache for unique cache ids.
+     * Key for each entry is the url to the JWK. Value is cache id.
+     *
+     * @var array
+     */
+    private $cachedEntryIds = [];
+
+    /**
      * Options for the Guzzle HTTP client.
      *
      * @var array
@@ -115,9 +123,7 @@ class JWKFetcher
             return [];
         }
 
-        $cache_key    = md5($jwks_url);
-        $cached_value = $use_cache ? $this->cache->get($cache_key) : null;
-        if (! empty($cached_value) && is_array($cached_value)) {
+        if (true === $use_cache && $cached_value = $this->getCacheEntry($jwks_url)) {
             return $cached_value;
         }
 
@@ -136,7 +142,7 @@ class JWKFetcher
             $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
         }
 
-        $this->cache->set($cache_key, $keys, $this->ttl);
+        $this->cache->set($this->getCacheKey($jwks_url), $keys, $this->ttl);
         return $keys;
     }
 
@@ -186,7 +192,45 @@ class JWKFetcher
     }
 
     /**
-     * Remove a specific JWK from the cache,
+     * Generate a cache id to use for a URL.
+     *
+     * @param string  $jwks_url  Full URL to the JWKS.
+     *
+     * @return string
+     */
+    public function getCacheKey(string $jwksUri)
+    {
+        if (isset($this->cachedEntryIds[$jwksUri])) {
+            return $this->cachedEntryIds[$jwksUri];
+        }
+
+        $cacheKey = md5($jwksUri);
+
+        $this->cachedEntryIds[$jwksUri] = $cacheKey;
+        return $cacheKey;
+    }
+
+    /**
+     * Get a specific JWK from the cache by it's URL.
+     *
+     * @param string  $jwks_url  Full URL to the JWKS.
+     *
+     * @return null|array
+     */
+    public function getCacheEntry(string $jwksUri)
+    {
+        $cache_key    = $this->getCacheKey($jwksUri);
+        $cached_value = $this->cache->get($cache_key);
+
+        if (! empty($cached_value) && is_array($cached_value)) {
+            return $cached_value;
+        }
+
+        return null;
+    }
+
+    /**
+     * Remove a specific JWK from the cache by it's URL.
      *
      * @param string  $jwks_url  Full URL to the JWKS.
      *
@@ -194,7 +238,7 @@ class JWKFetcher
      */
     public function removeCacheEntry(string $jwksUri)
     {
-        return $this->cache->delete(md5($jwksUri));
+        return $this->cache->delete($this->getCacheKey($jwksUri));
     }
 
     /**
