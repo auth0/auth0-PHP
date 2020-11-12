@@ -28,7 +28,7 @@ class JWKFetcher
      *
      * @see https://www.php-fig.org/psr/psr-16/#12-definitions
      */
-    private $ttl = 600;
+    private $ttl = self::CACHE_TTL;
 
     /**
      * Cache handler or null for no caching.
@@ -67,7 +67,6 @@ class JWKFetcher
 
         $this->cache         = $cache;
         $this->guzzleOptions = $guzzleOptions;
-        $this->ttl           = self::CACHE_TTL;
 
         if (!empty($options['ttl'])) {
             $this->ttl = $options['ttl'];
