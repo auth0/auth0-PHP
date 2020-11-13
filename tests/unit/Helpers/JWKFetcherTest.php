@@ -5,6 +5,7 @@ use Auth0\SDK\Helpers\JWKFetcher;
 use Cache\Adapter\PHPArray\ArrayCachePool;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use Auth0\SDK\Exception\CoreException;
 
 /**
  * Class JWKFetcherTest.
@@ -141,5 +142,78 @@ class JWKFetcherTest extends TestCase
     public function testThatEmptyUrlReturnsEmptyKeys() {
         $jwks_formatted_1 = (new JWKFetcher())->getKeys();
         $this->assertEquals( [], $jwks_formatted_1 );
+    }
+
+    public function testThatTtlChanges() {
+        $jwks_body = '{"keys":[{"kid":"__test_kid_2__","x5c":["__test_x5c_2__"]}]}';
+        $jwks = new MockJwks(
+            // [ new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body ) ],
+            // [ 'cache' => new ArrayCachePool() ],
+            // [ 'base_uri' => '__test_jwks_url__' ]
+        );
+
+        // Ensure TTL is assigned a recommended default value of 10 minutes.
+        $this->assertEquals(JWKFetcher::CACHE_TTL, $jwks->call()->getTtl());
+
+        // Ensure TTL is assigned correctly; 60 seconds is the minimum.
+        $jwks->call()->setTtl(60);
+        $this->assertEquals(60, $jwks->call()->getTtl());
+
+        // Ensure assigning a TTL of less than 60 seconds throws an exception.
+        $this->expectException(CoreException::class);
+        $jwks->call()->setTtl(30);
+    }
+
+    public function testThatCacheMutates() {
+        $jwks_body = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]},{"kid":"__kid_2__","x5c":["__x5c_2__"]}]}';
+        $jwks_body_modified = ['__kid_3__' => '__x5c_3__', '__kid_4__' => '__x5c_4__'];
+
+        $jwks = new MockJwks(
+            [
+                new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body ),
+                new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body ),
+            ],
+            [ 'cache' => new ArrayCachePool() ],
+            [ 'base_uri' => '__test_jwks_url__' ]
+        );
+
+        $jwks->call()->getKeys('__test_jwks_url__', false);
+
+        // getCacheKey MUST return an MD5 hash of provided JWKS URL.
+        $this->assertEquals(md5('__test_jwks_url__'), $jwks->call()->getCacheKey('__test_jwks_url__'));
+
+        // Requests for invalid/missing kids MUST return NULL.
+        $this->assertEquals(null, $jwks->call()->getKey('__test_missing_kid__'));
+
+        // Requesting a valid kid MUST return an ARRAY containing the x5c
+        $this->assertContains('__x5c_1__', $jwks->call()->getKey('__kid_1__'));
+
+        // Pulling directly from cache will return same results as getKeys()
+        $this->assertArrayHasKey('__kid_1__', $jwks->call()->getCacheEntry('__test_jwks_url__'));
+
+        // Overwrite an existing JWK in the cache.
+        $jwks->call()->setCacheEntry('__test_jwks_url__', $jwks_body_modified);
+
+        // Inject a new JWK into the cache.
+        $jwks->call()->setCacheEntry('__test_jwks_url_2__', $jwks_body_modified);
+
+        // Ensure the cache was updated successfully
+        $this->assertArrayHasKey('__kid_3__', $jwks->call()->getCacheEntry('__test_jwks_url__'));
+
+        // Purge the cache of keys relating to our test url
+        $jwks->call()->removeCacheEntry('__test_jwks_url__');
+
+        // Ensure cache for our test url is empty
+        $this->assertEmpty($jwks->call()->getCacheEntry('__test_jwks_url__'));
+
+        // Ensure the cache still contains content for __test_jwks_url_2__
+        $this->assertArrayHasKey('__kid_3__', $jwks->call()->getCacheEntry('__test_jwks_url_2__'));
+
+        // Purge the cache of all keys
+        $jwks->call()->clearCache();
+
+        // Ensure all JWKs are cleared from the cache.
+        $this->assertEmpty($jwks->call()->getCacheEntry('__test_jwks_url__'));
+        $this->assertEmpty($jwks->call()->getCacheEntry('__test_jwks_url_2__'));
     }
 }

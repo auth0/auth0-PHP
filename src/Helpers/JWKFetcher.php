@@ -5,6 +5,7 @@ namespace Auth0\SDK\Helpers;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
+use Auth0\SDK\Exception\CoreException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\SimpleCache\CacheInterface;
@@ -17,11 +18,19 @@ use Psr\SimpleCache\CacheInterface;
 class JWKFetcher
 {
     /**
-     * How long should the cache persist? Set to 10 minutes.
+     * Default length of cache persistence. Defaults to 10 minutes.
      *
      * @see https://www.php-fig.org/psr/psr-16/#12-definitions
      */
     const CACHE_TTL = 600;
+
+    /**
+     * How long should the cache persist? Defaults to value of CACHE_TTL.
+     * We strongly encouraged you leave the default value.
+     *
+     * @see https://www.php-fig.org/psr/psr-16/#12-definitions
+     */
+    private $ttl = self::CACHE_TTL;
 
     /**
      * Cache handler or null for no caching.
@@ -29,6 +38,14 @@ class JWKFetcher
      * @var CacheInterface|null
      */
     private $cache;
+
+    /**
+     * Cache for unique cache ids.
+     * Key for each entry is the url to the JWK. Value is cache id.
+     *
+     * @var array
+     */
+    private $cachedEntryIds = [];
 
     /**
      * Options for the Guzzle HTTP client.
@@ -42,8 +59,9 @@ class JWKFetcher
      *
      * @param CacheInterface|null $cache         Cache handler or null for no caching.
      * @param array               $guzzleOptions Guzzle HTTP options.
+     * @param options             $options       Class options to apply at initializion.
      */
-    public function __construct(CacheInterface $cache = null, array $guzzleOptions = [])
+    public function __construct(CacheInterface $cache = null, array $guzzleOptions = [], array $options = [])
     {
         if ($cache === null) {
             $cache = new NoCacheHandler();
@@ -51,6 +69,10 @@ class JWKFetcher
 
         $this->cache         = $cache;
         $this->guzzleOptions = $guzzleOptions;
+
+        if (!empty($options['ttl'])) {
+            $this->setTtl($options['ttl']);
+        }
     }
 
     /**
@@ -98,12 +120,13 @@ class JWKFetcher
     public function getKeys(string $jwks_url = null, bool $use_cache = true) : array
     {
         $jwks_url = $jwks_url ?? $this->guzzleOptions['base_uri'] ?? '';
+
         if (empty( $jwks_url )) {
             return [];
         }
 
-        $cache_key    = md5($jwks_url);
-        $cached_value = $use_cache ? $this->cache->get($cache_key) : null;
+        $cached_value = $use_cache ? $this->getCacheEntry($jwks_url) : null;
+
         if (! empty($cached_value) && is_array($cached_value)) {
             return $cached_value;
         }
@@ -123,7 +146,7 @@ class JWKFetcher
             $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
         }
 
-        $this->cache->set($cache_key, $keys, self::CACHE_TTL);
+        $this->setCacheEntry($jwks_url, $keys);
         return $keys;
     }
 
@@ -147,5 +170,112 @@ class JWKFetcher
         ]);
 
         return $request->call();
+    }
+
+    /**
+     * Set how long to cache JWKs in seconds.
+     * We strongly encouraged you leave the default value.
+     *
+     * @param string  $ttlSeconds  Number of seconds to keep a JWK in memory.
+     *
+     * @return $this
+     *
+     * @throws CoreException  If $ttlSeconds is less than 60.
+     */
+    public function setTtl(int $ttlSeconds)
+    {
+        if ($ttlSeconds < 60) {
+            throw new CoreException('TTL cannot be less than 60 seconds.');
+        }
+
+        $this->ttl = $ttlSeconds;
+        return $this;
+    }
+
+    /**
+     * Returns how long we are caching JWKs in seconds.
+     *
+     * @return integer
+     */
+    public function getTtl()
+    {
+        return $this->ttl;
+    }
+
+    /**
+     * Generate a cache id to use for a URL.
+     *
+     * @param string  $jwks_url  Full URL to the JWKS.
+     *
+     * @return string
+     */
+    public function getCacheKey(string $jwksUri)
+    {
+        if (isset($this->cachedEntryIds[$jwksUri])) {
+            return $this->cachedEntryIds[$jwksUri];
+        }
+
+        $cacheKey = md5($jwksUri);
+
+        $this->cachedEntryIds[$jwksUri] = $cacheKey;
+        return $cacheKey;
+    }
+
+    /**
+     * Get a specific JWK from the cache by it's URL.
+     *
+     * @param string  $jwks_url  Full URL to the JWKS.
+     *
+     * @return null|array
+     */
+    public function getCacheEntry(string $jwksUri)
+    {
+        $cache_key    = $this->getCacheKey($jwksUri);
+        $cached_value = $this->cache->get($cache_key);
+
+        if (! empty($cached_value) && is_array($cached_value)) {
+            return $cached_value;
+        }
+
+        return null;
+    }
+
+   /**
+     * Add or overwrite a specific JWK from the cache.
+     *
+     * @param string  $jwks_url  Full URL to the JWKS.
+     * @param array   $keys      An array representing the JWKS.
+     *
+     * @return $this
+     */
+    public function setCacheEntry(string $jwksUri, array $keys)
+    {
+        $cache_key = $this->getCacheKey($jwksUri);
+
+        $this->cache->set($cache_key, $keys, $this->ttl);
+
+        return $this;
+    }
+
+    /**
+     * Remove a specific JWK from the cache by it's URL.
+     *
+     * @param string  $jwks_url  Full URL to the JWKS.
+     *
+     * @return boolean
+     */
+    public function removeCacheEntry(string $jwksUri)
+    {
+        return $this->cache->delete($this->getCacheKey($jwksUri));
+    }
+
+    /**
+     * Clear the JWK cache.
+     *
+     * @return boolean
+     */
+    public function clearCache()
+    {
+        return $this->cache->clear();
     }
 }
