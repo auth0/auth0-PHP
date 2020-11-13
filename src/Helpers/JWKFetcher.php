@@ -26,6 +26,7 @@ class JWKFetcher
 
     /**
      * How long should the cache persist? Defaults to value of CACHE_TTL.
+     * We strongly encouraged you leave the default value.
      *
      * @see https://www.php-fig.org/psr/psr-16/#12-definitions
      */
@@ -170,6 +171,7 @@ class JWKFetcher
 
     /**
      * Set how long to cache JWKs in seconds.
+     * We strongly encouraged you leave the default value.
      *
      * @param string  $ttlSeconds  Number of seconds to keep a JWK in memory.
      *
