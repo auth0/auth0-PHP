@@ -125,8 +125,10 @@ class JWKFetcher
             return [];
         }
 
-        if (true === $use_cache) {
-            return $this->getCacheEntry($jwks_url) ?? [];
+        $cached_value = $use_cache ? $this->getCacheEntry($jwks_url) : null;
+
+        if (! empty($cached_value) && is_array($cached_value)) {
+            return $cached_value;
         }
 
         $jwks = $this->requestJwks($jwks_url);
