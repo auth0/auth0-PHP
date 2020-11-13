@@ -70,7 +70,7 @@ class JWKFetcher
         $this->guzzleOptions = $guzzleOptions;
 
         if (!empty($options['ttl'])) {
-            $this->ttl = $options['ttl'];
+            $this->setTtl($options['ttl']);
         }
     }
 
