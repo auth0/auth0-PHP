@@ -5,6 +5,7 @@ namespace Auth0\SDK\Helpers;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
+use Auth0\SDK\Exception\CoreException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\SimpleCache\CacheInterface;
@@ -173,9 +174,15 @@ class JWKFetcher
      * @param string  $ttlSeconds  Number of seconds to keep a JWK in memory.
      *
      * @return $this
+     *
+     * @throws CoreException  If $ttlSeconds is less than 60.
      */
     public function setTtl(int $ttlSeconds)
     {
+        if ($ttlSeconds < 60) {
+            throw new CoreException('TTL cannot be less than 60 seconds.');
+        }
+
         $this->ttl = $ttlSeconds;
         return $this;
     }
