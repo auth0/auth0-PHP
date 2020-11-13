@@ -120,12 +120,13 @@ class JWKFetcher
     public function getKeys(string $jwks_url = null, bool $use_cache = true) : array
     {
         $jwks_url = $jwks_url ?? $this->guzzleOptions['base_uri'] ?? '';
+
         if (empty( $jwks_url )) {
             return [];
         }
 
-        if (true === $use_cache && $cached_value = $this->getCacheEntry($jwks_url)) {
-            return $cached_value;
+        if (true === $use_cache) {
+            return $this->getCacheEntry($jwks_url) ?? [];
         }
 
         $jwks = $this->requestJwks($jwks_url);
