@@ -142,7 +142,7 @@ class JWKFetcher
             $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
         }
 
-        $this->cache->set($this->getCacheKey($jwks_url), $keys, $this->ttl);
+        $this->setCacheEntry($jwks_url, $keys);
         return $keys;
     }
 
