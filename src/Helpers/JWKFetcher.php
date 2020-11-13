@@ -228,6 +228,23 @@ class JWKFetcher
         return null;
     }
 
+   /**
+     * Add or overwrite a specific JWK from the cache.
+     *
+     * @param string  $jwks_url  Full URL to the JWKS.
+     * @param array   $keys      An array representing the JWKS.
+     *
+     * @return $this
+     */
+    public function setCacheEntry(string $jwksUri, array $keys)
+    {
+        $cache_key = $this->getCacheKey($jwksUri);
+
+        $this->cache->set($cache_key, $keys, $this->ttl);
+
+        return $this;
+    }
+
     /**
      * Remove a specific JWK from the cache by it's URL.
      *
