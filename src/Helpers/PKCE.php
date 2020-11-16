@@ -25,7 +25,7 @@ class PKCE
     {
         if ($length < 43 || $length > 128) {
             throw new \InvalidArgumentException(
-                'Code verifier must be crated with a minimum length of 43 characters and a maximum length of 128 characters.'
+                'Code verifier must be created with a minimum length of 43 characters and a maximum length of 128 characters.'
             );
         }
 
