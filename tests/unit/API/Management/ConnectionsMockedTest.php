@@ -33,7 +33,7 @@ class ConnectionsTestMocked extends TestCase
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
@@ -79,7 +79,7 @@ class ConnectionsTestMocked extends TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
-        $this->assertContains( 'strategy='.$strategy, $api->getHistoryQuery() );
+        $this->assertStringContainsString( 'strategy='.$strategy, $api->getHistoryQuery() );
     }
 
     /**
@@ -96,17 +96,19 @@ class ConnectionsTestMocked extends TestCase
         $strategy = null;
         $fields   = ['id', 'name'];
         $api->call()->connections()->getAll($strategy, $fields);
+        $query = $api->getHistoryQuery();
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
-        $this->assertContains( 'fields='.implode(',', $fields), $api->getHistoryQuery() );
-        $this->assertNotContains( 'include_fields=true', $api->getHistoryQuery() );
+        $this->assertStringContainsString( 'fields='.implode(',', $fields), $query );
+        $this->assertStringNotContainsString( 'include_fields=true', $query );
 
         // Test an explicit true for includeFields.
         $include_fields = true;
         $api->call()->connections()->getAll($strategy, $fields, $include_fields);
+        $query = $api->getHistoryQuery();
 
-        $this->assertContains( 'include_fields=true', $api->getHistoryQuery() );
+        $this->assertStringContainsString( 'include_fields=true', $query );
     }
 
     /**
@@ -127,8 +129,10 @@ class ConnectionsTestMocked extends TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
-        $this->assertContains( 'fields='.implode(',', $fields), $api->getHistoryQuery() );
-        $this->assertContains( 'include_fields=false', $api->getHistoryQuery() );
+
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'fields='.implode(',', $fields), $query );
+        $this->assertStringContainsString( 'include_fields=false', $query );
     }
 
     /**
@@ -151,8 +155,10 @@ class ConnectionsTestMocked extends TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
-        $this->assertContains( 'page=0', $api->getHistoryQuery() );
-        $this->assertContains( 'per_page=5', $api->getHistoryQuery() );
+
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'page=0', $query );
+        $this->assertStringContainsString( 'per_page=5', $query );
     }
 
     /**
@@ -176,8 +182,10 @@ class ConnectionsTestMocked extends TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections', $api->getHistoryUrl() );
-        $this->assertContains( 'param1=value1', $api->getHistoryQuery() );
-        $this->assertContains( 'param2=value2', $api->getHistoryQuery() );
+
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'param1=value1', $query );
+        $this->assertStringContainsString( 'param2=value2', $query );
     }
 
     /**
@@ -213,17 +221,19 @@ class ConnectionsTestMocked extends TestCase
         $id     = 'con_testConnection10';
         $fields = ['name', 'strategy'];
         $api->call()->connections()->get($id, $fields);
+        $query = $api->getHistoryQuery();
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
-        $this->assertContains( 'fields='.implode(',', $fields), $api->getHistoryQuery() );
-        $this->assertNotContains( 'include_fields=', $api->getHistoryQuery() );
+        $this->assertStringContainsString( 'fields='.implode(',', $fields), $query );
+        $this->assertStringNotContainsString( 'include_fields=', $query );
 
         // Test an explicit true for includeFields.
         $include_fields = true;
         $api->call()->connections()->get($id, $fields, $include_fields);
+        $query = $api->getHistoryQuery();
 
-        $this->assertContains( 'include_fields=true', $api->getHistoryQuery() );
+        $this->assertStringContainsString( 'include_fields=true', $query );
     }
 
     /**
@@ -244,8 +254,10 @@ class ConnectionsTestMocked extends TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/connections/'.$id, $api->getHistoryUrl() );
-        $this->assertContains( 'fields='.implode(',', $fields), $api->getHistoryQuery() );
-        $this->assertContains( 'include_fields=false', $api->getHistoryQuery() );
+
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'fields='.implode(',', $fields), $query );
+        $this->assertStringContainsString( 'include_fields=false', $query );
     }
 
     /**
@@ -287,7 +299,7 @@ class ConnectionsTestMocked extends TestCase
         $api->call()->connections()->deleteUser($id, $email);
 
         $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
-        $this->assertContains( 'https://api.test.local/api/v2/connections/'.$id.'/users', $api->getHistoryUrl() );
+        $this->assertStringContainsString( 'https://api.test.local/api/v2/connections/'.$id.'/users', $api->getHistoryUrl() );
         $this->assertEquals( 'email='.$email, $api->getHistoryQuery() );
 
         $headers = $api->getHistoryHeaders();

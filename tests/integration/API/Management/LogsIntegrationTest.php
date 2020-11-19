@@ -28,7 +28,7 @@ class LogsIntegrationTest extends ApiTests
      *
      * @throws \Auth0\SDK\Exception\ApiException
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $env = self::getEnv();
         $api = new Management($env['API_TOKEN'], $env['DOMAIN'], ['timeout' => 30]);

@@ -27,7 +27,7 @@ class PasswordlessTest extends ApiTests
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

@@ -22,11 +22,11 @@ class UrlBuildersTest extends TestCase
         $this->assertContains('redirect_uri=https%3A%2F%2Fexample.com%2Fcb', $authorize_url_query);
         $this->assertContains('response_type=code', $authorize_url_query);
         $this->assertContains('client_id=__test_client_id__', $authorize_url_query);
-        $this->assertNotContains('connection=', $authorize_url_parts['query']);
-        $this->assertNotContains('state=', $authorize_url_parts['query']);
+        $this->assertStringNotContainsString('connection=', $authorize_url_parts['query']);
+        $this->assertStringNotContainsString('state=', $authorize_url_parts['query']);
 
         // Telemetry should not be added to any browser URLs.
-        $this->assertNotContains('auth0Client=', $authorize_url_parts['query']);
+        $this->assertStringNotContainsString('auth0Client=', $authorize_url_parts['query']);
     }
 
     public function testThatAuthorizeLinkIncludesConnection()

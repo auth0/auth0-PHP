@@ -43,7 +43,7 @@ class Auth0Test extends TestCase
     /**
      * Runs after each test completes.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -64,7 +64,7 @@ class Auth0Test extends TestCase
     /**
      * Runs after each test completes.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $_GET     = [];
@@ -525,7 +525,7 @@ class Auth0Test extends TestCase
         $url_query        = explode( '&', $parsed_url_query );
 
         $this->assertArrayHasKey( 'auth0__code_verifier', $_SESSION );
-        $this->assertContains( 'code_challenge=', $parsed_url_query );
+        $this->assertStringContainsString( 'code_challenge=', $parsed_url_query );
         $this->assertContains( 'code_challenge_method=S256', $url_query );
     }
 

@@ -32,7 +32,7 @@ class ClientsTest extends ApiTests
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
@@ -69,11 +69,11 @@ class ClientsTest extends ApiTests
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/clients', $api->getHistoryUrl() );
 
         $query = '&'.$api->getHistoryQuery();
-        $this->assertContains( '&fields=field1,field2', $query );
-        $this->assertContains( '&include_fields=false', $query );
-        $this->assertContains( '&page=1', $query );
-        $this->assertContains( '&per_page=5', $query );
-        $this->assertContains( '&include_totals=true', $query );
+        $this->assertStringContainsString( '&fields=field1,field2', $query );
+        $this->assertStringContainsString( '&include_fields=false', $query );
+        $this->assertStringContainsString( '&page=1', $query );
+        $this->assertStringContainsString( '&per_page=5', $query );
+        $this->assertStringContainsString( '&include_totals=true', $query );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -93,8 +93,8 @@ class ClientsTest extends ApiTests
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/clients/__test_id__', $api->getHistoryUrl() );
 
         $query = '&'.$api->getHistoryQuery();
-        $this->assertContains( '&fields=field3,field4', $query );
-        $this->assertContains( '&include_fields=true', $query );
+        $this->assertStringContainsString( '&fields=field3,field4', $query );
+        $this->assertStringContainsString( '&include_fields=true', $query );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );

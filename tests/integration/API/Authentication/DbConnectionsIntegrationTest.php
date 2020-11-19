@@ -11,7 +11,7 @@ class DbConnectionsIntegrationTest extends ApiTests
 
     protected $connection = 'Username-Password-Authentication';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->email = 'test-dbconnections-user'.rand().'@test.com';
     }
@@ -46,6 +46,6 @@ class DbConnectionsIntegrationTest extends ApiTests
         $response = $api->dbconnections_change_password($email, $connection);
 
         $this->assertNotEmpty($response);
-        $this->assertContains('email', $response);
+        $this->assertStringContainsString('email', $response);
     }
 }
