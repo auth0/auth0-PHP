@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Helpers\Tokens;
 
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
+use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Token;
 
 /**
@@ -17,7 +18,7 @@ final class SymmetricVerifier extends SignatureVerifier
     /**
      * Client secret for the application.
      *
-     * @var string
+     * @var Key
      */
     private $clientSecret;
 
@@ -28,7 +29,7 @@ final class SymmetricVerifier extends SignatureVerifier
      */
     public function __construct(string $clientSecret)
     {
-        $this->clientSecret = $clientSecret;
+        $this->clientSecret = new Key($clientSecret);
         parent::__construct('HS256');
     }
 
