@@ -10,7 +10,7 @@ class Jobs extends GenericResource
      * Retrieves a job. Useful to check its status.
      * Required scopes: "create:users" "read:users"
      *
-     * @param  string  $id
+     * @param string $id
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
@@ -29,7 +29,7 @@ class Jobs extends GenericResource
      * Retrieve error details of a failed job.
      * Required scopes: "create:users" "read:users"
      *
-     * @param  string  $id
+     * @param string $id
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
@@ -48,9 +48,9 @@ class Jobs extends GenericResource
      * Import users from a formatted file into a connection via a long-running job.
      * Required scopes: "create:users" "read:users"
      *
-     * @param  string  $file_path
-     * @param  string  $connection_id
-     * @param  array   $params
+     * @param string $file_path
+     * @param string $connection_id
+     * @param array  $params
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
@@ -85,7 +85,7 @@ class Jobs extends GenericResource
      * Export all users to a file via a long-running job.
      * Required scopes: "read:users"
      *
-     * @param  array  $params
+     * @param array $params
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
@@ -100,19 +100,19 @@ class Jobs extends GenericResource
 
         $body = [];
 
-        if (!empty($params['connection_id'])) {
+        if (! empty($params['connection_id'])) {
             $body['connection_id'] = $params['connection_id'];
         }
 
-        if (!empty($params['format']) && in_array($params['format'], ['json', 'csv'])) {
+        if (! empty($params['format']) && in_array($params['format'], ['json', 'csv'])) {
             $body['format'] = $params['format'];
         }
 
-        if (!empty($params['limit']) && is_numeric($params['limit'])) {
+        if (! empty($params['limit']) && is_numeric($params['limit'])) {
             $body['limit'] = $params['limit'];
         }
 
-        if (!empty($params['fields']) && is_array($params['fields'])) {
+        if (! empty($params['fields']) && is_array($params['fields'])) {
             $body['fields'] = $params['fields'];
         }
 
@@ -146,12 +146,14 @@ class Jobs extends GenericResource
         }
 
         if (! empty( $params['identity'] )) {
-            if ( empty( $params['identity']['user_id']) || ! is_string($params['identity']['user_id']) ) {
+            if (empty( $params['identity']['user_id']) || ! is_string($params['identity']['user_id'])) {
                 throw new EmptyOrInvalidParameterException('Missing required "user_id" field of the "identity" object.');
             }
-            if ( empty( $params['identity']['provider'] ) || ! is_string($params['identity']['provider']) ) {
+
+            if (empty( $params['identity']['provider'] ) || ! is_string($params['identity']['provider'])) {
                 throw new EmptyOrInvalidParameterException('Missing required "provider" field of the "identity" object.');
             }
+
             $body['identity'] = $params['identity'];
         }
 

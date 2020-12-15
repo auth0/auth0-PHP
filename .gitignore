@@ -8,3 +8,4 @@ vendor
 .env
 .phpcs.xml
 phpcs.xml
+.phpunit.result.cache

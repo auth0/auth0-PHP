@@ -389,8 +389,8 @@ class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type
      *
-     * @param string $code               Authorization code received during login.
-     * @param string $redirect_uri       Redirect URI sent with authorize request.
+     * @param string      $code          Authorization code received during login.
+     * @param string      $redirect_uri  Redirect URI sent with authorize request.
      * @param string|null $code_verifier The clear-text version of the code_challenge from the /authorize call
      *
      * @return array
