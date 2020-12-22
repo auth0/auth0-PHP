@@ -20,6 +20,9 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
+  run-static-analysis:
+    steps:
+      - run: composer static-analysis
   run-unit-tests:
     steps:
       - run: composer test-unit-ci
@@ -37,6 +40,7 @@ jobs:
       - image: circleci/php:7.1
     steps:
       - prepare
+      - run-static-analysis
       - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
@@ -46,6 +50,7 @@ jobs:
       - image: circleci/php:7.2
     steps:
       - prepare
+      - run-static-analysis
       - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
@@ -55,6 +60,7 @@ jobs:
       - image: circleci/php:7.3
     steps:
       - prepare
+      - run-static-analysis
       - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
@@ -64,6 +70,7 @@ jobs:
       - image: circleci/php:7.4
     steps:
       - prepare
+      - run-static-analysis
       - run-unit-tests
       - run:
           command: bash <(curl -s https://codecov.io/bash)
