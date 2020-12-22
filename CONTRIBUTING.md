@@ -15,6 +15,12 @@ echo '#!/bin/sh' > .git/hooks/pre-commit && echo 'composer pre-commit' >> .git/h
 - Run `composer phpcs` for the changed PHP files before submitting your PR for review (optional). 
 - Keep PRs focused and change the minimum number of lines to achieve your goal.
 
+### Running static analysis
+
+Prior to making a PR, make sure the static analysis suite detects no defects:
+
+`composer static-analysis`
+
 ### Running unit tests
 
 Prior to making a PR, ensure that the unit tests pass:
