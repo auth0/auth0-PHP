@@ -13,7 +13,7 @@
   "repositories": [
     {
       "type": "git",
-      "url": "https://github.com/evansims/jwt.git"
+      "url": "https://github.com/evansims/php-jwt.git"
     }
   ],
   "require": {
@@ -51,15 +51,15 @@
     "test-unit-ci": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml --testsuite=unit",
     "test-integration": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text --testsuite=integration",
     "test-integration-ci": "\"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml --testsuite=integration",
-    "phpcs": "\"vendor/bin/phpcs\"",
-    "phpcbf": "\"vendor/bin/phpcbf\"",
-    "compat": "\"vendor/bin/phpcs\" --standard=.phpcs-compat.xml.dist",
+    "compat": "@php ./vendor/bin/phpcs --standard=.phpcs-compat.xml.dist",
+    "format": "@php ./vendor/bin/phpcbf",
+    "lint": "@php ./vendor/bin/phpcs",
     "sniffs": "\"vendor/bin/phpcs\" -e",
     "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
     "pre-commit": [
       "@test",
-      "@compat",
-      "@phpcbf"
+      "@format",
+      "@compat"
     ]
   }
 }
