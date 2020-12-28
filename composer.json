@@ -13,7 +13,7 @@
   "repositories": [
     {
       "type": "git",
-      "url": "https://github.com/evansims/php-jwt.git"
+      "url": "https://github.com/auth0/php-jwt.git"
     }
   ],
   "require": {
