@@ -28,7 +28,7 @@ class GrantsTestMocked extends TestCase
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
@@ -71,18 +71,21 @@ class GrantsTestMocked extends TestCase
         $page     = 1;
         $per_page = 5;
         $api->call()->grants()->getAll($page, $per_page);
+        $query = $api->getHistoryQuery();
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/grants', $api->getHistoryUrl() );
-        $this->assertContains( 'page=1', $api->getHistoryQuery() );
-        $this->assertContains( 'per_page=5', $api->getHistoryQuery() );
+
+        $this->assertStringContainsString( 'page=1', $query );
+        $this->assertStringContainsString( 'per_page=5', $query );
 
         $page     = 2;
         $per_page = null;
         $api->call()->grants()->getAll($page, $per_page);
+        $query = $api->getHistoryQuery();
 
-        $this->assertContains( 'page=2', $api->getHistoryQuery() );
-        $this->assertNotContains( 'per_page=', $api->getHistoryQuery() );
+        $this->assertStringContainsString( 'page=2', $query );
+        $this->assertStringNotContainsString( 'per_page=', $query );
 
         $page     = false;
         $per_page = false;
@@ -107,8 +110,10 @@ class GrantsTestMocked extends TestCase
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/grants', $api->getHistoryUrl() );
-        $this->assertContains( 'param1=value1', $api->getHistoryQuery() );
-        $this->assertContains( 'param2=value2', $api->getHistoryQuery() );
+
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'param1=value1', $query );
+        $this->assertStringContainsString( 'param2=value2', $query );
     }
 
     /**
@@ -141,8 +146,9 @@ class GrantsTestMocked extends TestCase
 
         $api->call()->grants()->getByClientId('__test_client_id__', 1, 2);
 
-        $this->assertContains( 'page=1', $api->getHistoryQuery() );
-        $this->assertContains( 'per_page=2', $api->getHistoryQuery() );
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'page=1', $query );
+        $this->assertStringContainsString( 'per_page=2', $query );
     }
 
     /**
@@ -205,8 +211,9 @@ class GrantsTestMocked extends TestCase
 
         $api->call()->grants()->getByAudience('__test_audience__', 1, 2);
 
-        $this->assertContains( 'page=1', $api->getHistoryQuery() );
-        $this->assertContains( 'per_page=2', $api->getHistoryQuery() );
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'page=1', $query );
+        $this->assertStringContainsString( 'per_page=2', $query );
     }
 
     /**
@@ -269,8 +276,9 @@ class GrantsTestMocked extends TestCase
 
         $api->call()->grants()->getByUserId('__test_user_id__', 1, 2);
 
-        $this->assertContains( 'page=1', $api->getHistoryQuery() );
-        $this->assertContains( 'per_page=2', $api->getHistoryQuery() );
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'page=1', $query );
+        $this->assertStringContainsString( 'per_page=2', $query );
     }
 
     /**

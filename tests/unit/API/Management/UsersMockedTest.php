@@ -36,7 +36,7 @@ class UsersMockedTest extends TestCase
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
@@ -112,7 +112,7 @@ class UsersMockedTest extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "connection" field', $exception_message );
+        $this->assertStringContainsString( 'Missing required "connection" field', $exception_message );
     }
 
     public function testThatExceptionIsThrownWhenSmsConnectionHasNoPhoneNumber()
@@ -126,7 +126,7 @@ class UsersMockedTest extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "phone_number" field for sms connection', $exception_message );
+        $this->assertStringContainsString( 'Missing required "phone_number" field for sms connection', $exception_message );
     }
 
     public function testThatExceptionIsThrownWhenConnectionHasNoEmailAddress()
@@ -140,7 +140,7 @@ class UsersMockedTest extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "email" field', $exception_message );
+        $this->assertStringContainsString( 'Missing required "email" field', $exception_message );
     }
 
     public function testThatExceptionIsThrownWhenDbConnectionHasNoPassword()
@@ -154,7 +154,7 @@ class UsersMockedTest extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "password" field for "auth0" connection', $exception_message );
+        $this->assertStringContainsString( 'Missing required "password" field for "auth0" connection', $exception_message );
     }
 
     /**
@@ -285,8 +285,8 @@ class UsersMockedTest extends TestCase
         $api->call()->users()->getAll( [], [ 'field3', 'field4' ], true );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'fields=field3,field4', $query );
-        $this->assertContains( 'include_fields=true', $query );
+        $this->assertStringContainsString( 'fields=field3,field4', $query );
+        $this->assertStringContainsString( 'include_fields=true', $query );
     }
 
     /**
@@ -303,8 +303,8 @@ class UsersMockedTest extends TestCase
         $api->call()->users()->getAll( [ 'include_fields' => false ], [ 'field3' ], true );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'fields=field3', $query );
-        $this->assertContains( 'include_fields=false', $query );
+        $this->assertStringContainsString( 'fields=field3', $query );
+        $this->assertStringContainsString( 'include_fields=false', $query );
     }
 
     /**
@@ -321,8 +321,8 @@ class UsersMockedTest extends TestCase
         $api->call()->users()->getAll( [], [ 'field3' ], uniqid() );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'fields=field3', $query );
-        $this->assertContains( 'include_fields=true', $query );
+        $this->assertStringContainsString( 'fields=field3', $query );
+        $this->assertStringContainsString( 'include_fields=true', $query );
     }
 
     /**
@@ -342,12 +342,12 @@ class UsersMockedTest extends TestCase
         $api->call()->users()->getAll( [], [], null, 10 );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'page=10', $query );
+        $this->assertStringContainsString( 'page=10', $query );
 
         $api->call()->users()->getAll( [], [], null, -10 );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'page=10', $query );
+        $this->assertStringContainsString( 'page=10', $query );
     }
 
     /**
@@ -364,7 +364,7 @@ class UsersMockedTest extends TestCase
         $api->call()->users()->getAll( [ 'page' => 11 ], [], null, 22 );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'page=11', $query );
+        $this->assertStringContainsString( 'page=11', $query );
     }
 
     /**
@@ -384,12 +384,12 @@ class UsersMockedTest extends TestCase
         $api->call()->users()->getAll( [], [], null, null, 10 );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'per_page=10', $query );
+        $this->assertStringContainsString( 'per_page=10', $query );
 
         $api->call()->users()->getAll( [], [], null, null, -10 );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'per_page=10', $query );
+        $this->assertStringContainsString( 'per_page=10', $query );
     }
 
     /**
@@ -406,7 +406,7 @@ class UsersMockedTest extends TestCase
         $api->call()->users()->getAll( [ 'per_page' => 8 ], [], null, null, 9 );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'per_page=8', $query );
+        $this->assertStringContainsString( 'per_page=8', $query );
     }
 
     /**
@@ -537,7 +537,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -560,9 +560,9 @@ class UsersMockedTest extends TestCase
         );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'per_page=5', $query );
-        $this->assertContains( 'page=1', $query );
-        $this->assertContains( 'include_totals=true', $query );
+        $this->assertStringContainsString( 'per_page=5', $query );
+        $this->assertStringContainsString( 'page=1', $query );
+        $this->assertStringContainsString( 'include_totals=true', $query );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -587,7 +587,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -608,7 +608,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid roles', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid roles', $caught_message );
     }
 
     /**
@@ -659,7 +659,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -680,7 +680,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid roles', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid roles', $caught_message );
     }
 
     /**
@@ -731,7 +731,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -776,7 +776,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -802,9 +802,9 @@ class UsersMockedTest extends TestCase
         );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'per_page=3', $query );
-        $this->assertContains( 'page=2', $query );
-        $this->assertContains( 'include_totals=false', $query );
+        $this->assertStringContainsString( 'per_page=3', $query );
+        $this->assertStringContainsString( 'page=2', $query );
+        $this->assertStringContainsString( 'include_totals=false', $query );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -829,7 +829,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -912,7 +912,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -995,7 +995,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -1021,10 +1021,10 @@ class UsersMockedTest extends TestCase
         );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'per_page=3', $query );
-        $this->assertContains( 'page=2', $query );
-        $this->assertContains( 'include_totals=false', $query );
-        $this->assertContains( 'fields=date,type,ip', $query );
+        $this->assertStringContainsString( 'per_page=3', $query );
+        $this->assertStringContainsString( 'page=2', $query );
+        $this->assertStringContainsString( 'include_totals=false', $query );
+        $this->assertStringContainsString( 'fields=date,type,ip', $query );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -1049,7 +1049,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**
@@ -1095,7 +1095,7 @@ class UsersMockedTest extends TestCase
             $caught_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid user_id', $caught_message );
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
     }
 
     /**

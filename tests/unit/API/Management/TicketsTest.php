@@ -28,7 +28,7 @@ class TicketsTest extends ApiTests
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $infoHeadersData               = new InformationHeaders;
         $infoHeadersData->setCorePackage();

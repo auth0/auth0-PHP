@@ -8,14 +8,14 @@ class Tickets extends GenericResource
 {
     /**
      *
-     * @param  string      $user_id
-     * @param  null|string $result_url
-     * @param array  $params  Array of optional parameters to add.
-     *      - ttl_sec: Number of seconds for which the ticket is valid before expiration. If unspecified or set to 0, this value defaults to 432000 seconds (5 days).
-     *      - includeEmailInRedirect: Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
-     *      - identity:  The optional identity of the user, as an array. Required to verify primary identities when using social, enterprise, or passwordless connections. It is also required to verify secondary identities.
-     *              - user_id: User ID of the identity to be verified. Must be a non-empty string.
-     *              - provider: Identity provider name of the identity (e.g. google-oauth2). Must be a non-empty string.
+     * @param string      $user_id
+     * @param null|string $result_url
+     * @param array       $params     Array of optional parameters to add.
+     *              - ttl_sec: Number of seconds for which the ticket is valid before expiration. If unspecified or set to 0, this value defaults to 432000 seconds (5 days).
+     *              - includeEmailInRedirect: Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
+     *              - identity:  The optional identity of the user, as an array. Required to verify primary identities when using social, enterprise, or passwordless connections. It is also required to verify secondary identities.
+     *                      - user_id: User ID of the identity to be verified. Must be a non-empty string.
+     *                      - provider: Identity provider name of the identity (e.g. google-oauth2). Must be a non-empty string.
      *
      * @throws EmptyOrInvalidParameterException Thrown if any required parameters are empty or invalid.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
@@ -32,12 +32,14 @@ class Tickets extends GenericResource
         }
 
         if (! empty( $params['identity'] )) {
-            if ( empty( $params['identity']['user_id']) || ! is_string($params['identity']['user_id']) ) {
+            if (empty( $params['identity']['user_id']) || ! is_string($params['identity']['user_id'])) {
                 throw new EmptyOrInvalidParameterException('Missing required "user_id" field of the "identity" object.');
             }
-            if ( empty( $params['identity']['provider'] ) || ! is_string($params['identity']['provider']) ) {
+
+            if (empty( $params['identity']['provider'] ) || ! is_string($params['identity']['provider'])) {
                 throw new EmptyOrInvalidParameterException('Missing required "provider" field of the "identity" object.');
             }
+
             $body['identity'] = $params['identity'];
         }
 
@@ -69,10 +71,10 @@ class Tickets extends GenericResource
 
     /**
      *
-     * @param  string      $email
-     * @param  null|string $new_password
-     * @param  null|string $result_url
-     * @param  null|string $connection_id
+     * @param  string       $email
+     * @param  null|string  $new_password
+     * @param  null|string  $result_url
+     * @param  null|string  $connection_id
      * @param  null|integer $ttl
      * @return mixed
      */
@@ -89,11 +91,11 @@ class Tickets extends GenericResource
 
     /**
      *
-     * @param  null|string $user_id
-     * @param  null|string $email
-     * @param  null|string $new_password
-     * @param  null|string $result_url
-     * @param  null|string $connection_id
+     * @param  null|string  $user_id
+     * @param  null|string  $email
+     * @param  null|string  $new_password
+     * @param  null|string  $result_url
+     * @param  null|string  $connection_id
      * @param  null|integer $ttl
      * @return mixed
      */

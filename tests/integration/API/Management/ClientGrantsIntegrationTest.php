@@ -42,7 +42,7 @@ class ClientGrantsIntegrationTest extends ApiTests
      * @throws \Auth0\SDK\Exception\ApiException
      * @throws \Exception
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::getEnv();
         $api       = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
@@ -59,7 +59,7 @@ class ClientGrantsIntegrationTest extends ApiTests
         usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
@@ -68,7 +68,7 @@ class ClientGrantsIntegrationTest extends ApiTests
      * @throws CoreException
      * @throws \Exception
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
         $api = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
