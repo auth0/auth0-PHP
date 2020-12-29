@@ -32,7 +32,8 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
     "cache/adapter-common": "^1.2",
     "cache/hierarchical-cache": "^1.1",
-    "cache/array-adapter": "^1.1"
+    "cache/array-adapter": "^1.1",
+    "phpstan/phpstan": "^0.12.64"
   },
   "autoload": {
     "psr-4": {
@@ -51,12 +52,14 @@
     "test-unit-ci": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml --testsuite=unit",
     "test-integration": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text --testsuite=integration",
     "test-integration-ci": "\"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml --testsuite=integration",
+    "static-analysis": "@php ./vendor/bin/phpstan analyze",
     "compat": "@php ./vendor/bin/phpcs --standard=.phpcs-compat.xml.dist",
     "format": "@php ./vendor/bin/phpcbf",
     "lint": "@php ./vendor/bin/phpcs",
     "sniffs": "\"vendor/bin/phpcs\" -e",
     "config-phpcs": "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
     "pre-commit": [
+      "@static-analysis",
       "@test",
       "@format",
       "@compat"
