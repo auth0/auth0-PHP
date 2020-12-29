@@ -68,14 +68,14 @@ class JWKFetcherTest extends TestCase
 
         $jwks_formatted_1 = $jwks->call()->getKeys( '__test_url__' );
         $this->assertArrayHasKey( 'abc', $jwks_formatted_1 );
-        $this->assertContains( '123', $jwks_formatted_1['abc'] );
+        $this->assertStringContainsString( '123', $jwks_formatted_1['abc'] );
 
         $jwks_formatted_2 = $jwks->call()->getKeys( '__test_url__' );
         $this->assertEquals( $jwks_formatted_1, $jwks_formatted_2 );
 
         $jwks_formatted_2 = $jwks->call()->getKeys( '__test_url_2__' );
         $this->assertArrayHasKey( 'def', $jwks_formatted_2 );
-        $this->assertContains( '456', $jwks_formatted_2['def'] );
+        $this->assertStringContainsString( '456', $jwks_formatted_2['def'] );
     }
 
     public function testThatGetKeyBreaksCache()
@@ -136,7 +136,7 @@ class JWKFetcherTest extends TestCase
 
         $cache->set(md5('__test_jwks_url__'), ['__test_kid_1__' => '__test_x5c_1__']);
 
-        $this->assertContains('__test_x5c_2__', $jwks->call()->getKey('__test_kid_2__'));
+        $this->assertStringContainsString('__test_x5c_2__', $jwks->call()->getKey('__test_kid_2__'));
     }
 
     public function testThatEmptyUrlReturnsEmptyKeys() {
@@ -186,7 +186,7 @@ class JWKFetcherTest extends TestCase
         $this->assertEquals(null, $jwks->call()->getKey('__test_missing_kid__'));
 
         // Requesting a valid kid MUST return an ARRAY containing the x5c
-        $this->assertContains('__x5c_1__', $jwks->call()->getKey('__kid_1__'));
+        $this->assertStringContainsString('__x5c_1__', $jwks->call()->getKey('__kid_1__'));
 
         // Pulling directly from cache will return same results as getKeys()
         $this->assertArrayHasKey('__kid_1__', $jwks->call()->getCacheEntry('__test_jwks_url__'));

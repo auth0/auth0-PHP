@@ -15,7 +15,7 @@ class PKCE
      * letters, numbers and "-", ".", "_", "~", as defined in the RFC 7636
      * specification.
      *
-     * @param int $length Code verifier length
+     * @param integer $length Code verifier length
      *
      * @return string
      *

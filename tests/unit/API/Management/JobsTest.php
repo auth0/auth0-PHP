@@ -35,7 +35,7 @@ class JobsTest extends ApiTests
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$testImportUsersJsonPath = AUTH0_PHP_TEST_JSON_DIR.'test-import-users-file.json';
         $infoHeadersData               = new InformationHeaders;
@@ -107,8 +107,8 @@ class JobsTest extends ApiTests
 
         // Test that the form data contains our import file content.
         $import_content = file_get_contents( self::$testImportUsersJsonPath );
-        $this->assertContains( 'name="users"; filename="test-import-users-file.json"', $form_body );
-        $this->assertContains( $import_content, $form_body );
+        $this->assertStringContainsString( 'name="users"; filename="test-import-users-file.json"', $form_body );
+        $this->assertStringContainsString( $import_content, $form_body );
 
         $conn_id_key = array_search( 'Content-Disposition: form-data; name="connection_id"', $form_body_arr );
         $this->assertNotEmpty( $conn_id_key );

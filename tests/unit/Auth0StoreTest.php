@@ -32,7 +32,7 @@ class Auth0StoreTest extends TestCase
     /**
      * Runs after each test completes.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ class Auth0StoreTest extends TestCase
     /**
      * Runs after each test completes.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $_GET     = [];

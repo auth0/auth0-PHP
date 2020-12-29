@@ -28,7 +28,7 @@ class LogStreamsTest extends ApiTests
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
@@ -74,7 +74,7 @@ class LogStreamsTest extends ApiTests
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid log_stream_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid log_stream_id', $exception_message );
     }
 
     public function testThatCreateLogStreamRequestIsFormedCorrectly()
@@ -123,7 +123,7 @@ class LogStreamsTest extends ApiTests
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "data" parameter', $exception_message );
+        $this->assertStringContainsString( 'Missing required "data" parameter', $exception_message );
     }
 
     public function testThatCreateLogStreamRequestWithEmptyTypeThrowsException()
@@ -145,7 +145,7 @@ class LogStreamsTest extends ApiTests
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "type" field', $exception_message );
+        $this->assertStringContainsString( 'Missing required "type" field', $exception_message );
     }
 
     public function testThatCreateLogStreamRequestWithMissingSinkThrowsException()
@@ -162,7 +162,7 @@ class LogStreamsTest extends ApiTests
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "sink" field', $exception_message );
+        $this->assertStringContainsString( 'Missing required "sink" field', $exception_message );
     }
 
     public function testThatCreateLogStreamRequestWithEmptySinkThrowsException()
@@ -180,7 +180,7 @@ class LogStreamsTest extends ApiTests
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "sink" field', $exception_message );
+        $this->assertStringContainsString( 'Missing required "sink" field', $exception_message );
     }
 
     public function testThatUpdateLogStreamRequestIsFormedCorrectly()
@@ -215,7 +215,7 @@ class LogStreamsTest extends ApiTests
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "log_stream_id" field', $exception_message );
+        $this->assertStringContainsString( 'Missing required "log_stream_id" field', $exception_message );
     }
 
     public function testThatDeleteLogStreamRequestIsFormedCorrectly()
@@ -244,6 +244,6 @@ class LogStreamsTest extends ApiTests
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Missing required "log_stream_id" field', $exception_message );
+        $this->assertStringContainsString( 'Missing required "log_stream_id" field', $exception_message );
     }
 }

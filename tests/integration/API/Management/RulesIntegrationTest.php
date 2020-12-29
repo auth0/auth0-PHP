@@ -28,7 +28,7 @@ class RulesIntegrationTest extends ApiTests
      *
      * @throws \Auth0\SDK\Exception\ApiException
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::getEnv();
     }

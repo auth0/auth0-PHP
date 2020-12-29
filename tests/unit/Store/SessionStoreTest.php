@@ -45,7 +45,7 @@ class SessionStoreTest extends TestCase
      *
      * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$sessionStore = new SessionStore();
         self::$sessionKey   = 'auth0__'.self::TEST_KEY;

@@ -34,8 +34,8 @@ use Psr\SimpleCache\CacheInterface;
  */
 class Auth0
 {
-    const TRANSIENT_STATE_KEY = 'state';
-    const TRANSIENT_NONCE_KEY = 'nonce';
+    const TRANSIENT_STATE_KEY         = 'state';
+    const TRANSIENT_NONCE_KEY         = 'nonce';
     const TRANSIENT_CODE_VERIFIER_KEY = 'code_verifier';
 
     /**
@@ -172,12 +172,12 @@ class Auth0
      */
     protected $skipUserinfo;
 
-	/**
-	 * Enable Authorization Code Flow with Proof Key for Code Exchange (PKCE)
-	 *
-	 * @var boolean
-	 */
-	protected $enablePkce;
+    /**
+     * Enable Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+     *
+     * @var boolean
+     */
+    protected $enablePkce;
 
     /**
      * Algorithm used for ID token validation.
@@ -425,7 +425,7 @@ class Auth0
         }
 
         if ($this->enablePkce) {
-            $codeVerifier = PKCE::generateCodeVerifier(128);
+            $codeVerifier                  = PKCE::generateCodeVerifier(128);
             $auth_params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
             // The PKCE spec defines two methods, S256 and plain, the former is
             // the only one supported by Auth0 since the latter is discouraged.
@@ -541,7 +541,7 @@ class Auth0
         $code_verifier = null;
         if ($this->enablePkce) {
             $code_verifier = $this->transientHandler->getOnce(self::TRANSIENT_CODE_VERIFIER_KEY);
-            if (!$code_verifier) {
+            if (! $code_verifier) {
                 throw new CoreException('Missing code_verifier');
             }
         }

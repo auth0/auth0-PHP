@@ -10,7 +10,8 @@ use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
  *
  * @package Auth0\SDK\API\Management
  */
-class LogStreams extends GenericResource {
+class LogStreams extends GenericResource
+{
 
     private const LOG_STREAMS_PATH = 'log-streams';
 
@@ -57,9 +58,9 @@ class LogStreams extends GenericResource {
      * Required scope: "create:log_streams"
      *
      * @param array $data Log Stream data to create:
-     *      - "name" if not specified, a name of the Log Stream will be assigned by the Log Stream endpoint.
-     *      - "type" field is required.
-     *      - "sink" field is required. It's value and requirements depends upon the type of Log Stream to create; see the linked documentation below.
+     *                    "name" if not specified, a name of the Log Stream will be assigned by the Log Stream endpoint.
+     *                    "type" field is required.
+     *                    "sink" field is required. It's value and requirements depends upon the type of Log Stream to create; see the linked documentation below.
      *
      * @return mixed
      *
@@ -93,7 +94,7 @@ class LogStreams extends GenericResource {
      * Required scope: "update:log_streams"
      *
      * @param string $log_stream_id the ID of the Log Stream to update.
-     * @param array  $data Log Stream data to update. Only certain fields are update-able; see the documentation linked below.
+     * @param array  $data          Log Stream data to update. Only certain fields are update-able; see the documentation linked below.
      *
      * @return mixed
      *
