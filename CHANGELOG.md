@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## [7.6.0](https://github.com/auth0/auth0-PHP/tree/7.6.0) (2021-01-01)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.5.0...7.6.0)
+
+SDK 7.6 introduces support for [the newly released PHP 8.0](https://www.php.net/releases/8.0/en.php) and drops supported for PHP 7.1 and 7.2 (which have reached their end of support cycles.) Please ensure you are running [supported versions of PHP](https://www.php.net/supported-versions.php) in your environments.
+
+**Added**
+
+- PHP 8.0 support [\#467](https://github.com/auth0/auth0-PHP/pull/467) ([evansims](https://github.com/evansims))
+- Static code analysis [#470](https://github.com/auth0/auth0-PHP/pull/470) ([FrontEndCoffee](https://github.com/FrontEndCoffee))
+
 ## [7.5.0](https://github.com/auth0/auth0-PHP/tree/7.5.0) (2020-11-16)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.4.0...7.5.0)
