@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [7.6.1](https://github.com/auth0/auth0-PHP/tree/7.6.0) (2021-01-01)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.0...7.6.1)
+
+This hotfix addresses an issue with a dependency reference.
+
 ## [7.6.0](https://github.com/auth0/auth0-PHP/tree/7.6.0) (2021-01-01)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.5.0...7.6.0)

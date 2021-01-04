@@ -10,18 +10,12 @@
       "homepage": "http://www.auth0.com/"
     }
   ],
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/auth0/php-jwt.git"
-    }
-  ],
   "require": {
     "php": "^7.3 | ^8.0",
     "ext-json": "*",
     "ext-openssl": "*",
+    "auth0/php-jwt": "3.3.4",
     "guzzlehttp/guzzle": "^7.2",
-    "lcobucci/jwt": "dev-3.3-php8-compatibility#daa6aff67a22bf737504143ae55a6913d9ff484d",
     "psr/simple-cache": "^1.0"
   },
   "require-dev": {
