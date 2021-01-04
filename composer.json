@@ -10,12 +10,6 @@
       "homepage": "http://www.auth0.com/"
     }
   ],
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/auth0/php-jwt.git"
-    }
-  ],
   "require": {
     "php": "^7.3 | ^8.0",
     "ext-json": "*",
