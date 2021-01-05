@@ -113,7 +113,7 @@ if (! empty($results)) {
 }
 ```
 
-The best way to see what endpoints are covered is to read through the `\Auth0\SDK\API\Management` constructor method.
+At the moment the best way to see what endpoints are covered is to read through the `\Auth0\SDK\API\Management` class, [available here](https://github.com/auth0/auth0-PHP/blob/update-readme/src/API/Management.php).
 
 ## Contributing
 
