@@ -69,9 +69,9 @@ Using the SDK, making requests to Auth0's endpoints couldn't be simpler. For exa
 ```php
 // Do we have an authenticated session available?
 if ($userinfo = $auth0->getUser()) {
-	// Output the authenticated user
-	var_dump($userinfo);
-	exit;
+  // Output the authenticated user
+  var_dump($userinfo);
+  exit;
 }
 
 // No session was available, so redirect to Universal Login page
