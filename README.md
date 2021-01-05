@@ -20,7 +20,7 @@ This is [one of many libraries we offer](https://auth0.com/docs/libraries) suppo
 
 - [Documentation](https://auth0.com/docs/libraries/auth0-php)
   - [Installation](https://auth0.com/docs/libraries/auth0-php#installation)
-  - [Getting Started](https://auth0.com/docs/libraries/auth0-php#installation)
+  - [Getting Started](https://auth0.com/docs/libraries/auth0-php#getting-started)
   - [Basic Usage](https://auth0.com/docs/libraries/auth0-php/auth0-php-basic-use)
   - [Authentication API](https://auth0.com/docs/libraries/auth0-php/using-the-authentication-api-with-auth0-php)
   - [Management API](https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php)
@@ -82,14 +82,14 @@ Further examples of how you can use the Authentication API Client can be found o
 
 ### Management API Client
 
-This SDK also offers an interface for Auth0's Management API, using a management access token.
+This SDK also offers an interface for Auth0's Management API which, in order to access, requires an Access Token that is issued specifically for your tenant's Management API by specifying the corresponding Audience.
 
-Management access tokens can be generated using the `getManagementAccessToken` method and the Authentication API, please review our [documentation](https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php) for guidance.
+The process for retrieving such an Access Token is described in our [documentation](https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php).
 
 ```php
 use Auth0\SDK\API\Management;
 
-$mgmt_api = new Management('{{YOUR_MANAGEMENT_ACCESS_TOKEN}}', 'https://{{YOUR_TENANT}}.auth0.com');
+$mgmt_api = new Management('{{YOUR_ACCESS_TOKEN}}', 'https://{{YOUR_TENANT}}.auth0.com');
 ```
 
 The SDK provides convenient interfaces to the Management API's endpoints. For example, to search for users:
@@ -113,7 +113,7 @@ if (! empty($results)) {
 }
 ```
 
-At the moment the best way to see what endpoints are covered is to read through the `\Auth0\SDK\API\Management` class, [available here](https://github.com/auth0/auth0-PHP/blob/update-readme/src/API/Management.php).
+At the moment the best way to see what endpoints are covered is to read through the `\Auth0\SDK\API\Management` class, [available here](https://github.com/auth0/auth0-PHP/blob/master/src/API/Management.php).
 
 ## Contributing
 
@@ -139,10 +139,10 @@ Please do not report security vulnerabilities on the public GitHub issue tracker
 
 Auth0 helps you to:
 
-- Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
+- Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like Google, Facebook, Microsoft, LinkedIn, GitHub, Twitter, Box, Salesforce (amongst others), or enterprise identity systems like Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider.
 - Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
-- Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
-- Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
+- Add support for [passwordless](https://auth0.com/passwordless) and [multi-factor authentication](https://auth0.com/docs/mfa).
+- Add support for [linking different user accounts](https://docs.auth0.com/link-accounts) with the same user.
 - Analytics of how, when and where users are logging in.
 - Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
 
