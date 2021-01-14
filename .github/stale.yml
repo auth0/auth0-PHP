@@ -5,12 +5,10 @@ daysUntilStale: 120
 
 # Number of days of inactivity before an Issue or Pull Request with the stale label is closed.
 daysUntilClose: 21
-
-# Issues or Pull Requests with these labels will never be considered stale. Set to `[]` to disable
-exemptLabels:
-  - no-stalebot
-  - enhancement
-  - work in progress
+  
+# Only issues or pull requests with all of these labels are check if stale. Defaults to `[]` (disabled)
+onlyLabels:
+  - 'Waiting for Response'
 
 # Set to true to ignore issues with an assignee (defaults to false)
 exemptAssignees: true
