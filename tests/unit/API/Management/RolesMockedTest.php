@@ -529,7 +529,10 @@ class RolesTestMocked extends TestCase
      */
     public function testThatGetUsersRequestIsFormattedProperly()
     {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [
+            new Response( 200, self::$headers ),
+            new Response( 200, self::$headers )
+        ] );
 
         $api->call()->roles()->getUsers( '__test_role_id__', [ 'per_page' => 6, 'include_totals' => 1 ] );
 
