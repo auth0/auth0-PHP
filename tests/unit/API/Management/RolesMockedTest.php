@@ -543,9 +543,15 @@ class RolesTestMocked extends TestCase
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
-        $query = $api->getHistoryQuery();
-        $this->assertStringContainsString( 'page=6', $query );
-        $this->assertStringContainsString( 'include_totals=true', $query );
+        $query = '&' . $api->getHistoryQuery();
+        $this->assertStringContainsString( '&per_page=6', $query );
+        $this->assertStringContainsString( '&include_totals=true', $query );
+
+        $api->call()->roles()->getUsers( '__test_role_id__', [ 'per_page' => 12 ] );
+
+        $query = '&' . $api->getHistoryQuery();
+        $this->assertStringContainsString( '&per_page=12', $query );
+        $this->assertStringContainsString( '&include_totals=false', $query );
     }
 
     /**

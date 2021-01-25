@@ -205,7 +205,10 @@ class UsersMockedTest extends TestCase
         $api->call()->users()->getAll();
 
         $this->assertEquals( 'GET', $api->getHistoryMethod() );
-        $this->assertEquals( 'https://api.test.local/api/v2/users', $api->getHistoryUrl() );
+        $this->assertStringStartsWith( 'https://api.test.local/api/v2/users', $api->getHistoryUrl() );
+
+        $query = '&'.$api->getHistoryQuery();
+        $this->assertStringContainsString( '&include_totals=false', $query );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -225,8 +228,8 @@ class UsersMockedTest extends TestCase
 
         $api->call()->users()->getAll( [ '__test_parameter__' => '__test_value__' ] );
 
-        $query = $api->getHistoryQuery();
-        $this->assertEquals( '__test_parameter__=__test_value__', $query );
+        $query = '&'.$api->getHistoryQuery();
+        $this->assertStringContainsString( '&__test_parameter__=__test_value__', $query );
     }
 
     /**
@@ -242,8 +245,8 @@ class UsersMockedTest extends TestCase
 
         $api->call()->users()->getAll( [ 'fields' => 'field1,field2' ], 'field3' );
 
-        $query = $api->getHistoryQuery();
-        $this->assertEquals( 'fields=field1,field2', $query );
+        $query = '&'.$api->getHistoryQuery();
+        $this->assertStringContainsString( '&fields=field1,field2', $query );
     }
 
     /**
@@ -262,13 +265,13 @@ class UsersMockedTest extends TestCase
 
         $api->call()->users()->getAll( [ 'fields' => 'field1,field2' ] );
 
-        $query = $api->getHistoryQuery();
-        $this->assertEquals( 'fields=field1,field2', $query );
+        $query = '&'.$api->getHistoryQuery();
+        $this->assertStringContainsString( '&fields=field1,field2', $query );
 
         $api->call()->users()->getAll( [ 'fields' => [ 'field1', 'field2' ] ] );
 
-        $query = $api->getHistoryQuery();
-        $this->assertEquals( 'fields=field1,field2', $query );
+        $query = '&'.$api->getHistoryQuery();
+        $this->assertStringContainsString( '&fields=field1,field2', $query );
     }
 
     /**
