@@ -28,8 +28,11 @@ class Roles extends GenericResource
      */
     public function getAll(array $params = [])
     {
+        $params = $this->normalizePagination( $params );
+        $params = $this->normalizeIncludeTotals( $params );
+
         return $this->apiClient->method('get')
-            ->withDictParams($this->normalizePagination( $params ))
+            ->withDictParams($params)
             ->addPath('roles')
             ->call();
     }
