@@ -142,6 +142,7 @@ class Users extends GenericResource
         }
 
         $params = $this->normalizePagination( $params, $page, $per_page );
+        $params = $this->normalizeIncludeTotals( $params );
 
         return $this->apiClient->method('get')
             ->addPath('users')
