@@ -1,6 +1,14 @@
 # CHANGELOG
 
-## [7.6.1](https://github.com/auth0/auth0-PHP/tree/7.6.0) (2021-01-01)
+## [7.6.2](https://github.com/auth0/auth0-PHP/tree/7.6.2) (2021-01-01)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.1...7.6.2)
+
+**Fixed**
+
+- Ensure ?include_totals are handled properly on GET /users and GET /roles requests for Management API [\#476](https://github.com/auth0/auth0-PHP/pull/476) ([evansims](https://github.com/evansims))
+
+## [7.6.1](https://github.com/auth0/auth0-PHP/tree/7.6.1) (2021-01-01)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.0...7.6.1)
 
