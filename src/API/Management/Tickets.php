@@ -3,7 +3,6 @@
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
-use GuzzleHttp\Exception\RequestException;
 
 class Tickets extends GenericResource
 {
