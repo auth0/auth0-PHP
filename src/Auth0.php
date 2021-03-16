@@ -97,7 +97,7 @@ class Auth0
      *
      * @var string
      */
-    protected $organizationId;
+    protected $organization;
 
     /**
      * Scope for ID tokens and /userinfo endpoint
@@ -285,7 +285,7 @@ class Auth0
             $this->clientSecret = self::urlSafeBase64Decode($this->clientSecret);
         }
 
-        $this->organizationId = $config['organization_id'] ?? $_ENV['AUTH0_ORGANIZATION_ID'] ?? null;
+        $this->organization = $config['organization'] ?? $_ENV['AUTH0_ORGANIZATION'] ?? null;
 
         $this->audience      = $config['audience'] ?? null;
         $this->responseMode  = $config['response_mode'] ?? 'query';
@@ -355,7 +355,7 @@ class Auth0
             $this->audience,
             $this->scope,
             $this->guzzleOptions,
-            $this->organizationId
+            $this->organization
         );
 
         $this->user         = $this->store->get('user');
@@ -702,7 +702,7 @@ class Auth0
         }
 
         $verifierOptions = $verifierOptions + [
-            'org_id' => $this->organizationId,
+            'org_id' => $this->organization,
             'leeway' => $this->idTokenLeeway,
             'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
             self::TRANSIENT_NONCE_KEY => $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY)

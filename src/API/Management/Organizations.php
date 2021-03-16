@@ -24,9 +24,10 @@ class Organizations extends GenericResource
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
     public function getAll(
-      array $params = []
-    ) {
-      return $this->apiClient->method('get')
+        array $params = []
+    )
+    {
+        return $this->apiClient->method('get')
         ->addPath('organizations')
         ->withDictParams($this->normalizeRequest($params))
         ->call();
@@ -36,7 +37,7 @@ class Organizations extends GenericResource
      * Get details about an organization, queried by it's ID.
      * Required scope: "read:organizations"
      *
-     * @param string $organizationId Organization (by ID) to retrieve details for.
+     * @param string $organization Organization (by ID) to retrieve details for.
      *
      * @return mixed
      *
@@ -45,10 +46,11 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function get(
-      string $organizationId
-    ) {
-      return $this->apiClient->method('get')
-        ->addPath('organizations', $organizationId)
+        string $organization
+    )
+    {
+        return $this->apiClient->method('get')
+        ->addPath('organizations', $organization)
         ->call();
     }
 
@@ -65,9 +67,10 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getByName(
-      string $organizationName
-    ) {
-      return $this->apiClient->method('get')
+        string $organizationName
+    )
+    {
+        return $this->apiClient->method('get')
         ->addPath('organizations', 'name', $organizationName)
         ->call();
     }
@@ -76,10 +79,10 @@ class Organizations extends GenericResource
      * Create an organization.
      * Required scope: "create:organizations"
      *
-     * @param string $name The name of the Organization. Cannot be changed later.
-     * @param string $displayName The displayed name of the Organization.
-     * @param array<string,mixed> $branding An array containing branding customizations for the organization.
-     * @param array<string,mixed> $metadata Optional. Additional metadata to store about the organization.
+     * @param string              $name                 The name of the Organization. Cannot be changed later.
+     * @param string              $displayName          The displayed name of the Organization.
+     * @param array<string,mixed> $branding             An array containing branding customizations for the organization.
+     * @param array<string,mixed> $metadata             Optional. Additional metadata to store about the organization.
      * @param array<string,mixed> $additionalParameters Optional. Additional parameters to send with the API request.
      *
      * @return mixed
@@ -89,22 +92,23 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function create(
-      string $name,
-      string $displayName,
-      array $branding,
-      array $metadata = [],
-      array $additionalParameters = []
-    ) {
-      $this->validateBranding($branding);
+        string $name,
+        string $displayName,
+        array $branding,
+        array $metadata = [],
+        array $additionalParameters = []
+    )
+    {
+        $this->validateBranding($branding);
 
-      $payload = [
-        'name'         => $name,
-        'display_name' => $displayName,
-        'branding'     => $branding,
-        'metadata'     => $metadata,
-      ] + $additionalParameters;
+        $payload = [
+            'name'         => $name,
+            'display_name' => $displayName,
+            'branding'     => $branding,
+            'metadata'     => $metadata,
+        ] + $additionalParameters;
 
-      return $this->apiClient->method('post')
+        return $this->apiClient->method('post')
         ->addPath('organizations')
         ->withBody(json_encode($payload))
         ->call();
@@ -114,10 +118,10 @@ class Organizations extends GenericResource
      * Update an organization.
      * Required scope: "update:organizations"
      *
-     * @param string $organizationId Organization (by ID) to update.
-     * @param string $displayName The displayed name of the Organization.
-     * @param array<string,mixed> $branding An array containing branding customizations for the organization.
-     * @param array<string,mixed> $metadata Optional. Additional metadata to store about the organization.
+     * @param string              $organization         Organization (by ID) to update.
+     * @param string              $displayName          The displayed name of the Organization.
+     * @param array<string,mixed> $branding             An array containing branding customizations for the organization.
+     * @param array<string,mixed> $metadata             Optional. Additional metadata to store about the organization.
      * @param array<string,mixed> $additionalParameters Optional. Additional parameters to send with the API request.
      *
      * @return mixed
@@ -127,23 +131,23 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function patch(
-      string $organizationId,
-      string $displayName,
-      array $branding,
-      array $metadata = [],
-      array $additionalParameters = []
+        string $organization,
+        string $displayName,
+        array $branding,
+        array $metadata = [],
+        array $additionalParameters = []
     )
     {
-      $this->validateBranding($branding);
+        $this->validateBranding($branding);
 
-      $payload = [
-        'display_name' => $displayName,
-        'branding'     => $branding,
-        'metadata'     => $metadata,
-      ] + $additionalParameters;
+        $payload = [
+            'display_name' => $displayName,
+            'branding'     => $branding,
+            'metadata'     => $metadata,
+        ] + $additionalParameters;
 
-      return $this->apiClient->method('patch')
-        ->addPath('organizations', $organizationId)
+        return $this->apiClient->method('patch')
+        ->addPath('organizations', $organization)
         ->withBody(json_encode($payload))
         ->call();
     }
@@ -152,7 +156,7 @@ class Organizations extends GenericResource
      * Delete an organization.
      * Required scope: "delete:organizations"
      *
-     * @param string $organizationId Organization (by ID) to delete.
+     * @param string $organization Organization (by ID) to delete.
      *
      * @return mixed
      *
@@ -161,11 +165,11 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function delete(
-      string $organizationId
+        string $organization
     )
     {
-      return $this->apiClient->method('delete')
-        ->addPath('organizations', $organizationId)
+        return $this->apiClient->method('delete')
+        ->addPath('organizations', $organization)
         ->call();
     }
 
@@ -173,8 +177,8 @@ class Organizations extends GenericResource
      * List the connections associated with an organization.
      * Required scope: "read:organization_connections"
      *
-     * @param string $organizationId Organization (by ID) to list connections of.
-     * @param array<string,mixed> $params Optional. Additional options to include with the request, such as pagination or filtering parameters.
+     * @param string              $organization Organization (by ID) to list connections of.
+     * @param array<string,mixed> $params       Optional. Additional options to include with the request, such as pagination or filtering parameters.
      *
      * @return mixed
      *
@@ -183,11 +187,12 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getConnections(
-      string $organizationId,
-      array $params = []
-    ) {
-      return $this->apiClient->method('get')
-        ->addPath('organizations', $organizationId, 'connections')
+        string $organization,
+        array $params = []
+    )
+    {
+        return $this->apiClient->method('get')
+        ->addPath('organizations', $organization, 'connections')
         ->withDictParams($this->normalizeRequest($params))
         ->call();
     }
@@ -196,8 +201,8 @@ class Organizations extends GenericResource
      * Add a connection to an organization.
      * Required scope: "create:organization_connections"
      *
-     * @param string $organizationId Organization (by ID) to add a connection to.
-     * @param string $connectionId Connection (by ID) to add to organization.
+     * @param string $organization Organization (by ID) to add a connection to.
+     * @param string $connection   Connection (by ID) to add to organization.
      *
      * @return mixed
      *
@@ -206,11 +211,12 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addConnection(
-      string $organizationId,
-      string $connectionId
-    ) {
-      return $this->apiClient->method('post')
-        ->addPath('organizations', $organizationId, 'connections', $connectionId)
+        string $organization,
+        string $connection
+    )
+    {
+        return $this->apiClient->method('post')
+        ->addPath('organizations', $organization, 'connections', $connection)
         ->call();
     }
 
@@ -218,8 +224,8 @@ class Organizations extends GenericResource
      * Remove a connection from an organization.
      * Required scope: "delete:organization_connections"
      *
-     * @param string $organizationId Organization (by ID) to remove connection from.
-     * @param string $connectionId Connection (by ID) to remove from organization.
+     * @param string $organization Organization (by ID) to remove connection from.
+     * @param string $connection   Connection (by ID) to remove from organization.
      *
      * @return mixed
      *
@@ -228,11 +234,12 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeConnection(
-      string $organizationId,
-      string $connectionId
-    ) {
-      return $this->apiClient->method('delete')
-        ->addPath('organizations', $organizationId, 'connections', $connectionId)
+        string $organization,
+        string $connection
+    )
+    {
+        return $this->apiClient->method('delete')
+        ->addPath('organizations', $organization, 'connections', $connection)
         ->call();
     }
 
@@ -240,8 +247,8 @@ class Organizations extends GenericResource
      * List the members (users) belonging to an organization
      * Required scope: "read:organization_members"
      *
-     * @param string $organizationId Organization (by ID) to list members of.
-     * @param array<string,mixed> $params Optional. Additional options to include with the request, such as pagination or filtering parameters.
+     * @param string              $organization Organization (by ID) to list members of.
+     * @param array<string,mixed> $params       Optional. Additional options to include with the request, such as pagination or filtering parameters.
      *
      * @return mixed
      *
@@ -250,11 +257,12 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getMembers(
-      string $organizationId,
-      array $params = []
-    ) {
-      return $this->apiClient->method('get')
-        ->addPath('organizations', $organizationId, 'members')
+        string $organization,
+        array $params = []
+    )
+    {
+        return $this->apiClient->method('get')
+        ->addPath('organizations', $organization, 'members')
         ->withDictParams($this->normalizeRequest($params))
         ->call();
     }
@@ -263,8 +271,8 @@ class Organizations extends GenericResource
      * Add a user to an organization as a member.
      * Required scope: "update:organization_members"
      *
-     * @param string $organizationId Organization (by ID) to add new members to.
-     * @param string $userId User (by ID) to add from the organization.
+     * @param string $organization Organization (by ID) to add new members to.
+     * @param string $user         User (by ID) to add from the organization.
      *
      * @return mixed
      *
@@ -273,18 +281,19 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addMember(
-      string $organizationId,
-      string $userId
-    ) {
-      return $this->addMembers($organizationId, [ $userId ]);
+        string $organization,
+        string $user
+    )
+    {
+        return $this->addMembers($organization, [ $user ]);
     }
 
     /**
      * Add one or more users to an organization as members.
      * Required scope: "update:organization_members"
      *
-     * @param string $organizationId Organization (by ID) to add new members to.
-     * @param array $userIds One or more users (by ID) to add from the organization.
+     * @param string $organization Organization (by ID) to add new members to.
+     * @param array  $users        One or more users (by ID) to add from the organization.
      *
      * @return mixed
      *
@@ -293,15 +302,16 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addMembers(
-      string $organizationId,
-      array $userIds
-    ) {
-      $payload = [
-        'members' => $userIds
-      ];
+        string $organization,
+        array $users
+    )
+    {
+        $payload = [
+            'members' => $users
+        ];
 
-      return $this->apiClient->method('post')
-        ->addPath('organizations', $organizationId, 'members')
+        return $this->apiClient->method('post')
+        ->addPath('organizations', $organization, 'members')
         ->withBody(json_encode($payload))
         ->call();
     }
@@ -310,8 +320,8 @@ class Organizations extends GenericResource
      * Remove a member (user) from an organization.
      * Required scope: "delete:organization_members"
      *
-     * @param string $organizationId Organization (by ID) user belongs to.
-     * @param string $userId User (by ID) to remove from the organization.
+     * @param string $organization Organization (by ID) user belongs to.
+     * @param string $user         User (by ID) to remove from the organization.
      *
      * @return mixed
      *
@@ -320,18 +330,19 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeMember(
-      string $organizationId,
-      string $userId
-    ) {
-      return $this->removeMembers($organizationId, [ $userId ]);
+        string $organization,
+        string $user
+    )
+    {
+        return $this->removeMembers($organization, [ $user ]);
     }
 
     /**
      * Remove one or more members (users) from an organization.
      * Required scope: "delete:organization_members"
      *
-     * @param string $organizationId Organization (by ID) users belong to.
-     * @param array $userIds One or more users (by ID) to remove from the organization.
+     * @param string $organization Organization (by ID) users belong to.
+     * @param array  $users        One or more users (by ID) to remove from the organization.
      *
      * @return mixed
      *
@@ -340,15 +351,16 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeMembers(
-      string $organizationId,
-      array $userIds
-    ) {
-      $payload = [
-        'members' => $userIds
-      ];
+        string $organization,
+        array $users
+    )
+    {
+        $payload = [
+            'members' => $users
+        ];
 
-      return $this->apiClient->method('delete')
-        ->addPath('organizations', $organizationId, 'members')
+        return $this->apiClient->method('delete')
+        ->addPath('organizations', $organization, 'members')
         ->withBody(json_encode($payload))
         ->call();
     }
@@ -357,9 +369,9 @@ class Organizations extends GenericResource
      * List the roles a member (user) in an organization currently has.
      * Required scope: "read:organization_member_roles"
      *
-     * @param string $organizationId Organization (by ID) user belongs to.
-     * @param string $userId User (by ID) to add role to.
-     * @param array<string,mixed> $params Optional. Additional options to include with the request, such as pagination or filtering parameters.
+     * @param string              $organization Organization (by ID) user belongs to.
+     * @param string              $user         User (by ID) to add role to.
+     * @param array<string,mixed> $params       Optional. Additional options to include with the request, such as pagination or filtering parameters.
      *
      * @return mixed
      *
@@ -368,12 +380,13 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getMemberRoles(
-      string $organizationId,
-      string $userId,
-      array $params = []
-    ) {
-      return $this->apiClient->method('get')
-        ->addPath('organizations', $organizationId, 'members', $userId)
+        string $organization,
+        string $user,
+        array $params = []
+    )
+    {
+        return $this->apiClient->method('get')
+        ->addPath('organizations', $organization, 'members', $user)
         ->withDictParams($this->normalizeRequest($params))
         ->call();
     }
@@ -382,9 +395,9 @@ class Organizations extends GenericResource
      * Add a role to a member (user) in an organization.
      * Required scope: "create:organization_member_roles"
      *
-     * @param string $organizationId Organization (by ID) user belongs to.
-     * @param string $userId User (by ID) to add role to.
-     * @param string $roleId Role (by ID) to add to the user.
+     * @param string $organization Organization (by ID) user belongs to.
+     * @param string $user         User (by ID) to add role to.
+     * @param string $role         Role (by ID) to add to the user.
      *
      * @return mixed
      *
@@ -393,20 +406,21 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addMemberRole(
-      string $organizationId,
-      string $userId,
-      string $roleId
-    ) {
-      return $this->addMemberRoles($organizationId, $userId, [ $roleId ]);
+        string $organization,
+        string $user,
+        string $role
+    )
+    {
+        return $this->addMemberRoles($organization, $user, [ $role ]);
     }
 
     /**
      * Add one or more roles to a member (user) in an organization.
      * Required scope: "create:organization_member_roles"
      *
-     * @param string $organizationId Organization (by ID) user belongs to.
-     * @param string $userId User (by ID) to add roles to.
-     * @param array $roleIds<string> One or more roles (by ID) to add to the user.
+     * @param string $organization  Organization (by ID) user belongs to.
+     * @param string $user          User (by ID) to add roles to.
+     * @param array  $roles<string> One or more roles (by ID) to add to the user.
      *
      * @return mixed
      *
@@ -415,16 +429,17 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addMemberRoles(
-      string $organizationId,
-      string $userId,
-      array $roleIds
-    ) {
-      $payload = [
-        'roles' => $roleIds
-      ];
+        string $organization,
+        string $user,
+        array $roles
+    )
+    {
+        $payload = [
+            'roles' => $roles
+        ];
 
-      return $this->apiClient->method('post')
-        ->addPath('organizations', $organizationId, 'members', $userId)
+        return $this->apiClient->method('post')
+        ->addPath('organizations', $organization, 'members', $user)
         ->withBody(json_encode($payload))
         ->call();
     }
@@ -433,9 +448,9 @@ class Organizations extends GenericResource
      * Remove a role from a member (user) in an organization.
      * Required scope: "delete:organization_member_roles"
      *
-     * @param string $organizationId Organization (by ID) user belongs to.
-     * @param string $userId User (by ID) to remove roles from.
-     * @param string $roleId Role (by ID) to remove from the user.
+     * @param string $organization Organization (by ID) user belongs to.
+     * @param string $user         User (by ID) to remove roles from.
+     * @param string $role         Role (by ID) to remove from the user.
      *
      * @return mixed
      *
@@ -444,20 +459,21 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeMemberRole(
-      string $organizationId,
-      string $userId,
-      string $roleId
-    ) {
-      return $this->removeMemberRoles($organizationId, $userId, [ $roleId ]);
+        string $organization,
+        string $user,
+        string $role
+    )
+    {
+        return $this->removeMemberRoles($organization, $user, [ $role ]);
     }
 
     /**
      * Remove one or more roles from a member (user) in an organization.
      * Required scope: "delete:organization_member_roles"
      *
-     * @param string $organizationId Organization (by ID) user belongs to.
-     * @param string $userId User (by ID) to remove roles from.
-     * @param array $roleIds<string> One or more roles (by ID) to remove from the user.
+     * @param string $organization  Organization (by ID) user belongs to.
+     * @param string $user          User (by ID) to remove roles from.
+     * @param array  $roles<string> One or more roles (by ID) to remove from the user.
      *
      * @return mixed
      *
@@ -466,16 +482,17 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeMemberRoles(
-      string $organizationId,
-      string $userId,
-      array $roleIds
-    ) {
-      $payload = [
-        'roles' => $roleIds
-      ];
+        string $organization,
+        string $user,
+        array $roles
+    )
+    {
+        $payload = [
+            'roles' => $roles
+        ];
 
-      return $this->apiClient->method('delete')
-        ->addPath('organizations', $organizationId, 'members', $userId)
+        return $this->apiClient->method('delete')
+        ->addPath('organizations', $organization, 'members', $user)
         ->withBody(json_encode($payload))
         ->call();
     }
@@ -490,9 +507,10 @@ class Organizations extends GenericResource
      * @throws EmptyOrInvalidParameterException When an improperly formatted branding customization is provided.
      */
     protected function validateBranding(
-      array $branding
-    ) {
-      // TODO
-      return true;
+        array $branding
+    )
+    {
+        // #TODO
+        return true;
     }
 }

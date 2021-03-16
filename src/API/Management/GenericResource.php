@@ -109,13 +109,13 @@ class GenericResource
      *
      * @param array              $params        Original parameters to normalize.
      * @param null|array<string> $fields        Optional. Array of fields names to include in the response.
-     * @param null|bool          $includeFields Optional. Whether to include (true) or exclude (false) the fields specified.
+     * @param null|boolean       $includeFields Optional. Whether to include (true) or exclude (false) the fields specified.
      *
      * @return array
      */
     protected function normalizeIncludeFields(array $params, ?array $fields = [], ?bool $includeFields = null)
     {
-        $fields = (null === $fields ? [] : $fields);
+        $fields           = (null === $fields ? [] : $fields);
         $params['fields'] = (isset($params['fields']) ? $params['fields'] : $fields);
 
         if (is_array($params['fields'])) {

@@ -52,13 +52,12 @@ class Authentication
      */
     private $audience;
 
-
     /**
      * Organization ID, if applicable.
      *
      * @var null|string
      */
-    private $organization_id;
+    private $organization;
 
     /**
      * Scopes to request during login.
@@ -101,16 +100,16 @@ class Authentication
         ?string $audience = null,
         ?string $scope = null,
         array $guzzleOptions = [],
-        ?string $organization_id = null
+        ?string $organization = null
     )
     {
-        $this->domain          = $domain;
-        $this->client_id       = $client_id;
-        $this->client_secret   = $client_secret;
-        $this->audience        = $audience;
-        $this->scope           = $scope;
-        $this->guzzleOptions   = $guzzleOptions;
-        $this->organization_id = $organization_id;
+        $this->domain        = $domain;
+        $this->client_id     = $client_id;
+        $this->client_secret = $client_secret;
+        $this->audience      = $audience;
+        $this->scope         = $scope;
+        $this->guzzleOptions = $guzzleOptions;
+        $this->organization  = $organization;
 
         $this->apiClient = new ApiClient( [
             'domain' => 'https://'.$this->domain,
@@ -148,7 +147,7 @@ class Authentication
         $params['state']         = $state ?? $params['state'] ?? null;
         $params['audience']      = $params['audience'] ?? $this->audience ?? null;
         $params['scope']         = $params['scope'] ?? $this->scope ?? null;
-        $params['organization']  = $params['organization_id'] ?? $this->organization_id ?? null;
+        $params['organization']  = $params['organization'] ?? $this->organization ?? null;
 
         $params = array_filter($params);
 
