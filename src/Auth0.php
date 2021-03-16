@@ -768,6 +768,49 @@ class Auth0
     }
 
     /**
+     * If invitation parameters are present in the request, handle extraction and automatically redirect to Universal Login.
+     *
+     * @return void
+     */
+    protected function handleInvitation()
+    {
+        if ($invite = $this->getInvitationParameters()) {
+            $this->login(null, null, [
+              'invitation'   => $invite->invitation,
+              'organization' => $invite->organization
+            ]);
+        }
+    }
+
+    /**
+     * Get the invitation details GET request
+     *
+     * @return object|null
+     */
+    protected function getInvitationParameters()
+    {
+        $invite = null;
+        $orgId = null;
+        $orgName = null;
+
+        if ($this->responseMode === 'query') {
+            $invite = (isset($_GET['invitation']) ? filter_var($_GET['invitation'], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE) : null);
+            $orgId = (isset($_GET['organization']) ? filter_var($_GET['organization'], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE) : null);
+            $orgName = (isset($_GET['organization_name']) ? filter_var($_GET['organization_name'], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE) : null);
+        }
+
+        if ($invite && $orgId && $orgName) {
+            return (object)[
+                'invitation' => $invite,
+                'organization' => $orgId,
+                'organizationName' => $orgName
+            ];
+        }
+
+        return null;
+    }
+
+    /**
      * Delete any persistent data and clear out all stored properties
      *
      * @return void
