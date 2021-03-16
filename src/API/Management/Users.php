@@ -461,6 +461,33 @@ class Users extends GenericResource
     }
 
     /**
+     * Get organizations a specific user belongs to.
+     * Required scope: "read:organizations"
+     *
+     * @param string $user_id User ID to get organization entries for.
+     * @param array  $params  Additional listing params like page, per_page, sort, and include_totals.
+     *
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/get_organizations_by_user #TODO
+     */
+    public function getOrganizations($user_id, array $params = [])
+    {
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
+
+        $params = $this->normalizePagination( $params );
+        $params = $this->normalizeIncludeTotals( $params );
+
+        return $this->apiClient->method('get')
+            ->addPath('users', $user_id, 'organizations')
+            ->withDictParams($params)
+            ->call();
+    }
+
+    /**
      * Removes the current Guardian recovery code and generates and returns a new one.
      * Required scope: "update:users"
      *
