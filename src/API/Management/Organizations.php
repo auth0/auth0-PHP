@@ -3,6 +3,7 @@
 namespace Auth0\SDK\API\Management;
 
 use GuzzleHttp\Exception\RequestException;
+use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 
 /**
  * Organizations
@@ -94,6 +95,8 @@ class Organizations extends GenericResource
       array $metadata = [],
       array $additionalParameters = []
     ) {
+      $this->validateBranding($branding);
+
       $payload = [
         'name'         => $name,
         'display_name' => $displayName,
@@ -131,6 +134,8 @@ class Organizations extends GenericResource
       array $additionalParameters = []
     )
     {
+      $this->validateBranding($branding);
+
       $payload = [
         'display_name' => $displayName,
         'branding'     => $branding,
@@ -473,5 +478,21 @@ class Organizations extends GenericResource
         ->addPath('organizations', $organizationId, 'members', $userId)
         ->withBody(json_encode($payload))
         ->call();
+    }
+
+    /**
+     * Validate an array containing branding customizations for use during the creation or updating of an organization.
+     *
+     * @param array<string,mixed> $branding An array containing branding customizations for the organization.
+     *
+     * @return void
+     *
+     * @throws EmptyOrInvalidParameterException When an improperly formatted branding customization is provided.
+     */
+    protected function validateBranding(
+      array $branding
+    ) {
+      // TODO
+      return true;
     }
 }
