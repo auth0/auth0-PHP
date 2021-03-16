@@ -183,14 +183,15 @@ If you prefer to have more control over this process, a separate helper function
 
 // Returns an object containing the invitation query parameters, or null if they aren't present
 if ($invite = $auth0->getInvitationParameters()) {
-  // Does the invite organization match your application's intended organization?
-  if ($invite->organization !== $auth0->organization) {
+  // Does the invite organization match your intended organization?
+  if ($invite->organization !== '{MY_ORGANIZATION_ID}') {
     throw new Exception("These aren't the droids you're looking for.");
   }
 
   // Redirect to Universal Login using the emailed invitation
   $auth0->login(null, null, [
-    'invitation' => $invite->invitation
+    'invitation'   => $invite->invitation,
+    'organization' => $invite->organization
   ]);
 }
 ```
