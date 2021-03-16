@@ -184,7 +184,7 @@ If you prefer to have more control over this process, a separate helper function
 // Returns an object containing the invitation query parameters, or null if they aren't present
 if ($invite = $auth0->getInvitationParameters()) {
   // Does the invite organization match your intended organization?
-  if ($invite->organization !== '{MY_ORGANIZATION_ID}') {
+  if ($invite->organization !== '{YOUR_ORGANIZATION_ID}') {
     throw new Exception("These aren't the droids you're looking for.");
   }
 
