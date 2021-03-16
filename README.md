@@ -16,9 +16,6 @@ Our PHP SDK provides a straight-forward and rigorously tested interface for acce
 
 This is [one of many libraries we offer](https://auth0.com/docs/libraries) supporting numerous platforms.
 
-## Table of Contents
-
-- [Table of Contents](#table-of-contents)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
@@ -160,7 +157,7 @@ $auth0 = new Auth0([
 ]);
 ```
 
-Redirect to the Universal Login page using the organization:
+Redirect to the Universal Login page using the configured organization:
 
 ```php
 $auth0->login();
