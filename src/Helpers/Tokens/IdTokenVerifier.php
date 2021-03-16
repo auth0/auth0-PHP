@@ -98,6 +98,20 @@ final class IdTokenVerifier extends TokenVerifier
         }
 
         /*
+         * Organization check
+         */
+        $tokenOrgId = $verifiedToken['org_id'] ?? null;
+        $expectedOrgId = $options['org_id'] ?? null;
+
+        if ($tokenOrgId !== $expectedOrgId) {
+            throw new InvalidTokenException( sprintf(
+                'Organization (org_id) claim mismatch in the ID token; expected "%s", found "%s"',
+                $expectedOrgId,
+                $tokenOrgId
+            ) );
+        }
+
+        /*
          * Authentication time check
          */
 
