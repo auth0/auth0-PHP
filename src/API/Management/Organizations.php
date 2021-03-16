@@ -88,8 +88,8 @@ class Organizations extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function create(
-      string $name = '',
-      string $displayName = '',
+      string $name,
+      string $displayName,
       array $branding,
       array $metadata = [],
       array $additionalParameters = []
@@ -125,7 +125,7 @@ class Organizations extends GenericResource
      */
     public function patch(
       string $organizationId,
-      string $displayName = '',
+      string $displayName,
       array $branding,
       array $metadata = [],
       array $additionalParameters = []
