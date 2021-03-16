@@ -148,6 +148,7 @@ class Authentication
         $params['state']         = $state ?? $params['state'] ?? null;
         $params['audience']      = $params['audience'] ?? $this->audience ?? null;
         $params['scope']         = $params['scope'] ?? $this->scope ?? null;
+        $params['organization']  = $params['organization_id'] ?? $this->organization_id ?? null;
 
         $params = array_filter($params);
 
