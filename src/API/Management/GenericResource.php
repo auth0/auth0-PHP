@@ -41,6 +41,22 @@ class GenericResource
     }
 
     /**
+     * Convenience function for normalizePagination, normalizeIncludeTotals and normalizeIncludeFields.
+     *
+     * @param array<string,mixed> $params Original parameters to normalize.
+     *
+     * @return array
+     */
+    protected function normalizeRequest(array $params)
+    {
+        $params = $this->normalizeIncludeFields($params);
+        $params = $this->normalizePagination($params);
+        $params = $this->normalizeIncludeTotals($params);
+
+        return $params;
+    }
+
+    /**
      * Normalize pagination parameters.
      *
      * @param array        $params   Original parameters to normalize.
@@ -84,6 +100,43 @@ class GenericResource
 
         // Make sure we have a boolean.
         $params['include_totals'] = filter_var( $params['include_totals'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+
+        return $params;
+    }
+
+    /**
+     * Normalize fields and include_fields parameters.
+     *
+     * @param array              $params        Original parameters to normalize.
+     * @param null|array<string> $fields        Optional. Array of fields names to include in the response.
+     * @param null|bool          $includeFields Optional. Whether to include (true) or exclude (false) the fields specified.
+     *
+     * @return array
+     */
+    protected function normalizeIncludeFields(array $params, ?array $fields = [], ?bool $includeFields = null)
+    {
+        $fields = (null === $fields ? [] : $fields);
+        $params['fields'] = (isset($params['fields']) ? $params['fields'] : $fields);
+
+        if (is_array($params['fields'])) {
+            $params['fields'] = implode(',', $params['fields']);
+        }
+
+        if (null !== $params['fields']) {
+            $params['include_fields'] = (isset($params['include_fields']) ? $params['include_fields'] : $includeFields);
+
+            if (null !== $params['include_fields']) {
+                $params['include_fields'] = filter_var( $params['include_fields'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+            }
+        }
+
+        if (null === $params['fields']) {
+            unset($params['fields']);
+        }
+
+        if (null === $params['include_fields']) {
+            unset($params['include_fields']);
+        }
 
         return $params;
     }
