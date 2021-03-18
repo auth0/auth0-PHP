@@ -239,6 +239,7 @@ class Auth0
      *     - client_secret          (String)  Optional. Client Secret found in the Application settings
      *     - secret_base64_encoded  (Boolean) Optional. Client Secret base64 encoded (true) or not (false, default)
      *     - audience               (String)  Optional. API identifier to generate an access token
+     *     - organization           (String)  Optional. ID of the Organization, if used. Found in your Organization settings.
      *     - response_mode          (String)  Optional. Response mode from the authorization server
      *     - response_type          (String)  Optional. Response type from the authorization server
      *     - scope                  (String)  Optional. Scope for ID and access tokens.
