@@ -773,7 +773,7 @@ class Auth0
      *
      * @return void
      */
-    protected function handleInvitation()
+    public function handleInvitation()
     {
         if ($invite = $this->getInvitationParameters()) {
             $this->login(null, null, [
@@ -788,7 +788,7 @@ class Auth0
      *
      * @return object|null
      */
-    protected function getInvitationParameters()
+    public function getInvitationParameters()
     {
         $invite = null;
         $orgId = null;
