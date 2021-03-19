@@ -196,7 +196,7 @@ if ($invite = $auth0->getInvitationParameters()) {
 }
 ```
 
-After successful authentication via the Universal Login page, the user will arrive back at your application using your configured `redirect_uri`, their token will be automatically validated, and the user will have an authenticated session. Use `getUser()` to retrieve details about the authenticated user.
+After successful authentication via the Universal Login Page, the user will arrive back at your application using your configured `redirect_uri`, their token will be automatically validated, and the user will have an authenticated session. Use `getUser()` to retrieve details about the authenticated user.
 
 ## Documentation
 
