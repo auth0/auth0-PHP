@@ -71,7 +71,7 @@ class TicketsTest extends ApiTests
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
 
-        $api->call()->tickets()->createPasswordChangeTicket( '__test_user_id__', '__test_password__', '__test_result_url__', '__test_connection_id__', 8675309 );
+        $api->call()->tickets()->createPasswordChangeTicket( '__test_user_id__', '__test_password__', '__test_result_url__', '__test_connection_id__', 8675309, '__test_client_id__' );
 
         $this->assertEquals( 'POST', $api->getHistoryMethod() );
         $this->assertEquals( 'https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl() );
@@ -88,6 +88,8 @@ class TicketsTest extends ApiTests
         $this->assertEquals( '__test_connection_id__', $body['connection_id'] );
         $this->assertArrayHasKey( 'ttl_sec', $body );
         $this->assertEquals( 8675309, $body['ttl_sec'] );
+        $this->assertArrayHasKey( 'client_id', $body );
+        $this->assertEquals( '__test_client_id__', $body['client_id'] );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );

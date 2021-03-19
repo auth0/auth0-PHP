@@ -56,6 +56,8 @@ class Tickets extends GenericResource
      * @param  null|string $new_password
      * @param  null|string $result_url
      * @param  null|string $connection_id
+     * @param  null|string $ttl
+     * @param  null|string $client_id
      * @return mixed
      */
     public function createPasswordChangeTicket(
@@ -63,10 +65,11 @@ class Tickets extends GenericResource
         $new_password = null,
         $result_url = null,
         $connection_id = null,
-        $ttl = null
+        $ttl = null,
+        $client_id = null
     )
     {
-        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id, $ttl);
+        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id, $ttl, $client_id);
     }
 
     /**
@@ -83,10 +86,11 @@ class Tickets extends GenericResource
         $new_password = null,
         $result_url = null,
         $connection_id = null,
-        $ttl = null
+        $ttl = null,
+        $client_id = null
     )
     {
-        return $this->createPasswordChangeTicketRaw(null, $email, $new_password, $result_url, $connection_id, $ttl);
+        return $this->createPasswordChangeTicketRaw(null, $email, $new_password, $result_url, $connection_id, $ttl, $client_id);
     }
 
     /**
@@ -105,7 +109,8 @@ class Tickets extends GenericResource
         $new_password = null,
         $result_url = null,
         $connection_id = null,
-        $ttl = null
+        $ttl = null,
+        $client_id = null
     )
     {
         $body = [];
@@ -132,6 +137,10 @@ class Tickets extends GenericResource
 
         if ($ttl) {
             $body['ttl_sec'] = $ttl;
+        }
+
+        if ($client_id) {
+            $body['client_id'] = $client_id;
         }
 
         return $this->apiClient->method('post')
