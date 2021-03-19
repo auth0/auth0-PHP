@@ -185,7 +185,7 @@ If you prefer to have more control over this process, a separate helper function
 if ($invite = $auth0->getInvitationParameters()) {
   // Does the invite organization match your intended organization?
   if ($invite->organization !== '{YOUR_ORGANIZATION_ID}') {
-    throw new Exception("These aren't the droids you're looking for.");
+    throw new Exception("This invitation isn't intended for this service. Please have your administrator check the service configuration and request a new invitation.");
   }
 
   // Redirect to Universal Login using the emailed invitation
