@@ -4,7 +4,7 @@
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.2...7.7.0)
 
-This release includes initial support for Organizations, a new featur from Auth0 currently in closed beta testing. Please see the updated README for usage instructions.
+This release includes initial support for Organizations, a new feature from Auth0 currently in closed beta testing. Please see the updated README for usage instructions.
 
 **Added**
 
