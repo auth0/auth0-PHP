@@ -94,6 +94,7 @@ class Auth0
 
     /**
      * Auth0 Organization ID, found in your Organization settings.
+     * Used for generating log in urls and validating token claims.
      *
      * @var string
      */
