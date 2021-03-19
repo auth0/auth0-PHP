@@ -53,7 +53,7 @@ class Authentication
     private $audience;
 
     /**
-     * Organization ID, if applicable.
+     * The Id of an organization to log in to.
      *
      * @var null|string
      */
@@ -85,10 +85,11 @@ class Authentication
      *
      * @param string      $domain        Tenant domain, found in Application settings.
      * @param string      $client_id     Client ID, found in Application settings.
-     * @param null|string $client_secret Client Secret, found in Application settings.
-     * @param null|string $audience      API audience identifier for the access token, found in API settings.
-     * @param null|string $scope         Scopes to request during login.
-     * @param array       $guzzleOptions Options for the Guzzle HTTP client.
+     * @param null|string $client_secret Optional. Client Secret, found in Application settings.
+     * @param null|string $audience      Optional. API audience identifier for the access token, found in API settings.
+     * @param null|string $scope         Optional. Scopes to request during login.
+     * @param array       $guzzleOptions Optional. Options for the Guzzle HTTP client.
+     * @param null|string $organization  Optional. The Id of an organization to log in to.
      *
      * @link https://auth0.com/docs/scopes/current
      * @link http://docs.guzzlephp.org/en/stable/request-options.html
