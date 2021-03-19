@@ -10,7 +10,7 @@ This release includes initial support for Organizations, a new featur from Auth0
 
 - Add Organizations support to Authentication API Client [\#482](https://github.com/auth0/auth0-PHP/pull/482) ([evansims](https://github.com/evansims))
 
-**Changes**
+**Changed**
 
 - Support client_id on /tickets/password-change [\#481](https://github.com/auth0/auth0-PHP/pull/481) ([evansims](https://github.com/evansims))
 
