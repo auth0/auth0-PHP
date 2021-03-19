@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [7.7.0](https://github.com/auth0/auth0-PHP/tree/7.6.2) (2021-03-19)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.2...7.7.0)
+
+This release includes initial support for Organizations, a new featur from Auth0 currently in closed beta testing. Please see the updated README for usage instructions.
+
+**Added**
+
+- Add Organizations support to Authentication API Client [\#482](https://github.com/auth0/auth0-PHP/pull/482) ([evansims](https://github.com/evansims))
+
+**Changes**
+
+- Support client_id on /tickets/password-change [\#481](https://github.com/auth0/auth0-PHP/pull/481) ([evansims](https://github.com/evansims))
+
 ## [7.6.2](https://github.com/auth0/auth0-PHP/tree/7.6.2) (2021-01-01)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.1...7.6.2)
