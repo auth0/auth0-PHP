@@ -185,7 +185,7 @@ If you prefer to have more control over this process, a separate helper function
 if ($invite = $auth0->getInvitationParameters()) {
   // Does the invite organization match your intended organization?
   if ($invite->organization !== '{YOUR_ORGANIZATION_ID}') {
-    throw new Exception("These aren't the droids you're looking for.");
+    throw new Exception("This invitation isn't intended for this service. Please have your administrator check the service configuration and request a new invitation.");
   }
 
   // Redirect to Universal Login using the emailed invitation
@@ -196,7 +196,7 @@ if ($invite = $auth0->getInvitationParameters()) {
 }
 ```
 
-After successful authentication via the Universal Login page, the user will arrive back at your application using your configured `redirect_uri`, their token will be automatically validated, and the user will have an authenticated session. Use `getUser()` to retrieve details about the authenticated user.
+After successful authentication via the Universal Login Page, the user will arrive back at your application using your configured `redirect_uri`, their token will be automatically validated, and the user will have an authenticated session. Use `getUser()` to retrieve details about the authenticated user.
 
 ## Documentation
 

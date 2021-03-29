@@ -94,6 +94,7 @@ class Auth0
 
     /**
      * Auth0 Organization ID, found in your Organization settings.
+     * Used for generating log in urls and validating token claims.
      *
      * @var string
      */
@@ -239,6 +240,7 @@ class Auth0
      *     - client_secret          (String)  Optional. Client Secret found in the Application settings
      *     - secret_base64_encoded  (Boolean) Optional. Client Secret base64 encoded (true) or not (false, default)
      *     - audience               (String)  Optional. API identifier to generate an access token
+     *     - organization           (String)  Optional. ID of the Organization, if used. Found in your Organization settings.
      *     - response_mode          (String)  Optional. Response mode from the authorization server
      *     - response_type          (String)  Optional. Response type from the authorization server
      *     - scope                  (String)  Optional. Scope for ID and access tokens.
@@ -772,7 +774,7 @@ class Auth0
      *
      * @return void
      */
-    protected function handleInvitation()
+    public function handleInvitation()
     {
         if ($invite = $this->getInvitationParameters()) {
             $this->login(null, null, [
@@ -787,7 +789,7 @@ class Auth0
      *
      * @return object|null
      */
-    protected function getInvitationParameters()
+    public function getInvitationParameters()
     {
         $invite = null;
         $orgId = null;

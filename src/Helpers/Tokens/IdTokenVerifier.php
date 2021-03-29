@@ -100,19 +100,22 @@ final class IdTokenVerifier extends TokenVerifier
         /*
          * Organization check
          */
-        $tokenOrgId    = $verifiedToken['org_id'] ?? null;
-        $expectedOrgId = $options['org_id'] ?? null;
+        $expectedOrganization = $options['org_id'] ?? null;
 
-        if (null !== $expectedOrgId && (null === $tokenOrgId || ! is_string($tokenOrgId))) {
-            throw new InvalidTokenException('Organization Id (org_id) claim must be a string present in the ID token');
-        }
+        if (null !== $expectedOrganization) {
+            $tokenOrganization = $verifiedToken['org_id'] ?? null;
 
-        if (null !== $expectedOrgId && ($tokenOrgId !== $expectedOrgId)) {
-            throw new InvalidTokenException( sprintf(
-                'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
-                $expectedOrgId,
-                $tokenOrgId
-            ) );
+            if (null === $tokenOrganization || ! is_string($tokenOrganization)) {
+                throw new InvalidTokenException('Organization Id (org_id) claim must be a string present in the ID token');
+            }
+
+            if ($tokenOrganization !== $expectedOrganization) {
+                throw new InvalidTokenException( sprintf(
+                    'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
+                    $expectedOrganization,
+                    $tokenOrganization
+                ) );
+            }
         }
 
         /*
