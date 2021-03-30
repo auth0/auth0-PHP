@@ -394,13 +394,13 @@ class Management
      *
      * @return Organizations
      */
-    public function organizations() : LogStreams
+    public function organizations() : Organizations
     {
         if (! $this->organizations instanceof Organizations) {
             $this->organizations = new Organizations($this->apiClient);
         }
 
-        return $this->organizations();
+        return $this->organizations;
     }
 
     /**

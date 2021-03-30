@@ -13,77 +13,16 @@ use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
  */
 class Organizations extends GenericResource
 {
-    /**
-     * List all organizations.
-     * Required scope: "read:organizations"
-     *
-     * @param array<string,mixed> $params Optional. Options to include with the request, such as pagination or filtering parameters.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function getAll(
-        array $params = []
-    )
-    {
-        return $this->apiClient->method('get')
-        ->addPath('organizations')
-        ->withDictParams($this->normalizeRequest($params))
-        ->call();
-    }
-
-    /**
-     * Get details about an organization, queried by it's ID.
-     * Required scope: "read:organizations"
-     *
-     * @param string $organization Organization (by ID) to retrieve details for.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
-     */
-    public function get(
-        string $organization
-    )
-    {
-        return $this->apiClient->method('get')
-        ->addPath('organizations', $organization)
-        ->call();
-    }
-
-    /**
-     * Get details about an organization, queried by it's `name`.
-     * Required scope: "read:organizations"
-     *
-     * @param string $organizationName Organization (by name parameter provided during creation) to retrieve details for.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
-     */
-    public function getByName(
-        string $organizationName
-    )
-    {
-        return $this->apiClient->method('get')
-        ->addPath('organizations', 'name', $organizationName)
-        ->call();
-    }
 
     /**
      * Create an organization.
      * Required scope: "create:organizations"
      *
-     * @param string              $name                 The name of the Organization. Cannot be changed later.
-     * @param string              $displayName          The displayed name of the Organization.
-     * @param array<string,mixed> $branding             An array containing branding customizations for the organization.
-     * @param array<string,mixed> $metadata             Optional. Additional metadata to store about the organization.
-     * @param array<string,mixed> $additionalParameters Optional. Additional parameters to send with the API request.
+     * @param string                   $name                 The name of the Organization. Cannot be changed later.
+     * @param string                   $displayName          The displayed name of the Organization.
+     * @param null|array<string,mixed> $branding             An array containing branding customizations for the organization.
+     * @param null|array<string,mixed> $metadata             Optional. Additional metadata to store about the organization.
+     * @param array<string,mixed>      $additionalParameters Optional. Additional parameters to send with the API request.
      *
      * @return mixed
      *
@@ -94,35 +33,35 @@ class Organizations extends GenericResource
     public function create(
         string $name,
         string $displayName,
-        array $branding,
-        array $metadata = [],
+        ?array $branding = null,
+        ?array $metadata = null,
         array $additionalParameters = []
     )
     {
         $this->validateBranding($branding);
 
-        $payload = [
+        $payload = (object)array_filter([
             'name'         => $name,
             'display_name' => $displayName,
-            'branding'     => $branding,
-            'metadata'     => $metadata,
-        ] + $additionalParameters;
+            'branding'     => $branding ? (object)$branding : null,
+            'metadata'     => $metadata ? (object)$metadata : null,
+        ] + $additionalParameters);
 
         return $this->apiClient->method('post')
-        ->addPath('organizations')
-        ->withBody(json_encode($payload))
-        ->call();
+            ->addPath('organizations')
+            ->withBody(json_encode($payload))
+            ->call();
     }
 
     /**
      * Update an organization.
      * Required scope: "update:organizations"
      *
-     * @param string              $organization         Organization (by ID) to update.
-     * @param string              $displayName          The displayed name of the Organization.
-     * @param array<string,mixed> $branding             An array containing branding customizations for the organization.
-     * @param array<string,mixed> $metadata             Optional. Additional metadata to store about the organization.
-     * @param array<string,mixed> $additionalParameters Optional. Additional parameters to send with the API request.
+     * @param string                   $organization         Organization (by ID) to update.
+     * @param string                   $displayName          The displayed name of the Organization.
+     * @param null|array<string,mixed> $branding             An array containing branding customizations for the organization.
+     * @param null|array<string,mixed> $metadata             Optional. Additional metadata to store about the organization.
+     * @param array<string,mixed>      $additionalParameters Optional. Additional parameters to send with the API request.
      *
      * @return mixed
      *
@@ -130,26 +69,26 @@ class Organizations extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
-    public function patch(
+    public function update(
         string $organization,
         string $displayName,
-        array $branding,
-        array $metadata = [],
+        ?array $branding = null,
+        ?array $metadata = null,
         array $additionalParameters = []
     )
     {
         $this->validateBranding($branding);
 
-        $payload = [
+        $payload = (object)array_filter([
             'display_name' => $displayName,
-            'branding'     => $branding,
-            'metadata'     => $metadata,
-        ] + $additionalParameters;
+            'branding'     => $branding ? (object)$branding : null,
+            'metadata'     => $metadata ? (object)$metadata : null,
+        ] + $additionalParameters);
 
         return $this->apiClient->method('patch')
-        ->addPath('organizations', $organization)
-        ->withBody(json_encode($payload))
-        ->call();
+            ->addPath('organizations', $organization)
+            ->withBody(json_encode($payload))
+            ->call();
     }
 
     /**
@@ -169,12 +108,74 @@ class Organizations extends GenericResource
     )
     {
         return $this->apiClient->method('delete')
-        ->addPath('organizations', $organization)
-        ->call();
+            ->addPath('organizations', $organization)
+            ->call();
     }
 
     /**
-     * List the connections associated with an organization.
+     * List all organizations.
+     * Required scope: "read:organizations"
+     *
+     * @param array<string,mixed> $params Optional. Options to include with the request, such as pagination or filtering parameters.
+     *
+     * @return mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     */
+    public function getAll(
+        array $params = []
+    )
+    {
+        return $this->apiClient->method('get')
+            ->addPath('organizations')
+            ->withDictParams($this->normalizeRequest($params))
+            ->call();
+    }
+
+    /**
+     * Get details about an organization, queried by it's ID.
+     * Required scope: "read:organizations"
+     *
+     * @param string $organization Organization (by ID) to retrieve details for.
+     *
+     * @return mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
+     */
+    public function get(
+        string $organization
+    )
+    {
+        return $this->apiClient->method('get')
+            ->addPath('organizations', $organization)
+            ->call();
+    }
+
+    /**
+     * Get details about an organization, queried by it's `name`.
+     * Required scope: "read:organizations"
+     *
+     * @param string $organizationName Organization (by name parameter provided during creation) to retrieve details for.
+     *
+     * @return mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
+     */
+    public function getByName(
+        string $organizationName
+    )
+    {
+        return $this->apiClient->method('get')
+            ->addPath('organizations', 'name', $organizationName)
+            ->call();
+    }
+
+    /**
+     * List the enabled connections associated with an organization.
      * Required scope: "read:organization_connections"
      *
      * @param string              $organization Organization (by ID) to list connections of.
@@ -186,23 +187,23 @@ class Organizations extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
-    public function getConnections(
+    public function getEnabledConnections(
         string $organization,
         array $params = []
     )
     {
         return $this->apiClient->method('get')
-        ->addPath('organizations', $organization, 'connections')
-        ->withDictParams($this->normalizeRequest($params))
-        ->call();
+            ->addPath('organizations', $organization, 'enabled_connections')
+            ->withDictParams($this->normalizeRequest($params))
+            ->call();
     }
 
     /**
-     * Add a connection to an organization.
-     * Required scope: "create:organization_connections"
+     * Get a connection (by ID) associated with an organization.
+     * Required scope: "read:organization_connections"
      *
-     * @param string $organization Organization (by ID) to add a connection to.
-     * @param string $connection   Connection (by ID) to add to organization.
+     * @param string              $organization Organization (by ID) to list connections of.
+     * @param array<string,mixed> $params       Optional. Additional options to include with the request, such as pagination or filtering parameters.
      *
      * @return mixed
      *
@@ -210,14 +211,70 @@ class Organizations extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
-    public function addConnection(
+    public function getEnabledConnection(
         string $organization,
         string $connection
     )
     {
+        return $this->apiClient->method('get')
+            ->addPath('organizations', $organization, 'enabled_connections', $connection)
+            ->call();
+    }
+
+    /**
+     * Add a connection to an organization.
+     * Required scope: "create:organization_connections"
+     *
+     * @param string              $organization Organization (by ID) to add a connection to.
+     * @param string              $connection   Connection (by ID) to add to organization.
+     * @param array<string,mixed> $additionalParameters Optional. Additional parameters to send with the API request.
+     *
+     * @return mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
+     */
+    public function addEnabledConnection(
+        string $organization,
+        string $connection,
+        array $additionalParameters = []
+    )
+    {
+        $payload = (object)array_filter([
+            'connection_id' => $connection
+        ] + $additionalParameters);
+
         return $this->apiClient->method('post')
-        ->addPath('organizations', $organization, 'connections', $connection)
-        ->call();
+            ->addPath('organizations', $organization, 'enabled_connections')
+            ->withBody(json_encode($payload))
+            ->call();
+    }
+
+    /**
+     * Update a connection to an organization.
+     * Required scope: "update:organization_connections"
+     *
+     * @param string              $organization Organization (by ID) to add a connection to.
+     * @param string              $connection   Connection (by ID) to add to organization.
+     * @param array<string,mixed> $additionalParameters Optional. Additional parameters to send with the API request.
+     *
+     * @return mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
+     */
+    public function updateEnabledConnection(
+        string $organization,
+        string $connection,
+        array $params = []
+    )
+    {
+        return $this->apiClient->method('patch')
+            ->addPath('organizations', $organization, 'enabled_connections', $connection)
+            ->withBody(json_encode((object)$params))
+            ->call();
     }
 
     /**
@@ -233,14 +290,14 @@ class Organizations extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
-    public function removeConnection(
+    public function removeEnabledConnection(
         string $organization,
         string $connection
     )
     {
         return $this->apiClient->method('delete')
-        ->addPath('organizations', $organization, 'connections', $connection)
-        ->call();
+            ->addPath('organizations', $organization, 'enabled_connections', $connection)
+            ->call();
     }
 
     /**
@@ -262,9 +319,9 @@ class Organizations extends GenericResource
     )
     {
         return $this->apiClient->method('get')
-        ->addPath('organizations', $organization, 'members')
-        ->withDictParams($this->normalizeRequest($params))
-        ->call();
+            ->addPath('organizations', $organization, 'members')
+            ->withDictParams($this->normalizeRequest($params))
+            ->call();
     }
 
     /**
@@ -311,9 +368,9 @@ class Organizations extends GenericResource
         ];
 
         return $this->apiClient->method('post')
-        ->addPath('organizations', $organization, 'members')
-        ->withBody(json_encode($payload))
-        ->call();
+            ->addPath('organizations', $organization, 'members')
+            ->withBody(json_encode($payload))
+            ->call();
     }
 
     /**
@@ -360,9 +417,9 @@ class Organizations extends GenericResource
         ];
 
         return $this->apiClient->method('delete')
-        ->addPath('organizations', $organization, 'members')
-        ->withBody(json_encode($payload))
-        ->call();
+            ->addPath('organizations', $organization, 'members')
+            ->withBody(json_encode($payload))
+            ->call();
     }
 
     /**
@@ -386,9 +443,9 @@ class Organizations extends GenericResource
     )
     {
         return $this->apiClient->method('get')
-        ->addPath('organizations', $organization, 'members', $user)
-        ->withDictParams($this->normalizeRequest($params))
-        ->call();
+            ->addPath('organizations', $organization, 'members', $user, 'roles')
+            ->withDictParams($this->normalizeRequest($params))
+            ->call();
     }
 
     /**
@@ -439,9 +496,9 @@ class Organizations extends GenericResource
         ];
 
         return $this->apiClient->method('post')
-        ->addPath('organizations', $organization, 'members', $user)
-        ->withBody(json_encode($payload))
-        ->call();
+            ->addPath('organizations', $organization, 'members', $user, 'roles')
+            ->withBody(json_encode($payload))
+            ->call();
     }
 
     /**
@@ -492,9 +549,9 @@ class Organizations extends GenericResource
         ];
 
         return $this->apiClient->method('delete')
-        ->addPath('organizations', $organization, 'members', $user)
-        ->withBody(json_encode($payload))
-        ->call();
+            ->addPath('organizations', $organization, 'members', $user, 'roles')
+            ->withBody(json_encode($payload))
+            ->call();
     }
 
     /**
@@ -507,7 +564,7 @@ class Organizations extends GenericResource
      * @throws EmptyOrInvalidParameterException When an improperly formatted branding customization is provided.
      */
     protected function validateBranding(
-        array $branding
+        ?array $branding = null
     )
     {
         // #TODO
