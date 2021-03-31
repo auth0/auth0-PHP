@@ -106,7 +106,6 @@ class OrganizationsIntegrationTest extends ApiTests
       'email_verified' => true,
       'password'       => password_hash(uniqid('php-sdk-test-password-'), PASSWORD_DEFAULT)
     ]);
-    // var_dump($this->user);
 
     // Add the new user to the organization as a member for our tests
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
