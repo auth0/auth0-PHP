@@ -471,8 +471,6 @@ class Users extends GenericResource
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
      * @return mixed
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Users/get_organizations_by_user #TODO
      */
     public function getOrganizations($user_id, array $params = [])
     {

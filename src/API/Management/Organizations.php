@@ -27,8 +27,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function create(
         string $name,
@@ -64,8 +62,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function update(
         string $organization,
@@ -96,8 +92,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function delete(
         string $organization
@@ -137,8 +131,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function get(
         string $organization
@@ -158,8 +150,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getByName(
         string $organizationName
@@ -180,8 +170,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getEnabledConnections(
         string $organization,
@@ -204,8 +192,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getEnabledConnection(
         string $organization,
@@ -228,8 +214,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addEnabledConnection(
         string $organization,
@@ -258,8 +242,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function updateEnabledConnection(
         string $organization,
@@ -283,8 +265,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeEnabledConnection(
         string $organization,
@@ -306,8 +286,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getMembers(
         string $organization,
@@ -330,8 +308,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addMember(
         string $organization,
@@ -351,8 +327,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addMembers(
         string $organization,
@@ -379,8 +353,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeMember(
         string $organization,
@@ -400,8 +372,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeMembers(
         string $organization,
@@ -429,8 +399,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function getMemberRoles(
         string $organization,
@@ -455,8 +423,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addMemberRole(
         string $organization,
@@ -478,8 +444,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function addMemberRoles(
         string $organization,
@@ -508,8 +472,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeMemberRole(
         string $organization,
@@ -531,8 +493,6 @@ class Organizations extends GenericResource
      * @return mixed
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Organizations/ #TODO
      */
     public function removeMemberRoles(
         string $organization,
