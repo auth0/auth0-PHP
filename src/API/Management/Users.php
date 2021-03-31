@@ -476,12 +476,9 @@ class Users extends GenericResource
     {
         $this->checkEmptyOrInvalidString($user_id, 'user_id');
 
-        $params = $this->normalizePagination( $params );
-        $params = $this->normalizeIncludeTotals( $params );
-
         return $this->apiClient->method('get')
             ->addPath('users', $user_id, 'organizations')
-            ->withDictParams($params)
+            ->withDictParams($this->normalizeRequest($params))
             ->call();
     }
 
