@@ -36,6 +36,9 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($name, 'name');
+        $this->checkEmptyOrInvalidString($displayName, 'displayName');
+
         $payload = (object) array_filter([
             'name'         => $name,
             'display_name' => $displayName,
@@ -71,6 +74,9 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($displayName, 'displayName');
+
         $payload = (object) array_filter([
             'display_name' => $displayName,
             'branding'     => $branding ? (object) $branding : null,
@@ -97,6 +103,8 @@ class Organizations extends GenericResource
         string $organization
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+
         return $this->apiClient->method('delete')
             ->addPath('organizations', $organization)
             ->call();
@@ -136,6 +144,8 @@ class Organizations extends GenericResource
         string $organization
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+
         return $this->apiClient->method('get')
             ->addPath('organizations', $organization)
             ->call();
@@ -155,6 +165,8 @@ class Organizations extends GenericResource
         string $organizationName
     )
     {
+        $this->checkEmptyOrInvalidString($organizationName, 'organizationName');
+
         return $this->apiClient->method('get')
             ->addPath('organizations', 'name', $organizationName)
             ->call();
@@ -176,6 +188,8 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+
         return $this->apiClient->method('get')
             ->addPath('organizations', $organization, 'enabled_connections')
             ->withDictParams($this->normalizeRequest($params))
@@ -198,6 +212,9 @@ class Organizations extends GenericResource
         string $connection
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($connection, 'connection');
+
         return $this->apiClient->method('get')
             ->addPath('organizations', $organization, 'enabled_connections', $connection)
             ->call();
@@ -221,6 +238,9 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($connection, 'connection');
+
         $payload = (object) array_filter([
             'connection_id' => $connection
         ] + $params);
@@ -249,6 +269,9 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($connection, 'connection');
+
         return $this->apiClient->method('patch')
             ->addPath('organizations', $organization, 'enabled_connections', $connection)
             ->withBody(json_encode( (object) $params))
@@ -271,6 +294,9 @@ class Organizations extends GenericResource
         string $connection
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($connection, 'connection');
+
         return $this->apiClient->method('delete')
             ->addPath('organizations', $organization, 'enabled_connections', $connection)
             ->call();
@@ -292,6 +318,8 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+
         return $this->apiClient->method('get')
             ->addPath('organizations', $organization, 'members')
             ->withDictParams($this->normalizeRequest($params))
@@ -314,6 +342,9 @@ class Organizations extends GenericResource
         string $user
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($user, 'user');
+
         return $this->addMembers($organization, [ $user ]);
     }
 
@@ -333,6 +364,9 @@ class Organizations extends GenericResource
         array $users
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidArray($users, 'users');
+
         $payload = [
             'members' => $users
         ];
@@ -359,6 +393,9 @@ class Organizations extends GenericResource
         string $user
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($user, 'user');
+
         return $this->removeMembers($organization, [ $user ]);
     }
 
@@ -378,6 +415,9 @@ class Organizations extends GenericResource
         array $users
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidArray($users, 'users');
+
         $payload = [
             'members' => $users
         ];
@@ -406,6 +446,9 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($user, 'user');
+
         return $this->apiClient->method('get')
             ->addPath('organizations', $organization, 'members', $user, 'roles')
             ->withDictParams($this->normalizeRequest($params))
@@ -430,6 +473,10 @@ class Organizations extends GenericResource
         string $role
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($user, 'user');
+        $this->checkEmptyOrInvalidString($role, 'role');
+
         return $this->addMemberRoles($organization, $user, [ $role ]);
     }
 
@@ -451,6 +498,10 @@ class Organizations extends GenericResource
         array $roles
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($user, 'user');
+        $this->checkEmptyOrInvalidArray($roles, 'roles');
+
         $payload = [
             'roles' => $roles
         ];
@@ -479,6 +530,10 @@ class Organizations extends GenericResource
         string $role
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($user, 'user');
+        $this->checkEmptyOrInvalidString($role, 'role');
+
         return $this->removeMemberRoles($organization, $user, [ $role ]);
     }
 
@@ -500,6 +555,10 @@ class Organizations extends GenericResource
         array $roles
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($user, 'user');
+        $this->checkEmptyOrInvalidArray($roles, 'roles');
+
         $payload = [
             'roles' => $roles
         ];
@@ -526,6 +585,8 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+
         return $this->apiClient->method('get')
             ->addPath('organizations', $organization, 'invitations')
             ->withDictParams($this->normalizeRequest($params))
@@ -548,6 +609,9 @@ class Organizations extends GenericResource
         string $invitation
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($invitation, 'invitation');
+
         return $this->apiClient->method('get')
             ->addPath('organizations', $organization, 'invitations', $invitation)
             ->call();
@@ -575,6 +639,19 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($clientId, 'clientId');
+        $this->checkEmptyOrInvalidArray($inviter, 'inviter');
+        $this->checkEmptyOrInvalidArray($invitee, 'invitee');
+
+        if (! isset($inviter['name'])) {
+            throw new EmptyOrInvalidParameterException('inviter');
+        }
+
+        if (! isset($invitee['email'])) {
+            throw new EmptyOrInvalidParameterException('invitee');
+        }
+
         $payload = (object) array_filter([
             'client_id' => $clientId,
             'inviter'   => (object) $inviter,
@@ -603,6 +680,9 @@ class Organizations extends GenericResource
         string $invitation
     )
     {
+        $this->checkEmptyOrInvalidString($organization, 'organization');
+        $this->checkEmptyOrInvalidString($invitation, 'invitation');
+
         return $this->apiClient->method('delete')
             ->addPath('organizations', $organization, 'invitations', $invitation)
             ->call();
