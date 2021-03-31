@@ -14,6 +14,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 * Class OrganizationsIntegrationTest.
 * Tests the Auth0\SDK\API\Management\Organizations class.
 *
+* @group integration
 * @group management
 * @group organizations
 *
