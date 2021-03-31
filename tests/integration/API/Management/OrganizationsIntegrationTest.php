@@ -5,10 +5,6 @@ namespace Auth0\Tests\integration\API\Management;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\API\Management\Organizations;
 use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Exception\RequestException;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
-use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
 * Class OrganizationsIntegrationTest.
@@ -114,7 +110,7 @@ class OrganizationsIntegrationTest extends ApiTests
 
     // Add the new user to the organization as a member for our tests
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
-    $this->api->addMember($this->organization['id'], $this->user['user_id']);
+    $this->api->addMembers($this->organization['id'], [ $this->user['user_id'] ]);
 
     // Add a role to the new member of the organization for our tests
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
@@ -267,7 +263,7 @@ class OrganizationsIntegrationTest extends ApiTests
 
     // Add our role to the organization member.
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
-    $this->api->addMemberRole($this->organization['id'], $this->user['user_id'], $this->role['id']);
+    $this->api->addMemberRoles($this->organization['id'], $this->user['user_id'], [ $this->role['id'] ]);
 
     // Confirm that the organization member now has the role.
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
@@ -280,7 +276,7 @@ class OrganizationsIntegrationTest extends ApiTests
 
     // Remove the role from the organization member.
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
-    $response = $this->api->removeMemberRole($this->organization['id'], $this->user['user_id'], $this->role['id']);
+    $response = $this->api->removeMemberRoles($this->organization['id'], $this->user['user_id'], [ $this->role['id'] ]);
 
     // Confirm that the organization member once again has no roles.
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
