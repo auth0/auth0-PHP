@@ -816,7 +816,7 @@ class OrganizationsTest extends ApiTests
         $api->call()->organizations()->deleteInvitation( '', '', );
     }
 
-    public function testThatDeeteInvitationWithEmptyClientThrowsException()
+    public function testThatDeleteInvitationWithEmptyClientThrowsException()
     {
         $api = new MockManagementApi();
 
