@@ -70,8 +70,6 @@ class OrganizationsIntegrationTest extends ApiTests
   {
     $env = self::getEnv();
 
-    $this->management = new Management($env['API_TOKEN'], $env['DOMAIN'], ['timeout' => 30]);
-
     $this->resources = [
       'name'         => uniqid('php-sdk-test-organization-'),
       'display_name' => 'PHP SDK Integration Test (DELETE)',
@@ -84,9 +82,14 @@ class OrganizationsIntegrationTest extends ApiTests
       ]
     ];
 
+    // Initialize Management Client and Organization class
+    $this->management = new Management($env['API_TOKEN'], $env['DOMAIN'], ['timeout' => 30]);
     $this->api = $this->management->organizations();
+
+    // Create a new organization for our tests
     $this->organization = $this->api->create($this->resources['name'], $this->resources['display_name']);
 
+    // Create a new connection for our tests
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->connection = $this->management->connections()->create([
       'name'            => uniqid('php-sdk-test-connection-'),
@@ -94,9 +97,11 @@ class OrganizationsIntegrationTest extends ApiTests
       'enabled_clients' => [ $env['APP_CLIENT_ID'] ]
     ]);
 
+    // Enable new connection with the organization for our tests
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->api->addEnabledConnection($this->organization['id'], $this->connection['id']);
 
+    // Create a new user for our tests
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->user = $this->management->users()->create([
       'email'          => uniqid('php-sdk-test-user-') . '@test.com',
@@ -104,32 +109,35 @@ class OrganizationsIntegrationTest extends ApiTests
       'email_verified' => true,
       'password'       => password_hash(uniqid('php-sdk-test-password-'), PASSWORD_DEFAULT)
     ]);
+    // var_dump($this->user);
 
+    // Add the new user to the organization as a member for our tests
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->api->addMember($this->organization['id'], $this->user['user_id']);
 
+    // Add a role to the new member of the organization for our tests
     usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->role = $this->management->roles()->create(uniqid('php-sdk-test-role-'));
   }
 
   public function tearDown(): void
   {
-    // Cleanup our test role.
+    // Cleanup our test role, if it's creation was successful
     if ($this->role) {
       $this->management->roles()->delete($this->role['id']);
     }
 
-    // Cleanup our test user.
+    // Cleanup our test user, if it's creation was successful
     if ($this->user) {
       $this->management->users()->delete($this->user['user_id']);
     }
 
-    // Cleanup our test connection.
+    // Cleanup our test connection, if it's creation was successful
     if ($this->connection) {
       $this->management->connections()->delete($this->connection['id']);
     }
 
-    // Cleanup our test organization.
+    // Cleanup our test organization, if it's creation was successful
     if ($this->organization) {
       $this->api->delete($this->organization['id']);
     }
