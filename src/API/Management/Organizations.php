@@ -529,8 +529,10 @@ class Organizations extends GenericResource
      *
      * @param string              $organization Organization (by ID) to create the invitation for.
      * @param string              $clientId     Client (by ID) to create the invitation for. This Client must be associated with the Organization.
-     * @param array<string,mixed> $inviter      An array containing information about the inviter. Requires a 'name' key, indicating who created the invitation.
-     * @param array<string,mixed> $invitee      An array containing information about the invitee. Requires an 'email' key, indicating where to send the invite.
+     * @param array<string,mixed> $inviter      An array containing information about the inviter. Requires a 'name' key minimally.
+     *                                          - 'name' Required. A name to identify who is sending the invitation.
+     * @param array<string,mixed> $invitee      An array containing information about the invitee. Requires an 'email' key.
+     *                                          - 'email' Required. An email address where the invitation should be sent.
      * @param array<string,mixed> $params       Optional. Options to include with the request, such as pagination or filtering parameters.
      *
      * @return mixed
