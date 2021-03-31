@@ -38,11 +38,11 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
-        $payload = (object)array_filter([
+        $payload = (object) array_filter([
             'name'         => $name,
             'display_name' => $displayName,
-            'branding'     => $branding ? (object)$branding : null,
-            'metadata'     => $metadata ? (object)$metadata : null,
+            'branding'     => $branding ? (object) $branding : null,
+            'metadata'     => $metadata ? (object) $metadata : null,
         ] + $params);
 
         return $this->apiClient->method('post')
@@ -75,10 +75,10 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
-        $payload = (object)array_filter([
+        $payload = (object) array_filter([
             'display_name' => $displayName,
-            'branding'     => $branding ? (object)$branding : null,
-            'metadata'     => $metadata ? (object)$metadata : null,
+            'branding'     => $branding ? (object) $branding : null,
+            'metadata'     => $metadata ? (object) $metadata : null,
         ] + $params);
 
         return $this->apiClient->method('patch')
@@ -237,7 +237,7 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
-        $payload = (object)array_filter([
+        $payload = (object) array_filter([
             'connection_id' => $connection
         ] + $params);
 
@@ -269,7 +269,7 @@ class Organizations extends GenericResource
     {
         return $this->apiClient->method('patch')
             ->addPath('organizations', $organization, 'enabled_connections', $connection)
-            ->withBody(json_encode((object)$params))
+            ->withBody(json_encode( (object) $params))
             ->call();
     }
 
@@ -597,11 +597,11 @@ class Organizations extends GenericResource
      * Create an invitation for an organization
      * Required scope: "create:organization_invitations"
      *
-     * @param string               $organization Organization (by ID) to create the invitation for.
-     * @param string               $clientId     Client (by ID) to create the invitation for. This Client must be associated with the Organization.
-     * @param array<string,mixed>  $inviter      An array containing information about the inviter. Requires a 'name' key, indicating who created the invitation.
-     * @param array<string,mixed>  $invitee      An array containing information about the invitee. Requires an 'email' key, indicating where to send the invite.
-     * @param array<string,mixed>  $params       Optional. Options to include with the request, such as pagination or filtering parameters.
+     * @param string              $organization Organization (by ID) to create the invitation for.
+     * @param string              $clientId     Client (by ID) to create the invitation for. This Client must be associated with the Organization.
+     * @param array<string,mixed> $inviter      An array containing information about the inviter. Requires a 'name' key, indicating who created the invitation.
+     * @param array<string,mixed> $invitee      An array containing information about the invitee. Requires an 'email' key, indicating where to send the invite.
+     * @param array<string,mixed> $params       Optional. Options to include with the request, such as pagination or filtering parameters.
      *
      * @return mixed
      *
@@ -615,10 +615,10 @@ class Organizations extends GenericResource
         array $params = []
     )
     {
-        $payload = (object)array_filter([
+        $payload = (object) array_filter([
             'client_id' => $clientId,
-            'inviter'   => (object)$inviter,
-            'invitee'   => (object)$invitee,
+            'inviter'   => (object) $inviter,
+            'invitee'   => (object) $invitee,
         ] + $params);
 
         return $this->apiClient->method('post')
