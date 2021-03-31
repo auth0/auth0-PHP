@@ -18,11 +18,11 @@ class Organizations extends GenericResource
      * Create an organization.
      * Required scope: "create:organizations"
      *
-     * @param string                   $name                 The name of the Organization. Cannot be changed later.
-     * @param string                   $displayName          The displayed name of the Organization.
-     * @param null|array<string,mixed> $branding             An array containing branding customizations for the organization.
-     * @param null|array<string,mixed> $metadata             Optional. Additional metadata to store about the organization.
-     * @param array<string,mixed>      $additionalParameters Optional. Additional parameters to send with the API request.
+     * @param string                   $name        The name of the Organization. Cannot be changed later.
+     * @param string                   $displayName The displayed name of the Organization.
+     * @param null|array<string,mixed> $branding    An array containing branding customizations for the organization.
+     * @param null|array<string,mixed> $metadata    Optional. Additional metadata to store about the organization.
+     * @param array<string,mixed>      $params      Optional. Additional parameters to send with the API request.
      *
      * @return mixed
      *
@@ -35,17 +35,15 @@ class Organizations extends GenericResource
         string $displayName,
         ?array $branding = null,
         ?array $metadata = null,
-        array $additionalParameters = []
+        array $params = []
     )
     {
-        $this->validateBranding($branding);
-
         $payload = (object)array_filter([
             'name'         => $name,
             'display_name' => $displayName,
             'branding'     => $branding ? (object)$branding : null,
             'metadata'     => $metadata ? (object)$metadata : null,
-        ] + $additionalParameters);
+        ] + $params);
 
         return $this->apiClient->method('post')
             ->addPath('organizations')
@@ -57,11 +55,11 @@ class Organizations extends GenericResource
      * Update an organization.
      * Required scope: "update:organizations"
      *
-     * @param string                   $organization         Organization (by ID) to update.
-     * @param string                   $displayName          The displayed name of the Organization.
-     * @param null|array<string,mixed> $branding             An array containing branding customizations for the organization.
-     * @param null|array<string,mixed> $metadata             Optional. Additional metadata to store about the organization.
-     * @param array<string,mixed>      $additionalParameters Optional. Additional parameters to send with the API request.
+     * @param string                   $organization Organization (by ID) to update.
+     * @param string                   $displayName  The displayed name of the Organization.
+     * @param null|array<string,mixed> $branding     An array containing branding customizations for the organization.
+     * @param null|array<string,mixed> $metadata     Optional. Additional metadata to store about the organization.
+     * @param array<string,mixed>      $params       Optional. Additional parameters to send with the API request.
      *
      * @return mixed
      *
@@ -74,16 +72,14 @@ class Organizations extends GenericResource
         string $displayName,
         ?array $branding = null,
         ?array $metadata = null,
-        array $additionalParameters = []
+        array $params = []
     )
     {
-        $this->validateBranding($branding);
-
         $payload = (object)array_filter([
             'display_name' => $displayName,
             'branding'     => $branding ? (object)$branding : null,
             'metadata'     => $metadata ? (object)$metadata : null,
-        ] + $additionalParameters);
+        ] + $params);
 
         return $this->apiClient->method('patch')
             ->addPath('organizations', $organization)
@@ -227,7 +223,7 @@ class Organizations extends GenericResource
      *
      * @param string              $organization Organization (by ID) to add a connection to.
      * @param string              $connection   Connection (by ID) to add to organization.
-     * @param array<string,mixed> $additionalParameters Optional. Additional parameters to send with the API request.
+     * @param array<string,mixed> $params       Optional. Additional parameters to send with the API request.
      *
      * @return mixed
      *
@@ -238,12 +234,12 @@ class Organizations extends GenericResource
     public function addEnabledConnection(
         string $organization,
         string $connection,
-        array $additionalParameters = []
+        array $params = []
     )
     {
         $payload = (object)array_filter([
             'connection_id' => $connection
-        ] + $additionalParameters);
+        ] + $params);
 
         return $this->apiClient->method('post')
             ->addPath('organizations', $organization, 'enabled_connections')
@@ -257,7 +253,7 @@ class Organizations extends GenericResource
      *
      * @param string              $organization Organization (by ID) to add a connection to.
      * @param string              $connection   Connection (by ID) to add to organization.
-     * @param array<string,mixed> $additionalParameters Optional. Additional parameters to send with the API request.
+     * @param array<string,mixed> $params       Optional. Additional parameters to send with the API request.
      *
      * @return mixed
      *
@@ -475,9 +471,9 @@ class Organizations extends GenericResource
      * Add one or more roles to a member (user) in an organization.
      * Required scope: "create:organization_member_roles"
      *
-     * @param string $organization  Organization (by ID) user belongs to.
-     * @param string $user          User (by ID) to add roles to.
-     * @param array  $roles<string> One or more roles (by ID) to add to the user.
+     * @param string        $organization Organization (by ID) user belongs to.
+     * @param string        $user         User (by ID) to add roles to.
+     * @param array<string> $roles        One or more roles (by ID) to add to the user.
      *
      * @return mixed
      *
@@ -528,9 +524,9 @@ class Organizations extends GenericResource
      * Remove one or more roles from a member (user) in an organization.
      * Required scope: "delete:organization_member_roles"
      *
-     * @param string $organization  Organization (by ID) user belongs to.
-     * @param string $user          User (by ID) to remove roles from.
-     * @param array  $roles<string> One or more roles (by ID) to remove from the user.
+     * @param string        $organization Organization (by ID) user belongs to.
+     * @param string        $user         User (by ID) to remove roles from.
+     * @param array<string> $roles        One or more roles (by ID) to remove from the user.
      *
      * @return mixed
      *
@@ -555,19 +551,100 @@ class Organizations extends GenericResource
     }
 
     /**
-     * Validate an array containing branding customizations for use during the creation or updating of an organization.
+     * List invitations for an organization
+     * Required scope: "read:organization_invitations"
      *
-     * @param array<string,mixed> $branding An array containing branding customizations for the organization.
+     * @param string              $organization Organization (by ID) to list invitations for.
+     * @param array<string,mixed> $params       Optional. Options to include with the request, such as pagination or filtering parameters.
      *
-     * @return void
+     * @return mixed
      *
-     * @throws EmptyOrInvalidParameterException When an improperly formatted branding customization is provided.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
-    protected function validateBranding(
-        ?array $branding = null
+    public function getInvitations(
+        string $organization,
+        array $params = []
     )
     {
-        // #TODO
-        return true;
+        return $this->apiClient->method('get')
+            ->addPath('organizations', $organization, 'invitations')
+            ->withDictParams($this->normalizeRequest($params))
+            ->call();
+    }
+
+    /**
+     * Get an invitation (by ID) for an organization
+     * Required scope: "read:organization_invitations"
+     *
+     * @param string $organization Organization (by ID) to request.
+     * @param string $invitation   Invitation (by ID) to request.
+     *
+     * @return mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     */
+    public function getInvitation(
+        string $organization,
+        string $invitation
+    )
+    {
+        return $this->apiClient->method('get')
+            ->addPath('organizations', $organization, 'invitations', $invitation)
+            ->call();
+    }
+
+    /**
+     * Create an invitation for an organization
+     * Required scope: "create:organization_invitations"
+     *
+     * @param string               $organization Organization (by ID) to create the invitation for.
+     * @param string               $clientId     Client (by ID) to create the invitation for. This Client must be associated with the Organization.
+     * @param array<string,mixed>  $inviter      An array containing information about the inviter. Requires a 'name' key, indicating who created the invitation.
+     * @param array<string,mixed>  $invitee      An array containing information about the invitee. Requires an 'email' key, indicating where to send the invite.
+     * @param array<string,mixed>  $params       Optional. Options to include with the request, such as pagination or filtering parameters.
+     *
+     * @return mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     */
+    public function createInvitation(
+        string $organization,
+        string $clientId,
+        array $inviter,
+        array $invitee,
+        array $params = []
+    )
+    {
+        $payload = (object)array_filter([
+            'client_id' => $clientId,
+            'inviter'   => (object)$inviter,
+            'invitee'   => (object)$invitee,
+        ] + $params);
+
+        return $this->apiClient->method('post')
+            ->addPath('organizations', $organization, 'invitations')
+            ->withBody(json_encode($payload))
+            ->call();
+    }
+
+    /**
+     * Delete an invitation (by ID) for an organization
+     * Required scope: "delete:organization_invitations"
+     *
+     * @param string $organization Organization (by ID) to request.
+     * @param string $invitation   Invitation (by ID) to request.
+     *
+     * @return mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     */
+    public function deleteInvitation(
+        string $organization,
+        string $invitation
+    )
+    {
+        return $this->apiClient->method('delete')
+            ->addPath('organizations', $organization, 'invitations', $invitation)
+            ->call();
     }
 }
