@@ -439,44 +439,6 @@ class OrganizationsTest extends ApiTests
         $api->call()->organizations()->getMembers( '' );
     }
 
-    public function testThatAddMemberRequestIsFormedProperly()
-    {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-
-        $api->call()->organizations()->addMember('test-organization', 'test-user');
-
-        $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertStringStartsWith( 'https://api.test.local/api/v2/organizations/test-organization/members', $api->getHistoryUrl() );
-
-        $headers = $api->getHistoryHeaders();
-        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
-
-        $body = $api->getHistoryBody();
-        $this->assertArrayHasKey( 'members', $body );
-        $this->assertContains('test-user', $body['members']);
-    }
-
-    public function testThatAddMemberWithEmptyIdThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
-
-        $api->call()->organizations()->addMember( '', '' );
-    }
-
-    public function testThatAddMemberWithEmptyUserThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid user.');
-
-        $api->call()->organizations()->addMember( 'test-organization', '' );
-    }
-
     public function testThatAddMembersRequestIsFormedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
@@ -513,44 +475,6 @@ class OrganizationsTest extends ApiTests
         $this->expectExceptionMessage('Empty or invalid users.');
 
         $api->call()->organizations()->addMembers( 'test-organization', [] );
-    }
-
-    public function testThatRemoveMemberRequestIsFormedProperly()
-    {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-
-        $api->call()->organizations()->removeMember('test-organization', 'test-user');
-
-        $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
-        $this->assertStringStartsWith( 'https://api.test.local/api/v2/organizations/test-organization/members', $api->getHistoryUrl() );
-
-        $headers = $api->getHistoryHeaders();
-        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
-
-        $body = $api->getHistoryBody();
-        $this->assertArrayHasKey( 'members', $body );
-        $this->assertContains('test-user', $body['members']);
-    }
-
-    public function testThatRemoveMemberWithEmptyIdThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
-
-        $api->call()->organizations()->removeMember( '', '' );
-    }
-
-    public function testThatRemoveMemberWithEmptyUserThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid user.');
-
-        $api->call()->organizations()->removeMember( 'test-organization', '' );
     }
 
     public function testThatRemoveMembersRequestIsFormedProperly()
@@ -625,54 +549,6 @@ class OrganizationsTest extends ApiTests
         $api->call()->organizations()->getMemberRoles( 'test-organization', '' );
     }
 
-    public function testThatAddMemberRoleRequestIsFormedProperly()
-    {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-
-        $api->call()->organizations()->addMemberRole('test-organization', 'test-user', 'test-role');
-
-        $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertStringStartsWith( 'https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles', $api->getHistoryUrl() );
-
-        $headers = $api->getHistoryHeaders();
-        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
-
-        $body = $api->getHistoryBody();
-        $this->assertArrayHasKey( 'roles', $body );
-        $this->assertContains('test-role', $body['roles']);
-    }
-
-    public function testThatAddMemberRoleWithEmptyIdThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
-
-        $api->call()->organizations()->addMemberRole( '', '', '' );
-    }
-
-    public function testThatAddMemberRoleWithEmptyUserThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid user.');
-
-        $api->call()->organizations()->addMemberRole( 'test-organization', '', '' );
-    }
-
-    public function testThatAddMemberRoleWithEmptyRoleThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid role.');
-
-        $api->call()->organizations()->addMemberRole( 'test-organization', 'test-rule', '' );
-    }
-
     public function testThatAddMemberRolesRequestIsFormedProperly()
     {
         $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
@@ -719,54 +595,6 @@ class OrganizationsTest extends ApiTests
         $this->expectExceptionMessage('Empty or invalid roles.');
 
         $api->call()->organizations()->addMemberRoles( 'test-organization', 'test-rule', [] );
-    }
-
-    public function testThatRemoveMemberRoleRequestIsFormedProperly()
-    {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-
-        $api->call()->organizations()->removeMemberRole('test-organization', 'test-user', 'test-role');
-
-        $this->assertEquals( 'DELETE', $api->getHistoryMethod() );
-        $this->assertStringStartsWith( 'https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles', $api->getHistoryUrl() );
-
-        $headers = $api->getHistoryHeaders();
-        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
-
-        $body = $api->getHistoryBody();
-        $this->assertArrayHasKey( 'roles', $body );
-        $this->assertContains('test-role', $body['roles']);
-    }
-
-    public function testThatRemoveMemberRoleWithEmptyIdThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
-
-        $api->call()->organizations()->removeMemberRole( '', '', '' );
-    }
-
-    public function testThatRemoveMemberRoleWithEmptyUserThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid user.');
-
-        $api->call()->organizations()->removeMemberRole( 'test-organization', '', '' );
-    }
-
-    public function testThatRemoveMemberRoleWithEmptyRoleThrowsException()
-    {
-        $api = new MockManagementApi();
-
-        $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid role.');
-
-        $api->call()->organizations()->removeMemberRole( 'test-organization', 'test-rule', '' );
     }
 
     public function testThatRemoveMemberRolesRequestIsFormedProperly()

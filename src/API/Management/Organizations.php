@@ -327,28 +327,6 @@ class Organizations extends GenericResource
     }
 
     /**
-     * Add a user to an organization as a member.
-     * Required scope: "update:organization_members"
-     *
-     * @param string $organization Organization (by ID) to add new members to.
-     * @param string $user         User (by ID) to add from the organization.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function addMember(
-        string $organization,
-        string $user
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($user, 'user');
-
-        return $this->addMembers($organization, [ $user ]);
-    }
-
-    /**
      * Add one or more users to an organization as members.
      * Required scope: "update:organization_members"
      *
@@ -375,28 +353,6 @@ class Organizations extends GenericResource
             ->addPath('organizations', $organization, 'members')
             ->withBody(json_encode($payload))
             ->call();
-    }
-
-    /**
-     * Remove a member (user) from an organization.
-     * Required scope: "delete:organization_members"
-     *
-     * @param string $organization Organization (by ID) user belongs to.
-     * @param string $user         User (by ID) to remove from the organization.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function removeMember(
-        string $organization,
-        string $user
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($user, 'user');
-
-        return $this->removeMembers($organization, [ $user ]);
     }
 
     /**
@@ -456,31 +412,6 @@ class Organizations extends GenericResource
     }
 
     /**
-     * Add a role to a member (user) in an organization.
-     * Required scope: "create:organization_member_roles"
-     *
-     * @param string $organization Organization (by ID) user belongs to.
-     * @param string $user         User (by ID) to add role to.
-     * @param string $role         Role (by ID) to add to the user.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function addMemberRole(
-        string $organization,
-        string $user,
-        string $role
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($user, 'user');
-        $this->checkEmptyOrInvalidString($role, 'role');
-
-        return $this->addMemberRoles($organization, $user, [ $role ]);
-    }
-
-    /**
      * Add one or more roles to a member (user) in an organization.
      * Required scope: "create:organization_member_roles"
      *
@@ -510,31 +441,6 @@ class Organizations extends GenericResource
             ->addPath('organizations', $organization, 'members', $user, 'roles')
             ->withBody(json_encode($payload))
             ->call();
-    }
-
-    /**
-     * Remove a role from a member (user) in an organization.
-     * Required scope: "delete:organization_member_roles"
-     *
-     * @param string $organization Organization (by ID) user belongs to.
-     * @param string $user         User (by ID) to remove roles from.
-     * @param string $role         Role (by ID) to remove from the user.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function removeMemberRole(
-        string $organization,
-        string $user,
-        string $role
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($user, 'user');
-        $this->checkEmptyOrInvalidString($role, 'role');
-
-        return $this->removeMemberRoles($organization, $user, [ $role ]);
     }
 
     /**
