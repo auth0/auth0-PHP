@@ -284,4 +284,82 @@ class OrganizationsIntegrationTest extends ApiTests
     $this->assertIsArray($response);
     $this->assertEmpty($response);
   }
+
+  public function testInvitations()
+  {
+    $env = self::getEnv();
+
+    // Confirm there are no invitations
+    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    $response = $this->api->getInvitations($this->organization['id']);
+
+    $this->assertIsArray($response);
+    $this->assertEmpty($response);
+
+    // Create an invitation
+    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    $response = $this->api->createInvitation(
+      $this->organization['id'],
+      $env['APP_CLIENT_ID'],
+      [
+        'name' => 'Evan Sims'
+      ],
+      [
+        'email' => uniqid('php-sdk-test-user-') . '@test.com'
+      ]
+    );
+
+    $this->assertIsArray($response);
+    $this->assertArrayHasKey('organization_id', $response);
+    $this->assertEquals($this->organization['id'], $response['organization_id']);
+    $this->assertArrayHasKey('client_id', $response);
+    $this->assertEquals($env['APP_CLIENT_ID'], $response['client_id']);
+    $this->assertArrayHasKey('invitation_url', $response);
+    $this->assertArrayHasKey('ticket_id', $response);
+
+    // Confirm pagination works
+    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    $response = $this->api->getInvitations($this->organization['id'], [ 'page' => 1 ]);
+
+    $this->assertIsArray($response);
+    $this->assertEmpty($response);
+
+    // Confirm there is one invitation
+    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    $response = $this->api->getInvitations($this->organization['id']);
+
+    $this->assertIsArray($response);
+    $this->assertNotEmpty($response);
+    $this->assertCount(1, $response);
+    $this->assertIsArray($response[0]);
+    $this->assertArrayHasKey('organization_id', $response[0]);
+    $this->assertEquals($this->organization['id'], $response[0]['organization_id']);
+    $this->assertArrayHasKey('client_id', $response[0]);
+    $this->assertEquals($env['APP_CLIENT_ID'], $response[0]['client_id']);
+    $this->assertArrayHasKey('invitation_url', $response[0]);
+    $this->assertArrayHasKey('ticket_id', $response[0]);
+
+    // Confirm invitation querying works
+    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    $response = $this->api->getInvitation($this->organization['id'], $response[0]['id']);
+
+    $this->assertIsArray($response);
+    $this->assertArrayHasKey('organization_id', $response);
+    $this->assertEquals($this->organization['id'], $response['organization_id']);
+    $this->assertArrayHasKey('client_id', $response);
+    $this->assertEquals($env['APP_CLIENT_ID'], $response['client_id']);
+    $this->assertArrayHasKey('invitation_url', $response);
+    $this->assertArrayHasKey('ticket_id', $response);
+
+    // Confirm invitation deletion works
+    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    $this->api->deleteInvitation($this->organization['id'], $response['id']);
+
+    // Confirm no invitations remain
+    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    $response = $this->api->getInvitations($this->organization['id']);
+
+    $this->assertIsArray($response);
+    $this->assertEmpty($response);
+  }
 }
