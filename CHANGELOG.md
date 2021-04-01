@@ -1,6 +1,16 @@
 # CHANGELOG
 
-## [7.7.0](https://github.com/auth0/auth0-PHP/tree/7.6.2) (2021-03-19)
+## [7.8.0](https://github.com/auth0/auth0-PHP/tree/7.8.0) (2021-03-19)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.7.0...7.8.0)
+
+This release expands Organizations support to the Management API client. Please see the README for details on Organizations, currently in closed beta testing.
+
+**Added**
+
+- Add Organizations support to Management API Client [\#483](https://github.com/auth0/auth0-PHP/pull/483) ([evansims](https://github.com/evansims))
+
+## [7.7.0](https://github.com/auth0/auth0-PHP/tree/7.7.0) (2021-03-19)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.2...7.7.0)
 
