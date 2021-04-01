@@ -183,4 +183,21 @@ class GenericResource
             throw new EmptyOrInvalidParameterException($var_name);
         }
     }
+
+    /**
+     * Check that a variable is an array and is not empty.
+     *
+     * @param mixed  $var      The variable to check.
+     * @param string $var_name The variable name.
+     *
+     * @return void
+     *
+     * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
+     */
+    protected function checkEmptyOrInvalidArray($var, $var_name)
+    {
+        if (! is_array($var) || ! count($var)) {
+            throw new EmptyOrInvalidParameterException($var_name);
+        }
+    }
 }

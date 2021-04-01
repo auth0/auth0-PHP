@@ -1035,6 +1035,60 @@ class UsersMockedTest extends TestCase
     }
 
     /**
+     * Test that a get organizations call throws an exception if the user ID is missing.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetOrganizationsThrowsExceptionIfUserIdIsMissing()
+    {
+        $api = new MockManagementApi();
+
+        try {
+            $api->call()->users()->getOrganizations( '' );
+            $caught_message = '';
+        } catch (EmptyOrInvalidParameterException $e) {
+            $caught_message = $e->getMessage();
+        }
+
+        $this->assertStringContainsString( 'Empty or invalid user_id', $caught_message );
+    }
+
+    /**
+     * Test that a get organizations call is formatted properly.
+     *
+     * @return void
+     *
+     * @throws \Exception Should not be thrown in this test.
+     */
+    public function testThatGetOrganizationsRequestIsFormattedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $api->call()->users()->getOrganizations(
+            '__test_user_id__',
+            [ 'per_page' => 3, 'page' => 2, 'include_totals' => 0, 'fields' => 'date,type,ip' ]
+        );
+
+        $this->assertEquals( 'GET', $api->getHistoryMethod() );
+        $this->assertStringStartsWith(
+            'https://api.test.local/api/v2/users/__test_user_id__/organizations?',
+            $api->getHistoryUrl()
+        );
+
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString( 'per_page=3', $query );
+        $this->assertStringContainsString( 'page=2', $query );
+        $this->assertStringContainsString( 'include_totals=false', $query );
+        $this->assertStringContainsString( 'fields=date,type,ip', $query );
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+    }
+
+    /**
      * Test that a generate recovery code call throws an exception if the user ID is missing.
      *
      * @return void
