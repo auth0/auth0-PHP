@@ -200,8 +200,8 @@ class Organizations extends GenericResource
      * Get a connection (by ID) associated with an organization.
      * Required scope: "read:organization_connections"
      *
-     * @param string              $organization Organization (by ID) to list connections of.
-     * @param array<string,mixed> $params       Optional. Additional options to include with the request, such as pagination or filtering parameters.
+     * @param string $organization Organization (by ID) that the connection is associated with.
+     * @param string $connection   Connection (by ID) to retrieve details for.
      *
      * @return mixed
      *
