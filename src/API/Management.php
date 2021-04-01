@@ -18,6 +18,7 @@ use Auth0\SDK\API\Management\Jobs;
 use Auth0\SDK\API\Management\Logs;
 use Auth0\SDK\API\Management\LogStreams;
 use Auth0\SDK\API\Management\ResourceServers;
+use Auth0\SDK\API\Management\Organizations;
 use Auth0\SDK\API\Management\Roles;
 use Auth0\SDK\API\Management\Rules;
 use Auth0\SDK\API\Management\Stats;
@@ -125,6 +126,13 @@ class Management
      * @var LogStreams
      */
     private $logStreams;
+
+    /**
+     * Instance of Auth0\SDK\API\Management\Organizations
+     *
+     * @var Organizations
+     */
+    private $organizations;
 
     /**
      * Instance of Auth0\SDK\API\Management\Roles
@@ -379,6 +387,20 @@ class Management
         }
 
         return $this->logStreams;
+    }
+
+    /**
+     * Return an instance of the Organizations class.
+     *
+     * @return Organizations
+     */
+    public function organizations() : Organizations
+    {
+        if (! $this->organizations instanceof Organizations) {
+            $this->organizations = new Organizations($this->apiClient);
+        }
+
+        return $this->organizations;
     }
 
     /**

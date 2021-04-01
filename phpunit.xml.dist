@@ -1,7 +1,10 @@
-<phpunit
-  colors="true"
-  verbose="true"
-  bootstrap="./tests/bootstrap.php">
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" verbose="true" bootstrap="./tests/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">./src/</directory>
+    </include>
+  </coverage>
   <testsuites>
     <testsuite name="unit">
       <directory>./tests/unit</directory>
@@ -10,10 +13,4 @@
       <directory>./tests/integration</directory>
     </testsuite>
   </testsuites>
-
-  <filter>
-    <whitelist>
-      <directory suffix=".php">./src/</directory>
-    </whitelist>
-  </filter>
 </phpunit>
