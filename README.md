@@ -22,7 +22,7 @@ This is [one of many libraries we offer](https://auth0.com/docs/libraries) suppo
   - [Authentication API](#authentication-api)
   - [Management API](#management-api)
 - [Examples](#examples)
-  - [Organizations (Closed Beta)](#organizations-closed-beta)
+  - [Organizations](#organizations)
     - [Logging in with an Organization](#logging-in-with-an-organization)
     - [Accepting user invitations](#accepting-user-invitations)
 - [Documentation](#documentation)
@@ -125,9 +125,9 @@ At the moment the best way to see what endpoints are covered is to read through 
 
 ## Examples
 
-### Organizations (Closed Beta)
+### Organizations
 
-Organizations is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications.
+[Organizations](https://auth0.com/docs/organizations) is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications.
 
 Using Organizations, you can:
 
