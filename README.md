@@ -203,7 +203,7 @@ After successful authentication via the Universal Login Page, the user will arri
 
 In the examples above, our application is operating with a single, configured Organization. In this case, the SDK automatically handles token validation for you: it will ensure the user's JWT has an `org_id` claim and that it matches.
 
-However, if your application requires more flexibility (such as an API supporting multiple tenants, and therefor multiple organizations) then your application should validate the `org_id` claim itself to ensure the value received is expected and known.
+However, if your application requires more flexibility (such as an API supporting multiple tenants, and therefore multiple organizations) then your application should validate the `org_id` claim itself to ensure the value received is expected and known.
 
 This could be achieved by reading the value of "org_id" returned by the `getUser()` method. An example might look like this:
 
