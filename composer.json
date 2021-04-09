@@ -15,7 +15,7 @@
     "ext-json": "*",
     "ext-openssl": "*",
     "auth0/php-jwt": "3.3.4",
-    "guzzlehttp/guzzle": "^6.5|^7.2",
+    "guzzlehttp/guzzle": "^6.0|^7.0",
     "psr/simple-cache": "^1.0"
   },
   "require-dev": {
