@@ -201,9 +201,9 @@ After successful authentication via the Universal Login Page, the user will arri
 
 #### Validation guidance
 
-In the examples above, our application is operating with a single, configured Organization. In this case, the SDK automatically handles token validation for you: it will ensure the user's JWT has an `org_id` claim and that it matches.
+In the examples above, our application is operating with a single, configured Organization. By initializing the SDK with the `organization` option, we are telling the internal ID Token verifier (`IdTokenVerifier`) to validate an `org_id` claim's presence, and that it matches what we provided.
 
-However, if your application requires more flexibility (such as an API supporting multiple tenants, and therefore multiple organizations) then your application should validate the `org_id` claim itself to ensure the value received is expected and known.
+Your application might not have the Organization ID ahead of time, or potentially needs to support multiple organizations. Your application should validate the `org_id` claim itself to ensure the value received is expected and known.
 
 This could be achieved by reading the value of "org_id" returned by the `getUser()` method. An example might look like this:
 
