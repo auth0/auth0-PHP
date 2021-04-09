@@ -25,6 +25,7 @@ This is [one of many libraries we offer](https://auth0.com/docs/libraries) suppo
   - [Organizations](#organizations)
     - [Logging in with an Organization](#logging-in-with-an-organization)
     - [Accepting user invitations](#accepting-user-invitations)
+    - [Token validation guidance](#token-validation-guidance)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [Support + Feedback](#support--feedback)
@@ -198,6 +199,67 @@ if ($invite = $auth0->getInvitationParameters()) {
 
 After successful authentication via the Universal Login Page, the user will arrive back at your application using your configured `redirect_uri`, their token will be automatically validated, and the user will have an authenticated session. Use `getUser()` to retrieve details about the authenticated user.
 
+#### Validation guidance
+
+In the examples above, our application is operating with a single, configured Organization. In this case, the SDK automatically handles token validation for you: it will ensure the user's JWT has an `org_id` claim and that it matches.
+
+However, if your application requires more flexibility (such as an API supporting multiple tenants, and therefor multiple organizations) then your application should validate the `org_id` claim itself to ensure the value received is expected and known.
+
+This could be achieved by reading the value of "org_id" returned by the `getUser()` method. An example might look like this:
+
+```php
+use Auth0\SDK\Auth0;
+
+// Example: a list of organizations our app supports
+$allowedOrganizations = ['org_123', 'org_456'];
+$defaultOrganization = $allowedOrganizations[0];
+
+// For this scenario, do not pass any `organization` during SDK initialization. You'll handle the organization validation yourself.
+$auth0 = new Auth0([
+  // Found in your Auth0 dashboard, under Application settings:
+  'domain'       => '{YOUR_TENANT}.auth0.com',
+  'client_id'    => '{YOUR_APPLICATION_CLIENT_ID}',
+  'redirect_uri' => 'https://{YOUR_APPLICATION_CALLBACK_URL}',
+]);
+
+// Are they authenticated?
+if ($user = $auth0->getUser()) {
+  // Do they have an organization claim?
+  if (! isset($user['org_id'])) {
+    // They do not; stop processing their request.
+    throw new Exception('Please sign in using an organization.');
+  }
+
+  // Does the claim match an expected organization?
+  if (! in_array($user['org_id'], $allowedOrganizations)) {
+    // It does not; stop processing their request.
+    throw new Exception('Access denied.');
+  }
+}
+
+// Do we have an incoming invitation?
+if ($invite = $auth0->getInvitationParameters()) {
+  // Is the invite for an expected organization?
+  if (! in_array($invite->organization, $allowedOrganizations)) {
+    throw new Exception("This invitation isn't intended for this service. Please have your administrator check the service configuration and request a new invitation.");
+  }
+
+  // Redirect to Universal Login using the invitation
+  $auth0->login(null, null, [
+    'invitation'   => $invite->invitation,
+    'organization' => $invite->organization
+  ]);
+}
+
+// Redirect to Universal Login using our default organization
+$auth0->login(null, null, [
+  'organization' => $defaultOrganization
+]);
+
+```
+
+If the claim can't be validated, your application should reject the token as invalid. See [https://auth0.com/docs/organizations/using-tokens](https://auth0.com/docs/organizations/using-tokens) for more information.
+
 ## Documentation
 
 - [Documentation](https://auth0.com/docs/libraries/auth0-php)
@@ -249,3 +311,7 @@ Auth0 helps you to:
 The Auth0 PHP SDK is open source software licensed under [the MIT license](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE.txt) file for more info.
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP?ref=badge_large)
+
+```
+
+```
