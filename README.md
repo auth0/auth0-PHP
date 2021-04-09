@@ -25,7 +25,7 @@ This is [one of many libraries we offer](https://auth0.com/docs/libraries) suppo
   - [Organizations](#organizations)
     - [Logging in with an Organization](#logging-in-with-an-organization)
     - [Accepting user invitations](#accepting-user-invitations)
-    - [Token validation guidance](#token-validation-guidance)
+    - [Validation guidance](#validation-guidance)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
 - [Support + Feedback](#support--feedback)
