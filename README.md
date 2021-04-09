@@ -205,7 +205,7 @@ In the examples above, our application is operating with a single, configured Or
 
 Your application might not have the Organization ID ahead of time, or potentially needs to support multiple organizations.
 
-Your application should validate any `org_id` claim itself to ensure the value received is expected and known by your application.
+Your application should validate an `org_id` claim itself to ensure the value received is expected and known by your application.
 
 This could be achieved by reading the value of "org_id" returned by the `getUser()` method. An example might look like this:
 
