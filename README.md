@@ -203,7 +203,9 @@ After successful authentication via the Universal Login Page, the user will arri
 
 In the examples above, our application is operating with a single, configured Organization. By initializing the SDK with the `organization` option, we are telling the internal ID Token verifier (`IdTokenVerifier`) to validate an `org_id` claim's presence, and that it matches what we provided.
 
-Your application might not have the Organization ID ahead of time, or potentially needs to support multiple organizations. Your application should validate the `org_id` claim itself to ensure the value received is expected and known.
+Your application might not have the Organization ID ahead of time, or potentially needs to support multiple organizations.
+
+Your application should validate any `org_id` claim itself to ensure the value received is expected and known by your application.
 
 This could be achieved by reading the value of "org_id" returned by the `getUser()` method. An example might look like this:
 
