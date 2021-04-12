@@ -18,7 +18,6 @@ use Auth0\Tests\API\ApiTests;
 */
 class OrganizationsIntegrationTest extends ApiTests
 {
-
   /**
    * Management API client.
    * @var Management
@@ -85,35 +84,36 @@ class OrganizationsIntegrationTest extends ApiTests
 
     // Create a new organization for our tests
     $this->organization = $this->api->create($this->resources['name'], $this->resources['display_name']);
+    $this->sleep();
 
     // Create a new connection for our tests
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->connection = $this->management->connections()->create([
       'name'            => uniqid('php-sdk-test-connection-'),
       'strategy'        => 'auth0',
       'enabled_clients' => [ $env['APP_CLIENT_ID'] ]
     ]);
+    $this->sleep();
 
     // Enable new connection with the organization for our tests
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->api->addEnabledConnection($this->organization['id'], $this->connection['id']);
+    $this->sleep();
 
     // Create a new user for our tests
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->user = $this->management->users()->create([
       'email'          => uniqid('php-sdk-test-user-') . '@test.com',
       'connection'     => $this->connection['name'],
       'email_verified' => true,
       'password'       => password_hash(uniqid('php-sdk-test-password-'), PASSWORD_DEFAULT)
     ]);
+    $this->sleep();
 
     // Add the new user to the organization as a member for our tests
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->api->addMembers($this->organization['id'], [ $this->user['user_id'] ]);
+    $this->sleep();
 
     // Add a role to the new member of the organization for our tests
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->role = $this->management->roles()->create(uniqid('php-sdk-test-role-'));
+    $this->sleep();
   }
 
   public function tearDown(): void
@@ -121,21 +121,25 @@ class OrganizationsIntegrationTest extends ApiTests
     // Cleanup our test role, if it's creation was successful
     if ($this->role) {
       $this->management->roles()->delete($this->role['id']);
+      $this->sleep();
     }
 
     // Cleanup our test user, if it's creation was successful
     if ($this->user) {
       $this->management->users()->delete($this->user['user_id']);
+      $this->sleep();
     }
 
     // Cleanup our test connection, if it's creation was successful
     if ($this->connection) {
       $this->management->connections()->delete($this->connection['id']);
+      $this->sleep();
     }
 
     // Cleanup our test organization, if it's creation was successful
     if ($this->organization) {
       $this->api->delete($this->organization['id']);
+      $this->sleep();
     }
   }
 
@@ -152,12 +156,13 @@ class OrganizationsIntegrationTest extends ApiTests
 
   public function testUpdate()
   {
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+    $this->sleep();
     $this->resources['display_name'] .= ' (UPDATED)';
     $this->api->update($this->organization['id'], $this->resources['display_name']);
+    $this->sleep();
 
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->organization = $this->api->get($this->organization['id']);
+    $this->sleep();
 
     $this->assertArrayHasKey('name', $this->organization);
     $this->assertEquals($this->organization['name'], $this->resources['name']);
@@ -165,8 +170,8 @@ class OrganizationsIntegrationTest extends ApiTests
 
   public function testGetAll()
   {
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getAll();
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertNotEmpty($response);
@@ -174,18 +179,18 @@ class OrganizationsIntegrationTest extends ApiTests
 
   public function testGetAllSupportsPagination()
   {
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getAll([
       'page' => 1
     ]);
+    $this->sleep();
 
     $this->assertIsArray($response);
   }
 
   public function testGet()
   {
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->get($this->organization['id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertNotEmpty($response);
@@ -194,8 +199,8 @@ class OrganizationsIntegrationTest extends ApiTests
 
   public function testGetByName()
   {
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getByName($this->organization['name']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertNotEmpty($response);
@@ -204,8 +209,8 @@ class OrganizationsIntegrationTest extends ApiTests
 
   public function testGetEnabledConnections()
   {
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getEnabledConnections($this->organization['id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
   }
@@ -213,18 +218,18 @@ class OrganizationsIntegrationTest extends ApiTests
   public function testEnabledConnections()
   {
     // Confirm 'assign_membership_on_login' is currently false on the organization connection.
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getEnabledConnection($this->organization['id'], $this->connection['id']);
+    $this->sleep();
 
     $this->assertFalse($response['assign_membership_on_login']);
 
     // Change the 'assign_membership_on_login' property on the organization connection.
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->api->updateEnabledConnection($this->organization['id'], $this->connection['id'], [ 'assign_membership_on_login' => true ]);
+    $this->sleep();
 
     // Confirm the change was recorded.
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getEnabledConnection($this->organization['id'], $this->connection['id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertArrayHasKey('connection_id', $response);
@@ -234,8 +239,8 @@ class OrganizationsIntegrationTest extends ApiTests
 
   public function testRetrieveMembers()
   {
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getMembers($this->organization['id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertNotEmpty($response);
@@ -243,10 +248,10 @@ class OrganizationsIntegrationTest extends ApiTests
 
   public function testRetrieveMembersPaginated()
   {
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getMembers($this->organization['id'], [
       'page' => 1
     ]);
+    $this->sleep();
 
     $this->assertIsArray($response);
   }
@@ -254,19 +259,19 @@ class OrganizationsIntegrationTest extends ApiTests
   public function testMemberRoles()
   {
     // Confirm that the organization member has no roles.
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getMemberRoles($this->organization['id'], $this->user['user_id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertEmpty($response);
 
     // Add our role to the organization member.
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->api->addMemberRoles($this->organization['id'], $this->user['user_id'], [ $this->role['id'] ]);
+    $this->sleep();
 
     // Confirm that the organization member now has the role.
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getMemberRoles($this->organization['id'], $this->user['user_id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertNotEmpty($response);
@@ -274,12 +279,12 @@ class OrganizationsIntegrationTest extends ApiTests
     $this->assertContainsEquals($this->role['id'], $response[0]);
 
     // Remove the role from the organization member.
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->removeMemberRoles($this->organization['id'], $this->user['user_id'], [ $this->role['id'] ]);
+    $this->sleep();
 
     // Confirm that the organization member once again has no roles.
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getMemberRoles($this->organization['id'], $this->user['user_id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertEmpty($response);
@@ -290,14 +295,13 @@ class OrganizationsIntegrationTest extends ApiTests
     $env = self::getEnv();
 
     // Confirm there are no invitations
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getInvitations($this->organization['id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertEmpty($response);
 
     // Create an invitation
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->createInvitation(
       $this->organization['id'],
       $env['APP_CLIENT_ID'],
@@ -308,6 +312,7 @@ class OrganizationsIntegrationTest extends ApiTests
         'email' => uniqid('php-sdk-test-user-') . '@test.com'
       ]
     );
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertArrayHasKey('organization_id', $response);
@@ -318,15 +323,15 @@ class OrganizationsIntegrationTest extends ApiTests
     $this->assertArrayHasKey('ticket_id', $response);
 
     // Confirm pagination works
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getInvitations($this->organization['id'], [ 'page' => 1 ]);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertEmpty($response);
 
     // Confirm there is one invitation
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getInvitations($this->organization['id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertNotEmpty($response);
@@ -340,8 +345,8 @@ class OrganizationsIntegrationTest extends ApiTests
     $this->assertArrayHasKey('ticket_id', $response[0]);
 
     // Confirm invitation querying works
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getInvitation($this->organization['id'], $response[0]['id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertArrayHasKey('organization_id', $response);
@@ -352,12 +357,12 @@ class OrganizationsIntegrationTest extends ApiTests
     $this->assertArrayHasKey('ticket_id', $response);
 
     // Confirm invitation deletion works
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $this->api->deleteInvitation($this->organization['id'], $response['id']);
+    $this->sleep();
 
     // Confirm no invitations remain
-    usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
     $response = $this->api->getInvitations($this->organization['id']);
+    $this->sleep();
 
     $this->assertIsArray($response);
     $this->assertEmpty($response);

@@ -24,10 +24,10 @@ class BlacklistsIntegrationTest extends ApiTests
         $test_jti = uniqid().uniqid().uniqid();
 
         $api->blacklists()->blacklist($env['APP_CLIENT_ID'], $test_jti);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
 
         $blacklisted = $api->blacklists()->getAll($env['APP_CLIENT_ID']);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
 
         $this->assertGreaterThan( 0, count( $blacklisted ) );
         $this->assertEquals( $env['APP_CLIENT_ID'], $blacklisted[0]['aud'] );

@@ -34,7 +34,7 @@ class ClientsIntegrationTest extends ApiTests
         ];
 
         $created_client = $api->clients()->create($create_body);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
 
         $this->assertNotEmpty($created_client['client_id']);
         $this->assertEquals($create_body['name'], $created_client['name']);
@@ -42,7 +42,7 @@ class ClientsIntegrationTest extends ApiTests
 
         $created_client_id = $created_client['client_id'];
         $got_entity        = $api->clients()->get($created_client_id);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
 
         // Make sure what we got matches what we created.
         $this->assertEquals($created_client_id, $got_entity['client_id']);
@@ -53,14 +53,14 @@ class ClientsIntegrationTest extends ApiTests
         ];
 
         $updated_client = $api->clients()->update($created_client_id, $update_body );
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
 
         $this->assertEquals($created_client_id, $updated_client['client_id']);
         $this->assertEquals($update_body['name'], $updated_client['name']);
         $this->assertEquals($update_body['app_type'], $updated_client['app_type']);
 
         $api->clients()->delete($created_client_id);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
     }
 
     /**
@@ -80,7 +80,7 @@ class ClientsIntegrationTest extends ApiTests
 
         // Get the second page of Clients with 1 per page (second result).
         $paged_results = $api->clients()->getAll($fields, true, $page_num, 1);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
 
         // Make sure we only have one result, as requested.
         $this->assertEquals(1, count($paged_results));
@@ -91,7 +91,7 @@ class ClientsIntegrationTest extends ApiTests
         // Get many results (needs to include the created result if self::findCreatedItem === true).
         $many_results_per_page = 50;
         $many_results          = $api->clients()->getAll($fields, true, 0, $many_results_per_page);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
 
         // Make sure we have at least as many results as we requested.
         $this->assertLessThanOrEqual($many_results_per_page, count($many_results));
