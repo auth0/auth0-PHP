@@ -47,7 +47,8 @@ class LogsIntegrationTest extends ApiTests
             'fields' => '_id,log_id,date',
             'include_fields' => true,
         ]);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
+
         $this->assertNotEmpty($search_results);
         $this->assertNotEmpty($search_results[0]['_id']);
         $this->assertNotEmpty($search_results[0]['log_id']);
@@ -56,7 +57,7 @@ class LogsIntegrationTest extends ApiTests
 
         // Test getting a single log result with a valid ID from above.
         $one_log = self::$api->get($search_results[0]['log_id']);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertNotEmpty($one_log);
         $this->assertEquals($search_results[0]['log_id'], $one_log['log_id']);
     }
@@ -81,7 +82,7 @@ class LogsIntegrationTest extends ApiTests
             // Include totals to check pagination.
             'include_totals' => true,
         ]);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
 
         $this->assertCount($expected_count, $search_results['logs']);
         $this->assertEquals($expected_count, $search_results['length']);

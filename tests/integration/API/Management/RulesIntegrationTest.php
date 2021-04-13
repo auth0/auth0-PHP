@@ -46,13 +46,13 @@ class RulesIntegrationTest extends ApiTests
         $api = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
 
         $results = $api->rules()->getAll();
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertNotEmpty($results);
 
         // Check getting a single rule by a known ID.
         $get_rule_id = $results[0]['id'];
         $result      = $api->rules()->get($get_rule_id);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertNotEmpty($result);
         $this->assertEquals($results[0]['id'], $get_rule_id);
 
@@ -69,7 +69,7 @@ class RulesIntegrationTest extends ApiTests
 
         // Check enabled rules.
         $enabled_results = $api->rules()->getAll(true);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         if ($has_enabled) {
             $this->assertNotEmpty($enabled_results);
         } else {
@@ -78,7 +78,7 @@ class RulesIntegrationTest extends ApiTests
 
         // Check disabled rules.
         $disabled_results = $api->rules()->getAll(false);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         if ($has_disabled) {
             $this->assertNotEmpty($disabled_results);
         } else {
@@ -101,13 +101,13 @@ class RulesIntegrationTest extends ApiTests
         $fields = ['id', 'name'];
 
         $fields_results = $api->rules()->getAll(null, $fields, true);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertNotEmpty($fields_results);
         $this->assertCount(count($fields), $fields_results[0]);
 
         $get_rule_id   = $fields_results[0]['id'];
         $fields_result = $api->rules()->get($get_rule_id, $fields, true);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertNotEmpty($fields_result);
         $this->assertCount(count($fields), $fields_result);
     }
@@ -123,12 +123,12 @@ class RulesIntegrationTest extends ApiTests
     {
         $api           = new Management(self::$env['API_TOKEN'], self::$env['DOMAIN']);
         $paged_results = $api->rules()->getAll(null, null, null, 0, 2);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertCount(2, $paged_results);
 
         // Second page of 1 result.
         $paged_results_2 = $api->rules()->getAll(null, null, null, 1, 1);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertCount(1, $paged_results_2);
         $this->assertEquals($paged_results[1]['id'], $paged_results_2[0]['id']);
     }
@@ -151,7 +151,7 @@ class RulesIntegrationTest extends ApiTests
         ];
 
         $create_result = $api->rules()->create($create_data);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertNotEmpty($create_result['id']);
         $this->assertEquals($create_data['enabled'], $create_result['enabled']);
         $this->assertEquals($create_data['name'], $create_result['name']);
@@ -165,13 +165,13 @@ class RulesIntegrationTest extends ApiTests
         ];
 
         $update_result = $api->rules()->update($test_rule_id, $update_data);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertEquals($update_data['enabled'], $update_result['enabled']);
         $this->assertEquals($update_data['name'], $update_result['name']);
         $this->assertEquals($update_data['script'], $update_result['script']);
 
         $delete_result = $api->rules()->delete($test_rule_id);
-        usleep(AUTH0_PHP_TEST_INTEGRATION_SLEEP);
+        $this->sleep();
         $this->assertNull($delete_result);
     }
 
