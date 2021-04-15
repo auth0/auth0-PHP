@@ -42,9 +42,6 @@ jobs:
       - prepare
       - run-static-analysis
       - run-unit-tests
-      - run:
-          command: bash <(curl -s https://codecov.io/bash)
-          when: on_success
   php_7_4:
     docker:
       - image: circleci/php:7.4
@@ -52,9 +49,6 @@ jobs:
       - prepare
       - run-static-analysis
       - run-unit-tests
-      - run:
-          command: bash <(curl -s https://codecov.io/bash)
-          when: on_success
   php_8_0:
     docker:
       - image: circleci/php:8.0
@@ -62,9 +56,6 @@ jobs:
       - prepare
       - run-static-analysis
       - run-unit-tests
-      - run:
-          command: bash <(curl -s https://codecov.io/bash)
-          when: on_success
   php_7_integration_tests:
     docker:
       - image: circleci/php:7.3
