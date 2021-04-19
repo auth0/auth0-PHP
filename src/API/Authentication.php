@@ -67,13 +67,6 @@ class Authentication
     private $scope;
 
     /**
-     * Options for the Guzzle HTTP client.
-     *
-     * @var array
-     */
-    private $guzzleOptions;
-
-    /**
      * ApiClient instance.
      *
      * @var ApiClient
@@ -109,7 +102,6 @@ class Authentication
         $this->client_secret = $client_secret;
         $this->audience      = $audience;
         $this->scope         = $scope;
-        $this->guzzleOptions = $guzzleOptions;
         $this->organization  = $organization;
 
         $this->apiClient = new ApiClient( [

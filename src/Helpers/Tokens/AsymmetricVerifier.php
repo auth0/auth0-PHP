@@ -5,7 +5,9 @@ namespace Auth0\SDK\Helpers\Tokens;
 
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
 use Lcobucci\JWT\Token;
 
@@ -46,12 +48,14 @@ final class AsymmetricVerifier extends SignatureVerifier
      */
     protected function checkSignature(Token $token) : bool
     {
-        $tokenKid   = $token->getHeader('kid', false);
+        $tokenKid   = $token->headers()->get('kid', false);
         $signingKey = is_array( $this->jwks ) ? ($this->jwks[$tokenKid] ?? null) : $this->jwks->getKey( $tokenKid );
         if (! $signingKey) {
             throw new InvalidTokenException( 'ID token key ID "'.$tokenKid.'" was not found in the JWKS' );
         }
 
-        return $token->verify(new RsSigner(), new Key($signingKey));
+        $config = Configuration::forAsymmetricSigner(new RsSigner(), InMemory::plainText($signingKey), InMemory::plainText($tokenKid));
+
+        return $config->validator()->validate($token, ...$config->validationConstraints());
     }
 }

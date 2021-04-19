@@ -5,8 +5,9 @@ namespace Auth0\SDK\Helpers\Tokens;
 
 use Auth0\SDK\Exception\InvalidTokenException;
 use InvalidArgumentException;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Token\Parser;
 
 /**
  * Class SignatureVerifier
@@ -47,7 +48,7 @@ abstract class SignatureVerifier
     public function __construct(string $alg)
     {
         $this->alg    = $alg;
-        $this->parser = new Parser();
+        $this->parser = new Parser(new JoseEncoder());
     }
 
     /**
@@ -69,7 +70,7 @@ abstract class SignatureVerifier
             throw new InvalidTokenException( 'ID token could not be decoded' );
         }
 
-        $tokenAlg = $parsedToken->getHeader('alg', false);
+        $tokenAlg = $parsedToken->headers()->get('alg', false);
         if ($tokenAlg !== $this->alg) {
             throw new InvalidTokenException( sprintf(
                 'Signature algorithm of "%s" is not supported. Expected the ID token to be signed with "%s".',

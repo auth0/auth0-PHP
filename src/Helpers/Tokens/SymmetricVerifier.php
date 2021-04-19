@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers\Tokens;
 
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 
 /**
@@ -41,7 +43,9 @@ final class SymmetricVerifier extends SignatureVerifier
      */
     protected function checkSignature(Token $token) : bool
     {
-        return $token->verify(new HsSigner(), $this->clientSecret);
+        $config = Configuration::forSymmetricSigner(new HsSigner(), InMemory::plainText($this->clientSecret));
+
+        return $config->validator()->validate($token, ...$config->validationConstraints());
     }
 
     /**
