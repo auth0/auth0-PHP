@@ -83,14 +83,10 @@ workflows:
       - php_7_3
       - php_7_4
       - php_8_0
-      - hold:
-          type: approval
-          requires:
-            - php_7_3
       - snyk:
+          type: approval
           context: snyk-env
           requires:
-            - hold
             - php_7_3
   integration-tests:
     jobs:
