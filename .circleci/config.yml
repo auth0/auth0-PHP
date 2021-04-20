@@ -15,6 +15,7 @@ commands:
           root: .
           paths:
             - composer.*
+            - .snyk
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
@@ -61,6 +62,20 @@ jobs:
     steps:
       - prepare
       - run-integration-tests
+  snyk:
+    docker:
+      - image: snyk/snyk-cli:composer
+    steps:
+      - attach_workspace:
+          at: .
+      - run: snyk test
+      - run:
+          command: |
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]
+            then
+            snyk monitor --org=auth0-sdks
+            fi
+          when: always
 
 workflows:
   build-and-test:
@@ -68,6 +83,15 @@ workflows:
       - php_7_3
       - php_7_4
       - php_8_0
+      - hold:
+          type: approval
+          requires:
+            - php_7_3
+      - snyk:
+          context: snyk-env
+          requires:
+            - hold
+            - php_7_3
   integration-tests:
     jobs:
       - php_7_integration_tests:
