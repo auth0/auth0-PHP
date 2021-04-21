@@ -2,7 +2,7 @@
 namespace Auth0\Tests\API;
 
 use Auth0\SDK\API\Authentication;
-use Auth0\Tests\Traits\ErrorHelpers;
+use Auth0\Tests\traits\ErrorHelpers;
 use josegonzalez\Dotenv\Loader;
 use PHPUnit\Framework\TestCase;
 
