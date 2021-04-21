@@ -111,21 +111,17 @@ class TokenVerifier
          */
 
         $tokenAud = $verifiedToken->claims()->get('aud', false);
-        if (! $tokenAud || (! is_string($tokenAud) && ! is_array($tokenAud))) {
+        if (! is_array($tokenAud)) {
             throw new InvalidTokenException(
                 'Audience (aud) claim must be a string or array of strings present in the ID token'
             );
         }
 
-        if (is_array($tokenAud) && ! in_array($this->audience, $tokenAud)) {
+        if (! in_array($this->audience, $tokenAud)) {
             throw new InvalidTokenException( sprintf(
                 'Audience (aud) claim mismatch in the ID token; expected "%s" was not one of "%s"',
                 $this->audience,
                 implode(', ', $tokenAud)
-            ) );
-        } else if (is_string($tokenAud) && $tokenAud !== $this->audience) {
-            throw new InvalidTokenException( sprintf(
-                'Audience (aud) claim mismatch in the ID token; expected "%s", found "%s"', $this->audience, $tokenAud
             ) );
         }
 
@@ -137,11 +133,12 @@ class TokenVerifier
         $leeway = $options['leeway'] ?? $this->leeway;
 
         $tokenExp = $verifiedToken->claims()->get('exp', false);
-        if (! $tokenExp || ! is_int($tokenExp)) {
+
+        if (! $tokenExp instanceof \DateTimeImmutable) {
             throw new InvalidTokenException('Expiration Time (exp) claim must be a number present in the ID token');
         }
 
-        $expireTime = $tokenExp + $leeway;
+        $expireTime = $tokenExp->getTimestamp() + $leeway;
         if ($now > $expireTime) {
             throw new InvalidTokenException( sprintf(
                 'Expiration Time (exp) claim error in the ID token; current time (%d) is after expiration time (%d)',
@@ -150,11 +147,6 @@ class TokenVerifier
             ) );
         }
 
-        $profile = [];
-        foreach ($verifiedToken->claims() as $claim => $value) {
-            $profile[$claim] = $value->getValue();
-        }
-
-        return $profile;
+        return $verifiedToken->claims()->all();
     }
 }

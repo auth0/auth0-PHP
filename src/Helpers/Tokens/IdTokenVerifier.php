@@ -50,7 +50,7 @@ final class IdTokenVerifier extends TokenVerifier
         $leeway = $options['leeway'] ?? $this->leeway;
 
         $tokenIat = $verifiedToken['iat'] ?? null;
-        if (! $tokenIat || ! is_int($tokenIat)) {
+        if (! $tokenIat instanceof \DateTimeImmutable) {
             throw new InvalidTokenException('Issued At (iat) claim must be a number present in the ID token');
         }
 

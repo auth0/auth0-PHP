@@ -329,7 +329,7 @@ class Auth0
         if (empty($this->persistantMap)) {
             // No need for storage, nothing to persist.
             $this->store = new EmptyStore();
-        } else if (! $this->store instanceof StoreInterface) {
+        } elseif (! $this->store instanceof StoreInterface) {
             // Need to have some kind of storage if user data needs to be persisted.
             $this->store = new SessionStore();
         }
@@ -699,7 +699,7 @@ class Auth0
             $jwksHttpOptions = array_merge( $this->guzzleOptions, [ 'base_uri' => $this->jwksUri ] );
             $jwksFetcher     = new JWKFetcher($this->cacheHandler, $jwksHttpOptions);
             $sigVerifier     = new AsymmetricVerifier($jwksFetcher);
-        } else if ('HS256' === $this->idTokenAlg) {
+        } elseif ('HS256' === $this->idTokenAlg) {
             $sigVerifier = new SymmetricVerifier($this->clientSecret);
         }
 
@@ -743,7 +743,7 @@ class Auth0
         $code = null;
         if ($this->responseMode === 'query' && isset($_GET['code'])) {
             $code = $_GET['code'];
-        } else if ($this->responseMode === 'form_post' && isset($_POST['code'])) {
+        } elseif ($this->responseMode === 'form_post' && isset($_POST['code'])) {
             $code = $_POST['code'];
         }
 
@@ -762,7 +762,7 @@ class Auth0
         $state = null;
         if ($this->responseMode === 'query' && isset($_GET[self::TRANSIENT_STATE_KEY])) {
             $state = $_GET[self::TRANSIENT_STATE_KEY];
-        } else if ($this->responseMode === 'form_post' && isset($_POST[self::TRANSIENT_STATE_KEY])) {
+        } elseif ($this->responseMode === 'form_post' && isset($_POST[self::TRANSIENT_STATE_KEY])) {
             $state = $_POST[self::TRANSIENT_STATE_KEY];
         }
 

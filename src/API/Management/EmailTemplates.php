@@ -5,7 +5,6 @@
  */
 namespace Auth0\SDK\API\Management;
 
-use \Auth0\SDK\Exception\CoreException;
 
 /**
  * Class EmailTemplates.

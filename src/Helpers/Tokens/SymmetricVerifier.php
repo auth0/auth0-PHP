@@ -7,6 +7,7 @@ use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 
 /**
  * Class SymmetricVerifier
@@ -44,6 +45,7 @@ final class SymmetricVerifier extends SignatureVerifier
     protected function checkSignature(Token $token) : bool
     {
         $config = Configuration::forSymmetricSigner(new HsSigner(), InMemory::plainText($this->clientSecret));
+        $config->setValidationConstraints(new SignedWith($config->signer(), $config->signingKey()));
 
         return $config->validator()->validate($token, ...$config->validationConstraints());
     }

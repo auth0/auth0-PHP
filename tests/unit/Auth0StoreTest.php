@@ -4,11 +4,8 @@ namespace Auth0\Tests\unit;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Exception\ApiException;
 use Auth0\SDK\Exception\CoreException;
-use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
-use Auth0\SDK\Store\StoreInterface;
 use Auth0\Tests\Traits\ErrorHelpers;
 use PHPUnit\Framework\TestCase;
 

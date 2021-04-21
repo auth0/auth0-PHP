@@ -4,7 +4,9 @@ namespace Auth0\Tests\unit\Helpers\Tokens;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
 use Lcobucci\JWT\Token;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +31,7 @@ class AsymmetricVerifierTest extends TestCase
 
         try {
             $verifier = new AsymmetricVerifier( [ '__test_kid__' => '__test_pem__' ] );
-            $verifier->verifyAndDecode( $hs256_token );
+            $verifier->verifyAndDecode($hs256_token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -48,7 +50,7 @@ class AsymmetricVerifierTest extends TestCase
 
         try {
             $verifier = new AsymmetricVerifier( [ '__invalid_kid__' => $rsa_keys['public'] ] );
-            $verifier->verifyAndDecode( $token );
+            $verifier->verifyAndDecode($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -64,12 +66,12 @@ class AsymmetricVerifierTest extends TestCase
 
         try {
             $verifier = new AsymmetricVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
-            $verifier->verifyAndDecode( $token.'__invalid_signature__' );
+            $verifier->verifyAndDecode($token->toString().'__invalid_signature__');
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
-        $this->assertEquals('Invalid ID token signature', $error_msg);
+        $this->assertEquals('ID token could not be decoded', $error_msg);
     }
 
     /**
@@ -81,16 +83,17 @@ class AsymmetricVerifierTest extends TestCase
         $token    = self::getToken($rsa_keys['private']);
 
         $verifier     = new AsymmetricVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
-        $decodedToken = $verifier->verifyAndDecode( $token );
 
-        $this->assertEquals('__test_sub__', $decodedToken->getClaim('sub'));
+        $decodedToken = $verifier->verifyAndDecode($token->toString());
+
+        $this->assertEquals('__test_sub__', $decodedToken->claims()->get('sub'));
     }
 
     public function testThatMalformedTokenFails()
     {
         $rsa_keys = self::getRsaKeys();
         $verifier = new AsymmetricVerifier( [ '__test_kid__' => $rsa_keys['public'] ] );
-        $token    = 'a'.(string) self::getToken($rsa_keys['private']);
+        $token    = 'a'.(string) self::getToken($rsa_keys['private'])->toString();
 
         $this->expectException(InvalidTokenException::class);
         $this->expectExceptionMessage('ID token could not be decoded');
@@ -120,13 +123,17 @@ class AsymmetricVerifierTest extends TestCase
 
     public static function getTokenBuilder() : Builder
     {
-        return (new Builder())->withClaim('sub', '__test_sub__')->withHeader('kid', '__test_kid__');
+        $builder = new Token\Builder(new JoseEncoder(), ChainedFormatter::default());
+
+        return $builder->relatedTo('__test_sub__')->withHeader('kid', '__test_kid__');
     }
 
     public static function getToken(string $rsa_private_key = null, Builder $builder = null) : Token
     {
         $rsa_private_key = $rsa_private_key ?? self::getRsaKeys()['private'];
+
         $builder = $builder ?? self::getTokenBuilder();
-        return $builder->getToken( new RsSigner(), new Key( $rsa_private_key ));
+
+        return $builder->getToken(new RsSigner(), InMemory::plainText($rsa_private_key));
     }
 }

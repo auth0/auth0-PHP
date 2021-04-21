@@ -6,10 +6,10 @@ namespace Auth0\SDK\Helpers\Tokens;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 
 /**
  * Class AsymmetricVerifier
@@ -55,6 +55,7 @@ final class AsymmetricVerifier extends SignatureVerifier
         }
 
         $config = Configuration::forAsymmetricSigner(new RsSigner(), InMemory::plainText($signingKey), InMemory::plainText($tokenKid));
+        $config->setValidationConstraints(new SignedWith($config->signer(), $config->signingKey()));
 
         return $config->validator()->validate($token, ...$config->validationConstraints());
     }

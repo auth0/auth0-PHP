@@ -27,7 +27,8 @@
     "cache/adapter-common": "^1.2",
     "cache/hierarchical-cache": "^1.1",
     "cache/array-adapter": "^1.1",
-    "phpstan/phpstan": "^0.12.64"
+    "phpstan/phpstan": "^0.12.64",
+    "firebase/php-jwt": "^5.2"
   },
   "autoload": {
     "psr-4": {

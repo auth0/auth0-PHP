@@ -3,7 +3,7 @@ namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\Tests\API\ApiTests;
-use Auth0\Tests\Traits\ErrorHelpers;
+use Auth0\Tests\traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
 
 /**

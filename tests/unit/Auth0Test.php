@@ -8,7 +8,7 @@ use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\Tests\unit\Helpers\Tokens\AsymmetricVerifierTest;
 use Auth0\Tests\unit\Helpers\Tokens\SymmetricVerifierTest;
-use Auth0\Tests\Traits\ErrorHelpers;
+use Auth0\Tests\traits\ErrorHelpers;
 use Cache\Adapter\PHPArray\ArrayCachePool;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -92,7 +92,7 @@ class Auth0Test extends TestCase
     public function testThatExchangeFailsWithNoStoredNonce()
     {
         $id_token      = self::getIdToken();
-        $response_body = '{"access_token":"1.2.3","id_token":"'.$id_token.'","refresh_token":"4.5.6"}';
+        $response_body = '{"access_token":"1.2.3","id_token":"'.$id_token->toString().'","refresh_token":"4.5.6"}';
 
         $mock = new MockHandler( [ new Response( 200, self::$headers, $response_body ) ] );
 
@@ -144,7 +144,7 @@ class Auth0Test extends TestCase
     public function testThatExchangeSucceedsWithIdToken()
     {
         $id_token      = self::getIdToken();
-        $response_body = '{"access_token":"1.2.3","id_token":"'.$id_token.'","refresh_token":"4.5.6"}';
+        $response_body = '{"access_token":"1.2.3","id_token":"'.$id_token->toString().'","refresh_token":"4.5.6"}';
 
         $mock = new MockHandler( [
             // Code exchange response.
@@ -168,7 +168,7 @@ class Auth0Test extends TestCase
 
         $this->assertTrue( $auth0->exchange() );
         $this->assertEquals( ['sub' => '__test_sub__'], $auth0->getUser() );
-        $this->assertEquals( $id_token, $auth0->getIdToken() );
+        $this->assertEquals( $id_token->toString(), $auth0->getIdToken() );
         $this->assertEquals( '1.2.3', $auth0->getAccessToken() );
         $this->assertEquals( '4.5.6', $auth0->getRefreshToken() );
     }
@@ -289,7 +289,7 @@ class Auth0Test extends TestCase
 
         $mock = new MockHandler( [
             // Code exchange response.
-            new Response( 200, self::$headers, '{"access_token":"1.2.3","id_token":"'.$id_token.'"}' ),
+            new Response( 200, self::$headers, '{"access_token":"1.2.3","id_token":"'.$id_token->toString().'"}' ),
         ] );
 
         $add_config               = [
@@ -307,7 +307,7 @@ class Auth0Test extends TestCase
         $this->assertTrue( $auth0->exchange() );
 
         $this->assertEquals( '__test_sub__', $auth0->getUser()['sub'] );
-        $this->assertEquals( $id_token, $auth0->getIdToken() );
+        $this->assertEquals( $id_token->toString(), $auth0->getIdToken() );
         $this->assertEquals( '1.2.3', $auth0->getAccessToken() );
     }
 
@@ -392,12 +392,22 @@ class Auth0Test extends TestCase
         $id_token = self::getIdToken();
         $request_history = [];
 
-        $mock = new MockHandler( [
-            // Code exchange response.
-            new Response( 200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"'.$id_token.'"}' ),
-            // Refresh token response.
-            new Response( 200, self::$headers, '{"access_token":"__test_access_token__","id_token":"'.$id_token.'"}' ),
-        ] );
+        $mock = new MockHandler(
+            [
+                // Code exchange response.
+                new Response(
+                    200,
+                    self::$headers,
+                    '{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $id_token->toString() . '"}'
+                ),
+                // Refresh token response.
+                new Response(
+                    200,
+                    self::$headers,
+                    '{"access_token":"__test_access_token__","id_token":"' . $id_token->toString() . '"}'
+                ),
+            ]
+        );
         $handler         = HandlerStack::create($mock);
         $handler->push( Middleware::history($request_history) );
 
@@ -422,7 +432,7 @@ class Auth0Test extends TestCase
         $auth0->renewTokens(['scope' => 'openid']);
 
         $this->assertEquals( '__test_access_token__', $auth0->getAccessToken() );
-        $this->assertEquals( $id_token, $auth0->getIdToken() );
+        $this->assertEquals( $id_token->toString(), $auth0->getIdToken() );
 
         $renew_request = $request_history[1]['request'];
         $renew_body    = json_decode($renew_request->getBody(), true);
@@ -684,10 +694,10 @@ class Auth0Test extends TestCase
 
         $_SESSION['auth0__nonce']   = '__test_nonce__';
         $_SESSION['auth0__max_age'] = 1000;
-        $auth0->setIdToken( $id_token );
+        $auth0->setIdToken( $id_token->toString() );
 
-        $this->assertEquals($id_token, $auth0->getIdToken());
-        $this->assertEquals($id_token, $_SESSION['auth0__id_token']);
+        $this->assertEquals($id_token->toString(), $auth0->getIdToken());
+        $this->assertEquals($id_token->toString(), $_SESSION['auth0__id_token']);
     }
 
     /**
@@ -702,7 +712,7 @@ class Auth0Test extends TestCase
         $_SESSION['auth0__nonce'] = '__invalid_nonce__';
         $e_message                = 'No exception caught';
         try {
-            $auth0->setIdToken( $id_token );
+            $auth0->setIdToken( $id_token->toString() );
         } catch (InvalidTokenException $e) {
             $e_message = $e->getMessage();
         }
@@ -722,7 +732,7 @@ class Auth0Test extends TestCase
         $_SESSION['auth0__nonce'] = '__test_nonce__';
         $e_message                = 'No exception caught';
         try {
-            $auth0->setIdToken( $id_token );
+            $auth0->setIdToken( $id_token->toString() );
         } catch (InvalidTokenException $e) {
             $e_message = $e->getMessage();
         }
@@ -743,7 +753,7 @@ class Auth0Test extends TestCase
         $this->expectException(InvalidTokenException::class);
         $this->expectExceptionMessage('Organization Id (org_id) claim must be a string present in the ID token');
 
-        $auth0->decodeIdToken( self::getIdToken() );
+        $auth0->decodeIdToken( self::getIdToken()->toString() );
     }
 
     /**
@@ -753,7 +763,7 @@ class Auth0Test extends TestCase
     {
         $auth0 = new Auth0( self::$baseConfig + [ 'id_token_alg' => 'HS256', 'organization' => '__test_organization__' ] );
 
-        $decodedToken = $auth0->decodeIdToken( self::getIdToken([ 'org_id' => '__test_organization__' ]) );
+        $decodedToken = $auth0->decodeIdToken( self::getIdToken([ 'org_id' => '__test_organization__' ])->toString() );
 
         $this->assertArrayHasKey( 'org_id', $decodedToken );
         $this->assertEquals( '__test_organization__', $decodedToken['org_id'] );
@@ -769,7 +779,7 @@ class Auth0Test extends TestCase
         $this->expectException(InvalidTokenException::class);
         $this->expectExceptionMessage('Organization Id (org_id) claim value mismatch in the ID token; expected "__test_organization__", found "__bad_test_organization__"');
 
-        $auth0->decodeIdToken( self::getIdToken(['org_id' => '__bad_test_organization__',]) );
+        $auth0->decodeIdToken( self::getIdToken(['org_id' => '__bad_test_organization__',])->toString() );
     }
 
     public function testThatDecodeIdTokenOptionsAreUsed()
@@ -778,7 +788,7 @@ class Auth0Test extends TestCase
         $_SESSION['auth0__nonce'] = '__test_nonce__';
         $e_message                = 'No exception caught';
         try {
-            $auth0->decodeIdToken( self::getIdToken(), ['max_age' => 10 ] );
+            $auth0->decodeIdToken( self::getIdToken()->toString(), ['max_age' => 10 ] );
         } catch (InvalidTokenException $e) {
             $e_message = $e->getMessage();
         }
@@ -804,8 +814,8 @@ class Auth0Test extends TestCase
 
         $_SESSION['auth0__nonce'] = '__test_nonce__';
 
-        $auth0->setIdToken( $id_token );
-        $this->assertEquals( $id_token, $auth0->getIdToken() );
+        $auth0->setIdToken( $id_token->toString() );
+        $this->assertEquals( $id_token->toString(), $auth0->getIdToken() );
     }
 
     public function testThatCacheHandlerCanBeSet()
@@ -831,7 +841,7 @@ class Auth0Test extends TestCase
         $_SESSION['auth0__nonce'] = '__test_nonce__';
 
         try {
-            @$auth0->setIdToken(AsymmetricVerifierTest::getToken());
+            @$auth0->setIdToken(AsymmetricVerifierTest::getToken()->toString());
         } catch ( \Exception $e ) {
             // ...
         }
@@ -861,6 +871,36 @@ class Auth0Test extends TestCase
         $builder  = SymmetricVerifierTest::getTokenBuilder();
 
         foreach (array_merge($defaults, $overrides) as $claim => $value) {
+            if ('sub' === $claim) {
+                $builder->relatedTo($value);
+
+                continue;
+            }
+
+            if ('iss' === $claim) {
+                $builder->issuedBy($value);
+
+                continue;
+            }
+
+            if ('aud' === $claim) {
+                $builder->permittedFor($value);
+
+                continue;
+            }
+
+            if ('exp' === $claim) {
+                $builder->expiresAt(new \DateTimeImmutable('@'.$value));
+
+                continue;
+            }
+
+            if ('iat' === $claim) {
+                $builder->issuedAt(new \DateTimeImmutable('@'.$value));
+
+                continue;
+            }
+
             $builder->withClaim($claim, $value);
         }
 

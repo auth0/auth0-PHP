@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @package Auth0\Tests\unit\API\Management
  */
-class ConnectionsTestMocked extends TestCase
+class ConnectionsMockedTest extends TestCase
 {
 
     use ErrorHelpers;

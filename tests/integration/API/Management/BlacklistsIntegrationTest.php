@@ -1,10 +1,8 @@
 <?php
 namespace Auth0\Tests\integration\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Management;
 use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
 
 class BlacklistsIntegrationTest extends ApiTests
 {

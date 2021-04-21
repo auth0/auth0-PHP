@@ -4,7 +4,12 @@ namespace Auth0\Tests\unit\Helpers\Tokens;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
-use Lcobucci\JWT\Builder;
+use Firebase\JWT\JWT;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
+use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Token;
 use PHPUnit\Framework\TestCase;
 
 class IdTokenVerifierTest extends TestCase
@@ -30,7 +35,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -41,28 +46,31 @@ class IdTokenVerifierTest extends TestCase
     public function testThatTokenWithNonStringIssuerFails()
     {
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = (new Builder())->withClaim('iss', 123);
+        $builder = (new Token\Builder(new JoseEncoder(), ChainedFormatter::default()))->issuedBy(123);
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
-        $this->assertEquals('Issuer (iss) claim must be a string present in the ID token', $error_msg);
+        $this->assertEquals(
+            'Issuer (iss) claim mismatch in the ID token; expected "__test_iss__", found "123"',
+            $error_msg
+        );
     }
 
     public function testThatTokenWithInvalidIssuerFails()
     {
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = (new Builder())->issuedBy('__invalid_issuer__');
+        $builder = (new Token\Builder(new JoseEncoder(), ChainedFormatter::default()))->issuedBy('__invalid_issuer__');
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -76,15 +84,16 @@ class IdTokenVerifierTest extends TestCase
     public function testThatTokenWithMissingSubFails()
     {
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = (new Builder())
+        $builder   = (new Token\Builder(new JoseEncoder(), ChainedFormatter::default()))
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'));
+        $token     = $builder->getToken(new HsSigner(), InMemory::plainText('__test_secret__'));
+
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -94,13 +103,15 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenWithNonStringSubFails()
     {
+        $tokenData = [
+            'aud' => '__test_aud__',
+            'iss' => '__test_iss__',
+            'sub' => 123,
+            'exp' => time() + 1000,
+        ];
+        $token = JWT::encode($tokenData, '__test_secret__');
+
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()
-            ->withClaim('sub', 123)
-            ->issuedBy('__test_iss__')
-            ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
@@ -120,26 +131,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
-            $error_msg = $e->getMessage();
-        }
-
-        $this->assertEquals(
-            'Audience (aud) claim must be a string or array of strings present in the ID token',
-            $error_msg
-        );
-    }
-
-    public function testThatTokenWithNonStringOrArrayAudFails()
-    {
-        $verifier  = new IdTokenVerifier('__test_iss__', uniqid(), new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', 123);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
-        $error_msg = 'No exception caught';
-
-        try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -152,11 +144,13 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenWithInvalidArrayAudFails()
     {
+        $tokenData = [
+            'aud' => ['__invalid_aud_1__', '__invalid_aud_2__'],
+            'iss' => '__test_iss__',
+        ];
+        $token = JWT::encode($tokenData, '__test_secret__');
+
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()
-            ->issuedBy('__test_iss__')
-            ->withClaim('aud', ['__invalid_aud_1__', '__invalid_aud_2__']);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
@@ -181,13 +175,13 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
         $this->assertEquals(
-            'Audience (aud) claim mismatch in the ID token; expected "__test_aud__", found "__invalid_aud__"',
+            'Audience (aud) claim mismatch in the ID token; expected "__test_aud__" was not one of "__invalid_aud__"',
             $error_msg
         );
     }
@@ -202,7 +196,7 @@ class IdTokenVerifierTest extends TestCase
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -212,12 +206,15 @@ class IdTokenVerifierTest extends TestCase
 
     public function testThatTokenWithNonIntExpFails()
     {
+        $tokenData = [
+            'aud' => '__test_aud__',
+            'iss' => '__test_iss__',
+            'exp' => uniqid(),
+        ];
+        $token = JWT::encode($tokenData, '__test_secret__');
+
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()
-            ->issuedBy('__test_iss__')
-            ->permittedFor('__test_aud__')
-            ->withClaim('exp', uniqid());
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+
         $error_msg = 'No exception caught';
 
         try {
@@ -226,7 +223,7 @@ class IdTokenVerifierTest extends TestCase
             $error_msg = $e->getMessage();
         }
 
-        $this->assertEquals('Expiration Time (exp) claim must be a number present in the ID token', $error_msg);
+        $this->assertEquals('ID token could not be decoded', $error_msg);
     }
 
     public function testThatExpiredTokenFails()
@@ -235,12 +232,12 @@ class IdTokenVerifierTest extends TestCase
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', 1000);
+            ->expiresAt(new \DateTimeImmutable('@' . 1000));
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token, ['time' => 10000, 'leeway' => 10]);
+            $verifier->verify($token->toString(), ['time' => 10000, 'leeway' => 10]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -257,12 +254,12 @@ class IdTokenVerifierTest extends TestCase
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000);
+            ->expiresAt(new \DateTimeImmutable('@' . (time() + 1000)));
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -276,13 +273,13 @@ class IdTokenVerifierTest extends TestCase
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000);
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'));
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token, ['nonce' => uniqid()]);
+            $verifier->verify($token->toString(), ['nonce' => uniqid()]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -296,14 +293,14 @@ class IdTokenVerifierTest extends TestCase
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000)
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'))
             ->withClaim('nonce', 123);
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token, ['nonce' => uniqid()]);
+            $verifier->verify($token->toString(), ['nonce' => uniqid()]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -317,14 +314,14 @@ class IdTokenVerifierTest extends TestCase
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000)
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'))
             ->withClaim('nonce', '__invalid_nonce__');
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token, ['nonce' => '__test_nonce__']);
+            $verifier->verify($token->toString(), ['nonce' => '__test_nonce__']);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -340,14 +337,14 @@ class IdTokenVerifierTest extends TestCase
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
-            ->withClaim('aud', ['__test_aud__', '__test_aud_2__'])
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000);
+            ->permittedFor('__test_aud__', '__test_aud_2__')
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'));
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -363,15 +360,15 @@ class IdTokenVerifierTest extends TestCase
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
-            ->withClaim('aud', ['__test_aud__', '__test_aud_2__'])
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000)
+            ->permittedFor('__test_aud__', '__test_aud_2__')
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'))
             ->withClaim('azp', 123);
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -387,15 +384,15 @@ class IdTokenVerifierTest extends TestCase
         $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
-            ->withClaim('aud', ['__test_aud__', '__test_aud_2__'])
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000)
+            ->permittedFor('__test_aud__', '__test_aud_2__')
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'))
             ->withClaim('azp', '__invalid_azp__');
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token);
+            $verifier->verify($token->toString());
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -412,13 +409,13 @@ class IdTokenVerifierTest extends TestCase
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000);
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'));
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token, ['max_age' => uniqid()]);
+            $verifier->verify($token->toString(), ['max_age' => uniqid()]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -435,14 +432,14 @@ class IdTokenVerifierTest extends TestCase
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000)
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'))
             ->withClaim('auth_time', uniqid());
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
-            $verifier->verify($token, ['max_age' => uniqid()]);
+            $verifier->verify($token->toString(), ['max_age' => uniqid()]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -459,15 +456,15 @@ class IdTokenVerifierTest extends TestCase
         $builder   = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', 11000)
-            ->withClaim('iat', 9000)
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'))
             ->withClaim('auth_time', 9000);
         $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->setLeeway(0);
-            $verifier->verify($token, ['time' => 10000, 'max_age' => 100]);
+            $verifier->verify($token->toString(), ['time' => 10000, 'max_age' => 100]);
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -487,12 +484,12 @@ class IdTokenVerifierTest extends TestCase
         $builder  = SymmetricVerifierTest::getTokenBuilder()
             ->issuedBy('__test_iss__')
             ->permittedFor('__test_aud__')
-            ->withClaim('exp', time() + 1000)
-            ->withClaim('iat', time() - 1000)
+            ->expiresAt(new \DateTimeImmutable('+1000 seconds'))
+            ->issuedAt(new \DateTimeImmutable('-1000 seconds'))
             ->withClaim('auth_time', 9000);
         $token    = SymmetricVerifierTest::getToken('__test_secret__', $builder);
 
-        $decoded_token = $verifier->verify($token);
+        $decoded_token = $verifier->verify($token->toString());
 
         $this->assertEquals('__test_sub__', $decoded_token['sub']);
     }

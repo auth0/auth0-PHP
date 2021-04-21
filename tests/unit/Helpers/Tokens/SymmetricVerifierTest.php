@@ -4,8 +4,10 @@ namespace Auth0\Tests\unit\Helpers\Tokens;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Encoding\ChainedFormatter;
+use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
+use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Token;
 use PHPUnit\Framework\TestCase;
 
@@ -30,24 +32,6 @@ class SymmetricVerifierTest extends TestCase
         $this->assertEquals('ID token could not be decoded', $error_msg);
     }
 
-    public function testThatAlgorithmNoneFails()
-    {
-        $error_msg      = 'No exception caught';
-        $unsigned_token = self::getTokenBuilder()->getToken();
-
-        try {
-            $verifier = new SymmetricVerifier( '__test_secret__' );
-            $verifier->verifyAndDecode( $unsigned_token );
-        } catch (InvalidTokenException $e) {
-            $error_msg = $e->getMessage();
-        }
-
-        $this->assertEquals(
-            'Signature algorithm of "none" is not supported. Expected the ID token to be signed with "HS256".',
-            $error_msg
-        );
-    }
-
     public function testThatWrongAlgorithmFails()
     {
         $rsa_keys    = AsymmetricVerifierTest::getRsaKeys();
@@ -56,7 +40,7 @@ class SymmetricVerifierTest extends TestCase
 
         try {
             $verifier = new SymmetricVerifier( '__test_secret__' );
-            $verifier->verifyAndDecode( $rs256_token );
+            $verifier->verifyAndDecode( $rs256_token->toString() );
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -72,7 +56,7 @@ class SymmetricVerifierTest extends TestCase
         $error_msg = 'No exception caught';
         try {
             $verifier = new SymmetricVerifier( '__test_secret__' );
-            $verifier->verifyAndDecode( self::getToken( '__invalid_secret__' ) );
+            $verifier->verifyAndDecode( self::getToken( '__invalid_secret__' )->toString() );
         } catch (InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
@@ -86,9 +70,9 @@ class SymmetricVerifierTest extends TestCase
     public function testThatTokenClaimsAreReturned()
     {
         $verifier     = new SymmetricVerifier( '__test_secret__' );
-        $decodedToken = $verifier->verifyAndDecode( self::getToken() );
+        $decodedToken = $verifier->verifyAndDecode( self::getToken()->toString() );
 
-        $this->assertEquals('__test_sub__', $decodedToken->getClaim('sub'));
+        $this->assertEquals('__test_sub__', $decodedToken->claims()->get('sub'));
     }
 
     /*
@@ -102,7 +86,9 @@ class SymmetricVerifierTest extends TestCase
      */
     public static function getTokenBuilder() : Builder
     {
-        return (new Builder())->withClaim('sub', '__test_sub__');
+        $builder = new Token\Builder(new JoseEncoder(), ChainedFormatter::default());
+
+        return $builder->relatedTo('__test_sub__');
     }
 
     /**
@@ -114,6 +100,7 @@ class SymmetricVerifierTest extends TestCase
     public static function getToken(string $secret = '__test_secret__', Builder $builder = null) : Token
     {
         $builder = $builder ?? self::getTokenBuilder();
-        return $builder->getToken( new HsSigner(), new Key($secret));
+
+        return $builder->getToken(new HsSigner(), InMemory::plainText($secret));
     }
 }

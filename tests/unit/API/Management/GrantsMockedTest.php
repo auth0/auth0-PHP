@@ -4,7 +4,7 @@ namespace Auth0\Tests\unit\API\Management;
 use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Exception\CoreException;
-use Auth0\Tests\Traits\ErrorHelpers;
+use Auth0\Tests\traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @package Auth0\Tests\unit\API\Management
  */
-class GrantsTestMocked extends TestCase
+class GrantsMockedTest extends TestCase
 {
 
     use ErrorHelpers;

@@ -218,7 +218,7 @@ class RequestBuilder
 
         if (! empty($this->files)) {
             $data['multipart'] = $this->buildMultiPart();
-        } else if (! empty($this->form_params)) {
+        } elseif (! empty($this->form_params)) {
             $data['form_params'] = $this->form_params;
         }
 
