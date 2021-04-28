@@ -399,7 +399,7 @@ class Authentication
      *
      * @throws ApiException If grant_type is missing.
      */
-    public function codeExchange(string $code, string $redirect_uri, string $code_verifier = null): array
+    public function codeExchange(string $code, string $redirect_uri, ?string $code_verifier = null): array
     {
         if (empty($this->client_secret)) {
             throw new ApiException('client_secret is mandatory');

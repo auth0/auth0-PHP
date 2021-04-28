@@ -23,7 +23,7 @@ class JWKFetcher
      *
      * @see https://www.php-fig.org/psr/psr-16/#12-definitions
      */
-    const CACHE_TTL = 600;
+    private const CACHE_TTL = 600;
 
     /**
      * How long should the cache persist? Defaults to value of CACHE_TTL.
@@ -62,8 +62,11 @@ class JWKFetcher
      * @param array               $guzzleOptions Guzzle HTTP options.
      * @param options             $options       Class options to apply at initializion.
      */
-    public function __construct(CacheInterface $cache = null, array $guzzleOptions = [], array $options = [])
-    {
+    public function __construct(
+        ?CacheInterface $cache = null,
+        array $guzzleOptions = [],
+        array $options = []
+    ) {
         if ($cache === null) {
             $cache = new NoCacheHandler();
         }
@@ -99,7 +102,7 @@ class JWKFetcher
      *
      * @return mixed|null
      */
-    public function getKey(string $kid, string $jwksUri = null)
+    public function getKey(string $kid, ?string $jwksUri = null)
     {
         $keys = $this->getKeys($jwksUri);
 
@@ -118,7 +121,7 @@ class JWKFetcher
      *
      * @return array
      */
-    public function getKeys(string $jwks_url = null, bool $use_cache = true): array
+    public function getKeys(?string $jwks_url = null, bool $use_cache = true): array
     {
         $jwks_url = $jwks_url ?? $this->guzzleOptions['base_uri'] ?? '';
 
