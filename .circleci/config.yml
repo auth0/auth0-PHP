@@ -20,17 +20,12 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
-  run-static-analysis:
+  run-quality-checks:
     steps:
-      - run: composer static-analysis
-  run-unit-tests:
+      - run: php ./vendor/bin/phpinsights --no-interaction --min-quality=50 --min-complexity=50 --min-architecture=50 --min-style=5
+  run-test-suite:
     steps:
-      - run: composer test-unit-ci
-      - store_artifacts:
-          path: build/coverage.xml
-  run-integration-tests:
-    steps:
-      - run: composer test-integration-ci
+      - run: php ./vendor/bin/pest --stop-on-failure --coverage-clover=build/coverage.xml
       - store_artifacts:
           path: build/coverage.xml
 
@@ -40,28 +35,22 @@ jobs:
       - image: circleci/php:7.3
     steps:
       - prepare
-      - run-static-analysis
-      - run-unit-tests
+      - run-quality-checks
+      - run-test-suite
   php_7_4:
     docker:
       - image: circleci/php:7.4
     steps:
       - prepare
-      - run-static-analysis
-      - run-unit-tests
+      - run-quality-checks
+      - run-test-suite
   php_8_0:
     docker:
       - image: circleci/php:8.0
     steps:
       - prepare
-      - run-static-analysis
-      - run-unit-tests
-  php_7_integration_tests:
-    docker:
-      - image: circleci/php:7.3
-    steps:
-      - prepare
-      - run-integration-tests
+      - run-quality-checks
+      - run-test-suite
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
@@ -78,20 +67,18 @@ jobs:
           when: always
 
 workflows:
-  build-and-test:
+  test-php-versions:
     jobs:
       - php_7_3
       - php_7_4
       - php_8_0
-      - snyk:
-          # Must define SNYK_TOKEN env
-          context: snyk-env
-          requires:
-            - php_7_3
-  integration-tests:
+  vulnerability-check:
     jobs:
-      - php_7_integration_tests:
+      - snyk:
           filters:
             branches:
               only:
                 - master
+          context: snyk-env
+          requires:
+            - php_7_3
