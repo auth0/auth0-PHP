@@ -33,11 +33,11 @@ class TicketsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testCreateEmailVerificationTicket()
+    public function testCreateEmailVerification()
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $api->call()->tickets()->createEmailVerificationTicket(
+        $api->call()->tickets()->createEmailVerification(
             '__test_user_id__',
             [
                 'identity' => [
@@ -67,11 +67,11 @@ class TicketsTest extends ApiTests
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
-    public function testCreatePasswordChangeTicket()
+    public function testCreatePasswordChange()
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $api->call()->tickets()->createPasswordChangeTicket(
+        $api->call()->tickets()->createPasswordChange(
             [
                 'user_id' => '__test_user_id__',
                 'new_password' => '__test_password__',

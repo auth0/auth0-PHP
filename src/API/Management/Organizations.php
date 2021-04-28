@@ -289,7 +289,7 @@ class Organizations extends GenericResource
         ?RequestOptions $options = null
     ): ?array {
         $this->validateString($id, 'id');
-        $this->validateString($connectionId, 'connection');
+        $this->validateString($connectionId, 'connectionId');
 
         return $this->apiClient->method('patch')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)

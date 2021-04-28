@@ -166,7 +166,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->update('', '');
     }
@@ -214,7 +214,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->update('', '');
     }
@@ -259,7 +259,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->get('');
     }
@@ -289,7 +289,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organizationName.');
+        $this->expectExceptionMessage('Empty or invalid name.');
 
         $api->call()->organizations()->getByName('');
     }
@@ -319,7 +319,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getEnabledConnections('');
     }
@@ -349,7 +349,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getEnabledConnection('', '');
     }
@@ -364,7 +364,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid connection.');
+        $this->expectExceptionMessage('Empty or invalid connectionId.');
 
         $api->call()->organizations()->getEnabledConnection('test-organization', '');
     }
@@ -378,7 +378,7 @@ class OrganizationsTest extends ApiTests
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $api->call()->organizations()->addEnabledConnection('test-organization', 'test-connection');
+        $api->call()->organizations()->addEnabledConnection('test-organization', 'test-connection', ['assign_membership_on_login' => true]);
 
         $this->assertEquals('POST', $api->getHistoryMethod());
         $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections', $api->getHistoryUrl());
@@ -398,9 +398,9 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
-        $api->call()->organizations()->addEnabledConnection('', '');
+        $api->call()->organizations()->addEnabledConnection('', '', ['assign_membership_on_login' => true]);
     }
 
     /**
@@ -413,9 +413,9 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid connection.');
+        $this->expectExceptionMessage('Empty or invalid connectionId.');
 
-        $api->call()->organizations()->addEnabledConnection('test-organization', '');
+        $api->call()->organizations()->addEnabledConnection('test-organization', '', ['assign_membership_on_login' => true]);
     }
 
     /**
@@ -450,9 +450,9 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
-        $api->call()->organizations()->updateEnabledConnection('', '');
+        $api->call()->organizations()->updateEnabledConnection('', '', ['assign_membership_on_login' => true]);
     }
 
     /**
@@ -465,9 +465,9 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid connection.');
+        $this->expectExceptionMessage('Empty or invalid connectionId.');
 
-        $api->call()->organizations()->updateEnabledConnection('test-organization', '');
+        $api->call()->organizations()->updateEnabledConnection('test-organization', '', ['assign_membership_on_login' => true]);
     }
 
     /**
@@ -495,7 +495,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->removeEnabledConnection('', '');
     }
@@ -510,7 +510,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid connection.');
+        $this->expectExceptionMessage('Empty or invalid connectionId.');
 
         $api->call()->organizations()->removeEnabledConnection('test-organization', '');
     }
@@ -540,7 +540,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getMembers('');
     }
@@ -577,7 +577,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->addMembers('', []);
     }
@@ -592,7 +592,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid users.');
+        $this->expectExceptionMessage('Empty or invalid members.');
 
         $api->call()->organizations()->addMembers('test-organization', []);
     }
@@ -626,7 +626,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->removeMembers('', []);
     }
@@ -641,7 +641,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid users.');
+        $this->expectExceptionMessage('Empty or invalid members.');
 
         $api->call()->organizations()->removeMembers('test-organization', []);
     }
@@ -671,7 +671,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getMemberRoles('', '');
     }
@@ -686,7 +686,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid user.');
+        $this->expectExceptionMessage('Empty or invalid userId.');
 
         $api->call()->organizations()->getMemberRoles('test-organization', '');
     }
@@ -723,7 +723,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->addMemberRoles('', '', []);
     }
@@ -738,7 +738,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid user.');
+        $this->expectExceptionMessage('Empty or invalid userId.');
 
         $api->call()->organizations()->addMemberRoles('test-organization', '', []);
     }
@@ -787,7 +787,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->removeMemberRoles('', '', []);
     }
@@ -802,7 +802,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid user.');
+        $this->expectExceptionMessage('Empty or invalid userId.');
 
         $api->call()->organizations()->removeMemberRoles('test-organization', '', []);
     }
@@ -847,7 +847,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getInvitations('');
     }
@@ -877,7 +877,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getInvitation('', '');
     }
@@ -892,7 +892,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid invitation.');
+        $this->expectExceptionMessage('Empty or invalid invitationId.');
 
         $api->call()->organizations()->getInvitation('test-organization', '');
     }
@@ -940,7 +940,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->createInvitation('', '', [], []);
     }
@@ -1045,7 +1045,7 @@ class OrganizationsTest extends ApiTests
         $api = new MockManagementApi();
 
         $this->expectException(EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid organization.');
+        $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->deleteInvitation('', '');
     }

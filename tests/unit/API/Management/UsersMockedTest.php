@@ -525,17 +525,17 @@ class UsersMockedTest extends TestCase
     }
 
     /**
-     * Test generateRecoveryCode() request.
+     * Test createRecoveryCode() request.
      *
      * @return void
      */
-    public function testThatGenerateRecoveryCodeRequestIsFormattedProperly()
+    public function testThatCreateRecoveryCodeRequestIsFormattedProperly()
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
         $mockupId = uniqid();
 
-        $api->call()->users()->generateRecoveryCode($mockupId);
+        $api->call()->users()->createRecoveryCode($mockupId);
 
         $this->assertEquals('POST', $api->getHistoryMethod());
         $this->assertEquals(

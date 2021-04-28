@@ -72,12 +72,12 @@ class EmailTemplatesMockedTest extends TestCase
 
         $api->call()->emailTemplates()->create(
             'welcome_email',
+            '__test_email_body__',
+            'test@auth0.com',
+            '__test_email_subject__',
+            'liquid',
+            true,
             [
-                'enabled'              => true,
-                'from'                 => 'test@auth0.com',
-                'subject'              => '__test_email_subject__',
-                'body'                 => '__test_email_body__',
-                'syntax'               => 'liquid',
                 'urlLifetimeInSeconds' => 0
             ]
         );

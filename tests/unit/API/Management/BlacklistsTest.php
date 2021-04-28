@@ -48,7 +48,7 @@ class BlacklistsTest extends ApiTests
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $api->call()->blacklists()->blacklist('__test_jti__', '__test_aud__');
+        $api->call()->blacklists()->create('__test_jti__', '__test_aud__');
 
         $this->assertEquals('POST', $api->getHistoryMethod());
         $this->assertEquals('https://api.test.local/api/v2/blacklists/tokens', $api->getHistoryUrl());

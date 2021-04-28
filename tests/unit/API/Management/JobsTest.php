@@ -83,7 +83,7 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $api->call()->jobs()->importUsers(
+        $api->call()->jobs()->createImportUsers(
             self::$testImportUsersJsonPath,
             '__test_conn_id__',
             [
@@ -133,7 +133,7 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $api->call()->jobs()->exportUsers(
+        $api->call()->jobs()->createExportUsers(
             [
                 'connection_id' => '__test_conn_id__',
                 'limit' => 5,
@@ -170,7 +170,7 @@ class JobsTest extends ApiTests
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $api->call()->jobs()->sendVerificationEmail(
+        $api->call()->jobs()->createSendVerificationEmail(
             '__test_user_id__',
             [
                 'client_id' => '__test_client_id__',

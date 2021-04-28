@@ -28,7 +28,7 @@ class RulesTest extends ApiTests
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $api->call()->rules()->getAll(true);
+        $api->call()->rules()->getAll(['enabled' => true]);
 
         $this->assertEquals('GET', $api->getHistoryMethod());
         $this->assertStringStartsWith('https://api.test.local/api/v2/rules', $api->getHistoryUrl());
