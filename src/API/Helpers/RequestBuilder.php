@@ -223,14 +223,12 @@ class RequestBuilder
 
         if (! empty($this->files)) {
             $data['multipart'] = $this->buildMultiPart();
-        } else if (! empty($this->form_params)) {
+        } elseif (! empty($this->form_params)) {
             $data['form_params'] = $this->form_params;
         }
 
-        $client   = new Client($this->getGuzzleOptions());
-        $response = $client->request($this->method, $this->getUrl(), $data);
-
-        return $response;
+        $client = new Client($this->getGuzzleOptions());
+        return $client->request($this->method, $this->getUrl(), $data);
     }
 
     /**
