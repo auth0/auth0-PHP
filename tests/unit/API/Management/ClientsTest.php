@@ -17,7 +17,6 @@ use PHPUnit\Framework\ExpectationFailedException;
  */
 class ClientsTest extends ApiTests
 {
-
     /**
      * Expected telemetry value.
      *
@@ -31,7 +30,6 @@ class ClientsTest extends ApiTests
      * @var array
      */
     protected static $headers = ['content-type' => 'json'];
-
 
     /**
      * Runs before test suite starts.

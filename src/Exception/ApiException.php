@@ -9,5 +9,4 @@ namespace Auth0\SDK\Exception;
  */
 class ApiException extends \Exception
 {
-
 }

@@ -18,108 +18,12 @@ use GuzzleHttp\Exception\RequestException;
 class Connections extends GenericResource
 {
     /**
-     * Get connection(s).
-     * Required scope: `read:connections`
-     *
-     * @param array               $query   Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections
-     */
-    public function getAll(
-        array $query = [],
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('connections')
-            ->withParams($query)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Get a single Connection.
-     * Required scope: `read:connections`
-     *
-     * @param string              $connectionId Connection (by ID) to query.
-     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections_by_id
-     */
-    public function get(
-        string $connectionId,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('connections', $connectionId)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Delete a Connection.
-     * Required scope: `delete:connections`
-     *
-     * @param string              $connectionId Connection (by ID) to delete.
-     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_connections_by_id
-     */
-    public function delete(
-        string $connectionId,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('delete')
-            ->addPath('connections', $connectionId)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Delete a specific User for a Connection.
-     * Required scope: `delete:users`
-     *
-     * @param string              $connectionId Auth0 database Connection ID (user_id with strategy of "auth0").
-     * @param string              $email        Email of the user to delete.
-     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_users_by_email
-     */
-    public function deleteUser(
-        string $connectionId,
-        string $email,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('delete')
-            ->addPath('connections', $connectionId, 'users')
-            ->withParam('email', $email)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
      * Create a new Connection.
      * Required scope: `create:connections`
      *
-     * @param string              $name     The name of the bew connection.
-     * @param string              $strategy The identity provider identifier for the bew connection.
-     * @param array               $query    Additional query parameters to pass with the API request. See @link for supported options.
+     * @param string              $name     The name of the new connection.
+     * @param string              $strategy The identity provider identifier for the new connection.
+     * @param array               $query    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -131,17 +35,69 @@ class Connections extends GenericResource
     public function create(
         string $name,
         string $strategy,
-        array $query = [],
+        array $body = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($name, 'name');
+        $this->validateString($strategy, 'strategy');
+
         $payload = [
             'name'     => $name,
             'strategy' => $strategy
-        ] + $query;
+        ] + $body;
 
         return $this->apiClient->method('post')
             ->addPath('connections')
-            ->withBody($payload)
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Get connection(s).
+     * Required scope: `read:connections`
+     *
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections
+     */
+    public function getAll(
+        array $parameters = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        return $this->apiClient->method('get')
+            ->addPath('connections')
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Get a single Connection.
+     * Required scope: `read:connections`
+     *
+     * @param string              $id      Connection (by it's ID) to query.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections_by_id
+     */
+    public function get(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('get')
+            ->addPath('connections', $id)
             ->withOptions($options)
             ->call();
     }
@@ -150,9 +106,9 @@ class Connections extends GenericResource
      * Update a Connection.
      * Required scope: `update:connections`
      *
-     * @param string              $connectionId Connection ID to update.
-     * @param array               $query        Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string              $id      Connection (by it's ID) to update.
+     * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -161,13 +117,69 @@ class Connections extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Connections/patch_connections_by_id
      */
     public function update(
-        string $connectionId,
-        array $query = [],
+        string $id,
+        array $body = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('patch')
-            ->addPath('connections', $connectionId)
-            ->withBody($query)
+            ->addPath('connections', $id)
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Delete a Connection.
+     * Required scope: `delete:connections`
+     *
+     * @param string              $id      Connection (by it's ID) to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_connections_by_id
+     */
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('delete')
+            ->addPath('connections', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Delete a specific User for a Connection.
+     * Required scope: `delete:users`
+     *
+     * @param string              $id      Connection (by it's ID)
+     * @param string              $email   Email of the user to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_users_by_email
+     */
+    public function deleteUser(
+        string $id,
+        string $email,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+        $this->validateEmail($email, 'email');
+
+        return $this->apiClient->method('delete')
+            ->addPath('connections', $id, 'users')
+            ->withParam('email', $email)
             ->withOptions($options)
             ->call();
     }

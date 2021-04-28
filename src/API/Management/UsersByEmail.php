@@ -22,7 +22,6 @@ class UsersByEmail extends GenericResource
      * Required scope: `read:users`
      *
      * @param string              $email   Email address to search for (case-sensitive).
-     * @param array               $query   Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -31,13 +30,11 @@ class UsersByEmail extends GenericResource
      */
     public function get(
         string $email,
-        array $query = [],
         ?RequestOptions $options = null
     ): ?array {
         return $this->apiClient->method('get')
             ->addPath('users-by-email')
             ->withParam('email', $email)
-            ->withParams($query)
             ->withOptions($options)
             ->call();
     }

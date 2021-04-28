@@ -42,7 +42,7 @@ class Tenants extends GenericResource
      * Update tenant settings.
      * Required scope: `update:tenant_settings`
      *
-     * @param array               $query   Updated settings to send to the API. See @link for supported options.
+     * @param array               $body    Updated settings to send to the API. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -52,12 +52,12 @@ class Tenants extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Tenants/patch_settings
      */
     public function update(
-        array $query,
+        array $body,
         ?RequestOptions $options = null
     ): ?array {
         return $this->apiClient->method('patch')
             ->addPath('tenants', 'settings')
-            ->withBody($query)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }

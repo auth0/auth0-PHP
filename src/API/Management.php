@@ -36,7 +36,6 @@ use Auth0\SDK\API\Management\UsersByEmail;
  */
 class Management
 {
-
     /**
      * Instance of Auth0\SDK\API\Helpers\ApiClient
      *

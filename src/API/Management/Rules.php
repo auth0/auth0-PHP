@@ -18,11 +18,45 @@ use GuzzleHttp\Exception\RequestException;
 class Rules extends GenericResource
 {
     /**
+     * Create a new Rule.
+     * Required scope: `create:rules`
+     *
+     * @param array               $name    Name of this rule.
+     * @param array               $script  Code to be executed when this rule runs.
+     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|mixed
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/post_rules
+     * @link https://auth0.com/docs/rules/current#create-rules-with-the-management-api
+     */
+    public function create(
+        string $name,
+        string $script,
+        array $body = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $payload = [
+            'name' => $name,
+            'script' => $script
+        ] + $body;
+
+        return $this->apiClient->method('post')
+            ->addPath('rules')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Get all Rules, by page if desired.
      * Required scope: `read:rules`
      *
-     * @param bool|null           $enabled Retrieves rules that match the value, otherwise all rules are retrieved.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return mixed
      *
@@ -31,18 +65,12 @@ class Rules extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Rules/get_rules
      */
     public function getAll(
-        ?bool $enabled = null,
+        array $parameters = [],
         ?RequestOptions $options = null
     ): ?array {
-        $payload = [];
-
-        if (null !== $enabled) {
-            $payload['enabled'] = $enabled;
-        }
-
         return $this->apiClient->method('get')
             ->addPath('rules')
-            ->withParams($payload)
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }
@@ -64,8 +92,39 @@ class Rules extends GenericResource
         string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('get')
             ->addPath('rules', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Update a Rule by ID.
+     * Required scope: `update:rules`
+     *
+     * @param string              $id      Rule ID to delete.
+     * @param array               $body    Rule data to update.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/patch_rules_by_id
+     */
+    public function update(
+        string $id,
+        array $body,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+        $this->validateArray($body, 'body');
+
+        return $this->apiClient->method('patch')
+            ->addPath('rules', $id)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -87,68 +146,10 @@ class Rules extends GenericResource
         string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('delete')
             ->addPath('rules', $id)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Create a new Rule.
-     * Required scope: `create:rules`
-     *
-     * @param array               $name    Name of this rule.
-     * @param array               $script  Code to be executed when this rule runs.
-     * @param array               $query   Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Rules/post_rules
-     * @link https://auth0.com/docs/rules/current#create-rules-with-the-management-api
-     */
-    public function create(
-        string $name,
-        string $script,
-        array $query = [],
-        ?RequestOptions $options = null
-    ): ?array {
-        $payload = [
-            'name' => $name,
-            'script' => $script
-        ] + $query;
-
-        return $this->apiClient->method('post')
-            ->addPath('rules')
-            ->withBody($payload)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Update a Rule by ID.
-     * Required scope: `update:rules`
-     *
-     * @param string              $id      Rule ID to delete.
-     * @param array               $query   Rule data to update.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Rules/patch_rules_by_id
-     */
-    public function update(
-        string $id,
-        array $query,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('patch')
-            ->addPath('rules', $id)
-            ->withBody($query)
             ->withOptions($options)
             ->call();
     }

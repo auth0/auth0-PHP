@@ -24,9 +24,10 @@ class PasswordGrantTest extends ApiTests
      */
     protected static $expectedTelemetry;
 
-
     /**
      * Runs before test suite starts.
+     *
+     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -37,7 +38,11 @@ class PasswordGrantTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-
+    /**
+     * Test that password grant login enforcces username.
+     *
+     * @return void
+     */
     public function testThatPasswordGrantLoginEnforcesUsername()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -61,7 +66,11 @@ class PasswordGrantTest extends ApiTests
         $this->assertTrue($caught_exception);
     }
 
-
+    /**
+     * Test that password grant login enforces password.
+     *
+     * @return void
+     */
     public function testThatPasswordGrantLoginEnforcesPassword()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -85,7 +94,11 @@ class PasswordGrantTest extends ApiTests
         $this->assertTrue($caught_exception);
     }
 
-
+    /**
+     * Test that password grant realm logic enforces realm.
+     *
+     * @return void
+     */
     public function testThatPasswordGrantRealmLoginEnforcesRealm()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -100,11 +113,10 @@ class PasswordGrantTest extends ApiTests
         $this->assertTrue($caught_exception);
     }
 
-
     /**
      * Test that a basic password grant request includes the correct URL, body, and headers.
      *
-     * @throws ApiException If username or password is missing.
+     * @return void
      */
     public function testThatPasswordGrantLoginSendsBasicRequestCorrectly()
     {
@@ -134,11 +146,10 @@ class PasswordGrantTest extends ApiTests
         $this->assertEquals('__test_client_secret__', $request_body['client_secret']);
     }
 
-
     /**
      * Test that a basic password grant realm request includes the realm.
      *
-     * @throws ApiException If username or password is missing.
+     * @return void
      */
     public function testThatPasswordGrantRealmLoginSendsBasicRequestCorrectly()
     {
@@ -163,11 +174,10 @@ class PasswordGrantTest extends ApiTests
         $this->assertEquals('http://auth0.com/oauth/grant-type/password-realm', $request_body['grant_type']);
     }
 
-
     /**
      * Test that a password grant request including an IP address sets the correct header.
      *
-     * @throws ApiException If username or password is missing.
+     * @return void
      */
     public function testThatPasswordGrantLoginSetsForwardedForHeader()
     {
@@ -203,11 +213,10 @@ class PasswordGrantTest extends ApiTests
         $this->assertEquals('1.2.3.4', $request_headers['Auth0-Forwarded-For'][0]);
     }
 
-
     /**
      * Test that a password grant request including an IP address sets the correct header.
      *
-     * @throws ApiException If username or password is missing.
+     * @return void
      */
     public function testThatPasswordGrantRealmLoginSetsForwardedForHeader()
     {

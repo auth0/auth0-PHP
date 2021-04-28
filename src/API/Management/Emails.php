@@ -18,6 +18,42 @@ use GuzzleHttp\Exception\RequestException;
 class Emails extends GenericResource
 {
     /**
+     * Create the email provider.
+     * Required scope: `create:email_provider`
+     *
+     * @param string              $name        Name of the email provider to use.
+     * @param array               $credentials Credentials required to use the provider. See @link for supported options.
+     * @param array               $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/post_provider
+     */
+    public function configureProvider(
+        string $name,
+        array $credentials,
+        array $body = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($name, 'name');
+        $this->validateArray($credentials, 'credentials');
+
+        $payload = [
+            'name'        => $name,
+            'credentials' => (object)$credentials
+        ] + $body;
+
+        return $this->apiClient->method('post')
+            ->addPath('emails', 'provider')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Retrieve email provider details.
      * Required scope: `read:email_provider`
      *
@@ -39,42 +75,13 @@ class Emails extends GenericResource
     }
 
     /**
-     * Create the email provider.
-     * Required scope: `create:email_provider`
-     *
-     * @param string              $name    Name of the email provider to use.
-     * @param array               $query   Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Emails/post_provider
-     */
-    public function configureProvider(
-        string $name,
-        array $query = [],
-        ?RequestOptions $options = null
-    ): ?array {
-        $payload = [
-            'name' => $name
-        ] + $query;
-
-        return $this->apiClient->method('post')
-            ->addPath('emails', 'provider')
-            ->withBody($payload)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
      * Update the email provider.
      * Required scope: `update:email_provider`
      *
-     * @param string              $name    Name of the email provider to use.
-     * @param array               $query   Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string              $name        Name of the email provider to use.
+     * @param array               $credentials Credentials required to use the provider. See @link for supported options.
+     * @param array               $body        Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -84,16 +91,21 @@ class Emails extends GenericResource
      */
     public function updateProvider(
         string $name,
-        array $query = [],
+        array $credentials,
+        array $body = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($name, 'name');
+        $this->validateArray($credentials, 'credentials');
+
         $payload = [
-            'name' => $name
-        ] + $query;
+            'name' => $name,
+            'credentials' => (object)$credentials
+        ] + $body;
 
         return $this->apiClient->method('patch')
             ->addPath('emails', 'provider')
-            ->withBody($payload)
+            ->withBody((object) $payload)
             ->withOptions($options)
             ->call();
     }

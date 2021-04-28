@@ -14,7 +14,6 @@ use Auth0\SDK\Exception\InvalidTokenException;
  */
 class TokenVerifier
 {
-
     /**
      * Token issuer base URL expected.
      *

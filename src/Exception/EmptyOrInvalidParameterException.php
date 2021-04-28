@@ -9,7 +9,6 @@ namespace Auth0\SDK\Exception;
  */
 class EmptyOrInvalidParameterException extends CoreException
 {
-
     /**
      * EmptyOrInvalidParameterException constructor.
      *

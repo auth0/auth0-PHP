@@ -18,33 +18,6 @@ use GuzzleHttp\Exception\RequestException;
 class Blacklists extends GenericResource
 {
     /**
-     * Retrieve the `jti` and `aud` of all tokens that are blacklisted.
-     * Required scope: `blacklist:tokens`
-     *
-     * @param string|null         $aud     Optional. Filter on the JWT's aud claim (the client_id to which the JWT was issued).
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens
-     */
-    public function get(
-        ?string $aud = null,
-        ?RequestOptions $options = null
-    ): ?array {
-        $client = $this->apiClient->method('get')
-            ->addPath('blacklists', 'tokens');
-
-        if (null !== $aud) {
-            $client->withParam('aud', $aud);
-        }
-
-        return $client->withOptions($options)->call();
-    }
-
-    /**
      * Blacklist a token.
      * Required scope: `blacklist:tokens`
      *
@@ -63,16 +36,48 @@ class Blacklists extends GenericResource
         ?string $aud = null,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($jti, 'jti');
+
         $request = [ 'jti' => $jti ];
 
         if (null !== $aud) {
+            $this->validateString($aud, 'aud');
             $request['aud'] = $aud;
         }
 
         return $this->apiClient->method('post')
             ->addPath('blacklists', 'tokens')
-            ->withBody($request)
+            ->withBody((object) $request)
             ->withOptions($options)
             ->call();
+    }
+
+    /**
+     * Retrieve the `jti` and `aud` of all tokens that are blacklisted.
+     * Required scope: `blacklist:tokens`
+     *
+     * @param string|null         $aud     Optional. Filter on the JWT's aud claim (the client_id to which the JWT was issued).
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens
+     */
+    public function get(
+        ?string $aud = null,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($aud, 'aud');
+
+        $client = $this->apiClient->method('get')
+            ->addPath('blacklists', 'tokens');
+
+        if (null !== $aud) {
+            $client->withParam('aud', $aud);
+        }
+
+        return $client->withOptions($options)->call();
     }
 }

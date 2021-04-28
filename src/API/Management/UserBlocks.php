@@ -21,7 +21,7 @@ class UserBlocks extends GenericResource
      * Retrieve a list of blocked IP addresses for the login identifiers (email, username, phone number, etc) associated with the specified user.
      * Required scope: `read:users`
      *
-     * @param string              $userId  User Id to query for.
+     * @param string              $id      User ID to query for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -29,11 +29,36 @@ class UserBlocks extends GenericResource
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
     public function get(
-        string $userId,
+        string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('get')
-            ->addPath('user-blocks', $userId)
+            ->addPath('user-blocks', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Unblock a user that was blocked due to an excessive amount of incorrectly provided credentials.
+     * Required scope: `update:users`
+     *
+     * @param string              $id      The user_id of the user to update.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     */
+    public function unblock(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('delete')
+            ->addPath('user-blocks', $id)
             ->withOptions($options)
             ->call();
     }
@@ -53,30 +78,11 @@ class UserBlocks extends GenericResource
         string $identifier,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($identifier, 'identifier');
+
         return $this->apiClient->method('get')
             ->addPath('user-blocks')
             ->withParam('identifier', $identifier)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Unblock a user that was blocked due to an excessive amount of incorrectly provided credentials.
-     * Required scope: `update:users`
-     *
-     * @param string              $userId  The user_id of the user to update.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function unblock(
-        string $userId,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('delete')
-            ->addPath('user-blocks', $userId)
             ->withOptions($options)
             ->call();
     }
@@ -96,6 +102,8 @@ class UserBlocks extends GenericResource
         string $identifier,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($identifier, 'identifier');
+
         return $this->apiClient->method('delete')
             ->addPath('user-blocks')
             ->withParam('identifier', $identifier)

@@ -13,12 +13,10 @@ use Psr\SimpleCache\CacheInterface;
  */
 class MockJwks extends MockApi
 {
-
     /**
      * @var JWKFetcher
      */
     protected $client;
-
 
     /**
      * @param array $guzzleOptions

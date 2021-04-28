@@ -9,7 +9,6 @@ use GuzzleHttp\Psr7\Response;
 
 class LogStreamsTest extends ApiTests
 {
-
     /**
      * Expected telemetry value.
      *

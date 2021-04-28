@@ -9,7 +9,6 @@ namespace Auth0\SDK\Exception;
  */
 class InvalidPermissionsArrayException extends CoreException
 {
-
     /**
      * InvalidPermissionsArrayException constructor.
      */

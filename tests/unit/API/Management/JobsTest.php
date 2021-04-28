@@ -3,7 +3,6 @@
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
 
@@ -34,6 +33,8 @@ class JobsTest extends ApiTests
 
     /**
      * Runs before test suite starts.
+     *
+     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -43,6 +44,11 @@ class JobsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
+    /**
+     * Test get().
+     *
+     * @return void
+     */
     public function testGet()
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
@@ -53,6 +59,11 @@ class JobsTest extends ApiTests
         $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__', $api->getHistoryUrl());
     }
 
+    /**
+     * Test getErrors().
+     *
+     * @return void
+     */
     public function testGetErrors()
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
@@ -63,6 +74,11 @@ class JobsTest extends ApiTests
         $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__/errors', $api->getHistoryUrl());
     }
 
+    /**
+     * Test importUsers().
+     *
+     * @return void
+     */
     public function testImportUsers()
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
@@ -108,6 +124,11 @@ class JobsTest extends ApiTests
         $this->assertEquals('__test_ext_id__', $form_body_arr[$ext_id_key + self::FORM_DATA_VALUE_KEY_OFFSET]);
     }
 
+    /**
+     * Test exportUsers().
+     *
+     * @return void
+     */
     public function testExportUsers()
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
@@ -140,6 +161,11 @@ class JobsTest extends ApiTests
         $this->assertEquals([['name' => 'user_id']], $request_body['fields']);
     }
 
+    /**
+     * Test sendVerificationEmail().
+     *
+     * @return void
+     */
     public function testSendVerificationEmail()
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);

@@ -22,7 +22,7 @@ class Tickets extends GenericResource
      * Required scope: `create:user_tickets`
      *
      * @param string              $userId  ID of the user for whom the ticket should be created.
-     * @param array               $query   Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
@@ -31,18 +31,20 @@ class Tickets extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification
      */
-    public function createEmailVerificationTicket(
+    public function createEmailVerification(
         string $userId,
-        array $query = [],
+        array $body = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($userId, 'userId');
+
         $payload = [
             'user_id' => $userId
-        ] + $query;
+        ] + $body;
 
         return $this->apiClient->method('post')
             ->addPath('tickets', 'email-verification')
-            ->withBody($payload)
+            ->withBody((object) $payload)
             ->withOptions($options)
             ->call();
     }
@@ -51,20 +53,20 @@ class Tickets extends GenericResource
      * Create a password change ticket.
      * Required scope: `create:user_tickets`
      *
-     * @param array               $query   Query parameters to pass with the API request. See @link for supported options.
+     * @param array               $body    Body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @return array|null
      */
-    public function createPasswordChangeTicket(
-        array $query = [],
+    public function createPasswordChange(
+        array $body,
         ?RequestOptions $options = null
     ): ?array {
         return $this->apiClient->method('post')
             ->addPath('tickets', 'password-change')
-            ->withBody($query)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }

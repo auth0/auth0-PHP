@@ -25,6 +25,8 @@ class GrantsMockedTest extends TestCase
 
     /**
      * Runs before test suite starts.
+     *
+     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -42,7 +44,7 @@ class GrantsMockedTest extends TestCase
     {
         $api = new MockManagementApi([new Response(200)]);
 
-        $api->call()->grants()->get();
+        $api->call()->grants()->getAll();
 
         $this->assertEquals('GET', $api->getHistoryMethod());
         $this->assertEquals('https://api.test.local/api/v2/grants', $api->getHistoryUrl());
@@ -58,7 +60,7 @@ class GrantsMockedTest extends TestCase
     {
         $api = new MockManagementApi([new Response(200)]);
 
-        $api->call()->grants()->getByClientId('__test_client_id__');
+        $api->call()->grants()->getAllByClientId('__test_client_id__');
 
         $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getHistoryUrl());
         $this->assertEquals('client_id=__test_client_id__', $api->getHistoryQuery());
@@ -73,7 +75,7 @@ class GrantsMockedTest extends TestCase
     {
         $api = new MockManagementApi([new Response(200)]);
 
-        $api->call()->grants()->getByAudience('__test_audience__');
+        $api->call()->grants()->getAllByAudience('__test_audience__');
 
         $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getHistoryUrl());
         $this->assertEquals('audience=__test_audience__', $api->getHistoryQuery());
@@ -88,7 +90,7 @@ class GrantsMockedTest extends TestCase
     {
         $api = new MockManagementApi([new Response(200)]);
 
-        $api->call()->grants()->getByUserId('__test_user_id__');
+        $api->call()->grants()->getAllByUserId('__test_user_id__');
 
         $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getHistoryUrl());
         $this->assertEquals('user_id=__test_user_id__', $api->getHistoryQuery());

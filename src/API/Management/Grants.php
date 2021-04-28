@@ -21,8 +21,8 @@ class Grants extends GenericResource
      * Retrieve the grants associated with your account.
      * Required scope: `read:grants`
      *
-     * @param array               $query   Optional. Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -30,13 +30,13 @@ class Grants extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
-    public function get(
-        array $query = [],
+    public function getAll(
+        array $parameters = [],
         ?RequestOptions $options = null
     ): ?array {
         return $this->apiClient->method('get')
             ->addPath('grants')
-            ->withParams($query)
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }
@@ -45,9 +45,9 @@ class Grants extends GenericResource
      * Get Grants by Client ID with pagination.
      * Required scope: `read:grants`
      *
-     * @param string              $clientId Client ID to filter Grants.
-     * @param array               $query    Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string              $clientId   Client ID to filter Grants.
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -55,25 +55,27 @@ class Grants extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
-    public function getByClientId(
+    public function getAllByClientId(
         string $clientId,
-        array $query = [],
+        array $parameters = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($clientId, 'clientId');
+
         $payload = [
             'client_id' => $clientId
-        ] + $query;
+        ] + $parameters;
 
-        return $this->get($payload, $options);
+        return $this->getAll($payload, $options);
     }
 
     /**
      * Get Grants by Audience with pagination.
      * Required scope: `read:grants`
      *
-     * @param string              $audience Audience to filter Grants.
-     * @param array               $query    Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string              $audience   Audience to filter Grants.
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -81,25 +83,27 @@ class Grants extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
-    public function getByAudience(
+    public function getAllByAudience(
         string $audience,
-        array $query = [],
+        array $parameters = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($audience, 'audience');
+
         $payload = [
             'audience' => $audience
-        ] + $query;
+        ] + $parameters;
 
-        return $this->get($payload, $options);
+        return $this->getAll($payload, $options);
     }
 
     /**
      * Get Grants by User ID with pagination.
      * Required scope: `read:grants`
      *
-     * @param string              $userId  User ID to filter Grants.
-     * @param array               $query   Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string              $userId     User ID to filter Grants.
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -107,16 +111,18 @@ class Grants extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
-    public function getByUserId(
+    public function getAllByUserId(
         string $userId,
-        array $query = [],
+        array $parameters = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($userId, 'userId');
+
         $payload = [
             'user_id' => $userId
-        ] + $query;
+        ] + $parameters;
 
-        return $this->get($payload, $options);
+        return $this->getAll($payload, $options);
     }
 
     /**
@@ -136,6 +142,8 @@ class Grants extends GenericResource
         string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('delete')
             ->addPath('grants', $id)
             ->withOptions($options)

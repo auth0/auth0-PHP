@@ -3,8 +3,6 @@
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
-use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 use Auth0\Tests\Traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -32,6 +30,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Runs before test suite starts.
+     *
+     * @return void
      */
     public static function setUpBeforeClass(): void
     {

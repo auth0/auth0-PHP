@@ -17,7 +17,6 @@ use GuzzleHttp\Psr7\Request;
  */
 abstract class MockApi
 {
-
     /**
      * Guzzle request history container for mock API.
      *
@@ -39,7 +38,6 @@ abstract class MockApi
      */
     protected $client;
 
-
     /**
      * MockApi constructor.
      *
@@ -59,7 +57,6 @@ abstract class MockApi
         $this->setClient($guzzleOptions, $config);
     }
 
-
     /**
      * @param array $guzzleOptions
      * @param array $config
@@ -67,7 +64,6 @@ abstract class MockApi
      * @return mixed
      */
     abstract public function setClient(array $guzzleOptions, array $config = []);
-
 
     /**
      * Return the endpoint being used.
@@ -80,7 +76,6 @@ abstract class MockApi
 
         return $this->client;
     }
-
 
     /**
      * Get the URL from a mocked request.
@@ -97,7 +92,6 @@ abstract class MockApi
         return is_null($parse_component) ? $request_url : parse_url($request_url, $parse_component);
     }
 
-
     /**
      * Get the URL query from a mocked request.
      *
@@ -108,7 +102,6 @@ abstract class MockApi
         return $this->getHistoryUrl(PHP_URL_QUERY);
     }
 
-
     /**
      * Get the HTTP method from a mocked request.
      *
@@ -118,7 +111,6 @@ abstract class MockApi
     {
         return $this->getHistory()->getMethod();
     }
-
 
     /**
      * Get the body from a mocked request.
@@ -132,7 +124,6 @@ abstract class MockApi
         return json_decode($body, true);
     }
 
-
     /**
      * Get the form body from a mocked request.
      *
@@ -143,7 +134,6 @@ abstract class MockApi
         return $this->getHistory()->getBody()->getContents();
     }
 
-
     /**
      * Get the headers from a mocked request.
      *
@@ -153,7 +143,6 @@ abstract class MockApi
     {
         return $this->getHistory()->getHeaders();
     }
-
 
     /**
      * Get a Guzzle history record from an array populated by Middleware::history().

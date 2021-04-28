@@ -16,7 +16,6 @@ use Lcobucci\JWT\Token;
  */
 abstract class SignatureVerifier
 {
-
     /**
      * Token algorithm value.
      *

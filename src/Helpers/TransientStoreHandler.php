@@ -13,7 +13,6 @@ use Auth0\SDK\Store\StoreInterface;
  */
 class TransientStoreHandler
 {
-
     /**
      * Storage method to use.
      *

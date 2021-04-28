@@ -18,6 +18,30 @@ use GuzzleHttp\Exception\RequestException;
 class Logs extends GenericResource
 {
     /**
+     * Retrieves log entries that match the specified search criteria (or list all entries if no criteria is used).
+     * Required scope: `read:logs`
+     *
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Logs/get_logs
+     */
+    public function getAll(
+        array $parameters = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        return $this->apiClient->method('get')
+            ->addPath('logs')
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Retrieve an individual log event.
      * Required scope: `read:logs`
      *
@@ -34,32 +58,10 @@ class Logs extends GenericResource
         string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('get')
             ->addPath('logs', $id)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Retrieves log entries that match the specified search criteria (or list all entries if no criteria is used).
-     * Required scope: `read:logs`
-     *
-     * @param array               $query   Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Logs/get_logs
-     */
-    public function search(
-        array $query = [],
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('logs')
-            ->withParams($query)
             ->withOptions($options)
             ->call();
     }

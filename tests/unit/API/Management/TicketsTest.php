@@ -9,7 +9,6 @@ use GuzzleHttp\Psr7\Response;
 
 class TicketsTest extends ApiTests
 {
-
     /**
      * Expected telemetry value.
      *
@@ -24,7 +23,6 @@ class TicketsTest extends ApiTests
      */
     protected static $headers = ['content-type' => 'json'];
 
-
     /**
      * Runs before test suite starts.
      */
@@ -34,7 +32,6 @@ class TicketsTest extends ApiTests
         $infoHeadersData->setCorePackage();
         self::$expectedTelemetry = $infoHeadersData->build();
     }
-
 
     public function testCreateEmailVerificationTicket()
     {
@@ -69,7 +66,6 @@ class TicketsTest extends ApiTests
         $headers = $api->getHistoryHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
-
 
     public function testCreatePasswordChangeTicket()
     {

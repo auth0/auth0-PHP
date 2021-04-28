@@ -19,56 +19,6 @@ use GuzzleHttp\Exception\RequestException;
 class Jobs extends GenericResource
 {
     /**
-     * Retrieves a job. Useful to check its status.
-     * Required scopes:
-     * - `create:users`
-     * - `read:users`
-     *
-     * @param string              $jobId   ID of the Job to query.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @return array|null
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id
-     */
-    public function get(
-        string $jobId,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('jobs', $jobId)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Retrieve error details of a failed job.
-     * Required scopes:
-     * - `create:users`
-     * - `read:users`
-     *
-     * @param string              $jobId   Id of the Job to query.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @return array|null
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_errors
-     */
-    public function getErrors(
-        string $jobId,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('jobs', $jobId, 'errors')
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
      * Import users from a formatted file into a connection via a long-running job.
      * Required scopes:
      * - `create:users`
@@ -76,7 +26,7 @@ class Jobs extends GenericResource
      *
      * @param string              $filePath     Path to formatted file to import.
      * @param string              $connectionId Id of the Connection to use.
-     * @param array               $query        Additional query parameters to pass with the API request. See @link for supported options.
+     * @param array               $parameters   Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
@@ -88,15 +38,18 @@ class Jobs extends GenericResource
     public function importUsers(
         string $filePath,
         string $connectionId,
-        array $query = [],
+        array $parameters = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($filePath, 'filePath');
+        $this->validateString($connectionId, 'connectionId');
+
         $request = $this->apiClient->method('post', false)
             ->addPath('jobs', 'users-imports')
             ->addFile('users', $filePath)
             ->addFormParam('connection_id', $connectionId);
 
-        foreach ($query as $key => $value) {
+        foreach ($parameters as $key => $value) {
             $request->addFormParam($key, $value);
         }
 
@@ -104,12 +57,11 @@ class Jobs extends GenericResource
             ->call();
     }
 
-
     /**
      * Export all users to a file via a long-running job.
      * Required scope: `read:users`
      *
-     * @param array               $query   Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
@@ -119,12 +71,14 @@ class Jobs extends GenericResource
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports
      */
     public function exportUsers(
-        array $query = [],
+        array $body = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateArray($body, 'body');
+
         return $this->apiClient->method('post')
             ->addPath('jobs', 'users-exports')
-            ->withBody($query)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -134,10 +88,9 @@ class Jobs extends GenericResource
      * Required scope: `update:users`
      *
      * @param string              $user_id User ID of the user to send the verification email to.
-     * @param array               $query   Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws EmptyOrInvalidParameterException Thrown if any required parameters are empty or invalid.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @return array|null
@@ -146,16 +99,72 @@ class Jobs extends GenericResource
      */
     public function sendVerificationEmail(
         string $userId,
-        array $query = [],
+        array $body = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($userId, 'userId');
+
         $payload = [
             'user_id' => $userId
-        ] + $query;
+        ] + $body;
 
         return $this->apiClient->method('post')
             ->addPath('jobs', 'verification-email')
-            ->withBody($payload)
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Retrieves a job. Useful to check its status.
+     * Required scopes:
+     * - `create:users`
+     * - `read:users`
+     *
+     * @param string              $id      Job (by it's ID) to query.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @return array|null
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id
+     */
+    public function get(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('get')
+            ->addPath('jobs', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Retrieve error details of a failed job.
+     * Required scopes:
+     * - `create:users`
+     * - `read:users`
+     *
+     * @param string              $id      Job (by it's ID) to query.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @return array|null
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_errors
+     */
+    public function getErrors(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('get')
+            ->addPath('jobs', $id, 'errors')
             ->withOptions($options)
             ->call();
     }

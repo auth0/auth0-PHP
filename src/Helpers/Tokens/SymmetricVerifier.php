@@ -14,7 +14,6 @@ use Lcobucci\JWT\Token;
  */
 final class SymmetricVerifier extends SignatureVerifier
 {
-
     /**
      * Client secret for the application.
      *

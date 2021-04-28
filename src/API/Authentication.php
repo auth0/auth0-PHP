@@ -25,7 +25,6 @@ use GuzzleHttp\Psr7;
  */
 class Authentication
 {
-
     /**
      * Domain for the Auth0 Tenant.
      *

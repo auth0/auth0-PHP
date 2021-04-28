@@ -52,7 +52,7 @@ class GenericResource
      *
      * @throws InvalidPermissionsArrayException If permissions are empty or do not contain the necessary keys.
      */
-    protected function checkInvalidPermissions(array $permissions): void
+    protected function validatePermissions(array $permissions): void
     {
         if (empty($permissions)) {
             throw new InvalidPermissionsArrayException();
@@ -79,11 +79,30 @@ class GenericResource
      *
      * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
-    protected function checkEmptyOrInvalidString(
+    protected function validateString(
         string $variable,
         string $variableName
     ): void {
         if (! strlen($variable)) {
+            throw new EmptyOrInvalidParameterException($variableName);
+        }
+    }
+
+    /**
+     * Check that a variable contains a valid email address.
+     *
+     * @param string $email        The email to check.
+     * @param string $variableName The variable name.
+     *
+     * @return void
+     *
+     * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
+     */
+    protected function validateEmail(
+        string $email,
+        string $variableName
+    ): void {
+        if (! (filter_var($email, FILTER_VALIDATE_EMAIL))) {
             throw new EmptyOrInvalidParameterException($variableName);
         }
     }
@@ -98,7 +117,7 @@ class GenericResource
      *
      * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
-    protected function checkEmptyOrInvalidArray(
+    protected function validateArray(
         array $variable,
         string $variableName
     ): void {

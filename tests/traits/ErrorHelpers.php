@@ -6,8 +6,6 @@ namespace Auth0\Tests\traits;
 
 trait ErrorHelpers
 {
-
-
     /**
      * Does an error message contain a specific string?
      *

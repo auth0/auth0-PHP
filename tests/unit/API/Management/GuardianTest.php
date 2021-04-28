@@ -21,7 +21,6 @@ class GuardianTest extends ApiTests
      */
     protected static $telemetry;
 
-
     /**
      * Runs before test suite starts.
      */
@@ -31,7 +30,6 @@ class GuardianTest extends ApiTests
         $infoHeadersData->setCorePackage();
         self::$telemetry = $infoHeadersData->build();
     }
-
 
     /**
      * Test that getFactors requests properly.
@@ -48,7 +46,6 @@ class GuardianTest extends ApiTests
         $this->assertEquals('https://api.test.local/api/v2/guardian/factors', $api->getHistoryUrl());
         $this->assertEmpty($api->getHistoryQuery());
     }
-
 
     /**
      * Test that getEnrollment requests properly.
@@ -68,7 +65,6 @@ class GuardianTest extends ApiTests
         );
         $this->assertEmpty($api->getHistoryQuery());
     }
-
 
     /**
      * Test that deleteEnrollment requests properly.

@@ -10,14 +10,12 @@ use Auth0\Tests\unit\MockApi;
  */
 class MockManagementApi extends MockApi
 {
-
     /**
      * Management API object.
      *
      * @var Management
      */
     protected $client;
-
 
     /**
      * @param array $guzzleOptions

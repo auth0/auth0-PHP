@@ -29,7 +29,7 @@ class Stats extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Stats/get_active_users
      */
-    public function getActiveUsersCount(
+    public function getActiveUsers(
         ?RequestOptions $options = null
     ): ?array {
         return $this->apiClient->method('get')
@@ -42,8 +42,8 @@ class Stats extends GenericResource
      * Get daily statistics from a period of time.
      * Required scope: `read:stats`
      *
-     * @param string              $from    Beginning from this timestamp.
-     * @param string              $to      Ending from this timestamp.
+     * @param string|null         $from    Optional. Beginning from this date; YYYYMMDD format.
+     * @param string|null         $to      Optional. Ending from this date; YYYYMMDD format.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -52,16 +52,25 @@ class Stats extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Stats/get_daily
      */
-    public function getDailyStats(
-        string $from,
-        string $to,
+    public function getDaily(
+        ?string $from = null,
+        ?string $to = null,
         ?RequestOptions $options = null
     ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('stats', 'daily')
-            ->withParam('from', $from)
-            ->withParam('to', $to)
-            ->withOptions($options)
+        $client = $this->apiClient->method('get')
+            ->addPath('stats', 'daily');
+
+        if (null !== $from) {
+            $this->validateString($from, 'from');
+            $client->withParam('from', $from);
+        }
+
+        if (null !== $to) {
+            $this->validateString($to, 'to');
+            $client->withParam('to', $to);
+        }
+
+        return $client->withOptions($options)
             ->call();
     }
 }

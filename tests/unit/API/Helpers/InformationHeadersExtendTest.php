@@ -14,8 +14,6 @@ use PHPUnit\Framework\TestCase;
  */
 class InformationHeadersExtendTest extends TestCase
 {
-
-
     public static function tearDownAfterClass(): void
     {
         $reset_headers = new InformationHeaders();
@@ -23,7 +21,6 @@ class InformationHeadersExtendTest extends TestCase
         ApiClient::setInfoHeadersData($reset_headers);
         parent::tearDownAfterClass();
     }
-
 
     /**
      * Test that extending the headers works for Management API calls.
@@ -40,7 +37,6 @@ class InformationHeadersExtendTest extends TestCase
 
         $this->assertEquals($new_headers->build(), $headers['Auth0-Client'][0]);
     }
-
 
     /**
      * Test that extending the headers works for Management API calls.
@@ -63,11 +59,9 @@ class InformationHeadersExtendTest extends TestCase
         $this->assertEquals($new_headers->build(), $headers['Auth0-Client'][0]);
     }
 
-
     /*
      * Test helper methods.
      */
-
 
     /**
      * Reset and extend telemetry headers.

@@ -9,14 +9,11 @@ use PHPUnit\Framework\TestCase;
 
 class NoCacheHandlerTest extends TestCase
 {
-
-
     public function testThatGetReturnsDefault()
     {
         $cache = new NoCacheHandler();
         $this->assertEquals('__test_default_value__', $cache->get(uniqid(), '__test_default_value__'));
     }
-
 
     public function testThatSetReturnsTrue()
     {
@@ -24,20 +21,17 @@ class NoCacheHandlerTest extends TestCase
         $this->assertTrue($cache->set(uniqid(), uniqid()));
     }
 
-
     public function testThatDeleteReturnsTrue()
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->delete(uniqid()));
     }
 
-
     public function testThatClearReturnsTrue()
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->clear());
     }
-
 
     public function testThatSetMultipleReturnsNull()
     {
@@ -50,20 +44,17 @@ class NoCacheHandlerTest extends TestCase
         $this->assertEquals('__test_default_value__', $result['key2']);
     }
 
-
     public function testThatSetMultipleReturnsTrue()
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->setMultiple([uniqid() => uniqid()]));
     }
 
-
     public function testThatDeleteMultipleReturnsTrue()
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->deleteMultiple([uniqid(), uniqid()]));
     }
-
 
     public function testThatHasReturnsFalse()
     {

@@ -18,85 +18,11 @@ use GuzzleHttp\Exception\RequestException;
 class Clients extends GenericResource
 {
     /**
-     * Get all Clients.
-     * Required scopes:
-     * - `read:clients` for any call to this endpoint.
-     * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
-     *
-     * @param array               $query   Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients
-     */
-    public function getAll(
-        array $query = [],
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('clients')
-            ->withParams($query)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Get a Client.
-     * Required scopes:
-     * - `read:clients` for any call to this endpoint.
-     * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
-     *
-     * @param string              $clientId Client (by ID) to query.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients_by_id
-     */
-    public function get(
-        string $clientId,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('clients', $clientId)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Delete a Client.
-     * Required scope: `delete:clients"
-     *
-     * @param string              $clientId Client (by ID) to delete.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Clients/delete_clients_by_id
-     */
-    public function delete(
-        string $clientId,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('delete')
-            ->addPath('clients', $clientId)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
      * Create a new Client.
      * Required scope: `create:clients`
      *
      * @param string              $name    Name of the new client.
-     * @param array               $query   Additional query parameters to pass with the API request. See @link for supported options.
+     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -107,16 +33,71 @@ class Clients extends GenericResource
      */
     public function create(
         string $name,
-        array $query = [],
+        array $body = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($name, 'name');
+
         $payload = [
             'name' => $name
-        ] + $query;
+        ] + $body;
 
         return $this->apiClient->method('post')
             ->addPath('clients')
-            ->withBody($payload)
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Get all Clients.
+     * Required scopes:
+     * - `read:clients` for any call to this endpoint.
+     * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
+     *
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients
+     */
+    public function getAll(
+        array $parameters = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        return $this->apiClient->method('get')
+            ->addPath('clients')
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Get a Client.
+     * Required scopes:
+     * - `read:clients` for any call to this endpoint.
+     * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
+     *
+     * @param string              $id      Client (by it's ID) to query.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients_by_id
+     */
+    public function get(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('get')
+            ->addPath('clients', $id)
             ->withOptions($options)
             ->call();
     }
@@ -127,9 +108,9 @@ class Clients extends GenericResource
      * - `update:clients` for any call to this endpoint.
      * - `update:client_keys` to update "client_secret" and "encryption_key" attributes.
      *
-     * @param string              $clientId Client ID to update.
-     * @param array               $query    Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string              $id      Client (by it's ID) to update.
+     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -138,13 +119,40 @@ class Clients extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Clients/patch_clients_by_id
      */
     public function update(
-        string $clientId,
-        array $query = [],
+        string $id,
+        array $body = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('patch')
-            ->addPath('clients', $clientId)
-            ->withBody($query)
+            ->addPath('clients', $id)
+            ->withBody($body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Delete a Client.
+     * Required scope: `delete:clients"
+     *
+     * @param string              $id      Client (by it's ID) to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Clients/delete_clients_by_id
+     */
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('delete')
+            ->addPath('clients', $id)
             ->withOptions($options)
             ->call();
     }

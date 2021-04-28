@@ -20,11 +20,43 @@ use GuzzleHttp\Exception\RequestException;
 class Roles extends GenericResource
 {
     /**
+     * Create a new Role.
+     * Required scope: `create:roles`
+     *
+     * @param string              $name    Role name.
+     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Roles/post_roles
+     */
+    public function create(
+        string $name,
+        array $body = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($name, 'name');
+
+        $payload = [
+            'name' => $name
+        ] + $body;
+
+        return $this->apiClient->method('post')
+            ->addPath('roles')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Get all Roles
      * Required scope: `read:roles`
      *
-     * @param array               $query   Optional. Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -33,12 +65,12 @@ class Roles extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_roles
      */
     public function getAll(
-        array $query = [],
+        array $parameters = [],
         ?RequestOptions $options = null
     ): ?array {
         return $this->apiClient->method('get')
             ->addPath('roles')
-            ->withParams($query)
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }
@@ -60,6 +92,8 @@ class Roles extends GenericResource
         string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('get')
             ->addPath('roles', $id)
             ->withOptions($options)
@@ -67,31 +101,30 @@ class Roles extends GenericResource
     }
 
     /**
-     * Create a new Role.
-     * Required scope: `create:roles`
+     * Update a Role by ID.
+     * Required scope: `update:roles`
      *
-     * @param string              $name    Role name.
-     * @param array               $query   Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param string              $id      Role ID update.
+     * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @link https://auth0.com/docs/api/management/v2#!/Roles/post_roles
+     * @link https://auth0.com/docs/api/management/v2#!/Roles/patch_roles_by_id
      */
-    public function create(
-        string $name,
-        array $query = [],
+    public function update(
+        string $id,
+        array $body,
         ?RequestOptions $options = null
     ): ?array {
-        $payload = [
-            'name' => $name
-        ] + $query;
+        $this->validateString($id, 'id');
+        $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('post')
-            ->addPath('roles')
-            ->withBody($payload)
+        return $this->apiClient->method('patch')
+            ->addPath('roles', $id)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -113,57 +146,10 @@ class Roles extends GenericResource
         string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('delete')
             ->addPath('roles', $id)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Update a Role by ID.
-     * Required scope: `update:roles`
-     *
-     * @param string              $id      Role to ID update.
-     * @param array               $query   Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Roles/patch_roles_by_id
-     */
-    public function update(
-        string $id,
-        array $query,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('patch')
-            ->addPath('roles', $id)
-            ->withBody($query)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Get the permissions associated to a role.
-     * Required scope: `read:roles`
-     *
-     * @param string              $id      Role to ID to get permissions.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Roles/get_role_permission
-     */
-    public function getPermissions(
-        string $id,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('roles', $id, 'permissions')
             ->withOptions($options)
             ->call();
     }
@@ -172,7 +158,7 @@ class Roles extends GenericResource
      * Associate permissions with a role.
      * Required scope: `update:roles`
      *
-     * @param string              $id          Role to ID to get permissions.
+     * @param string              $id          Role ID to get permissions.
      * @param array               $permissions Permissions to add, array of permission arrays.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
@@ -188,15 +174,45 @@ class Roles extends GenericResource
         array $permissions,
         ?RequestOptions $options = null
     ): ?array {
-        $this->checkInvalidPermissions($permissions);
+        $this->validateString($id, 'id');
+        $this->validatePermissions($permissions);
+
+        $payload = [
+            'permissions' => []
+        ];
+
+        foreach ($permissions as $permission) {
+            $payload['permissions'][] = (object) $permission;
+        }
 
         return $this->apiClient->method('post')
             ->addPath('roles', $id, 'permissions')
-            ->withBody(
-                [
-                    'permissions' => $permissions
-                ]
-            )
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Get the permissions associated to a role.
+     * Required scope: `read:roles`
+     *
+     * @param string              $id      Role ID to get permissions.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Roles/get_role_permission
+     */
+    public function getPermissions(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('get')
+            ->addPath('roles', $id, 'permissions')
             ->withOptions($options)
             ->call();
     }
@@ -205,7 +221,7 @@ class Roles extends GenericResource
      * Delete permissions from a role.
      * Required scope: `update:roles`
      *
-     * @param string              $id          Role to ID to get permissions.
+     * @param string              $id          Role ID to get permissions.
      * @param array               $permissions Permissions to delete, array of permission arrays.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
@@ -221,13 +237,52 @@ class Roles extends GenericResource
         array $permissions,
         ?RequestOptions $options = null
     ): ?array {
-        $this->checkInvalidPermissions($permissions);
+        $this->validateString($id, 'id');
+        $this->validatePermissions($permissions);
+
+        $payload = [
+            'permissions' => []
+        ];
+
+        foreach ($permissions as $permission) {
+            $payload['permissions'][] = (object) $permission;
+        }
 
         return $this->apiClient->method('delete')
             ->addPath('roles', $id, 'permissions')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Add one or more users to a role.
+     * Required scope: `update:roles`
+     *
+     * @param string              $id      Role ID to add users.
+     * @param array               $users   Array of user IDs to add to the role.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Roles/post_role_users
+     */
+    public function addUsers(
+        string $id,
+        array $users,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+        $this->validateArray($users, 'users');
+
+        return $this->apiClient->method('post')
+            ->addPath('roles', $id, 'users')
             ->withBody(
+                (object)
                 [
-                    'permissions' => $permissions
+                    'users' => $users
                 ]
             )
             ->withOptions($options)
@@ -254,38 +309,10 @@ class Roles extends GenericResource
         string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('get')
             ->addPath('roles', $id, 'users')
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Add one or more users to a role.
-     * Required scope: `update:roles`
-     *
-     * @param string              $id      Role ID to add users.
-     * @param array               $users   Array of user IDs to add to the role.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Roles/post_role_users
-     */
-    public function addUsers(
-        string $id,
-        array $users,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('post')
-            ->addPath('roles', $id, 'users')
-            ->withBody(
-                [
-                    'users' => array_unique($users)
-                ]
-            )
             ->withOptions($options)
             ->call();
     }

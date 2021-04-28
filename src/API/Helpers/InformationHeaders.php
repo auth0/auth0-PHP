@@ -12,7 +12,6 @@ namespace Auth0\SDK\API\Helpers;
  */
 class InformationHeaders
 {
-
     /**
      * Default header data to send.
      *

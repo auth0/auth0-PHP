@@ -20,6 +20,8 @@ class CookieStoreTest extends TestCase
 
     /**
      * Run after each test in this suite.
+     *
+     * @return void
      */
     public function tearDown(): void
     {
@@ -29,7 +31,9 @@ class CookieStoreTest extends TestCase
     }
 
     /**
-     * @param array $args
+     * Create a mock cookie store.
+     *
+     * @param array $args Additional constructor arguments to pass
      *
      * @return CookieStore|\PHPUnit\Framework\MockObject\MockObject
      */
@@ -54,7 +58,7 @@ class CookieStoreTest extends TestCase
      * Gain access to PHPUnit's mock invocation stack for analyzing calls.
      * PHPUnit 8.4 removed the native getInvocations property, requiring this workaround.
      *
-     * @param object $mock
+     * @param object $mock Mock object to reflect.
      *
      * @return array
      */
@@ -67,12 +71,22 @@ class CookieStoreTest extends TestCase
         return $invocations->getValue($mock);
     }
 
+    /**
+     * Test get cookie name
+     *
+     * @return void
+     */
     public function testGetCookieName()
     {
         $store = new CookieStore();
         $this->assertEquals('auth0__test_key', $store->getCookieName('test_key'));
     }
 
+    /**
+     * Test custom base name
+     *
+     * @return void
+     */
     public function testCustomBaseName()
     {
         $store = new CookieStore(['base_name' => 'custom_base']);
@@ -82,6 +96,11 @@ class CookieStoreTest extends TestCase
         $this->assertEquals('custom_base__test_key', $store->getCookieName('test_key'));
     }
 
+    /**
+     * Test no same-site
+     *
+     * @return void
+     */
     public function testSetNoSameSite()
     {
         $mockStore = $this->getMock(['now' => 1, 'expiration' => 1]);
@@ -100,6 +119,11 @@ class CookieStoreTest extends TestCase
         $this->assertEquals(2, $setCookieParams[2]);
     }
 
+    /**
+     * Test same-site: none
+     *
+     * @return void
+     */
     public function testSetSameSiteNone()
     {
         $mockStore = $this->getMock(['now' => 10, 'expiration' => 10, 'samesite' => 'None']);
@@ -125,6 +149,11 @@ class CookieStoreTest extends TestCase
         $this->assertEquals(20, $setCookieParams[2]);
     }
 
+    /**
+     * Test same-site: none (no legacy)
+     *
+     * @return void
+     */
     public function testSetSameSiteNoneNoLegacy()
     {
         $mockStore = $this->getMock(['legacy_samesite_none' => false, 'samesite' => 'None']);
@@ -142,6 +171,11 @@ class CookieStoreTest extends TestCase
         $this->assertGreaterThanOrEqual(time() + 600, $setCookieParams[2]);
     }
 
+    /**
+     * Test Get
+     *
+     * @return void
+     */
     public function testGet()
     {
         $store = new CookieStore();
@@ -156,6 +190,11 @@ class CookieStoreTest extends TestCase
         $this->assertEquals('__test_get_legacy_value__', $store->get('test_get_key'));
     }
 
+    /**
+     * Test Get No Legacy
+     *
+     * @return void
+     */
     public function testGetNoLegacy()
     {
         $store = new CookieStore(['legacy_samesite_none' => false]);
@@ -170,6 +209,11 @@ class CookieStoreTest extends TestCase
         $this->assertNull($store->get('test_get_key'));
     }
 
+    /**
+     * Test Delete
+     *
+     * @return void
+     */
     public function testDelete()
     {
         $_COOKIE['auth0__test_delete_key']  = '__test_delete_value__';
@@ -198,6 +242,11 @@ class CookieStoreTest extends TestCase
         $this->assertEquals(0, $setCookieParams[2]);
     }
 
+    /**
+     * Test Delete No Legacy
+     *
+     * @return void
+     */
     public function testDeleteNoLegacy()
     {
         $_COOKIE['auth0__test_delete_key']  = '__test_delete_value__';
@@ -219,6 +268,11 @@ class CookieStoreTest extends TestCase
         $this->assertEquals(0, $setCookieParams[2]);
     }
 
+    /**
+     * Test Get Set Cookie Header Strict
+     *
+     * @return void
+     */
     public function testGetSetCookieHeaderStrict()
     {
         $store  = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'lax']);
@@ -232,6 +286,11 @@ class CookieStoreTest extends TestCase
         );
     }
 
+    /**
+     * Test Get Set Cookie Header None
+     *
+     * @return void
+     */
     public function testGetSetCookieHeaderNone()
     {
         $store  = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'none']);
@@ -245,6 +304,11 @@ class CookieStoreTest extends TestCase
         );
     }
 
+    /**
+     * Test Set Cookie Header Fails With Invalid Cookie Name
+     *
+     * @return void
+     */
     public function testSetCookieHeaderFailsWithInvalidCookieName()
     {
         $store  = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'none']);
@@ -259,6 +323,11 @@ class CookieStoreTest extends TestCase
         $this->assertEquals('', $header);
     }
 
+    /**
+     * Test Set Cookie Header Fails With Invalid Cookie Value
+     *
+     * @return void
+     */
     public function testSetCookieHeaderFailsWithInvalidCookieValue()
     {
         $store  = new CookieStore(['now' => 303943620, 'expiration' => 0, 'samesite' => 'none']);

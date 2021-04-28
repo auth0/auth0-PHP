@@ -11,8 +11,6 @@ use PHPUnit\Framework\TestCase;
  */
 class InformationHeadersTest extends TestCase
 {
-
-
     /**
      * Set the package data and make sure it's returned correctly.
      *
@@ -30,7 +28,6 @@ class InformationHeadersTest extends TestCase
         $this->assertArrayHasKey('version', $header_data);
         $this->assertEquals('1.2.3', $header_data['version']);
     }
-
 
     /**
      * Set and override an env property and make sure it's returned correctly.
@@ -57,7 +54,6 @@ class InformationHeadersTest extends TestCase
         $this->assertEquals('4.5.6', $header_data['env']['test_env_name_2']);
     }
 
-
     /**
      * Set the package and env and make sure it's built correctly.
      *
@@ -77,7 +73,6 @@ class InformationHeadersTest extends TestCase
         $header_built = base64_decode($header->build());
         $this->assertEquals(json_encode($header_data), $header_built);
     }
-
 
     /**
      * Check that setting the core package works correctly.

@@ -16,8 +16,13 @@ use GuzzleHttp\Psr7\Response;
  */
 class RequestBuilderTest extends ApiTests
 {
-
-
+    /**
+     * Retrieve a mock RequestBuilder instance.
+     *
+     * @param mixed|null $basePath basePath to pass to RequestBuilder.
+     *
+     * @return RequestBuilder
+     */
     private static function getUrlBuilder($basePath = null)
     {
         return new RequestBuilder(
@@ -29,7 +34,11 @@ class RequestBuilderTest extends ApiTests
         );
     }
 
-
+    /**
+     * Test addPath().
+     *
+     * @return void
+     */
     public function testUrl()
     {
         $builder = self::getUrlBuilder('/api');
@@ -45,7 +54,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('path1/path2/3', $builder->getUrl());
     }
 
-
+    /**
+     * Test that a single url param si added.
+     *
+     * @return void
+     */
     public function testThatASingleUrlParamIsAdded()
     {
         $builder = self::getUrlBuilder()->withParam('param1', 'value1');
@@ -53,7 +66,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('?param1=value1', $builder->getParams());
     }
 
-
+    /**
+     * Test that empty string params are not added.
+     *
+     * @return void
+     */
     public function testThatEmptyStringParamsAreNotAdded()
     {
         $builder = self::getUrlBuilder()->withParam('param1', '');
@@ -61,7 +78,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEmpty($builder->getParams());
     }
 
-
+    /**
+     * Test that null params are not added.
+     *
+     * @return void
+     */
     public function testThatNullParamsAreNotAdded()
     {
         $builder = self::getUrlBuilder()->withParam('param1', null);
@@ -69,7 +90,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEmpty($builder->getParams());
     }
 
-
+    /**
+     * Test that true params are added.
+     *
+     * @return void
+     */
     public function testThatTrueParamsAreAdded()
     {
         $builder = self::getUrlBuilder()->withParam('param1', true);
@@ -77,7 +102,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('?param1=true', $builder->getParams());
     }
 
-
+    /**
+     * Test that false params are added.
+     *
+     * @return void
+     */
     public function testThatFalseParamsAreAdded()
     {
         $builder = self::getUrlBuilder()->withParam('param1', false);
@@ -85,7 +114,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('?param1=false', $builder->getParams());
     }
 
-
+    /**
+     * Test that boolean form params are added.
+     *
+     * @return void
+     */
     public function testThatBooleanFormParamsAreAdded()
     {
         $history = [];
@@ -112,7 +145,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('test=false', $history[1]['request']->getBody());
     }
 
-
+    /**
+     * Test that 0 int params are added.
+     *
+     * @return void
+     */
     public function testThatZeroParamsAreAdded()
     {
         $builder = self::getUrlBuilder()->withParam('param1', 0);
@@ -120,7 +157,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('?param1=0', $builder->getParams());
     }
 
-
+    /**
+     * Test that multiple url params are added.
+     *
+     * @return void
+     */
     public function testThatMultipleUrlParamsAreAdded()
     {
         $builder = self::getUrlBuilder();
@@ -131,7 +172,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('?param1=value1&param3=value3', $builder->getParams());
     }
 
-
+    /**
+     * Test that single url param values are replaced..
+     *
+     * @return void
+     */
     public function testThatASingleUrlParamValueIsReplaced()
     {
         $builder = self::getUrlBuilder();
@@ -141,7 +186,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('?param1=value3', $builder->getParams());
     }
 
-
+    /**
+     * Test that withParams() generates a query string correctly.
+     *
+     * @return void
+     */
     public function testParams()
     {
         $builder = self::getUrlBuilder('/api');
@@ -151,7 +200,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('?param4=value4&param2=value5', $builder->getParams());
     }
 
-
+    /**
+     * Test that getGuzzleOptions() works.
+     *
+     * @return void
+     */
     public function testGetGuzzleOptions()
     {
         $options = self::getUrlBuilder()->getGuzzleOptions();
@@ -160,7 +213,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('api.local.test', $options['base_uri']);
     }
 
-
+    /**
+     * Test that getGuzzleOptions w/ a base path works.
+     *
+     * @return void
+     */
     public function testGetGuzzleOptionsWithBasePath()
     {
         $options = self::getUrlBuilder('/api')->getGuzzleOptions();
@@ -169,7 +226,11 @@ class RequestBuilderTest extends ApiTests
         $this->assertEquals('api.local.test/api', $options['base_uri']);
     }
 
-
+    /**
+     * Test that return types are used correctly.
+     *
+     * @return void
+     */
     public function testReturnType()
     {
         $response = [new Response(200, ['Content-Type' => 'application/json'], '{"key":"__test_value__"}')];

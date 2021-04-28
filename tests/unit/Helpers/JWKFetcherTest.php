@@ -15,6 +15,11 @@ use PHPUnit\Framework\TestCase;
  */
 class JWKFetcherTest extends TestCase
 {
+    /**
+     * Test that getKeys() returns keys.
+     *
+     * @return void
+     */
     public function testThatGetKeysReturnsKeys()
     {
         $test_jwks = file_get_contents(AUTH0_PHP_TEST_JSON_DIR . 'localhost--well-known-jwks-json.json');
@@ -38,6 +43,11 @@ class JWKFetcherTest extends TestCase
         $this->assertEquals('-----END CERTIFICATE-----', $pem_parts_2[2]);
     }
 
+    /**
+     * Test that getKeys() w/ empty JWKs returns an empty array.
+     *
+     * @return void
+     */
     public function testThatGetKeysEmptyJwksReturnsEmptyArray()
     {
         $jwks = new MockJwks(
@@ -54,6 +64,11 @@ class JWKFetcherTest extends TestCase
         $this->assertEquals([], $jwks_formatted);
     }
 
+    /**
+     * Test that getKeys() uses cache.
+     *
+     * @return void
+     */
     public function testThatGetKeysUsesCache()
     {
         $jwks_body_1 = '{"keys":[{"kid":"abc","x5c":["123"]}]}';
@@ -80,6 +95,11 @@ class JWKFetcherTest extends TestCase
         $this->assertStringContainsString('456', $jwks_formatted_2['def']);
     }
 
+    /**
+     * Test that getKey() breaks cache.
+     *
+     * @return void
+     */
     public function testThatGetKeyBreaksCache()
     {
         $jwks_body_1 = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]}]}';
@@ -106,6 +126,11 @@ class JWKFetcherTest extends TestCase
         $this->assertArrayHasKey('__kid_2__', $jwks_formatted_3);
     }
 
+    /**
+     * Test that getKeys() uses options url.
+     *
+     * @return void
+     */
     public function testThatGetKeysUsesOptionsUrl()
     {
         $jwks_body = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]}]}';
@@ -119,6 +144,11 @@ class JWKFetcherTest extends TestCase
         $this->assertEquals('__test_jwks_url__', $jwks->getHistoryUrl());
     }
 
+    /**
+     * Test that getKey() gets specific kid.
+     *
+     * @return void
+     */
     public function testThatGetKeyGetsSpecificKid()
     {
         $cache = new ArrayCachePool();
@@ -127,6 +157,11 @@ class JWKFetcherTest extends TestCase
         $this->assertEquals('__test_x5c_1__', $jwks->getKey('__test_kid_1__'));
     }
 
+    /**
+     * Test that getKey() breaks cache when kid is missing.
+     *
+     * @return void
+     */
     public function testThatGetKeyBreaksCacheIsKidMissing()
     {
         $cache = new ArrayCachePool();
@@ -143,12 +178,22 @@ class JWKFetcherTest extends TestCase
         $this->assertStringContainsString('__test_x5c_2__', $jwks->call()->getKey('__test_kid_2__'));
     }
 
+    /**
+     * Test that empty URL returns empty keys.
+     *
+     * @return void
+     */
     public function testThatEmptyUrlReturnsEmptyKeys()
     {
         $jwks_formatted_1 = (new JWKFetcher())->getKeys();
         $this->assertEquals([], $jwks_formatted_1);
     }
 
+    /**
+     * Test that TTL changes.
+     *
+     * @return void
+     */
     public function testThatTtlChanges()
     {
         $jwks_body = '{"keys":[{"kid":"__test_kid_2__","x5c":["__test_x5c_2__"]}]}';
@@ -170,6 +215,11 @@ class JWKFetcherTest extends TestCase
         $jwks->call()->setTtl(30);
     }
 
+    /**
+     * Test that cache mutates.
+     *
+     * @return void
+     */
     public function testThatCacheMutates()
     {
         $jwks_body          = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]},{"kid":"__kid_2__","x5c":["__x5c_2__"]}]}';

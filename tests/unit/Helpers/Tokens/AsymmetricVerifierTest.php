@@ -155,7 +155,6 @@ class AsymmetricVerifierTest extends TestCase
         return (new Builder())->withClaim('sub', '__test_sub__')->withHeader('kid', '__test_kid__');
     }
 
-
     /**
      * Generate a token from a private key using a token builder.
      *

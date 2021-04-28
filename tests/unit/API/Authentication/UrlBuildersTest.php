@@ -7,8 +7,6 @@ use PHPUnit\Framework\TestCase;
 
 class UrlBuildersTest extends TestCase
 {
-
-
     public function testThatBasicAuthorizeLinkIsBuiltCorrectly()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -31,7 +29,6 @@ class UrlBuildersTest extends TestCase
         $this->assertStringNotContainsString('auth0Client=', $authorize_url_parts['query']);
     }
 
-
     public function testThatAuthorizeLinkIncludesConnection()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -42,7 +39,6 @@ class UrlBuildersTest extends TestCase
 
         $this->assertContains('connection=test-connection', $authorize_url_query);
     }
-
 
     public function testThatAuthorizeLinkIncludesState()
     {
@@ -55,7 +51,6 @@ class UrlBuildersTest extends TestCase
         $this->assertContains('state=__test_state__', $authorize_url_query);
     }
 
-
     public function testThatAuthorizeLinkIncludesAdditionalParams()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -67,7 +62,6 @@ class UrlBuildersTest extends TestCase
 
         $this->assertContains('param1=value1', $authorize_url_query);
     }
-
 
     public function testThatBasicLogoutLinkIsBuiltCorrectly()
     {
@@ -84,7 +78,6 @@ class UrlBuildersTest extends TestCase
         $this->assertTrue(empty($logout_link_parts['query']));
     }
 
-
     public function testThatReturnToLogoutLinkIsBuiltCorrectly()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -94,7 +87,6 @@ class UrlBuildersTest extends TestCase
 
         $this->assertContains('returnTo=https%3A%2F%2Fexample.com%2Freturn-to', $logout_link_query);
     }
-
 
     public function testThatClientIdLogoutLinkIsBuiltCorrectly()
     {
@@ -106,7 +98,6 @@ class UrlBuildersTest extends TestCase
         $this->assertContains('client_id=' . '__test_client_id__', $logout_link_query);
     }
 
-
     public function testThatFederatedLogoutLinkIsBuiltCorrectly()
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
@@ -116,7 +107,6 @@ class UrlBuildersTest extends TestCase
 
         $this->assertContains('federated=federated', $logout_link_query);
     }
-
 
     public function testThatSamlLinkIsBuiltProperly()
     {
@@ -138,7 +128,6 @@ class UrlBuildersTest extends TestCase
         );
     }
 
-
     public function testThatSamlMetadataLinkIsBuiltProperly()
     {
         $api = new Authentication('test-domain.auth0.com', 'test-client-id-1');
@@ -153,7 +142,6 @@ class UrlBuildersTest extends TestCase
             $api->getSamlpMetadataLink('test-client-id-2')
         );
     }
-
 
     public function testThatWsFedLinkIsBuiltProperly()
     {
@@ -181,7 +169,6 @@ class UrlBuildersTest extends TestCase
             )
         );
     }
-
 
     public function testThatWsFedMetadataLinkIsBuiltProperly()
     {

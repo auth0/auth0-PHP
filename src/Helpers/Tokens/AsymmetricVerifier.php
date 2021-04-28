@@ -17,7 +17,6 @@ use Lcobucci\JWT\Token;
  */
 final class AsymmetricVerifier extends SignatureVerifier
 {
-
     /**
      * Array of kid => keys or a JWKFetcher instance.
      *

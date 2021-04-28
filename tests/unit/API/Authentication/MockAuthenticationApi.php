@@ -10,12 +10,10 @@ use Auth0\Tests\unit\MockApi;
  */
 class MockAuthenticationApi extends MockApi
 {
-
     /**
      * @var Authentication
      */
     protected $client;
-
 
     /**
      * @param array $guzzleOptions

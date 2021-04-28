@@ -6,7 +6,6 @@ namespace Auth0\SDK\API\Header;
 
 class Header
 {
-
     /**
      * Name of the header.
      *

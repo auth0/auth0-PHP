@@ -14,7 +14,6 @@ use GuzzleHttp\Psr7\Response;
  */
 class RefreshTokenTest extends ApiTests
 {
-
     /**
      * Expected telemetry value.
      *
@@ -29,7 +28,6 @@ class RefreshTokenTest extends ApiTests
      */
     protected static $headers = ['content-type' => 'json'];
 
-
     /**
      * Runs before test suite starts.
      */
@@ -39,7 +37,6 @@ class RefreshTokenTest extends ApiTests
         $infoHeadersData->setCorePackage();
         self::$expectedTelemetry = $infoHeadersData->build();
     }
-
 
     /**
      * Test that an empty refresh token will throw an exception.
@@ -58,7 +55,6 @@ class RefreshTokenTest extends ApiTests
         $this->assertTrue($caught_exception);
     }
 
-
     /**
      * Test that setting an empty client_secret will override the default and throw an exception.
      */
@@ -76,7 +72,6 @@ class RefreshTokenTest extends ApiTests
         $this->assertTrue($caught_exception);
     }
 
-
     /**
      * Test that setting an empty client_id will override the default and throw an exception.
      */
@@ -93,7 +88,6 @@ class RefreshTokenTest extends ApiTests
 
         $this->assertTrue($caught_exception);
     }
-
 
     /**
      * Test that the refresh token request is made successfully.

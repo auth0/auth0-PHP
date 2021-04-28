@@ -18,86 +18,12 @@ use GuzzleHttp\Exception\RequestException;
 class ClientGrants extends GenericResource
 {
     /**
-     * Retrieve client grants, by page if desired.
-     * Required scope: `read:client_grants`
-     *
-     * @param array               $query   Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
-     */
-    public function get(
-        array $query = [],
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('get')
-            ->addPath('client-grants')
-            ->withParams($query)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Get Client Grants by audience.
-     * Required scope: `read:client_grants`
-     *
-     * @param string              $audience API Audience to filter by.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
-     */
-    public function getByAudience(
-        string $audience,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->get(
-            [
-                'audience' => $audience
-            ],
-            $options
-        );
-    }
-
-    /**
-     * Get Client Grants by Client ID.
-     * Required scope: `read:client_grants`
-     *
-     * @param string              $clientId Client ID to filter by.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
-     */
-    public function getByClientId(
-        string $clientId,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->get(
-            [
-                'client_id' => $clientId
-            ],
-            $options
-        );
-    }
-
-    /**
      * Create a new Client Grant.
      * Required scope: `create:client_grants`
      *
      * @param string              $clientId Client ID to receive the grant.
      * @param string              $audience Audience identifier for the API being granted.
-     * @param array               $scope    Optional. Array of scopes for the grant.
+     * @param array               $scope    Optional. Scopes allowed for this client grant.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -112,9 +38,13 @@ class ClientGrants extends GenericResource
         array $scope = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($clientId, 'clientId');
+        $this->validateString($audience, 'audience');
+
         return $this->apiClient->method('post')
             ->addPath('client-grants')
             ->withBody(
+                (object)
                 [
                     'client_id' => $clientId,
                     'audience'  => $audience,
@@ -126,34 +56,93 @@ class ClientGrants extends GenericResource
     }
 
     /**
-     * Delete a Client Grant by ID.
-     * Required scope: `delete:client_grants`
+     * Retrieve client grants, by page if desired.
+     * Required scope: `read:client_grants`
      *
-     * @param string              $grantId Client Grant ID to delete.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
      * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
      *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
+     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
-    public function delete(
-        string $grantId,
+    public function getAll(
+        array $parameters = [],
         ?RequestOptions $options = null
     ): ?array {
-        return $this->apiClient->method('delete')
-            ->addPath('client-grants', $grantId)
+        return $this->apiClient->method('get')
+            ->addPath('client-grants')
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
+    }
+
+    /**
+     * Get Client Grants by audience.
+     * Required scope: `read:client_grants`
+     *
+     * @param string              $audience   API Audience to filter by.
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
+     */
+    public function getAllByAudience(
+        string $audience,
+        array $parameters = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($audience, 'audience');
+
+        return $this->getAll(
+            [
+                'audience' => $audience
+            ] + $parameters,
+            $options
+        );
+    }
+
+    /**
+     * Get Client Grants by Client ID.
+     * Required scope: `read:client_grants`
+     *
+     * @param string              $clientId   Client ID to filter by.
+     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
+     */
+    public function getAllByClientId(
+        string $clientId,
+        array $parameters = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($clientId, 'clientId');
+
+        return $this->getAll(
+            [
+                'client_id' => $clientId
+            ] + $parameters,
+            $options
+        );
     }
 
     /**
      * Update an existing Client Grant.
      * Required scope: `update:client_grants`
      *
-     * @param string              $grantId Client Grant ID to update.
-     * @param array               $scope   Array of scopes to update; will replace existing scopes, not merge.
+     * @param string              $id      Grant (by it's ID) to update.
+     * @param array               $scope   Optional. Array of scopes to update; will replace existing scopes, not merge.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -163,17 +152,45 @@ class ClientGrants extends GenericResource
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/patch_client_grants_by_id
      */
     public function update(
-        string $grantId,
-        array $scope,
+        string $id,
+        array $scope = [],
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('patch')
-            ->addPath('client-grants', $grantId)
+            ->addPath('client-grants', $id)
             ->withBody(
+                (object)
                 [
                     'scope' => $scope
                 ]
             )
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Delete a Client Grant by ID.
+     * Required scope: `delete:client_grants`
+     *
+     * @param string              $id      Grant (by it's ID) to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
+     */
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('delete')
+            ->addPath('client-grants', $id)
             ->withOptions($options)
             ->call();
     }

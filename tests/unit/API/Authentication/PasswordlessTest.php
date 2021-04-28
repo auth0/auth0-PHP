@@ -24,6 +24,8 @@ class PasswordlessTest extends ApiTests
 
     /**
      * Runs before test suite starts.
+     *
+     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -34,6 +36,11 @@ class PasswordlessTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
+    /**
+     * Test That Email Passwordless Request Is Correct.
+     *
+     * @return void
+     */
     public function testThatEmailPasswordlessRequestIsCorrect()
     {
         $api = new MockAuthenticationApi(
@@ -73,6 +80,11 @@ class PasswordlessTest extends ApiTests
         $this->assertEquals('__test_value__', $request_body['authParams']['__test_key__']);
     }
 
+    /**
+     * Test That Default Sms Passwordless Request Is Correct.
+     *
+     * @return void
+     */
     public function testThatDefaultSmsPasswordlessRequestIsCorrect()
     {
         $api = new MockAuthenticationApi(

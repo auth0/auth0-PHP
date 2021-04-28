@@ -29,7 +29,6 @@ class EmailTemplatesMockedTest extends TestCase
      */
     protected static $headers = ['content-type' => 'json'];
 
-
     /**
      * Runs before test suite starts.
      */

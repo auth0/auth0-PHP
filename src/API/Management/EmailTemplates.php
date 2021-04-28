@@ -18,11 +18,63 @@ use GuzzleHttp\Exception\RequestException;
 class EmailTemplates extends GenericResource
 {
     /**
+     * Create an email template by name.
+     * See docs @link below for valid names and fields.
+     * Required scope: `create:email_templates`
+     *
+     * @param string              $template   The template name. See the @link for a list of templates available.
+     * @param string              $body       Body of the email template.
+     * @param string              $from       Senders from email address.
+     * @param string              $subject    Subject line of the email.
+     * @param string              $syntax     Syntax of the template body.
+     * @param bool                $enabled    Whether the template is enabled (true) or disabled (false).
+     * @param array               $additional Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates
+     */
+    public function create(
+        string $template,
+        string $body,
+        string $from,
+        string $subject,
+        string $syntax,
+        bool $enabled,
+        array $additional = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($template, 'template');
+        $this->validateString($body, 'body');
+        $this->validateString($from, 'from');
+        $this->validateString($subject, 'subject');
+        $this->validateString($syntax, 'syntax');
+
+        $payload = [
+            'template' => $template,
+            'body'     => $body,
+            'from'     => $from,
+            'subject'  => $subject,
+            'syntax'   => $syntax,
+            'enabled'  => $enabled
+        ] + $additional;
+
+        return $this->apiClient->method('post')
+            ->addPath('email-templates')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Get an email template by name.
      * See docs @link below for valid names and fields.
      * Required scope: `read:email_templates`
      *
-     * @param string              $templateName The email template name.
+     * @param string              $templateName The email template name. See the @link for a list of templates available.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -35,36 +87,10 @@ class EmailTemplates extends GenericResource
         string $templateName,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($templateName, 'templateName');
+
         return $this->apiClient->method('get')
             ->addPath('email-templates', $templateName)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Patch an email template by name.
-     * This will update only the email template data fields provided (see HTTP PATCH).
-     * See docs @link below for valid names, fields, and possible responses.
-     * Required scope: `update:email_templates`
-     *
-     * @param string              $templateName The email template name.
-     * @param array               $query        Update existing template fields with this data.
-     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
-     */
-    public function patch(
-        string $templateName,
-        array $query,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('patch')
-            ->addPath('email-templates', $templateName)
-            ->withBody($query)
             ->withOptions($options)
             ->call();
     }
@@ -75,8 +101,8 @@ class EmailTemplates extends GenericResource
      * See docs @link below for valid names, fields, and possible responses.
      * Required scope: `update:email_templates`
      *
-     * @param string              $templateName The email template name.
-     * @param array               $query        Replace existing template with this data.
+     * @param string              $templateName The email template name. See the @link for a list of templates available.
+     * @param array               $body         Replace existing template with this data.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -87,43 +113,46 @@ class EmailTemplates extends GenericResource
      */
     public function update(
         string $templateName,
-        array $query,
+        array $body,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($templateName, 'templateName');
+        $this->validateArray($body, 'body');
+
         return $this->apiClient->method('put')
             ->addPath('email-templates', $templateName)
-            ->withBody($query)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
 
     /**
-     * Create an email template by name.
-     * See docs @link below for valid names and fields.
-     * Required scope: `create:email_templates`
+     * Patch an email template by name.
+     * This will update only the email template data fields provided (see HTTP PATCH).
+     * See docs @link below for valid names, fields, and possible responses.
+     * Required scope: `update:email_templates`
      *
-     * @param string              $template The template name.
-     * @param array               $query    Body of the request to send.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string              $templateName The email template name. See the @link for a list of templates available.
+     * @param array               $body         Update existing template fields with this data.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates
+     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
      */
-    public function create(
+    public function patch(
         string $templateName,
-        array $query,
+        array $body,
         ?RequestOptions $options = null
     ): ?array {
-        $payload = [
-            'template' => $templateName
-        ] + $query;
+        $this->validateString($templateName, 'templateName');
+        $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('post')
-            ->addPath('email-templates')
-            ->withBody($payload)
+        return $this->apiClient->method('patch')
+            ->addPath('email-templates', $templateName)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }

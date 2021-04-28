@@ -18,6 +18,49 @@ use GuzzleHttp\Exception\RequestException;
 class DeviceCredentials extends GenericResource
 {
     /**
+     * Create a device public key credential.
+     *
+     * @param string              $deviceName Name for this device easily recognized by owner.
+     * @param string              $type       Type of credential. Must be public_key.
+     * @param string              $value      Base64 encoded string containing the credential.
+     * @param string              $deviceId   Unique identifier for the device. Recommend using Android_ID on Android and identifierForVendor.
+     * @param array               $body       Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/post_device_credentials
+     */
+    public function create(
+        string $deviceName,
+        string $type,
+        string $value,
+        string $deviceId,
+        array $body = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($deviceName, 'deviceName');
+        $this->validateString($type, 'type');
+        $this->validateString($value, 'value');
+        $this->validateString($deviceId, 'deviceId');
+
+        $payload = [
+            'device_name' => $deviceName,
+            'type'        => $type,
+            'value'       => $value,
+            'device_id'   => $deviceId
+        ] + $body;
+
+        return $this->apiClient->method('post')
+            ->addPath('device-credentials')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Retrieve device credential details for a given user_id.
      * Required scope: `read:device_credentials`
      *
@@ -38,10 +81,15 @@ class DeviceCredentials extends GenericResource
         ?string $type = null,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($userId, 'userId');
+
         $payload = [
-            'user_id'     => $userId,
-            'client_id' => $clientId,
+            'user_id' => $userId
         ];
+
+        if (null !== $clientId) {
+            $payload['client_id'] = $clientId;
+        }
 
         if (null !== $type) {
             $payload['type'] = $type;
@@ -50,29 +98,6 @@ class DeviceCredentials extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('device-credentials')
             ->withParams($payload)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Create a device public key credential.
-     *
-     * @param array               $query   Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/post_device_credentials
-     */
-    public function create(
-        array $query,
-        ?RequestOptions $options = null
-    ): ?array {
-        return $this->apiClient->method('post')
-            ->addPath('device-credentials')
-            ->withBody($query)
             ->withOptions($options)
             ->call();
     }
@@ -94,6 +119,8 @@ class DeviceCredentials extends GenericResource
         string $id,
         ?RequestOptions $options = null
     ): ?array {
+        $this->validateString($id, 'id');
+
         return $this->apiClient->method('delete')
             ->addPath('device-credentials', $id)
             ->withOptions($options)

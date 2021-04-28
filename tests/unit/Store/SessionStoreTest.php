@@ -43,7 +43,6 @@ class SessionStoreTest extends TestCase
      */
     public static $sessionKey;
 
-
     /**
      * Test fixture for class, runs once before any tests.
      *
@@ -54,7 +53,6 @@ class SessionStoreTest extends TestCase
         self::$sessionStore = new SessionStore();
         self::$sessionKey   = 'auth0__' . self::TEST_KEY;
     }
-
 
     /**
      * Test that SessionStore::initSession ran and cookie params are stored correctly.
@@ -70,7 +68,6 @@ class SessionStoreTest extends TestCase
         $this->assertNotEmpty(session_id());
     }
 
-
     /**
      * Test that SessionStore::getSessionKeyName returns the expected name.
      *
@@ -81,7 +78,6 @@ class SessionStoreTest extends TestCase
         $test_this_key_name = self::$sessionStore->getSessionKeyName(self::TEST_KEY);
         $this->assertEquals(self::$sessionKey, $test_this_key_name);
     }
-
 
     /**
      * Test that SessionStore::set stores the correct value.
@@ -99,7 +95,6 @@ class SessionStoreTest extends TestCase
         $this->assertEquals(self::TEST_VALUE, $_SESSION[self::$sessionKey]);
     }
 
-
     /**
      * Test that SessionStore::get stores the correct value.
      *
@@ -110,7 +105,6 @@ class SessionStoreTest extends TestCase
         $_SESSION[self::$sessionKey] = self::TEST_VALUE;
         $this->assertEquals(self::TEST_VALUE, self::$sessionStore->get(self::TEST_KEY));
     }
-
 
     /**
      * Test that SessionStore::delete trashes the stored value.
@@ -127,7 +121,6 @@ class SessionStoreTest extends TestCase
         $this->assertNull(self::$sessionStore->get(self::TEST_KEY));
         $this->assertFalse(isset($_SESSION[self::$sessionKey]));
     }
-
 
     /**
      * Test that custom base names can be set and return the correct value.
