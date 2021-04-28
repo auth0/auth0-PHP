@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers;
@@ -38,7 +39,7 @@ class TransientStoreHandler
      *
      * @return void
      */
-    public function store(string $key, string $value) : void
+    public function store(string $key, string $value): void
     {
         $this->store->set($key, $value);
     }
@@ -50,7 +51,7 @@ class TransientStoreHandler
      *
      * @return string
      */
-    public function issue(string $key) : string
+    public function issue(string $key): string
     {
         $nonce = $this->getNonce();
         $this->store($key, $nonce);
@@ -62,9 +63,9 @@ class TransientStoreHandler
      *
      * @param string $key Key to check.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isset(string $key) : bool
+    public function isset(string $key): bool
     {
         return ! is_null($this->store->get($key));
     }
@@ -89,9 +90,9 @@ class TransientStoreHandler
      * @param string $key      Key to get once.
      * @param string $expected Value expected.
      *
-     * @return boolean
+     * @return bool
      */
-    public function verify(string $key, string $expected) : bool
+    public function verify(string $key, string $expected): bool
     {
         return $this->getOnce($key) === $expected;
     }
@@ -99,13 +100,11 @@ class TransientStoreHandler
     /**
      * Generate a random nonce value.
      *
-     * @param integer $length Length of the generated value, in bytes.
+     * @param int $length Length of the generated value, in bytes.
      *
      * @return string
-     *
-     * @codeCoverageIgnore
      */
-    private function getNonce(int $length = 16) : string
+    private function getNonce(int $length = 16): string
     {
         try {
             $random_bytes = random_bytes($length);

@@ -1,91 +1,43 @@
 <?php
-/**
- *
- * @package Auth0\SDK\API\Management
- */
+
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-use \Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Helpers\Requests\RequestOptions;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class EmailTemplates.
  * Handles requests to the Email Templates endpoint of the v2 Management API.
  *
- * @package Auth0\SDK\API\Management\EmailTemplates
+ * @link https://auth0.com/docs/api/management/v2#!/Email_Templates
+ *
+ * @package Auth0\SDK\API\Management
  */
 class EmailTemplates extends GenericResource
 {
     /**
-     *
-     * @var string
-     */
-    const TEMPLATE_VERIFY_EMAIL = 'verify_email';
-
-    /**
-     *
-     * @var string
-     */
-    const TEMPLATE_RESET_EMAIL = 'reset_email';
-
-    /**
-     *
-     * @var string
-     */
-    const TEMPLATE_WELCOME_EMAIL = 'welcome_email';
-
-    /**
-     *
-     * @var string
-     */
-    const TEMPLATE_BLOCKED_ACCOUNT = 'blocked_account';
-
-    /**
-     *
-     * @var string
-     */
-    const TEMPLATE_STOLEN_CREDENTIALS = 'stolen_credentials';
-
-    /**
-     *
-     * @var string
-     */
-    const TEMPLATE_ENROLLMENT_EMAIL = 'enrollment_email';
-
-    /**
-     *
-     * @var string
-     */
-    const TEMPLATE_CHANGE_PASSWORD = 'change_password';
-
-    /**
-     *
-     * @var string
-     */
-    const TEMPLATE_PASSWORD_RESET = 'password_reset';
-
-    /**
-     *
-     * @var string
-     */
-    const TEMPLATE_MFA_OOB_CODE = 'mfa_oob_code';
-
-    /**
      * Get an email template by name.
      * See docs @link below for valid names and fields.
-     * Required scope: "read:email_templates"
+     * Required scope: `read:email_templates`
      *
-     * @param string $templateName - the email template name to get (see constants defined for this class).
+     * @param string              $templateName The email template name.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array
+     * @return array|null
      *
-     * @throws \Exception - if a 200 response was not returned from the API.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName
      */
-    public function get($templateName)
-    {
+    public function get(
+        string $templateName,
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('get')
             ->addPath('email-templates', $templateName)
+            ->withOptions($options)
             ->call();
     }
 
@@ -93,74 +45,86 @@ class EmailTemplates extends GenericResource
      * Patch an email template by name.
      * This will update only the email template data fields provided (see HTTP PATCH).
      * See docs @link below for valid names, fields, and possible responses.
-     * Required scope: "update:email_templates"
+     * Required scope: `update:email_templates`
      *
-     * @param string $templateName - the email template name to patch (see constants defined for this class).
-     * @param array  $data         - an array of data to update.
+     * @param string              $templateName The email template name.
+     * @param array               $query        Update existing template fields with this data.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array - updated data for the template name provided.
+     * @return array|null
      *
-     * @throws \Exception - if a 200 response was not returned from the API.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
      */
-    public function patch($templateName, $data)
-    {
+    public function patch(
+        string $templateName,
+        array $query,
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('patch')
             ->addPath('email-templates', $templateName)
-            ->withBody(json_encode($data))
+            ->withBody($query)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Update an email template by name.
+     * This will replace the email template data.
+     * See docs @link below for valid names, fields, and possible responses.
+     * Required scope: `update:email_templates`
+     *
+     * @param string              $templateName The email template name.
+     * @param array               $query        Replace existing template with this data.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
+     */
+    public function update(
+        string $templateName,
+        array $query,
+        ?RequestOptions $options = null
+    ): ?array {
+        return $this->apiClient->method('put')
+            ->addPath('email-templates', $templateName)
+            ->withBody($query)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Create an email template by name.
      * See docs @link below for valid names and fields.
-     * Required scope: "create:email_templates"
+     * Required scope: `create:email_templates`
      *
-     * @param string  $template    - the template name to create (see constants defined for this class).
-     * @param boolean $enabled     - is the email template enabled?
-     * @param string  $from        - the email address the email should come from.
-     * @param string  $subject     - the email subject.
-     * @param string  $body        - the email body in the syntax indicated below.
-     * @param string  $syntax      - the email body syntax to use.
-     * @param string  $resultUrl   - URL where a click-through should land.
-     * @param integer $urlLifetime - URL lifetime, in seconds.
+     * @param string              $template The template name.
+     * @param array               $query    Body of the request to send.
+     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed|string
+     * @return array|null
      *
-     * @throws \Exception - if a 200 response was not returned from the API.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates
      */
     public function create(
-        $template,
-        $enabled,
-        $from,
-        $subject,
-        $body,
-        $syntax = 'liquid',
-        $resultUrl = '',
-        $urlLifetime = 0
-    )
-    {
-        // Required fields
-        $data = [
-            'template' => (string) $template,
-            'enabled' => (bool) $enabled,
-            'from' => (string) $from,
-            'subject' => (string) $subject,
-            'body' => (string) $body,
-            'syntax' => (string) $syntax,
-            'urlLifetimeInSeconds' => abs( (int) $urlLifetime)
-        ];
-
-        if (! empty($resultUrl)) {
-            $data['resultUrl'] = filter_var($resultUrl, FILTER_SANITIZE_URL);
-        }
+        string $templateName,
+        array $query,
+        ?RequestOptions $options = null
+    ): ?array {
+        $payload = [
+            'template' => $templateName
+        ] + $query;
 
         return $this->apiClient->method('post')
             ->addPath('email-templates')
-            ->withBody(json_encode($data))
+            ->withBody($payload)
+            ->withOptions($options)
             ->call();
     }
 }

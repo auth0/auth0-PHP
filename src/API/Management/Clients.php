@@ -1,167 +1,151 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
+
+use Auth0\SDK\Helpers\Requests\RequestOptions;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Clients.
  * Handles requests to the Clients endpoint of the v2 Management API.
+ *
+ * https://auth0.com/docs/api/management/v2#!/Clients
  *
  * @package Auth0\SDK\API\Management
  */
 class Clients extends GenericResource
 {
     /**
-     * Get all Clients by page.
+     * Get all Clients.
      * Required scopes:
-     *      - "read:clients" - For any call to this endpoint.
-     *      - "read:client_keys" - To retrieve "client_secret" and "encryption_key" attributes.
+     * - `read:clients` for any call to this endpoint.
+     * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
      *
-     * @param null|string|array $fields         Fields to include or exclude from the result:
-     *      - Including only the fields required can speed up API calls significantly.
-     *      - Arrays will be converted to comma-separated strings.
-     * @param null|boolean      $include_fields True to include $fields, false to exclude $fields.
-     * @param null|integer      $page           Page number to get, zero-based.
-     * @param null|integer      $per_page       Number of results to get, null to return the default number.
-     * @param array             $add_params     Additional API parameters, over-written by function params.
+     * @param array               $query   Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients
      */
     public function getAll(
-        $fields = null,
-        $include_fields = null,
-        $page = null,
-        $per_page = null,
-        array $add_params = []
-    )
-    {
-        // Set additional parameters first so they are over-written by function parameters.
-        $params = is_array($add_params) ? $add_params : [];
-
-        // Results fields.
-        if (! empty($fields)) {
-            $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
-            if (null !== $include_fields) {
-                $params['include_fields'] = $include_fields;
-            }
-        }
-
-        // Pagination.
-        if (null !== $page) {
-            $params['page'] = abs( (int) $page);
-            if (null !== $per_page) {
-                $params['per_page'] = $per_page;
-            }
-        }
-
+        array $query = [],
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('get')
             ->addPath('clients')
-            ->withDictParams($params)
+            ->withParams($query)
+            ->withOptions($options)
             ->call();
     }
 
     /**
-     * Get a single Client by ID.
+     * Get a Client.
      * Required scopes:
-     *      - "read:clients" - For any call to this endpoint.
-     *      - "read:client_keys" - To retrieve "client_secret" and "encryption_key" attributes.
+     * - `read:clients` for any call to this endpoint.
+     * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
      *
-     * @param string            $client_id      Client ID to get.
-     * @param null|string|array $fields         Fields to include or exclude from the result:
-     *      - Including only the fields required can speed up API calls significantly.
-     *      - Arrays will be converted to comma-separated strings.
-     * @param null|boolean      $include_fields True to include $fields, false to exclude $fields.
+     * @param string              $clientId Client (by ID) to query.
+     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients_by_id
      */
-    public function get($client_id, $fields = null, $include_fields = null)
-    {
-        $params = [];
-
-        // Results fields.
-        if (! empty($fields)) {
-            $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
-            if (null !== $include_fields) {
-                $params['include_fields'] = $include_fields;
-            }
-        }
-
+    public function get(
+        string $clientId,
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('get')
-            ->addPath('clients', $client_id)
-            ->withDictParams($params)
+            ->addPath('clients', $clientId)
+            ->withOptions($options)
             ->call();
     }
 
     /**
-     * Delete a Client by ID.
-     * Required scope: "delete:clients"
+     * Delete a Client.
+     * Required scope: `delete:clients"
      *
-     * @param string $client_id Client ID to delete.
+     * @param string              $clientId Client (by ID) to delete.
+     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed|string
+     * @return array|null
      *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/delete_clients_by_id
      */
-    public function delete($client_id)
-    {
+    public function delete(
+        string $clientId,
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('delete')
-            ->addPath('clients', $client_id)
+            ->addPath('clients', $clientId)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Create a new Client.
-     * Required scope: "create:clients"
+     * Required scope: `create:clients`
      *
-     * @param array $data Client create data; "name" field is required.
+     * @param string              $name    Name of the new client.
+     * @param array               $query   Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed|string
+     * @return array|null
      *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/post_clients
      */
-    public function create(array $data)
-    {
-        if (empty($data['name'])) {
-            throw new \Exception('Missing required "name" field.');
-        }
+    public function create(
+        string $name,
+        array $query = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $payload = [
+            'name' => $name
+        ] + $query;
 
         return $this->apiClient->method('post')
             ->addPath('clients')
-            ->withBody(json_encode($data))
+            ->withBody($payload)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Update a Client.
      * Required scopes:
-     *      - "update:clients" - For any call to this endpoint.
-     *      - "update:client_keys" - To update "client_secret" and "encryption_key" attributes.
+     * - `update:clients` for any call to this endpoint.
+     * - `update:client_keys` to update "client_secret" and "encryption_key" attributes.
      *
-     * @param string $client_id Client ID to update.
-     * @param array  $data      Client data to update.
+     * @param string              $clientId Client ID to update.
+     * @param array               $query    Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed|string
+     * @return array|null
      *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/patch_clients_by_id
      */
-    public function update($client_id, array $data)
-    {
+    public function update(
+        string $clientId,
+        array $query = [],
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('patch')
-            ->addPath('clients', $client_id)
-            ->withBody(json_encode($data))
+            ->addPath('clients', $clientId)
+            ->withBody($query)
+            ->withOptions($options)
             ->call();
     }
 }

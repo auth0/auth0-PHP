@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 class HeaderTest extends TestCase
 {
 
+
     public function testHeader()
     {
         $headerName = 'HEADERNAME';
@@ -24,6 +25,7 @@ class HeaderTest extends TestCase
         $this->assertEquals("$headerName: $value\n", $header->get());
     }
 
+
     public function testAuthorizationBearer()
     {
         $token  = 'THISISTHETOKEN';
@@ -33,6 +35,7 @@ class HeaderTest extends TestCase
         $this->assertEquals("Bearer $token", $header->getValue());
         $this->assertEquals("Authorization: Bearer $token\n", $header->get());
     }
+
 
     public function testContentType()
     {
@@ -44,6 +47,7 @@ class HeaderTest extends TestCase
         $this->assertEquals("Content-Type: $contentType\n", $header->get());
     }
 
+
     public function testTelemetry()
     {
         $telemetryVal = uniqid();
@@ -53,6 +57,7 @@ class HeaderTest extends TestCase
         $this->assertEquals($telemetryVal, $header->getValue());
         $this->assertEquals("Auth0-Client: $telemetryVal\n", $header->get());
     }
+
 
     public function testForwardedFor()
     {

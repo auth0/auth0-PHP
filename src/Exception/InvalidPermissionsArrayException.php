@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\Exception;
 
 /**
@@ -14,7 +16,7 @@ class InvalidPermissionsArrayException extends CoreException
     public function __construct()
     {
         parent::__construct(
-            'Invalid or empty permissions array passed. 
+            'Invalid or empty permissions array passed.
                 All permissions must include both permission_name and resource_server_identifier keys.'
         );
     }

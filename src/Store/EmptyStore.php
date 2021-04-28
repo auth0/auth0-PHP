@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
@@ -19,7 +20,7 @@ class EmptyStore implements StoreInterface
      *
      * @return void
      */
-    public function set(string $key, $value) : void
+    public function set(string $key, $value): void
     {
     }
 
@@ -27,7 +28,7 @@ class EmptyStore implements StoreInterface
      * Return the default.
      *
      * @param string      $key     Key to get.
-     * @param null|string $default Return value if key not found.
+     * @param string|null $default Return value if key not found.
      *
      * @return mixed
      */
@@ -43,7 +44,7 @@ class EmptyStore implements StoreInterface
      *
      * @return void
      */
-    public function delete(string $key) : void
+    public function delete(string $key): void
     {
     }
 }

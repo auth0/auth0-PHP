@@ -1,28 +1,30 @@
 <?php
+
 /**
  * Main entry point to the Auth0 SDK
  *
  * @package Auth0\SDK
  */
 
+declare(strict_types=1);
+
 namespace Auth0\SDK;
 
-use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\PKCE;
-use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
+use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Store\StoreInterface;
-use Auth0\SDK\API\Authentication;
-
 use GuzzleHttp\Exception\RequestException;
 use Psr\SimpleCache\CacheInterface;
 
@@ -43,7 +45,7 @@ class Auth0
      *
      * @var array
      */
-    public $persistantMap = [
+    protected $persistantMap = [
         'refresh_token',
         'access_token',
         'user',
@@ -176,14 +178,14 @@ class Auth0
     /**
      * Skip the /userinfo endpoint call and use the ID token.
      *
-     * @var boolean
+     * @var bool
      */
     protected $skipUserinfo;
 
     /**
      * Enable Authorization Code Flow with Proof Key for Code Exchange (PKCE)
      *
-     * @var boolean
+     * @var bool
      */
     protected $enablePkce;
 
@@ -198,7 +200,7 @@ class Auth0
     /**
      * Leeway for ID token validation.
      *
-     * @var integer
+     * @var int
      */
     protected $idTokenLeeway;
 
@@ -212,7 +214,7 @@ class Auth0
     /**
      * Maximum time allowed between authentication and ID token verification.
      *
-     * @var integer
+     * @var int
      */
     protected $maxAge;
 
@@ -233,34 +235,31 @@ class Auth0
     /**
      * BaseAuth0 Constructor.
      *
-     * @param array $config - Required configuration options.
-     *     - domain                 (String)  Required. Auth0 domain for your tenant
-     *     - client_id              (String)  Required. Client ID found in the Application settings
-     *     - redirect_uri           (String)  Required. Authentication callback URI
-     *     - client_secret          (String)  Optional. Client Secret found in the Application settings
-     *     - secret_base64_encoded  (Boolean) Optional. Client Secret base64 encoded (true) or not (false, default)
-     *     - audience               (String)  Optional. API identifier to generate an access token
-     *     - organization           (String)  Optional. ID of the Organization, if used. Found in your Organization settings.
-     *     - response_mode          (String)  Optional. Response mode from the authorization server
-     *     - response_type          (String)  Optional. Response type from the authorization server
-     *     - scope                  (String)  Optional. Scope for ID and access tokens.
-     *     - guzzle_options         (Object)  Optional. Options passed to the Guzzle HTTP library
-     *     - skip_userinfo          (Boolean) Optional. Use the ID token for user identity (true, default) or the
-     *                                                  userinfo endpoint (false)
-     *     - enable_pkce            (Boolean) Optional. Enable Authorization Code Flow with Proof Key for Code Exchange
-     *     - max_age                (Integer) Optional. Maximum time allowed between authentication and callback
-     *     - id_token_alg           (String)  Optional. ID token algorithm expected; RS256 (default) or HS256 only
-     *     - id_token_leeway        (Integer) Optional. Leeway, in seconds, for ID token validation.
-     *     - jwks_uri               (String)  Optional. URI to the JWKS when accepting RS256 ID tokens.
-     *     - store                  (Mixed)   Optional. StorageInterface for identity and token persistence;
-     *                                                  leave empty to default to SessionStore
-     *     - transient_store        (Mixed)   Optional.  StorageInterface for transient auth data;
-     *                                                  leave empty to default to CookieStore
-     *     - cache_handler          (Mixed)   Optional. CacheInterface instance or false for none
-     *     - persist_user           (Boolean) Optional. Persist the user info, default true
-     *     - persist_access_token   (Boolean) Optional. Persist the access token, default false
-     *     - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
-     *     - persist_id_token       (Boolean) Optional. Persist the ID token, default false
+     * @param array $config Required. Configuration options.
+     *                      - domain                 (String)  Required. Auth0 domain for your tenant
+     *                      - client_id              (String)  Required. Client ID found in the Application settings
+     *                      - redirect_uri           (String)  Required. Authentication callback URI
+     *                      - client_secret          (String)  Optional. Client Secret found in the Application settings
+     *                      - secret_base64_encoded  (Boolean) Optional. Client Secret base64 encoded (true) or not (false, default)
+     *                      - audience               (String)  Optional. API identifier to generate an access token
+     *                      - organization           (String)  Optional. ID of the Organization, if used. Found in your Organization settings.
+     *                      - response_mode          (String)  Optional. Response mode from the authorization server
+     *                      - response_type          (String)  Optional. Response type from the authorization server
+     *                      - scope                  (String)  Optional. Scope for ID and access tokens.
+     *                      - guzzle_options         (Object)  Optional. Options passed to the Guzzle HTTP library
+     *                      - skip_userinfo          (Boolean) Optional. Use the ID token for user identity (true, default) or the userinfo endpoint (false)
+     *                      - enable_pkce            (Boolean) Optional. Enable Authorization Code Flow with Proof Key for Code Exchange
+     *                      - max_age                (Integer) Optional. Maximum time allowed between authentication and callback
+     *                      - id_token_alg           (String)  Optional. ID token algorithm expected; RS256 (default) or HS256 only
+     *                      - id_token_leeway        (Integer) Optional. Leeway, in seconds, for ID token validation.
+     *                      - jwks_uri               (String)  Optional. URI to the JWKS when accepting RS256 ID tokens.
+     *                      - store                  (Mixed)   Optional. StorageInterface for identity and token persistence; leave empty to default to SessionStore
+     *                      - transient_store        (Mixed)   Optional.  StorageInterface for transient auth data; leave empty to default to CookieStore
+     *                      - cache_handler          (Mixed)   Optional. CacheInterface instance or false for none
+     *                      - persist_user           (Boolean) Optional. Persist the user info, default true
+     *                      - persist_access_token   (Boolean) Optional. Persist the access token, default false
+     *                      - persist_refresh_token  (Boolean) Optional. Persist the refresh token, default false
+     *                      - persist_id_token       (Boolean) Optional. Persist the ID token, default false
      *
      * @throws CoreException If `domain`, `client_id`, or `redirect_uri` is not provided.
      * @throws CoreException If `id_token_alg` is provided and is not supported.
@@ -298,10 +297,10 @@ class Auth0
         $this->enablePkce    = $config['enable_pkce'] ?? false;
         $this->maxAge        = $config['max_age'] ?? null;
         $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
-        $this->jwksUri       = $config['jwks_uri'] ?? 'https://'.$this->domain.'/.well-known/jwks.json';
+        $this->jwksUri       = $config['jwks_uri'] ?? 'https://' . $this->domain . '/.well-known/jwks.json';
 
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
-        if (! in_array( $this->idTokenAlg, ['HS256', 'RS256'] )) {
+        if (! in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
             throw new CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
         }
 
@@ -336,14 +335,16 @@ class Auth0
 
         $transientStore = $config['transient_store'] ?? null;
         if (! $transientStore instanceof StoreInterface) {
-            $transientStore = new CookieStore([
+            $transientStore = new CookieStore(
+                [
                 // Use configuration option or class default.
-                'legacy_samesite_none' => $config['legacy_samesite_none_cookie'] ?? null,
-                'samesite' => 'form_post' === $this->responseMode ? 'None' : 'Lax',
-            ]);
+                    'legacy_samesite_none' => $config['legacy_samesite_none_cookie'] ?? null,
+                    'samesite' => 'form_post' === $this->responseMode ? 'None' : 'Lax',
+                ]
+            );
         }
 
-        $this->transientHandler = new TransientStoreHandler( $transientStore );
+        $this->transientHandler = new TransientStoreHandler($transientStore);
 
         $this->cacheHandler = $config['cache_handler'] ?? null;
         if (! $this->cacheHandler instanceof CacheInterface) {
@@ -375,10 +376,10 @@ class Auth0
      *
      * @return void
      *
-     * @see \Auth0\SDK\API\Authentication::get_authorize_link()
+     * @see \Auth0\SDK\API\Authentication::getAuthorizationLink()
      * @see https://auth0.com/docs/api/authentication#login
      */
-    public function login($state = null, $connection = null, array $additionalParams = [])
+    public function login($state = null, $connection = null, array $additionalParams = []): void
     {
         $params = [];
 
@@ -396,7 +397,7 @@ class Auth0
 
         $login_url = $this->getLoginUrl($params);
 
-        header('Location: '.$login_url);
+        header('Location: ' . $login_url);
         exit;
     }
 
@@ -418,10 +419,10 @@ class Auth0
             'max_age' => $this->maxAge,
         ];
 
-        $auth_params = array_replace( $default_params, $params );
-        $auth_params = array_filter( $auth_params );
+        $auth_params = array_replace($default_params, $params);
+        $auth_params = array_filter($auth_params);
 
-        if (empty( $auth_params[self::TRANSIENT_STATE_KEY] )) {
+        if (empty($auth_params[self::TRANSIENT_STATE_KEY])) {
             // No state provided by application so generate, store, and send one.
             $auth_params[self::TRANSIENT_STATE_KEY] = $this->transientHandler->issue(self::TRANSIENT_STATE_KEY);
         } else {
@@ -430,14 +431,14 @@ class Auth0
         }
 
         // ID token nonce validation is required so auth params must include one.
-        if (empty( $auth_params[self::TRANSIENT_NONCE_KEY] )) {
+        if (empty($auth_params[self::TRANSIENT_NONCE_KEY])) {
             $auth_params[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->issue(self::TRANSIENT_NONCE_KEY);
         } else {
             $this->transientHandler->store(self::TRANSIENT_NONCE_KEY, $auth_params[self::TRANSIENT_NONCE_KEY]);
         }
 
         if ($this->enablePkce) {
-            $codeVerifier                  = PKCE::generateCodeVerifier(128);
+            $codeVerifier = PKCE::generateCodeVerifier(128);
             $auth_params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
             // The PKCE spec defines two methods, S256 and plain, the former is
             // the only one supported by Auth0 since the latter is discouraged.
@@ -446,10 +447,10 @@ class Auth0
         }
 
         if (isset($auth_params['max_age'])) {
-            $this->transientHandler->store( 'max_age', $auth_params['max_age'] );
+            $this->transientHandler->store('max_age', $auth_params['max_age']);
         }
 
-        return $this->authentication->get_authorize_link(
+        return $this->authentication->getAuthorizationLink(
             $auth_params['response_type'],
             $auth_params['redirect_uri'],
             null,
@@ -532,9 +533,9 @@ class Auth0
      * @throws CoreException If the state value is missing or invalid.
      * @throws CoreException If there is already an active session.
      * @throws ApiException If access token is missing from the response.
-     * @throws RequestException If HTTP request fails (e.g. access token does not have userinfo scope).
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return boolean
+     * @return bool
      *
      * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
@@ -562,7 +563,7 @@ class Auth0
             throw new CoreException('Can\'t initialize a new session while there is one active session already');
         }
 
-        $response = $this->authentication->code_exchange($code, $this->redirectUri, $code_verifier);
+        $response = $this->authentication->codeExchange($code, $this->redirectUri, $code_verifier);
 
         if (empty($response['access_token'])) {
             throw new ApiException('Invalid access_token - Retry login.');
@@ -585,7 +586,7 @@ class Auth0
         if ($this->skipUserinfo) {
             $user = $this->idTokenDecoded;
         } else {
-            $user = $this->authentication->userinfo($this->accessToken);
+            $user = $this->authentication->userInfo($this->accessToken);
         }
 
         if ($user) {
@@ -600,19 +601,21 @@ class Auth0
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
      *
      * @param array $options Options for the token endpoint request.
-     *      - options.scope         Access token scope requested; optional.
+     *                       - options.scope         Access token scope requested; optional.
      *
      * @throws CoreException If the Auth0 object does not have access token and refresh token
      * @throws ApiException If the Auth0 API did not renew access and ID token properly
      * @link   https://auth0.com/docs/tokens/refresh-token/current
+     *
+     * @return void
      */
-    public function renewTokens(array $options = [])
+    public function renewTokens(array $options = []): void
     {
         if (! $this->refreshToken) {
             throw new CoreException('Can\'t renew the access token if there isn\'t a refresh token available');
         }
 
-        $response = $this->authentication->refresh_token( $this->refreshToken, $options );
+        $response = $this->authentication->refreshToken($this->refreshToken, $options);
 
         if (empty($response['access_token'])) {
             throw new ApiException('Token did not refresh correctly. Access token not returned.');
@@ -691,12 +694,12 @@ class Auth0
      *
      * @throws InvalidTokenException
      */
-    public function decodeIdToken(string $idToken, array $verifierOptions = []) : array
+    public function decodeIdToken(string $idToken, array $verifierOptions = []): array
     {
-        $idTokenIss  = 'https://'.$this->domain.'/';
+        $idTokenIss  = 'https://' . $this->domain . '/';
         $sigVerifier = null;
         if ('RS256' === $this->idTokenAlg) {
-            $jwksHttpOptions = array_merge( $this->guzzleOptions, [ 'base_uri' => $this->jwksUri ] );
+            $jwksHttpOptions = array_merge($this->guzzleOptions, [ 'base_uri' => $this->jwksUri ]);
             $jwksFetcher     = new JWKFetcher($this->cacheHandler, $jwksHttpOptions);
             $sigVerifier     = new AsymmetricVerifier($jwksFetcher);
         } else if ('HS256' === $this->idTokenAlg) {
@@ -774,13 +777,17 @@ class Auth0
      *
      * @return void
      */
-    public function handleInvitation()
+    public function handleInvitation(): void
     {
         if ($invite = $this->getInvitationParameters()) {
-            $this->login(null, null, [
-                'invitation'   => $invite->invitation,
-                'organization' => $invite->organization
-            ]);
+            $this->login(
+                null,
+                null,
+                [
+                    'invitation'   => $invite->invitation,
+                    'organization' => $invite->organization
+                ]
+            );
         }
     }
 
@@ -817,7 +824,7 @@ class Auth0
      *
      * @return void
      */
-    public function logout()
+    public function logout(): void
     {
         $this->deleteAllPersistentData();
         $this->accessToken  = null;
@@ -831,7 +838,7 @@ class Auth0
      *
      * @return void
      */
-    public function deleteAllPersistentData()
+    public function deleteAllPersistentData(): void
     {
         foreach ($this->persistantMap as $key) {
             $this->store->delete($key);
@@ -845,7 +852,7 @@ class Auth0
      *
      * @return void
      */
-    private function dontPersist($name)
+    private function dontPersist($name): void
     {
         $key = array_search($name, $this->persistantMap);
         if ($key !== false) {
@@ -867,11 +874,13 @@ class Auth0
     }
 
     /**
-     * @param integer $length
+     * Generate a nonce value.
+     *
+     * @param int $length Desired length of the nonce.
      *
      * @return string
      */
-    public static function getNonce(int $length = 16) : string
+    public static function getNonce(int $length = 16): string
     {
         try {
             $random_bytes = random_bytes($length);
@@ -889,7 +898,7 @@ class Auth0
      *
      * @return string
      */
-    public static function urlSafeBase64Decode(string $input) : string
+    public static function urlSafeBase64Decode(string $input): string
     {
         $remainder = strlen($input) % 4;
         if ($remainder) {

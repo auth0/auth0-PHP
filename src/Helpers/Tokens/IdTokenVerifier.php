@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers\Tokens;
@@ -17,9 +18,9 @@ final class IdTokenVerifier extends TokenVerifier
      *
      * @param string $token   Raw JWT string.
      * @param array  $options Options to adjust the verification. Can be:
-     *      - "nonce" to check the nonce contained in the token (recommended).
-     *      - "max_age" to check the auth_time of the token.
-     *      - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
+     *                        - "nonce" to check the nonce contained in the token (recommended).
+     *                        - "max_age" to check the auth_time of the token.
+     *                        - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
      *
      * @return array
      *
@@ -29,7 +30,7 @@ final class IdTokenVerifier extends TokenVerifier
      *      - Token algorithm is not supported
      *      - Any claim-based test fails
      */
-    public function verify(string $token, array $options = []) : array
+    public function verify(string $token, array $options = []): array
     {
         $verifiedToken = parent::verify($token, $options);
 
@@ -66,11 +67,13 @@ final class IdTokenVerifier extends TokenVerifier
             }
 
             if ($tokenNonce !== $options['nonce']) {
-                throw new InvalidTokenException( sprintf(
-                    'Nonce (nonce) claim mismatch in the ID token; expected "%s", found "%s"',
-                    $options['nonce'],
-                    $tokenNonce
-                ) );
+                throw new InvalidTokenException(
+                    sprintf(
+                        'Nonce (nonce) claim mismatch in the ID token; expected "%s", found "%s"',
+                        $options['nonce'],
+                        $tokenNonce
+                    )
+                );
             }
         }
 
@@ -89,11 +92,13 @@ final class IdTokenVerifier extends TokenVerifier
             }
 
             if ($tokenAzp !== $this->audience) {
-                throw new InvalidTokenException( sprintf(
-                    'Authorized Party (azp) claim mismatch in the ID token; expected "%s", found "%s"',
-                    $this->audience,
-                    $tokenAzp
-                ) );
+                throw new InvalidTokenException(
+                    sprintf(
+                        'Authorized Party (azp) claim mismatch in the ID token; expected "%s", found "%s"',
+                        $this->audience,
+                        $tokenAzp
+                    )
+                );
             }
         }
 
@@ -110,11 +115,13 @@ final class IdTokenVerifier extends TokenVerifier
             }
 
             if ($tokenOrganization !== $expectedOrganization) {
-                throw new InvalidTokenException( sprintf(
-                    'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
-                    $expectedOrganization,
-                    $tokenOrganization
-                ) );
+                throw new InvalidTokenException(
+                    sprintf(
+                        'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
+                        $expectedOrganization,
+                        $tokenOrganization
+                    )
+                );
             }
         }
 
@@ -134,11 +141,13 @@ final class IdTokenVerifier extends TokenVerifier
             $authValidUntil = $tokenAuthTime + $options['max_age'] + $leeway;
 
             if ($now > $authValidUntil) {
-                throw new InvalidTokenException( sprintf(
-                    'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed since the last end-user authentication. Current time (%d) is after last auth at %d',
-                    $now,
-                    $authValidUntil
-                ) );
+                throw new InvalidTokenException(
+                    sprintf(
+                        'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed since the last end-user authentication. Current time (%d) is after last auth at %d',
+                        $now,
+                        $authValidUntil
+                    )
+                );
             }
         }
 

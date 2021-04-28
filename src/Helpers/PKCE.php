@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers;
@@ -15,7 +16,7 @@ class PKCE
      * letters, numbers and "-", ".", "_", "~", as defined in the RFC 7636
      * specification.
      *
-     * @param integer $length Code verifier length
+     * @param int $length Code verifier length
      *
      * @return string
      *
@@ -53,7 +54,7 @@ class PKCE
      * and no line breaks, whitespace, or other additional characters should be
      * present.
      *
-     * @param string $code_verifier
+     * @param string $code_verifier String to generate code challenge from.
      *
      * @return string
      *

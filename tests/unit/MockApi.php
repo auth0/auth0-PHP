@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit;
 
 use Auth0\SDK\API\Authentication;
@@ -10,9 +13,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 
 /**
- * Class MockApi
- *
- * @package Auth0\Tests\unit
+ * Class MockApi.
  */
 abstract class MockApi
 {
@@ -27,35 +28,37 @@ abstract class MockApi
     /**
      * History index to use.
      *
-     * @var integer
+     * @var int
      */
     protected $historyIndex = 0;
 
     /**
      * Management API object.
      *
-     * @var Management|Authentication|JWKFetcher
+     * @var Authentication|JWKFetcher|Management
      */
     protected $client;
+
 
     /**
      * MockApi constructor.
      *
-     * @param array $responses Array of GuzzleHttp\Psr7\Response objects.
-     * @param array $config Additional optional configuration needed for mocked class.
+     * @param array $responses     Array of GuzzleHttp\Psr7\Response objects.
+     * @param array $config        Additional optional configuration needed for mocked class.
      * @param array $guzzleOptions Additional Guzzle HTTP options.
      */
     public function __construct(array $responses = [], array $config = [], array $guzzleOptions = [])
     {
-        if (count( $responses )) {
+        if (count($responses)) {
             $mock    = new MockHandler($responses);
             $handler = HandlerStack::create($mock);
-            $handler->push( Middleware::history($this->requestHistory) );
+            $handler->push(Middleware::history($this->requestHistory));
             $guzzleOptions['handler'] = $handler;
         }
 
-        $this->setClient( $guzzleOptions, $config );
+        $this->setClient($guzzleOptions, $config);
     }
+
 
     /**
      * @param array $guzzleOptions
@@ -65,21 +68,24 @@ abstract class MockApi
      */
     abstract public function setClient(array $guzzleOptions, array $config = []);
 
+
     /**
      * Return the endpoint being used.
      *
-     * @return Management|Authentication|JWKFetcher
+     * @return Authentication|JWKFetcher|Management
      */
     public function call()
     {
-        $this->historyIndex ++;
+        ++$this->historyIndex;
+
         return $this->client;
     }
+
 
     /**
      * Get the URL from a mocked request.
      *
-     * @param integer $parse_component Component for parse_url, null to return complete URL.
+     * @param int $parse_component Component for parse_url, null to return complete URL.
      *
      * @return string
      */
@@ -87,8 +93,10 @@ abstract class MockApi
     {
         $request     = $this->getHistory();
         $request_url = $request->getUri()->__toString();
-        return is_null( $parse_component ) ? $request_url : parse_url( $request_url, $parse_component );
+
+        return is_null($parse_component) ? $request_url : parse_url($request_url, $parse_component);
     }
+
 
     /**
      * Get the URL query from a mocked request.
@@ -97,8 +105,9 @@ abstract class MockApi
      */
     public function getHistoryQuery()
     {
-        return $this->getHistoryUrl( PHP_URL_QUERY );
+        return $this->getHistoryUrl(PHP_URL_QUERY);
     }
+
 
     /**
      * Get the HTTP method from a mocked request.
@@ -110,16 +119,19 @@ abstract class MockApi
         return $this->getHistory()->getMethod();
     }
 
+
     /**
      * Get the body from a mocked request.
      *
-     * @return \stdClass|array
+     * @return array|\stdClass
      */
     public function getHistoryBody()
     {
-        $body = $this->getHistory()->getBody();
-        return json_decode( $body, true );
+        $body = (string) $this->getHistory()->getBody();
+
+        return json_decode($body, true);
     }
+
 
     /**
      * Get the form body from a mocked request.
@@ -131,6 +143,7 @@ abstract class MockApi
         return $this->getHistory()->getBody()->getContents();
     }
 
+
     /**
      * Get the headers from a mocked request.
      *
@@ -141,6 +154,7 @@ abstract class MockApi
         return $this->getHistory()->getHeaders();
     }
 
+
     /**
      * Get a Guzzle history record from an array populated by Middleware::history().
      *
@@ -148,7 +162,8 @@ abstract class MockApi
      */
     protected function getHistory()
     {
-        $requestHistoryIndex = $this->historyIndex - 1;
+        $requestHistoryIndex = ($this->historyIndex - 1);
+
         return $this->requestHistory[$requestHistoryIndex]['request'];
     }
 }

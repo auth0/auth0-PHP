@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\Helpers;
 
 use Auth0\SDK\Helpers\TransientStoreHandler;
@@ -6,17 +9,18 @@ use Auth0\SDK\Store\SessionStore;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TransientStoreHandlerTest
- *
- * @package Auth0\Tests\unit\Helpers
+ * Class TransientStoreHandlerTest.
  */
 class TransientStoreHandlerTest extends TestCase
 {
+
+
     public function tearDown(): void
     {
         parent::tearDown();
         $_SESSION = [];
     }
+
 
     public function testThatTransientIsStored()
     {
@@ -27,6 +31,7 @@ class TransientStoreHandlerTest extends TestCase
         $this->assertEquals('__test_store_value__', $_SESSION['test_store_test_store_key']);
     }
 
+
     public function testThatTransientIsIssued()
     {
         $sessionStore   = new SessionStore('test_store');
@@ -36,6 +41,7 @@ class TransientStoreHandlerTest extends TestCase
         $this->assertEquals($issuedValue, $_SESSION['test_store_test_issue_key']);
         $this->assertGreaterThanOrEqual(16, strlen($issuedValue));
     }
+
 
     public function testThatTransientIsGottenOnce()
     {
@@ -48,6 +54,7 @@ class TransientStoreHandlerTest extends TestCase
         $this->assertArrayNotHasKey('test_store_test_get_key', $_SESSION);
     }
 
+
     public function testThatTransientIsVerified()
     {
         $sessionStore   = new SessionStore('test_store');
@@ -59,6 +66,7 @@ class TransientStoreHandlerTest extends TestCase
         $this->assertNull($transientStore->getOnce('test_verify_key'));
         $this->assertArrayNotHasKey('test_store_test_verify_key', $_SESSION);
     }
+
 
     public function testThatTransientIssetReturnsCorrectly()
     {
@@ -74,6 +82,5 @@ class TransientStoreHandlerTest extends TestCase
         $transientStore->getOnce('test_verify_key');
 
         $this->assertFalse($transientStore->isset('test_verify_key'));
-
     }
 }

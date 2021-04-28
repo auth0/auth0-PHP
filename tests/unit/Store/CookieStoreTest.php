@@ -1,9 +1,11 @@
 <?php
-namespace Auth0\Tests\Store;
+
+declare(strict_types=1);
+
+namespace Auth0\Tests\unit\Store;
 
 use Auth0\SDK\Store\CookieStore;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Error\Warning;
 use ReflectionClass;
 
 /**
@@ -12,7 +14,6 @@ use ReflectionClass;
  */
 class CookieStoreTest extends TestCase
 {
-
     private static $mockSpyCookie;
 
     private static $mockSpyHeader;
@@ -22,7 +23,7 @@ class CookieStoreTest extends TestCase
      */
     public function tearDown(): void
     {
-        $_COOKIE             = [];
+        $_COOKIE = [];
         self::$mockSpyCookie = null;
         self::$mockSpyHeader = null;
     }
@@ -30,13 +31,13 @@ class CookieStoreTest extends TestCase
     /**
      * @param array $args
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject|CookieStore
+     * @return CookieStore|\PHPUnit\Framework\MockObject\MockObject
      */
     public function getMock(array $args = [])
     {
         $mockStore = $this->getMockBuilder(CookieStore::class)
             ->setConstructorArgs([$args])
-            ->onlyMethods(['setCookie','setCookieHeader'])
+            ->onlyMethods(['setCookie', 'setCookieHeader'])
             ->getMock();
 
         $mockStore->expects(self::$mockSpyCookie = $this->any())
@@ -59,7 +60,7 @@ class CookieStoreTest extends TestCase
      */
     public function getMockInvocations(object $mock)
     {
-        $reflector = new ReflectionClass(get_class($mock));
+        $reflector   = new ReflectionClass(get_class($mock));
         $invocations = $reflector->getParentClass()->getProperty('invocations');
         $invocations->setAccessible(true);
 
@@ -226,7 +227,7 @@ class CookieStoreTest extends TestCase
         $header = $method->invokeArgs($store, ['__test_name_1__', '__test_value_1__', 303943620]);
 
         $this->assertEquals(
-            'Set-Cookie: __test_name_1__=__test_value_1__; path=/; '.'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=Lax',
+            'Set-Cookie: __test_name_1__=__test_value_1__; path=/; ' . 'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=Lax',
             $header
         );
     }
@@ -239,7 +240,7 @@ class CookieStoreTest extends TestCase
         $header = $method->invokeArgs($store, ['__test_name_2__', '__test_value_2__', 303943620]);
 
         $this->assertEquals(
-            'Set-Cookie: __test_name_2__=__test_value_2__; path=/; '.'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=None; Secure',
+            'Set-Cookie: __test_name_2__=__test_value_2__; path=/; ' . 'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=None; Secure',
             $header
         );
     }
@@ -251,16 +252,10 @@ class CookieStoreTest extends TestCase
         $method->setAccessible(true);
         $methodArgs = ['__test_invalid_name_;__', uniqid(), mt_rand(1000, 9999)];
 
-        try {
-            $method->invokeArgs($store, $methodArgs);
-            $error_msg = 'No warning caught';
-        } catch (Warning $e) {
-            $error_msg = $e->getMessage();
-        }
+        $this->expectExceptionMessage("Cookie names cannot contain any of the following ',; \\t\\r\\n\\013\\014'");
 
-        $this->assertEquals("Cookie names cannot contain any of the following ',; \\t\\r\\n\\013\\014'", $error_msg);
+        $header = $method->invokeArgs($store, $methodArgs);
 
-        $header = @$method->invokeArgs($store, $methodArgs);
         $this->assertEquals('', $header);
     }
 
@@ -271,16 +266,10 @@ class CookieStoreTest extends TestCase
         $method->setAccessible(true);
         $methodArgs = [uniqid(), '__test_invalid_value_;__', mt_rand(1000, 9999)];
 
-        try {
-            $method->invokeArgs($store, $methodArgs);
-            $error_msg = 'No warning caught';
-        } catch (Warning $e) {
-            $error_msg = $e->getMessage();
-        }
+        $this->expectExceptionMessage("Cookie values cannot contain any of the following ',; \\t\\r\\n\\013\\014'");
 
-        $this->assertEquals("Cookie values cannot contain any of the following ',; \\t\\r\\n\\013\\014'", $error_msg);
+        $header = $method->invokeArgs($store, $methodArgs);
 
-        $header = @$method->invokeArgs($store, $methodArgs);
         $this->assertEquals('', $header);
     }
 }

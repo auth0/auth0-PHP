@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
-use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Helpers\Cache\NoCacheHandler;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use Psr\SimpleCache\CacheInterface;
@@ -82,11 +83,11 @@ class JWKFetcher
      *
      * @return string
      */
-    protected function convertCertToPem(string $cert) : string
+    protected function convertCertToPem(string $cert): string
     {
-        $output  = '-----BEGIN CERTIFICATE-----'.PHP_EOL;
+        $output  = '-----BEGIN CERTIFICATE-----' . PHP_EOL;
         $output .= chunk_split($cert, 64, PHP_EOL);
-        $output .= '-----END CERTIFICATE-----'.PHP_EOL;
+        $output .= '-----END CERTIFICATE-----' . PHP_EOL;
         return $output;
     }
 
@@ -100,10 +101,10 @@ class JWKFetcher
      */
     public function getKey(string $kid, string $jwksUri = null)
     {
-        $keys = $this->getKeys( $jwksUri );
+        $keys = $this->getKeys($jwksUri);
 
-        if (! empty( $keys ) && empty( $keys[$kid] )) {
-            $keys = $this->getKeys( $jwksUri, false );
+        if (! empty($keys) && empty($keys[$kid])) {
+            $keys = $this->getKeys($jwksUri, false);
         }
 
         return $keys[$kid] ?? null;
@@ -112,16 +113,16 @@ class JWKFetcher
     /**
      * Gets an array of keys from the JWKS as kid => x5c.
      *
-     * @param string  $jwks_url  Full URL to the JWKS.
-     * @param boolean $use_cache Set to false to skip cache check; default true to use caching.
+     * @param string $jwks_url  Full URL to the JWKS.
+     * @param bool   $use_cache Set to false to skip cache check; default true to use caching.
      *
      * @return array
      */
-    public function getKeys(string $jwks_url = null, bool $use_cache = true) : array
+    public function getKeys(string $jwks_url = null, bool $use_cache = true): array
     {
         $jwks_url = $jwks_url ?? $this->guzzleOptions['base_uri'] ?? '';
 
-        if (empty( $jwks_url )) {
+        if (empty($jwks_url)) {
             return [];
         }
 
@@ -133,17 +134,17 @@ class JWKFetcher
 
         $jwks = $this->requestJwks($jwks_url);
 
-        if (empty( $jwks ) || empty( $jwks['keys'] )) {
+        if (empty($jwks) || empty($jwks['keys'])) {
             return [];
         }
 
         $keys = [];
         foreach ($jwks['keys'] as $key) {
-            if (empty( $key['kid'] ) || empty( $key['x5c'] ) || empty( $key['x5c'][0] )) {
+            if (empty($key['kid']) || empty($key['x5c']) || empty($key['x5c'][0])) {
                 continue;
             }
 
-            $keys[$key['kid']] = $this->convertCertToPem( $key['x5c'][0] );
+            $keys[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
         }
 
         $this->setCacheEntry($jwks_url, $keys);
@@ -157,17 +158,19 @@ class JWKFetcher
      *
      * @return array
      *
-     * @throws RequestException If $jwks_url is empty or malformed.
-     * @throws ClientException  If the JWKS cannot be retrieved.
+     * @throws RequestException When HTTP request fails. Reason for failure provided in exception message.
+     * @throws ClientException  When the JWKS cannot be retrieved.
      */
-    protected function requestJwks(string $jwks_url) : array
+    protected function requestJwks(string $jwks_url): array
     {
-        $options = array_merge( $this->guzzleOptions, [ 'base_uri' => $jwks_url ] );
+        $options = array_merge($this->guzzleOptions, [ 'base_uri' => $jwks_url ]);
 
-        $request = new RequestBuilder([
-            'method' => 'GET',
-            'guzzleOptions' => $options,
-        ]);
+        $request = new RequestBuilder(
+            [
+                'method' => 'GET',
+                'guzzleOptions' => $options,
+            ]
+        );
 
         return $request->call();
     }
@@ -195,7 +198,7 @@ class JWKFetcher
     /**
      * Returns how long we are caching JWKs in seconds.
      *
-     * @return integer
+     * @return int
      */
     public function getTtl()
     {
@@ -205,7 +208,7 @@ class JWKFetcher
     /**
      * Generate a cache id to use for a URL.
      *
-     * @param string $jwks_url Full URL to the JWKS.
+     * @param string $jwksUri Full URL to the JWKS.
      *
      * @return string
      */
@@ -224,9 +227,9 @@ class JWKFetcher
     /**
      * Get a specific JWK from the cache by it's URL.
      *
-     * @param string $jwks_url Full URL to the JWKS.
+     * @param string $jwksUri Full URL to the JWKS.
      *
-     * @return null|array
+     * @return array|null
      */
     public function getCacheEntry(string $jwksUri)
     {
@@ -243,12 +246,12 @@ class JWKFetcher
     /**
      * Add or overwrite a specific JWK from the cache.
      *
-     * @param string $jwks_url Full URL to the JWKS.
-     * @param array  $keys     An array representing the JWKS.
+     * @param string $jwksUri Full URL to the JWKS.
+     * @param array  $keys    An array representing the JWKS.
      *
      * @return $this
      */
-    public function setCacheEntry(string $jwksUri, array $keys)
+    public function setCacheEntry(string $jwksUri, array $keys): self
     {
         $cache_key = $this->getCacheKey($jwksUri);
 
@@ -260,11 +263,11 @@ class JWKFetcher
     /**
      * Remove a specific JWK from the cache by it's URL.
      *
-     * @param string $jwks_url Full URL to the JWKS.
+     * @param string $jwksUri Full URL to the JWKS.
      *
-     * @return boolean
+     * @return bool
      */
-    public function removeCacheEntry(string $jwksUri)
+    public function removeCacheEntry(string $jwksUri): bool
     {
         return $this->cache->delete($this->getCacheKey($jwksUri));
     }
@@ -272,9 +275,9 @@ class JWKFetcher
     /**
      * Clear the JWK cache.
      *
-     * @return boolean
+     * @return bool
      */
-    public function clearCache()
+    public function clearCache(): bool
     {
         return $this->cache->clear();
     }

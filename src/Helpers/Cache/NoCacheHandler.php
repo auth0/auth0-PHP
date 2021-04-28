@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\Helpers\Cache;
 
 use Psr\SimpleCache\CacheInterface;
@@ -22,13 +24,13 @@ class NoCacheHandler implements CacheInterface
     /**
      * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
      *
-     * @param string                     $key   The key of the item to store.
-     * @param mixed                      $value The value of the item to store, must be serializable.
-     * @param null|integer|\DateInterval $ttl   Optional. The TTL value of this item. If no value is sent and
-     *                                          the driver supports TTL then the library may set a default value
-     *                                          for it or let the driver take care of that.
+     * @param string                 $key   The key of the item to store.
+     * @param mixed                  $value The value of the item to store, must be serializable.
+     * @param int|\DateInterval|null $ttl   Optional. The TTL value of this item. If no value is sent and
+     *                                      the driver supports TTL then the library may set a default value
+     *                                      for it or let the driver take care of that.
      *
-     * @return boolean True on success and false on failure.
+     * @return bool True on success and false on failure.
      */
     public function set($key, $value, $ttl = null)
     {
@@ -40,7 +42,7 @@ class NoCacheHandler implements CacheInterface
      *
      * @param string $key The unique cache key of the item to delete.
      *
-     * @return boolean True if the item was successfully removed. False if there was an error.
+     * @return bool True if the item was successfully removed. False if there was an error.
      */
     public function delete($key)
     {
@@ -50,7 +52,7 @@ class NoCacheHandler implements CacheInterface
     /**
      * Wipes clean the entire cache's keys.
      *
-     * @return boolean True on success and false on failure.
+     * @return bool True on success and false on failure.
      */
     public function clear()
     {
@@ -78,12 +80,12 @@ class NoCacheHandler implements CacheInterface
     /**
      * Persists a set of key => value pairs in the cache, with an optional TTL.
      *
-     * @param iterable                   $values A list of key => value pairs for a multiple-set operation.
-     * @param null|integer|\DateInterval $ttl    Optional. The TTL value of this item. If no value is sent and
-     *                                           the driver supports TTL then the library may set a default value
-     *                                           for it or let the driver take care of that.
+     * @param iterable               $values A list of key => value pairs for a multiple-set operation.
+     * @param int|\DateInterval|null $ttl    Optional. The TTL value of this item. If no value is sent and
+     *                                       the driver supports TTL then the library may set a default value
+     *                                       for it or let the driver take care of that.
      *
-     * @return boolean True on success and false on failure.
+     * @return bool True on success and false on failure.
      */
     public function setMultiple($values, $ttl = null)
     {
@@ -95,7 +97,7 @@ class NoCacheHandler implements CacheInterface
      *
      * @param iterable $keys A list of string-based keys to be deleted.
      *
-     * @return boolean True if the items were successfully removed. False if there was an error.
+     * @return bool True if the items were successfully removed. False if there was an error.
      */
     public function deleteMultiple($keys)
     {
@@ -107,7 +109,7 @@ class NoCacheHandler implements CacheInterface
      *
      * @param string $key The cache item key.
      *
-     * @return boolean
+     * @return bool
      */
     public function has($key)
     {

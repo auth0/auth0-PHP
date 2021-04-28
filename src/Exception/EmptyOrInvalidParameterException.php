@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\Exception;
 
 /**
@@ -15,6 +17,6 @@ class EmptyOrInvalidParameterException extends CoreException
      */
     public function __construct($parameter_name)
     {
-        parent::__construct('Empty or invalid '.$parameter_name.'.');
+        parent::__construct('Empty or invalid ' . $parameter_name . '.');
     }
 }

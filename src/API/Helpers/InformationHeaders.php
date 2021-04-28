@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\API\Helpers;
@@ -27,7 +28,7 @@ class InformationHeaders
      *
      * @return void
      */
-    public function setPackage(string $name, $version) : void
+    public function setPackage(string $name, $version): void
     {
         $this->data['name']    = $name;
         $this->data['version'] = $version;
@@ -38,7 +39,7 @@ class InformationHeaders
      *
      * @return void
      */
-    public function setCorePackage() : void
+    public function setCorePackage(): void
     {
         $this->setPackage('auth0-php', ApiClient::API_VERSION);
         $this->setEnvProperty('php', phpversion());
@@ -52,7 +53,7 @@ class InformationHeaders
      *
      * @return void
      */
-    public function setEnvProperty(string $name, $version) : void
+    public function setEnvProperty(string $name, $version): void
     {
         if (! isset($this->data['env']) || ! is_array($this->data['env'])) {
             $this->data['env'] = [];
@@ -68,7 +69,7 @@ class InformationHeaders
      *
      * @return void
      */
-    public function setEnvironmentData(array $data) : void
+    public function setEnvironmentData(array $data): void
     {
         $this->data['env'] = $data;
     }
@@ -78,7 +79,7 @@ class InformationHeaders
      *
      * @return array
      */
-    public function get() : array
+    public function get(): array
     {
         return $this->data;
     }
@@ -88,7 +89,7 @@ class InformationHeaders
      *
      * @return string
      */
-    public function build() : string
+    public function build(): string
     {
         return base64_encode(json_encode($this->get()));
     }
@@ -101,12 +102,12 @@ class InformationHeaders
      *
      * @return InformationHeaders
      */
-    public static function Extend(InformationHeaders $headers) : InformationHeaders
+    public static function extend(InformationHeaders $headers): InformationHeaders
     {
-        $new_headers = new InformationHeaders;
+        $new_headers = new InformationHeaders();
         $old_headers = $headers->get();
 
-        if (! empty( $old_headers['env'] ) && is_array( $old_headers['env'] )) {
+        if (! empty($old_headers['env']) && is_array($old_headers['env'])) {
             $new_headers->setEnvironmentData($old_headers['env']);
         }
 

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\Tests\API;
 
 use Auth0\SDK\API\Authentication;
@@ -9,8 +12,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class ApiTests.
  * Extend to test API endpoints with a live or mock API.
- *
- * @package Auth0\Tests\API
  */
 class ApiTests extends TestCase
 {
@@ -26,9 +27,9 @@ class ApiTests extends TestCase
     /**
      * Get all test suite environment variables.
      *
-     * @return array
-     *
      * @throws \Auth0\SDK\Exception\ApiException
+     *
+     * @return array
      */
     protected static function getEnv()
     {
@@ -46,10 +47,10 @@ class ApiTests extends TestCase
         $env = getenv();
 
         self::$env = [
-            'DOMAIN'                  => $env['DOMAIN'] ?? false,
-            'APP_CLIENT_ID'           => $env['APP_CLIENT_ID'] ?? false,
-            'APP_CLIENT_SECRET'       => $env['APP_CLIENT_SECRET'] ?? false,
-            'API_TOKEN'               => $env['API_TOKEN'] ?? false,
+            'DOMAIN' => $env['DOMAIN'] ?? false,
+            'APP_CLIENT_ID' => $env['APP_CLIENT_ID'] ?? false,
+            'APP_CLIENT_SECRET' => $env['APP_CLIENT_SECRET'] ?? false,
+            'API_TOKEN' => $env['API_TOKEN'] ?? false,
             'AUTH0_API_REQUEST_DELAY' => (int) ($env['AUTH0_API_REQUEST_DELAY'] ?? 0),
         ];
 
@@ -57,9 +58,9 @@ class ApiTests extends TestCase
             self::$env['AUTH0_API_REQUEST_DELAY'] = 200000;
         }
 
-        if (! isset($env['API_TOKEN']) && $env['APP_CLIENT_SECRET']) {
-            $auth_api               = new Authentication( $env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET'] );
-            $response               = $auth_api->client_credentials( [ 'audience' => 'https://'.$env['DOMAIN'].'/api/v2/' ] );
+        if (!isset($env['API_TOKEN']) && $env['APP_CLIENT_SECRET']) {
+            $auth_api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET']);
+            $response = $auth_api->clientCredentials(['audience' => 'https://' . $env['DOMAIN'] . '/api/v2/']);
             self::$env['API_TOKEN'] = $response['access_token'];
         }
 

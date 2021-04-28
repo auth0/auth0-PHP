@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers\Tokens;
@@ -40,16 +41,16 @@ final class AsymmetricVerifier extends SignatureVerifier
      *
      * @param Token $token Parsed token to check.
      *
-     * @return boolean
+     * @return bool
      *
      * @throws InvalidTokenException If ID token kid was not found in the JWKS.
      */
-    protected function checkSignature(Token $token) : bool
+    protected function checkSignature(Token $token): bool
     {
         $tokenKid   = $token->getHeader('kid', false);
-        $signingKey = is_array( $this->jwks ) ? ($this->jwks[$tokenKid] ?? null) : $this->jwks->getKey( $tokenKid );
+        $signingKey = is_array($this->jwks) ? ($this->jwks[$tokenKid] ?? null) : $this->jwks->getKey($tokenKid);
         if (! $signingKey) {
-            throw new InvalidTokenException( 'ID token key ID "'.$tokenKid.'" was not found in the JWKS' );
+            throw new InvalidTokenException('ID token key ID "' . $tokenKid . '" was not found in the JWKS');
         }
 
         return $token->verify(new RsSigner(), new Key($signingKey));

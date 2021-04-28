@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
@@ -43,7 +44,7 @@ class SessionStore implements StoreInterface
      *
      * @return void
      */
-    private function initSession() : void
+    private function initSession(): void
     {
         if (! session_id()) {
             session_start();
@@ -58,7 +59,7 @@ class SessionStore implements StoreInterface
      *
      * @return void
      */
-    public function set(string $key, $value) : void
+    public function set(string $key, $value): void
     {
         $this->initSession();
         $key_name            = $this->getSessionKeyName($key);
@@ -93,7 +94,7 @@ class SessionStore implements StoreInterface
      *
      * @return void
      */
-    public function delete(string $key) : void
+    public function delete(string $key): void
     {
         $this->initSession();
         $key_name = $this->getSessionKeyName($key);
@@ -107,11 +108,11 @@ class SessionStore implements StoreInterface
      *
      * @return string
      */
-    public function getSessionKeyName(string $key) : string
+    public function getSessionKeyName(string $key): string
     {
         $key_name = $key;
-        if (! empty( $this->session_base_name )) {
-            $key_name = $this->session_base_name.'_'.$key_name;
+        if (! empty($this->session_base_name)) {
+            $key_name = $this->session_base_name . '_' . $key_name;
         }
 
         return $key_name;

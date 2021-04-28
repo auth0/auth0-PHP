@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
@@ -18,13 +19,13 @@ interface StoreInterface
      *
      * @return void
      */
-    public function set(string $key, $value);
+    public function set(string $key, $value): void;
 
     /**
      * Get a value from the store by a given key.
      *
      * @param string      $key     Key to get.
-     * @param null|string $default Return value if key not found.
+     * @param string|null $default Return value if key not found.
      *
      * @return mixed
      */
@@ -37,5 +38,5 @@ interface StoreInterface
      *
      * @return void
      */
-    public function delete(string $key);
+    public function delete(string $key): void;
 }

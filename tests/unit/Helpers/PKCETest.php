@@ -1,13 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\Helpers;
 
 use Auth0\SDK\Helpers\PKCE;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class PKCETest
- *
- * @package Auth0\Tests\unit\Helpers
+ * Class PKCETest.
  */
 class PKCETest extends TestCase
 {
@@ -19,17 +20,17 @@ class PKCETest extends TestCase
     }
 
     public function testThatGenerateCodeVerifierGenerateExpectedValue()
-	{
-		$code_verifier = PKCE::generateCodeVerifier(43);
-		$this->assertNotEmpty($code_verifier);
-		$this->assertSame(43, strlen($code_verifier));
-	}
+    {
+        $code_verifier = PKCE::generateCodeVerifier(43);
+        $this->assertNotEmpty($code_verifier);
+        $this->assertSame(43, strlen($code_verifier));
+    }
 
     public function testThanGenerateCodeChallengeGenerateExpectedValue()
     {
-		$codeVerifier = 'Q6D5aiJHs6QdEILJoCz5pFw3Wmi9UiP8ovQbvlgd3Gc';
-		$code_challenge = PKCE::generateCodeChallenge($codeVerifier);
-		$this->assertNotEmpty($code_challenge);
-		$this->assertSame('f3X4JO4FpNodO254hdZAMCYKE4fzFn8ezYlLUr5qjH4', $code_challenge);
+        $codeVerifier   = 'Q6D5aiJHs6QdEILJoCz5pFw3Wmi9UiP8ovQbvlgd3Gc';
+        $code_challenge = PKCE::generateCodeChallenge($codeVerifier);
+        $this->assertNotEmpty($code_challenge);
+        $this->assertSame('f3X4JO4FpNodO254hdZAMCYKE4fzFn8ezYlLUr5qjH4', $code_challenge);
     }
 }

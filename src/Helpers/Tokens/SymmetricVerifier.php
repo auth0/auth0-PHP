@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers\Tokens;
@@ -37,9 +38,9 @@ final class SymmetricVerifier extends SignatureVerifier
      *
      * @param Token $token Parsed token to check.
      *
-     * @return boolean
+     * @return bool
      */
-    protected function checkSignature(Token $token) : bool
+    protected function checkSignature(Token $token): bool
     {
         return $token->verify(new HsSigner(), $this->clientSecret);
     }
@@ -49,7 +50,7 @@ final class SymmetricVerifier extends SignatureVerifier
      *
      * @return string
      */
-    protected function getAlgorithm() : string
+    protected function getAlgorithm(): string
     {
         return 'HS256';
     }

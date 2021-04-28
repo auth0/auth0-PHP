@@ -1,13 +1,12 @@
 <?php
+
 namespace Auth0\Tests\unit\API\Authentication;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\Tests\unit\MockApi;
 
 /**
- * Class MockAuthenticationApi
- *
- * @package Auth0\Tests\unit\API\Authentication
+ * Class MockAuthenticationApi.
  */
 class MockAuthenticationApi extends MockApi
 {
@@ -16,6 +15,7 @@ class MockAuthenticationApi extends MockApi
      * @var Authentication
      */
     protected $client;
+
 
     /**
      * @param array $guzzleOptions

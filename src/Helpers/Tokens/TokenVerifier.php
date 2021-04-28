@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers\Tokens;
@@ -38,7 +39,7 @@ class TokenVerifier
     /**
      * Clock tolerance for time-base token checks in seconds.
      *
-     * @var integer
+     * @var int
      */
     protected $leeway = 60;
 
@@ -59,11 +60,11 @@ class TokenVerifier
     /**
      * Set a new leeway time for all token checks.
      *
-     * @param integer $newLeeway New leeway time for class instance.
+     * @param int $newLeeway New leeway time for class instance.
      *
      * @return void
      */
-    public function setLeeway(int $newLeeway) : void
+    public function setLeeway(int $newLeeway): void
     {
         $this->leeway = $newLeeway;
     }
@@ -73,7 +74,7 @@ class TokenVerifier
      *
      * @param string $token   Raw JWT string.
      * @param array  $options Options to adjust the verification. Can be:
-     *      - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
+     *                        - "leeway" clock tolerance in seconds for the current check only. See $leeway above for default.
      *
      * @return array
      *
@@ -83,13 +84,13 @@ class TokenVerifier
      *      - Token algorithm is not supported
      *      - Any claim-based test fails
      */
-    public function verify(string $token, array $options = []) : array
+    public function verify(string $token, array $options = []): array
     {
         if (empty($token)) {
             throw new InvalidTokenException('ID token is required but missing');
         }
 
-        $verifiedToken = $this->verifier->verifyAndDecode( $token );
+        $verifiedToken = $this->verifier->verifyAndDecode($token);
 
         /*
          * Issuer checks
@@ -101,9 +102,13 @@ class TokenVerifier
         }
 
         if ($tokenIss !== $this->issuer) {
-            throw new InvalidTokenException( sprintf(
-                'Issuer (iss) claim mismatch in the ID token; expected "%s", found "%s"', $this->issuer, $tokenIss
-            ) );
+            throw new InvalidTokenException(
+                sprintf(
+                    'Issuer (iss) claim mismatch in the ID token; expected "%s", found "%s"',
+                    $this->issuer,
+                    $tokenIss
+                )
+            );
         }
 
         /*
@@ -118,15 +123,21 @@ class TokenVerifier
         }
 
         if (is_array($tokenAud) && ! in_array($this->audience, $tokenAud)) {
-            throw new InvalidTokenException( sprintf(
-                'Audience (aud) claim mismatch in the ID token; expected "%s" was not one of "%s"',
-                $this->audience,
-                implode(', ', $tokenAud)
-            ) );
+            throw new InvalidTokenException(
+                sprintf(
+                    'Audience (aud) claim mismatch in the ID token; expected "%s" was not one of "%s"',
+                    $this->audience,
+                    implode(', ', $tokenAud)
+                )
+            );
         } else if (is_string($tokenAud) && $tokenAud !== $this->audience) {
-            throw new InvalidTokenException( sprintf(
-                'Audience (aud) claim mismatch in the ID token; expected "%s", found "%s"', $this->audience, $tokenAud
-            ) );
+            throw new InvalidTokenException(
+                sprintf(
+                    'Audience (aud) claim mismatch in the ID token; expected "%s", found "%s"',
+                    $this->audience,
+                    $tokenAud
+                )
+            );
         }
 
         /*
@@ -143,11 +154,13 @@ class TokenVerifier
 
         $expireTime = $tokenExp + $leeway;
         if ($now > $expireTime) {
-            throw new InvalidTokenException( sprintf(
-                'Expiration Time (exp) claim error in the ID token; current time (%d) is after expiration time (%d)',
-                $now,
-                $expireTime
-            ) );
+            throw new InvalidTokenException(
+                sprintf(
+                    'Expiration Time (exp) claim error in the ID token; current time (%d) is after expiration time (%d)',
+                    $now,
+                    $expireTime
+                )
+            );
         }
 
         $profile = [];

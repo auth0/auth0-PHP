@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers\Tokens;
@@ -35,14 +36,14 @@ abstract class SignatureVerifier
      *
      * @param Token $parsedToken Parsed token to check.
      *
-     * @return boolean
+     * @return bool
      */
-    abstract protected function checkSignature(Token $parsedToken) : bool;
+    abstract protected function checkSignature(Token $parsedToken): bool;
 
     /**
      * SignatureVerifier constructor.
      *
-     * @param string $alg
+     * @param string $alg Token algorithm type.
      */
     public function __construct(string $alg)
     {
@@ -61,21 +62,23 @@ abstract class SignatureVerifier
      * @throws InvalidTokenException If token algorithm does not match the validator.
      * @throws InvalidTokenException If token algorithm signature cannot be validated.
      */
-    final public function verifyAndDecode(string $token) : Token
+    final public function verifyAndDecode(string $token): Token
     {
         try {
             $parsedToken = $this->parser->parse($token);
         } catch (InvalidArgumentException | \RuntimeException $e) {
-            throw new InvalidTokenException( 'ID token could not be decoded' );
+            throw new InvalidTokenException('ID token could not be decoded');
         }
 
         $tokenAlg = $parsedToken->getHeader('alg', false);
         if ($tokenAlg !== $this->alg) {
-            throw new InvalidTokenException( sprintf(
-                'Signature algorithm of "%s" is not supported. Expected the ID token to be signed with "%s".',
-                $tokenAlg,
-                $this->alg
-            ) );
+            throw new InvalidTokenException(
+                sprintf(
+                    'Signature algorithm of "%s" is not supported. Expected the ID token to be signed with "%s".',
+                    $tokenAlg,
+                    $this->alg
+                )
+            );
         }
 
         if (! $this->checkSignature($parsedToken)) {

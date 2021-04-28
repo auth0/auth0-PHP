@@ -1,53 +1,66 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
+
+use Auth0\SDK\Helpers\Requests\RequestOptions;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Logs.
- * Access to the v2 Management API Logs endpoint.
+ * Handles requests to the Logs endpoint of the v2 Management API.
+ *
+ * @link https://auth0.com/docs/api/management/v2#!/Logs
  *
  * @package Auth0\SDK\API\Management
  */
 class Logs extends GenericResource
 {
     /**
-     * Get a single Log event.
-     * Required scope: "read:logs"
+     * Retrieve an individual log event.
+     * Required scope: `read:logs`
      *
-     * @param string $log_id Log entry ID to get.
+     * @param string              $id      Log entry ID to get.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws \Exception Thrown by Guzzle for API errors.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Logs/get_logs_by_id
      */
-    public function get($log_id)
-    {
+    public function get(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('get')
-            ->addPath('logs', $log_id)
+            ->addPath('logs', $id)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Retrieves log entries that match the specified search criteria (or list all entries if no criteria is used).
-     * Required scope: "read:logs"
+     * Required scope: `read:logs`
      *
-     * @param array $params Log search parameters to send:
-     *      - Including a restricted "fields" parameter can speed up API calls significantly.
-     *      - Results are paged by default; pass a "page" and "per_page" param to adjust what results are shown.
+     * @param array               $query   Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws \Exception Thrown by Guzzle for API errors.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Logs/get_logs
      */
-    public function search(array $params = [])
-    {
+    public function search(
+        array $query = [],
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('get')
             ->addPath('logs')
-            ->withDictParams($params)
+            ->withParams($query)
+            ->withOptions($options)
             ->call();
     }
 }

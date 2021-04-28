@@ -1,12 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Helpers\Requests\RequestOptions;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class ResourceServers.
  * Handles requests to the Resource Servers endpoint of the v2 Management API.
+ *
+ * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers
  *
  * @package Auth0\SDK\API\Management
  */
@@ -14,138 +19,124 @@ class ResourceServers extends GenericResource
 {
     /**
      * Get all Resource Servers, by page if desired.
-     * Required scope: "read:resource_servers"
+     * Required scope: `read:resource_servers`
      *
-     * @param null|integer $page     Page number to get, zero-based.
-     * @param null|integer $per_page Number of results to get, null to return the default number.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers
      */
-    public function getAll($page = null, $per_page = null)
-    {
-        $params = [];
-
-        // Pagination parameters.
-        if (null !== $page) {
-            $params['page'] = abs( (int) $page);
-        }
-
-        if (null !== $per_page) {
-            $params['per_page'] = abs( (int) $per_page);
-        }
-
+    public function getAll(
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('get')
-            ->withDictParams($params)
             ->addPath('resource-servers')
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Get a single Resource Server by ID or API identifier.
-     * Required scope: "read:resource_servers"
+     * Required scope: `read:resource_servers`
      *
-     * @param string $id Resource Server ID or identifier to get.
+     * @param string              $id      Resource Server ID or identifier to get.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers_by_id
      */
-    public function get($id)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
-
+    public function get(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('get')
             ->addPath('resource-servers', $id)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Create a new Resource Server.
-     * Required scope: "create:resource_servers"
+     * Required scope: `create:resource_servers`
      *
-     * @param string $identifier API identifier to use.
-     * @param array  $data       Additional fields to add.
+     * @param string              $identifier API identifier to use.
+     * @param array               $query      Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws CoreException Thrown if the identifier parameter or data field is empty or is not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/post_resource_servers
      */
-    public function create($identifier, array $data)
-    {
-        // Backwards-compatibility with previously-unused $identifier parameter.
-        if (empty($data['identifier'])) {
-            $data['identifier'] = $identifier;
-        }
-
-        if (empty($data['identifier']) || ! is_string($data['identifier'])) {
-            throw new CoreException('Invalid "identifier" field.');
-        }
+    public function create(
+        string $identifier,
+        array $query,
+        ?RequestOptions $options = null
+    ): ?array {
+        $payload = [
+            'identifier' => $identifier
+        ] + $query;
 
         return $this->apiClient->method('post')
             ->addPath('resource-servers')
-            ->withBody(json_encode($data))
+            ->withBody($payload)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Delete a Resource Server by ID.
-     * Required scope: "delete:resource_servers"
+     * Required scope: `delete:resource_servers`
      *
-     * @param string $id Resource Server ID or identifier to delete.
+     * @param string              $id      Resource Server ID or identifier to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/delete_resource_servers_by_id
      */
-    public function delete($id)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
-
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('delete')
             ->addPath('resource-servers', $id)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Update a Resource Server by ID.
-     * Required scope: "update:resource_servers"
+     * Required scope: `update:resource_servers`
      *
-     * @param string $id   Resource Server ID or identifier to update.
-     * @param array  $data Data to update.
+     * @param string              $id      Resource Server ID or identifier to update.
+     * @param array               $query   Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @return array|null
      *
-     * @throws CoreException Thrown if the id parameter is empty or is not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/patch_resource_servers_by_id
      */
-    public function update($id, array $data)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
-
+    public function update(
+        string $id,
+        array $query,
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('patch')
             ->addPath('resource-servers', $id)
-            ->withBody(json_encode($data))
+            ->withBody($query)
+            ->withOptions($options)
             ->call();
     }
 }

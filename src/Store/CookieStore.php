@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
@@ -31,7 +32,7 @@ class CookieStore implements StoreInterface
      * Use config key 'expiration' to set this during instantiation.
      * Default is 600.
      *
-     * @var integer
+     * @var int
      */
     protected $expiration;
 
@@ -41,7 +42,7 @@ class CookieStore implements StoreInterface
      * Use config key 'samesite' to set this during instantiation.
      * Default is no SameSite attribute set.
      *
-     * @var null|string
+     * @var string|null
      */
     protected $sameSite;
 
@@ -51,7 +52,7 @@ class CookieStore implements StoreInterface
      * Use config key 'now' to set this during instantiation.
      * Default is current server time.
      *
-     * @var null|integer
+     * @var int|null
      */
     protected $now;
 
@@ -61,7 +62,7 @@ class CookieStore implements StoreInterface
      * Use config key 'legacy_samesite_none' to set this during instantiation.
      * Default is true.
      *
-     * @var boolean
+     * @var bool
      */
     protected $legacySameSiteNone;
 
@@ -96,7 +97,7 @@ class CookieStore implements StoreInterface
      *
      * @return void
      */
-    public function set(string $key, $value) : void
+    public function set(string $key, $value): void
     {
         $key_name           = $this->getCookieName($key);
         $_COOKIE[$key_name] = $value;
@@ -110,8 +111,8 @@ class CookieStore implements StoreInterface
 
         // If we're using SameSite=None, set a fallback cookie with no SameSite attribute.
         if ($this->legacySameSiteNone && 'None' === $this->sameSite) {
-            $_COOKIE['_'.$key_name] = $value;
-            $this->setCookie('_'.$key_name, $value, $this->getExpTimecode());
+            $_COOKIE['_' . $key_name] = $value;
+            $this->setCookie('_' . $key_name, $value, $this->getExpTimecode());
         }
     }
 
@@ -131,7 +132,7 @@ class CookieStore implements StoreInterface
 
         // If handling legacy browsers, check for fallback value.
         if ($this->legacySameSiteNone) {
-            $value = $_COOKIE['_'.$key_name] ?? $value;
+            $value = $_COOKIE['_' . $key_name] ?? $value;
         }
 
         return $_COOKIE[$key_name] ?? $value;
@@ -144,31 +145,31 @@ class CookieStore implements StoreInterface
      *
      * @return void
      */
-    public function delete(string $key) : void
+    public function delete(string $key): void
     {
         $key_name = $this->getCookieName($key);
         unset($_COOKIE[$key_name]);
-        $this->setCookie( $key_name, '', 0 );
+        $this->setCookie($key_name, '', 0);
 
         // If we set a legacy fallback value, remove that as well.
         if ($this->legacySameSiteNone) {
-            unset($_COOKIE['_'.$key_name]);
-            $this->setCookie( '_'.$key_name, '', 0 );
+            unset($_COOKIE['_' . $key_name]);
+            $this->setCookie('_' . $key_name, '', 0);
         }
     }
 
     /**
      * Build the header to use when setting SameSite cookies.
      *
-     * @param string  $name   Cookie name.
-     * @param string  $value  Cookie value.
-     * @param integer $expire Cookie expiration timecode.
+     * @param string $name   Cookie name.
+     * @param string $value  Cookie value.
+     * @param int    $expire Cookie expiration timecode.
      *
      * @return string
      *
      * @see https://github.com/php/php-src/blob/master/ext/standard/head.c#L77
      */
-    protected function getSameSiteCookieHeader(string $name, string $value, int $expire) : string
+    protected function getSameSiteCookieHeader(string $name, string $value, int $expire): string
     {
         $date = new \Datetime();
         $date->setTimestamp($expire)
@@ -178,12 +179,12 @@ class CookieStore implements StoreInterface
         $illegalCharsMsg = ",; \\t\\r\\n\\013\\014";
 
         if (strpbrk($name, $illegalChars) != null) {
-            trigger_error("Cookie names cannot contain any of the following '".$illegalCharsMsg."'", E_USER_WARNING);
+            trigger_error("Cookie names cannot contain any of the following '" . $illegalCharsMsg . "'", E_USER_WARNING);
             return '';
         }
 
         if (strpbrk($value, $illegalChars) != null) {
-            trigger_error("Cookie values cannot contain any of the following '".$illegalCharsMsg."'", E_USER_WARNING);
+            trigger_error("Cookie values cannot contain any of the following '" . $illegalCharsMsg . "'", E_USER_WARNING);
             return '';
         }
 
@@ -200,9 +201,9 @@ class CookieStore implements StoreInterface
     /**
      * Get cookie expiration timecode to use.
      *
-     * @return integer
+     * @return int
      */
-    protected function getExpTimecode() : int
+    protected function getExpTimecode(): int
     {
         return ($this->now ?? time()) + $this->expiration;
     }
@@ -210,15 +211,13 @@ class CookieStore implements StoreInterface
     /**
      * Wrapper around PHP core setcookie() function to assist with testing.
      *
-     * @param string  $name   Complete cookie name to set.
-     * @param string  $value  Value of the cookie to set.
-     * @param integer $expire Expiration time in Unix timecode format.
+     * @param string $name   Complete cookie name to set.
+     * @param string $value  Value of the cookie to set.
+     * @param int    $expire Expiration time in Unix timecode format.
      *
-     * @return boolean
-     *
-     * @codeCoverageIgnore
+     * @return bool
      */
-    protected function setCookie(string $name, string $value, int $expire) : bool
+    protected function setCookie(string $name, string $value, int $expire): bool
     {
         return setcookie($name, $value, $expire, '/', '', false, true);
     }
@@ -226,15 +225,13 @@ class CookieStore implements StoreInterface
     /**
      * Wrapper around PHP core header() function to assist with testing.
      *
-     * @param string  $name   Complete cookie name to set.
-     * @param string  $value  Value of the cookie to set.
-     * @param integer $expire Expiration time in Unix timecode format.
+     * @param string $name   Complete cookie name to set.
+     * @param string $value  Value of the cookie to set.
+     * @param int    $expire Expiration time in Unix timecode format.
      *
      * @return void
-     *
-     * @codeCoverageIgnore
      */
-    protected function setCookieHeader(string $name, string $value, int $expire) : void
+    protected function setCookieHeader(string $name, string $value, int $expire): void
     {
         header($this->getSameSiteCookieHeader($name, $value, $expire), false);
     }
@@ -246,11 +243,11 @@ class CookieStore implements StoreInterface
      *
      * @return string
      */
-    public function getCookieName(string $key) : string
+    public function getCookieName(string $key): string
     {
         $key_name = $key;
-        if (! empty( $this->baseName )) {
-            $key_name = $this->baseName.'_'.$key_name;
+        if (! empty($this->baseName)) {
+            $key_name = $this->baseName . '_' . $key_name;
         }
 
         return $key_name;
