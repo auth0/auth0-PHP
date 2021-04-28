@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "php": "^7.3|^8.0",
+    "php": "^7.4|^8.0",
     "ext-json": "*",
     "ext-openssl": "*",
     "auth0/php-jwt": "3.3.4",
@@ -23,7 +23,7 @@
     "cache/array-adapter": "^1.1",
     "cache/hierarchical-cache": "^1.1",
     "josegonzalez/dotenv": "^3.2",
-    "nunomaduro/phpinsights": "@dev-master",
+    "nunomaduro/phpinsights": "dev-master",
     "pestphp/pest": "^1.0"
   },
   "autoload": {
