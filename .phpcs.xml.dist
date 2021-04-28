@@ -3,6 +3,7 @@
     <description>Auth0 PHP coding standard</description>
 
     <file>src</file>
+    <file>tests</file>
 
     <arg name="basepath" value="."/>
     <arg name="colors"/>
