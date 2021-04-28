@@ -74,6 +74,7 @@ workflows:
       - php_8_0
   vulnerability-check:
     jobs:
+      - php_7_3
       - snyk:
           filters:
             branches:
