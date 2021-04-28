@@ -67,7 +67,7 @@ class FilteredRequest
      */
     public function getFields(): array
     {
-        return $this->state['fields'];
+        return array_keys($this->state['fields']);
     }
 
     /**
@@ -79,10 +79,7 @@ class FilteredRequest
      */
     public function addField(string $field): self
     {
-        if (!isset($this->state['fields'][$field]) {
-            $this->state['fields'][] = $field;
-        }
-
+        $this->state['fields'][$field] = true;
         return $this;
     }
 
@@ -95,7 +92,7 @@ class FilteredRequest
      */
     public function removeField(string $field): self
     {
-        if (isset($this->state['fields'][$field]) {
+        if (isset($this->state['fields'][$field])) {
             unset($this->state['fields'][$field]);
         }
 
@@ -136,7 +133,7 @@ class FilteredRequest
         $response = [];
 
         if (count($this->state['fields'])) {
-            $response['fields'] = implode(',', $this->state['fields']);
+            $response['fields'] = implode(',', array_keys($this->state['fields']));
 
             if (null !== $this->state['include_fields']) {
                 $response['include_fields'] = $this->state['include_fields'];
