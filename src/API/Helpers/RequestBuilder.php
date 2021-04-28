@@ -20,7 +20,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 class RequestBuilder
 {
-
     /**
      * Domain for the request.
      *
@@ -295,7 +294,9 @@ class RequestBuilder
         $body,
         bool $jsonEncode = true
     ): RequestBuilder {
-        if (is_array($body) || is_object($body) || is_string($body) && $jsonEncode === true) {
+        if (is_object($body)) {
+            $body = json_encode($body, JSON_FORCE_OBJECT);
+        } elseif (is_array($body) || is_string($body) && $jsonEncode === true) {
             $body = json_encode($body);
         }
 
