@@ -220,35 +220,6 @@ class Users extends GenericResource
     }
 
     /**
-     * Delete the multifactor provider settings for a particular user.
-     * This will force user to re-configure the multifactor provider.
-     * Required scope: `update:users`
-     *
-     * @param string              $id       User ID with the multifactor provider to delete.
-     * @param string              $provider Multifactor provider to delete.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Users/delete_multifactor_by_provider
-     */
-    public function deleteMultifactorProvider(
-        string $id,
-        string $provider,
-        ?RequestOptions $options = null
-    ) {
-        $this->validateString($id, 'id');
-        $this->validateString($provider, 'provider');
-
-        return $this->apiClient->method('delete')
-            ->addPath('users', $id, 'multifactor', $provider)
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
      * Add one or more roles to a specific user.
      * Required scopes:
      * - `update:users`
@@ -341,31 +312,6 @@ class Users extends GenericResource
                     'roles' => $roles
                 ]
             )
-            ->withOptions($options)
-            ->call();
-    }
-
-    /**
-     * Retrieve the first confirmed Guardian enrollment for a user.
-     * Required scope: `read:users`
-     *
-     * @param string              $id      User ID to query.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @return mixed
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
-     */
-    public function getEnrollments(
-        string $id,
-        ?RequestOptions $options = null
-    ): ?array {
-        $this->validateString($id, 'id');
-
-        return $this->apiClient->method('get')
-            ->addPath('users', $id, 'enrollments')
             ->withOptions($options)
             ->call();
     }
@@ -524,6 +470,31 @@ class Users extends GenericResource
     }
 
     /**
+     * Retrieve the first confirmed Guardian enrollment for a user.
+     * Required scope: `read:users`
+     *
+     * @param string              $id      User ID to query.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @return mixed
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
+     */
+    public function getEnrollments(
+        string $id,
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($id, 'id');
+
+        return $this->apiClient->method('get')
+            ->addPath('users', $id, 'enrollments')
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Remove the current multi-factor authentication recovery code and generate a new one.
      * Required scope: `update:users`
      *
@@ -537,7 +508,7 @@ class Users extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
      */
-    public function generateRecoveryCode(
+    public function createRecoveryCode(
         string $id,
         ?RequestOptions $options = null
     ): ?array {
@@ -571,6 +542,35 @@ class Users extends GenericResource
 
         return $this->apiClient->method('post')
             ->addPath('users', $id, 'multifactor', 'actions', 'invalidate-remember-browser')
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Delete the multifactor provider settings for a particular user.
+     * This will force user to re-configure the multifactor provider.
+     * Required scope: `update:users`
+     *
+     * @param string              $id       User ID with the multifactor provider to delete.
+     * @param string              $provider Multifactor provider to delete.
+     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/delete_multifactor_by_provider
+     */
+    public function deleteMultifactorProvider(
+        string $id,
+        string $provider,
+        ?RequestOptions $options = null
+    ) {
+        $this->validateString($id, 'id');
+        $this->validateString($provider, 'provider');
+
+        return $this->apiClient->method('delete')
+            ->addPath('users', $id, 'multifactor', $provider)
             ->withOptions($options)
             ->call();
     }

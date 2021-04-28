@@ -32,7 +32,7 @@ class Emails extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Emails/post_provider
      */
-    public function configureProvider(
+    public function createProvider(
         string $name,
         array $credentials,
         array $body = [],

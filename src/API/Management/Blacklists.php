@@ -31,7 +31,7 @@ class Blacklists extends GenericResource
      *
      * @link https://auth0.com/docs/api/management/v2#!/Blacklists/post_tokens
      */
-    public function blacklist(
+    public function create(
         string $jti,
         ?string $aud = null,
         ?RequestOptions $options = null

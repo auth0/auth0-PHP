@@ -51,7 +51,7 @@ class UserBlocks extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
-    public function unblock(
+    public function delete(
         string $id,
         ?RequestOptions $options = null
     ): ?array {
@@ -98,7 +98,7 @@ class UserBlocks extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
-    public function unblockByIdentifier(
+    public function deleteByIdentifier(
         string $identifier,
         ?RequestOptions $options = null
     ): ?array {

@@ -35,7 +35,7 @@ class Jobs extends GenericResource
      *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_imports
      */
-    public function importUsers(
+    public function createImportUsers(
         string $filePath,
         string $connectionId,
         array $parameters = [],
@@ -70,7 +70,7 @@ class Jobs extends GenericResource
      *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports
      */
-    public function exportUsers(
+    public function createExportUsers(
         array $body = [],
         ?RequestOptions $options = null
     ): ?array {
@@ -97,7 +97,7 @@ class Jobs extends GenericResource
      *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_verification_email
      */
-    public function sendVerificationEmail(
+    public function createSendVerificationEmail(
         string $userId,
         array $body = [],
         ?RequestOptions $options = null
