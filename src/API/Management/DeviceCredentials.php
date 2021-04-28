@@ -11,7 +11,7 @@ use GuzzleHttp\Exception\RequestException;
  * Class DeviceCredentials.
  * Handles requests to the Device Credentials endpoint of the v2 Management API.
  *
- * https://auth0.com/docs/api/management/v2#!/Device_Credentials
+ * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials
  *
  * @package Auth0\SDK\API\Management
  */

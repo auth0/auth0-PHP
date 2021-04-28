@@ -11,7 +11,7 @@ use GuzzleHttp\Exception\RequestException;
  * Class Connections.
  * Handles requests to the Connections endpoint of the v2 Management API.
  *
- * https://auth0.com/docs/api/management/v2#!/Connections
+ * @link https://auth0.com/docs/api/management/v2#!/Connections
  *
  * @package Auth0\SDK\API\Management
  */
@@ -23,7 +23,7 @@ class Connections extends GenericResource
      *
      * @param string              $name     The name of the new connection.
      * @param string              $strategy The identity provider identifier for the new connection.
-     * @param array               $query    Additional body content to pass with the API request. See @link for supported options.
+     * @param array               $body     Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null

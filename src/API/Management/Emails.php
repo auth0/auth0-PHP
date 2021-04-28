@@ -11,7 +11,7 @@ use GuzzleHttp\Exception\RequestException;
  * Class Emails.
  * Handles requests to the Emails endpoint of the v2 Management API.
  *
- * https://auth0.com/docs/api/management/v2#!/Emails
+ * @link https://auth0.com/docs/api/management/v2#!/Emails
  *
  * @package Auth0\SDK\API\Management
  */

@@ -87,7 +87,7 @@ class Jobs extends GenericResource
      * Create a verification email job.
      * Required scope: `update:users`
      *
-     * @param string              $user_id User ID of the user to send the verification email to.
+     * @param string              $userId  User ID of the user to send the verification email to.
      * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
