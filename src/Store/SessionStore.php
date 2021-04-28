@@ -17,30 +17,25 @@ namespace Auth0\SDK\Store;
 class SessionStore implements StoreInterface
 {
     /**
-     * Default session base name.
-     */
-    const BASE_NAME = 'auth0_';
-
-    /**
      * Session base name, configurable on instantiation.
      *
      * @var string
      */
-    protected $session_base_name;
+    protected $sessionBaseName;
 
     /**
      * SessionStore constructor.
      *
-     * @param string $base_name Session base name.
+     * @param string $baseName Session base name.
      */
-    public function __construct($base_name = self::BASE_NAME)
-    {
-        $this->session_base_name = (string) $base_name;
+    public function __construct(
+        string $baseName = 'auth0'
+    ) {
+        $this->sessionBaseName = $baseName;
     }
 
     /**
-     * This basic implementation of BaseAuth0 SDK uses
-     * PHP Sessions to store volatile data.
+     * This basic implementation of BaseAuth0 SDK uses PHP Sessions to store volatile data.
      *
      * @return void
      */
@@ -82,9 +77,9 @@ class SessionStore implements StoreInterface
 
         if (isset($_SESSION[$key_name])) {
             return $_SESSION[$key_name];
-        } else {
-            return $default;
         }
+
+        return $default;
     }
 
     /**
@@ -111,8 +106,9 @@ class SessionStore implements StoreInterface
     public function getSessionKeyName(string $key): string
     {
         $key_name = $key;
-        if (! empty($this->session_base_name)) {
-            $key_name = $this->session_base_name . '_' . $key_name;
+
+        if (! empty($this->sessionBaseName)) {
+            $key_name = $this->sessionBaseName . '_' . $key_name;
         }
 
         return $key_name;

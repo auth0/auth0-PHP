@@ -13,18 +13,13 @@ namespace Auth0\SDK\Store;
 class CookieStore implements StoreInterface
 {
     /**
-     * Default cookie base name.
-     */
-    const BASE_NAME = 'auth0_';
-
-    /**
      * Cookie base name.
      * Use config key 'base_name' to set this during instantiation.
-     * Default is self::BASE_NAME.
+     * Default is 'auth0'
      *
      * @var string
      */
-    protected $baseName;
+    protected $sessionBaseName;
 
     /**
      * Cookie expiration length, in seconds.
@@ -73,8 +68,8 @@ class CookieStore implements StoreInterface
      */
     public function __construct(array $options = [])
     {
-        $this->baseName   = $options['base_name'] ?? self::BASE_NAME;
-        $this->expiration = $options['expiration'] ?? 600;
+        $this->sessionBaseName = $options['base_name'] ?? 'auth0';
+        $this->expiration      = $options['expiration'] ?? 600;
 
         if (! empty($options['samesite']) && is_string($options['samesite'])) {
             $sameSite = ucfirst($options['samesite']);
@@ -178,12 +173,12 @@ class CookieStore implements StoreInterface
         $illegalChars    = ",; \t\r\n\013\014";
         $illegalCharsMsg = ",; \\t\\r\\n\\013\\014";
 
-        if (strpbrk($name, $illegalChars) != null) {
+        if (strpbrk($name, $illegalChars) !== false) {
             trigger_error("Cookie names cannot contain any of the following '" . $illegalCharsMsg . "'", E_USER_WARNING);
             return '';
         }
 
-        if (strpbrk($value, $illegalChars) != null) {
+        if (strpbrk($value, $illegalChars) !== false) {
             trigger_error("Cookie values cannot contain any of the following '" . $illegalCharsMsg . "'", E_USER_WARNING);
             return '';
         }
@@ -246,8 +241,9 @@ class CookieStore implements StoreInterface
     public function getCookieName(string $key): string
     {
         $key_name = $key;
-        if (! empty($this->baseName)) {
-            $key_name = $this->baseName . '_' . $key_name;
+
+        if (! empty($this->sessionBaseName)) {
+            $key_name = $this->sessionBaseName . '_' . $key_name;
         }
 
         return $key_name;
