@@ -13,6 +13,6 @@ class AuthorizationBearer extends Header
      */
     public function __construct(string $token)
     {
-        parent::__construct('Authorization', "Bearer $token");
+        parent::__construct('Authorization', 'Bearer ' . $token);
     }
 }
