@@ -129,7 +129,9 @@ class TokenVerifier
                     implode(', ', $tokenAud)
                 )
             );
-        } else if (is_string($tokenAud) && $tokenAud !== $this->audience) {
+        }
+
+        if (is_string($tokenAud) && $tokenAud !== $this->audience) {
             throw new InvalidTokenException(
                 sprintf(
                     'Audience (aud) claim mismatch in the ID token; expected "%s", found "%s"',
