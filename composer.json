@@ -23,7 +23,7 @@
     "cache/array-adapter": "^1.1",
     "cache/hierarchical-cache": "^1.1",
     "josegonzalez/dotenv": "^3.2",
-    "nunomaduro/phpinsights": "^1.14",
+    "nunomaduro/phpinsights": "@dev-master",
     "pestphp/pest": "^1.0"
   },
   "autoload": {
