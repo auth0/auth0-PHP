@@ -309,8 +309,8 @@ class Auth0
      * @see https://auth0.com/docs/api/authentication#login
      */
     public function login(
-        string $state = null,
-        string $connection = null,
+        ?string $state = null,
+        ?string $connection = null,
         array $additionalParams = []
     ): void {
         $params = [];
