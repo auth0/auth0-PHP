@@ -13,10 +13,8 @@ class FilteredRequest
 {
     /**
      * Internal state of the field-filtered request.
-     *
-     * @var array
      */
-    protected $state = [];
+    protected array $state = [];
 
     /**
      * FilteredRequest constructor
@@ -30,7 +28,7 @@ class FilteredRequest
         ?array $fields = null,
         ?bool $includeFields = null
     ) {
-        $this->state['fields']         = $fields ?? [];
+        $this->state['fields'] = $fields ?? [];
         $this->state['include_fields'] = $includeFields;
     }
 
@@ -38,11 +36,10 @@ class FilteredRequest
      * Set the `fields` for the filtered request.
      *
      * @param array $fields Value of `fields` parameter for the filtered request.
-     *
-     * @return self
      */
-    public function setFields(array $fields): self
-    {
+    public function setFields(
+        array $fields
+    ): self {
         $this->state['fields'] = $fields;
 
         return $this;
@@ -50,8 +47,6 @@ class FilteredRequest
 
     /**
      * Clear the `fields` for the filtered request.
-     *
-     * @return self
      */
     public function clearFields(): self
     {
@@ -74,11 +69,10 @@ class FilteredRequest
      * Add a value to `fields` for the filtered request.
      *
      * @param string $field Value of `field` parameter for the filtered request.
-     *
-     * @return self
      */
-    public function addField(string $field): self
-    {
+    public function addField(
+        string $field
+    ): self {
         $this->state['fields'][$field] = true;
         return $this;
     }
@@ -87,11 +81,10 @@ class FilteredRequest
      * Add a value to `fields` for the filtered request.
      *
      * @param string $field Value of `field` parameter for the filtered request.
-     *
-     * @return self
      */
-    public function removeField(string $field): self
-    {
+    public function removeField(
+        string $field
+    ): self {
         if (isset($this->state['fields'][$field])) {
             unset($this->state['fields'][$field]);
         }
@@ -103,11 +96,10 @@ class FilteredRequest
      * Set the `include_fields` for the paginated request.
      *
      * @param ?bool $includeFields Value of `include_fields` parameter for the filtered request.
-     *
-     * @return self
      */
-    public function setIncludeFields(?bool $includeFields): self
-    {
+    public function setIncludeFields(
+        ?bool $includeFields
+    ): self {
         $this->state['include_fields'] = $includeFields;
 
         return $this;
@@ -115,8 +107,6 @@ class FilteredRequest
 
     /**
      * Retrieve the `include_fields` for the filtered request.
-     *
-     * @return int|null
      */
     public function getIncludeFields(): ?int
     {
@@ -135,7 +125,7 @@ class FilteredRequest
         if (count($this->state['fields'])) {
             $response['fields'] = implode(',', array_keys($this->state['fields']));
 
-            if (null !== $this->state['include_fields']) {
+            if ($this->state['include_fields'] !== null) {
                 $response['include_fields'] = $this->state['include_fields'];
             }
         }

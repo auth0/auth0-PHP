@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class EmailTemplates.
@@ -55,11 +54,11 @@ class EmailTemplates extends GenericResource
 
         $payload = [
             'template' => $template,
-            'body'     => $body,
-            'from'     => $from,
-            'subject'  => $subject,
-            'syntax'   => $syntax,
-            'enabled'  => $enabled
+            'body' => $body,
+            'from' => $from,
+            'subject' => $subject,
+            'syntax' => $syntax,
+            'enabled' => $enabled,
         ] + $additional;
 
         return $this->apiClient->method('post')

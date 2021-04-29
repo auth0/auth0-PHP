@@ -1,16 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Management;
 use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Response;
-use InvalidArgumentException as GlobalInvalidArgumentException;
-use PHPUnit\Framework\Exception;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
-use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Class ClientsTest.
@@ -19,22 +15,16 @@ class ClientsTest extends ApiTests
 {
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -45,10 +35,8 @@ class ClientsTest extends ApiTests
 
     /**
      * Test getAll() request.
-     *
-     * @return void
      */
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -63,10 +51,8 @@ class ClientsTest extends ApiTests
 
     /**
      * Test get() request.
-     *
-     * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -78,10 +64,8 @@ class ClientsTest extends ApiTests
 
     /**
      * Test delete() request.
-     *
-     * @return void
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -93,10 +77,8 @@ class ClientsTest extends ApiTests
 
     /**
      * Test create() request.
-     *
-     * @return void
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -114,10 +96,8 @@ class ClientsTest extends ApiTests
 
     /**
      * Test update() request.
-     *
-     * @return void
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 

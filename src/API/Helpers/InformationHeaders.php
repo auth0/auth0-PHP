@@ -14,29 +14,25 @@ class InformationHeaders
 {
     /**
      * Default header data to send.
-     *
-     * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Set the main SDK name and version.
      *
      * @param string $name    SDK name.
      * @param string $version SDK version number.
-     *
-     * @return void
      */
-    public function setPackage(string $name, $version): void
-    {
-        $this->data['name']    = $name;
+    public function setPackage(
+        string $name,
+        string $version
+    ): void {
+        $this->data['name'] = $name;
         $this->data['version'] = $version;
     }
 
     /**
      * Set the main SDK name and version to the PHP SDK.
-     *
-     * @return void
      */
     public function setCorePackage(): void
     {
@@ -49,11 +45,11 @@ class InformationHeaders
      *
      * @param string $name    Property name to set, name of dependency or platform.
      * @param string $version Version number of dependency or platform.
-     *
-     * @return void
      */
-    public function setEnvProperty(string $name, $version): void
-    {
+    public function setEnvProperty(
+        string $name,
+        string $version
+    ): void {
         if (! isset($this->data['env']) || ! is_array($this->data['env'])) {
             $this->data['env'] = [];
         }
@@ -65,11 +61,10 @@ class InformationHeaders
      * Replace the current env data with new data.
      *
      * @param array $data Env data to add.
-     *
-     * @return void
      */
-    public function setEnvironmentData(array $data): void
-    {
+    public function setEnvironmentData(
+        array $data
+    ): void {
         $this->data['env'] = $data;
     }
 
@@ -85,8 +80,6 @@ class InformationHeaders
 
     /**
      * Return a header-formatted string.
-     *
-     * @return string
      */
     public function build(): string
     {
@@ -98,15 +91,14 @@ class InformationHeaders
      * Used in dependant modules to set a new SDK name and version but keep existing PHP SDK data.
      *
      * @param InformationHeaders $headers InformationHeaders object to extend.
-     *
-     * @return InformationHeaders
      */
-    public static function extend(InformationHeaders $headers): InformationHeaders
-    {
+    public static function extend(
+        InformationHeaders $headers
+    ): InformationHeaders {
         $new_headers = new InformationHeaders();
         $old_headers = $headers->get();
 
-        if (! empty($old_headers['env']) && is_array($old_headers['env'])) {
+        if (isset($old_headers['env']) && count($old_headers['env'])) {
             $new_headers->setEnvironmentData($old_headers['env']);
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Authentication;
 
 use Auth0\SDK\API\Authentication;
@@ -7,11 +9,11 @@ use PHPUnit\Framework\TestCase;
 
 class UrlBuildersTest extends TestCase
 {
-    public function testThatBasicAuthorizeLinkIsBuiltCorrectly()
+    public function testThatBasicAuthorizeLinkIsBuiltCorrectly(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $authorize_url       = $api->getAuthorizationLink('code', 'https://example.com/cb');
+        $authorize_url = $api->getAuthorizationLink('code', 'https://example.com/cb');
         $authorize_url_parts = parse_url($authorize_url);
 
         $this->assertEquals('https', $authorize_url_parts['scheme']);
@@ -29,41 +31,41 @@ class UrlBuildersTest extends TestCase
         $this->assertStringNotContainsString('auth0Client=', $authorize_url_parts['query']);
     }
 
-    public function testThatAuthorizeLinkIncludesConnection()
+    public function testThatAuthorizeLinkIncludesConnection(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $authorize_url       = $api->getAuthorizationLink('code', 'https://example.com/cb', 'test-connection');
+        $authorize_url = $api->getAuthorizationLink('code', 'https://example.com/cb', 'test-connection');
         $authorize_url_query = parse_url($authorize_url, PHP_URL_QUERY);
         $authorize_url_query = explode('&', $authorize_url_query);
 
         $this->assertContains('connection=test-connection', $authorize_url_query);
     }
 
-    public function testThatAuthorizeLinkIncludesState()
+    public function testThatAuthorizeLinkIncludesState(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $authorize_url       = $api->getAuthorizationLink('code', 'https://example.com/cb', null, '__test_state__');
+        $authorize_url = $api->getAuthorizationLink('code', 'https://example.com/cb', null, '__test_state__');
         $authorize_url_query = parse_url($authorize_url, PHP_URL_QUERY);
         $authorize_url_query = explode('&', $authorize_url_query);
 
         $this->assertContains('state=__test_state__', $authorize_url_query);
     }
 
-    public function testThatAuthorizeLinkIncludesAdditionalParams()
+    public function testThatAuthorizeLinkIncludesAdditionalParams(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        $additional_params   = ['param1' => 'value1'];
-        $authorize_url       = $api->getAuthorizationLink('code', 'https://example.com/cb', null, null, $additional_params);
+        $additional_params = ['param1' => 'value1'];
+        $authorize_url = $api->getAuthorizationLink('code', 'https://example.com/cb', null, null, $additional_params);
         $authorize_url_query = parse_url($authorize_url, PHP_URL_QUERY);
         $authorize_url_query = explode('&', $authorize_url_query);
 
         $this->assertContains('param1=value1', $authorize_url_query);
     }
 
-    public function testThatBasicLogoutLinkIsBuiltCorrectly()
+    public function testThatBasicLogoutLinkIsBuiltCorrectly(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
@@ -78,7 +80,7 @@ class UrlBuildersTest extends TestCase
         $this->assertTrue(empty($logout_link_parts['query']));
     }
 
-    public function testThatReturnToLogoutLinkIsBuiltCorrectly()
+    public function testThatReturnToLogoutLinkIsBuiltCorrectly(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
@@ -88,7 +90,7 @@ class UrlBuildersTest extends TestCase
         $this->assertContains('returnTo=https%3A%2F%2Fexample.com%2Freturn-to', $logout_link_query);
     }
 
-    public function testThatClientIdLogoutLinkIsBuiltCorrectly()
+    public function testThatClientIdLogoutLinkIsBuiltCorrectly(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
@@ -98,7 +100,7 @@ class UrlBuildersTest extends TestCase
         $this->assertContains('client_id=' . '__test_client_id__', $logout_link_query);
     }
 
-    public function testThatFederatedLogoutLinkIsBuiltCorrectly()
+    public function testThatFederatedLogoutLinkIsBuiltCorrectly(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
@@ -108,7 +110,7 @@ class UrlBuildersTest extends TestCase
         $this->assertContains('federated=federated', $logout_link_query);
     }
 
-    public function testThatSamlLinkIsBuiltProperly()
+    public function testThatSamlLinkIsBuiltProperly(): void
     {
         $api = new Authentication('test-domain.auth0.com', 'test-client-id-1');
 
@@ -128,7 +130,7 @@ class UrlBuildersTest extends TestCase
         );
     }
 
-    public function testThatSamlMetadataLinkIsBuiltProperly()
+    public function testThatSamlMetadataLinkIsBuiltProperly(): void
     {
         $api = new Authentication('test-domain.auth0.com', 'test-client-id-1');
 
@@ -143,7 +145,7 @@ class UrlBuildersTest extends TestCase
         );
     }
 
-    public function testThatWsFedLinkIsBuiltProperly()
+    public function testThatWsFedLinkIsBuiltProperly(): void
     {
         $api = new Authentication('test-domain.auth0.com', 'test-client-id-1');
 
@@ -163,14 +165,14 @@ class UrlBuildersTest extends TestCase
                 'test-client-id-3',
                 [
                     'wtrealm' => 'test_wtrealm',
-                    'whr'     => 'test_whr',
-                    'wctx'    => 'test_wctx',
+                    'whr' => 'test_whr',
+                    'wctx' => 'test_wctx',
                 ]
             )
         );
     }
 
-    public function testThatWsFedMetadataLinkIsBuiltProperly()
+    public function testThatWsFedMetadataLinkIsBuiltProperly(): void
     {
         $api = new Authentication('test-domain.auth0.com', 'test-client-id-1');
 

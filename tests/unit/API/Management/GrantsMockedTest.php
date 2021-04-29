@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Management;
-use Auth0\SDK\Exception\CoreException;
 use Auth0\Tests\Traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -18,15 +18,11 @@ class GrantsMockedTest extends TestCase
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $telemetry;
+    protected static string $telemetry;
 
     /**
      * Runs before test suite starts.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -37,10 +33,8 @@ class GrantsMockedTest extends TestCase
 
     /**
      * Test that getAll requests properly.
-     *
-     * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200)]);
 
@@ -53,10 +47,8 @@ class GrantsMockedTest extends TestCase
 
     /**
      * Test that getByClientId adds a client_id to the request.
-     *
-     * @return void
      */
-    public function testGetByClientId()
+    public function testGetByClientId(): void
     {
         $api = new MockManagementApi([new Response(200)]);
 
@@ -68,10 +60,8 @@ class GrantsMockedTest extends TestCase
 
     /**
      * Test that getByAudience adds an audience to the request.
-     *
-     * @return void
      */
-    public function testGetByAudience()
+    public function testGetByAudience(): void
     {
         $api = new MockManagementApi([new Response(200)]);
 
@@ -83,10 +73,8 @@ class GrantsMockedTest extends TestCase
 
     /**
      * Test that getByUserId adds an audience to the request.
-     *
-     * @return void
      */
-    public function testGetByUserId()
+    public function testGetByUserId(): void
     {
         $api = new MockManagementApi([new Response(200)]);
 
@@ -98,10 +86,8 @@ class GrantsMockedTest extends TestCase
 
     /**
      * Test that delete requests properly.
-     *
-     * @return void
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $api = new MockManagementApi([new Response(204)]);
 

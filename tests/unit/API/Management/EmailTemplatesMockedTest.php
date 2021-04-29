@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Management;
 use Auth0\Tests\Traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -17,17 +18,13 @@ class EmailTemplatesMockedTest extends TestCase
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
@@ -39,7 +36,7 @@ class EmailTemplatesMockedTest extends TestCase
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
         $api->call()->emailTemplates()->get('verify_email');
@@ -48,14 +45,14 @@ class EmailTemplatesMockedTest extends TestCase
         $this->assertEquals('https://api.test.local/api/v2/email-templates/verify_email', $api->getHistoryUrl());
     }
 
-    public function testPatch()
+    public function testPatch(): void
     {
-        $api        = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi([new Response(200, self::$headers)]);
         $patch_data = [
-            'body'      => '__test_email_body__',
-            'from'      => 'test@auth0.com',
+            'body' => '__test_email_body__',
+            'from' => 'test@auth0.com',
             'resultUrl' => 'https://auth0.com',
-            'subject'   => '__test_email_subject__',
+            'subject' => '__test_email_subject__',
         ];
 
         $api->call()->emailTemplates()->patch('reset_email', $patch_data);
@@ -66,7 +63,7 @@ class EmailTemplatesMockedTest extends TestCase
         $this->assertEquals($patch_data, $api->getHistoryBody());
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -78,7 +75,7 @@ class EmailTemplatesMockedTest extends TestCase
             'liquid',
             true,
             [
-                'urlLifetimeInSeconds' => 0
+                'urlLifetimeInSeconds' => 0,
             ]
         );
 

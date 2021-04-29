@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\unit\Helpers;
 
-use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Helpers\JWKFetcher;
 use Cache\Adapter\PHPArray\ArrayCachePool;
 use GuzzleHttp\Psr7\Response;
@@ -17,13 +16,11 @@ class JWKFetcherTest extends TestCase
 {
     /**
      * Test that getKeys() returns keys.
-     *
-     * @return void
      */
-    public function testThatGetKeysReturnsKeys()
+    public function testThatGetKeysReturnsKeys(): void
     {
         $test_jwks = file_get_contents(AUTH0_PHP_TEST_JSON_DIR . 'localhost--well-known-jwks-json.json');
-        $jwks      = new MockJwks([new Response(200, ['Content-Type' => 'application/json'], $test_jwks)]);
+        $jwks = new MockJwks([new Response(200, ['Content-Type' => 'application/json'], $test_jwks)]);
 
         $jwks_formatted = $jwks->call()->getKeys(uniqid());
 
@@ -45,10 +42,8 @@ class JWKFetcherTest extends TestCase
 
     /**
      * Test that getKeys() w/ empty JWKs returns an empty array.
-     *
-     * @return void
      */
-    public function testThatGetKeysEmptyJwksReturnsEmptyArray()
+    public function testThatGetKeysEmptyJwksReturnsEmptyArray(): void
     {
         $jwks = new MockJwks(
             [
@@ -66,14 +61,12 @@ class JWKFetcherTest extends TestCase
 
     /**
      * Test that getKeys() uses cache.
-     *
-     * @return void
      */
-    public function testThatGetKeysUsesCache()
+    public function testThatGetKeysUsesCache(): void
     {
         $jwks_body_1 = '{"keys":[{"kid":"abc","x5c":["123"]}]}';
         $jwks_body_2 = '{"keys":[{"kid":"def","x5c":["456"]}]}';
-        $jwks        = new MockJwks(
+        $jwks = new MockJwks(
             [
                 new Response(200, ['Content-Type' => 'application/json'], $jwks_body_1),
                 new Response(200, ['Content-Type' => 'application/json'], $jwks_body_2),
@@ -97,14 +90,12 @@ class JWKFetcherTest extends TestCase
 
     /**
      * Test that getKey() breaks cache.
-     *
-     * @return void
      */
-    public function testThatGetKeyBreaksCache()
+    public function testThatGetKeyBreaksCache(): void
     {
         $jwks_body_1 = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]}]}';
         $jwks_body_2 = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]},{"kid":"__kid_2__","x5c":["__x5c_2__"]}]}';
-        $jwks        = new MockJwks(
+        $jwks = new MockJwks(
             [
                 new Response(200, ['Content-Type' => 'application/json'], $jwks_body_1),
                 new Response(200, ['Content-Type' => 'application/json'], $jwks_body_2),
@@ -128,13 +119,11 @@ class JWKFetcherTest extends TestCase
 
     /**
      * Test that getKeys() uses options url.
-     *
-     * @return void
      */
-    public function testThatGetKeysUsesOptionsUrl()
+    public function testThatGetKeysUsesOptionsUrl(): void
     {
         $jwks_body = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]}]}';
-        $jwks      = new MockJwks(
+        $jwks = new MockJwks(
             [new Response(200, ['Content-Type' => 'application/json'], $jwks_body)],
             ['cache' => new ArrayCachePool()],
             ['base_uri' => '__test_jwks_url__']
@@ -146,28 +135,24 @@ class JWKFetcherTest extends TestCase
 
     /**
      * Test that getKey() gets specific kid.
-     *
-     * @return void
      */
-    public function testThatGetKeyGetsSpecificKid()
+    public function testThatGetKeyGetsSpecificKid(): void
     {
         $cache = new ArrayCachePool();
-        $jwks  = new JWKFetcher($cache, ['base_uri' => '__test_jwks_url__']);
+        $jwks = new JWKFetcher($cache, ['base_uri' => '__test_jwks_url__']);
         $cache->set(md5('__test_jwks_url__'), ['__test_kid_1__' => '__test_x5c_1__']);
         $this->assertEquals('__test_x5c_1__', $jwks->getKey('__test_kid_1__'));
     }
 
     /**
      * Test that getKey() breaks cache when kid is missing.
-     *
-     * @return void
      */
-    public function testThatGetKeyBreaksCacheIsKidMissing()
+    public function testThatGetKeyBreaksCacheIsKidMissing(): void
     {
         $cache = new ArrayCachePool();
 
         $jwks_body = '{"keys":[{"kid":"__test_kid_2__","x5c":["__test_x5c_2__"]}]}';
-        $jwks      = new MockJwks(
+        $jwks = new MockJwks(
             [new Response(200, ['Content-Type' => 'application/json'], $jwks_body)],
             ['cache' => $cache],
             ['base_uri' => '__test_jwks_url__']
@@ -180,10 +165,8 @@ class JWKFetcherTest extends TestCase
 
     /**
      * Test that empty URL returns empty keys.
-     *
-     * @return void
      */
-    public function testThatEmptyUrlReturnsEmptyKeys()
+    public function testThatEmptyUrlReturnsEmptyKeys(): void
     {
         $jwks_formatted_1 = (new JWKFetcher())->getKeys();
         $this->assertEquals([], $jwks_formatted_1);
@@ -191,38 +174,34 @@ class JWKFetcherTest extends TestCase
 
     /**
      * Test that TTL changes.
-     *
-     * @return void
      */
-    public function testThatTtlChanges()
+    public function testThatTtlChanges(): void
     {
         $jwks_body = '{"keys":[{"kid":"__test_kid_2__","x5c":["__test_x5c_2__"]}]}';
-        $jwks      = new MockJwks(
+        $jwks = new MockJwks(
             // [ new Response( 200, [ 'Content-Type' => 'application/json' ], $jwks_body ) ],
             // [ 'cache' => new ArrayCachePool() ],
             // [ 'base_uri' => '__test_jwks_url__' ]
         );
 
-        // Ensure TTL is assigned a recommended default value of 10 minutes.
-        $this->assertEquals(JWKFetcher::CACHE_TTL, $jwks->call()->getTtl());
+        // Ensure TTL is assigned a recommended default value.
+        $this->assertEquals(JWKFetcher::DEFAULT_CACHE_TTL, $jwks->call()->getTtl());
 
         // Ensure TTL is assigned correctly; 60 seconds is the minimum.
         $jwks->call()->setTtl(60);
         $this->assertEquals(60, $jwks->call()->getTtl());
 
         // Ensure assigning a TTL of less than 60 seconds throws an exception.
-        $this->expectException(CoreException::class);
+        $this->expectException(\Auth0\SDK\Exception\CoreException::class);
         $jwks->call()->setTtl(30);
     }
 
     /**
      * Test that cache mutates.
-     *
-     * @return void
      */
-    public function testThatCacheMutates()
+    public function testThatCacheMutates(): void
     {
-        $jwks_body          = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]},{"kid":"__kid_2__","x5c":["__x5c_2__"]}]}';
+        $jwks_body = '{"keys":[{"kid":"__kid_1__","x5c":["__x5c_1__"]},{"kid":"__kid_2__","x5c":["__x5c_2__"]}]}';
         $jwks_body_modified = ['__kid_3__' => '__x5c_3__', '__kid_4__' => '__x5c_4__'];
 
         $jwks = new MockJwks(

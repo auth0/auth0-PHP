@@ -14,17 +14,12 @@ use Psr\SimpleCache\CacheInterface;
 class MockJwks extends MockApi
 {
     /**
-     * @var JWKFetcher
-     */
-    protected $client;
-
-    /**
      * @param array $guzzleOptions
      * @param array $config
      */
-    public function setClient(array $guzzleOptions, array $config = [])
+    public function setClient(array $guzzleOptions, array $config = []): void
     {
-        $cache        = isset($config['cache']) && $config['cache'] instanceof CacheInterface ? $config['cache'] : null;
+        $cache = isset($config['cache']) && $config['cache'] instanceof CacheInterface ? $config['cache'] : null;
         $this->client = new JWKFetcher($cache, $guzzleOptions);
     }
 }

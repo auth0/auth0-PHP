@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class ClientGrants.
@@ -44,11 +43,10 @@ class ClientGrants extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('client-grants')
             ->withBody(
-                (object)
-                [
+                (object) [
                     'client_id' => $clientId,
-                    'audience'  => $audience,
-                    'scope'     => $scope,
+                    'audience' => $audience,
+                    'scope' => $scope,
                 ]
             )
             ->withOptions($options)
@@ -102,7 +100,7 @@ class ClientGrants extends GenericResource
 
         return $this->getAll(
             [
-                'audience' => $audience
+                'audience' => $audience,
             ] + $parameters,
             $options
         );
@@ -131,7 +129,7 @@ class ClientGrants extends GenericResource
 
         return $this->getAll(
             [
-                'client_id' => $clientId
+                'client_id' => $clientId,
             ] + $parameters,
             $options
         );
@@ -161,9 +159,8 @@ class ClientGrants extends GenericResource
         return $this->apiClient->method('patch')
             ->addPath('client-grants', $id)
             ->withBody(
-                (object)
-                [
-                    'scope' => $scope
+                (object) [
+                    'scope' => $scope,
                 ]
             )
             ->withOptions($options)

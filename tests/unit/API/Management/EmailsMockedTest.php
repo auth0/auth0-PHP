@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -16,17 +18,13 @@ class EmailsMockedTest extends TestCase
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
@@ -38,7 +36,7 @@ class EmailsMockedTest extends TestCase
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testGetProvider()
+    public function testGetProvider(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
         $api->call()->emails()->getProvider();

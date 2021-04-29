@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
-use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Users.
@@ -42,7 +39,7 @@ class Users extends GenericResource
         $this->validateArray($body, 'body');
 
         $payload = [
-            'connection' => $connection
+            'connection' => $connection,
         ] + $body;
 
         return $this->apiClient->method('post')
@@ -246,9 +243,8 @@ class Users extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('users', $id, 'roles')
             ->withBody(
-                (object)
-                [
-                    'roles' => $roles
+                (object) [
+                    'roles' => $roles,
                 ]
             )
             ->withOptions($options)
@@ -307,9 +303,8 @@ class Users extends GenericResource
         return $this->apiClient->method('delete')
             ->addPath('users', $id, 'roles')
             ->withBody(
-                (object)
-                [
-                    'roles' => $roles
+                (object) [
+                    'roles' => $roles,
                 ]
             )
             ->withOptions($options)
@@ -341,7 +336,7 @@ class Users extends GenericResource
         $this->validatePermissions($permissions);
 
         $payload = [
-            'permissions' => []
+            'permissions' => [],
         ];
 
         foreach ($permissions as $permission) {
@@ -405,7 +400,7 @@ class Users extends GenericResource
         $this->validatePermissions($permissions);
 
         $payload = [
-            'permissions' => []
+            'permissions' => [],
         ];
 
         foreach ($permissions as $permission) {
@@ -565,7 +560,7 @@ class Users extends GenericResource
         string $id,
         string $provider,
         ?RequestOptions $options = null
-    ) {
+    ): ?array {
         $this->validateString($id, 'id');
         $this->validateString($provider, 'provider');
 

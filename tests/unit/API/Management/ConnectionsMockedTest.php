@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -16,17 +18,13 @@ class ConnectionsMockedTest extends TestCase
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
@@ -40,12 +38,10 @@ class ConnectionsMockedTest extends TestCase
 
     /**
      * Test a getAll() request.
-     *
-     * @return void
      */
-    public function testGetAll()
+    public function testGetAll(): void
     {
-        $api      = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi([new Response(200, self::$headers)]);
         $strategy = 'test-strategy-01';
 
         $api->call()->connections()->getAll([ 'strategy' => $strategy ]);
@@ -57,10 +53,8 @@ class ConnectionsMockedTest extends TestCase
 
     /**
      * Test a get() request.
-     *
-     * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -74,10 +68,8 @@ class ConnectionsMockedTest extends TestCase
 
     /**
      * Test a basic delete connection request.
-     *
-     * @return void
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $api = new MockManagementApi([new Response(204)]);
 
@@ -91,14 +83,12 @@ class ConnectionsMockedTest extends TestCase
 
     /**
      * Test a delete user for connection request.
-     *
-     * @return void
      */
-    public function testDeleteUser()
+    public function testDeleteUser(): void
     {
         $api = new MockManagementApi([new Response(204)]);
 
-        $id    = 'con_testConnection10';
+        $id = 'con_testConnection10';
         $email = 'con_testConnection10@auth0.com';
         $api->call()->connections()->deleteUser($id, $email);
 
@@ -109,16 +99,14 @@ class ConnectionsMockedTest extends TestCase
 
     /**
      * Test a basic connection create call.
-     *
-     * @return void
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $name     = 'TestConnection01';
+        $name = 'TestConnection01';
         $strategy = 'test-strategy-01';
-        $query    = [ 'testing' => 'test '];
+        $query = [ 'testing' => 'test '];
 
         $api->call()->connections()->create($name, $strategy, $query);
         $request_body = $api->getHistoryBody();
@@ -132,14 +120,12 @@ class ConnectionsMockedTest extends TestCase
 
     /**
      * Test a basic update request.
-     *
-     * @return void
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        $id          = 'con_testConnection10';
+        $id = 'con_testConnection10';
         $update_data = ['metadata' => ['meta1' => 'value1']];
         $api->call()->connections()->update($id, $update_data);
         $request_body = $api->getHistoryBody();

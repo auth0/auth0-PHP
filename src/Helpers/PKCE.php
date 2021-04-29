@@ -18,12 +18,11 @@ class PKCE
      *
      * @param int $length Code verifier length
      *
-     * @return string
-     *
      * @see https://tools.ietf.org/html/rfc7636
      */
-    public static function generateCodeVerifier(int $length = 43): string
-    {
+    public static function generateCodeVerifier(
+        int $length = 43
+    ): string {
         if ($length < 43 || $length > 128) {
             throw new \InvalidArgumentException(
                 'Code verifier must be created with a minimum length of 43 characters and a maximum length of 128 characters.'
@@ -37,7 +36,7 @@ class PKCE
 
             try {
                 $bytes = random_bytes($size);
-            } catch (\Exception $e) {
+            } catch (\Exception $exception) {
                 $bytes = openssl_random_pseudo_bytes($size);
             }
 
@@ -54,15 +53,14 @@ class PKCE
      * and no line breaks, whitespace, or other additional characters should be
      * present.
      *
-     * @param string $code_verifier String to generate code challenge from.
-     *
-     * @return string
+     * @param string $codeVerifier String to generate code challenge from.
      *
      * @see https://auth0.com/docs/flows/concepts/auth-code-pkce
      */
-    public static function generateCodeChallenge(string $code_verifier): string
-    {
-        $encoded = base64_encode(hash('sha256', $code_verifier, true));
+    public static function generateCodeChallenge(
+        string $codeVerifier
+    ): string {
+        $encoded = base64_encode(hash('sha256', $codeVerifier, true));
 
         return strtr(rtrim($encoded, '='), '+/', '-_');
     }

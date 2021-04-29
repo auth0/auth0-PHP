@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class UsersByEmail.

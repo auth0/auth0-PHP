@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Blacklists.
@@ -40,7 +39,7 @@ class Blacklists extends GenericResource
 
         $request = [ 'jti' => $jti ];
 
-        if (null !== $aud) {
+        if ($aud !== null) {
             $this->validateString($aud, 'aud');
             $request['aud'] = $aud;
         }
@@ -74,7 +73,7 @@ class Blacklists extends GenericResource
         $client = $this->apiClient->method('get')
             ->addPath('blacklists', 'tokens');
 
-        if (null !== $aud) {
+        if ($aud !== null) {
             $client->withParam('aud', $aud);
         }
 

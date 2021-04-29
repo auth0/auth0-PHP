@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\unit\Helpers\Tokens;
 
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
@@ -18,26 +17,24 @@ class AsymmetricVerifierTest extends TestCase
 {
     /**
      * Test that incorrect algorithms fail.
-     *
-     * @return void
      */
-    public function testThatWrongAlgorithmFails()
+    public function testThatWrongAlgorithmFails(): void
     {
         $pkey_resource = openssl_pkey_new(
             [
-                'digest_alg'       => 'sha256',
+                'digest_alg' => 'sha256',
                 'private_key_type' => OPENSSL_KEYTYPE_RSA,
             ]
         );
         openssl_pkey_export($pkey_resource, $rsa_private_key);
 
-        $error_msg   = 'No exception caught';
+        $error_msg = 'No exception caught';
         $hs256_token = SymmetricVerifierTest::getToken();
 
         try {
             $verifier = new AsymmetricVerifier(['__test_kid__' => '__test_pem__']);
             $verifier->verifyAndDecode($hs256_token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -49,19 +46,17 @@ class AsymmetricVerifierTest extends TestCase
 
     /**
      * Test that invalid kids fail.
-     *
-     * @return void
      */
-    public function testThatInvalidKidFails()
+    public function testThatInvalidKidFails(): void
     {
         $error_msg = 'No exception caught';
-        $rsa_keys  = self::getRsaKeys();
-        $token     = self::getToken($rsa_keys['private']);
+        $rsa_keys = self::getRsaKeys();
+        $token = self::getToken($rsa_keys['private']);
 
         try {
             $verifier = new AsymmetricVerifier(['__invalid_kid__' => $rsa_keys['public']]);
             $verifier->verifyAndDecode($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -70,19 +65,17 @@ class AsymmetricVerifierTest extends TestCase
 
     /**
      * Test that invalid signatures fail.
-     *
-     * @return void
      */
-    public function testThatInvalidSignatureFails()
+    public function testThatInvalidSignatureFails(): void
     {
         $error_msg = 'No exception caught';
-        $rsa_keys  = self::getRsaKeys();
-        $token     = self::getToken($rsa_keys['private']);
+        $rsa_keys = self::getRsaKeys();
+        $token = self::getToken($rsa_keys['private']);
 
         try {
             $verifier = new AsymmetricVerifier(['__test_kid__' => $rsa_keys['public']]);
             $verifier->verifyAndDecode($token . '__invalid_signature__');
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -91,15 +84,13 @@ class AsymmetricVerifierTest extends TestCase
 
     /**
      * Test that token claims are returned.
-     *
-     * @return void
      */
-    public function testThatTokenClaimsAreReturned()
+    public function testThatTokenClaimsAreReturned(): void
     {
         $rsa_keys = self::getRsaKeys();
-        $token    = self::getToken($rsa_keys['private']);
+        $token = self::getToken($rsa_keys['private']);
 
-        $verifier     = new AsymmetricVerifier(['__test_kid__' => $rsa_keys['public']]);
+        $verifier = new AsymmetricVerifier(['__test_kid__' => $rsa_keys['public']]);
         $decodedToken = $verifier->verifyAndDecode($token);
 
         $this->assertEquals('__test_sub__', $decodedToken->getClaim('sub'));
@@ -107,16 +98,14 @@ class AsymmetricVerifierTest extends TestCase
 
     /**
      * Test that malformed tokens fail.
-     *
-     * @return void
      */
-    public function testThatMalformedTokenFails()
+    public function testThatMalformedTokenFails(): void
     {
         $rsa_keys = self::getRsaKeys();
         $verifier = new AsymmetricVerifier(['__test_kid__' => $rsa_keys['public']]);
-        $token    = 'a' . (string) self::getToken($rsa_keys['private']);
+        $token = 'a' . (string) self::getToken($rsa_keys['private']);
 
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
         $this->expectExceptionMessage('ID token could not be decoded');
 
         $verifier->verifyAndDecode($token);
@@ -131,7 +120,7 @@ class AsymmetricVerifierTest extends TestCase
     {
         $pkey_resource = openssl_pkey_new(
             [
-                'digest_alg'       => 'sha256',
+                'digest_alg' => 'sha256',
                 'private_key_type' => OPENSSL_KEYTYPE_RSA,
             ]
         );
@@ -141,14 +130,12 @@ class AsymmetricVerifierTest extends TestCase
 
         return [
             'private' => $rsa_private_key,
-            'public'  => $public_key['key'],
+            'public' => $public_key['key'],
         ];
     }
 
     /**
      * Create a new instance of the token builder.
-     *
-     * @return Builder
      */
     public static function getTokenBuilder(): Builder
     {
@@ -160,13 +147,11 @@ class AsymmetricVerifierTest extends TestCase
      *
      * @param string|null  $rsa_private_key Private key
      * @param Builder|null $builder         Build instance
-     *
-     * @return string
      */
-    public static function getToken(string $rsa_private_key = null, Builder $builder = null): string
+    public static function getToken(?string $rsa_private_key = null, ?Builder $builder = null): string
     {
         $rsa_private_key = ($rsa_private_key ?? self::getRsaKeys()['private']);
-        $builder         = ($builder ?? self::getTokenBuilder());
+        $builder = ($builder ?? self::getTokenBuilder());
 
         return (string) $builder->getToken(new RsSigner(), new Key($rsa_private_key));
     }

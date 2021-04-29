@@ -11,8 +11,9 @@ class ForwardedFor extends Header
      *
      * @param string $ipAddress IP address to identify as forwarding.
      */
-    public function __construct(string $ipAddress)
-    {
+    public function __construct(
+        string $ipAddress
+    ) {
         parent::__construct('Auth0-Forwarded-For', $ipAddress);
     }
 }

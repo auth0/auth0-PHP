@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Organizations
@@ -46,10 +44,10 @@ class Organizations extends GenericResource
 
         $payload = array_filter(
             [
-                'name'         => $name,
+                'name' => $name,
                 'display_name' => $displayName,
-                'branding'     => $branding ? (object) $branding : null,
-                'metadata'     => $metadata ? (object) $metadata : null,
+                'branding' => $branding ? (object) $branding : null,
+                'metadata' => $metadata ? (object) $metadata : null,
             ] + $body
         );
 
@@ -154,8 +152,8 @@ class Organizations extends GenericResource
         $payload = array_filter(
             [
                 'display_name' => $displayName,
-                'branding'     => $branding ? (object) $branding : null,
-                'metadata'     => $metadata ? (object) $metadata : null,
+                'branding' => $branding ? (object) $branding : null,
+                'metadata' => $metadata ? (object) $metadata : null,
             ] + $body
         );
 
@@ -210,7 +208,7 @@ class Organizations extends GenericResource
         $this->validateString($connectionId, 'connectionId');
 
         $payload = [
-            'connection_id' => $connectionId
+            'connection_id' => $connectionId,
         ] + $body;
 
         return $this->apiClient->method('post')
@@ -345,7 +343,7 @@ class Organizations extends GenericResource
         $this->validateArray($members, 'members');
 
         $payload = [
-            'members' => $members
+            'members' => $members,
         ];
 
         return $this->apiClient->method('post')
@@ -399,7 +397,7 @@ class Organizations extends GenericResource
         $this->validateArray($members, 'members');
 
         $payload = [
-            'members' => $members
+            'members' => $members,
         ];
 
         return $this->apiClient->method('delete')
@@ -433,7 +431,7 @@ class Organizations extends GenericResource
         $this->validateArray($roles, 'roles');
 
         $payload = [
-            'roles' => $roles
+            'roles' => $roles,
         ];
 
         return $this->apiClient->method('post')
@@ -493,7 +491,7 @@ class Organizations extends GenericResource
         $this->validateArray($roles, 'roles');
 
         $payload = [
-            'roles' => $roles
+            'roles' => $roles,
         ];
 
         return $this->apiClient->method('delete')
@@ -534,18 +532,18 @@ class Organizations extends GenericResource
         $this->validateArray($invitee, 'invitee');
 
         if (! isset($inviter['name'])) {
-            throw new EmptyOrInvalidParameterException('inviter');
+            throw new \Auth0\SDK\Exception\EmptyOrInvalidParameterException('inviter');
         }
 
         if (! isset($invitee['email'])) {
-            throw new EmptyOrInvalidParameterException('invitee');
+            throw new \Auth0\SDK\Exception\EmptyOrInvalidParameterException('invitee');
         }
 
         $payload = array_filter(
             [
                 'client_id' => $clientId,
-                'inviter'   => (object) $inviter,
-                'invitee'   => (object) $invitee,
+                'inviter' => (object) $inviter,
+                'invitee' => (object) $invitee,
             ] + $body
         );
 

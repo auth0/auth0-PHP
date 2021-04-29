@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
 
@@ -11,17 +12,13 @@ class TicketsTest extends ApiTests
 {
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
@@ -33,7 +30,7 @@ class TicketsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testCreateEmailVerification()
+    public function testCreateEmailVerification(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -41,7 +38,7 @@ class TicketsTest extends ApiTests
             '__test_user_id__',
             [
                 'identity' => [
-                    'user_id'  => '__test_secondary_user_id__',
+                    'user_id' => '__test_secondary_user_id__',
                     'provider' => '__test_provider__',
                 ],
             ]
@@ -57,7 +54,7 @@ class TicketsTest extends ApiTests
         $this->assertArrayHasKey('identity', $body);
         $this->assertEquals(
             [
-                'user_id'  => '__test_secondary_user_id__',
+                'user_id' => '__test_secondary_user_id__',
                 'provider' => '__test_provider__',
             ],
             $body['identity']
@@ -67,7 +64,7 @@ class TicketsTest extends ApiTests
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
-    public function testCreatePasswordChange()
+    public function testCreatePasswordChange(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -78,7 +75,7 @@ class TicketsTest extends ApiTests
                 'result_url' => '__test_result_url__',
                 'connection_id' => '__test_connection_id__',
                 'ttl_sec' => 8675309,
-                'client_id' => '__test_client_id__'
+                'client_id' => '__test_client_id__',
             ]
         );
 

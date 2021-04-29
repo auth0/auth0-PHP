@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\Store;
+namespace Auth0\SDK\Contract;
 
 /**
  * Interface StoreInterface
- *
- * @package Auth0\SDK\Store
  */
 interface StoreInterface
 {
@@ -16,10 +14,11 @@ interface StoreInterface
      *
      * @param string $key   Key to set.
      * @param mixed  $value Value to set.
-     *
-     * @return void
      */
-    public function set(string $key, $value): void;
+    public function set(
+        string $key,
+        $value
+    ): void;
 
     /**
      * Get a value from the store by a given key.
@@ -29,14 +28,17 @@ interface StoreInterface
      *
      * @return mixed
      */
-    public function get(string $key, $default = null);
+    public function get(
+        string $key,
+        ?string $default = null
+    );
 
     /**
      * Remove a value from the store
      *
      * @param string $key Key to delete.
-     *
-     * @return void
      */
-    public function delete(string $key): void;
+    public function delete(
+        string $key
+    ): void;
 }

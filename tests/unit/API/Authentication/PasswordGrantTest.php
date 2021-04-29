@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Authentication;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\Exception\ApiException;
 use Auth0\Tests\API\ApiTests;
 use Auth0\Tests\Traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
@@ -19,15 +20,11 @@ class PasswordGrantTest extends ApiTests
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Runs before test suite starts.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -40,85 +37,57 @@ class PasswordGrantTest extends ApiTests
 
     /**
      * Test that password grant login enforcces username.
-     *
-     * @return void
      */
-    public function testThatPasswordGrantLoginEnforcesUsername()
+    public function testThatPasswordGrantLoginEnforcesUsername(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        try {
-            $caught_exception = false;
-            $api->loginWithDefaultDirectory([]);
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString($e, 'username is mandatory');
-        }
+        $this->expectException(\Auth0\SDK\Exception\ApiException::class);
+        $this->expectExceptionMessage('username is mandatory');
 
-        $this->assertTrue($caught_exception);
+        $api->loginWithDefaultDirectory([]);
 
-        try {
-            $caught_exception = false;
-            $api->login([]);
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString($e, 'username is mandatory');
-        }
+        $this->expectException(\Auth0\SDK\Exception\ApiException::class);
+        $this->expectExceptionMessage('username is mandatory');
 
-        $this->assertTrue($caught_exception);
+        $api->login([]);
     }
 
     /**
      * Test that password grant login enforces password.
-     *
-     * @return void
      */
-    public function testThatPasswordGrantLoginEnforcesPassword()
+    public function testThatPasswordGrantLoginEnforcesPassword(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        try {
-            $caught_exception = false;
-            $api->loginWithDefaultDirectory(['username' => uniqid()]);
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString($e, 'password is mandatory');
-        }
+        $this->expectException(\Auth0\SDK\Exception\ApiException::class);
+        $this->expectExceptionMessage('password is mandatory');
 
-        $this->assertTrue($caught_exception);
+        $api->loginWithDefaultDirectory(['username' => uniqid()]);
 
-        try {
-            $caught_exception = false;
-            $api->login(['username' => uniqid()]);
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString($e, 'password is mandatory');
-        }
+        $this->expectException(\Auth0\SDK\Exception\ApiException::class);
+        $this->expectExceptionMessage('password is mandatory');
 
-        $this->assertTrue($caught_exception);
+        $api->login(['username' => uniqid()]);
     }
 
     /**
      * Test that password grant realm logic enforces realm.
-     *
-     * @return void
      */
-    public function testThatPasswordGrantRealmLoginEnforcesRealm()
+    public function testThatPasswordGrantRealmLoginEnforcesRealm(): void
     {
         $api = new Authentication('test-domain.auth0.com', '__test_client_id__');
 
-        try {
-            $caught_exception = false;
-            $api->login(['username' => uniqid(), 'password' => uniqid()]);
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString($e, 'realm is mandatory');
-        }
+        $this->expectException(\Auth0\SDK\Exception\ApiException::class);
+        $this->expectExceptionMessage('realm is mandatory');
 
-        $this->assertTrue($caught_exception);
+        $api->login(['username' => uniqid(), 'password' => uniqid()]);
     }
 
     /**
      * Test that a basic password grant request includes the correct URL, body, and headers.
-     *
-     * @return void
      */
-    public function testThatPasswordGrantLoginSendsBasicRequestCorrectly()
+    public function testThatPasswordGrantLoginSendsBasicRequestCorrectly(): void
     {
         $api = new MockAuthenticationApi(
             [
@@ -148,10 +117,8 @@ class PasswordGrantTest extends ApiTests
 
     /**
      * Test that a basic password grant realm request includes the realm.
-     *
-     * @return void
      */
-    public function testThatPasswordGrantRealmLoginSendsBasicRequestCorrectly()
+    public function testThatPasswordGrantRealmLoginSendsBasicRequestCorrectly(): void
     {
         $api = new MockAuthenticationApi(
             [
@@ -163,7 +130,7 @@ class PasswordGrantTest extends ApiTests
             [
                 'username' => 'the_username',
                 'password' => 'the_password',
-                'realm'    => 'the_realm',
+                'realm' => 'the_realm',
             ]
         );
 
@@ -176,10 +143,8 @@ class PasswordGrantTest extends ApiTests
 
     /**
      * Test that a password grant request including an IP address sets the correct header.
-     *
-     * @return void
      */
-    public function testThatPasswordGrantLoginSetsForwardedForHeader()
+    public function testThatPasswordGrantLoginSetsForwardedForHeader(): void
     {
         $api = new MockAuthenticationApi(
             [
@@ -202,8 +167,8 @@ class PasswordGrantTest extends ApiTests
 
         $api->call()->loginWithDefaultDirectory(
             [
-                'username'            => uniqid(),
-                'password'            => uniqid(),
+                'username' => uniqid(),
+                'password' => uniqid(),
                 'auth0_forwarded_for' => '1.2.3.4',
             ]
         );
@@ -215,10 +180,8 @@ class PasswordGrantTest extends ApiTests
 
     /**
      * Test that a password grant request including an IP address sets the correct header.
-     *
-     * @return void
      */
-    public function testThatPasswordGrantRealmLoginSetsForwardedForHeader()
+    public function testThatPasswordGrantRealmLoginSetsForwardedForHeader(): void
     {
         $api = new MockAuthenticationApi(
             [
@@ -231,7 +194,7 @@ class PasswordGrantTest extends ApiTests
             [
                 'username' => uniqid(),
                 'password' => uniqid(),
-                'realm'    => uniqid(),
+                'realm' => uniqid(),
             ],
             '5.6.7.8'
         );
@@ -242,9 +205,9 @@ class PasswordGrantTest extends ApiTests
 
         $api->call()->login(
             [
-                'username'            => uniqid(),
-                'password'            => uniqid(),
-                'realm'               => uniqid(),
+                'username' => uniqid(),
+                'password' => uniqid(),
+                'realm' => uniqid(),
                 'auth0_forwarded_for' => '5.6.7.8',
             ]
         );

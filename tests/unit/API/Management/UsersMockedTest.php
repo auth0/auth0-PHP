@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\API\Management;
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
-use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 use Auth0\Tests\Traits\ErrorHelpers;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -19,22 +18,16 @@ class UsersMockedTest extends TestCase
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -45,10 +38,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test getAll() request.
-     *
-     * @return void
      */
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -65,10 +56,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test get() request.
-     *
-     * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -82,10 +71,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test update() request.
-     *
-     * @return void
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -96,7 +83,7 @@ class UsersMockedTest extends TestCase
                 'user_metadata' => [
                     '__test_meta_key__' => uniqid(),
                 ],
-            ]
+            ],
         ];
 
         $api->call()->users()->update(
@@ -120,10 +107,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test create() request.
-     *
-     * @return void
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -131,8 +116,8 @@ class UsersMockedTest extends TestCase
             'connection' => uniqid(),
             'query' => [
                 'email' => uniqid(),
-                'password' => uniqid()
-            ]
+                'password' => uniqid(),
+            ],
         ];
 
         $api->call()->users()->create(
@@ -157,10 +142,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test delete() request.
-     *
-     * @return void
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -177,10 +160,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test linkAccount() request.
-     *
-     * @return void
      */
-    public function testLinkAccount()
+    public function testLinkAccount(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -190,7 +171,7 @@ class UsersMockedTest extends TestCase
                 'provider' => uniqid(),
                 'connection_id' => uniqid(),
                 'user_id' => uniqid(),
-            ]
+            ],
         ];
 
         $api->call()->users()->linkAccount(
@@ -215,17 +196,15 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test unlinkAccount() request.
-     *
-     * @return void
      */
-    public function testUnlinkAccount()
+    public function testUnlinkAccount(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
         $mockup = (object) [
             'id' => uniqid(),
             'provider' => uniqid(),
-            'identity' => uniqid()
+            'identity' => uniqid(),
         ];
 
         $api->call()->users()->unlinkAccount(
@@ -246,16 +225,14 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test deleteMultifactorProvider() request.
-     *
-     * @return void
      */
-    public function testDeleteMultifactorProvider()
+    public function testDeleteMultifactorProvider(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
         $mockup = (object) [
             'id' => uniqid(),
-            'provider' => uniqid()
+            'provider' => uniqid(),
         ];
 
         $api->call()->users()->deleteMultifactorProvider($mockup->id, $mockup->provider);
@@ -272,10 +249,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test getRoles() request.
-     *
-     * @return void
      */
-    public function testThatGetRolesRequestIsFormattedProperly()
+    public function testThatGetRolesRequestIsFormattedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -292,10 +267,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test removeRoles() request.
-     *
-     * @return void
      */
-    public function testRemoveRoles()
+    public function testRemoveRoles(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -303,8 +276,8 @@ class UsersMockedTest extends TestCase
             'id' => uniqid(),
             'roles' => [
                 uniqid(),
-                uniqid()
-            ]
+                uniqid(),
+            ],
         ];
 
         $api->call()->users()->removeRoles($mockup->id, $mockup->roles);
@@ -327,10 +300,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test addRoles() request.
-     *
-     * @return void
      */
-    public function testAddRoles()
+    public function testAddRoles(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -338,8 +309,8 @@ class UsersMockedTest extends TestCase
             'id' => uniqid(),
             'roles' => [
                 uniqid(),
-                uniqid()
-            ]
+                uniqid(),
+            ],
         ];
 
         $api->call()->users()->addRoles($mockup->id, $mockup->roles);
@@ -362,10 +333,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test getEnrollments() request.
-     *
-     * @return void
      */
-    public function testGetEnrollments()
+    public function testGetEnrollments(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -382,10 +351,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test getPermissions() request.
-     *
-     * @return void
      */
-    public function testGetPermissions()
+    public function testGetPermissions(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -402,10 +369,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test removePermissions() request.
-     *
-     * @return void
      */
-    public function testRemovePermissions()
+    public function testRemovePermissions(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -415,8 +380,8 @@ class UsersMockedTest extends TestCase
                 [
                     'permission_name' => 'test:' . uniqid(),
                     'resource_server_identifier' => uniqid(),
-                ]
-            ]
+                ],
+            ],
         ];
 
         $api->call()->users()->removePermissions(
@@ -444,10 +409,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test addPermissions() request.
-     *
-     * @return void
      */
-    public function testThatAddPermissionsRequestIsFormattedProperly()
+    public function testThatAddPermissionsRequestIsFormattedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -457,8 +420,8 @@ class UsersMockedTest extends TestCase
                 [
                     'permission_name' => 'test:' . uniqid(),
                     'resource_server_identifier' => uniqid(),
-                ]
-            ]
+                ],
+            ],
         ];
 
         $api->call()->users()->addPermissions(
@@ -486,10 +449,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test getLogs() request.
-     *
-     * @return void
      */
-    public function testGetLogs()
+    public function testGetLogs(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -506,10 +467,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test getOrganizations() request.
-     *
-     * @return void
      */
-    public function testGetOrganizations()
+    public function testGetOrganizations(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -526,10 +485,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test createRecoveryCode() request.
-     *
-     * @return void
      */
-    public function testThatCreateRecoveryCodeRequestIsFormattedProperly()
+    public function testThatCreateRecoveryCodeRequestIsFormattedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -549,10 +506,8 @@ class UsersMockedTest extends TestCase
 
     /**
      * Test invalidateBrowsers() request.
-     *
-     * @return void
      */
-    public function testInvalidateBrowsers()
+    public function testInvalidateBrowsers(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 

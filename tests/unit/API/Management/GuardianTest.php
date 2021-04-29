@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -16,10 +18,8 @@ class GuardianTest extends ApiTests
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $telemetry;
+    protected static string $telemetry;
 
     /**
      * Runs before test suite starts.
@@ -33,10 +33,8 @@ class GuardianTest extends ApiTests
 
     /**
      * Test that getFactors requests properly.
-     *
-     * @return void
      */
-    public function testGuardianGetFactor()
+    public function testGuardianGetFactor(): void
     {
         $api = new MockManagementApi([new Response(200)]);
 
@@ -49,10 +47,8 @@ class GuardianTest extends ApiTests
 
     /**
      * Test that getEnrollment requests properly.
-     *
-     * @return void
      */
-    public function testGuardianGetEnrollment()
+    public function testGuardianGetEnrollment(): void
     {
         $api = new MockManagementApi([new Response(200)]);
 
@@ -68,10 +64,8 @@ class GuardianTest extends ApiTests
 
     /**
      * Test that deleteEnrollment requests properly.
-     *
-     * @return void
      */
-    public function testGuardianDeleteEnrollment()
+    public function testGuardianDeleteEnrollment(): void
     {
         $api = new MockManagementApi([new Response(200)]);
 

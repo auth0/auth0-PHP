@@ -11,11 +11,9 @@ trait ErrorHelpers
      *
      * @param \Exception $e   - Error object.
      * @param string     $str - String to find in the error message.
-     *
-     * @return bool
      */
-    protected function errorHasString(\Exception $e, $str)
+    protected function errorHasString(\Exception $e, string $str): bool
     {
-        return !(false === strpos($e->getMessage(), $str));
+        return ! strpos($e->getMessage(), $str) === false;
     }
 }

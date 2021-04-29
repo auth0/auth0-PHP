@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Grants.
@@ -63,7 +62,7 @@ class Grants extends GenericResource
         $this->validateString($clientId, 'clientId');
 
         $payload = [
-            'client_id' => $clientId
+            'client_id' => $clientId,
         ] + $parameters;
 
         return $this->getAll($payload, $options);
@@ -91,7 +90,7 @@ class Grants extends GenericResource
         $this->validateString($audience, 'audience');
 
         $payload = [
-            'audience' => $audience
+            'audience' => $audience,
         ] + $parameters;
 
         return $this->getAll($payload, $options);
@@ -119,7 +118,7 @@ class Grants extends GenericResource
         $this->validateString($userId, 'userId');
 
         $payload = [
-            'user_id' => $userId
+            'user_id' => $userId,
         ] + $parameters;
 
         return $this->getAll($payload, $options);

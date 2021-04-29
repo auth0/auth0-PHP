@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Helpers\ApiClient;
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
-use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 
 /**
  * Class GenericResource.
@@ -18,27 +16,24 @@ class GenericResource
 {
     /**
      * Injected ApiClient instance to use.
-     *
-     * @var ApiClient
      */
-    protected $apiClient;
+    protected ApiClient $apiClient;
 
     /**
      * GenericResource constructor.
      *
      * @param ApiClient $apiClient ApiClient instance to use.
      */
-    public function __construct(ApiClient $apiClient)
-    {
+    public function __construct(
+        ApiClient $apiClient
+    ) {
         $this->apiClient = $apiClient;
     }
 
     /**
      * Get the injected ApiClient instance.
-     *
-     * @return ApiClient
      */
-    public function getApiClient()
+    public function getApiClient(): ApiClient
     {
         return $this->apiClient;
     }
@@ -48,23 +43,22 @@ class GenericResource
      *
      * @param array $permissions Permissions array to check.
      *
-     * @return void
-     *
      * @throws InvalidPermissionsArrayException If permissions are empty or do not contain the necessary keys.
      */
-    protected function validatePermissions(array $permissions): void
-    {
-        if (empty($permissions)) {
-            throw new InvalidPermissionsArrayException();
+    protected function validatePermissions(
+        array $permissions
+    ): void {
+        if (! count($permissions)) {
+            throw new \Auth0\SDK\Exception\InvalidPermissionsArrayException();
         }
 
         foreach ($permissions as $permission) {
-            if (empty($permission['permission_name'])) {
-                throw new InvalidPermissionsArrayException();
+            if (! isset($permission['permission_name'])) {
+                throw new \Auth0\SDK\Exception\InvalidPermissionsArrayException();
             }
 
-            if (empty($permission['resource_server_identifier'])) {
-                throw new InvalidPermissionsArrayException();
+            if (! isset($permission['resource_server_identifier'])) {
+                throw new \Auth0\SDK\Exception\InvalidPermissionsArrayException();
             }
         }
     }
@@ -75,8 +69,6 @@ class GenericResource
      * @param string $variable     The variable to check.
      * @param string $variableName The variable name.
      *
-     * @return void
-     *
      * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
     protected function validateString(
@@ -84,7 +76,7 @@ class GenericResource
         string $variableName
     ): void {
         if (! strlen($variable)) {
-            throw new EmptyOrInvalidParameterException($variableName);
+            throw new \Auth0\SDK\Exception\EmptyOrInvalidParameterException($variableName);
         }
     }
 
@@ -94,16 +86,14 @@ class GenericResource
      * @param string $email        The email to check.
      * @param string $variableName The variable name.
      *
-     * @return void
-     *
      * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
     protected function validateEmail(
         string $email,
         string $variableName
     ): void {
-        if (! (filter_var($email, FILTER_VALIDATE_EMAIL))) {
-            throw new EmptyOrInvalidParameterException($variableName);
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \Auth0\SDK\Exception\EmptyOrInvalidParameterException($variableName);
         }
     }
 
@@ -113,8 +103,6 @@ class GenericResource
      * @param array  $variable     The variable to check.
      * @param string $variableName The variable name.
      *
-     * @return void
-     *
      * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
     protected function validateArray(
@@ -122,7 +110,7 @@ class GenericResource
         string $variableName
     ): void {
         if (! count($variable)) {
-            throw new EmptyOrInvalidParameterException($variableName);
+            throw new \Auth0\SDK\Exception\EmptyOrInvalidParameterException($variableName);
         }
     }
 }

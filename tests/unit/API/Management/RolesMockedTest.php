@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -16,22 +18,16 @@ class RolesMockedTest extends TestCase
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -42,10 +38,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test a basic getAll roles call.
-     *
-     * @return void
      */
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -61,10 +55,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test create role is requested properly.
-     *
-     * @return void
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -82,10 +74,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test a get role call.
-     *
-     * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -97,10 +87,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test a delete role call.
-     *
-     * @return void
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -112,10 +100,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test an update role call.
-     *
-     * @return void
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -131,10 +117,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test a get role permissions call.
-     *
-     * @return void
      */
-    public function testGetPermissions()
+    public function testGetPermissions(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -149,10 +133,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test an add role permissions call.
-     *
-     * @return void
      */
-    public function testAddPermissions()
+    public function testAddPermissions(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -183,10 +165,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test a delete role permissions call.
-     *
-     * @return void
      */
-    public function testRemovePermissions()
+    public function testRemovePermissions(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -217,10 +197,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test a paginated get role users call.
-     *
-     * @return void
      */
-    public function testGetUsers()
+    public function testGetUsers(): void
     {
         $api = new MockManagementApi(
             [
@@ -240,10 +218,8 @@ class RolesMockedTest extends TestCase
 
     /**
      * Test an add role user call.
-     *
-     * @return void
      */
-    public function testAddUsers()
+    public function testAddUsers(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 

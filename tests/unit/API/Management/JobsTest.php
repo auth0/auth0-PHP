@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -12,29 +14,21 @@ class JobsTest extends ApiTests
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $testImportUsersJsonPath;
+    protected static string $testImportUsersJsonPath;
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -46,10 +40,8 @@ class JobsTest extends ApiTests
 
     /**
      * Test get().
-     *
-     * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -61,10 +53,8 @@ class JobsTest extends ApiTests
 
     /**
      * Test getErrors().
-     *
-     * @return void
      */
-    public function testGetErrors()
+    public function testGetErrors(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -76,10 +66,8 @@ class JobsTest extends ApiTests
 
     /**
      * Test importUsers().
-     *
-     * @return void
      */
-    public function testImportUsers()
+    public function testImportUsers(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -99,7 +87,7 @@ class JobsTest extends ApiTests
         $headers = $api->getHistoryHeaders();
         $this->assertStringStartsWith('multipart/form-data', $headers['Content-Type'][0]);
 
-        $form_body     = $api->getHistoryBodyAsString();
+        $form_body = $api->getHistoryBodyAsString();
         $form_body_arr = explode("\r\n", $form_body);
 
         // Test that the form data contains our import file content.
@@ -126,10 +114,8 @@ class JobsTest extends ApiTests
 
     /**
      * Test exportUsers().
-     *
-     * @return void
      */
-    public function testExportUsers()
+    public function testExportUsers(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -163,10 +149,8 @@ class JobsTest extends ApiTests
 
     /**
      * Test sendVerificationEmail().
-     *
-     * @return void
      */
-    public function testSendVerificationEmail()
+    public function testSendVerificationEmail(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 

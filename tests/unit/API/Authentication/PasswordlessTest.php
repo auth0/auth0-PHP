@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Authentication;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -17,15 +19,11 @@ class PasswordlessTest extends ApiTests
 
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Runs before test suite starts.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -38,10 +36,8 @@ class PasswordlessTest extends ApiTests
 
     /**
      * Test That Email Passwordless Request Is Correct.
-     *
-     * @return void
      */
-    public function testThatEmailPasswordlessRequestIsCorrect()
+    public function testThatEmailPasswordlessRequestIsCorrect(): void
     {
         $api = new MockAuthenticationApi(
             [
@@ -82,10 +78,8 @@ class PasswordlessTest extends ApiTests
 
     /**
      * Test That Default Sms Passwordless Request Is Correct.
-     *
-     * @return void
      */
-    public function testThatDefaultSmsPasswordlessRequestIsCorrect()
+    public function testThatDefaultSmsPasswordlessRequestIsCorrect(): void
     {
         $api = new MockAuthenticationApi(
             [

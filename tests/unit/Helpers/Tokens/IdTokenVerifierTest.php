@@ -4,31 +4,24 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\unit\Helpers\Tokens;
 
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
-use InvalidArgumentException as GlobalInvalidArgumentException;
 use Lcobucci\JWT\Builder;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 class IdTokenVerifierTest extends TestCase
 {
     /**
      * Test that empty token fails.
-     *
-     * @return void
      */
-    public function testThatEmptyTokenFails()
+    public function testThatEmptyTokenFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier(uniqid()));
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier(uniqid()));
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify('');
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -37,18 +30,16 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token missing issuer fails.
-     *
-     * @return void
      */
-    public function testThatTokenMissingIssuerFails()
+    public function testThatTokenMissingIssuerFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $token     = SymmetricVerifierTest::getToken();
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $token = SymmetricVerifierTest::getToken();
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -57,19 +48,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with non string issuer fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithNonStringIssuerFails()
+    public function testThatTokenWithNonStringIssuerFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = (new Builder())->withClaim('iss', 123);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = (new Builder())->withClaim('iss', 123);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -78,19 +67,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with invalid issuer fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithInvalidIssuerFails()
+    public function testThatTokenWithInvalidIssuerFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = (new Builder())->issuedBy('__invalid_issuer__');
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = (new Builder())->issuedBy('__invalid_issuer__');
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -102,19 +89,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with missing sub fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithMissingSubFails()
+    public function testThatTokenWithMissingSubFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = (new Builder())->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000));
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = (new Builder())->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -123,19 +108,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with non string sub fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithNonStringSubFails()
+    public function testThatTokenWithNonStringSubFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->withClaim('sub', 123)->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000));
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->withClaim('sub', 123)->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -144,19 +127,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with missing aud fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithMissingAudFails()
+    public function testThatTokenWithMissingAudFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__');
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__');
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -168,19 +149,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with non string or array aud fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithNonStringOrArrayAudFails()
+    public function testThatTokenWithNonStringOrArrayAudFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', uniqid(), new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', 123);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', uniqid(), new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', 123);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -192,19 +171,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with invalid array aud fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithInvalidArrayAudFails()
+    public function testThatTokenWithInvalidArrayAudFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', ['__invalid_aud_1__', '__invalid_aud_2__']);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', ['__invalid_aud_1__', '__invalid_aud_2__']);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -216,19 +193,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with invalid string aud fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithInvalidStringAudFails()
+    public function testThatTokenWithInvalidStringAudFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__invalid_aud__');
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__invalid_aud__');
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -240,19 +215,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with missing exp fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithMissingExpFails()
+    public function testThatTokenWithMissingExpFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__');
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__');
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -261,19 +234,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with non int exp fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithNonIntExpFails()
+    public function testThatTokenWithNonIntExpFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', uniqid());
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', uniqid());
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -282,19 +253,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that expired token fails.
-     *
-     * @return void
      */
-    public function testThatExpiredTokenFails()
+    public function testThatExpiredTokenFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', 1000);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', 1000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token, ['time' => 10000, 'leeway' => 10]);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -306,19 +275,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with missing iat fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithMissingIatFails()
+    public function testThatTokenWithMissingIatFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000));
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -327,19 +294,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token without nonce fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithoutNonceFails()
+    public function testThatTokenWithoutNonceFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000));
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token, ['nonce' => uniqid()]);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -348,19 +313,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token non string nonce fails.
-     *
-     * @return void
      */
-    public function testThatTokenNonStringNonceFails()
+    public function testThatTokenNonStringNonceFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000))->withClaim('nonce', 123);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000)->withClaim('nonce', 123);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token, ['nonce' => uniqid()]);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -369,19 +332,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with invalid nonce fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithInvalidNonceFails()
+    public function testThatTokenWithInvalidNonceFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000))->withClaim('nonce', '__invalid_nonce__');
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000)->withClaim('nonce', '__invalid_nonce__');
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token, ['nonce' => '__test_nonce__']);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -393,19 +354,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test hat token with missing azp fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithMissingAzpFails()
+    public function testThatTokenWithMissingAzpFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', ['__test_aud__', '__test_aud_2__'])->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000));
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', ['__test_aud__', '__test_aud_2__'])->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -417,19 +376,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with non string azp fails
-     *
-     * @return void
      */
-    public function testThatTokenWithNonStringAzpFails()
+    public function testThatTokenWithNonStringAzpFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', ['__test_aud__', '__test_aud_2__'])->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000))->withClaim('azp', 123);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', ['__test_aud__', '__test_aud_2__'])->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000)->withClaim('azp', 123);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -441,19 +398,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with invalid azp fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithInvalidAzpFails()
+    public function testThatTokenWithInvalidAzpFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', ['__test_aud__', '__test_aud_2__'])->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000))->withClaim('azp', '__invalid_azp__');
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->withClaim('aud', ['__test_aud__', '__test_aud_2__'])->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000)->withClaim('azp', '__invalid_azp__');
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -465,19 +420,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with missing auth time fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithMissingAuthTimeFails()
+    public function testThatTokenWithMissingAuthTimeFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000));
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token, ['max_age' => uniqid()]);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -489,19 +442,17 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with non int auth time fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithNonIntAuthTimeFails()
+    public function testThatTokenWithNonIntAuthTimeFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000))->withClaim('auth_time', uniqid());
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000)->withClaim('auth_time', uniqid());
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->verify($token, ['max_age' => uniqid()]);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -513,20 +464,18 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that token with invalid auth time time fails.
-     *
-     * @return void
      */
-    public function testThatTokenWithInvalidAuthTimeTimeFails()
+    public function testThatTokenWithInvalidAuthTimeTimeFails(): void
     {
-        $verifier  = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder   = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', 11000)->withClaim('iat', 9000)->withClaim('auth_time', 9000);
-        $token     = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', 11000)->withClaim('iat', 9000)->withClaim('auth_time', 9000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
         $error_msg = 'No exception caught';
 
         try {
             $verifier->setLeeway(0);
             $verifier->verify($token, ['time' => 10000, 'max_age' => 100]);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -538,14 +487,12 @@ class IdTokenVerifierTest extends TestCase
 
     /**
      * Test that valid token returns claims.
-     *
-     * @return void
      */
-    public function testThatValidTokenReturnsClaims()
+    public function testThatValidTokenReturnsClaims(): void
     {
         $verifier = new IdTokenVerifier('__test_iss__', '__test_aud__', new SymmetricVerifier('__test_secret__'));
-        $builder  = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', (time() + 1000))->withClaim('iat', (time() - 1000))->withClaim('auth_time', 9000);
-        $token    = SymmetricVerifierTest::getToken('__test_secret__', $builder);
+        $builder = SymmetricVerifierTest::getTokenBuilder()->issuedBy('__test_iss__')->permittedFor('__test_aud__')->withClaim('exp', time() + 1000)->withClaim('iat', time() - 1000)->withClaim('auth_time', 9000);
+        $token = SymmetricVerifierTest::getToken('__test_secret__', $builder);
 
         $decoded_token = $verifier->verify($token);
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
 
+use Auth0\SDK\Contract\StoreInterface;
+
 /**
  * Class SessionStore
  * This class provides a layer to persist data using PHP Sessions.
@@ -18,10 +20,8 @@ class SessionStore implements StoreInterface
 {
     /**
      * Session base name, configurable on instantiation.
-     *
-     * @var string
      */
-    protected $sessionBaseName;
+    protected string $sessionBaseName;
 
     /**
      * SessionStore constructor.
@@ -35,29 +35,17 @@ class SessionStore implements StoreInterface
     }
 
     /**
-     * This basic implementation of BaseAuth0 SDK uses PHP Sessions to store volatile data.
-     *
-     * @return void
-     */
-    private function initSession(): void
-    {
-        if (! session_id()) {
-            session_start();
-        }
-    }
-
-    /**
      * Persists $value on $_SESSION, identified by $key.
      *
      * @param string $key   Session key to set.
      * @param mixed  $value Value to use.
-     *
-     * @return void
      */
-    public function set(string $key, $value): void
-    {
+    public function set(
+        string $key,
+        $value
+    ): void {
         $this->initSession();
-        $key_name            = $this->getSessionKeyName($key);
+        $key_name = $this->getSessionKeyName($key);
         $_SESSION[$key_name] = $value;
     }
 
@@ -70,8 +58,10 @@ class SessionStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get(string $key, $default = null)
-    {
+    public function get(
+        string $key,
+        $default = null
+    ) {
         $this->initSession();
         $key_name = $this->getSessionKeyName($key);
 
@@ -86,11 +76,10 @@ class SessionStore implements StoreInterface
      * Removes a persisted value identified by $key.
      *
      * @param string $key Session key to delete.
-     *
-     * @return void
      */
-    public function delete(string $key): void
-    {
+    public function delete(
+        string $key
+    ): void {
         $this->initSession();
         $key_name = $this->getSessionKeyName($key);
         unset($_SESSION[$key_name]);
@@ -100,11 +89,10 @@ class SessionStore implements StoreInterface
      * Constructs a session key name.
      *
      * @param string $key Session key name to prefix and return.
-     *
-     * @return string
      */
-    public function getSessionKeyName(string $key): string
-    {
+    public function getSessionKeyName(
+        string $key
+    ): string {
         $key_name = $key;
 
         if (! empty($this->sessionBaseName)) {
@@ -112,5 +100,15 @@ class SessionStore implements StoreInterface
         }
 
         return $key_name;
+    }
+
+    /**
+     * This basic implementation of BaseAuth0 SDK uses PHP Sessions to store volatile data.
+     */
+    private function initSession(): void
+    {
+        if (! session_id()) {
+            session_start();
+        }
     }
 }

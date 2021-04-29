@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
 
+use Auth0\SDK\Contract\StoreInterface;
+
 /**
  * Class EmptyStore.
  * Used to fulfill an interface without providing actual storage.
@@ -17,11 +19,11 @@ class EmptyStore implements StoreInterface
      *
      * @param string $key   Key to set.
      * @param mixed  $value Value to set.
-     *
-     * @return void
      */
-    public function set(string $key, $value): void
-    {
+    public function set(
+        string $key,
+        $value
+    ): void {
     }
 
     /**
@@ -32,8 +34,10 @@ class EmptyStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get(string $key, $default = null)
-    {
+    public function get(
+        string $key,
+        ?string $default = null
+    ) {
         return $default;
     }
 
@@ -41,10 +45,9 @@ class EmptyStore implements StoreInterface
      * Do nothing.
      *
      * @param string $key Key to delete.
-     *
-     * @return void
      */
-    public function delete(string $key): void
-    {
+    public function delete(
+        string $key
+    ): void {
     }
 }

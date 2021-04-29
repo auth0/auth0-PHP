@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Authentication;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\Exception\ApiException;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
 
@@ -16,17 +17,13 @@ class RefreshTokenTest extends ApiTests
 {
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
@@ -41,52 +38,40 @@ class RefreshTokenTest extends ApiTests
     /**
      * Test that an empty refresh token will throw an exception.
      */
-    public function testThatRefreshTokenIsRequired()
+    public function testThatRefreshTokenIsRequired(): void
     {
         $api = new Authentication('test_domain', 'test_client_id', 'test_client_secret');
 
-        try {
-            $api->refreshToken('');
-            $caught_exception = false;
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString($e, 'Refresh token cannot be blank');
-        }
+        $this->expectException(\Auth0\SDK\Exception\ApiException::class);
+        $this->expectExceptionMessage('Refresh token cannot be blank');
 
-        $this->assertTrue($caught_exception);
+        $api->refreshToken('');
     }
 
     /**
      * Test that setting an empty client_secret will override the default and throw an exception.
      */
-    public function testThatClientSecretIsRequired()
+    public function testThatClientSecretIsRequired(): void
     {
         $api = new Authentication('test_domain', 'test_client_id', 'test_client_secret');
 
-        try {
-            $api->refreshToken(uniqid(), ['client_secret' => '']);
-            $caught_exception = false;
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString($e, 'client_secret is mandatory');
-        }
+        $this->expectException(\Auth0\SDK\Exception\ApiException::class);
+        $this->expectExceptionMessage('client_secret is mandatory');
 
-        $this->assertTrue($caught_exception);
+        $api->refreshToken(uniqid(), ['client_secret' => '']);
     }
 
     /**
      * Test that setting an empty client_id will override the default and throw an exception.
      */
-    public function testThatClientIdIsRequired()
+    public function testThatClientIdIsRequired(): void
     {
         $api = new Authentication('test_domain', 'test_client_id', 'test_client_secret');
 
-        try {
-            $api->refreshToken(uniqid(), ['client_id' => '']);
-            $caught_exception = false;
-        } catch (ApiException $e) {
-            $caught_exception = $this->errorHasString($e, 'client_id is mandatory');
-        }
+        $this->expectException(\Auth0\SDK\Exception\ApiException::class);
+        $this->expectExceptionMessage('client_id is mandatory');
 
-        $this->assertTrue($caught_exception);
+        $api->refreshToken(uniqid(), ['client_id' => '']);
     }
 
     /**
@@ -94,7 +79,7 @@ class RefreshTokenTest extends ApiTests
      *
      * @throws ApiException
      */
-    public function testThatRefreshTokenRequestIsMadeCorrectly()
+    public function testThatRefreshTokenRequestIsMadeCorrectly(): void
     {
         $api = new MockAuthenticationApi(
             [

@@ -16,8 +16,10 @@ class NoCacheHandler implements CacheInterface
      *
      * @return mixed The value of the item from the cache, or $default in case of cache miss.
      */
-    public function get($key, $default = null)
-    {
+    public function get(
+        $key,
+        $default = null
+    ) {
         return $default;
     }
 
@@ -32,8 +34,11 @@ class NoCacheHandler implements CacheInterface
      *
      * @return bool True on success and false on failure.
      */
-    public function set($key, $value, $ttl = null)
-    {
+    public function set(
+        $key,
+        $value,
+        $ttl = null
+    ): bool {
         return true;
     }
 
@@ -44,8 +49,9 @@ class NoCacheHandler implements CacheInterface
      *
      * @return bool True if the item was successfully removed. False if there was an error.
      */
-    public function delete($key)
-    {
+    public function delete(
+        $key
+    ): bool {
         return true;
     }
 
@@ -54,7 +60,7 @@ class NoCacheHandler implements CacheInterface
      *
      * @return bool True on success and false on failure.
      */
-    public function clear()
+    public function clear(): bool
     {
         return true;
     }
@@ -67,8 +73,10 @@ class NoCacheHandler implements CacheInterface
      *
      * @return iterable A list of key => value pairs.
      */
-    public function getMultiple($keys, $default = null)
-    {
+    public function getMultiple(
+        $keys,
+        $default = null
+    ): iterable {
         $values = [];
         foreach ($keys as $key) {
             $values[$key] = $default;
@@ -87,8 +95,10 @@ class NoCacheHandler implements CacheInterface
      *
      * @return bool True on success and false on failure.
      */
-    public function setMultiple($values, $ttl = null)
-    {
+    public function setMultiple(
+        $values,
+        $ttl = null
+    ): bool {
         return true;
     }
 
@@ -99,8 +109,9 @@ class NoCacheHandler implements CacheInterface
      *
      * @return bool True if the items were successfully removed. False if there was an error.
      */
-    public function deleteMultiple($keys)
-    {
+    public function deleteMultiple(
+        $keys
+    ): bool {
         return true;
     }
 
@@ -108,11 +119,10 @@ class NoCacheHandler implements CacheInterface
      * Determines whether an item is present in the cache.
      *
      * @param string $key The cache item key.
-     *
-     * @return bool
      */
-    public function has($key)
-    {
+    public function has(
+        $key
+    ): bool {
         return false;
     }
 }

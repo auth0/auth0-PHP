@@ -13,10 +13,8 @@ class PaginatedRequest
 {
     /**
      * Internal state of the paginated request.
-     *
-     * @var array
      */
-    protected $state = [];
+    protected array $state = [];
 
     /**
      * PaginatedRequest constructor.
@@ -32,8 +30,8 @@ class PaginatedRequest
         ?int $perPage = null,
         ?bool $includeTotals = null
     ) {
-        $this->state['page']           = $page;
-        $this->state['per_page']       = $perPage;
+        $this->state['page'] = $page;
+        $this->state['per_page'] = $perPage;
         $this->state['include_totals'] = $includeTotals;
     }
 
@@ -41,11 +39,10 @@ class PaginatedRequest
      * Set the `page` for the paginated request.
      *
      * @param int $page Value of `page` parameter for the paginated request.
-     *
-     * @return self
      */
-    public function setPage(int $page): self
-    {
+    public function setPage(
+        int $page
+    ): self {
         $this->state['page'] = $page;
 
         return $this;
@@ -53,8 +50,6 @@ class PaginatedRequest
 
     /**
      * Retrieve the `page` for the paginated request.
-     *
-     * @return int|null
      */
     public function getPage(): ?int
     {
@@ -65,11 +60,10 @@ class PaginatedRequest
      * Set the `per_page` for the paginated request.
      *
      * @param int $perPage Value of `per_page` parameter for the paginated request.
-     *
-     * @return self
      */
-    public function setPerPage(int $perPage): self
-    {
+    public function setPerPage(
+        int $perPage
+    ): self {
         $this->state['per_page'] = $perPage;
 
         return $this;
@@ -77,8 +71,6 @@ class PaginatedRequest
 
     /**
      * Retrieve the `per_page` for the paginated request.
-     *
-     * @return int|null
      */
     public function getPerPage(): ?int
     {
@@ -89,11 +81,10 @@ class PaginatedRequest
      * Set the `include_totals` for the paginated request.
      *
      * @param ?bool $includeTotals Value of `include_totals` parameter for the paginated request.
-     *
-     * @return self
      */
-    public function setIncludeTotals(?bool $includeTotals): self
-    {
+    public function setIncludeTotals(
+        ?bool $includeTotals
+    ): self {
         $this->state['include_totals'] = $includeTotals;
 
         return $this;
@@ -101,8 +92,6 @@ class PaginatedRequest
 
     /**
      * Retrieve the `include_totals` for the paginated request.
-     *
-     * @return bool|null
      */
     public function getIncludeTotals(): ?bool
     {

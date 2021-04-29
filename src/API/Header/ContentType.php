@@ -11,8 +11,9 @@ class ContentType extends Header
      *
      * @param string $contentType Content-Type to use.
      */
-    public function __construct(string $contentType)
-    {
+    public function __construct(
+        string $contentType
+    ) {
         parent::__construct('Content-Type', $contentType);
     }
 }

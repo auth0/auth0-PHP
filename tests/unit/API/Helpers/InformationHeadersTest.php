@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Helpers;
 
 use Auth0\SDK\API\Helpers\ApiClient;
@@ -13,10 +15,8 @@ class InformationHeadersTest extends TestCase
 {
     /**
      * Set the package data and make sure it's returned correctly.
-     *
-     * @return void
      */
-    public function testThatSetPackageSetsDataCorrectly()
+    public function testThatSetPackageSetsDataCorrectly(): void
     {
         $header = new InformationHeaders();
         $header->setPackage('test_name', '1.2.3');
@@ -31,10 +31,8 @@ class InformationHeadersTest extends TestCase
 
     /**
      * Set and override an env property and make sure it's returned correctly.
-     *
-     * @return void
      */
-    public function testThatSetEnvPropertySetsDataCorrectly()
+    public function testThatSetEnvPropertySetsDataCorrectly(): void
     {
         $header = new InformationHeaders();
         $header->setEnvProperty('test_env_name', '2.3.4');
@@ -56,16 +54,14 @@ class InformationHeadersTest extends TestCase
 
     /**
      * Set the package and env and make sure it's built correctly.
-     *
-     * @return void
      */
-    public function testThatBuildReturnsCorrectData()
+    public function testThatBuildReturnsCorrectData(): void
     {
-        $header      = new InformationHeaders();
+        $header = new InformationHeaders();
         $header_data = [
-            'name'    => 'test_name_2',
+            'name' => 'test_name_2',
             'version' => '5.6.7',
-            'env'     => ['test_env_name_3' => '6.7.8'],
+            'env' => ['test_env_name_3' => '6.7.8'],
         ];
         $header->setPackage($header_data['name'], $header_data['version']);
         $header->setEnvProperty('test_env_name_3', '6.7.8');
@@ -76,10 +72,8 @@ class InformationHeadersTest extends TestCase
 
     /**
      * Check that setting the core package works correctly.
-     *
-     * @return void
      */
-    public function testThatCorePackageIsSet()
+    public function testThatCorePackageIsSet(): void
     {
         $header = new InformationHeaders();
         $header->setCorePackage();

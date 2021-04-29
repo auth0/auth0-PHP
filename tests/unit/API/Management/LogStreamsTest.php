@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
 
@@ -11,17 +12,13 @@ class LogStreamsTest extends ApiTests
 {
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
@@ -33,7 +30,7 @@ class LogStreamsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -43,7 +40,7 @@ class LogStreamsTest extends ApiTests
         $this->assertStringStartsWith('https://api.test.local/api/v2/log-streams', $api->getHistoryUrl());
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -53,16 +50,16 @@ class LogStreamsTest extends ApiTests
         $this->assertStringStartsWith('https://api.test.local/api/v2/log-streams/123', $api->getHistoryUrl());
     }
 
-    public function testThatCreateLogStreamRequestIsFormedCorrectly()
+    public function testThatCreateLogStreamRequestIsFormedCorrectly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
         $api->call()->logStreams()->create(
             'http',
             [
-                'httpEndpoint'      => 'https://me.org',
+                'httpEndpoint' => 'https://me.org',
                 'httpContentFormat' => 'JSONLINES',
-                'httpContentType'   => 'application/json',
+                'httpContentType' => 'application/json',
                 'httpAuthorization' => 'abc123',
             ],
             'Test Stream'
@@ -86,7 +83,7 @@ class LogStreamsTest extends ApiTests
         $this->assertEquals('abc123', $body['sink']['httpAuthorization']);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -106,7 +103,7 @@ class LogStreamsTest extends ApiTests
         $this->assertEquals('Test Name', $body['name']);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 

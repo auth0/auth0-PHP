@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers\Tokens;
 
-use Auth0\SDK\Exception\InvalidTokenException;
-
 /**
  * Class IdTokenVerifier, an OIDC-compliant ID token verifier.
  *
@@ -30,8 +28,10 @@ final class IdTokenVerifier extends TokenVerifier
      *      - Token algorithm is not supported
      *      - Any claim-based test fails
      */
-    public function verify(string $token, array $options = []): array
-    {
+    public function verify(
+        string $token,
+        array $options = []
+    ): array {
         $verifiedToken = parent::verify($token, $options);
 
         /*
@@ -40,19 +40,19 @@ final class IdTokenVerifier extends TokenVerifier
 
         $tokenSub = $verifiedToken['sub'] ?? null;
         if (! $tokenSub || ! is_string($tokenSub)) {
-            throw new InvalidTokenException('Subject (sub) claim must be a string present in the ID token');
+            throw new \Auth0\SDK\Exception\InvalidTokenException('Subject (sub) claim must be a string present in the ID token');
         }
 
         /*
          * Clock checks
          */
 
-        $now    = $options['time'] ?? time();
+        $now = $options['time'] ?? time();
         $leeway = $options['leeway'] ?? $this->leeway;
 
         $tokenIat = $verifiedToken['iat'] ?? null;
         if (! $tokenIat || ! is_int($tokenIat)) {
-            throw new InvalidTokenException('Issued At (iat) claim must be a number present in the ID token');
+            throw new \Auth0\SDK\Exception\InvalidTokenException('Issued At (iat) claim must be a number present in the ID token');
         }
 
         /*
@@ -63,11 +63,11 @@ final class IdTokenVerifier extends TokenVerifier
             $tokenNonce = $verifiedToken['nonce'] ?? null;
 
             if (! $tokenNonce || ! is_string($tokenNonce)) {
-                throw new InvalidTokenException('Nonce (nonce) claim must be a string present in the ID token');
+                throw new \Auth0\SDK\Exception\InvalidTokenException('Nonce (nonce) claim must be a string present in the ID token');
             }
 
             if ($tokenNonce !== $options['nonce']) {
-                throw new InvalidTokenException(
+                throw new \Auth0\SDK\Exception\InvalidTokenException(
                     sprintf(
                         'Nonce (nonce) claim mismatch in the ID token; expected "%s", found "%s"',
                         $options['nonce'],
@@ -86,13 +86,13 @@ final class IdTokenVerifier extends TokenVerifier
             $tokenAzp = $verifiedToken['azp'] ?? null;
 
             if (! $tokenAzp || ! is_string($tokenAzp)) {
-                throw new InvalidTokenException(
+                throw new \Auth0\SDK\Exception\InvalidTokenException(
                     'Authorized Party (azp) claim must be a string present in the ID token when Audience (aud) claim has multiple values'
                 );
             }
 
             if ($tokenAzp !== $this->audience) {
-                throw new InvalidTokenException(
+                throw new \Auth0\SDK\Exception\InvalidTokenException(
                     sprintf(
                         'Authorized Party (azp) claim mismatch in the ID token; expected "%s", found "%s"',
                         $this->audience,
@@ -107,15 +107,15 @@ final class IdTokenVerifier extends TokenVerifier
          */
         $expectedOrganization = $options['org_id'] ?? null;
 
-        if (null !== $expectedOrganization) {
+        if ($expectedOrganization !== null) {
             $tokenOrganization = $verifiedToken['org_id'] ?? null;
 
-            if (null === $tokenOrganization || ! is_string($tokenOrganization)) {
-                throw new InvalidTokenException('Organization Id (org_id) claim must be a string present in the ID token');
+            if ($tokenOrganization === null || ! is_string($tokenOrganization)) {
+                throw new \Auth0\SDK\Exception\InvalidTokenException('Organization Id (org_id) claim must be a string present in the ID token');
             }
 
             if ($tokenOrganization !== $expectedOrganization) {
-                throw new InvalidTokenException(
+                throw new \Auth0\SDK\Exception\InvalidTokenException(
                     sprintf(
                         'Organization Id (org_id) claim value mismatch in the ID token; expected "%s", found "%s"',
                         $expectedOrganization,
@@ -133,7 +133,7 @@ final class IdTokenVerifier extends TokenVerifier
             $tokenAuthTime = $verifiedToken['auth_time'] ?? null;
 
             if (! $tokenAuthTime || ! is_int($tokenAuthTime)) {
-                throw new InvalidTokenException(
+                throw new \Auth0\SDK\Exception\InvalidTokenException(
                     'Authentication Time (auth_time) claim must be a number present in the ID token when Max Age (max_age) is specified'
                 );
             }
@@ -141,7 +141,7 @@ final class IdTokenVerifier extends TokenVerifier
             $authValidUntil = $tokenAuthTime + $options['max_age'] + $leeway;
 
             if ($now > $authValidUntil) {
-                throw new InvalidTokenException(
+                throw new \Auth0\SDK\Exception\InvalidTokenException(
                     sprintf(
                         'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed since the last end-user authentication. Current time (%d) is after last auth at %d',
                         $now,

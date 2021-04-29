@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Rules.
@@ -41,7 +40,7 @@ class Rules extends GenericResource
     ): ?array {
         $payload = [
             'name' => $name,
-            'script' => $script
+            'script' => $script,
         ] + $body;
 
         return $this->apiClient->method('post')

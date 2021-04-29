@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Connections.
@@ -42,8 +41,8 @@ class Connections extends GenericResource
         $this->validateString($strategy, 'strategy');
 
         $payload = [
-            'name'     => $name,
-            'strategy' => $strategy
+            'name' => $name,
+            'strategy' => $strategy,
         ] + $body;
 
         return $this->apiClient->method('post')

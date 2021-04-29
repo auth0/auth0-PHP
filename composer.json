@@ -42,7 +42,7 @@
   },
   "scripts": {
     "test": "pest --stop-on-failure",
-    "lint": "phpinsights",
+    "lint": "phpinsights -v",
     "lint-style": "phpcs -s",
     "lint-style-fix": "phpcbf"
   }

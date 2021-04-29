@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Helpers;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
-use Auth0\SDK\Exception\CoreException;
 use Auth0\SDK\Helpers\Cache\NoCacheHandler;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\RequestException;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -23,37 +20,31 @@ class JWKFetcher
      *
      * @see https://www.php-fig.org/psr/psr-16/#12-definitions
      */
-    private const CACHE_TTL = 600;
+    public const DEFAULT_CACHE_TTL = 600;
 
     /**
-     * How long should the cache persist? Defaults to value of CACHE_TTL.
+     * How long should the cache persist? Defaults to value of DEFAULT_CACHE_TTL.
      * We strongly encouraged you leave the default value.
      *
      * @see https://www.php-fig.org/psr/psr-16/#12-definitions
      */
-    private $ttl = self::CACHE_TTL;
+    private $ttl = self::DEFAULT_CACHE_TTL;
 
     /**
      * Cache handler or null for no caching.
-     *
-     * @var CacheInterface|null
      */
-    private $cache;
+    private ?CacheInterface $cache = null;
 
     /**
      * Cache for unique cache ids.
      * Key for each entry is the url to the JWK. Value is cache id.
-     *
-     * @var array
      */
-    private $cachedEntryIds = [];
+    private array $cachedEntryIds = [];
 
     /**
      * Options for the Guzzle HTTP client.
-     *
-     * @var array
      */
-    private $guzzleOptions;
+    private array $guzzleOptions;
 
     /**
      * JWKFetcher constructor.
@@ -71,27 +62,12 @@ class JWKFetcher
             $cache = new NoCacheHandler();
         }
 
-        $this->cache         = $cache;
+        $this->cache = $cache;
         $this->guzzleOptions = $guzzleOptions;
 
-        if (! empty($options['ttl'])) {
-            $this->setTtl($options['ttl']);
+        if (isset($options['ttl'])) {
+            $this->setTtl((int) $options['ttl']);
         }
-    }
-
-    /**
-     * Convert a certificate to PEM format.
-     *
-     * @param string $cert X509 certificate to convert to PEM format.
-     *
-     * @return string
-     */
-    protected function convertCertToPem(string $cert): string
-    {
-        $output  = '-----BEGIN CERTIFICATE-----' . PHP_EOL;
-        $output .= chunk_split($cert, 64, PHP_EOL);
-        $output .= '-----END CERTIFICATE-----' . PHP_EOL;
-        return $output;
     }
 
     /**
@@ -100,10 +76,12 @@ class JWKFetcher
      * @param string      $kid     Key ID to get.
      * @param string|null $jwksUri JWKS URI to use, or fallback on class-level one.
      *
-     * @return mixed|null
+     * @return string|null
      */
-    public function getKey(string $kid, ?string $jwksUri = null)
-    {
+    public function getKey(
+        string $kid,
+        ?string $jwksUri = null
+    ): ?string {
         $keys = $this->getKeys($jwksUri);
 
         if (! empty($keys) && empty($keys[$kid])) {
@@ -116,32 +94,34 @@ class JWKFetcher
     /**
      * Gets an array of keys from the JWKS as kid => x5c.
      *
-     * @param string $jwks_url  Full URL to the JWKS.
-     * @param bool   $use_cache Set to false to skip cache check; default true to use caching.
+     * @param string $url      Full URL to the JWKS.
+     * @param bool   $useCache Set to false to skip cache check; default true to use caching.
      *
      * @return array
      */
-    public function getKeys(?string $jwks_url = null, bool $use_cache = true): array
-    {
-        $jwks_url = $jwks_url ?? $this->guzzleOptions['base_uri'] ?? '';
+    public function getKeys(
+        ?string $url = null,
+        bool $useCache = true
+    ): array {
+        $url = $url ?? $this->guzzleOptions['base_uri'] ?? '';
+        $keys = [];
 
-        if (empty($jwks_url)) {
+        if (! $url) {
             return [];
         }
 
-        $cached_value = $use_cache ? $this->getCacheEntry($jwks_url) : null;
+        $cached_value = $useCache ? $this->getCacheEntry($url) : null;
 
         if (! empty($cached_value) && is_array($cached_value)) {
             return $cached_value;
         }
 
-        $jwks = $this->requestJwks($jwks_url);
+        $jwks = $this->requestJwks($url);
 
-        if (empty($jwks) || empty($jwks['keys'])) {
+        if (! $jwks || ! isset($jwks['keys']) || ! count($jwks['keys'])) {
             return [];
         }
 
-        $keys = [];
         foreach ($jwks['keys'] as $key) {
             if (empty($key['kid']) || empty($key['x5c']) || empty($key['x5c'][0])) {
                 continue;
@@ -150,32 +130,8 @@ class JWKFetcher
             $keys[$key['kid']] = $this->convertCertToPem($key['x5c'][0]);
         }
 
-        $this->setCacheEntry($jwks_url, $keys);
+        $this->setCacheEntry($url, $keys);
         return $keys;
-    }
-
-    /**
-     * Get a JWKS from a specific URL.
-     *
-     * @param string $jwks_url URL to the JWKS.
-     *
-     * @return array
-     *
-     * @throws RequestException When HTTP request fails. Reason for failure provided in exception message.
-     * @throws ClientException  When the JWKS cannot be retrieved.
-     */
-    protected function requestJwks(string $jwks_url): array
-    {
-        $options = array_merge($this->guzzleOptions, [ 'base_uri' => $jwks_url ]);
-
-        $request = new RequestBuilder(
-            [
-                'method' => 'GET',
-                'guzzleOptions' => $options,
-            ]
-        );
-
-        return $request->call();
     }
 
     /**
@@ -184,14 +140,13 @@ class JWKFetcher
      *
      * @param string $ttlSeconds Number of seconds to keep a JWK in memory.
      *
-     * @return $this
-     *
      * @throws CoreException  If $ttlSeconds is less than 60.
      */
-    public function setTtl(int $ttlSeconds)
-    {
+    public function setTtl(
+        int $ttlSeconds
+    ): self {
         if ($ttlSeconds < 60) {
-            throw new CoreException('TTL cannot be less than 60 seconds.');
+            throw new \Auth0\SDK\Exception\CoreException('TTL cannot be less than 60 seconds.');
         }
 
         $this->ttl = $ttlSeconds;
@@ -200,10 +155,8 @@ class JWKFetcher
 
     /**
      * Returns how long we are caching JWKs in seconds.
-     *
-     * @return int
      */
-    public function getTtl()
+    public function getTtl(): int
     {
         return $this->ttl;
     }
@@ -212,11 +165,10 @@ class JWKFetcher
      * Generate a cache id to use for a URL.
      *
      * @param string $jwksUri Full URL to the JWKS.
-     *
-     * @return string
      */
-    public function getCacheKey(string $jwksUri)
-    {
+    public function getCacheKey(
+        string $jwksUri
+    ): string {
         if (isset($this->cachedEntryIds[$jwksUri])) {
             return $this->cachedEntryIds[$jwksUri];
         }
@@ -234,9 +186,10 @@ class JWKFetcher
      *
      * @return array|null
      */
-    public function getCacheEntry(string $jwksUri)
-    {
-        $cache_key    = $this->getCacheKey($jwksUri);
+    public function getCacheEntry(
+        string $jwksUri
+    ): ?array {
+        $cache_key = $this->getCacheKey($jwksUri);
         $cached_value = $this->cache->get($cache_key);
 
         if (! empty($cached_value) && is_array($cached_value)) {
@@ -251,11 +204,11 @@ class JWKFetcher
      *
      * @param string $jwksUri Full URL to the JWKS.
      * @param array  $keys    An array representing the JWKS.
-     *
-     * @return $this
      */
-    public function setCacheEntry(string $jwksUri, array $keys): self
-    {
+    public function setCacheEntry(
+        string $jwksUri,
+        array $keys
+    ): self {
         $cache_key = $this->getCacheKey($jwksUri);
 
         $this->cache->set($cache_key, $keys, $this->ttl);
@@ -267,21 +220,57 @@ class JWKFetcher
      * Remove a specific JWK from the cache by it's URL.
      *
      * @param string $jwksUri Full URL to the JWKS.
-     *
-     * @return bool
      */
-    public function removeCacheEntry(string $jwksUri): bool
-    {
+    public function removeCacheEntry(
+        string $jwksUri
+    ): bool {
         return $this->cache->delete($this->getCacheKey($jwksUri));
     }
 
     /**
      * Clear the JWK cache.
-     *
-     * @return bool
      */
     public function clearCache(): bool
     {
         return $this->cache->clear();
+    }
+
+    /**
+     * Convert a certificate to PEM format.
+     *
+     * @param string $cert X509 certificate to convert to PEM format.
+     */
+    protected function convertCertToPem(
+        string $cert
+    ): string {
+        $output = '-----BEGIN CERTIFICATE-----' . PHP_EOL;
+        $output .= chunk_split($cert, 64, PHP_EOL);
+        $output .= '-----END CERTIFICATE-----' . PHP_EOL;
+        return $output;
+    }
+
+    /**
+     * Get a JWKS from a specific URL.
+     *
+     * @param string $url URL to the JWKS.
+     *
+     * @return array
+     *
+     * @throws RequestException When HTTP request fails. Reason for failure provided in exception message.
+     * @throws ClientException  When the JWKS cannot be retrieved.
+     */
+    protected function requestJwks(
+        string $url
+    ): array {
+        $options = $this->guzzleOptions + [ 'base_uri' => $url ];
+
+        $request = new RequestBuilder(
+            [
+                'method' => 'GET',
+                'guzzleOptions' => $options,
+            ]
+        );
+
+        return $request->call();
     }
 }

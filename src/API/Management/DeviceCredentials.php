@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class DeviceCredentials.
@@ -48,9 +47,9 @@ class DeviceCredentials extends GenericResource
 
         $payload = [
             'device_name' => $deviceName,
-            'type'        => $type,
-            'value'       => $value,
-            'device_id'   => $deviceId
+            'type' => $type,
+            'value' => $value,
+            'device_id' => $deviceId,
         ] + $body;
 
         return $this->apiClient->method('post')
@@ -84,14 +83,14 @@ class DeviceCredentials extends GenericResource
         $this->validateString($userId, 'userId');
 
         $payload = [
-            'user_id' => $userId
+            'user_id' => $userId,
         ];
 
-        if (null !== $clientId) {
+        if ($clientId !== null) {
             $payload['client_id'] = $clientId;
         }
 
-        if (null !== $type) {
+        if ($type !== null) {
             $payload['type'] = $type;
         }
 

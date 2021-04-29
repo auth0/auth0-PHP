@@ -38,164 +38,118 @@ class Management
 {
     /**
      * Instance of Auth0\SDK\API\Helpers\ApiClient
-     *
-     * @var ApiClient
      */
-    private $apiClient;
+    private ?ApiClient $apiClient = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Blacklists
-     *
-     * @var Blacklists
      */
-    private $blacklists;
+    private ?Blacklists $blacklists = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Clients
-     *
-     * @var Clients
      */
-    private $clients;
+    private ?Clients $clients = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\ClientGrants
-     *
-     * @var ClientGrants
      */
-    private $clientGrants;
+    private ?ClientGrants $clientGrants = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Connections
-     *
-     * @var Connections
      */
-    private $connections;
+    private ?Connections $connections = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\DeviceCredentials
-     *
-     * @var DeviceCredentials
      */
-    private $deviceCredentials;
+    private ?DeviceCredentials $deviceCredentials = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Emails
-     *
-     * @var Emails
      */
-    private $emails;
+    private ?Emails $emails = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\EmailTemplates
-     *
-     * @var EmailTemplates
      */
-    private $emailTemplates;
+    private ?EmailTemplates $emailTemplates = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Jobs
-     *
-     * @var Jobs
      */
-    private $jobs;
+    private ?Jobs $jobs = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Grants
-     *
-     * @var Grants
      */
-    private $grants;
+    private ?Grants $grants = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Guardian
-     *
-     * @var Guardian
      */
-    private $guardian;
+    private ?Guardian $guardian = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Logs
-     *
-     * @var Logs
      */
-    private $logs;
+    private ?Logs $logs = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\LogStreams
-     *
-     * @var LogStreams
      */
-    private $logStreams;
+    private ?LogStreams $logStreams = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Organizations
-     *
-     * @var Organizations
      */
-    private $organizations;
+    private ?Organizations $organizations = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Roles
-     *
-     * @var Roles
      */
-    private $roles;
+    private ?Roles $roles = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Rules
-     *
-     * @var Rules
      */
-    private $rules;
+    private ?Rules $rules = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\ResourceServers
-     *
-     * @var ResourceServers
      */
-    private $resourceServers;
+    private ?ResourceServers $resourceServers = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Stats
-     *
-     * @var Stats
      */
-    private $stats;
+    private ?Stats $stats = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Tenants
-     *
-     * @var Tenants
      */
-    private $tenants;
+    private ?Tenants $tenants = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Tickets
-     *
-     * @var Tickets
      */
-    private $tickets;
+    private ?Tickets $tickets = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\UserBlocks
-     *
-     * @var UserBlocks
      */
-    private $userBlocks;
+    private ?UserBlocks $userBlocks = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Users
-     *
-     * @var Users
      */
-    private $users;
+    private ?Users $users = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\UsersByEmail
-     *
-     * @var UsersByEmail
      */
-    private $usersByEmail;
+    private ?UsersByEmail $usersByEmail = null;
 
     /**
      * Management constructor.
@@ -208,8 +162,12 @@ class Management
      *                                   - `body` (default) to return only the response body.
      *                                   - `object` to return the entire Reponse object.
      */
-    public function __construct(string $token, string $domain, array $guzzleOptions = [], ?string $returnType = null)
-    {
+    public function __construct(
+        string $token,
+        string $domain,
+        array $guzzleOptions = [],
+        ?string $returnType = null
+    ) {
         $this->apiClient = new ApiClient(
             [
                 'domain' => 'https://' . $domain,
@@ -217,20 +175,18 @@ class Management
                 'guzzleOptions' => $guzzleOptions,
                 'returnType' => $returnType,
                 'headers' => [
-                    new AuthorizationBearer($token)
-                ]
+                    new AuthorizationBearer($token),
+                ],
             ]
         );
     }
 
     /**
      * Return an instance of the Blacklists class.
-     *
-     * @return Blacklists
      */
     public function blacklists(): Blacklists
     {
-        if (! $this->blacklists instanceof Blacklists) {
+        if ($this->blacklists === null) {
             $this->blacklists = new Blacklists($this->apiClient);
         }
 
@@ -239,12 +195,10 @@ class Management
 
     /**
      * Return an instance of the Clients class.
-     *
-     * @return Clients
      */
     public function clients(): Clients
     {
-        if (! $this->clients instanceof Clients) {
+        if ($this->clients === null) {
             $this->clients = new Clients($this->apiClient);
         }
 
@@ -253,12 +207,10 @@ class Management
 
     /**
      * Return an instance of the ClientGrants class.
-     *
-     * @return ClientGrants
      */
     public function clientGrants(): ClientGrants
     {
-        if (! $this->clientGrants instanceof ClientGrants) {
+        if ($this->clientGrants === null) {
             $this->clientGrants = new ClientGrants($this->apiClient);
         }
 
@@ -267,12 +219,10 @@ class Management
 
     /**
      * Return an instance of the Connections class.
-     *
-     * @return Connections
      */
     public function connections(): Connections
     {
-        if (! $this->connections instanceof Connections) {
+        if ($this->connections === null) {
             $this->connections = new Connections($this->apiClient);
         }
 
@@ -281,12 +231,10 @@ class Management
 
     /**
      * Return an instance of the DeviceCredentials class.
-     *
-     * @return DeviceCredentials
      */
     public function deviceCredentials(): DeviceCredentials
     {
-        if (! $this->deviceCredentials instanceof DeviceCredentials) {
+        if ($this->deviceCredentials === null) {
             $this->deviceCredentials = new DeviceCredentials($this->apiClient);
         }
 
@@ -295,12 +243,10 @@ class Management
 
     /**
      * Return an instance of the Emails class.
-     *
-     * @return Emails
      */
     public function emails(): Emails
     {
-        if (! $this->emails instanceof Emails) {
+        if ($this->emails === null) {
             $this->emails = new Emails($this->apiClient);
         }
 
@@ -309,12 +255,10 @@ class Management
 
     /**
      * Return an instance of the EmailTemplates class.
-     *
-     * @return EmailTemplates
      */
     public function emailTemplates(): EmailTemplates
     {
-        if (! $this->emailTemplates instanceof EmailTemplates) {
+        if ($this->emailTemplates === null) {
             $this->emailTemplates = new EmailTemplates($this->apiClient);
         }
 
@@ -323,12 +267,10 @@ class Management
 
     /**
      * Return an instance of the Grants class.
-     *
-     * @return Grants
      */
     public function grants(): Grants
     {
-        if (! $this->grants instanceof Grants) {
+        if ($this->grants === null) {
             $this->grants = new Grants($this->apiClient);
         }
 
@@ -337,12 +279,10 @@ class Management
 
     /**
      * Return an instance of the Guardian class.
-     *
-     * @return Guardian
      */
     public function guardian(): Guardian
     {
-        if (! $this->guardian instanceof Guardian) {
+        if ($this->guardian === null) {
             $this->guardian = new Guardian($this->apiClient);
         }
 
@@ -351,12 +291,10 @@ class Management
 
     /**
      * Return an instance of the Jobs class.
-     *
-     * @return Jobs
      */
     public function jobs(): Jobs
     {
-        if (! $this->jobs instanceof Jobs) {
+        if ($this->jobs === null) {
             $this->jobs = new Jobs($this->apiClient);
         }
 
@@ -365,12 +303,10 @@ class Management
 
     /**
      * Return an instance of the Logs class.
-     *
-     * @return Logs
      */
     public function logs(): Logs
     {
-        if (! $this->logs instanceof Logs) {
+        if ($this->logs === null) {
             $this->logs = new Logs($this->apiClient);
         }
 
@@ -379,12 +315,10 @@ class Management
 
     /**
      * Return an instance of the LogStreams class.
-     *
-     * @return LogStreams
      */
     public function logStreams(): LogStreams
     {
-        if (! $this->logStreams instanceof LogStreams) {
+        if ($this->logStreams === null) {
             $this->logStreams = new LogStreams($this->apiClient);
         }
 
@@ -393,12 +327,10 @@ class Management
 
     /**
      * Return an instance of the Organizations class.
-     *
-     * @return Organizations
      */
     public function organizations(): Organizations
     {
-        if (! $this->organizations instanceof Organizations) {
+        if ($this->organizations === null) {
             $this->organizations = new Organizations($this->apiClient);
         }
 
@@ -407,12 +339,10 @@ class Management
 
     /**
      * Return an instance of the Roles class.
-     *
-     * @return Roles
      */
     public function roles(): Roles
     {
-        if (! $this->roles instanceof Roles) {
+        if ($this->roles === null) {
             $this->roles = new Roles($this->apiClient);
         }
 
@@ -421,12 +351,10 @@ class Management
 
     /**
      * Return an instance of the Rules class.
-     *
-     * @return Rules
      */
     public function rules(): Rules
     {
-        if (! $this->rules instanceof Rules) {
+        if ($this->rules === null) {
             $this->rules = new Rules($this->apiClient);
         }
 
@@ -435,12 +363,10 @@ class Management
 
     /**
      * Return an instance of the ResourceServers class.
-     *
-     * @return ResourceServers
      */
     public function resourceServers(): ResourceServers
     {
-        if (! $this->resourceServers instanceof ResourceServers) {
+        if ($this->resourceServers === null) {
             $this->resourceServers = new ResourceServers($this->apiClient);
         }
 
@@ -449,12 +375,10 @@ class Management
 
     /**
      * Return an instance of the Stats class.
-     *
-     * @return Stats
      */
     public function stats(): Stats
     {
-        if (! $this->stats instanceof Stats) {
+        if ($this->stats === null) {
             $this->stats = new Stats($this->apiClient);
         }
 
@@ -463,12 +387,10 @@ class Management
 
     /**
      * Return an instance of the Tenants class.
-     *
-     * @return Tenants
      */
     public function tenants(): Tenants
     {
-        if (! $this->tenants instanceof Tenants) {
+        if ($this->tenants === null) {
             $this->tenants = new Tenants($this->apiClient);
         }
 
@@ -477,12 +399,10 @@ class Management
 
     /**
      * Return an instance of the Tickets class.
-     *
-     * @return Tickets
      */
     public function tickets(): Tickets
     {
-        if (! $this->tickets instanceof Tickets) {
+        if ($this->tickets === null) {
             $this->tickets = new Tickets($this->apiClient);
         }
 
@@ -491,12 +411,10 @@ class Management
 
     /**
      * Return an instance of the UserBlocks class.
-     *
-     * @return UserBlocks
      */
     public function userBlocks(): UserBlocks
     {
-        if (! $this->userBlocks instanceof UserBlocks) {
+        if ($this->userBlocks === null) {
             $this->userBlocks = new UserBlocks($this->apiClient);
         }
 
@@ -505,12 +423,10 @@ class Management
 
     /**
      * Return an instance of the Users class.
-     *
-     * @return Users
      */
     public function users(): Users
     {
-        if (! $this->users instanceof Users) {
+        if ($this->users === null) {
             $this->users = new Users($this->apiClient);
         }
 
@@ -519,12 +435,10 @@ class Management
 
     /**
      * Return an instance of the UsersByEmail class.
-     *
-     * @return UsersByEmail
      */
     public function usersByEmail(): UsersByEmail
     {
-        if (! $this->usersByEmail instanceof UsersByEmail) {
+        if ($this->usersByEmail === null) {
             $this->usersByEmail = new UsersByEmail($this->apiClient);
         }
 

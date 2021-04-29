@@ -30,13 +30,6 @@ commands:
           path: build/coverage.xml
 
 jobs:
-  php_7_3:
-    docker:
-      - image: circleci/php:7.3
-    steps:
-      - prepare
-      - run-quality-checks
-      - run-test-suite
   php_7_4:
     docker:
       - image: circleci/php:7.4
@@ -69,12 +62,11 @@ jobs:
 workflows:
   test-php-versions:
     jobs:
-      - php_7_3
       - php_7_4
       - php_8_0
   vulnerability-check:
     jobs:
-      - php_7_3
+      - php_7_4
       - snyk:
           filters:
             branches:
@@ -82,4 +74,4 @@ workflows:
                 - master
           context: snyk-env
           requires:
-            - php_7_3
+            - php_7_4

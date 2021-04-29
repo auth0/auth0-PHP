@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Helpers\Tokens;
 
-use Auth0\SDK\Exception\InvalidTokenException;
-use Auth0\SDK\Helpers\JWKFetcher;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256 as RsSigner;
 use Lcobucci\JWT\Token;
@@ -29,8 +27,9 @@ final class AsymmetricVerifier extends SignatureVerifier
      *
      * @param array|JWKFetcher $jwks Array of kid => keys or a JWKFetcher instance.
      */
-    public function __construct($jwks)
-    {
+    public function __construct(
+        $jwks
+    ) {
         $this->jwks = $jwks;
         parent::__construct('RS256');
     }
@@ -40,16 +39,15 @@ final class AsymmetricVerifier extends SignatureVerifier
      *
      * @param Token $token Parsed token to check.
      *
-     * @return bool
-     *
      * @throws InvalidTokenException If ID token kid was not found in the JWKS.
      */
-    protected function checkSignature(Token $token): bool
-    {
-        $tokenKid   = $token->getHeader('kid', false);
+    protected function checkSignature(
+        Token $token
+    ): bool {
+        $tokenKid = $token->getHeader('kid', false);
         $signingKey = is_array($this->jwks) ? ($this->jwks[$tokenKid] ?? null) : $this->jwks->getKey($tokenKid);
         if (! $signingKey) {
-            throw new InvalidTokenException('ID token key ID "' . $tokenKid . '" was not found in the JWKS');
+            throw new \Auth0\SDK\Exception\InvalidTokenException('ID token key ID "' . $tokenKid . '" was not found in the JWKS');
         }
 
         return $token->verify(new RsSigner(), new Key($signingKey));

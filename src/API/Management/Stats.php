@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Stats.
@@ -60,12 +59,12 @@ class Stats extends GenericResource
         $client = $this->apiClient->method('get')
             ->addPath('stats', 'daily');
 
-        if (null !== $from) {
+        if ($from !== null) {
             $this->validateString($from, 'from');
             $client->withParam('from', $from);
         }
 
-        if (null !== $to) {
+        if ($to !== null) {
             $this->validateString($to, 'to');
             $client->withParam('to', $to);
         }

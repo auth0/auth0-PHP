@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Helpers;
 
 use Auth0\SDK\API\Helpers\ApiClient;
@@ -27,7 +29,7 @@ class InformationHeadersExtendTest extends TestCase
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
-    public function testThatExtendedHeadersAreUsedForManagementApiCalls()
+    public function testThatExtendedHeadersAreUsedForManagementApiCalls(): void
     {
         $new_headers = self::setExtendedHeaders('test-extend-sdk-2', '2.3.4');
 
@@ -43,7 +45,7 @@ class InformationHeadersExtendTest extends TestCase
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
-    public function testThatExtendedHeadersAreUsedForAuthenticationApiCalls()
+    public function testThatExtendedHeadersAreUsedForAuthenticationApiCalls(): void
     {
         $new_headers = self::setExtendedHeaders('test-extend-sdk-3', '3.4.5');
 
@@ -68,16 +70,14 @@ class InformationHeadersExtendTest extends TestCase
      *
      * @param string $name    New SDK name.
      * @param string $version New SDK version.
-     *
-     * @return InformationHeaders
      */
-    public static function setExtendedHeaders($name, $version)
+    public static function setExtendedHeaders(string $name, string $version): InformationHeaders
     {
         $reset_headers = new InformationHeaders();
         $reset_headers->setCorePackage();
         ApiClient::setInfoHeadersData($reset_headers);
 
-        $headers     = ApiClient::getInfoHeadersData();
+        $headers = ApiClient::getInfoHeadersData();
         $new_headers = InformationHeaders::Extend($headers);
         $new_headers->setPackage($name, $version);
         ApiClient::setInfoHeadersData($new_headers);

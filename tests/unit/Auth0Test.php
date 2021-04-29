@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Auth0\Tests\unit;
 
 use Auth0\SDK\Auth0;
-use Auth0\SDK\Exception\CoreException;
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Store\SessionStore;
 use Auth0\Tests\Traits\ErrorHelpers;
 use Auth0\Tests\unit\Helpers\Tokens\AsymmetricVerifierTest;
@@ -27,59 +25,49 @@ class Auth0Test extends TestCase
 
     /**
      * Basic Auth0 class config options.
-     *
-     * @var array
      */
-    public static $baseConfig;
+    public static array $baseConfig;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs after each test completes.
-     *
-     * @return void
      */
     public function setUp(): void
     {
         parent::setUp();
 
         self::$baseConfig = [
-            'domain'          => '__test_domain__',
-            'client_id'       => '__test_client_id__',
-            'client_secret'   => '__test_client_secret__',
-            'redirect_uri'    => '__test_redirect_uri__',
-            'store'           => false,
+            'domain' => '__test_domain__',
+            'client_id' => '__test_client_id__',
+            'client_secret' => '__test_client_secret__',
+            'redirect_uri' => '__test_redirect_uri__',
+            'store' => false,
             'transient_store' => new SessionStore(),
         ];
 
-        if (!session_id()) {
+        if (! session_id()) {
             session_start();
         }
     }
 
     /**
      * Runs after each test completes.
-     *
-     * @return void
      */
     public function tearDown(): void
     {
         parent::tearDown();
-        $_GET     = [];
+        $_GET = [];
         $_SESSION = [];
     }
 
     /**
      * Test that the exchange call returns false before making any HTTP calls if no code is present.
-     *
-     * @return void
      */
-    public function testThatExchangeReturnsFalseIfNoCodePresent()
+    public function testThatExchangeReturnsFalseIfNoCodePresent(): void
     {
         $auth0 = new Auth0(self::$baseConfig);
         $this->assertFalse($auth0->exchange());
@@ -87,27 +75,25 @@ class Auth0Test extends TestCase
 
     /**
      * Test that the exchanges fails when there is not a stored nonce value.
-     *
-     * @return void
      */
-    public function testThatExchangeFailsWithNoStoredNonce()
+    public function testThatExchangeFailsWithNoStoredNonce(): void
     {
-        $id_token      = self::getIdToken();
+        $id_token = self::getIdToken();
         $response_body = '{"access_token":"1.2.3","id_token":"' . $id_token . '","refresh_token":"4.5.6"}';
 
         $mock = new MockHandler([new Response(200, self::$headers, $response_body)]);
 
-        $add_config    = [
-            'skip_userinfo'  => true,
-            'id_token_alg'   => 'HS256',
+        $add_config = [
+            'skip_userinfo' => true,
+            'id_token_alg' => 'HS256',
             'guzzle_options' => [
                 'handler' => HandlerStack::create($mock),
             ],
         ];
-        $auth0         = new Auth0(self::$baseConfig + $add_config);
-        $_GET['code']  = uniqid();
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
+        $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $this->expectExceptionMessage('Nonce value not found in application store');
         $auth0->exchange();
@@ -115,32 +101,28 @@ class Auth0Test extends TestCase
 
     /**
      * Test that the exchanges fails when there is not a stored nonce value.
-     *
-     * @return void
      */
-    public function testThatExchangeFailsWhenPkceIsEnabledAndNoCodeVerifierWasFound()
+    public function testThatExchangeFailsWhenPkceIsEnabledAndNoCodeVerifierWasFound(): void
     {
         $add_config = ['enable_pkce' => true];
-        $auth0      = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
 
-        $_GET['code']  = uniqid();
+        $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
-        $_SESSION['auth0__state']         = '__test_state__';
-        $_SESSION['auth0__code_verifier'] = null;
+        $_SESSION['auth0_state'] = '__test_state__';
+        $_SESSION['auth0_code_verifier'] = null;
 
-        $this->expectException(CoreException::class);
+        $this->expectException(\Auth0\SDK\Exception\CoreException::class);
         $this->expectExceptionMessage('Missing code_verifier');
         $auth0->exchange();
     }
 
     /**
      * Test that the exchanges succeeds when there is both and access token and an ID token present.
-     *
-     * @return void
      */
-    public function testThatExchangeSucceedsWithIdToken()
+    public function testThatExchangeSucceedsWithIdToken(): void
     {
-        $id_token      = self::getIdToken();
+        $id_token = self::getIdToken();
         $response_body = '{"access_token":"1.2.3","id_token":"' . $id_token . '","refresh_token":"4.5.6"}';
 
         $mock = new MockHandler(
@@ -152,18 +134,18 @@ class Auth0Test extends TestCase
             ]
         );
 
-        $add_config   = [
-            'skip_userinfo'  => false,
-            'id_token_alg'   => 'HS256',
+        $add_config = [
+            'skip_userinfo' => false,
+            'id_token_alg' => 'HS256',
             'guzzle_options' => [
                 'handler' => HandlerStack::create($mock),
             ],
         ];
-        $auth0        = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
         $_GET['code'] = uniqid();
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
-        $_GET['state']            = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
+        $_GET['state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $this->assertTrue($auth0->exchange());
         $this->assertEquals(['sub' => '__test_sub__'], $auth0->getUser());
@@ -174,10 +156,8 @@ class Auth0Test extends TestCase
 
     /**
      * Test that the exchanges succeeds when there is only an access token.
-     *
-     * @return void
      */
-    public function testThatExchangeSucceedsWithNoIdToken()
+    public function testThatExchangeSucceedsWithNoIdToken(): void
     {
         $mock = new MockHandler(
             [
@@ -189,16 +169,16 @@ class Auth0Test extends TestCase
             ]
         );
 
-        $add_config    = [
-            'skip_userinfo'  => false,
-            'scope'          => 'offline_access read:messages',
-            'audience'       => 'https://api.identifier',
+        $add_config = [
+            'skip_userinfo' => false,
+            'scope' => 'offline_access read:messages',
+            'audience' => 'https://api.identifier',
             'guzzle_options' => ['handler' => HandlerStack::create($mock)],
         ];
-        $auth0         = new Auth0(self::$baseConfig + $add_config);
-        $_GET['code']  = uniqid();
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
+        $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $this->assertTrue($auth0->exchange());
         $this->assertEquals(['sub' => '123'], $auth0->getUser());
@@ -208,10 +188,8 @@ class Auth0Test extends TestCase
 
     /**
      * Test that the exchanges succeeds when PKCE is enabled.
-     *
-     * @return void
      */
-    public function testThatExchangeSucceedsWithPkceEnabled()
+    public function testThatExchangeSucceedsWithPkceEnabled(): void
     {
         $mock = new MockHandler(
             [
@@ -223,19 +201,19 @@ class Auth0Test extends TestCase
             ]
         );
 
-        $add_config   = [
-            'skip_userinfo'  => false,
-            'enable_pkce'    => true,
+        $add_config = [
+            'skip_userinfo' => false,
+            'enable_pkce' => true,
             'guzzle_options' => [
                 'handler' => HandlerStack::create($mock),
             ],
         ];
-        $auth0        = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
         $_GET['code'] = uniqid();
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
-        $_GET['state']            = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
-        $_SESSION['auth0__code_verifier'] = '__test_code_verifier__';
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
+        $_GET['state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
+        $_SESSION['auth0_code_verifier'] = '__test_code_verifier__';
 
         $this->assertTrue($auth0->exchange());
         $this->assertEquals(['sub' => '__test_sub__'], $auth0->getUser());
@@ -245,10 +223,8 @@ class Auth0Test extends TestCase
 
     /**
      * Test that the exchanges succeeds when PKCE is disabled.
-     *
-     * @return void
      */
-    public function testThatExchangeSucceedsWithoutPkceEnabled()
+    public function testThatExchangeSucceedsWithoutPkceEnabled(): void
     {
         $mock = new MockHandler(
             [
@@ -260,18 +236,18 @@ class Auth0Test extends TestCase
             ]
         );
 
-        $add_config   = [
-            'skip_userinfo'  => false,
-            'enable_pkce'    => false,
+        $add_config = [
+            'skip_userinfo' => false,
+            'enable_pkce' => false,
             'guzzle_options' => [
                 'handler' => HandlerStack::create($mock),
             ],
         ];
-        $auth0        = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
         $_GET['code'] = uniqid();
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
-        $_GET['state']            = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
+        $_GET['state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $this->assertTrue($auth0->exchange());
         $this->assertEquals(['sub' => '__test_sub__'], $auth0->getUser());
@@ -281,10 +257,8 @@ class Auth0Test extends TestCase
 
     /**
      * Test that the skip_userinfo config option uses the ID token instead of calling /userinfo.
-     *
-     * @return void
      */
-    public function testThatExchangeSkipsUserinfo()
+    public function testThatExchangeSkipsUserinfo(): void
     {
         $id_token = self::getIdToken();
 
@@ -295,17 +269,17 @@ class Auth0Test extends TestCase
             ]
         );
 
-        $add_config   = [
-            'scope'          => 'openid',
-            'skip_userinfo'  => true,
-            'id_token_alg'   => 'HS256',
+        $add_config = [
+            'scope' => 'openid',
+            'skip_userinfo' => true,
+            'id_token_alg' => 'HS256',
             'guzzle_options' => ['handler' => HandlerStack::create($mock)],
         ];
-        $auth0        = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
         $_GET['code'] = uniqid();
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
-        $_GET['state']            = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
+        $_GET['state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $this->assertTrue($auth0->exchange());
 
@@ -316,10 +290,8 @@ class Auth0Test extends TestCase
 
     /**
      * Test that renewTokens fails if there is no refresh_token stored.
-     *
-     * @return void
      */
-    public function testThatRenewTokensFailsIfThereIsNoRefreshToken()
+    public function testThatRenewTokensFailsIfThereIsNoRefreshToken(): void
     {
         $mock = new MockHandler(
             [
@@ -329,37 +301,28 @@ class Auth0Test extends TestCase
         );
 
         $add_config = [
-            'skip_userinfo'        => true,
+            'skip_userinfo' => true,
             'persist_access_token' => true,
-            'guzzle_options'       => ['handler' => HandlerStack::create($mock)],
+            'guzzle_options' => ['handler' => HandlerStack::create($mock)],
         ];
-        $auth0      = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
 
-        $_GET['code']  = uniqid();
+        $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $this->assertTrue($auth0->exchange());
 
-        try {
-            $caught_exception = false;
-            $auth0->renewTokens();
-        } catch (CoreException $e) {
-            $caught_exception = $this->errorHasString(
-                $e,
-                "Can't renew the access token if there isn't a refresh token available"
-            );
-        }
+        $this->expectException(\Auth0\SDK\Exception\CoreException::class);
+        $this->expectExceptionMessage("Can't renew the access token if there isn't a refresh token available");
 
-        $this->assertTrue($caught_exception);
+        $auth0->renewTokens();
     }
 
     /**
      * Test that renewTokens fails if the API response is invalid.
-     *
-     * @return void
      */
-    public function testThatRenewTokensFailsIfNoAccessTokenReturned()
+    public function testThatRenewTokensFailsIfNoAccessTokenReturned(): void
     {
         $mock = new MockHandler(
             [
@@ -371,15 +334,15 @@ class Auth0Test extends TestCase
         );
 
         $add_config = [
-            'skip_userinfo'        => true,
+            'skip_userinfo' => true,
             'persist_access_token' => true,
-            'guzzle_options'       => ['handler' => HandlerStack::create($mock)],
+            'guzzle_options' => ['handler' => HandlerStack::create($mock)],
         ];
-        $auth0      = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
 
-        $_GET['code']  = uniqid();
+        $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $this->assertTrue($auth0->exchange());
 
@@ -389,15 +352,13 @@ class Auth0Test extends TestCase
 
     /**
      * Test that renewTokens succeeds with non-empty access_token and refresh_token stored.
-     *
-     * @return void
      */
-    public function testThatRenewTokensSucceeds()
+    public function testThatRenewTokensSucceeds(): void
     {
-        $id_token        = self::getIdToken();
+        $id_token = self::getIdToken();
         $request_history = [];
 
-        $mock    = new MockHandler(
+        $mock = new MockHandler(
             [
             // Code exchange response.
                 new Response(200, self::$headers, '{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $id_token . '"}'),
@@ -409,22 +370,22 @@ class Auth0Test extends TestCase
         $handler->push(Middleware::history($request_history));
 
         $add_config = [
-            'id_token_alg'         => 'HS256',
-            'skip_userinfo'        => true,
+            'id_token_alg' => 'HS256',
+            'skip_userinfo' => true,
             'persist_access_token' => true,
-            'guzzle_options'       => ['handler' => $handler],
+            'guzzle_options' => ['handler' => $handler],
         ];
-        $auth0      = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
 
         $_GET['code'] = uniqid();
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
-        $_GET['state']            = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
+        $_GET['state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $this->assertTrue($auth0->exchange());
 
-        $this->assertArrayNotHasKey('auth0__nonce', $_SESSION);
-        $this->assertArrayNotHasKey('auth0__state', $_SESSION);
+        $this->assertArrayNotHasKey('auth0_nonce', $_SESSION);
+        $this->assertArrayNotHasKey('auth0_state', $_SESSION);
 
         $auth0->renewTokens(['scope' => 'openid']);
 
@@ -432,7 +393,7 @@ class Auth0Test extends TestCase
         $this->assertEquals($id_token, $auth0->getIdToken());
 
         $renew_request = $request_history[1]['request'];
-        $renew_body    = json_decode((string) $renew_request->getBody(), true);
+        $renew_body = json_decode((string) $renew_request->getBody(), true);
         $this->assertEquals('openid', $renew_body['scope']);
         $this->assertEquals('__test_client_secret__', $renew_body['client_secret']);
         $this->assertEquals('__test_client_id__', $renew_body['client_id']);
@@ -442,10 +403,8 @@ class Auth0Test extends TestCase
 
     /**
      * Test that get login url uses default values.
-     *
-     * @return void
      */
-    public function testThatGetLoginUrlUsesDefaultValues()
+    public function testThatGetLoginUrlUsesDefaultValues(): void
     {
         $auth0 = new Auth0(self::$baseConfig);
 
@@ -465,24 +424,22 @@ class Auth0Test extends TestCase
 
     /**
      * Test that get login url adds values.
-     *
-     * @return void
      */
-    public function testThatGetLoginUrlAddsValues()
+    public function testThatGetLoginUrlAddsValues(): void
     {
         $auth0 = new Auth0(self::$baseConfig);
 
         $custom_params = [
             'connection' => '__test_connection__',
-            'prompt'     => 'none',
-            'audience'   => '__test_audience__',
-            'state'      => '__test_state__',
+            'prompt' => 'none',
+            'audience' => '__test_audience__',
+            'state' => '__test_state__',
             'invitation' => '__test_invitation__',
         ];
 
-        $auth_url         = $auth0->getLoginUrl($custom_params);
+        $auth_url = $auth0->getLoginUrl($custom_params);
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-        $url_query        = explode('&', $parsed_url_query);
+        $url_query = explode('&', $parsed_url_query);
 
         $this->assertContains('redirect_uri=__test_redirect_uri__', $url_query);
         $this->assertContains('client_id=__test_client_id__', $url_query);
@@ -495,22 +452,20 @@ class Auth0Test extends TestCase
 
     /**
      * Test that get login url overrides default values.
-     *
-     * @return void
      */
-    public function testThatGetLoginUrlOverridesDefaultValues()
+    public function testThatGetLoginUrlOverridesDefaultValues(): void
     {
         $auth0 = new Auth0(self::$baseConfig);
 
         $override_params = [
-            'scope'         => 'openid profile email',
+            'scope' => 'openid profile email',
             'response_type' => 'id_token',
             'response_mode' => 'form_post',
         ];
 
-        $auth_url         = $auth0->getLoginUrl($override_params);
+        $auth_url = $auth0->getLoginUrl($override_params);
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-        $url_query        = explode('&', $parsed_url_query);
+        $url_query = explode('&', $parsed_url_query);
 
         $this->assertContains('scope=openid%20profile%20email', $url_query);
         $this->assertContains('response_type=id_token', $url_query);
@@ -521,10 +476,8 @@ class Auth0Test extends TestCase
 
     /**
      * Test that get login url generates state and nonce.
-     *
-     * @return void
      */
-    public function testThatGetLoginUrlGeneratesStateAndNonce()
+    public function testThatGetLoginUrlGeneratesStateAndNonce(): void
     {
         $custom_config = self::$baseConfig;
 
@@ -533,45 +486,41 @@ class Auth0Test extends TestCase
         $auth_url = $auth0->getLoginUrl();
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-        $url_query        = explode('&', $parsed_url_query);
+        $url_query = explode('&', $parsed_url_query);
 
-        $this->assertArrayHasKey('auth0__state', $_SESSION);
-        $this->assertContains('state=' . $_SESSION['auth0__state'], $url_query);
-        $this->assertArrayHasKey('auth0__nonce', $_SESSION);
-        $this->assertContains('nonce=' . $_SESSION['auth0__nonce'], $url_query);
+        $this->assertArrayHasKey('auth0_state', $_SESSION);
+        $this->assertContains('state=' . $_SESSION['auth0_state'], $url_query);
+        $this->assertArrayHasKey('auth0_nonce', $_SESSION);
+        $this->assertContains('nonce=' . $_SESSION['auth0_nonce'], $url_query);
     }
 
     /**
      * Test that get login url generates challenge and challenge method when PKCE is enabled.
-     *
-     * @return void
      */
-    public function testThatGetLoginUrlGeneratesChallengeAndChallengeMethodWhenPkceIsEnabled()
+    public function testThatGetLoginUrlGeneratesChallengeAndChallengeMethodWhenPkceIsEnabled(): void
     {
         $add_config = ['enable_pkce' => true];
-        $auth0      = new Auth0(self::$baseConfig + $add_config);
+        $auth0 = new Auth0(self::$baseConfig + $add_config);
 
         $auth_url = $auth0->getLoginUrl();
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-        $url_query        = explode('&', $parsed_url_query);
+        $url_query = explode('&', $parsed_url_query);
 
-        $this->assertArrayHasKey('auth0__code_verifier', $_SESSION);
+        $this->assertArrayHasKey('auth0_code_verifier', $_SESSION);
         $this->assertStringContainsString('code_challenge=', $parsed_url_query);
         $this->assertContains('code_challenge_method=S256', $url_query);
     }
 
     /**
      * Test that invitation parameters are extracted.
-     *
-     * @return void
      */
-    public function testThatInvitationParametersAreExtracted()
+    public function testThatInvitationParametersAreExtracted(): void
     {
         $auth0 = new Auth0(self::$baseConfig);
 
-        $_GET['invitation']        = '__test_invitation__';
-        $_GET['organization']      = '__test_organization__';
+        $_GET['invitation'] = '__test_invitation__';
+        $_GET['organization'] = '__test_organization__';
         $_GET['organization_name'] = '__test_organization_name__';
 
         $extracted = $auth0->getInvitationParameters();
@@ -589,10 +538,8 @@ class Auth0Test extends TestCase
 
     /**
      * Test that invitation parameters aren't extracted when incomplete..
-     *
-     * @return void
      */
-    public function testThatInvitationParametersArentExtractedWhenIncomplete()
+    public function testThatInvitationParametersArentExtractedWhenIncomplete(): void
     {
         $auth0 = new Auth0(self::$baseConfig);
 
@@ -605,32 +552,30 @@ class Auth0Test extends TestCase
 
     /**
      * Test that client secret is not decoded by default.
-     *
-     * @return void
      */
-    public function testThatClientSecretIsNotDecodedByDefault()
+    public function testThatClientSecretIsNotDecodedByDefault(): void
     {
         $request_history = [];
-        $mock            = new MockHandler(
+        $mock = new MockHandler(
             [
                 new Response(200, ['Content-Type' => 'json'], '{"access_token":"1.2.3"}'),
             ]
         );
-        $handler         = HandlerStack::create($mock);
+        $handler = HandlerStack::create($mock);
         $handler->push(Middleware::history($request_history));
 
         $custom_config = array_merge(
             self::$baseConfig,
             [
-                'skip_userinfo'  => true,
+                'skip_userinfo' => true,
                 'guzzle_options' => ['handler' => $handler],
             ]
         );
-        $auth0         = new Auth0($custom_config);
+        $auth0 = new Auth0($custom_config);
 
-        $_GET['code']  = uniqid();
+        $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $auth0->exchange();
 
@@ -643,35 +588,32 @@ class Auth0Test extends TestCase
 
     /**
      * Test that client secret is decoded before sending.
-     *
-     * @return void
      */
-    public function testThatClientSecretIsDecodedBeforeSending()
+    public function testThatClientSecretIsDecodedBeforeSending(): void
     {
         $request_history = [];
-        $mock            = new MockHandler(
+        $mock = new MockHandler(
             [
                 new Response(200, ['Content-Type' => 'json'], '{"access_token":"1.2.3"}'),
             ]
         );
-        $handler         = HandlerStack::create($mock);
+        $handler = HandlerStack::create($mock);
         $handler->push(Middleware::history($request_history));
 
-        $_GET['code']  = uniqid();
+        $_GET['code'] = uniqid();
         $custom_config = array_merge(
             self::$baseConfig,
             [
-                'client_secret'         => base64_encode('__test_encoded_client_secret__'),
-                'secret_base64_encoded' => true,
-                'skip_userinfo'         => true,
-                'guzzle_options'        => ['handler' => $handler],
+                'client_secret' => '__test_encoded_client_secret__',
+                'skip_userinfo' => true,
+                'guzzle_options' => ['handler' => $handler],
             ]
         );
 
         $auth0 = new Auth0($custom_config);
 
-        $_GET['state']            = '__test_state__';
-        $_SESSION['auth0__state'] = '__test_state__';
+        $_GET['state'] = '__test_state__';
+        $_SESSION['auth0_state'] = '__test_state__';
 
         $auth0->exchange();
 
@@ -684,89 +626,81 @@ class Auth0Test extends TestCase
 
     /**
      * Test that max age is set in login url from initial config.
-     *
-     * @return void
      */
-    public function testThatMaxAgeIsSetInLoginUrlFromInitialConfig()
+    public function testThatMaxAgeIsSetInLoginUrlFromInitialConfig(): void
     {
-        $custom_config            = self::$baseConfig;
+        $custom_config = self::$baseConfig;
         $custom_config['max_age'] = '1000';
         $auth0 = new Auth0($custom_config);
 
         $auth_url = $auth0->getLoginUrl();
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-        $url_query        = explode('&', $parsed_url_query);
+        $url_query = explode('&', $parsed_url_query);
 
         $this->assertContains('max_age=1000', $url_query);
-        $this->assertArrayHasKey('auth0__max_age', $_SESSION);
-        $this->assertEquals('1000', $_SESSION['auth0__max_age']);
+        $this->assertArrayHasKey('auth0_max_age', $_SESSION);
+        $this->assertEquals('1000', $_SESSION['auth0_max_age']);
     }
 
     /**
      * Test that max age is overridden in login url.
-     *
-     * @return void
      */
-    public function testThatMaxAgeIsOverriddenInLoginUrl()
+    public function testThatMaxAgeIsOverriddenInLoginUrl(): void
     {
-        $custom_config            = self::$baseConfig;
-        $custom_config['max_age'] = 1000;
+        $custom_config = self::$baseConfig;
+        $custom_config['max_age'] = '1000';
         $auth0 = new Auth0($custom_config);
 
         $auth_url = $auth0->getLoginUrl(['max_age' => '1001']);
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-        $url_query        = explode('&', $parsed_url_query);
+        $url_query = explode('&', $parsed_url_query);
 
         $this->assertContains('max_age=1001', $url_query);
-        $this->assertArrayHasKey('auth0__max_age', $_SESSION);
-        $this->assertEquals('1001', $_SESSION['auth0__max_age']);
+        $this->assertArrayHasKey('auth0_max_age', $_SESSION);
+        $this->assertEquals('1001', $_SESSION['auth0_max_age']);
     }
 
     /**
      * Test that ID Token is persisted when set.
-     *
-     * @return void
      */
-    public function testThatIdTokenIsPersistedWhenSet()
+    public function testThatIdTokenIsPersistedWhenSet(): void
     {
         $custom_config = array_merge(
             self::$baseConfig,
             [
-                'id_token_alg'     => 'HS256',
+                'id_token_alg' => 'HS256',
                 'persist_id_token' => true,
-                'store'            => new SessionStore(),
+                'store' => new SessionStore(),
             ]
         );
 
-        $auth0    = new Auth0($custom_config);
+        $auth0 = new Auth0($custom_config);
         $id_token = self::getIdToken();
 
-        $_SESSION['auth0__nonce']   = '__test_nonce__';
-        $_SESSION['auth0__max_age'] = 1000;
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
+        $_SESSION['auth0_max_age'] = '1000';
         $auth0->setIdToken($id_token);
 
         $this->assertEquals($id_token, $auth0->getIdToken());
-        $this->assertEquals($id_token, $_SESSION['auth0__id_token']);
+        $this->assertEquals($id_token, $_SESSION['auth0_id_token']);
     }
 
     /**
      * Test that ID Token nonce is checked when set.
-     *
-     * @return void
      */
-    public function testThatIdTokenNonceIsCheckedWhenSet()
+    public function testThatIdTokenNonceIsCheckedWhenSet(): void
     {
-        $custom_config = (self::$baseConfig + ['id_token_alg' => 'HS256']);
-        $auth0         = new Auth0($custom_config);
-        $id_token      = self::getIdToken();
+        $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256'];
+        $auth0 = new Auth0($custom_config);
+        $id_token = self::getIdToken();
 
-        $_SESSION['auth0__nonce'] = '__invalid_nonce__';
+        $_SESSION['auth0_nonce'] = '__invalid_nonce__';
         $e_message = 'No exception caught';
         try {
             $auth0->setIdToken($id_token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $e_message = $e->getMessage();
         }
 
@@ -775,20 +709,18 @@ class Auth0Test extends TestCase
 
     /**
      * Test that ID Token auth time is checked when set.
-     *
-     * @return void
      */
-    public function testThatIdTokenAuthTimeIsCheckedWhenSet()
+    public function testThatIdTokenAuthTimeIsCheckedWhenSet(): void
     {
-        $custom_config = (self::$baseConfig + ['id_token_alg' => 'HS256', 'max_age' => 10]);
-        $auth0         = new Auth0($custom_config);
-        $id_token      = self::getIdToken();
+        $custom_config = self::$baseConfig + ['id_token_alg' => 'HS256', 'max_age' => 10];
+        $auth0 = new Auth0($custom_config);
+        $id_token = self::getIdToken();
 
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
         $e_message = 'No exception caught';
         try {
             $auth0->setIdToken($id_token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $e_message = $e->getMessage();
         }
 
@@ -800,14 +732,12 @@ class Auth0Test extends TestCase
 
     /**
      * Test that ID Token Organization is checked when set.
-     *
-     * @return void
      */
-    public function testThatIdTokenOrganizationIsCheckedWhenSet()
+    public function testThatIdTokenOrganizationIsCheckedWhenSet(): void
     {
-        $auth0 = new Auth0((self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']));
+        $auth0 = new Auth0(self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']);
 
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
         $this->expectExceptionMessage('Organization Id (org_id) claim must be a string present in the ID token');
 
         $auth0->decodeIdToken(self::getIdToken());
@@ -815,12 +745,10 @@ class Auth0Test extends TestCase
 
     /**
      * Test that ID Token Organization is successful when matched.
-     *
-     * @return void
      */
-    public function testThatIdTokenOrganizationSucceesWhenMatched()
+    public function testThatIdTokenOrganizationSucceesWhenMatched(): void
     {
-        $auth0 = new Auth0((self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']));
+        $auth0 = new Auth0(self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']);
 
         $decodedToken = $auth0->decodeIdToken(self::getIdToken(['org_id' => '__test_organization__']));
 
@@ -830,14 +758,12 @@ class Auth0Test extends TestCase
 
     /**
      * Test that ID Token Organization fails when mismatched.
-     *
-     * @return void
      */
-    public function testThatIdTokenOrganizationFailsWhenMismatched()
+    public function testThatIdTokenOrganizationFailsWhenMismatched(): void
     {
-        $auth0 = new Auth0((self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']));
+        $auth0 = new Auth0(self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']);
 
-        $this->expectException(InvalidTokenException::class);
+        $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
         $this->expectExceptionMessage('Organization Id (org_id) claim value mismatch in the ID token; expected "__test_organization__", found "__bad_test_organization__"');
 
         $auth0->decodeIdToken(self::getIdToken(['org_id' => '__bad_test_organization__']));
@@ -845,17 +771,15 @@ class Auth0Test extends TestCase
 
     /**
      * Test that decode ID Token options are used.
-     *
-     * @return void
      */
-    public function testThatDecodeIdTokenOptionsAreUsed()
+    public function testThatDecodeIdTokenOptionsAreUsed(): void
     {
-        $auth0 = new Auth0((self::$baseConfig + ['id_token_alg' => 'HS256']));
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $auth0 = new Auth0(self::$baseConfig + ['id_token_alg' => 'HS256']);
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
         $e_message = 'No exception caught';
         try {
             $auth0->decodeIdToken(self::getIdToken(), ['max_age' => 10]);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $e_message = $e->getMessage();
         }
 
@@ -867,18 +791,16 @@ class Auth0Test extends TestCase
 
     /**
      * Test that ID Token leeway from constructor is used.
-     *
-     * @return void
      */
-    public function testThatIdTokenLeewayFromConstructorIsUsed()
+    public function testThatIdTokenLeewayFromConstructorIsUsed(): void
     {
-        $custom_config = (self::$baseConfig + ['id_token_leeway' => 120, 'id_token_alg' => 'HS256']);
-        $auth0         = new Auth0($custom_config);
+        $custom_config = self::$baseConfig + ['id_token_leeway' => 120, 'id_token_alg' => 'HS256'];
+        $auth0 = new Auth0($custom_config);
 
         // Set the token expiration time past the default leeway of 60 seconds.
-        $id_token = self::getIdToken(['exp' => (time() - 100)]);
+        $id_token = self::getIdToken(['exp' => time() - 100]);
 
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
 
         $auth0->setIdToken($id_token);
         $this->assertEquals($id_token, $auth0->getIdToken());
@@ -886,32 +808,30 @@ class Auth0Test extends TestCase
 
     /**
      * Test that cache handler can be set.
-     *
-     * @return void
      */
-    public function testThatCacheHandlerCanBeSet()
+    public function testThatCacheHandlerCanBeSet(): void
     {
         $request_history = [];
-        $mock            = new MockHandler(
+        $mock = new MockHandler(
             [
                 new Response(200, ['Content-Type' => 'application/json'], '{"keys":[{"kid":"__test_kid__","x5c":["123"]}]}'),
             ]
         );
-        $handler         = HandlerStack::create($mock);
+        $handler = HandlerStack::create($mock);
         $handler->push(Middleware::history($request_history));
 
-        $pool  = new ArrayCachePool();
+        $pool = new ArrayCachePool();
         $auth0 = new Auth0(
             [
-                'domain'          => 'test.auth0.com',
-                'client_id'       => uniqid(),
-                'redirect_uri'    => uniqid(),
-                'cache_handler'   => $pool,
+                'domain' => 'test.auth0.com',
+                'client_id' => uniqid(),
+                'redirect_uri' => uniqid(),
+                'cache_handler' => $pool,
                 'transient_store' => new SessionStore(),
-                'guzzle_options'  => ['handler' => $handler],
+                'guzzle_options' => ['handler' => $handler],
             ]
         );
-        $_SESSION['auth0__nonce'] = '__test_nonce__';
+        $_SESSION['auth0_nonce'] = '__test_nonce__';
 
         try {
             @$auth0->setIdToken(AsymmetricVerifierTest::getToken());
@@ -930,21 +850,19 @@ class Auth0Test extends TestCase
      * Helper method for building an ID Token.
      *
      * @param array $overrides Any overrides to apply to the token configuration.
-     *
-     * @return string
      */
     public static function getIdToken(array $overrides = []): string
     {
         $defaults = [
-            'sub'       => '__test_sub__',
-            'iss'       => 'https://__test_domain__/',
-            'aud'       => '__test_client_id__',
-            'nonce'     => '__test_nonce__',
-            'auth_time' => (time() - 100),
-            'exp'       => (time() + 1000),
-            'iat'       => (time() - 1000),
+            'sub' => '__test_sub__',
+            'iss' => 'https://__test_domain__/',
+            'aud' => '__test_client_id__',
+            'nonce' => '__test_nonce__',
+            'auth_time' => time() - 100,
+            'exp' => time() + 1000,
+            'iat' => time() - 1000,
         ];
-        $builder  = SymmetricVerifierTest::getTokenBuilder();
+        $builder = SymmetricVerifierTest::getTokenBuilder();
 
         foreach (array_merge($defaults, $overrides) as $claim => $value) {
             $builder->withClaim($claim, $value);

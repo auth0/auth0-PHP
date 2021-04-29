@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Emails.
@@ -42,8 +41,8 @@ class Emails extends GenericResource
         $this->validateArray($credentials, 'credentials');
 
         $payload = [
-            'name'        => $name,
-            'credentials' => (object)$credentials
+            'name' => $name,
+            'credentials' => (object) $credentials,
         ] + $body;
 
         return $this->apiClient->method('post')
@@ -100,7 +99,7 @@ class Emails extends GenericResource
 
         $payload = [
             'name' => $name,
-            'credentials' => (object)$credentials
+            'credentials' => (object) $credentials,
         ] + $body;
 
         return $this->apiClient->method('patch')

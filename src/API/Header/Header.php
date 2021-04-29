@@ -8,17 +8,13 @@ class Header
 {
     /**
      * Name of the header.
-     *
-     * @var string
      */
-    protected $header;
+    protected string $header;
 
     /**
      * Value of the header.
-     *
-     * @var string
      */
-    protected $value;
+    protected string $value;
 
     /**
      * Header constructor.
@@ -31,13 +27,11 @@ class Header
         string $value
     ) {
         $this->header = $header;
-        $this->value  = $value;
+        $this->value = $value;
     }
 
     /**
      * Return the header name.
-     *
-     * @return string
      */
     public function getHeader(): string
     {
@@ -46,8 +40,6 @@ class Header
 
     /**
      * Return the header value.
-     *
-     * @return string
      */
     public function getValue(): string
     {
@@ -56,8 +48,6 @@ class Header
 
     /**
      * Build and return the header string.
-     *
-     * @return string
      */
     public function get(): string
     {

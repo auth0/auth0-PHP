@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
-use Auth0\SDK\API\Management;
-use Auth0\SDK\Exception\CoreException;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
 
@@ -14,17 +14,13 @@ class RulesTest extends ApiTests
 {
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Test getAll() request.
-     *
-     * @return void
      */
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -39,10 +35,8 @@ class RulesTest extends ApiTests
 
     /**
      * Test get() request.
-     *
-     * @return void
      */
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -56,10 +50,8 @@ class RulesTest extends ApiTests
 
     /**
      * Test delete() request.
-     *
-     * @return void
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -73,17 +65,15 @@ class RulesTest extends ApiTests
 
     /**
      * Test create() request.
-     *
-     * @return void
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
         $mockup = (object) [
             'name' => uniqid(),
             'script' => uniqid(),
-            'query' => [ 'test_parameter' => uniqid() ]
+            'query' => [ 'test_parameter' => uniqid() ],
         ];
 
         $api->call()->rules()->create($mockup->name, $mockup->script, $mockup->query);
@@ -107,16 +97,14 @@ class RulesTest extends ApiTests
 
     /**
      * Test update() request.
-     *
-     * @return void
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
         $mockup = (object) [
             'id' => uniqid(),
-            'query' => [ 'test_parameter' => uniqid() ]
+            'query' => [ 'test_parameter' => uniqid() ],
         ];
 
         $api->call()->rules()->update($mockup->id, $mockup->query);

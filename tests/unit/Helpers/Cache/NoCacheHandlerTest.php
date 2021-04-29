@@ -9,33 +9,33 @@ use PHPUnit\Framework\TestCase;
 
 class NoCacheHandlerTest extends TestCase
 {
-    public function testThatGetReturnsDefault()
+    public function testThatGetReturnsDefault(): void
     {
         $cache = new NoCacheHandler();
         $this->assertEquals('__test_default_value__', $cache->get(uniqid(), '__test_default_value__'));
     }
 
-    public function testThatSetReturnsTrue()
+    public function testThatSetReturnsTrue(): void
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->set(uniqid(), uniqid()));
     }
 
-    public function testThatDeleteReturnsTrue()
+    public function testThatDeleteReturnsTrue(): void
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->delete(uniqid()));
     }
 
-    public function testThatClearReturnsTrue()
+    public function testThatClearReturnsTrue(): void
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->clear());
     }
 
-    public function testThatSetMultipleReturnsNull()
+    public function testThatSetMultipleReturnsNull(): void
     {
-        $cache  = new NoCacheHandler();
+        $cache = new NoCacheHandler();
         $result = $cache->getMultiple(['key1', 'key2'], '__test_default_value__');
 
         $this->assertArrayHasKey('key1', $result);
@@ -44,19 +44,19 @@ class NoCacheHandlerTest extends TestCase
         $this->assertEquals('__test_default_value__', $result['key2']);
     }
 
-    public function testThatSetMultipleReturnsTrue()
+    public function testThatSetMultipleReturnsTrue(): void
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->setMultiple([uniqid() => uniqid()]));
     }
 
-    public function testThatDeleteMultipleReturnsTrue()
+    public function testThatDeleteMultipleReturnsTrue(): void
     {
         $cache = new NoCacheHandler();
         $this->assertTrue($cache->deleteMultiple([uniqid(), uniqid()]));
     }
 
-    public function testThatHasReturnsFalse()
+    public function testThatHasReturnsFalse(): void
     {
         $cache = new NoCacheHandler();
         $this->assertFalse($cache->has(uniqid()));

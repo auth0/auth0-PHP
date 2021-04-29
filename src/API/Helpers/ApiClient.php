@@ -19,25 +19,68 @@ class ApiClient
     /**
      * Flag to turn telemetry headers off.
      * Adjusted with self::disableInfoHeaders().
-     *
-     * @var bool
      */
-    protected static $infoHeadersDataEnabled = true;
+    protected static bool $infoHeadersDataEnabled = true;
 
     /**
      * Current telemetry headers.
-     *
-     * @var InformationHeaders
      */
-    protected static $infoHeadersData;
+    protected static ?InformationHeaders $infoHeadersData = null;
+
+    /**
+     * API domain.
+     */
+    protected string $domain;
+
+    /**
+     * Base API path.
+     */
+    protected string $basePath;
+
+    /**
+     * Headers to set for all calls.
+     *
+     * @var array|mixed
+     */
+    protected $headers;
+
+    /**
+     * Options to pass to the Guzzle HTTP library.
+     */
+    protected array $guzzleOptions;
+
+    /**
+     * Data type to return from the call.
+     * Can be "body" (default), "headers", or "object".
+     *
+     * @see \Auth0\SDK\API\Helpers\RequestBuilder::call()
+     */
+    protected ?string $returnType = null;
+
+    /**
+     * ApiClient constructor.
+     *
+     * @param array $config Configuration for this client.
+     */
+    public function __construct(
+        array $config
+    ) {
+        $this->basePath = $config['basePath'];
+        $this->domain = $config['domain'];
+        $this->returnType = $config['returnType'] ?? null;
+        $this->headers = $config['headers'] ?? [];
+        $this->guzzleOptions = $config['guzzleOptions'] ?? [];
+
+        if (self::$infoHeadersDataEnabled) {
+            $this->headers[] = new Telemetry(self::getInfoHeadersData()->build());
+        }
+    }
 
     /**
      * Set new telemetry headers to be used for API requests.
      * Used by dependents to report their package.
      *
      * @param InformationHeaders $infoHeadersData Object representing telemetry to send.
-     *
-     * @return void
      */
     public static function setInfoHeadersData(
         InformationHeaders $infoHeadersData
@@ -50,9 +93,7 @@ class ApiClient
     }
 
     /**
-     * Get the currently set telemtery data.
-     *
-     * @return InformationHeaders|null
+     * Get the currently set telemetry data.
      */
     public static function getInfoHeadersData(): ?InformationHeaders
     {
@@ -70,8 +111,6 @@ class ApiClient
 
     /**
      * Turn off telemetry headers.
-     *
-     * @return void
      */
     public static function disableInfoHeaders(): void
     {
@@ -79,75 +118,16 @@ class ApiClient
     }
 
     /**
-     * API domain.
-     *
-     * @var string
-     */
-    protected $domain;
-
-    /**
-     * Base API path.
-     *
-     * @var string
-     */
-    protected $basePath;
-
-    /**
-     * Headers to set for all calls.
-     *
-     * @var array|mixed
-     */
-    protected $headers;
-
-    /**
-     * Options to pass to the Guzzle HTTP library.
-     *
-     * @var array
-     */
-    protected $guzzleOptions;
-
-    /**
-     * Data type to return from the call.
-     * Can be "body" (default), "headers", or "object".
-     *
-     * @var string|null
-     *
-     * @see \Auth0\SDK\API\Helpers\RequestBuilder::call()
-     */
-    protected $returnType;
-
-    /**
-     * ApiClient constructor.
-     *
-     * @param array $config Configuration for this client.
-     */
-    public function __construct(
-        array $config
-    ) {
-        $this->basePath      = $config['basePath'];
-        $this->domain        = $config['domain'];
-        $this->returnType    = $config['returnType'] ?? null;
-        $this->headers       = $config['headers'] ?? [];
-        $this->guzzleOptions = $config['guzzleOptions'] ?? [];
-
-        if (self::$infoHeadersDataEnabled) {
-            $this->headers[] = new Telemetry(self::getInfoHeadersData()->build());
-        }
-    }
-
-    /**
      * Create a new RequestBuilder.
      *
      * @param string $method           HTTP method to use (GET, POST, PATCH, etc).
      * @param bool   $set_content_type Automatically set a content-type header.
-     *
-     * @return RequestBuilder
      */
     public function method(
         string $method,
         bool $set_content_type = true
     ): RequestBuilder {
-        $method  = strtolower($method);
+        $method = strtolower($method);
         $builder = new RequestBuilder(
             [
                 'domain' => $this->domain,

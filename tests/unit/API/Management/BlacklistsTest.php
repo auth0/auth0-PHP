@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
@@ -10,17 +12,13 @@ class BlacklistsTest extends ApiTests
 {
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
@@ -32,7 +30,7 @@ class BlacklistsTest extends ApiTests
         self::$expectedTelemetry = $infoHeadersData->build();
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -44,7 +42,7 @@ class BlacklistsTest extends ApiTests
         $this->assertEquals('aud=__test_aud__', $api->getHistoryQuery());
     }
 
-    public function testBlacklist()
+    public function testBlacklist(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 

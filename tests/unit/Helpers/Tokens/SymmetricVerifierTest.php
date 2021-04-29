@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\unit\Helpers\Tokens;
 
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HsSigner;
 use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Token;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,29 +15,29 @@ use PHPUnit\Framework\TestCase;
  */
 class SymmetricVerifierTest extends TestCase
 {
-    public function testThatFormatCheckFails()
+    public function testThatFormatCheckFails(): void
     {
         $error_msg = 'No exception caught';
 
         try {
             $verifier = new SymmetricVerifier('__test_secret__');
             $verifier->verifyAndDecode(uniqid() . '.' . uniqid());
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
         $this->assertEquals('ID token could not be decoded', $error_msg);
     }
 
-    public function testThatAlgorithmNoneFails()
+    public function testThatAlgorithmNoneFails(): void
     {
-        $error_msg      = 'No exception caught';
+        $error_msg = 'No exception caught';
         $unsigned_token = (string) self::getTokenBuilder()->getToken();
 
         try {
             $verifier = new SymmetricVerifier('__test_secret__');
             $verifier->verifyAndDecode($unsigned_token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -49,16 +47,16 @@ class SymmetricVerifierTest extends TestCase
         );
     }
 
-    public function testThatWrongAlgorithmFails()
+    public function testThatWrongAlgorithmFails(): void
     {
-        $rsa_keys    = AsymmetricVerifierTest::getRsaKeys();
+        $rsa_keys = AsymmetricVerifierTest::getRsaKeys();
         $rs256_token = AsymmetricVerifierTest::getToken($rsa_keys['private']);
-        $error_msg   = 'No exception caught';
+        $error_msg = 'No exception caught';
 
         try {
             $verifier = new SymmetricVerifier('__test_secret__');
             $verifier->verifyAndDecode($rs256_token);
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
@@ -68,22 +66,22 @@ class SymmetricVerifierTest extends TestCase
         );
     }
 
-    public function testThatInvalidSignatureFails()
+    public function testThatInvalidSignatureFails(): void
     {
         $error_msg = 'No exception caught';
         try {
             $verifier = new SymmetricVerifier('__test_secret__');
             $verifier->verifyAndDecode(self::getToken('__invalid_secret__'));
-        } catch (InvalidTokenException $e) {
+        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
             $error_msg = $e->getMessage();
         }
 
         $this->assertEquals('Invalid ID token signature', $error_msg);
     }
 
-    public function testThatTokenClaimsAreReturned()
+    public function testThatTokenClaimsAreReturned(): void
     {
-        $verifier     = new SymmetricVerifier('__test_secret__');
+        $verifier = new SymmetricVerifier('__test_secret__');
         $decodedToken = $verifier->verifyAndDecode(self::getToken());
 
         $this->assertEquals('__test_sub__', $decodedToken->getClaim('sub'));
@@ -91,8 +89,6 @@ class SymmetricVerifierTest extends TestCase
 
     /**
      * Returns a token builder with a default sub claim.
-     *
-     * @return Builder
      */
     public static function getTokenBuilder(): Builder
     {
@@ -105,7 +101,7 @@ class SymmetricVerifierTest extends TestCase
      *
      * @return Token
      */
-    public static function getToken(string $secret = '__test_secret__', Builder $builder = null): string
+    public static function getToken(string $secret = '__test_secret__', ?Builder $builder = null): string
     {
         $builder = ($builder ?? self::getTokenBuilder());
 

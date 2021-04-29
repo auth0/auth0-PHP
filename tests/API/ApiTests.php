@@ -19,10 +19,8 @@ class ApiTests extends TestCase
 
     /**
      * Environment variables.
-     *
-     * @var array
      */
-    protected static $env = [];
+    protected static array $env = [];
 
     /**
      * Get all test suite environment variables.
@@ -31,7 +29,7 @@ class ApiTests extends TestCase
      *
      * @return array
      */
-    protected static function getEnv()
+    protected static function getEnv(): array
     {
         if (self::$env) {
             return self::$env;
@@ -58,7 +56,7 @@ class ApiTests extends TestCase
             self::$env['AUTH0_API_REQUEST_DELAY'] = 200000;
         }
 
-        if (!isset($env['API_TOKEN']) && $env['APP_CLIENT_SECRET']) {
+        if (! isset($env['API_TOKEN']) && $env['APP_CLIENT_SECRET']) {
             $auth_api = new Authentication($env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET']);
             $response = $auth_api->clientCredentials(['audience' => 'https://' . $env['DOMAIN'] . '/api/v2/']);
             self::$env['API_TOKEN'] = $response['access_token'];
@@ -67,7 +65,7 @@ class ApiTests extends TestCase
         return self::$env;
     }
 
-    protected static function sleep(?int $microseconds = null)
+    protected static function sleep(?int $microseconds = null): void
     {
         usleep($microseconds ?? self::$env['AUTH0_API_REQUEST_DELAY']);
     }

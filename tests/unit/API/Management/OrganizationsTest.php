@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
 
@@ -19,22 +20,16 @@ class OrganizationsTest extends ApiTests
 {
     /**
      * Expected telemetry value.
-     *
-     * @var string
      */
-    protected static $expectedTelemetry;
+    protected static string $expectedTelemetry;
 
     /**
      * Default request headers.
-     *
-     * @var array
      */
-    protected static $headers = ['content-type' => 'json'];
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
      * Runs before test suite starts.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
@@ -45,10 +40,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create organization request is formed correctly.
-     *
-     * @return void
      */
-    public function testThatCreateOrganizationRequestIsFormedCorrectly()
+    public function testThatCreateOrganizationRequestIsFormedCorrectly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -88,14 +81,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create organization request with empty name throws exception.
-     *
-     * @return void
      */
-    public function testThatCreateOrganizationRequestWithEmptyNameThrowsException()
+    public function testThatCreateOrganizationRequestWithEmptyNameThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid name.');
 
         $api->call()->organizations()->create('', '');
@@ -103,14 +94,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create organization request with empty display name throws exception.
-     *
-     * @return void
      */
-    public function testThatCreateOrganizationRequestWithEmptyDisplayNameThrowsException()
+    public function testThatCreateOrganizationRequestWithEmptyDisplayNameThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid displayName.');
 
         $api->call()->organizations()->create('test-organization', '');
@@ -118,10 +107,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that update organization request is formed correctly.
-     *
-     * @return void
      */
-    public function testThatUpdateOrganizationRequestIsFormedCorrectly()
+    public function testThatUpdateOrganizationRequestIsFormedCorrectly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -158,14 +145,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that update organization request with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatUpdateOrganizationRequestWithEmptyIdThrowsException()
+    public function testThatUpdateOrganizationRequestWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->update('', '');
@@ -173,14 +158,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that update organization request with empty display name throws exception.
-     *
-     * @return void
      */
-    public function testThatUpdateOrganizationRequestWithEmptyDisplayNameThrowsException()
+    public function testThatUpdateOrganizationRequestWithEmptyDisplayNameThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid displayName.');
 
         $api->call()->organizations()->update('test-organization', '');
@@ -188,10 +171,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that delete organization request is formed correctly.
-     *
-     * @return void
      */
-    public function testThatDeleteOrganizationRequestIsFormedCorrectly()
+    public function testThatDeleteOrganizationRequestIsFormedCorrectly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -206,14 +187,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that delete organization request with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatDeleteOrganizationRequestWithEmptyIdThrowsException()
+    public function testThatDeleteOrganizationRequestWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->update('', '');
@@ -221,10 +200,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get all request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetAllRequestIsFormedProperly()
+    public function testThatGetAllRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -236,10 +213,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetRequestIsFormedProperly()
+    public function testThatGetRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -251,14 +226,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatGetWithEmptyIdThrowsException()
+    public function testThatGetWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->get('');
@@ -266,10 +239,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get by name request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetByNameRequestIsFormedProperly()
+    public function testThatGetByNameRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -281,14 +252,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get by name with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatGetByNameWithEmptyIdThrowsException()
+    public function testThatGetByNameWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid name.');
 
         $api->call()->organizations()->getByName('');
@@ -296,10 +265,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get enabled connections request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetEnabledConnectionsRequestIsFormedProperly()
+    public function testThatGetEnabledConnectionsRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -311,14 +278,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get enabled connections with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatGetEnabledConnectionsWithEmptyIdThrowsException()
+    public function testThatGetEnabledConnectionsWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getEnabledConnections('');
@@ -326,10 +291,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get enabled connection request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetEnabledConnectionRequestIsFormedProperly()
+    public function testThatGetEnabledConnectionRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -341,14 +304,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get enabled connection with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatGetEnabledConnectionWithEmptyIdThrowsException()
+    public function testThatGetEnabledConnectionWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getEnabledConnection('', '');
@@ -356,14 +317,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get enabled connection with empty connection throws exception.
-     *
-     * @return void
      */
-    public function testThatGetEnabledConnectionWithEmptyConnectionThrowsException()
+    public function testThatGetEnabledConnectionWithEmptyConnectionThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid connectionId.');
 
         $api->call()->organizations()->getEnabledConnection('test-organization', '');
@@ -371,10 +330,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add enabled connection request is formed properly.
-     *
-     * @return void
      */
-    public function testThatAddEnabledConnectionRequestIsFormedProperly()
+    public function testThatAddEnabledConnectionRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -390,14 +347,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add enabled connection with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatAddEnabledConnectionWithEmptyIdThrowsException()
+    public function testThatAddEnabledConnectionWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->addEnabledConnection('', '', ['assign_membership_on_login' => true]);
@@ -405,14 +360,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add enabled connection with empty connection throws exception.
-     *
-     * @return void
      */
-    public function testThatAddEnabledConnectionWithEmptyConnectionThrowsException()
+    public function testThatAddEnabledConnectionWithEmptyConnectionThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid connectionId.');
 
         $api->call()->organizations()->addEnabledConnection('test-organization', '', ['assign_membership_on_login' => true]);
@@ -420,10 +373,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that update enabled connection request is formed properly.
-     *
-     * @return void
      */
-    public function testThatUpdateEnabledConnectionRequestIsFormedProperly()
+    public function testThatUpdateEnabledConnectionRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -442,14 +393,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that update enabled connection with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatUpdateEnabledConnectionWithEmptyIdThrowsException()
+    public function testThatUpdateEnabledConnectionWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->updateEnabledConnection('', '', ['assign_membership_on_login' => true]);
@@ -457,14 +406,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that update enabled connection with empty connection throws exception.
-     *
-     * @return void
      */
-    public function testThatUpdateEnabledConnectionWithEmptyConnectionThrowsException()
+    public function testThatUpdateEnabledConnectionWithEmptyConnectionThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid connectionId.');
 
         $api->call()->organizations()->updateEnabledConnection('test-organization', '', ['assign_membership_on_login' => true]);
@@ -472,10 +419,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove enabled connection request is formed properly.
-     *
-     * @return void
      */
-    public function testThatRemoveEnabledConnectionRequestIsFormedProperly()
+    public function testThatRemoveEnabledConnectionRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -487,14 +432,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test hat remove enabled connection with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatRemoveEnabledConnectionWithEmptyIdThrowsException()
+    public function testThatRemoveEnabledConnectionWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->removeEnabledConnection('', '');
@@ -502,14 +445,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove enabled connection with empty connection throws exception.
-     *
-     * @return void
      */
-    public function testThatRemoveEnabledConnectionWithEmptyConnectionThrowsException()
+    public function testThatRemoveEnabledConnectionWithEmptyConnectionThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid connectionId.');
 
         $api->call()->organizations()->removeEnabledConnection('test-organization', '');
@@ -517,10 +458,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get members request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetMembersRequestIsFormedProperly()
+    public function testThatGetMembersRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -532,14 +471,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get members with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatGetMembersWithEmptyIdThrowsException()
+    public function testThatGetMembersWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getMembers('');
@@ -547,10 +484,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add members request is formed properly.
-     *
-     * @return void
      */
-    public function testThatAddMembersRequestIsFormedProperly()
+    public function testThatAddMembersRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -569,14 +504,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add members request with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatAddMembersWithEmptyIdThrowsException()
+    public function testThatAddMembersWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->addMembers('', []);
@@ -584,14 +517,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add members with empty users throws exception.
-     *
-     * @return void
      */
-    public function testThatAddMembersWithEmptyUsersThrowsException()
+    public function testThatAddMembersWithEmptyUsersThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid members.');
 
         $api->call()->organizations()->addMembers('test-organization', []);
@@ -599,10 +530,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove members request is formed properly.
-     *
-     * @return void
      */
-    public function testThatRemoveMembersRequestIsFormedProperly()
+    public function testThatRemoveMembersRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -618,14 +547,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove members with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatRemoveMembersWithEmptyIdThrowsException()
+    public function testThatRemoveMembersWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->removeMembers('', []);
@@ -633,14 +560,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove members with empty users throws exception.
-     *
-     * @return void
      */
-    public function testThatRemoveMembersWithEmptyUsersThrowsException()
+    public function testThatRemoveMembersWithEmptyUsersThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid members.');
 
         $api->call()->organizations()->removeMembers('test-organization', []);
@@ -648,10 +573,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get member roles request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetMemberRolesRequestIsFormedProperly()
+    public function testThatGetMemberRolesRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -663,14 +586,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get member roles with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatGetMemberRolesWithEmptyIdThrowsException()
+    public function testThatGetMemberRolesWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getMemberRoles('', '');
@@ -678,14 +599,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get member roles with empty user throws exception.
-     *
-     * @return void
      */
-    public function testThatGetMemberRolesWithEmptyUserThrowsException()
+    public function testThatGetMemberRolesWithEmptyUserThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid userId.');
 
         $api->call()->organizations()->getMemberRoles('test-organization', '');
@@ -693,10 +612,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add member roles request is formed properly.
-     *
-     * @return void
      */
-    public function testThatAddMemberRolesRequestIsFormedProperly()
+    public function testThatAddMemberRolesRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -715,14 +632,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add member roles with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatAddMemberRolesWithEmptyIdThrowsException()
+    public function testThatAddMemberRolesWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->addMemberRoles('', '', []);
@@ -730,14 +645,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add member roles with empty user throws exception.
-     *
-     * @return void
      */
-    public function testThatAddMemberRolesWithEmptyUserThrowsException()
+    public function testThatAddMemberRolesWithEmptyUserThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid userId.');
 
         $api->call()->organizations()->addMemberRoles('test-organization', '', []);
@@ -745,14 +658,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that add member roles with empty roles throws exception.
-     *
-     * @return void
      */
-    public function testThatAddMemberRolesWithEmptyRolesThrowsException()
+    public function testThatAddMemberRolesWithEmptyRolesThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid roles.');
 
         $api->call()->organizations()->addMemberRoles('test-organization', 'test-rule', []);
@@ -760,10 +671,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove member roles request is formed properly.
-     *
-     * @return void
      */
-    public function testThatRemoveMemberRolesRequestIsFormedProperly()
+    public function testThatRemoveMemberRolesRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -779,14 +688,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove member roles with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatRemoveMemberRolesWithEmptyIdThrowsException()
+    public function testThatRemoveMemberRolesWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->removeMemberRoles('', '', []);
@@ -794,14 +701,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove member roles with empty user throws exception.
-     *
-     * @return void
      */
-    public function testThatRemoveMemberRolesWithEmptyUserThrowsException()
+    public function testThatRemoveMemberRolesWithEmptyUserThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid userId.');
 
         $api->call()->organizations()->removeMemberRoles('test-organization', '', []);
@@ -809,14 +714,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that remove member roles with empty roles throws exception.
-     *
-     * @return void
      */
-    public function testThatRemoveMemberRolesWithEmptyRolesThrowsException()
+    public function testThatRemoveMemberRolesWithEmptyRolesThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid roles.');
 
         $api->call()->organizations()->removeMemberRoles('test-organization', 'test-rule', []);
@@ -824,10 +727,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get invitations request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetInvitationsRequestIsFormedProperly()
+    public function testThatGetInvitationsRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -839,14 +740,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get invitations with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatGetInvitationsWithEmptyIdThrowsException()
+    public function testThatGetInvitationsWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getInvitations('');
@@ -854,10 +753,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get invitation request is formed properly.
-     *
-     * @return void
      */
-    public function testThatGetInvitationRequestIsFormedProperly()
+    public function testThatGetInvitationRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -869,14 +766,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get invitation with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatGetInvitationWithEmptyIdThrowsException()
+    public function testThatGetInvitationWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->getInvitation('', '');
@@ -884,14 +779,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that get invitation with empty invitation throws exception.
-     *
-     * @return void
      */
-    public function testThatGetInvitationWithEmptyInvitationThrowsException()
+    public function testThatGetInvitationWithEmptyInvitationThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid invitationId.');
 
         $api->call()->organizations()->getInvitation('test-organization', '');
@@ -899,10 +792,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create invitation request is formed properly.
-     *
-     * @return void
      */
-    public function testThatCreateInvitationRequestIsFormedProperly()
+    public function testThatCreateInvitationRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -932,14 +823,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create invitation with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatCreateInvitationWithEmptyIdThrowsException()
+    public function testThatCreateInvitationWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->createInvitation('', '', [], []);
@@ -947,14 +836,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create invitation with empty client throws exception.
-     *
-     * @return void
      */
-    public function testThatCreateInvitationWithEmptyClientThrowsException()
+    public function testThatCreateInvitationWithEmptyClientThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid clientId.');
 
         $api->call()->organizations()->createInvitation('test-organization', '', [], []);
@@ -962,14 +849,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create invitation with empty inviter throws exception.
-     *
-     * @return void
      */
-    public function testThatCreateInvitationWithEmptyInviterThrowsException()
+    public function testThatCreateInvitationWithEmptyInviterThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid inviter.');
 
         $api->call()->organizations()->createInvitation('test-organization', 'test-client', [], []);
@@ -977,14 +862,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create invitation with empty invitee throws exception.
-     *
-     * @return void
      */
-    public function testThatCreateInvitationWithEmptyInviteeThrowsException()
+    public function testThatCreateInvitationWithEmptyInviteeThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid invitee.');
 
         $api->call()->organizations()->createInvitation('test-organization', 'test-client', ['test' => 'test'], []);
@@ -992,14 +875,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create invitation with malformed inviter throws exception.
-     *
-     * @return void
      */
-    public function testThatCreateInvitationWithMalformedInviterThrowsException()
+    public function testThatCreateInvitationWithMalformedInviterThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid inviter.');
 
         $api->call()->organizations()->createInvitation('test-organization', 'test-client', ['test' => 'test'], ['test' => 'test']);
@@ -1007,14 +888,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that create invitation with malformed invitee throws exception.
-     *
-     * @return void
      */
-    public function testThatCreateInvitationWithMalformedInviteeThrowsException()
+    public function testThatCreateInvitationWithMalformedInviteeThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid invitee.');
 
         $api->call()->organizations()->createInvitation('test-organization', 'test-client', ['name' => 'Test Sender'], ['test' => 'test']);
@@ -1022,10 +901,8 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that delete invitation request is formed properly.
-     *
-     * @return void
      */
-    public function testThatDeleteInvitationRequestIsFormedProperly()
+    public function testThatDeleteInvitationRequestIsFormedProperly(): void
     {
         $api = new MockManagementApi([new Response(200, self::$headers)]);
 
@@ -1037,14 +914,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that delete invitation with empty id throws exception.
-     *
-     * @return void
      */
-    public function testThatDeleteInvitationWithEmptyIdThrowsException()
+    public function testThatDeleteInvitationWithEmptyIdThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid id.');
 
         $api->call()->organizations()->deleteInvitation('', '');
@@ -1052,14 +927,12 @@ class OrganizationsTest extends ApiTests
 
     /**
      * Test that delete invitation with empty client throws exception.
-     *
-     * @return void
      */
-    public function testThatDeleteInvitationWithEmptyClientThrowsException()
+    public function testThatDeleteInvitationWithEmptyClientThrowsException(): void
     {
         $api = new MockManagementApi();
 
-        $this->expectException(EmptyOrInvalidParameterException::class);
+        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
         $this->expectExceptionMessage('Empty or invalid invitation.');
 
         $api->call()->organizations()->deleteInvitation('test-organization', '');

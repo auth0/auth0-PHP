@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
-use Auth0\SDK\Exception\InvalidPermissionsArrayException;
 use Auth0\SDK\Helpers\Requests\RequestOptions;
-use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Roles.
@@ -41,7 +38,7 @@ class Roles extends GenericResource
         $this->validateString($name, 'name');
 
         $payload = [
-            'name' => $name
+            'name' => $name,
         ] + $body;
 
         return $this->apiClient->method('post')
@@ -178,7 +175,7 @@ class Roles extends GenericResource
         $this->validatePermissions($permissions);
 
         $payload = [
-            'permissions' => []
+            'permissions' => [],
         ];
 
         foreach ($permissions as $permission) {
@@ -241,7 +238,7 @@ class Roles extends GenericResource
         $this->validatePermissions($permissions);
 
         $payload = [
-            'permissions' => []
+            'permissions' => [],
         ];
 
         foreach ($permissions as $permission) {
@@ -280,9 +277,8 @@ class Roles extends GenericResource
         return $this->apiClient->method('post')
             ->addPath('roles', $id, 'users')
             ->withBody(
-                (object)
-                [
-                    'users' => $users
+                (object) [
+                    'users' => $users,
                 ]
             )
             ->withOptions($options)

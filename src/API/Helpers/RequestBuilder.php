@@ -9,8 +9,6 @@ use Auth0\SDK\Helpers\Requests\FilteredRequest;
 use Auth0\SDK\Helpers\Requests\PaginatedRequest;
 use Auth0\SDK\Helpers\Requests\RequestOptions;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -22,102 +20,79 @@ class RequestBuilder
 {
     /**
      * Domain for the request.
-     *
-     * @var string
      */
-    protected $domain;
+    protected string $domain;
 
     /**
      * Base API path for the request.
-     *
-     * @var string
      */
-    protected $basePath;
+    protected string $basePath;
 
     /**
      * Path to request.
-     *
-     * @var array
      */
-    protected $path = [];
+    protected array $path = [];
 
     /**
      * HTTP method to use for the request.
-     *
-     * @var string
      */
-    protected $method;
+    protected string $method;
 
     /**
      * Headers to include for the request.
-     *
-     * @var array
      */
-    protected $headers = [];
+    protected array $headers = [];
 
     /**
      * URL parameters for the request.
-     *
-     * @var array
      */
-    protected $params = [];
+    protected array $params = [];
 
     /**
      * Form parameters to send with the request.
-     *
-     * @var array
      */
-    protected $form_params = [];
+    protected array $form_params = [];
 
     /**
      * Files to send with a multipart request.
-     *
-     * @var array
      */
-    protected $files = [];
+    protected array $files = [];
 
     /**
      * Guzzle HTTP Client options.
      *
-     * @var array
-     *
      * @see http://docs.guzzlephp.org/en/stable/request-options.html
      */
-    protected $guzzleOptions = [];
+    protected array $guzzleOptions = [];
 
     /**
      * Request body.
-     *
-     * @var string
      */
-    protected $body;
+    protected string $body = '';
 
     /**
      * Valid return types for the call() method.
-     *
-     * @var array
      */
-    protected $returnTypes = [ 'body', 'headers' ];
+    protected array $returnTypes = [ 'body', 'headers' ];
 
     /**
      * Default return type.
-     *
-     * @var string
      */
-    protected $returnType;
+    protected ?string $returnType = null;
 
     /**
      * RequestBuilder constructor.
      *
      * @param array $config Configuration array passed to \Auth0\SDK\API\Management constructor.
      */
-    public function __construct(array $config)
-    {
-        $this->method        = $config['method'];
-        $this->domain        = $config['domain'] ?? '';
-        $this->basePath      = $config['basePath'] ?? '';
+    public function __construct(
+        array $config
+    ) {
+        $this->method = $config['method'];
+        $this->domain = $config['domain'] ?? '';
+        $this->basePath = $config['basePath'] ?? '';
         $this->guzzleOptions = $config['guzzleOptions'] ?? [];
-        $this->headers       = $config['headers'] ?? [];
+        $this->headers = $config['headers'] ?? [];
 
         if (array_key_exists('path', $config)) {
             $this->path = $config['path'];
@@ -130,19 +105,16 @@ class RequestBuilder
      * Add paths to the request URL.
      *
      * @param string ...$params String paths to append to the request.
-     *
-     * @return RequestBuilder
      */
-    public function addPath(string ...$params): RequestBuilder
-    {
+    public function addPath(
+        string ...$params
+    ): RequestBuilder {
         $this->path = array_merge($this->path, $params);
         return $this;
     }
 
     /**
      * Get the path and URL parameters of this request.
-     *
-     * @return string
      */
     public function getUrl(): string
     {
@@ -151,19 +123,17 @@ class RequestBuilder
 
     /**
      * Build the query string from current request parameters.
-     *
-     * @return string
      */
     public function getParams(): string
     {
         $paramsClean = [];
         foreach ($this->params as $param => $value) {
-            if (! is_null($value) && '' !== $value) {
+            if (! is_null($value) && $value !== '') {
                 $paramsClean[] = sprintf('%s=%s', $param, $value);
             }
         }
 
-        return empty($paramsClean) ? '' : '?' . implode('&', $paramsClean);
+        return ! count($paramsClean) ? '' : '?' . implode('&', $paramsClean);
     }
 
     /**
@@ -171,11 +141,11 @@ class RequestBuilder
      *
      * @param string $field     Field name in the multipart request.
      * @param string $file_path Path to the file to send.
-     *
-     * @return RequestBuilder
      */
-    public function addFile(string $field, string $file_path): RequestBuilder
-    {
+    public function addFile(
+        string $field,
+        string $file_path
+    ): RequestBuilder {
         $this->files[$field] = $file_path;
         return $this;
     }
@@ -183,13 +153,13 @@ class RequestBuilder
     /**
      * Add a form value to be sent with the request.
      *
-     * @param string $key   Form parameter key.
-     * @param string $value Form parameter value.
-     *
-     * @return RequestBuilder
+     * @param string          $key Form parameter key.
+     * @param string|bool|int $value Form parameter value.
      */
-    public function addFormParam(string $key, $value): RequestBuilder
-    {
+    public function addFormParam(
+        string $key,
+        $value
+    ): RequestBuilder {
         $this->form_params[$key] = $this->prepareBoolParam($value);
         return $this;
     }
@@ -210,8 +180,6 @@ class RequestBuilder
     /**
      * Build the URL and make the request. Returns a ResponseInterface.
      *
-     * @return ResponseInterface
-     *
      * @throws RequestException When there is an HTTP error during the request.
      */
     public function fetch(): ResponseInterface
@@ -221,9 +189,9 @@ class RequestBuilder
             'body' => $this->body,
         ];
 
-        if (! empty($this->files)) {
+        if (count($this->files)) {
             $data['multipart'] = $this->buildMultiPart();
-        } elseif (! empty($this->form_params)) {
+        } elseif (count($this->form_params)) {
             $data['form_params'] = $this->form_params;
         }
 
@@ -255,11 +223,10 @@ class RequestBuilder
      * Set multiple headers for the request.
      *
      * @param array $headers Array of headers to set.
-     *
-     * @return RequestBuilder
      */
-    public function withHeaders(array $headers): RequestBuilder
-    {
+    public function withHeaders(
+        array $headers
+    ): RequestBuilder {
         foreach ($headers as $header) {
             $this->withHeader($header);
         }
@@ -271,11 +238,10 @@ class RequestBuilder
      * Add a header to the request.
      *
      * @param Header $header Header to add.
-     *
-     * @return RequestBuilder
      */
-    public function withHeader(Header $header): RequestBuilder
-    {
+    public function withHeader(
+        Header $header
+    ): RequestBuilder {
         $this->headers[$header->getHeader()] = $header->getValue();
         return $this;
     }
@@ -285,8 +251,6 @@ class RequestBuilder
      *
      * @param string|array|object $body       Body to send.
      * @param string              $jsonEncode True if the $body be encoded as JSON before sending.
-     *
-     * @return RequestBuilder
      */
     public function withBody(
         $body,
@@ -307,11 +271,11 @@ class RequestBuilder
      *
      * @param string          $key   URL parameter key.
      * @param string|bool|int $value URL parameter value.
-     *
-     * @return RequestBuilder
      */
-    public function withParam(string $key, $value): RequestBuilder
-    {
+    public function withParam(
+        string $key,
+        $value
+    ): RequestBuilder {
         $this->params[$key] = $this->prepareBoolParam($value);
         return $this;
     }
@@ -320,12 +284,11 @@ class RequestBuilder
      * Add URL parameters using $key => $value array.
      *
      * @param array|null $parameters URL parameters to add.
-     *
-     * @return RequestBuilder
      */
-    public function withParams(?array $parameters): RequestBuilder
-    {
-        if (null !== $parameters) {
+    public function withParams(
+        ?array $parameters
+    ): RequestBuilder {
+        if ($parameters !== null) {
             foreach ($parameters as $key => $value) {
                 $this->withParam((string) $key, $value);
             }
@@ -338,13 +301,12 @@ class RequestBuilder
      * Add field response filtering parameters using $key => $value array.
      *
      * @param FilteredRequest|null $fields Request fields be included or excluded from the API response using a FilteredRequest object.
-     *
-     * @return RequestBuilder
      */
-    public function withFields(?FilteredRequest $fields): RequestBuilder
-    {
-        if (null !== $fields) {
-            $this->params = $this->params + $fields->build();
+    public function withFields(
+        ?FilteredRequest $fields
+    ): RequestBuilder {
+        if ($fields !== null) {
+            $this->params += $fields->build();
         }
 
         return $this;
@@ -354,13 +316,12 @@ class RequestBuilder
      * Add pagination parameters using $key => $value array.
      *
      * @param PaginatedRequest|null $paginated Request paged results using a PaginatedRequest object.
-     *
-     * @return RequestBuilder
      */
-    public function withPagination(?PaginatedRequest $paginated): RequestBuilder
-    {
-        if (null !== $paginated) {
-            $this->params = $this->params + $paginated->build();
+    public function withPagination(
+        ?PaginatedRequest $paginated
+    ): RequestBuilder {
+        if ($paginated !== null) {
+            $this->params += $paginated->build();
         }
 
         return $this;
@@ -370,13 +331,12 @@ class RequestBuilder
      * Add request parameters using RequestOptions object, representing common scenarios like pagination and field filtering.
      *
      * @param RequestOptions|null $options Request options to include.
-     *
-     * @return RequestBuilder
      */
-    public function withOptions(?RequestOptions $options): RequestBuilder
-    {
-        if (null !== $options) {
-            $this->params = $this->params + $options->build();
+    public function withOptions(
+        ?RequestOptions $options
+    ): RequestBuilder {
+        if ($options !== null) {
+            $this->params += $options->build();
         }
 
         return $this;
@@ -386,12 +346,11 @@ class RequestBuilder
      * Set the return type for this request.
      *
      * @param string $type Request type of "headers" or "body" or "object".
-     *
-     * @return RequestBuilder
      */
-    public function setReturnType(?string $type): RequestBuilder
-    {
-        if (empty($type) || ! in_array($type, $this->returnTypes)) {
+    public function setReturnType(
+        ?string $type
+    ): RequestBuilder {
+        if ($type === null || ! in_array($type, $this->returnTypes)) {
             $type = 'body';
         }
 
@@ -411,14 +370,14 @@ class RequestBuilder
         foreach ($this->files as $field => $file) {
             $multipart[] = [
                 'name' => $field,
-                'contents' => fopen($file, 'r')
+                'contents' => fopen($file, 'r'),
             ];
         }
 
         foreach ($this->form_params as $param => $value) {
             $multipart[] = [
                 'name' => $param,
-                'contents' => $value
+                'contents' => $value,
             ];
         }
 
@@ -432,10 +391,11 @@ class RequestBuilder
      *
      * @return mixed|string
      */
-    private function prepareBoolParam($value)
-    {
+    private function prepareBoolParam(
+        $value
+    ) {
         if (is_bool($value)) {
-            return true === $value ? 'true' : 'false';
+            return $value === true ? 'true' : 'false';
         }
 
         return $value;
