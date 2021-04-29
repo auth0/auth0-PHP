@@ -128,7 +128,7 @@ class RequestBuilder
     {
         $paramsClean = [];
         foreach ($this->params as $param => $value) {
-            if (! is_null($value) && strlen($value)) {
+            if (! is_null($value) && $value !== '') {
                 $paramsClean[] = sprintf('%s=%s', $param, $value);
             }
         }
