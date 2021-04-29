@@ -9,8 +9,6 @@ use Auth0\SDK\Contract\StoreInterface;
 /**
  * Class EmptyStore.
  * Used to fulfill an interface without providing actual storage.
- *
- * @package Auth0\SDK\Store
  */
 class EmptyStore implements StoreInterface
 {

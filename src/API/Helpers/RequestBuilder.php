@@ -13,8 +13,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class RequestBuilder
- *
- * @package Auth0\SDK\API\Helpers
  */
 class RequestBuilder
 {

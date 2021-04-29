@@ -7,8 +7,6 @@ namespace Auth0\SDK\API\Helpers;
 /**
  * Class InformationHeaders
  * Builds, extends, modifies, and formats SDK telemetry data.
- *
- * @package Auth0\SDK\API\Helpers
  */
 class InformationHeaders
 {

@@ -8,8 +8,6 @@ use Auth0\SDK\Contract\StoreInterface;
 
 /**
  * Class TransientStoreHandler
- *
- * @package Auth0\SDK\Helpers
  */
 class TransientStoreHandler
 {

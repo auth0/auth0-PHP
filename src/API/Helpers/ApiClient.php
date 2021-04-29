@@ -9,8 +9,6 @@ use Auth0\SDK\API\Header\Telemetry;
 
 /**
  * Class ApiClient
- *
- * @package Auth0\SDK\API\Helpers
  */
 class ApiClient
 {

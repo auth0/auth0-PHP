@@ -6,8 +6,6 @@ namespace Auth0\SDK\Helpers\Requests;
 
 /**
  * Class RequestOptions.
- *
- * @package Auth0\SDK\Helpers\Requests
  */
 class RequestOptions
 {

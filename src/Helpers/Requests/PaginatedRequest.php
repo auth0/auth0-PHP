@@ -6,8 +6,6 @@ namespace Auth0\SDK\Helpers\Requests;
 
 /**
  * Class PaginatedRequest.
- *
- * @package Auth0\SDK\Helpers
  */
 class PaginatedRequest
 {

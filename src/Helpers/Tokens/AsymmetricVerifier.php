@@ -10,8 +10,6 @@ use Lcobucci\JWT\Token;
 
 /**
  * Class AsymmetricVerifier
- *
- * @package Auth0\SDK\Helpers
  */
 final class AsymmetricVerifier extends SignatureVerifier
 {

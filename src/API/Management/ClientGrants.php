@@ -11,8 +11,6 @@ use Auth0\SDK\Helpers\Requests\RequestOptions;
  * Handles requests to the Client Grants endpoint of the v2 Management API.
  *
  * @link https://auth0.com/docs/api/management/v2#!/Client_Grants
- *
- * @package Auth0\SDK\API\Management
  */
 class ClientGrants extends GenericResource
 {

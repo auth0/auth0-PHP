@@ -10,8 +10,6 @@ use Psr\SimpleCache\CacheInterface;
 
 /**
  * Class JWKFetcher.
- *
- * @package Auth0\SDK\Helpers
  */
 class JWKFetcher
 {

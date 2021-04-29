@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Helpers;
 
 /**
- * Class PKCE
- *
- * @package Auth0\SDK\Helpers
+ * Class PKCE.
  */
 class PKCE
 {

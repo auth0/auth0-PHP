@@ -7,8 +7,6 @@ namespace Auth0\SDK\Helpers\Tokens;
 /**
  * Class TokenVerifier, a generic JWT verifier.
  * For verifying OIDC-compliant ID tokens, use Auth0\SDK\Helpers\Tokens\IdTokenVerifier
- *
- * @package Auth0\SDK\Helpers\Tokens
  */
 class TokenVerifier
 {

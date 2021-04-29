@@ -6,8 +6,6 @@ namespace Auth0\SDK\Helpers\Tokens;
 
 /**
  * Class IdTokenVerifier, an OIDC-compliant ID token verifier.
- *
- * @package Auth0\SDK\Helpers\Tokens
  */
 final class IdTokenVerifier extends TokenVerifier
 {

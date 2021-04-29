@@ -9,8 +9,6 @@ use Lcobucci\JWT\Token;
 
 /**
  * Class SignatureVerifier
- *
- * @package Auth0\SDK\Helpers
  */
 abstract class SignatureVerifier
 {

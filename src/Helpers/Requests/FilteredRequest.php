@@ -6,8 +6,6 @@ namespace Auth0\SDK\Helpers\Requests;
 
 /**
  * Class FilteredRequest.
- *
- * @package Auth0\SDK\Helpers
  */
 class FilteredRequest
 {

@@ -11,8 +11,6 @@ use Auth0\SDK\Helpers\Requests\RequestOptions;
  * Handles requests to the Jobs endpoint of the v2 Management API.
  *
  * @link https://auth0.com/docs/api/management/v2#!/Jobs
- *
- * @package Auth0\SDK\API\Management
  */
 class Jobs extends GenericResource
 {

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Main entry point to the Auth0 SDK
- *
- * @package Auth0\SDK
- */
-
 declare(strict_types=1);
 
 namespace Auth0\SDK;
@@ -27,8 +21,6 @@ use Psr\SimpleCache\CacheInterface;
 /**
  * Class Auth0
  * Provides access to Auth0 authentication functionality.
- *
- * @package Auth0\SDK
  */
 class Auth0
 {

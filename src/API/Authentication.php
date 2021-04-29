@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Authentication API wrapper
- *
- * @package Auth0\SDK\API
- *
- * @see https://auth0.com/docs/api/authentication
- */
-
 declare(strict_types=1);
 
 namespace Auth0\SDK\API;
@@ -19,8 +11,6 @@ use GuzzleHttp\Psr7;
 
 /**
  * Class Authentication
- *
- * @package Auth0\SDK\API
  */
 class Authentication
 {

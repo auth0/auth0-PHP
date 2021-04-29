@@ -11,8 +11,6 @@ use Auth0\SDK\Helpers\Requests\RequestOptions;
  * Handles requests to the Clients endpoint of the v2 Management API.
  *
  * @link https://auth0.com/docs/api/management/v2#!/Clients
- *
- * @package Auth0\SDK\API\Management
  */
 class Clients extends GenericResource
 {

@@ -9,8 +9,6 @@ use Auth0\SDK\API\Helpers\ApiClient;
 /**
  * Class GenericResource.
  * Extended by Management API endpoints classes.
- *
- * @package Auth0\SDK\API\Management
  */
 class GenericResource
 {

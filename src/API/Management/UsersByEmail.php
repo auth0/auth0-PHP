@@ -11,8 +11,6 @@ use Auth0\SDK\Helpers\Requests\RequestOptions;
  * Handles requests to the Users by Email endpoint of the v2 Management API.
  *
  * @link https://auth0.com/docs/api/management/v2#!/Users_By_Email
- *
- * @package Auth0\SDK\API\Management
  */
 class UsersByEmail extends GenericResource
 {

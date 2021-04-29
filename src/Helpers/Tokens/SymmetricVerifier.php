@@ -9,8 +9,6 @@ use Lcobucci\JWT\Token;
 
 /**
  * Class SymmetricVerifier
- *
- * @package Auth0\SDK\Helpers
  */
 final class SymmetricVerifier extends SignatureVerifier
 {
