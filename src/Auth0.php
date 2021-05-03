@@ -757,7 +757,7 @@ class Auth0
      *
      * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
-    protected function getState()
+    public function getState()
     {
         $state = null;
         if ($this->responseMode === 'query' && isset($_GET[self::TRANSIENT_STATE_KEY])) {
