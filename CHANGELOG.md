@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [7.9.0](https://github.com/auth0/auth0-PHP/tree/7.9.0) (2021-05-03)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.8.0...7.9.0)
+
+**Changed**
+
+- Reintroduce Guzzle 6 support [\#489](https://github.com/auth0/auth0-PHP/pull/489) ([marko-ilic](https://github.com/marko-ilic))
+- Update Auth0\SDK\Auth0::getState() visibility to public [\#498](https://github.com/auth0/auth0-PHP/pull/498) ([evansims](https://github.com/evansims))
+
 ## [7.8.0](https://github.com/auth0/auth0-PHP/tree/7.8.0) (2021-03-19)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.7.0...7.8.0)
