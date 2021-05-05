@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Header;
 
 use Auth0\SDK\API\Header\AuthorizationBearer;
@@ -11,11 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 class HeaderTest extends TestCase
 {
-
-    public function testHeader()
+    public function testHeader(): void
     {
         $headerName = 'HEADERNAME';
-        $value      = 'THISISTHEVALUE';
+        $value = 'THISISTHEVALUE';
 
         $header = new Header($headerName, $value);
 
@@ -24,9 +25,9 @@ class HeaderTest extends TestCase
         $this->assertEquals("$headerName: $value\n", $header->get());
     }
 
-    public function testAuthorizationBearer()
+    public function testAuthorizationBearer(): void
     {
-        $token  = 'THISISTHETOKEN';
+        $token = 'THISISTHETOKEN';
         $header = new AuthorizationBearer($token);
 
         $this->assertEquals('Authorization', $header->getHeader());
@@ -34,30 +35,30 @@ class HeaderTest extends TestCase
         $this->assertEquals("Authorization: Bearer $token\n", $header->get());
     }
 
-    public function testContentType()
+    public function testContentType(): void
     {
         $contentType = 'CONTENT/TYPE';
-        $header      = new ContentType($contentType);
+        $header = new ContentType($contentType);
 
         $this->assertEquals('Content-Type', $header->getHeader());
         $this->assertEquals($contentType, $header->getValue());
         $this->assertEquals("Content-Type: $contentType\n", $header->get());
     }
 
-    public function testTelemetry()
+    public function testTelemetry(): void
     {
         $telemetryVal = uniqid();
-        $header       = new Telemetry($telemetryVal);
+        $header = new Telemetry($telemetryVal);
 
         $this->assertEquals('Auth0-Client', $header->getHeader());
         $this->assertEquals($telemetryVal, $header->getValue());
         $this->assertEquals("Auth0-Client: $telemetryVal\n", $header->get());
     }
 
-    public function testForwardedFor()
+    public function testForwardedFor(): void
     {
         $forwardedForVal = uniqid();
-        $header          = new ForwardedFor($forwardedForVal);
+        $header = new ForwardedFor($forwardedForVal);
 
         $this->assertEquals('Auth0-Forwarded-For', $header->getHeader());
         $this->assertEquals($forwardedForVal, $header->getValue());

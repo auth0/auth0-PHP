@@ -1,69 +1,130 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
+use Auth0\SDK\Helpers\Requests\RequestOptions;
+
+/**
+ * Class Emails.
+ * Handles requests to the Emails endpoint of the v2 Management API.
+ *
+ * @link https://auth0.com/docs/api/management/v2#!/Emails
+ */
 class Emails extends GenericResource
 {
     /**
+     * Create the email provider.
+     * Required scope: `create:email_provider`
      *
-     * @param  null|string|array $fields
-     * @param  null|string|array $include_fields
-     * @return mixed
-     */
-    public function getEmailProvider($fields = null, $include_fields = null)
-    {
-        $request = $this->apiClient->method('get')
-        ->addPath('emails', 'provider');
-
-        if ($fields !== null) {
-            if (is_array($fields)) {
-                $fields = implode(',', $fields);
-            }
-
-            $request->withParam('fields', $fields);
-        }
-
-        if ($include_fields !== null) {
-            $request->withParam('include_fields', $include_fields);
-        }
-
-        return $request->call();
-    }
-
-    /**
+     * @param string              $name        Name of the email provider to use.
+     * @param array               $credentials Credentials required to use the provider. See @link for supported options.
+     * @param array               $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @param  array $data
-     * @return mixed
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/post_provider
      */
-    public function configureEmailProvider($data)
-    {
+    public function createProvider(
+        string $name,
+        array $credentials,
+        array $body = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($name, 'name');
+        $this->validateArray($credentials, 'credentials');
+
+        $payload = [
+            'name' => $name,
+            'credentials' => (object) $credentials,
+        ] + $body;
+
         return $this->apiClient->method('post')
-        ->addPath('emails', 'provider')
-        ->withBody(json_encode($data))
-        ->call();
+            ->addPath('emails', 'provider')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
     }
 
     /**
+     * Retrieve email provider details.
+     * Required scope: `read:email_provider`
      *
-     * @param  array $data
-     * @return mixed
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/get_provider
      */
-    public function updateEmailProvider($data)
-    {
+    public function getProvider(
+        ?RequestOptions $options = null
+    ): ?array {
+        return $this->apiClient->method('get')
+            ->addPath('emails', 'provider')
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Update the email provider.
+     * Required scope: `update:email_provider`
+     *
+     * @param string              $name        Name of the email provider to use.
+     * @param array               $credentials Credentials required to use the provider. See @link for supported options.
+     * @param array               $body        Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/patch_provider
+     */
+    public function updateProvider(
+        string $name,
+        array $credentials,
+        array $body = [],
+        ?RequestOptions $options = null
+    ): ?array {
+        $this->validateString($name, 'name');
+        $this->validateArray($credentials, 'credentials');
+
+        $payload = [
+            'name' => $name,
+            'credentials' => (object) $credentials,
+        ] + $body;
+
         return $this->apiClient->method('patch')
-        ->addPath('emails', 'provider')
-        ->withBody(json_encode($data))
-        ->call();
+            ->addPath('emails', 'provider')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
     }
 
     /**
+     * Delete the email provider.
+     * Required scope: `delete:email_provider`
      *
-     * @return mixed
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @return array|null
+     *
+     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/delete_provider
      */
-    public function deleteEmailProvider()
-    {
+    public function deleteProvider(
+        ?RequestOptions $options = null
+    ): ?array {
         return $this->apiClient->method('delete')
-        ->addPath('emails', 'provider')
-        ->call();
+            ->addPath('emails', 'provider')
+            ->withOptions($options)
+            ->call();
     }
 }

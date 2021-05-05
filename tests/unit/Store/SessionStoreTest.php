@@ -1,5 +1,8 @@
 <?php
-namespace Auth0\Tests\Store;
+
+declare(strict_types=1);
+
+namespace Auth0\Tests\unit\Store;
 
 use Auth0\SDK\Store\SessionStore;
 use PHPUnit\Framework\TestCase;
@@ -28,38 +31,29 @@ class SessionStoreTest extends TestCase
 
     /**
      * Reusable instance of SessionStore class to be tested.
-     *
-     * @var SessionStore
      */
-    public static $sessionStore;
+    public static SessionStore $sessionStore;
 
     /**
      * Full session array key.
-     *
-     * @var string
      */
-    public static $sessionKey;
+    public static string $sessionKey;
 
     /**
      * Test fixture for class, runs once before any tests.
-     *
-     * @return void
      */
     public static function setUpBeforeClass(): void
     {
         self::$sessionStore = new SessionStore();
-        self::$sessionKey   = 'auth0__'.self::TEST_KEY;
+        self::$sessionKey = 'auth0_' . self::TEST_KEY;
     }
 
     /**
      * Test that SessionStore::initSession ran and cookie params are stored correctly.
-     *
-     * @return void
      */
-    public function testInitSession()
+    public function testInitSession(): void
     {
         // Suppressing "headers already sent" warning related to cookies.
-        // phpcs:ignore
         @self::$sessionStore->set(self::TEST_KEY, self::TEST_VALUE);
 
         // Make sure we have a session to check.
@@ -68,10 +62,8 @@ class SessionStoreTest extends TestCase
 
     /**
      * Test that SessionStore::getSessionKeyName returns the expected name.
-     *
-     * @return void
      */
-    public function testGetSessionKey()
+    public function testGetSessionKey(): void
     {
         $test_this_key_name = self::$sessionStore->getSessionKeyName(self::TEST_KEY);
         $this->assertEquals(self::$sessionKey, $test_this_key_name);
@@ -79,73 +71,55 @@ class SessionStoreTest extends TestCase
 
     /**
      * Test that SessionStore::set stores the correct value.
-     *
-     * @return void
-     *
-     * @runInSeparateProcess
      */
-    public function testSet()
+    public function testSet(): void
     {
         // Make sure this key does not exist yet so we can test that it was set.
         $_SESSION = [];
 
         // Suppressing "headers already sent" warning related to cookies.
-        // phpcs:ignore
-        @self::$sessionStore->set(self::TEST_KEY, self::TEST_VALUE);
+        self::$sessionStore->set(self::TEST_KEY, self::TEST_VALUE);
 
         $this->assertEquals(self::TEST_VALUE, $_SESSION[self::$sessionKey]);
     }
 
     /**
      * Test that SessionStore::get stores the correct value.
-     *
-     * @return void
-     *
-     * @runInSeparateProcess
      */
-    public function testGet()
+    public function testGet(): void
     {
-        session_start();
         $_SESSION[self::$sessionKey] = self::TEST_VALUE;
         $this->assertEquals(self::TEST_VALUE, self::$sessionStore->get(self::TEST_KEY));
     }
 
     /**
      * Test that SessionStore::delete trashes the stored value.
-     *
-     * @return void
-     *
-     * @runInSeparateProcess
      */
-    public function testDelete()
+    public function testDelete(): void
     {
-        session_start();
         $_SESSION[self::$sessionKey] = self::TEST_VALUE;
         $this->assertTrue(isset($_SESSION[self::$sessionKey]));
 
         self::$sessionStore->delete(self::TEST_KEY);
+
         $this->assertNull(self::$sessionStore->get(self::TEST_KEY));
         $this->assertFalse(isset($_SESSION[self::$sessionKey]));
     }
 
     /**
      * Test that custom base names can be set and return the correct value.
-     *
-     * @return void
-     *
-     * @runInSeparateProcess
      */
-    public function testCustomSessionBaseName()
+    public function testCustomSessionBaseName(): void
     {
         $test_base_name = 'test_base_name';
 
-        self::$sessionStore = new SessionStore( $test_base_name );
+        self::$sessionStore = new SessionStore($test_base_name);
         $test_this_key_name = self::$sessionStore->getSessionKeyName(self::TEST_KEY);
-        $this->assertEquals($test_base_name.'_'.self::TEST_KEY, $test_this_key_name);
+        $this->assertEquals($test_base_name . '_' . self::TEST_KEY, $test_this_key_name);
 
         // Suppressing "headers already sent" warning related to cookies.
-        // phpcs:ignore
         @self::$sessionStore->set(self::TEST_KEY, self::TEST_VALUE);
+
         $this->assertEquals(self::TEST_VALUE, self::$sessionStore->get(self::TEST_KEY));
     }
 }

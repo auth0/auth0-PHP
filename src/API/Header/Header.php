@@ -1,56 +1,55 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Header;
 
 class Header
 {
+    /**
+     * Name of the header.
+     */
+    protected string $header;
 
     /**
-     *
-     * @var string
+     * Value of the header.
      */
-    protected $header;
-
-    /**
-     *
-     * @var string
-     */
-    protected $value;
+    protected string $value;
 
     /**
      * Header constructor.
      *
-     * @param string $header
-     * @param string $value
+     * @param string $header Header name to use.
+     * @param string $value  Header value to use.
      */
-    public function __construct($header, $value)
-    {
+    public function __construct(
+        string $header,
+        string $value
+    ) {
         $this->header = $header;
-        $this->value  = $value;
+        $this->value = $value;
     }
 
     /**
-     *
-     * @return string
+     * Return the header name.
      */
-    public function getHeader()
+    public function getHeader(): string
     {
         return $this->header;
     }
 
     /**
-     *
-     * @return string
+     * Return the header value.
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
     /**
-     *
-     * @return string
+     * Build and return the header string.
      */
-    public function get()
+    public function get(): string
     {
         return "{$this->header}: {$this->value}\n";
     }

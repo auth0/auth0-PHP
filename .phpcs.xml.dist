@@ -1,118 +1,198 @@
-<?xml version="1.0"?>
-<ruleset name="Auth0-PHP" namespace="Auth0PHP\CS\Standard">
-    <description>A custom coding standard for the Auth0 PHP SDK</description>
+<ruleset name="Auth0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <description>Auth0 PHP coding standard</description>
 
-    <file>./src</file>
+    <!-- Files -->
+    <file>src</file>
+    <file>tests</file>
 
-    <!-- Only check PHP files. -->
-    <arg name="extensions" value="php"/>
+    <!-- Excludes -->
+    <exclude-pattern>vendor/</exclude-pattern>
 
-    <!-- Show progress, show the error codes for each message (source). -->
-    <arg value="sp"/>
-
-    <!-- Strip the filepaths down to the relevant bit. -->
+    <!-- Arguments -->
     <arg name="basepath" value="."/>
-
-    <!-- Show coloured output, if available. -->
+    <arg name="tab-width" value="4"/>
     <arg name="colors"/>
+    <arg name="parallel" value="75"/>
+    <arg value="p"/>
+    <ini name="memory_limit" value="512M"/>
 
-    <!--
-    PHPCompatibility sniffs to check for PHP cross-version incompatible code.
-    https://github.com/PHPCompatibility/PHPCompatibility
-    -->
-    <config name="testVersion" value="7.3-"/>
-    <rule ref="PHPCompatibility"/>
+    <!-- Configs -->
+    <config name="installed_paths" value="vendor/slevomat/coding-standard"/>
 
-    <!--
-    Generic sniffs
-    https://github.com/squizlabs/PHP_CodeSniffer/tree/master/src/Standards/Generic/Sniffs
-    -->
-    <rule ref="Generic.Arrays">
-        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
-    </rule>
-    <rule ref="Generic.Classes.DuplicateClassName"/>
-    <rule ref="Generic.CodeAnalysis"/>
-    <rule ref="Generic.Commenting"/>
-    <rule ref="Generic.ControlStructures">
-        <exclude name="Generic.ControlStructures.DisallowYodaConditions"/>
-    </rule>
-    <rule ref="Generic.Files">
-        <exclude name="Generic.Files.EndFileNoNewline"/>
-        <exclude name="Generic.Files.LowercasedFilename"/>
-    </rule>
-    <rule ref="Generic.Files.LineLength">
-        <properties>
-            <property name="lineLimit" value="120"/>
-            <property name="absoluteLineLimit" value="120"/>
-        </properties>
-    </rule>
-    <rule ref="Generic.Formatting">
-        <exclude name="Generic.Formatting.NoSpaceAfterCast"/>
-    </rule>
-    <rule ref="Generic.Functions">
-        <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
-    </rule>
-    <rule ref="Generic.Metrics"/>
-    <rule ref="Generic.NamingConventions">
-        <exclude name="Generic.NamingConventions.CamelCapsFunctionName.ScopeNotCamelCaps"/>
-    </rule>
-    <rule ref="Generic.PHP">
-        <exclude name="Generic.PHP.ClosingPHPTag"/>
-        <exclude name="Generic.PHP.UpperCaseConstant"/>
-    </rule>
-    <rule ref="Generic.Strings"/>
-    <rule ref="Generic.WhiteSpace">
-        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+    <!-- Internal -->
+    <rule ref="Internal.Tokenizer.Exception">
+        <type>error</type>
     </rule>
 
-    <!--
-    Squiz Labs sniffs
-    https://github.com/squizlabs/PHP_CodeSniffer/wiki/Customisable-Sniff-Properties
-    -->
-    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
-    <rule ref="Squiz.Classes"/>
-    <rule ref="Squiz.Commenting">
-        <exclude name="Squiz.Commenting.ClosingDeclarationComment"/>
-        <exclude name="Squiz.Commenting.ClassComment.TagNotAllowed"/>
-        <exclude name="Squiz.Commenting.FileComment"/>
-        <exclude name="Squiz.Commenting.LongConditionClosingComment"/>
-        <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
-        <exclude name="Squiz.Commenting.FunctionCommentThrowTag.WrongNumber"/>
-    </rule>
-    <rule ref="Squiz.Commenting.FunctionComment">
-        <exclude-pattern>tests/*\.php</exclude-pattern>
-    </rule>
-    <rule ref="Squiz.ControlStructures"/>
-    <rule ref="Squiz.Functions">
-        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.NewlineBeforeOpenBrace"/>
-        <exclude name="Squiz.ControlStructures.InlineIfDeclaration.NoBrackets"/>
-    </rule>
-    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+    <!-- Style -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Files.ByteOrderMark"/>
+    <rule ref="Generic.Files.LineEndings"/>
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="Generic.Formatting.SpaceAfterNot"/>
+    <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+    <rule ref="Generic.PHP.BacktickOperator"/>
+    <rule ref="Generic.PHP.CharacterBeforePHPOpeningTag"/>
+    <rule ref="Generic.PHP.DisallowAlternativePHPTags"/>
+    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="Generic.PHP.LowerCaseConstant"/>
+    <rule ref="Generic.PHP.LowerCaseKeyword"/>
+    <rule ref="Generic.PHP.LowerCaseType"/>
+    <rule ref="Generic.PHP.SAPIUsage"/>
+    <rule ref="Generic.PHP.Syntax"/>
+    <rule ref="Generic.VersionControl.GitMergeConflict"/>
+    <rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing"/>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+    <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
+    <rule ref="PEAR.WhiteSpace.ObjectOperatorIndent"/>
+    <rule ref="PEAR.WhiteSpace.ScopeClosingBrace"/>
+    <rule ref="PSR1.Files.SideEffects"/>
+    <rule ref="PSR1.Methods.CamelCapsMethodName"/>
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration"/>
+    <rule ref="PSR2.ControlStructures.SwitchDeclaration"/>
+    <rule ref="PSR2.Files.ClosingTag"/>
+    <rule ref="PSR2.Files.EndFileNewline"/>
+    <rule ref="PSR2.Methods.FunctionClosingBrace"/>
+    <rule ref="PSR12.Classes.ClassInstantiation"/>
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
+    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
         <properties>
-            <property name="equalsSpacing" value="1"/>
+            <property name="linesCountBetweenDifferentAnnotationsTypes" value="1"/>
         </properties>
     </rule>
-    <rule ref="Squiz.Operators">
-        <exclude name="Squiz.Operators.ComparisonOperatorUsage.NotAllowed"/>
-        <exclude name="Squiz.Operators.ComparisonOperatorUsage.ImplicitTrue"/>
-    </rule>
-    <rule ref="Squiz.PHP">
-        <exclude name="Squiz.PHP.DisallowComparisonAssignment.AssignedComparison"/>
-        <exclude name="Squiz.PHP.DisallowInlineIf.Found"/>
-        <exclude name="Squiz.PHP.DisallowBooleanStatement.Found"/>
-    </rule>
-    <rule ref="Squiz.Scope"/>
-    <rule ref="Squiz.Strings"/>
-    <rule ref="Squiz.WhiteSpace">
-        <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace"/>
-        <exclude name="Squiz.WhiteSpace.FunctionSpacing"/>
-        <exclude name="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
-    </rule>
-    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceSpacing"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.RequireOneNamespaceInFile"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing"/>
+    <rule ref="SlevomatCodingStandard.Operators.SpreadOperatorSpacing"/>
+    <rule ref="SlevomatCodingStandard.PHP.ShortList"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/>
+
+    <!-- Code > Classes -->
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="PSR2.Classes.PropertyDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
+    <rule ref="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants"/>
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
+    <rule ref="SlevomatCodingStandard.Classes.UselessLateStaticBinding"/>
+
+    <!-- Code > Code -->
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+    <rule ref="Generic.CodeAnalysis.EmptyPHPStatement"/>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+    <rule ref="Generic.PHP.BacktickOperator"/>
+    <rule ref="Generic.PHP.DiscourageGoto"/>
+    <rule ref="Generic.PHP.NoSilencedErrors"/>
+    <rule ref="Generic.Strings.UnnecessaryStringConcat"/>
+    <rule ref="PSR2.ControlStructures.SwitchDeclaration"/>
+    <rule ref="PSR12.Keywords.ShortFormTypeKeywords"/>
+    <rule ref="Squiz.PHP.Eval"/>
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+    <rule ref="Zend.Debug.CodeAnalyzer"/>
+    <rule ref="SlevomatCodingStandard.Arrays.DisallowImplicitArrayCreation"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowContinueWithoutIntegerOperandInSwitch"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowEmpty"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowShortTernaryOperator"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.LanguageConstructWithParentheses"/>
+    <rule ref="SlevomatCodingStandard.Exceptions.DeadCatch"/>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure"/>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedParameter"/>
+    <rule ref="SlevomatCodingStandard.Functions.UselessParameterDefaultValue"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedExceptions"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
+    <rule ref="SlevomatCodingStandard.Operators.RequireCombinedAssignmentOperator"/>
+    <rule ref="SlevomatCodingStandard.Operators.RequireOnlyStandaloneIncrementAndDecrementOperators"/>
+    <rule ref="SlevomatCodingStandard.PHP.OptimizedFunctionsWithoutUnpacking"/>
+    <rule ref="SlevomatCodingStandard.PHP.TypeCast"/>
+    <rule ref="SlevomatCodingStandard.PHP.UselessParentheses"/>
+    <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
         <properties>
-            <property name="spacing" value="1"/>
-            <property name="spacingBeforeFirst" value="0"/>
-            <property name="spacingAfterLast" value="0"/>
+            <property name="newlinesCountBetweenOpenTagAndDeclare" value="2"/>
+            <property name="spacesCountAroundEqualsSign" value="0"/>
         </properties>
     </rule>
+    <rule ref="SlevomatCodingStandard.Variables.DuplicateAssignmentToVariable"/>
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
+    <rule ref="SlevomatCodingStandard.Variables.UselessVariable"/>
+
+    <!-- Code > Comments -->
+    <rule ref="Generic.Commenting.Fixme"/>
+    <rule ref="Generic.Commenting.Todo"/>
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments"/>
+    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Commenting.UselessFunctionDocComment"/>
+    <rule ref="SlevomatCodingStandard.Commenting.UselessInheritDocComment"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.NullTypeHintOnLastPosition"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint"/>
+
+    <!-- Code > Functions -->
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+    <rule ref="Generic.Functions.CallTimePassByReference"/>
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="PSR12.Functions.NullableTypeDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Functions.StaticClosure"/>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure"/>
+
+    <!-- Code > Globally -->
+    <rule ref="Squiz.PHP.GlobalKeyword"/>
+
+    <!-- Architecture > Classes -->
+    <rule ref="Generic.Files.OneClassPerFile"/>
+    <rule ref="PSR1.Classes.ClassDeclaration"/>
+    <rule ref="Squiz.Classes.ValidClassName"/>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming"/>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming"/>
+
+    <!-- Architecture > Files -->
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming"/>
+
+    <!-- Architecture > Functions -->
+    <!-- -->
+
+    <!-- Architecture > Globally -->
+    <!-- -->
+
+    <!-- Architecture > Interfaces -->
+    <rule ref="Generic.Files.OneInterfacePerFile"/>
+
+    <!-- Architecture > Namespaces -->
+    <rule ref="PSR12.Namespaces.CompoundNamespaceDepth"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
+
+    <!-- Architecture > Traits -->
+    <rule ref="Generic.Files.OneTraitPerFile"/>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousTraitNaming"/>
+
+    <!-- Complexity -->
+    <!-- -->
 </ruleset>

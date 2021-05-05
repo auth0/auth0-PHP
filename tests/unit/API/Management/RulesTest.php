@@ -1,78 +1,122 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\Tests\unit\API\Management;
 
-use Auth0\SDK\API\Management;
-use Auth0\SDK\Exception\CoreException;
-
 use Auth0\Tests\API\ApiTests;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Class RulesTest.
- *
- * @package Auth0\Tests\unit\API\Management
  */
 class RulesTest extends ApiTests
 {
+    /**
+     * Default request headers.
+     */
+    protected static array $headers = ['content-type' => 'json'];
 
     /**
-     * Test that exceptions are thrown for specific methods in specific cases.
-     *
-     * @return void
-     *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * Test getAll() request.
      */
-    public function testExceptions()
+    public function testGetAll(): void
     {
-        $api = new Management(uniqid(), uniqid());
+        $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        // Test that the get method throws an exception if the $id parameter is empty.
-        $caught_get_no_id_exception = false;
-        try {
-            $api->rules()->get(null);
-        } catch (CoreException $e) {
-            $caught_get_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
-        }
+        $api->call()->rules()->getAll(['enabled' => true]);
 
-        $this->assertTrue($caught_get_no_id_exception);
+        $this->assertEquals('GET', $api->getHistoryMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/rules', $api->getHistoryUrl());
 
-        // Test that the delete method throws an exception if the $id parameter is empty.
-        $caught_delete_no_id_exception = false;
-        try {
-            $api->rules()->delete(null);
-        } catch (CoreException $e) {
-            $caught_delete_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
-        }
+        $query = $api->getHistoryQuery();
+        $this->assertStringContainsString('enabled=true', $query);
+    }
 
-        $this->assertTrue($caught_delete_no_id_exception);
+    /**
+     * Test get() request.
+     */
+    public function testGet(): void
+    {
+        $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        // Test that the create method throws an exception if no "name" field is passed.
-        $caught_create_no_name_exception = false;
-        try {
-            $api->rules()->create(['script' => 'function(){}']);
-        } catch (CoreException $e) {
-            $caught_create_no_name_exception = $this->errorHasString($e, 'Missing required "name" field');
-        }
+        $mockupId = uniqid();
 
-        $this->assertTrue($caught_create_no_name_exception);
+        $api->call()->rules()->get($mockupId);
 
-        // Test that the create method throws an exception if no "script" field is passed.
-        $caught_create_no_script_exception = false;
-        try {
-            $api->rules()->create(['name' => 'test-create-rule-'.rand()]);
-        } catch (CoreException $e) {
-            $caught_create_no_script_exception = $this->errorHasString($e, 'Missing required "script" field');
-        }
+        $this->assertEquals('GET', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockupId, $api->getHistoryUrl());
+    }
 
-        $this->assertTrue($caught_create_no_script_exception);
+    /**
+     * Test delete() request.
+     */
+    public function testDelete(): void
+    {
+        $api = new MockManagementApi([new Response(200, self::$headers)]);
 
-        // Test that the update method throws an exception if the $id parameter is empty.
-        $caught_update_no_id_exception = false;
-        try {
-            $api->rules()->update(null, []);
-        } catch (CoreException $e) {
-            $caught_update_no_id_exception = $this->errorHasString($e, 'Invalid "id" parameter');
-        }
+        $mockupId = uniqid();
 
-        $this->assertTrue($caught_update_no_id_exception);
+        $api->call()->rules()->delete($mockupId);
+
+        $this->assertEquals('DELETE', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockupId, $api->getHistoryUrl());
+    }
+
+    /**
+     * Test create() request.
+     */
+    public function testCreate(): void
+    {
+        $api = new MockManagementApi([new Response(200, self::$headers)]);
+
+        $mockup = (object) [
+            'name' => uniqid(),
+            'script' => uniqid(),
+            'query' => [ 'test_parameter' => uniqid() ],
+        ];
+
+        $api->call()->rules()->create($mockup->name, $mockup->script, $mockup->query);
+
+        $this->assertEquals('POST', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/rules', $api->getHistoryUrl());
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals('application/json', $headers['Content-Type'][0]);
+
+        $body = $api->getHistoryBody();
+        $this->assertArrayHasKey('name', $body);
+        $this->assertEquals($mockup->name, $body['name']);
+
+        $this->assertArrayHasKey('script', $body);
+        $this->assertEquals($mockup->script, $body['script']);
+
+        $this->assertArrayHasKey('test_parameter', $body);
+        $this->assertEquals($mockup->query['test_parameter'], $body['test_parameter']);
+    }
+
+    /**
+     * Test update() request.
+     */
+    public function testUpdate(): void
+    {
+        $api = new MockManagementApi([new Response(200, self::$headers)]);
+
+        $mockup = (object) [
+            'id' => uniqid(),
+            'query' => [ 'test_parameter' => uniqid() ],
+        ];
+
+        $api->call()->rules()->update($mockup->id, $mockup->query);
+
+        $this->assertEquals('PATCH', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockup->id, $api->getHistoryUrl());
+
+        $headers = $api->getHistoryHeaders();
+        $this->assertEquals('application/json', $headers['Content-Type'][0]);
+
+        $body = $api->getHistoryBody();
+        $this->assertArrayHasKey('test_parameter', $body);
+        $this->assertEquals($mockup->query['test_parameter'], $body['test_parameter']);
     }
 }
