@@ -155,7 +155,7 @@ class Authentication
         return sprintf(
             'https://%s/authorize?%s',
             $this->domain,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
@@ -218,7 +218,7 @@ class Authentication
             'https://%s/wsfed/%s?%s',
             $this->domain,
             $client_id ?? $this->client_id,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
@@ -258,7 +258,7 @@ class Authentication
         return sprintf(
             'https://%s/v2/logout?%s',
             $this->domain,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
