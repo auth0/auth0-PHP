@@ -7,7 +7,7 @@
   </coverage>
   <testsuites>
     <testsuite>
-      <directory>./tests/unit</directory>
+      <directory>tests/Unit</directory>
     </testsuite>
   </testsuites>
 </phpunit>
