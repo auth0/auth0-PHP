@@ -6,7 +6,6 @@ namespace Auth0\Tests\Unit;
 
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Store\SessionStore;
-use Auth0\Tests\unit\Helpers\Tokens\AsymmetricVerifierTest;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Cache\Adapter\PHPArray\ArrayCachePool;
 use GuzzleHttp\Handler\MockHandler;
