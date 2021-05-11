@@ -406,8 +406,6 @@ class Auth0
     /**
      * Get userinfo from persisted session or from a code exchange
      *
-     * @return array|null
-     *
      * @throws ApiException (see self::exchange()).
      * @throws CoreException (see self::exchange()).
      */
@@ -633,8 +631,9 @@ class Auth0
 
         $token->verify($this->idTokenAlg, $this->jwksUri, $this->clientSecret, $this->cacheTtl, $this->cacheHandler);
 
-        $maxAge = $options['max_age'] ?? $this->maxAge ?? $this->transientHandler->getOnce('max_age');
-        $nonce = $options['nonce'] ?? $this->transientHandler->getOnce('nonce');
+        $maxAge = $options['max_age'] ?? $this->maxAge ?? $this->transientHandler->getOnce('max_age') ?? null;
+        $nonce = $options['nonce'] ?? $this->transientHandler->getOnce('nonce') ?? null;
+        $organization = $options['org_id'] ?? $this->organization ?? null;
 
         if ($maxAge !== null && ! is_int($maxAge)) {
             if (is_numeric($maxAge)) {
@@ -648,10 +647,16 @@ class Auth0
             $nonce = null;
         }
 
+        if ($organization !== null) {
+            if (! is_array($organization)) {
+                $organization = [ $organization ];
+            }
+        }
+
         $token->validate(
             'https://' . $this->domain . '/',
             [$this->clientId],
-            $this->organization,
+            $organization,
             $nonce,
             $maxAge,
             $this->idTokenLeeway
