@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit\Helpers;
+namespace Auth0\Tests\Unit\Helpers;
 
 use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Store\SessionStore;

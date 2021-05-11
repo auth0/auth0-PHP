@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit\API\Helpers;
+namespace Auth0\Tests\Unit\API\Helpers;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\Tests\API\ApiTests;
-use Auth0\Tests\unit\API\Management\MockManagementApi;
+use Auth0\Tests\Unit\API\Management\MockManagementApi;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;

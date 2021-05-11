@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit\API\Management;
+namespace Auth0\Tests\Unit\API\Management;
 
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;

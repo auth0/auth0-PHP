@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit;
+namespace Auth0\Tests\Unit;
 
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit\API\Header;
+namespace Auth0\Tests\Unit\API\Header;
 
 use Auth0\SDK\API\Header\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;

@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit;
+namespace Auth0\Tests\Unit;
 
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Store\EmptyStore;
 use Auth0\SDK\Store\SessionStore;
-use Auth0\Tests\Traits\ErrorHelpers;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,8 +14,6 @@ use PHPUnit\Framework\TestCase;
  */
 class Auth0StoreTest extends TestCase
 {
-    use ErrorHelpers;
-
     /**
      * Basic Auth0 class config options.
      */

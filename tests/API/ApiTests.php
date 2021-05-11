@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\Tests\API;
 
 use Auth0\SDK\API\Authentication;
-use Auth0\Tests\Traits\ErrorHelpers;
 use josegonzalez\Dotenv\Loader;
 use PHPUnit\Framework\TestCase;
 
@@ -15,8 +14,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ApiTests extends TestCase
 {
-    use ErrorHelpers;
-
     /**
      * Environment variables.
      */

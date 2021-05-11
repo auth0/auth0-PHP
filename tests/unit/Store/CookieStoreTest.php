@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit\Store;
+namespace Auth0\Tests\Unit\Store;
 
 use Auth0\SDK\Store\CookieStore;
 use PHPUnit\Framework\TestCase;

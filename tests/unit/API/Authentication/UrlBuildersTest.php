@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit\API\Authentication;
+namespace Auth0\Tests\Unit\API\Authentication;
 
 use Auth0\SDK\API\Authentication;
 use PHPUnit\Framework\TestCase;

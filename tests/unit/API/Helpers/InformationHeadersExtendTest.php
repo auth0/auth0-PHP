@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit\API\Helpers;
+namespace Auth0\Tests\Unit\API\Helpers;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Helpers\InformationHeaders;
