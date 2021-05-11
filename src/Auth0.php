@@ -6,12 +6,7 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Contract\StoreInterface;
-use Auth0\SDK\Helpers\Cache\NoCacheHandler;
-use Auth0\SDK\Helpers\JWKFetcher;
 use Auth0\SDK\Helpers\PKCE;
-use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
-use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
-use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Store\EmptyStore;
@@ -612,7 +607,7 @@ class Auth0
     public function setIdToken(
         string $idToken
     ): self {
-        $this->idTokenDecoded = $this->decodeIdToken($idToken);
+        $this->idTokenDecoded = $this->decode($idToken);
 
         if (in_array('id_token', $this->persistentMap)) {
             $this->store->set('id_token', $idToken);
@@ -628,34 +623,43 @@ class Auth0
      * @param string $token ID token to verify and decode.
      * @param array $options Additional configuration options to pass during Token processing.
      *
-     * @return array
+     * @return Token
      *
      * @throws InvalidTokenException
      */
-    public function decodeIdToken(
-        string $idToken,
-        array $verifierOptions = []
+    public function decode(
+        string $token,
+        array $options = []
     ): array {
-        $idTokenIss = 'https://' . $this->domain . '/';
-        $sigVerifier = null;
+        $token = new Token($token);
 
-        if ($this->idTokenAlg === 'RS256') {
-            $jwksHttpOptions = $this->guzzleOptions + [ 'base_uri' => $this->jwksUri ];
-            $jwksFetcher = new JWKFetcher($this->cacheHandler, $jwksHttpOptions);
-            $sigVerifier = new AsymmetricVerifier($jwksFetcher);
-        } elseif ($this->idTokenAlg === 'HS256') {
-            $sigVerifier = new SymmetricVerifier($this->clientSecret);
+        $token->verify($this->idTokenAlg, $this->jwksUri, $this->clientSecret, $this->cacheTtl, $this->cacheHandler);
+
+        $maxAge = $options['max_age'] ?? $this->maxAge ?? $this->transientHandler->getOnce('max_age');
+        $nonce = $options['nonce'] ?? $this->transientHandler->getOnce('nonce');
+
+        if ($maxAge !== null && ! is_int($maxAge)) {
+            if (is_numeric($maxAge)) {
+                $maxAge = (int) $maxAge;
+            } else {
+                $maxAge = null;
+            }
         }
 
-        $verifierOptions = $verifierOptions + [
-            'org_id' => $this->organization,
-            'leeway' => $this->idTokenLeeway,
-            'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
-            self::TRANSIENT_NONCE_KEY => $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY),
-        ];
+        if ($nonce !== null && strlen($nonce) === 0) {
+            $nonce = null;
+        }
 
-        $idTokenVerifier = new IdTokenVerifier($idTokenIss, $this->clientId, $sigVerifier);
-        return $idTokenVerifier->verify($idToken, $verifierOptions);
+        $token->validate(
+            'https://' . $this->domain . '/',
+            [$this->clientId],
+            $this->organization,
+            $nonce,
+            $maxAge,
+            $this->idTokenLeeway
+        );
+
+        return $token->toArray();
     }
 
     /**
