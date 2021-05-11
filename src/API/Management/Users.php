@@ -523,8 +523,6 @@ class Users extends GenericResource
      * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return mixed
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_invalidate_remember_browser
      */
     public function invalidateBrowsers(

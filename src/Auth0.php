@@ -623,8 +623,6 @@ class Auth0
      * @param string $token ID token to verify and decode.
      * @param array $options Additional configuration options to pass during Token processing.
      *
-     * @return Token
-     *
      * @throws InvalidTokenException
      */
     public function decode(

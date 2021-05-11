@@ -121,7 +121,7 @@ class Authentication
         return sprintf(
             'https://%s/authorize?%s',
             $this->domain,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
@@ -183,7 +183,7 @@ class Authentication
             'https://%s/wsfed/%s?%s',
             $this->domain,
             $client_id ?? $this->client_id,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
@@ -222,7 +222,7 @@ class Authentication
         return sprintf(
             'https://%s/v2/logout?%s',
             $this->domain,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
@@ -566,7 +566,7 @@ class Authentication
      * @param string $password   New password for the user signing up.
      * @param string $connection Database connection to create the user in.
      *
-     * @return mixed
+     * @return array|null
      *
      * @link https://auth0.com/docs/api/authentication#signup
      */
@@ -574,7 +574,7 @@ class Authentication
         string $email,
         string $password,
         string $connection
-    ): array {
+    ): ?array {
         $data = [
             'client_id' => $this->client_id,
             'email' => $email,
@@ -599,7 +599,7 @@ class Authentication
      *                                this value will be set for the user.
      *                                If this parameter is NOT provided, the user will be asked for a new password.
      *
-     * @return mixed
+     * @return array|null
      *
      * @link https://auth0.com/docs/api/authentication#change-password
      */
@@ -607,7 +607,7 @@ class Authentication
         string $email,
         string $connection,
         ?string $password = null
-    ) {
+    ): ?array {
         $data = [
             'client_id' => $this->client_id,
             'email' => $email,
