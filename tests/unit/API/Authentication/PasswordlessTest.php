@@ -6,6 +6,7 @@ namespace Auth0\Tests\Unit\API\Authentication;
 
 use Auth0\SDK\API\Helpers\InformationHeaders;
 use Auth0\Tests\API\ApiTests;
+use Auth0\Tests\Unit\API\Authentication\MockAuthenticationApi;
 use GuzzleHttp\Psr7\Response;
 
 /**

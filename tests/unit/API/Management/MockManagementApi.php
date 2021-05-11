@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Tests\Unit\API\Management;
 
 use Auth0\SDK\API\Management;
-use Auth0\Tests\unit\MockApi;
+use Auth0\Tests\Unit\MockApi;
 
 /**
  * Class MockManagementApi.

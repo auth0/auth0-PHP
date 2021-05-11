@@ -6,8 +6,8 @@ namespace Auth0\Tests\Unit\API\Helpers;
 
 use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\Tests\unit\API\Authentication\MockAuthenticationApi;
-use Auth0\Tests\unit\API\Management\MockManagementApi;
+use Auth0\Tests\Unit\API\Authentication\MockAuthenticationApi;
+use Auth0\Tests\Unit\API\Management\MockManagementApi;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
