@@ -31,7 +31,6 @@ return [
     'config' => [
         \SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff::class => [
             'exclude' => [
-                'src/Helpers/Cache/NoCacheHandler.php',
                 'src/Store/EmptyStore.php',
             ],
         ],
