@@ -26,6 +26,10 @@ return [
         \PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff::class,
         \SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff::class,
         \SlevomatCodingStandard\Sniffs\Classes\SuperfluousInterfaceNamingSniff::class,
+        \SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff::class,
+        \SlevomatCodingStandard\Sniffs\TypeHints\ParameterTypeHintSniff::class,
+        \SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff::class,
+        \SlevomatCodingStandard\Sniffs\TypeHints\ReturnTypeHintSniff::class,
     ],
 
     'config' => [

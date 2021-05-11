@@ -74,7 +74,7 @@ class TransientStoreHandler
     ): ?string {
         $value = $this->store->get($key, null);
         $this->store->delete($key);
-        return ($value !== null ? (string) $value : null);
+        return $value !== null ? (string) $value : null;
     }
 
     /**
