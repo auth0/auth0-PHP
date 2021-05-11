@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Token;
 
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
 use Psr\SimpleCache\CacheInterface;
 
@@ -44,7 +43,7 @@ class Parser
         $parts = explode('.', $jwt);
 
         if (count($parts) !== 3) {
-            throw InvalidTokenException::badSeparators();
+            throw \Auth0\SDK\Exception\InvalidTokenException::badSeparators();
         }
 
         $decoded = [

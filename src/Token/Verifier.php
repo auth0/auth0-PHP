@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\Token;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
 use OpenSSLAsymmetricKey;
 use Psr\SimpleCache\CacheInterface;
@@ -99,14 +98,14 @@ class Verifier
         $alg = $this->headers['alg'] ?? null;
 
         if ($this->algorithm && ($this->algorithm !== $alg)) {
-            throw InvalidTokenException::unexpectedSigningAlgorithm($this->algorithm, $alg);
+            throw \Auth0\SDK\Exception\InvalidTokenException::unexpectedSigningAlgorithm($this->algorithm, $alg);
         }
 
         if ($alg === Token::ALGO_RS256) {
             $kid = $this->headers['kid'] ?? null;
 
             if ($kid === null) {
-                throw InvalidTokenException::missingKidHeader();
+                throw \Auth0\SDK\Exception\InvalidTokenException::missingKidHeader();
             }
 
             $key = $this->getKey($kid);
@@ -114,7 +113,7 @@ class Verifier
             $this->freeKey($key);
 
             if ($valid !== 1) {
-                throw InvalidTokenException::badSignature();
+                throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
             }
 
             return $this;
@@ -122,20 +121,20 @@ class Verifier
 
         if ($alg === Token::ALGO_HS256) {
             if (! $this->clientSecret) {
-                throw InvalidTokenException::requiresClientSecret();
+                throw \Auth0\SDK\Exception\InvalidTokenException::requiresClientSecret();
             }
 
             $hash = hash_hmac('sha256', $this->payload, $this->clientSecret, true);
             $valid = hash_equals($this->signature, $hash);
 
             if (! $valid) {
-                throw InvalidTokenException::badSignature();
+                throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
             }
 
             return $this;
         }
 
-        throw InvalidTokenException::unsupportedSigningAlgorithm($alg);
+        throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm($alg);
     }
 
     /**
@@ -146,7 +145,7 @@ class Verifier
     protected function getKeySet(): array
     {
         if ($this->jwksUri === null) {
-            throw InvalidTokenException::requiresJwksUri();
+            throw \Auth0\SDK\Exception\InvalidTokenException::requiresJwksUri();
         }
 
         $jwksCacheKey = md5($this->jwksUri);
@@ -198,19 +197,19 @@ class Verifier
         $keys = $this->getKeySet();
 
         if (! isset($keys[$kid])) {
-            throw InvalidTokenException::badSignatureMissingKid();
+            throw \Auth0\SDK\Exception\InvalidTokenException::badSignatureMissingKid();
         }
 
         $key = openssl_pkey_get_public("-----BEGIN CERTIFICATE-----\n" . chunk_split($keys[$kid]['x5c'][0], 64, "\n") . '-----END CERTIFICATE-----');
 
         if (is_bool($key)) {
-            throw InvalidTokenException::badSignature();
+            throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
         }
 
         $details = openssl_pkey_get_details($key);
 
         if ($details['type'] !== OPENSSL_KEYTYPE_RSA) {
-            throw InvalidTokenException::badSignatureIncompatibleAlgorithm();
+            throw \Auth0\SDK\Exception\InvalidTokenException::badSignatureIncompatibleAlgorithm();
         }
 
         return $key;

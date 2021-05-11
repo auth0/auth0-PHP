@@ -16,18 +16,18 @@ class SessionStoreTest extends TestCase
     /**
      * Session key for test values.
      */
-    const TEST_KEY = 'never_compromise_on_identity';
+    protected const TEST_KEY = 'never_compromise_on_identity';
 
     /**
      * Session value to test.
      */
-    const TEST_VALUE = '__Auth0__';
+    protected const TEST_VALUE = '__Auth0__';
 
     /**
      * Expected cookie lifetime of 1 week.
      * 60 s/min * 60 min/h * 24 h/day * 7 days.
      */
-    const COOKIE_LIFETIME = 604800;
+    protected const COOKIE_LIFETIME = 604800;
 
     /**
      * Reusable instance of SessionStore class to be tested.

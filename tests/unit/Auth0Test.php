@@ -683,7 +683,6 @@ class Auth0Test extends TestCase
         $this->expectExceptionMessage('Nonce (nonce) claim mismatch in the token');
 
         $auth0->setIdToken($id_token);
-
     }
 
     /**
@@ -779,8 +778,8 @@ class Auth0Test extends TestCase
         $cacheKey = md5('https://test.auth0.com/.well-known/jwks.json');
         $mockJwks = [
             '__test_kid__' => [
-                'x5c' => ['123']
-            ]
+                'x5c' => ['123'],
+            ],
         ];
 
         $pool = new ArrayCachePool();
@@ -792,7 +791,7 @@ class Auth0Test extends TestCase
                 'client_id' => uniqid(),
                 'redirect_uri' => uniqid(),
                 'cache_handler' => $pool,
-                'transient_store' => new SessionStore()
+                'transient_store' => new SessionStore(),
             ]
         );
 

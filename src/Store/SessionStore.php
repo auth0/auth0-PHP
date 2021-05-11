@@ -91,7 +91,7 @@ class SessionStore implements StoreInterface
     ): string {
         $key_name = $key;
 
-        if (! empty($this->sessionBaseName)) {
+        if (strlen($this->sessionBaseName)) {
             $key_name = $this->sessionBaseName . '_' . $key_name;
         }
 

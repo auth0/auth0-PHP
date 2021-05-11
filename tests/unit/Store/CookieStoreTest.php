@@ -259,7 +259,7 @@ class CookieStoreTest extends TestCase
         $header = $method->invokeArgs($store, ['__test_name_1__', '__test_value_1__', 303943620]);
 
         $this->assertEquals(
-            'Set-Cookie: __test_name_1__=__test_value_1__; path=/; ' . 'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=Lax',
+            'Set-Cookie: __test_name_1__=__test_value_1__; path=/; expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=Lax',
             $header
         );
     }
@@ -275,7 +275,7 @@ class CookieStoreTest extends TestCase
         $header = $method->invokeArgs($store, ['__test_name_2__', '__test_value_2__', 303943620]);
 
         $this->assertEquals(
-            'Set-Cookie: __test_name_2__=__test_value_2__; path=/; ' . 'expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=None; Secure',
+            'Set-Cookie: __test_name_2__=__test_value_2__; path=/; expires=Sunday, 19-Aug-1979 20:47:00 GMT; HttpOnly; SameSite=None; Secure',
             $header
         );
     }

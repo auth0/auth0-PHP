@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK;
 
-use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token\Parser;
 use Psr\SimpleCache\CacheInterface;
 

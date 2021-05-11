@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Token;
 
-use Auth0\SDK\Exception\InvalidTokenException;
-
 /**
  * Class Validator.
  */
@@ -40,7 +38,7 @@ class Validator
         $audience = $this->getClaim('aud');
 
         if ($audience === null) {
-            throw InvalidTokenException::missingAudienceClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingAudienceClaim();
         }
 
         if (is_string($audience)) {
@@ -51,7 +49,7 @@ class Validator
             return $this;
         }
 
-        throw InvalidTokenException::mismatchedAudClaim(implode(', ', $expects), implode(', ', $audience));
+        throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedAudClaim(implode(', ', $expects), implode(', ', $audience));
     }
 
     /**
@@ -72,13 +70,13 @@ class Validator
         $now = $now ?? time();
 
         if ($authTime === null) {
-            throw InvalidTokenException::missingAuthTimeClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingAuthTimeClaim();
         }
 
         $validUntil = $authTime + $maxAge + $leeway;
 
         if ($now > $validUntil) {
-            throw InvalidTokenException::mismatchedAuthTimeClaim($now, $validUntil);
+            throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedAuthTimeClaim($now, $validUntil);
         }
 
         return $this;
@@ -97,18 +95,18 @@ class Validator
         $audience = $this->getClaim('aud');
 
         if ($audience === null) {
-            throw InvalidTokenException::missingAudienceClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingAudienceClaim();
         }
 
         if (is_array($audience)) {
             $azp = $this->getClaim('azp');
 
             if ($azp === null) {
-                throw InvalidTokenException::missingAzpClaim();
+                throw \Auth0\SDK\Exception\InvalidTokenException::missingAzpClaim();
             }
 
             if (! array_key_exists($azp, $expects)) {
-                throw InvalidTokenException::mismatchedAzpClaim(implode(', ', $expects), $azp);
+                throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedAzpClaim(implode(', ', $expects), $azp);
             }
         }
 
@@ -131,13 +129,13 @@ class Validator
         $now = $now ?? time();
 
         if ($expires === null) {
-            throw InvalidTokenException::missingExpClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingExpClaim();
         }
 
         $expires += $leeway;
 
         if ($now > $expires) {
-            throw InvalidTokenException::mismatchedExpClaim($now, $expires);
+            throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedExpClaim($now, $expires);
         }
 
         return $this;
@@ -153,7 +151,7 @@ class Validator
         $issued = $this->getClaim('iat');
 
         if ($issued === null) {
-            throw InvalidTokenException::missingIatClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingIatClaim();
         }
 
         return $this;
@@ -172,11 +170,11 @@ class Validator
         $claim = $this->getClaim('iss');
 
         if ($claim === null) {
-            throw InvalidTokenException::missingIssClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingIssClaim();
         }
 
         if ($claim !== $expects) {
-            throw InvalidTokenException::mismatchedIssClaim($expects, $claim);
+            throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedIssClaim($expects, $claim);
         }
 
         return $this;
@@ -195,11 +193,11 @@ class Validator
         $claim = $this->getClaim('nonce');
 
         if ($claim === null) {
-            throw InvalidTokenException::missingNonceClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingNonceClaim();
         }
 
         if ($claim !== $expects) {
-            throw InvalidTokenException::mismatchedNonceClaim($expects, $claim);
+            throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedNonceClaim($expects, $claim);
         }
 
         return $this;
@@ -218,11 +216,11 @@ class Validator
         $claim = $this->getClaim('org_id');
 
         if ($claim === null) {
-            throw InvalidTokenException::missingOrgIdClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingOrgIdClaim();
         }
 
         if (! in_array($claim, $expects)) {
-            throw InvalidTokenException::mismatchedOrgIdClaim(implode(', ', $expects), $claim);
+            throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedOrgIdClaim(implode(', ', $expects), $claim);
         }
 
         return $this;
@@ -238,7 +236,7 @@ class Validator
         $claim = $this->getClaim('sub');
 
         if ($claim === null) {
-            throw InvalidTokenException::missingSubClaim();
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingSubClaim();
         }
 
         return $this;

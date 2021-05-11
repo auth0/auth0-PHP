@@ -10,7 +10,7 @@ use GuzzleHttp\Psr7\Response;
 
 class JobsTest extends ApiTests
 {
-    const FORM_DATA_VALUE_KEY_OFFSET = 3;
+    protected const FORM_DATA_VALUE_KEY_OFFSET = 3;
 
     /**
      * Expected telemetry value.
