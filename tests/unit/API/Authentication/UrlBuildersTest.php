@@ -77,7 +77,7 @@ class UrlBuildersTest extends TestCase
 
         // Telemetry should not be added to browser URLs.
         // If a query is added in the future, change this to check that auth0Client is not present.
-        $this->assertTrue(strlen($logout_link_parts['query']) === 0);
+        $this->assertTrue(! isset($logout_link_parts['query']));
     }
 
     public function testThatReturnToLogoutLinkIsBuiltCorrectly(): void
