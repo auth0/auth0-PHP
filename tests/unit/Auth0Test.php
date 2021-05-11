@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\unit;
+namespace Auth0\Tests\Unit;
 
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Store\SessionStore;
-use Auth0\Tests\Traits\ErrorHelpers;
 use Auth0\Tests\unit\Helpers\Tokens\AsymmetricVerifierTest;
-use Auth0\Tests\unit\Helpers\Tokens\SymmetricVerifierTest;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Cache\Adapter\PHPArray\ArrayCachePool;
 use GuzzleHttp\Handler\MockHandler;
@@ -22,8 +20,6 @@ use PHPUnit\Framework\TestCase;
  */
 class Auth0Test extends TestCase
 {
-    use ErrorHelpers;
-
     /**
      * Basic Auth0 class config options.
      */
@@ -616,7 +612,7 @@ class Auth0Test extends TestCase
     public function testThatMaxAgeIsSetInLoginUrlFromInitialConfig(): void
     {
         $custom_config = self::$baseConfig;
-        $custom_config['max_age'] = '1000';
+        $custom_config['max_age'] = 1000;
         $auth0 = new Auth0($custom_config);
 
         $auth_url = $auth0->getLoginUrl();
@@ -626,7 +622,7 @@ class Auth0Test extends TestCase
 
         $this->assertContains('max_age=1000', $url_query);
         $this->assertArrayHasKey('auth0_max_age', $_SESSION);
-        $this->assertEquals('1000', $_SESSION['auth0_max_age']);
+        $this->assertEquals(1000, $_SESSION['auth0_max_age']);
     }
 
     /**
@@ -635,10 +631,10 @@ class Auth0Test extends TestCase
     public function testThatMaxAgeIsOverriddenInLoginUrl(): void
     {
         $custom_config = self::$baseConfig;
-        $custom_config['max_age'] = '1000';
+        $custom_config['max_age'] = 1000;
         $auth0 = new Auth0($custom_config);
 
-        $auth_url = $auth0->getLoginUrl(['max_age' => '1001']);
+        $auth_url = $auth0->getLoginUrl(['max_age' => 1001]);
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
@@ -666,7 +662,7 @@ class Auth0Test extends TestCase
         $id_token = (new TokenGenerator())->withHs256();
 
         $_SESSION['auth0_nonce'] = '__test_nonce__';
-        $_SESSION['auth0_max_age'] = '1000';
+        $_SESSION['auth0_max_age'] = 1000;
         $auth0->setIdToken($id_token);
 
         $this->assertEquals($id_token, $auth0->getIdToken());
@@ -683,14 +679,12 @@ class Auth0Test extends TestCase
         $id_token = (new TokenGenerator())->withHs256();
 
         $_SESSION['auth0_nonce'] = '__invalid_nonce__';
-        $e_message = 'No exception caught';
-        try {
-            $auth0->setIdToken($id_token);
-        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
-            $e_message = $e->getMessage();
-        }
 
-        $this->assertStringStartsWith('Nonce (nonce) claim mismatch in the ID token', $e_message);
+        $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
+        $this->expectExceptionMessage('Nonce (nonce) claim mismatch in the token');
+
+        $auth0->setIdToken($id_token);
+
     }
 
     /**
@@ -702,18 +696,10 @@ class Auth0Test extends TestCase
         $auth0 = new Auth0($custom_config);
         $id_token = (new TokenGenerator())->withHs256();
 
-        $_SESSION['auth0_nonce'] = '__test_nonce__';
-        $e_message = 'No exception caught';
-        try {
-            $auth0->setIdToken($id_token);
-        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
-            $e_message = $e->getMessage();
-        }
+        $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
+        $this->expectExceptionMessage('Authentication Time (auth_time) claim in the token indicates that too much time has passed since the last end-user authentication');
 
-        $this->assertStringStartsWith(
-            'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed',
-            $e_message
-        );
+        $auth0->setIdToken($id_token);
     }
 
     /**
@@ -724,7 +710,7 @@ class Auth0Test extends TestCase
         $auth0 = new Auth0(self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']);
 
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-        $this->expectExceptionMessage('Organization Id (org_id) claim must be a string present in the ID token');
+        $this->expectExceptionMessage('Organization Id (org_id) claim must be a string present in the token');
 
         $auth0->decode((new TokenGenerator())->withHs256());
     }
@@ -732,7 +718,7 @@ class Auth0Test extends TestCase
     /**
      * Test that ID Token Organization is successful when matched.
      */
-    public function testThatIdTokenOrganizationSucceesWhenMatched(): void
+    public function testThatIdTokenOrganizationSuccessWhenMatched(): void
     {
         $auth0 = new Auth0(self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']);
 
@@ -750,7 +736,7 @@ class Auth0Test extends TestCase
         $auth0 = new Auth0(self::$baseConfig + ['id_token_alg' => 'HS256', 'organization' => '__test_organization__']);
 
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-        $this->expectExceptionMessage('Organization Id (org_id) claim value mismatch in the ID token; expected "__test_organization__", found "__bad_test_organization__"');
+        $this->expectExceptionMessage('Organization Id (org_id) claim value mismatch in the token');
 
         $auth0->decode((new TokenGenerator())->withHs256(['org_id' => '__bad_test_organization__']));
     }
@@ -762,12 +748,6 @@ class Auth0Test extends TestCase
     {
         $auth0 = new Auth0(self::$baseConfig + ['id_token_alg' => 'HS256']);
         $_SESSION['auth0_nonce'] = '__test_nonce__';
-        $e_message = 'No exception caught';
-        try {
-            $auth0->decodeIdToken(self::getIdToken(), ['max_age' => 10]);
-        } catch (\Auth0\SDK\Exception\InvalidTokenException $e) {
-            $e_message = $e->getMessage();
-        }
 
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
         $this->expectExceptionMessage('Authentication Time (auth_time) claim in the token indicates that too much time has passed');

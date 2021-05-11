@@ -72,9 +72,9 @@ class TransientStoreHandler
     public function getOnce(
         string $key
     ): ?string {
-        $value = $this->store->get($key);
+        $value = $this->store->get($key, null);
         $this->store->delete($key);
-        return $value;
+        return ($value !== null ? (string) $value : null);
     }
 
     /**

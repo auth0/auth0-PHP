@@ -24,10 +24,6 @@ use Psr\SimpleCache\CacheInterface;
  */
 class Auth0
 {
-    protected const TRANSIENT_STATE_KEY = 'state';
-    protected const TRANSIENT_NONCE_KEY = 'nonce';
-    protected const TRANSIENT_CODE_VERIFIER_KEY = 'code_verifier';
-
     /**
      * Available keys to persist data.
      */
@@ -145,7 +141,7 @@ class Auth0
     /**
      * Leeway for ID token validation.
      */
-    protected ?int $idTokenLeeway;
+    protected ?int $idTokenLeeway = null;
 
     /**
      * URI to the JWKS when accepting RS256 ID tokens.
@@ -155,7 +151,7 @@ class Auth0
     /**
      * Maximum time allowed between authentication and ID token verification.
      */
-    protected ?int $maxAge;
+    protected ?int $maxAge = null;
 
     /**
      * Transient authorization storage used for state, nonce, and max_age.
@@ -165,7 +161,12 @@ class Auth0
     /**
      * Cache Handler.
      */
-    protected CacheInterface $cacheHandler;
+    protected ?CacheInterface $cacheHandler = null;
+
+    /**
+     * Maximum time allowed between authentication and ID token verification.
+     */
+    protected ?int $cacheTtl = null;
 
     /**
      * BaseAuth0 Constructor.
@@ -213,8 +214,6 @@ class Auth0
         $this->guzzleOptions = $config['guzzle_options'] ?? [];
         $this->skipUserinfo = $config['skip_userinfo'] ?? true;
         $this->enablePkce = $config['enable_pkce'] ?? false;
-        $this->maxAge = isset($config['max_age']) ? (int) $config['max_age'] : null;
-        $this->idTokenLeeway = $config['id_token_leeway'] ?? null;
         $this->jwksUri = $config['jwks_uri'] ?? 'https://' . $this->domain . '/.well-known/jwks.json';
         $this->idTokenAlg = $config['id_token_alg'] ?? 'RS256';
 
@@ -232,6 +231,26 @@ class Auth0
 
         if (! in_array($this->idTokenAlg, ['HS256', 'RS256'])) {
             throw new \Auth0\SDK\Exception\CoreException('Invalid id_token_alg; must be "HS256" or "RS256"');
+        }
+
+        if (isset($config['max_age'])) {
+            if (is_int($config['max_age'])) {
+                // Leeway was passed as an int, perfect.
+                $this->maxAge = $config['max_age'];
+            } elseif (! is_int($config['max_age']) && is_numeric($config['max_age'])) {
+                // Leeway was passed as a string, but it is numeric so cast to int.
+                $this->maxAge = (int) $config['max_age'];
+            }
+        }
+
+        if (isset($config['id_token_leeway'])) {
+            if (is_int($config['id_token_leeway'])) {
+                // Leeway was passed as an int, perfect.
+                $this->idTokenLeeway = $config['id_token_leeway'];
+            } elseif (! is_int($config['id_token_leeway']) && is_numeric($config['id_token_leeway'])) {
+                // Leeway was passed as a string, but it is numeric so cast to int.
+                $this->idTokenLeeway = (int) $config['id_token_leeway'];
+            }
         }
 
         // User info is persisted by default.
@@ -277,10 +296,9 @@ class Auth0
         }
         $this->transientHandler = new TransientStoreHandler($config['transient_store']);
 
-        if (! isset($config['cache_handler']) || ! $config['cache_handler'] instanceof CacheInterface) {
-            $config['cache_handler'] = new NoCacheHandler();
+        if (isset($config['cache_handler']) && $config['cache_handler'] instanceof CacheInterface) {
+            $this->cacheHandler = $config['cache_handler'];
         }
-        $this->cacheHandler = $config['cache_handler'];
 
         $this->authentication = new Authentication(
             $this->domain,
@@ -316,7 +334,7 @@ class Auth0
         $params = [];
 
         if ($state) {
-            $params[self::TRANSIENT_STATE_KEY] = $state;
+            $params['state'] = $state;
         }
 
         if ($connection) {
@@ -353,19 +371,19 @@ class Auth0
         $auth_params = array_replace($default_params, $params);
         $auth_params = array_filter($auth_params);
 
-        if (! isset($auth_params[self::TRANSIENT_STATE_KEY])) {
+        if (! isset($auth_params['state'])) {
             // No state provided by application so generate, store, and send one.
-            $auth_params[self::TRANSIENT_STATE_KEY] = $this->transientHandler->issue(self::TRANSIENT_STATE_KEY);
+            $auth_params['state'] = $this->transientHandler->issue('state');
         } else {
             // Store the passed-in value.
-            $this->transientHandler->store(self::TRANSIENT_STATE_KEY, $auth_params[self::TRANSIENT_STATE_KEY]);
+            $this->transientHandler->store('state', $auth_params['state']);
         }
 
         // ID token nonce validation is required so auth params must include one.
-        if (! isset($auth_params[self::TRANSIENT_NONCE_KEY])) {
-            $auth_params[self::TRANSIENT_NONCE_KEY] = $this->transientHandler->issue(self::TRANSIENT_NONCE_KEY);
+        if (! isset($auth_params['nonce'])) {
+            $auth_params['nonce'] = $this->transientHandler->issue('nonce');
         } else {
-            $this->transientHandler->store(self::TRANSIENT_NONCE_KEY, $auth_params[self::TRANSIENT_NONCE_KEY]);
+            $this->transientHandler->store('nonce', $auth_params['nonce']);
         }
 
         if ($this->enablePkce) {
@@ -374,7 +392,7 @@ class Auth0
             // The PKCE spec defines two methods, S256 and plain, the former is
             // the only one supported by Auth0 since the latter is discouraged.
             $auth_params['code_challenge_method'] = 'S256';
-            $this->transientHandler->store(self::TRANSIENT_CODE_VERIFIER_KEY, $codeVerifier);
+            $this->transientHandler->store('code_verifier', $codeVerifier);
         }
 
         if (isset($auth_params['max_age'])) {
@@ -470,13 +488,13 @@ class Auth0
         }
 
         $state = $this->getState();
-        if (! $state || ! $this->transientHandler->verify(self::TRANSIENT_STATE_KEY, $state)) {
+        if (! $state || ! $this->transientHandler->verify('state', $state)) {
             throw new \Auth0\SDK\Exception\CoreException('Invalid state');
         }
 
         $code_verifier = null;
         if ($this->enablePkce) {
-            $code_verifier = $this->transientHandler->getOnce(self::TRANSIENT_CODE_VERIFIER_KEY);
+            $code_verifier = $this->transientHandler->getOnce('code_verifier');
             if (! $code_verifier) {
                 throw new \Auth0\SDK\Exception\CoreException('Missing code_verifier');
             }
@@ -499,7 +517,7 @@ class Auth0
         }
 
         if (isset($response['id_token'])) {
-            if (! $this->transientHandler->isset(self::TRANSIENT_NONCE_KEY)) {
+            if (! $this->transientHandler->isset('nonce')) {
                 throw new \Auth0\SDK\Exception\InvalidTokenException('Nonce value not found in application store');
             }
 
@@ -607,8 +625,8 @@ class Auth0
     /**
      * Verifies and decodes an ID token using the properties in this class.
      *
-     * @param string $idToken         ID token to verify and decode.
-     * @param array  $verifierOptions Options passed to verifier.
+     * @param string $token ID token to verify and decode.
+     * @param array $options Additional configuration options to pass during Token processing.
      *
      * @return array
      *
@@ -664,10 +682,10 @@ class Auth0
     public function getState(): ?string
     {
         $state = null;
-        if ($this->responseMode === 'query' && isset($_GET[self::TRANSIENT_STATE_KEY])) {
-            $state = $_GET[self::TRANSIENT_STATE_KEY];
-        } elseif ($this->responseMode === 'form_post' && isset($_POST[self::TRANSIENT_STATE_KEY])) {
-            $state = $_POST[self::TRANSIENT_STATE_KEY];
+        if ($this->responseMode === 'query' && isset($_GET['state'])) {
+            $state = $_GET['state'];
+        } elseif ($this->responseMode === 'form_post' && isset($_POST['state'])) {
+            $state = $_POST['state'];
         }
 
         return $state;
