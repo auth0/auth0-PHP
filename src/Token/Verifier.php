@@ -140,10 +140,13 @@ class Verifier
     /**
      * Query a JWKS endpoint and return an array representing the key set.
      *
+     * @param string|null $expectsKid Optional. A key id we're currently expecting to retrieve. When retrieving a cache response, if the key isn't present, it will invalid the cache and fetch an updated JWKS.
+     *
      * @throws InvalidTokenException When the JWKS uri is not properly configured, or is unreachable.
      */
-    protected function getKeySet(): array
-    {
+    protected function getKeySet(
+        ?string $expectsKid = null
+    ): array {
         if ($this->jwksUri === null) {
             throw \Auth0\SDK\Exception\InvalidTokenException::requiresJwksUri();
         }
@@ -159,7 +162,9 @@ class Verifier
             $cached = $this->cache->get($jwksCacheKey);
 
             if ($cached !== null) {
-                return $cached;
+                if ($expectsKid === null || $expectsKid !== null && isset($cached[$expectsKid])) {
+                    return $cached;
+                }
             }
         }
 
@@ -194,7 +199,7 @@ class Verifier
     protected function getKey(
         string $kid
     ): OpenSSLAsymmetricKey {
-        $keys = $this->getKeySet();
+        $keys = $this->getKeySet($kid);
 
         if (! isset($keys[$kid])) {
             throw \Auth0\SDK\Exception\InvalidTokenException::badSignatureMissingKid();
