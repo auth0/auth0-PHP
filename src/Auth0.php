@@ -230,10 +230,10 @@ class Auth0
 
         if (isset($config['max_age'])) {
             if (is_int($config['max_age'])) {
-                // Leeway was passed as an int, perfect.
+                // Max age was passed as an int, perfect.
                 $this->maxAge = $config['max_age'];
             } elseif (! is_int($config['max_age']) && is_numeric($config['max_age'])) {
-                // Leeway was passed as a string, but it is numeric so cast to int.
+                // Max age was passed as a string, but it is numeric so cast to int.
                 $this->maxAge = (int) $config['max_age'];
             }
         }
