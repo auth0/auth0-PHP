@@ -42,7 +42,7 @@
     "sort-packages": true
   },
   "scripts": {
-    "test": "pest --stop-on-failure",
+    "test": "pest --stop-on-failure --coverage",
     "lint": "phpinsights -v",
     "lint-style": "phpcs -s",
     "lint-style-fix": "phpcbf"
