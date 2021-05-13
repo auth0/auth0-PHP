@@ -97,6 +97,10 @@ class Verifier
     {
         $alg = $this->headers['alg'] ?? null;
 
+        if ($alg === null) {
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingAlgHeader();
+        }
+
         if ($this->algorithm && ($this->algorithm !== $alg)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::unexpectedSigningAlgorithm($this->algorithm, $alg);
         }
