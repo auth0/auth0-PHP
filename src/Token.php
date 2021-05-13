@@ -31,8 +31,8 @@ class Token
     /**
      * Constructor for Token handling class.
      *
-     * @param string $jwt A JWT string to parse, and prepare for verification and validation.
-     * @param int $type Specify the Token type to toggle specific claim validations. Defaults to 1 for ID Token. See TYPE_ consts for options.
+     * @param string $jwt  A JWT string to parse, and prepare for verification and validation.
+     * @param int    $type Specify the Token type to toggle specific claim validations. Defaults to 1 for ID Token. See TYPE_ consts for options.
      *
      * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
@@ -61,11 +61,11 @@ class Token
     /**
      * Verify the signature of the Token using either RS256 or HS256.
      *
-     * @param string|null $algorithm Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
-     * @param string|null $jwksUri Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null $cacheExpires Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheInterface|null $cache Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     * @param string|null         $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
+     * @param string|null         $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param string|null         $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
+     * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      *
      * @throws InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
@@ -83,12 +83,12 @@ class Token
     /**
      * Validate the claims of the token.
      *
-     * @param string $issuer The value expected for the 'iss' claim.
-     * @param array $audience An array of allowed values for the 'aud' claim. Successful if ANY match.
-     * @param array|null $organization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
-     * @param string|null $nonce Optional. The value expected for the 'nonce' claim.
-     * @param int|null $maxAge Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
-     * @param int|null $leeway Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
+     * @param string      $issuer       The value expected for the 'iss' claim.
+     * @param array       $audience     An array of allowed values for the 'aud' claim. Successful if ANY match.
+     * @param array|null  $organization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
+     * @param string|null $nonce        Optional. The value expected for the 'nonce' claim.
+     * @param int|null    $maxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
+     * @param int|null    $leeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
      *
      * @throws InvalidTokenException When Token validation fails. See the exception message for further details.
      */

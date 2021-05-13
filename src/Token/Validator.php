@@ -55,9 +55,9 @@ class Validator
     /**
      * Validate the 'auth_time' claim.
      *
-     * @param int $maxAge Maximum window of time in seconds since the 'auth_time' to accept the token.
-     * @param int $leeway Leeway in seconds to allow during time calculations.
-     * @param int|null $now Optional. Unix timestamp representing the current point in time to use for time calculations.
+     * @param int      $maxAge Maximum window of time in seconds since the 'auth_time' to accept the token.
+     * @param int      $leeway Leeway in seconds to allow during time calculations.
+     * @param int|null $now    Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
      * @throws InvalidTokenException When claim validation fails.
      */
@@ -116,8 +116,8 @@ class Validator
     /**
      * Validate the 'exp' claim.
      *
-     * @param int $leeway Leeway in seconds to allow during time calculations.
-     * @param int|null $now Optional. Unix timestamp representing the current point in time to use for time calculations.
+     * @param int      $leeway Leeway in seconds to allow during time calculations.
+     * @param int|null $now    Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
      * @throws InvalidTokenException When claim validation fails.
      */

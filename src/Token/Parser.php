@@ -73,11 +73,11 @@ class Parser
     /**
      * Verify the signature of the Token using either RS256 or HS256.
      *
-     * @param string|null $algorithm Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
-     * @param string|null $jwksUri Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null $cacheExpires Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheInterface|null $cache Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     * @param string|null         $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
+     * @param string|null         $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param string|null         $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
+     * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      *
      * @throws InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */

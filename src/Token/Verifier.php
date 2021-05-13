@@ -56,14 +56,14 @@ class Verifier
     /**
      * Constructor for the Token Verifier class.
      *
-     * @param string $payload A string representing the headers and claims portions of a JWT.
-     * @param string $signature A string representing the signature portion of a JWT.
-     * @param array $headers An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
-     * @param string|null $algorithm Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
-     * @param string|null $jwksUri Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null $cacheExpires Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheInterface|null $cache Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     * @param string              $payload      A string representing the headers and claims portions of a JWT.
+     * @param string              $signature    A string representing the signature portion of a JWT.
+     * @param array               $headers      An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
+     * @param string|null         $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
+     * @param string|null         $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param string|null         $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
+     * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      */
     public function __construct(
         string $payload,
