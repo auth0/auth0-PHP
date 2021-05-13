@@ -18,8 +18,6 @@ class RequestOptions
      * RequestOptions constructor
      *
      * @param array<FilteredRequest|PaginatedRequest> $options An array of FilteredRequest or PaginatedRequest objects.
-     *
-     * @return void
      */
     public function __construct(
         array $options = []
@@ -79,8 +77,6 @@ class RequestOptions
 
     /**
      * Return an array representing the field-filtered request.
-     *
-     * @return array
      */
     public function build(): array
     {

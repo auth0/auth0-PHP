@@ -19,8 +19,6 @@ class FilteredRequest
      *
      * @param array|null $fields        Fields to include or exclude from API responses.
      * @param bool|null  $includeFields True to include $fields, false to exclude $fields.
-     *
-     * @return void
      */
     public function __construct(
         ?array $fields = null,

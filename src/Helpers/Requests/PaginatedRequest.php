@@ -20,8 +20,6 @@ class PaginatedRequest
      * @param int|null  $page          Page index of the results to return. First page is 0.
      * @param int|null  $perPage       Number of results per page. Paging is disabled if parameter not set.
      * @param bool|null $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
-     *
-     * @return void
      */
     public function __construct(
         ?int $page = null,

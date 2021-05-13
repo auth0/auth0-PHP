@@ -43,8 +43,7 @@ class SessionStore implements StoreInterface
         $value
     ): void {
         $this->initSession();
-        $key_name = $this->getSessionKeyName($key);
-        $_SESSION[$key_name] = $value;
+        $_SESSION[$this->getSessionKeyName($key)] = $value;
     }
 
     /**
@@ -79,8 +78,7 @@ class SessionStore implements StoreInterface
         string $key
     ): void {
         $this->initSession();
-        $key_name = $this->getSessionKeyName($key);
-        unset($_SESSION[$key_name]);
+        unset($_SESSION[$this->getSessionKeyName($key)]);
     }
 
     /**
@@ -93,7 +91,7 @@ class SessionStore implements StoreInterface
     ): string {
         $key_name = $key;
 
-        if (! empty($this->sessionBaseName)) {
+        if (strlen($this->sessionBaseName)) {
             $key_name = $this->sessionBaseName . '_' . $key_name;
         }
 

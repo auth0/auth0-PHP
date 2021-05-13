@@ -37,10 +37,8 @@ class ApiClient
 
     /**
      * Headers to set for all calls.
-     *
-     * @var array|mixed
      */
-    protected $headers;
+    protected array $headers;
 
     /**
      * Options to pass to the Guzzle HTTP library.
