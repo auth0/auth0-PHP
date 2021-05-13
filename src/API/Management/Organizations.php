@@ -18,12 +18,12 @@ class Organizations extends GenericResource
      * Create an organization.
      * Required scope: `create:organizations`
      *
-     * @param string                   $name        The name of the Organization. Cannot be changed later.
-     * @param string                   $displayName The displayed name of the Organization.
-     * @param array|null               $branding    An array containing branding customizations for the organization.
-     * @param array|null $metadata    Optional. Additional metadata to store about the organization.
-     * @param array      $body        Optional. Additional body content to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null      $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string              $name        The name of the Organization. Cannot be changed later.
+     * @param string              $displayName The displayed name of the Organization.
+     * @param array|null          $branding    An array containing branding customizations for the organization.
+     * @param array|null          $metadata    Optional. Additional metadata to store about the organization.
+     * @param array               $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -125,12 +125,12 @@ class Organizations extends GenericResource
      * Update an organization.
      * Required scope: `update:organizations`
      *
-     * @param string                   $id          Organization (by ID) to update.
-     * @param string                   $displayName The displayed name of the Organization.
-     * @param array|null $branding    An array containing branding customizations for the organization.
-     * @param array|null $metadata    Optional. Additional metadata to store about the organization.
-     * @param array      $body        Optional. Additional body content to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null      $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string               $id          Organization (by ID) to update.
+     * @param string               $displayName The displayed name of the Organization.
+     * @param array|null           $branding    An array containing branding customizations for the organization.
+     * @param array|null           $metadata    Optional. Additional metadata to store about the organization.
+     * @param array                $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null  $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
      *
@@ -189,7 +189,7 @@ class Organizations extends GenericResource
      *
      * @param string              $id           Organization (by ID) to add a connection to.
      * @param string              $connectionId Connection (by ID) to add to organization.
-     * @param array $body         Additional body content to send with the API request. See @link for supported options.
+     * @param array               $body         Additional body content to send with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -271,7 +271,7 @@ class Organizations extends GenericResource
      *
      * @param string              $id           Organization (by ID) to add a connection to.
      * @param string              $connectionId Connection (by ID) to add to organization.
-     * @param array $body         Additional body content to pass with the API request. See @link for supported options.
+     * @param array               $body         Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
@@ -505,11 +505,11 @@ class Organizations extends GenericResource
      *
      * @param string              $id       Organization (by ID) to create the invitation for.
      * @param string              $clientId Client (by ID) to create the invitation for. This Client must be associated with the Organization.
-     * @param array $inviter  An array containing information about the inviter. Requires a 'name' key minimally.
+     * @param array               $inviter  An array containing information about the inviter. Requires a 'name' key minimally.
      *                                      - 'name' Required. A name to identify who is sending the invitation.
-     * @param array $invitee  An array containing information about the invitee. Requires an 'email' key.
+     * @param array               $invitee  An array containing information about the invitee. Requires an 'email' key.
      *                                      - 'email' Required. An email address where the invitation should be sent.
-     * @param array $body     Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param array               $body     Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @return array|null
