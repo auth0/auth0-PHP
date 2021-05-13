@@ -6,11 +6,11 @@ use Auth0\SDK\Token;
 use Auth0\SDK\Token\Verifier;
 use Auth0\Tests\Utilities\TokenGenerator;
 
-dataset('jwksUri', function () {
+dataset('jwksUri', static function () {
     yield [ 'https://test.auth0.com/.well-known/jwks.json', md5('https://test.auth0.com/.well-known/jwks.json') ];
 });
 
-dataset('tokenHs256', function () {
+dataset('tokenHs256', static function () {
     $token = (new TokenGenerator())->withHs256([]);
     [$headers, $claims, $signature] = explode('.', $token);
     $payload = join('.', [$headers, $claims]);
@@ -19,7 +19,7 @@ dataset('tokenHs256', function () {
     yield [ $token, $payload, $signature, $headers ];
 });
 
-dataset('tokenRs256', function () {
+dataset('tokenRs256', static function () {
     $keyPair = TokenGenerator::generateRsaKeyPair();
     $token = (new TokenGenerator())->withRs256([], $keyPair['private'], ['kid' => '__test_kid__']);
     [$headers, $claims, $signature] = explode('.', $token);

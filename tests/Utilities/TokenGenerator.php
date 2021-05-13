@@ -44,7 +44,7 @@ class TokenGenerator
         return [
             'private' => $privateKey,
             'public' => $publicKey['key'],
-            'cert' => $x509
+            'cert' => $x509,
         ];
     }
 
