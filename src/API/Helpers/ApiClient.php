@@ -12,7 +12,7 @@ use Auth0\SDK\API\Header\Telemetry;
  */
 class ApiClient
 {
-    public const API_VERSION = '7.8.0';
+    public const API_VERSION = '7.9.0';
 
     /**
      * Flag to turn telemetry headers off.
