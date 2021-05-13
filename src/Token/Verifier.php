@@ -6,7 +6,6 @@ namespace Auth0\SDK\Token;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\Token;
-use OpenSSLAsymmetricKey;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -194,15 +193,17 @@ class Verifier
     }
 
     /**
-     * Query a JWKS endpoint for a matching key. Parse and return a OpenSSLAsymmetricKey suitable for verification.
+     * Query a JWKS endpoint for a matching key. Parse and return a OpenSSLAsymmetricKey (PHP 8.0+) or resource (PHP < 8.0) suitable for verification.
      *
      * @param string $kid The 'kid' header value to use for key lookup.
+     *
+     * @return OpenSSLAsymmetricKey|resource
      *
      * @throws InvalidTokenException When unable to retrieve key. See error message for details.
      */
     protected function getKey(
         string $kid
-    ): OpenSSLAsymmetricKey {
+    ) {
         $keys = $this->getKeySet($kid);
 
         if (! isset($keys[$kid])) {
