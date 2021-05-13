@@ -35,11 +35,16 @@ class TokenGenerator
         ]);
 
         openssl_pkey_export($privateKeyResource, $privateKey);
-        $public_key = openssl_pkey_get_details($privateKeyResource);
+        $publicKey = openssl_pkey_get_details($privateKeyResource);
+
+        $resCsr = openssl_csr_new([], $privateKeyResource);
+        $resCert = openssl_csr_sign($resCsr, null, $privateKeyResource, 30);
+        openssl_x509_export($resCert, $x509);
 
         return [
             'private' => $privateKey,
-            'public' => $public_key['key'],
+            'public' => $publicKey['key'],
+            'cert' => $x509
         ];
     }
 
@@ -56,7 +61,7 @@ class TokenGenerator
         array $claims = [],
         ?string $privateKey = null,
         $headers = []
-        ): string {
+    ): string {
         $claims = self::getClaims($claims);
 
         if ($privateKey === null) {
@@ -65,5 +70,18 @@ class TokenGenerator
         }
 
         return JWT::encode($claims, $privateKey, 'RS256', null, $headers + ['alg' => 'RS256']);
+    }
+
+    public static function decodePart(
+        string $part,
+        bool $json = true
+    ) {
+        $decoded = base64_decode(strtr($part, '-_', '+/'), true);
+
+        if ($json) {
+            return json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        return $decoded;
     }
 }
