@@ -117,9 +117,6 @@ test('[RS256] verify() succeeds when signing key is correct', function($keyPair,
         ],
     ]);
 
-    // $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    // $this->expectExceptionMessage(\Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE);
-
     $this->assertIsObject(new Verifier($payload, $signature, $headers, Token::ALGO_RS256, $jwksUri, null, null, $cache));
 })->with('tokenRs256');
 
