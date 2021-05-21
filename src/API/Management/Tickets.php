@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Tickets.
@@ -24,15 +25,13 @@ class Tickets extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification
      */
     public function createEmailVerification(
         string $userId,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($userId, 'userId');
 
         $payload = [
@@ -54,13 +53,11 @@ class Tickets extends GenericResource
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @return array|null
      */
     public function createPasswordChange(
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('post')
             ->addPath('tickets', 'password-change')
             ->withBody((object) $body)

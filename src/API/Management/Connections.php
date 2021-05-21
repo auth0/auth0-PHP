@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Connections.
@@ -23,8 +24,6 @@ class Connections extends GenericResource
      * @param array               $body     Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/post_connections
@@ -34,7 +33,7 @@ class Connections extends GenericResource
         string $strategy,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($name, 'name');
         $this->validateString($strategy, 'strategy');
 
@@ -57,8 +56,6 @@ class Connections extends GenericResource
      * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections
@@ -66,7 +63,7 @@ class Connections extends GenericResource
     public function getAll(
         array $parameters = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('connections')
             ->withParams($parameters)
@@ -81,8 +78,6 @@ class Connections extends GenericResource
      * @param string              $id      Connection (by it's ID) to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections_by_id
@@ -90,7 +85,7 @@ class Connections extends GenericResource
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -107,8 +102,6 @@ class Connections extends GenericResource
      * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/patch_connections_by_id
@@ -117,7 +110,7 @@ class Connections extends GenericResource
         string $id,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('patch')
@@ -134,8 +127,6 @@ class Connections extends GenericResource
      * @param string              $id      Connection (by it's ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_connections_by_id
@@ -143,7 +134,7 @@ class Connections extends GenericResource
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')
@@ -160,8 +151,6 @@ class Connections extends GenericResource
      * @param string              $email   Email of the user to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_users_by_email
@@ -170,7 +159,7 @@ class Connections extends GenericResource
         string $id,
         string $email,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateEmail($email, 'email');
 

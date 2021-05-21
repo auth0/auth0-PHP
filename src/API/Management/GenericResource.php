@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\API\Helpers\ApiClient;
+use Auth0\SDK\Utility\HttpClient;
 
 /**
  * Class GenericResource.
@@ -15,7 +15,7 @@ class GenericResource
     /**
      * Injected ApiClient instance to use.
      */
-    protected ApiClient $apiClient;
+    protected HttpClient $apiClient;
 
     /**
      * GenericResource constructor.
@@ -23,7 +23,7 @@ class GenericResource
      * @param ApiClient $apiClient ApiClient instance to use.
      */
     public function __construct(
-        ApiClient $apiClient
+        HttpClient $apiClient
     ) {
         $this->apiClient = $apiClient;
     }
@@ -31,7 +31,7 @@ class GenericResource
     /**
      * Get the injected ApiClient instance.
      */
-    public function getApiClient(): ApiClient
+    public function getApiClient(): HttpClient
     {
         return $this->apiClient;
     }

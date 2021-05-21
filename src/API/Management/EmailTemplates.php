@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class EmailTemplates.
@@ -28,8 +29,6 @@ class EmailTemplates extends GenericResource
      * @param array               $additional Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates
@@ -43,7 +42,7 @@ class EmailTemplates extends GenericResource
         bool $enabled,
         array $additional = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($template, 'template');
         $this->validateString($body, 'body');
         $this->validateString($from, 'from');
@@ -74,8 +73,6 @@ class EmailTemplates extends GenericResource
      * @param string              $templateName The email template name. See the @link for a list of templates available.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName
@@ -83,7 +80,7 @@ class EmailTemplates extends GenericResource
     public function get(
         string $templateName,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($templateName, 'templateName');
 
         return $this->apiClient->method('get')
@@ -102,8 +99,6 @@ class EmailTemplates extends GenericResource
      * @param array               $body         Replace existing template with this data.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
@@ -112,7 +107,7 @@ class EmailTemplates extends GenericResource
         string $templateName,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($templateName, 'templateName');
         $this->validateArray($body, 'body');
 
@@ -133,8 +128,6 @@ class EmailTemplates extends GenericResource
      * @param array               $body         Update existing template fields with this data.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
@@ -143,7 +136,7 @@ class EmailTemplates extends GenericResource
         string $templateName,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($templateName, 'templateName');
         $this->validateArray($body, 'body');
 

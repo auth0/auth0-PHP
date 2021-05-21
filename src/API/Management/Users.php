@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Users.
@@ -22,8 +23,6 @@ class Users extends GenericResource
      * @param array               $body       Configuration for the new User. Some parameters are dependent upon the type of connection. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_users
@@ -32,7 +31,7 @@ class Users extends GenericResource
         string $connection,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($connection, 'connection');
         $this->validateArray($body, 'body');
 
@@ -56,8 +55,6 @@ class Users extends GenericResource
      * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/users/search/v3
@@ -66,7 +63,7 @@ class Users extends GenericResource
     public function getAll(
         array $parameters = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('users')
             ->withParams($parameters)
@@ -83,14 +80,12 @@ class Users extends GenericResource
      * @param string              $id      User (by their ID) to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -109,8 +104,6 @@ class Users extends GenericResource
      * @param array               $body    User data to update. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id
@@ -119,7 +112,7 @@ class Users extends GenericResource
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('patch')
@@ -136,8 +129,6 @@ class Users extends GenericResource
      * @param string              $id      User ID to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_users_by_id
@@ -145,7 +136,7 @@ class Users extends GenericResource
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')
@@ -162,8 +153,6 @@ class Users extends GenericResource
      * @param array               $body    Additional body content to send with the API request.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_identities
@@ -172,7 +161,7 @@ class Users extends GenericResource
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
@@ -192,8 +181,6 @@ class Users extends GenericResource
      * @param string              $identityId ID of the secondary linked account
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_user_identity_by_user_id
@@ -203,7 +190,7 @@ class Users extends GenericResource
         string $provider,
         string $identityId,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($provider, 'provider');
         $this->validateString($identityId, 'identityId');
@@ -226,15 +213,13 @@ class Users extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
      */
     public function addRoles(
         string $id,
         array $roles,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($roles, 'roles');
 
@@ -260,14 +245,12 @@ class Users extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
      */
     public function getRoles(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -286,15 +269,13 @@ class Users extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_user_roles
      */
     public function removeRoles(
         string $id,
         array $roles,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($roles, 'roles');
 
@@ -321,15 +302,13 @@ class Users extends GenericResource
      * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is malformed.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return mixed
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_permissions
      */
     public function addPermissions(
         string $id,
         array $permissions,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validatePermissions($permissions);
 
@@ -357,14 +336,12 @@ class Users extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return mixed
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_permissions
      */
     public function getPermissions(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -385,15 +362,13 @@ class Users extends GenericResource
      * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is malformed.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return mixed
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_permissions
      */
     public function removePermissions(
         string $id,
         array $permissions,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validatePermissions($permissions);
 
@@ -422,14 +397,12 @@ class Users extends GenericResource
      * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return mixed
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_logs_by_user
      */
     public function getLogs(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -453,7 +426,7 @@ class Users extends GenericResource
     public function getOrganizations(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -471,14 +444,12 @@ class Users extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return mixed
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
      */
     public function getEnrollments(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -497,14 +468,12 @@ class Users extends GenericResource
      * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return mixed
-     *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
      */
     public function createRecoveryCode(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('post')
@@ -528,7 +497,7 @@ class Users extends GenericResource
     public function invalidateBrowsers(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('post')
@@ -546,8 +515,6 @@ class Users extends GenericResource
      * @param string              $provider Multifactor provider to delete.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_multifactor_by_provider
@@ -556,7 +523,7 @@ class Users extends GenericResource
         string $id,
         string $provider,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($provider, 'provider');
 

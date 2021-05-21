@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class UsersByEmail.
@@ -21,14 +22,12 @@ class UsersByEmail extends GenericResource
      * @param string              $email   Email address to search for (case-sensitive).
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      */
     public function get(
         string $email,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('users-by-email')
             ->withParam('email', $email)

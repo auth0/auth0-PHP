@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Roles.
@@ -22,8 +23,6 @@ class Roles extends GenericResource
      * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_roles
@@ -32,7 +31,7 @@ class Roles extends GenericResource
         string $name,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($name, 'name');
 
         $payload = [
@@ -53,8 +52,6 @@ class Roles extends GenericResource
      * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_roles
@@ -62,7 +59,7 @@ class Roles extends GenericResource
     public function getAll(
         array $parameters = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('roles')
             ->withParams($parameters)
@@ -77,8 +74,6 @@ class Roles extends GenericResource
      * @param string              $id      Role ID to get.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_roles_by_id
@@ -86,7 +81,7 @@ class Roles extends GenericResource
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -103,8 +98,6 @@ class Roles extends GenericResource
      * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/patch_roles_by_id
@@ -113,7 +106,7 @@ class Roles extends GenericResource
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
@@ -131,8 +124,6 @@ class Roles extends GenericResource
      * @param string              $id      Role ID to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/delete_roles_by_id
@@ -140,7 +131,7 @@ class Roles extends GenericResource
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')
@@ -157,8 +148,6 @@ class Roles extends GenericResource
      * @param array               $permissions Permissions to add, array of permission arrays.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is empty or invalid.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
@@ -168,7 +157,7 @@ class Roles extends GenericResource
         string $id,
         array $permissions,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validatePermissions($permissions);
 
@@ -194,8 +183,6 @@ class Roles extends GenericResource
      * @param string              $id      Role ID to get permissions.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_role_permission
@@ -203,7 +190,7 @@ class Roles extends GenericResource
     public function getPermissions(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -220,8 +207,6 @@ class Roles extends GenericResource
      * @param array               $permissions Permissions to delete, array of permission arrays.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is empty or invalid.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
@@ -231,7 +216,7 @@ class Roles extends GenericResource
         string $id,
         array $permissions,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validatePermissions($permissions);
 
@@ -258,8 +243,6 @@ class Roles extends GenericResource
      * @param array               $users   Array of user IDs to add to the role.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_role_users
@@ -268,7 +251,7 @@ class Roles extends GenericResource
         string $id,
         array $users,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($users, 'users');
 
@@ -292,8 +275,6 @@ class Roles extends GenericResource
      * @param string              $id      Role ID assigned to users.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws EmptyOrInvalidParameterException Thrown if the id parameter is empty or is not a string.
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
@@ -302,7 +283,7 @@ class Roles extends GenericResource
     public function getUsers(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')

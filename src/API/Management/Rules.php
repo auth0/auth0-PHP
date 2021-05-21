@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Rules.
@@ -23,8 +24,6 @@ class Rules extends GenericResource
      * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|mixed
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Rules/post_rules
@@ -35,7 +34,7 @@ class Rules extends GenericResource
         string $script,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $payload = [
             'name' => $name,
             'script' => $script,
@@ -62,7 +61,7 @@ class Rules extends GenericResource
     public function getAll(
         array $parameters = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('rules')
             ->withParams($parameters)
@@ -77,8 +76,6 @@ class Rules extends GenericResource
      * @param string              $id      Rule ID to get.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Rules/get_rules_by_id
@@ -86,7 +83,7 @@ class Rules extends GenericResource
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -103,8 +100,6 @@ class Rules extends GenericResource
      * @param array               $body    Rule data to update.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Rules/patch_rules_by_id
@@ -113,7 +108,7 @@ class Rules extends GenericResource
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
@@ -131,8 +126,6 @@ class Rules extends GenericResource
      * @param string              $id      Rule ID to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Rules/delete_rules_by_id
@@ -140,7 +133,7 @@ class Rules extends GenericResource
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')

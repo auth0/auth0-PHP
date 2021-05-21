@@ -43,7 +43,9 @@ class SessionStore implements StoreInterface
         $value
     ): void {
         $this->initSession();
-        $_SESSION[$this->getSessionKeyName($key)] = $value;
+        $key_name = $this->getSessionKeyName($key);
+
+        $_SESSION[$key_name] = $value;
     }
 
     /**

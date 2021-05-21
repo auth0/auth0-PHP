@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ClientGrants.
@@ -23,8 +24,6 @@ class ClientGrants extends GenericResource
      * @param array               $scope    Optional. Scopes allowed for this client grant.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/post_client_grants
@@ -34,7 +33,7 @@ class ClientGrants extends GenericResource
         string $audience,
         array $scope = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($clientId, 'clientId');
         $this->validateString($audience, 'audience');
 
@@ -58,8 +57,6 @@ class ClientGrants extends GenericResource
      * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
@@ -67,7 +64,7 @@ class ClientGrants extends GenericResource
     public function getAll(
         array $parameters = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('client-grants')
             ->withParams($parameters)
@@ -83,8 +80,6 @@ class ClientGrants extends GenericResource
      * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
@@ -93,7 +88,7 @@ class ClientGrants extends GenericResource
         string $audience,
         array $parameters = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($audience, 'audience');
 
         return $this->getAll(
@@ -112,8 +107,6 @@ class ClientGrants extends GenericResource
      * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
@@ -122,7 +115,7 @@ class ClientGrants extends GenericResource
         string $clientId,
         array $parameters = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($clientId, 'clientId');
 
         return $this->getAll(
@@ -141,8 +134,6 @@ class ClientGrants extends GenericResource
      * @param array               $scope   Optional. Array of scopes to update; will replace existing scopes, not merge.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/patch_client_grants_by_id
@@ -151,7 +142,7 @@ class ClientGrants extends GenericResource
         string $id,
         array $scope = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('patch')
@@ -172,8 +163,6 @@ class ClientGrants extends GenericResource
      * @param string              $id      Grant (by it's ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
      * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
@@ -181,7 +170,7 @@ class ClientGrants extends GenericResource
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')

@@ -14,7 +14,7 @@ class TransientStoreHandler
     /**
      * Storage method to use.
      */
-    private StoreInterface $store;
+    public StoreInterface $store;
 
     /**
      * TransientStoreHandler constructor.

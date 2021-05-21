@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Jobs.
@@ -27,8 +28,6 @@ class Jobs extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_imports
      */
     public function createImportUsers(
@@ -36,17 +35,17 @@ class Jobs extends GenericResource
         string $connectionId,
         array $parameters = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($filePath, 'filePath');
         $this->validateString($connectionId, 'connectionId');
 
         $request = $this->apiClient->method('post', false)
             ->addPath('jobs', 'users-imports')
             ->addFile('users', $filePath)
-            ->addFormParam('connection_id', $connectionId);
+            ->withFormParam('connection_id', $connectionId);
 
         foreach ($parameters as $key => $value) {
-            $request->addFormParam($key, $value);
+            $request->withFormParam($key, $value);
         }
 
         return $request->withOptions($options)
@@ -62,14 +61,12 @@ class Jobs extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports
      */
     public function createExportUsers(
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateArray($body, 'body');
 
         return $this->apiClient->method('post')
@@ -89,15 +86,13 @@ class Jobs extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_verification_email
      */
     public function createSendVerificationEmail(
         string $userId,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($userId, 'userId');
 
         $payload = [
@@ -122,14 +117,12 @@ class Jobs extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id
      */
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -149,14 +142,12 @@ class Jobs extends GenericResource
      *
      * @throws RequestException When API request fails. Reason for failure provided in exception message.
      *
-     * @return array|null
-     *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_errors
      */
     public function getErrors(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')

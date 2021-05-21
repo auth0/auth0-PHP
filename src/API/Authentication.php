@@ -5,142 +5,112 @@ declare(strict_types=1);
 namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Header\AuthorizationBearer;
-use Auth0\SDK\API\Header\ForwardedFor;
-use Auth0\SDK\API\Helpers\ApiClient;
-use GuzzleHttp\Psr7;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\AuthenticationException;
+use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\SDK\Helpers\PKCE;
+use Auth0\SDK\Helpers\TransientStoreHandler;
+use Auth0\SDK\Utility\HttpClient;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Authentication
  */
-class Authentication
+final class Authentication
 {
     /**
-     * Domain for the Auth0 Tenant.
+     * HttpClient instance.
      */
-    private string $domain;
+    private HttpClient $httpClient;
 
     /**
-     * Client ID for the Auth0 Application.
+     * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    private ?string $client_id = null;
+    private SdkConfiguration $configuration;
 
     /**
-     * Client Secret for the Auth0 Application.
+     * Instance of TransientStoreHandler for storing ephemeral data.
      */
-    private ?string $client_secret = null;
-
-    /**
-     * API audience identifier for the access token.
-     */
-    private ?string $audience = null;
-
-    /**
-     * The Id of an organization to log in to.
-     */
-    private ?string $organization = null;
-
-    /**
-     * Scopes to request during login.
-     */
-    private ?string $scope = null;
-
-    /**
-     * ApiClient instance.
-     */
-    private ApiClient $apiClient;
+    private TransientStoreHandler $transient;
 
     /**
      * Authentication constructor.
      *
-     * @param string      $domain        Tenant domain, found in Application settings.
-     * @param string      $client_id     Client ID, found in Application settings.
-     * @param string|null $client_secret Optional. Client Secret, found in Application settings.
-     * @param string|null $audience      Optional. API audience identifier for the access token, found in API settings.
-     * @param string|null $scope         Optional. Scopes to request during login.
-     * @param array       $guzzleOptions Optional. Options for the Guzzle HTTP client.
-     * @param string|null $organization  Optional. The Id of an organization to log in to.
-     *
-     * @link https://auth0.com/docs/scopes/current
-     * @link http://docs.guzzlephp.org/en/stable/request-options.html
+     * @param SdkConfiguration|array $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      */
     public function __construct(
-        string $domain,
-        string $client_id,
-        ?string $client_secret = null,
-        ?string $audience = null,
-        ?string $scope = null,
-        array $guzzleOptions = [],
-        ?string $organization = null
+        $configuration
     ) {
-        $this->domain = $domain;
-        $this->client_id = $client_id;
-        $this->client_secret = $client_secret;
-        $this->audience = $audience;
-        $this->scope = $scope;
-        $this->organization = $organization;
+        // If we're passed an array, construct a new SdkConfiguration from that structure.
+        if (is_array($configuration)) {
+            $configuration = new SdkConfiguration($configuration);
+        }
 
-        $this->apiClient = new ApiClient(
-            [
-                'domain' => 'https://' . $this->domain,
-                'basePath' => '/',
-                'guzzleOptions' => $guzzleOptions,
-                'returnType' => 'body',
-            ]
-        );
+        // We only accept an SdkConfiguration type.
+        if (! $configuration instanceof SdkConfiguration) {
+            throw ConfigurationException::requiresConfiguration();
+        }
+
+        // Store the configuration internally.
+        $this->configuration = $configuration;
+
+        // Create a transient storage handler using the configured transientStorage medium.
+        $this->transient = new TransientStoreHandler($configuration->getTransientStorage());
+
+        // Build the HTTP client.
+        $this->httpClient = new HttpClient($this->configuration);
+    }
+
+    /**
+     * Return the HttpClient instance being used for authentication  API requests.
+     */
+    public function getHttpClient(): HttpClient
+    {
+        return $this->httpClient;
     }
 
     /**
      * Builds and returns the authorization URL.
      *
-     * @param string      $response_type Response type requested, typically "code" for web application login.
-     * @param string      $redirect_uri  Redirect URI for login and consent, must be white-listed.
-     * @param string|null $connection    Connection parameter to send with the request.
-     * @param string|null $state         State parameter to send with the request.
-     * @param array       $params        Additional URL parameters to send with the request.
+     * @param array $params Optional. Additional parameters to include with the request. See @link for details.
      *
      * @link https://auth0.com/docs/api/authentication#authorize-application
      */
     public function getAuthorizationLink(
-        string $response_type,
-        string $redirect_uri,
-        ?string $connection = null,
-        ?string $state = null,
         array $params = []
     ): string {
-        $params['client_id'] = $this->client_id;
-        $params['response_type'] = $response_type;
-        $params['redirect_uri'] = $redirect_uri;
-        $params['connection'] = $connection ?? $params['connection'] ?? null;
-        $params['state'] = $state ?? $params['state'] ?? null;
-        $params['audience'] = $params['audience'] ?? $this->audience ?? null;
-        $params['scope'] = $params['scope'] ?? $this->scope ?? null;
-        $params['organization'] = $params['organization'] ?? $this->organization ?? null;
-
-        $params = array_filter($params);
+        $params = array_filter(array_merge([
+            'client_id' => $this->configuration->getClientId(),
+            'response_type' => $this->configuration->getResponseType(),
+            'redirect_uri' => $this->configuration->getRedirectUri(),
+            'audience' => $this->configuration->buildDefaultAudience(),
+            'scope' => $this->configuration->buildScopeString(),
+            'organization' => $this->configuration->buildDefaultOrganization(),
+        ], $params));
 
         return sprintf(
-            'https://%s/authorize?%s',
-            $this->domain,
-            Psr7\Query::build($params)
+            '%s/authorize?%s',
+            $this->configuration->buildDomainUri(),
+            http_build_query($params, '', '&', PHP_QUERY_RFC3986)
         );
     }
 
     /**
      * Build and return a SAMLP link.
      *
-     * @param string|null $client_id  Client ID to use, null to use the value set during class initialization.
-     * @param string      $connection Connection parameter to add.
+     * @param string|null $clientId   Optional. Client ID to use. Defaults to the SDK's configured Client ID.
+     * @param string|null $connection Optional. The connection to use. If no connection is specified, the Auth0 Login Page will be shown.
      *
      * @link https://auth0.com/docs/connections/enterprise/samlp
      */
     public function getSamlpLink(
-        ?string $client_id = null,
+        ?string $clientId = null,
         ?string $connection = null
     ): string {
         return sprintf(
-            'https://%s/samlp/%s?connection=%s',
-            $this->domain,
-            $client_id ?? $this->client_id,
+            '%s/samlp/%s?connection=%s',
+            $this->configuration->buildDomainUri(),
+            $clientId ?? $this->configuration->getClientId(),
             $connection ?? ''
         );
     }
@@ -148,42 +118,37 @@ class Authentication
     /**
      * Build and return a SAMLP metadata link.
      *
-     * @param string|null $client_id Client ID to use, null to use the value set during class initialization.
+     * @param string|null $clientId Optional. Client ID to use. Defaults to the SDK's configured Client ID.
      *
      * @link https://auth0.com/docs/connections/enterprise/samlp
      */
     public function getSamlpMetadataLink(
-        ?string $client_id = null
+        ?string $clientId = null
     ): string {
         return sprintf(
-            'https://%s/samlp/metadata/%s',
-            $this->domain,
-            $client_id ?? $this->client_id
+            '%s/samlp/metadata/%s',
+            $this->configuration->buildDomainUri(),
+            $clientId ?? $this->configuration->getClientId()
         );
     }
 
     /**
      * Build and return a WS-Federation link
      *
-     * @param string|null $client_id Client ID to use, null to use the value set during class initialization.
-     * @param array       $params    Request parameters for the WS-Fed request.
-     *                               - params.client-id The client-id of your application.
-     *                               - params.wtrealm   Can be used in place of client-id.
-     *                               - params.whr       The name of the connection (used to skip the login page).
-     *                               - params.wctx      Your application's state.
-     *                               - params.wreply    The callback URL.
+     * @param string|null $clientId Optional. Client ID to use. Defaults to the SDK's configured Client ID.
+     * @param array       $params   Optional. Additional parameters to include with the request. See @link for details.
      *
      * @link https://auth0.com/docs/protocols/ws-fed
      */
     public function getWsfedLink(
-        ?string $client_id = null,
+        ?string $clientId = null,
         array $params = []
     ): string {
         return sprintf(
-            'https://%s/wsfed/%s?%s',
-            $this->domain,
-            $client_id ?? $this->client_id,
-            Psr7\Query::build($params)
+            '%s/wsfed/%s?%s',
+            $this->configuration->buildDomainUri(),
+            $clientId ?? $this->configuration->getClientId(),
+            http_build_query($params, '', '&', PHP_QUERY_RFC3986)
         );
     }
 
@@ -194,47 +159,122 @@ class Authentication
      */
     public function getWsfedMetadataLink(): string
     {
-        return 'https://' . $this->domain . '/wsfed/FederationMetadata/2007-06/FederationMetadata.xml';
+        return $this->configuration->buildDomainUri() . '/wsfed/FederationMetadata/2007-06/FederationMetadata.xml';
+    }
+
+    /**
+     * Build the login URL.
+     *
+     * @param array $params Optional. Additional parameters to include with the request. See @link for details.
+     *
+     * @link https://auth0.com/docs/api/authentication#authorize-application
+     */
+    public function getLoginLink(
+        array $params = []
+    ): string {
+        $params = array_filter(array_replace([
+            'scope' => $this->configuration->buildScopeString(),
+            'audience' => $this->configuration->buildDefaultAudience(),
+            'response_mode' => $this->configuration->getResponseMode(),
+            'response_type' => $this->configuration->getResponseType(),
+            'redirect_uri' => $this->configuration->getRedirectUri(),
+            'max_age' => $this->configuration->getTokenMaxAge(),
+        ], $params));
+
+        if (! isset($params['state'])) {
+            // No state provided by application so generate, store, and send one.
+            $params['state'] = $this->transient->issue('state');
+        } else {
+            // Store the passed-in value.
+            $this->transient->store('state', $params['state']);
+        }
+
+        // ID token nonce validation is required so auth params must include one.
+        if (! isset($params['nonce'])) {
+            $params['nonce'] = $this->transient->issue('nonce');
+        } else {
+            $this->transient->store('nonce', $params['nonce']);
+        }
+
+        if ($this->configuration->getUsePkce()) {
+            $codeVerifier = PKCE::generateCodeVerifier(128);
+            $params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
+            $params['code_challenge_method'] = 'S256';
+            $this->transient->store('code_verifier', $codeVerifier);
+        }
+
+        if (isset($params['max_age'])) {
+            $this->transient->store('max_age', (string) $params['max_age']);
+        }
+
+        return $this->getAuthorizationLink($params);
     }
 
     /**
      * Builds and returns a logout URL to terminate an SSO session.
      *
-     * @param string|null      $returnTo  URL to return to after logging in; must be white-listed in Auth0.
-     * @param string|bool|null $client_id Client ID to use App-specific returnTo URLs. True to use class prop.
-     * @param bool             $federated Attempt a federated logout.
+     * @param string|null $returnTo URL to return to after logging in; must be white-listed in Auth0. Defaults to the SDK's configured redirectUri.
+     * @param array       $params   Optional. Additional parameters to include with the request. See @link for details.
      *
      * @link https://auth0.com/docs/api/authentication#logout
      */
     public function getLogoutLink(
         ?string $returnTo = null,
-        $client_id = null,
-        bool $federated = false
+        array $params = []
     ): string {
-        $params = [
-            'returnTo' => $returnTo,
-            'client_id' => $client_id === true ? $this->client_id : $client_id,
-            'federated' => $federated ? 'federated' : null,
-        ];
-
-        $params = array_filter($params);
-
         return sprintf(
-            'https://%s/v2/logout?%s',
-            $this->domain,
-            Psr7\Query::build($params)
+            '%s/v2/logout?%s',
+            $this->configuration->buildDomainUri(),
+            http_build_query(array_filter(array_merge([
+                'returnTo' => $returnTo ?? $this->configuration->getRedirectUri(),
+                'client_id' => $this->configuration->getClientId(),
+            ], $params)), '', '&', PHP_QUERY_RFC3986)
         );
+    }
+
+    /**
+     * Start passwordless login process.
+     *
+     * @param array  $body    Optional. Additional content to include in the body of the API request. See @link for details.
+     * @param array  $headers Optional. Additional headers to send with the API request.
+     *
+     * @throws AuthenticationException When Client Secret is not configured.
+     * @throws NetworkException When there is an HTTP error during the API request.
+     *
+     * @link https://auth0.com/docs/api/authentication#get-code-or-link
+     */
+    public function passwordlessStart(
+        array $body = [],
+        array $headers = []
+    ): ResponseInterface {
+        if (! $this->configuration->hasClientSecret()) {
+            throw AuthenticationException::requiresClientSecret();
+        }
+
+        $body = array_filter(array_merge([
+            'client_id' => $this->configuration->getClientId(),
+            'client_secret' => $this->configuration->getClientSecret(),
+        ], $body));
+
+        return $this->httpClient
+            ->method('post')
+            ->addPath('passwordless', 'start')
+            ->withBody($body)
+            ->withHeaders($headers)
+            ->call();
     }
 
     /**
      * Start passwordless login process for email
      *
-     * @param string      $email         Email address to use.
-     * @param string      $type          Use null or "link" to send a link, use "code" to send a verification code.
-     * @param array       $authParams    Link parameters (like scope, redirect_uri, protocol, response_type) to modify.
-     * @param string|null $forwardedFor  (optional) source IP address. requires Trust Token Endpoint IP Header
+     * @param string $email      Email address to use.
+     * @param string $type       Use null or "link" to send a link, use "code" to send a verification code.
+     * @param array  $authParams Optional.Append or override the link parameters (like scope, redirect_uri, protocol, response_type) when you send a link using email.
+     * @param array  $headers    Optional. Additional headers to send with the API request.
      *
-     * @return array
+     * @throws AuthenticationException When Client Secret is not configured.
+     * @throws AuthenticationException When an invalid `email` or `type` are passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
@@ -242,320 +282,261 @@ class Authentication
         string $email,
         string $type,
         array $authParams = [],
-        ?string $forwardedFor = null
-    ): array {
-        $data = [
-            'client_id' => $this->client_id,
+        array $headers = []
+    ): ResponseInterface {
+        if (! mb_strlen($email)) {
+            throw AuthenticationException::emptyString('email');
+        }
+
+        if (! mb_strlen($type)) {
+            throw AuthenticationException::emptyString('type');
+        }
+
+        return $this->passwordlessStart(array_filter([
+            'email' => $email,
             'connection' => 'email',
             'send' => $type,
-            'email' => $email,
-        ];
-
-        if ($this->client_secret) {
-            $data['client_secret'] = $this->client_secret;
-        }
-
-        if (count($authParams)) {
-            $data['authParams'] = $authParams;
-        }
-
-        $request = $this->apiClient->method('post')
-            ->addPath('passwordless', 'start')
-            ->withBody($data);
-
-        if ($forwardedFor) {
-            $request->withHeader(new ForwardedFor($forwardedFor));
-        }
-
-        return $request->call();
+            'authParams' => $authParams,
+        ]), $headers);
     }
 
     /**
      * Start passwordless login process for SMS.
      *
-     * @param string      $phoneNumber  Phone number to use.
-     * @param string|null $forwardedFor (optional) source IP address. requires Trust Token Endpoint IP Header
+     * @param string $phoneNumber Phone number to use.
+     * @param array  $headers     Optional. Additional headers to send with the API request.
      *
-     * @return array
+     * @throws AuthenticationException When Client Secret is not configured.
+     * @throws AuthenticationException When an invalid $phoneNumber is passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
     public function smsPasswordlessStart(
         string $phoneNumber,
-        ?string $forwardedFor = null
-    ): array {
-        $data = [
-            'client_id' => $this->client_id,
-            'connection' => 'sms',
+        array $headers = []
+    ): ResponseInterface {
+        if (! mb_strlen($phoneNumber)) {
+            throw AuthenticationException::emptyString('phoneNumber');
+        }
+
+        return $this->passwordlessStart(array_filter([
             'phone_number' => $phoneNumber,
-        ];
-
-        if ($this->client_secret) {
-            $data['client_secret'] = $this->client_secret;
-        }
-
-        $request = $this->apiClient->method('post')
-            ->addPath('passwordless', 'start')
-            ->withBody($data);
-
-        if ($forwardedFor) {
-            $request->withHeader(new ForwardedFor($forwardedFor));
-        }
-
-        return $request->call();
+            'connection' => 'sms',
+        ]), $headers);
     }
 
     /**
      * Make an authenticated request to the /userinfo endpoint.
      *
-     * @param string $access_token Bearer token to use for the request.
+     * @param string $accessToken Bearer token to use for the request.
      *
-     * @return array
+     * @throws AuthenticationException When an invalid $accessToken is passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#user-profile
      */
     public function userInfo(
-        string $access_token
-    ): array {
-        return $this->apiClient->method('get')
+        string $accessToken
+    ): ResponseInterface {
+        if (! mb_strlen($accessToken)) {
+            throw AuthenticationException::emptyString('phoneNumber');
+        }
+
+        return $this->httpClient
+            ->method('post')
             ->addPath('userinfo')
-            ->withHeader(new AuthorizationBearer($access_token))
+            ->withHeader(new AuthorizationBearer($accessToken))
             ->call();
     }
 
     /**
      * Makes a call to the `oauth/token` endpoint.
      *
-     * @param array $options Options for the token endpoint request.
-     *                       - options.grant_type    Grant type to use; required.
-     *                       - options.client_id     Application Client ID; required.
-     *                       - options.client_secret Application Client Secret; required if token endpoint requires authentication.
-     *                       - options.scope         Access token scope requested.
-     *                       - options.audience      API audience identifier for access token.
+     * @param array  $grantType Denotes the type of flow being used. See @link for details.
+     * @param array  $params    Optional. Additional content to include in the body of the API request. See @link for details.
+     * @param array  $headers   Optional. Additional headers to send with the API request.
      *
-     * @return array
+     * @throws AuthenticationException When an invalid $grantType is passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
-     * @throws ApiException If grant_type is missing from $options.
+     * @link https://auth0.com/docs/api/authentication#get-token
      */
     public function oauthToken(
-        array $options = []
-    ): array {
-        if (! isset($options['client_id'])) {
-            $options['client_id'] = $this->client_id;
+        string $grantType,
+        array $params = [],
+        array $headers = []
+    ): ResponseInterface {
+        if (! mb_strlen($grantType)) {
+            throw AuthenticationException::requiresGrantType();
         }
 
-        if (! isset($options['client_secret'])) {
-            $options['client_secret'] = $this->client_secret;
-        }
-
-        if (! isset($options['grant_type'])) {
-            throw new \Auth0\SDK\Exception\ApiException('grant_type is mandatory');
-        }
-
-        $request = $this->apiClient->method('post')
+        return $this->httpClient
+            ->method('post')
             ->addPath('oauth', 'token')
-            ->withBody($options);
-
-        if (isset($options['auth0_forwarded_for'])) {
-            $request->withHeader(new ForwardedFor($options['auth0_forwarded_for']));
-        }
-
-        return $request->call();
+            ->withHeaders($headers)
+            ->withFormParams(array_filter(array_merge([
+                'grant_type' => $grantType,
+                'client_id' => $this->configuration->getClientId(),
+            ], $params)))
+            ->call();
     }
 
     /**
      * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type
      *
-     * @param string      $code          Authorization code received during login.
-     * @param string      $redirectUri  Redirect URI sent with authorize request.
-     * @param string|null $codeVerifier The clear-text version of the code_challenge from the /authorize call
+     * @param string      $code         Authorization code received during login.
+     * @param string|null $redirectUri  Optional. Redirect URI sent with authorize request.
+     * @param string|null $codeVerifier Optional. The clear-text version of the code_challenge from the /authorize call
      *
-     * @return array
-     *
-     * @throws ApiException If grant_type is missing.
+     * @throws AuthenticationException When an invalid $code is passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      */
     public function codeExchange(
         string $code,
-        string $redirectUri,
+        ?string $redirectUri = null,
         ?string $codeVerifier = null
-    ): array {
-        if (! $this->client_secret) {
-            throw new \Auth0\SDK\Exception\ApiException('client_secret is mandatory');
+    ): ResponseInterface {
+        if (! mb_strlen($code)) {
+            throw AuthenticationException::emptyString('code');
         }
 
-        $options = [
-            'client_secret' => $this->client_secret,
-            'redirect_uri' => $redirectUri,
+        return $this->oauthToken('authorization_code', array_filter([
+            'client_secret' => $this->configuration->getClientSecret(),
+            'redirect_uri' => $redirectUri ?? $this->configuration->getRedirectUri(),
             'code' => $code,
-            'grant_type' => 'authorization_code',
-        ];
-
-        if ($codeVerifier) {
-            $options += ['code_verifier' => $codeVerifier];
-        }
-
-        return $this->oauthToken($options);
+            'code_verifier' => $codeVerifier,
+        ]));
     }
 
     /**
      * Makes a call to the `oauth/token` endpoint with `password-realm` grant type.
      *
-     * @param array       $options    Options for this grant.
-     *                                - options.username Username or email of the user logging in; required.
-     *                                - options.password Password of the user logging in; required.
-     *                                - options.realm    Database realm to use; required.
-     *                                - options.scope    Access token scope requested.
-     *                                - options.audience API audience identifier for access token.
-     * @param string|null $ipAddress  Pass in an IP address to set an Auth0-Forwarded-For header.
+     * @param string $username   Username of the resource owner.
+     * @param string $password   Password of the resource owner.
+     * @param string $realm      Database realm the user belongs to.
+     * @param array  $params     Optional. Additional content to include in the body of the API request. See @link for details.
+     * @param array  $headers    Optional. Additional headers to send with the API request.
      *
-     * @return array
-     *
-     * @throws ApiException If username, password, or realm are missing from $options.
+     * @throws AuthenticationException When an invalid $username, $password, or $realm are passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      */
     public function login(
-        array $options,
-        ?string $ipAddress = null
-    ): array {
-        if (! isset($options['username'])) {
-            throw new \Auth0\SDK\Exception\ApiException('username is mandatory');
+        string $username,
+        string $password,
+        string $realm,
+        array $params = [],
+        array $headers = []
+    ): ResponseInterface {
+        if (! mb_strlen($username)) {
+            throw AuthenticationException::emptyString('username');
         }
 
-        if (! isset($options['password'])) {
-            throw new \Auth0\SDK\Exception\ApiException('password is mandatory');
+        if (! mb_strlen($password)) {
+            throw AuthenticationException::emptyString('password');
         }
 
-        if (! isset($options['realm'])) {
-            throw new \Auth0\SDK\Exception\ApiException('realm is mandatory');
+        if (! mb_strlen($realm)) {
+            throw AuthenticationException::emptyString('realm');
         }
 
-        if ($ipAddress) {
-            $options['auth0_forwarded_for'] = $ipAddress;
-        }
-
-        $options['grant_type'] = 'http://auth0.com/oauth/grant-type/password-realm';
-
-        return $this->oauthToken($options);
+        return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', array_filter(array_merge([
+            'username' => $username,
+            'password' => $password,
+            'realm' => $realm,
+            'client_secret' => $this->configuration->getClientSecret(),
+        ], $params)), $headers);
     }
 
     /**
      * Makes a call to the `oauth/token` endpoint with `password` grant type
      *
-     * @param array       $options    Options for this grant.
-     *                                - options.username Username or email of the user logging in; required.
-     *                                - options.password Password of the user logging in; required.
-     *                                - options.scope    Access token scope requested.
-     *                                - options.audience API audience identifier for access token.
-     * @param string|null $ip_address Pass in an IP address to set an Auth0-Forwarded-For header.
+     * @param string $username   Username of the resource owner.
+     * @param string $password   Password of the resource owner.
+     * @param array  $params     Optional. Additional content to include in the body of the API request. See @link for details.
+     * @param array  $headers    Optional. Additional headers to send with the API request.
      *
-     * @return array
-     *
-     * @throws ApiException If username or password is missing.
+     * @throws AuthenticationException When an invalid $username or $password are passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api-auth/grant/password
      */
     public function loginWithDefaultDirectory(
-        array $options,
-        ?string $ipAddress = null
-    ): array {
-        if (! isset($options['username'])) {
-            throw new \Auth0\SDK\Exception\ApiException('username is mandatory');
+        string $username,
+        string $password,
+        array $params = [],
+        array $headers = []
+    ): ResponseInterface {
+        if (! mb_strlen($username)) {
+            throw AuthenticationException::emptyString('username');
         }
 
-        if (! isset($options['password'])) {
-            throw new \Auth0\SDK\Exception\ApiException('password is mandatory');
+        if (! mb_strlen($password)) {
+            throw AuthenticationException::emptyString('password');
         }
 
-        if ($ipAddress) {
-            $options['auth0_forwarded_for'] = $ipAddress;
-        }
-
-        $options['grant_type'] = 'password';
-
-        return $this->oauthToken($options);
+        return $this->oauthToken('password', array_filter(array_merge([
+            'username' => $username,
+            'password' => $password,
+            'client_secret' => $this->configuration->getClientSecret(),
+        ], $params)), $headers);
     }
 
     /**
      * Makes a call to the `oauth/token` endpoint with `client_credentials` grant type.
      *
-     * @param array $options Information required for this grant.
-     *                       - options.client_id     Application Client ID.
-     *                       - options.client_secret Application Client Secret.
-     *                       - options.audience      API Audience requested.
+     * @param array  $params  Optional. Additional content to include in the body of the API request. See @link for details.
+     * @param array  $headers Optional. Additional headers to send with the API request.
      *
-     * @return array
-     *
-     * @throws ApiException If client_id or client_secret are missing.
+     * @throws AuthenticationException When Client Secret is not configured.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api-auth/grant/client-credentials
      */
     public function clientCredentials(
-        array $options
-    ): array {
-        if (! isset($options['client_secret'])) {
-            $options['client_secret'] = $this->client_secret;
+        array $params = [],
+        array $headers = []
+    ): ResponseInterface {
+        if (! $this->configuration->hasClientSecret()) {
+            throw AuthenticationException::requiresClientSecret();
         }
 
-        if (! isset($options['client_secret'])) {
-            throw new \Auth0\SDK\Exception\ApiException('client_secret is mandatory');
-        }
-
-        if (! isset($options['client_id'])) {
-            $options['client_id'] = $this->client_id;
-        }
-
-        if (! isset($options['audience'])) {
-            $options['audience'] = $this->audience;
-        }
-
-        if (! isset($options['audience'])) {
-            throw new \Auth0\SDK\Exception\ApiException('audience is mandatory');
-        }
-
-        $options['grant_type'] = 'client_credentials';
-
-        return $this->oauthToken($options);
+        return $this->oauthToken('client_credentials', array_filter(array_merge([
+            'client_secret' => $this->configuration->getClientSecret(),
+            'audience' => $this->configuration->buildDefaultAudience(),
+        ], $params)), $headers);
     }
 
     /**
      * Use a refresh token grant to get new tokens.
      *
      * @param string $refreshToken Refresh token to use.
-     * @param array  $options       Array of options to override defaults.
+     * @param array  $params       Optional. Additional content to include in the body of the API request. See @link for details.
+     * @param array  $headers      Optional. Additional headers to send with the API request.
      *
-     * @return array
-     *
-     * @throws ApiException If $refreshToken, client_secret, or client_id is blank.
+     * @throws AuthenticationException When Client Secret is not configured.
+     * @throws AuthenticationException When an invalid $refreshToken is passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#refresh-token
      */
     public function refreshToken(
         string $refreshToken,
-        array $options = []
-    ): array {
-        if (! $refreshToken) {
-            throw new \Auth0\SDK\Exception\ApiException('Refresh token cannot be blank');
+        array $params = [],
+        array $headers = []
+    ): ResponseInterface {
+        if (! mb_strlen($refreshToken)) {
+            throw AuthenticationException::emptyString('refreshToken');
         }
 
-        if (! isset($options['client_secret'])) {
-            $options['client_secret'] = $this->client_secret;
+        if (! $this->configuration->hasClientSecret()) {
+            throw AuthenticationException::requiresClientSecret();
         }
 
-        if (! isset($options['client_secret']) || ! strlen($options['client_secret'])) {
-            throw new \Auth0\SDK\Exception\ApiException('client_secret is mandatory');
-        }
-
-        if (! isset($options['client_id'])) {
-            $options['client_id'] = $this->client_id;
-        }
-
-        if (! isset($options['client_id']) || ! strlen($options['client_id'])) {
-            throw new \Auth0\SDK\Exception\ApiException('client_id is mandatory');
-        }
-
-        $options['refresh_token'] = $refreshToken;
-        $options['grant_type'] = 'refresh_token';
-
-        return $this->oauthToken($options);
+        return $this->oauthToken('refresh_token', array_filter(array_merge([
+            'client_secret' => $this->configuration->getClientSecret(),
+            'refresh_token' => $refreshToken,
+        ], $params)), $headers);
     }
 
     /**
@@ -565,26 +546,43 @@ class Authentication
      * @param string $email      Email for the user signing up.
      * @param string $password   New password for the user signing up.
      * @param string $connection Database connection to create the user in.
+     * @param array  $body       Optional. Additional content to include in the body of the API request. See @link for details.
+     * @param array  $headers    Optional. Additional headers to send with the API request.
      *
-     * @return array|null
+     * @throws AuthenticationException When an invalid $email, $password, or $connection are passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#signup
      */
-    public function dbconnectionsSignup(
+    public function dbConnectionsSignup(
         string $email,
         string $password,
-        string $connection
-    ): ?array {
-        $data = [
-            'client_id' => $this->client_id,
-            'email' => $email,
-            'password' => $password,
-            'connection' => $connection,
-        ];
+        string $connection,
+        array $body = [],
+        array $headers = []
+    ): ResponseInterface {
+        if (! mb_strlen($email)) {
+            throw AuthenticationException::emptyString('email');
+        }
 
-        return $this->apiClient->method('post')
+        if (! mb_strlen($password)) {
+            throw AuthenticationException::emptyString('password');
+        }
+
+        if (! mb_strlen($connection)) {
+            throw AuthenticationException::emptyString('connection');
+        }
+
+        return $this->httpClient
+            ->method('post')
             ->addPath('dbconnections', 'signup')
-            ->withBody($data)
+            ->withBody(array_filter(array_merge([
+                'client_id' => $this->configuration->getClientId(),
+                'email' => $email,
+                'password' => $password,
+                'connection' => $connection,
+            ], $body)))
+            ->withHeaders($headers)
             ->call();
     }
 
@@ -594,33 +592,37 @@ class Authentication
      *
      * @param string      $email      Email for the user changing their password.
      * @param string      $connection The name of the database connection this user is in.
-     * @param string|null $password   New password to use.
-     *                                If this parameter is provided, when the user clicks on the confirm password change link,
-     *                                this value will be set for the user.
-     *                                If this parameter is NOT provided, the user will be asked for a new password.
+     * @param array       $body       Optional. Additional content to include in the body of the API request. See @link for details.
+     * @param array       $headers    Optional. Additional headers to send with the API request.
      *
-     * @return array|null
+     * @throws AuthenticationException When an invalid $email or $connection are passed.
+     * @throws NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#change-password
      */
-    public function dbconnectionsChangePassword(
+    public function dbConnectionsChangePassword(
         string $email,
         string $connection,
-        ?string $password = null
-    ): ?array {
-        $data = [
-            'client_id' => $this->client_id,
-            'email' => $email,
-            'connection' => $connection,
-        ];
-
-        if ($password !== null) {
-            $data['password'] = $password;
+        array $body = [],
+        array $headers = []
+    ): ResponseInterface {
+        if (! mb_strlen($email)) {
+            throw AuthenticationException::emptyString('email');
         }
 
-        return $this->apiClient->method('post')
+        if (! mb_strlen($connection)) {
+            throw AuthenticationException::emptyString('connection');
+        }
+
+        return $this->httpClient
+            ->method('post')
             ->addPath('dbconnections', 'change_password')
-            ->withBody($data)
+            ->withBody(array_filter(array_merge([
+                'client_id' => $this->configuration->getClientId(),
+                'email' => $email,
+                'connection' => $connection,
+            ], $body)))
+            ->withHeaders($headers)
             ->call();
     }
 }
