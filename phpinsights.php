@@ -45,11 +45,6 @@ return [
                 'src/Configuration/SdkState.php',
             ],
         ],
-        \SlevomatCodingStandard\Sniffs\Classes\UnusedPrivateElementsSniff::class => [
-            'exclude' => [
-                'src/Configuration/SdkConfiguration.php',
-            ],
-        ],
         \SlevomatCodingStandard\Sniffs\Classes\ModernClassNameReferenceSniff::class => [
             'exclude' => [
                 'src/Mixins/ConfigurableMixin.php',
