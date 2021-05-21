@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Token;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Psr\SimpleCache\CacheInterface;
 
@@ -18,6 +19,11 @@ class Parser
     protected array $token = [];
 
     /**
+     * Instance of SdkConfiguration
+     */
+    protected SdkConfiguration $configuration;
+
+    /**
      * Constructor for Token Parser class.
      *
      * @param string $jwt A JWT string to parse.
@@ -25,8 +31,10 @@ class Parser
      * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
-        string $jwt
+        string $jwt,
+        SdkConfiguration $configuration
     ) {
+        $this->configuration = $configuration;
         $this->parse($jwt);
     }
 
@@ -88,7 +96,7 @@ class Parser
         ?int $cacheExpires = null,
         ?CacheInterface $cache = null
     ): self {
-        new Verifier(join('.', [$this->token['parts'][0], $this->token['parts'][1]]), $this->token['signature'], $this->token['headers'], $algorithm, $jwksUri, $clientSecret, $cacheExpires, $cache);
+        new Verifier($this->configuration, join('.', [$this->token['parts'][0], $this->token['parts'][1]]), $this->token['signature'], $this->token['headers'], $algorithm, $jwksUri, $clientSecret, $cacheExpires, $cache);
         return $this;
     }
 

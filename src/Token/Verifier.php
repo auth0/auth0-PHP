@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Token;
 
-use Auth0\SDK\API\Helpers\RequestBuilder;
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
+use Auth0\SDK\Utility\HttpRequest;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -54,6 +55,11 @@ class Verifier
     protected ?CacheInterface $cache = null;
 
     /**
+     * An PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     */
+    protected ?SdkConfiguration $configuration = null;
+
+    /**
      * Constructor for the Token Verifier class.
      *
      * @param string              $payload      A string representing the headers and claims portions of a JWT.
@@ -66,6 +72,7 @@ class Verifier
      * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      */
     public function __construct(
+        SdkConfiguration $configuration,
         string $payload,
         string $signature,
         array $headers,
@@ -75,6 +82,7 @@ class Verifier
         ?int $cacheExpires = null,
         ?CacheInterface $cache = null
     ) {
+        $this->configuration = $configuration;
         $this->payload = $payload;
         $this->signature = $signature;
         $this->headers = $headers;
@@ -171,11 +179,7 @@ class Verifier
             }
         }
 
-        $keys = (new RequestBuilder([
-            'method' => 'get',
-            'domain' => $scheme . '://' . $jwksUri['host'],
-            'basePath' => $path,
-        ]))->call();
+        $keys = (new HttpRequest($this->configuration, 'get', $path, [], null, $scheme . '://' . $jwksUri['host']))->call();
 
         if (is_array($keys) && isset($keys['keys']) && count($keys['keys'])) {
             foreach ($keys['keys'] as $key) {
