@@ -18,7 +18,7 @@ class GrantsMockedTest extends TestCase
     public function testGet(): void
     {
         $api = new MockManagementApi();
-        $request = $api->mock()->grants()->getAll();
+        $api->mock()->grants()->getAll();
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/grants', $api->getRequestUrl());
@@ -33,7 +33,7 @@ class GrantsMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->grants()->getAllByClientId($id);
+        $api->mock()->grants()->getAllByClientId($id);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
@@ -48,7 +48,7 @@ class GrantsMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->grants()->getAllByAudience($id);
+        $api->mock()->grants()->getAllByAudience($id);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
@@ -63,7 +63,7 @@ class GrantsMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->grants()->getAllByUserId($id);
+        $api->mock()->grants()->getAllByUserId($id);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
@@ -78,7 +78,7 @@ class GrantsMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->grants()->delete($id);
+        $api->mock()->grants()->delete($id);
 
         $this->assertEquals('DELETE', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/grants/' . $id, $api->getRequestUrl());

@@ -6,7 +6,6 @@ namespace Auth0\SDK\Configuration;
 
 use Auth0\SDK\Contract\ConfigurableContract;
 use Auth0\SDK\Contract\StoreInterface;
-use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Mixins\ConfigurableMixin;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Store\SessionStore;
@@ -277,7 +276,7 @@ class SdkConfiguration implements ConfigurableContract
         }
 
         if ($propertyName === 'tokenAlgorithm' && ! in_array($propertyValue, ['HS256', 'RS256'])) {
-            throw ConfigurationException::invalidAlgorithm();
+            throw \Auth0\SDK\Exception\ConfigurationException::invalidAlgorithm();
         }
 
         if ($propertyName === 'tokenMaxAge' || $propertyName === 'tokenLeeway') {
@@ -301,7 +300,7 @@ class SdkConfiguration implements ConfigurableContract
         string $parameter,
         ?string $reason = null
     ): void {
-        throw ConfigurationException::validationFailed($parameter);
+        throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($parameter);
     }
 
     private function export(): string

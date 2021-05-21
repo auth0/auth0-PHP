@@ -22,7 +22,7 @@ class UserBlocks extends GenericResource
      * @param string              $id      User ID to query for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      */
     public function get(
         string $id,
@@ -43,7 +43,7 @@ class UserBlocks extends GenericResource
      * @param string              $id      The user_id of the user to update.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      */
     public function delete(
         string $id,
@@ -64,7 +64,7 @@ class UserBlocks extends GenericResource
      * @param string              $identifier Should be any of a username, phone number, or email.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      */
     public function getByIdentifier(
         string $identifier,
@@ -86,7 +86,7 @@ class UserBlocks extends GenericResource
      * @param string              $identifier Should be any of a username, phone number, or email.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      */
     public function deleteByIdentifier(
         string $identifier,

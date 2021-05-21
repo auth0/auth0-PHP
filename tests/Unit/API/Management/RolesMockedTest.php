@@ -18,7 +18,7 @@ class RolesMockedTest extends TestCase
     public function testGetAll(): void
     {
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->getAll(['name_filter' => '__test_name_filter__']);
+        $api->mock()->roles()->getAll(['name_filter' => '__test_name_filter__']);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertStringStartsWith('https://api.test.local/api/v2/roles', $api->getRequestUrl());
@@ -35,7 +35,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->create($id, ['description' => '__test_description__']);
+        $api->mock()->roles()->create($id, ['description' => '__test_description__']);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/roles', $api->getRequestUrl());
@@ -55,7 +55,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->get($id);
+        $api->mock()->roles()->get($id);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $api->getRequestUrl());
@@ -69,7 +69,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->delete($id);
+        $api->mock()->roles()->delete($id);
 
         $this->assertEquals('DELETE', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $api->getRequestUrl());
@@ -83,7 +83,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->update($id, ['name' => '__test_new_name__']);
+        $api->mock()->roles()->update($id, ['name' => '__test_new_name__']);
 
         $this->assertEquals('PATCH', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $api->getRequestUrl());
@@ -101,7 +101,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->getPermissions($id);
+        $api->mock()->roles()->getPermissions($id);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertStringStartsWith('https://api.test.local/api/v2/roles/' . $id . '/permissions', $api->getRequestUrl());
@@ -115,7 +115,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->addPermissions($id, [
+        $api->mock()->roles()->addPermissions($id, [
             [
                 'permission_name' => '__test_permission_name__',
                 'resource_server_identifier' => '__test_server_id__',
@@ -142,7 +142,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->removePermissions($id, [
+        $api->mock()->roles()->removePermissions($id, [
             [
                 'permission_name' => '__test_permission_name__',
                 'resource_server_identifier' => '__test_server_id__',
@@ -169,7 +169,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->getUsers($id);
+        $api->mock()->roles()->getUsers($id);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertStringStartsWith('https://api.test.local/api/v2/roles/' . $id . '/users', $api->getRequestUrl());
@@ -183,7 +183,7 @@ class RolesMockedTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->roles()->addUsers($id, ['strategy|1234567890', 'strategy|0987654321']);
+        $api->mock()->roles()->addUsers($id, ['strategy|1234567890', 'strategy|0987654321']);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/roles/' .$id . '/users', $api->getRequestUrl());

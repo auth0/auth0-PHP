@@ -22,7 +22,7 @@ class UsersByEmail extends GenericResource
      * @param string              $email   Email address to search for (case-sensitive).
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      */
     public function get(
         string $email,

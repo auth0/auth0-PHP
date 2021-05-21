@@ -46,7 +46,7 @@ class Token
      * @param string $jwt  A JWT string to parse, and prepare for verification and validation.
      * @param int    $type Specify the Token type to toggle specific claim validations. Defaults to 1 for ID Token. See TYPE_ consts for options.
      *
-     * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
         string $jwt,
@@ -71,7 +71,7 @@ class Token
      *
      * @param string $jwt The JWT string to process.
      *
-     * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function parse(
         string $jwt
@@ -89,7 +89,7 @@ class Token
      * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
      * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      *
-     * @throws InvalidTokenException When Token signature verification fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
     public function verify(
         ?string $tokenAlgorithm = null,
@@ -119,7 +119,7 @@ class Token
      * @param int|null    $maxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
      * @param int|null    $leeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
      *
-     * @throws InvalidTokenException When Token validation fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token validation fails. See the exception message for further details.
      */
     public function validate(
         ?string $tokenIssuer = null,

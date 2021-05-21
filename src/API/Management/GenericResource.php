@@ -41,7 +41,7 @@ class GenericResource
      *
      * @param array $permissions Permissions array to check.
      *
-     * @throws InvalidPermissionsArrayException If permissions are empty or do not contain the necessary keys.
+     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException If permissions are empty or do not contain the necessary keys.
      */
     protected function validatePermissions(
         array $permissions
@@ -67,7 +67,7 @@ class GenericResource
      * @param string $variable     The variable to check.
      * @param string $variableName The variable name.
      *
-     * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
     protected function validateString(
         string $variable,
@@ -84,7 +84,7 @@ class GenericResource
      * @param string $email        The email to check.
      * @param string $variableName The variable name.
      *
-     * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
     protected function validateEmail(
         string $email,
@@ -101,7 +101,7 @@ class GenericResource
      * @param array  $variable     The variable to check.
      * @param string $variableName The variable name.
      *
-     * @throws EmptyOrInvalidParameterException If $var is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException If $var is empty or is not a string.
      */
     protected function validateArray(
         array $variable,

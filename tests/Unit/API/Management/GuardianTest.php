@@ -18,7 +18,7 @@ class GuardianTest extends TestCase
     public function testGuardianGetFactor(): void
     {
         $api = new MockManagementApi();
-        $request = $api->mock()->guardian()->getFactors();
+        $api->mock()->guardian()->getFactors();
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/guardian/factors', $api->getRequestUrl());
@@ -33,7 +33,7 @@ class GuardianTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->guardian()->getEnrollment($id);
+        $api->mock()->guardian()->getEnrollment($id);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $api->getRequestUrl());
@@ -48,7 +48,7 @@ class GuardianTest extends TestCase
         $id = uniqid();
 
         $api = new MockManagementApi();
-        $request = $api->mock()->guardian()->deleteEnrollment($id);
+        $api->mock()->guardian()->deleteEnrollment($id);
 
         $this->assertEquals('DELETE', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $api->getRequestUrl());

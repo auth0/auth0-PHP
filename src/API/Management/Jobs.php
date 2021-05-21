@@ -26,7 +26,7 @@ class Jobs extends GenericResource
      * @param array               $parameters   Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_imports
      */
@@ -59,7 +59,7 @@ class Jobs extends GenericResource
      * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports
      */
@@ -84,7 +84,7 @@ class Jobs extends GenericResource
      * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_verification_email
      */
@@ -115,7 +115,7 @@ class Jobs extends GenericResource
      * @param string              $id      Job (by it's ID) to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id
      */
@@ -140,7 +140,7 @@ class Jobs extends GenericResource
      * @param string              $id      Job (by it's ID) to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_errors
      */

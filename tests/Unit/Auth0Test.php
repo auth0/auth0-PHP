@@ -69,7 +69,7 @@ class Auth0Test extends TestCase
         $token = (new TokenGenerator())->withHs256();
 
         $auth0 = new Auth0(self::$baseConfig + [
-            'tokenAlgorithm' => 'HS256'
+            'tokenAlgorithm' => 'HS256',
         ]);
 
         $httpClient = $auth0->authentication()->getHttpClient();
@@ -183,7 +183,7 @@ class Auth0Test extends TestCase
     public function testThatExchangeSucceedsWithoutPkceEnabled(): void
     {
         $auth0 = new Auth0(self::$baseConfig + [
-            'usePkce' => false
+            'usePkce' => false,
         ]);
 
         $httpClient = $auth0->authentication()->getHttpClient();
@@ -209,7 +209,7 @@ class Auth0Test extends TestCase
         $token = (new TokenGenerator())->withHs256();
 
         $auth0 = new Auth0(self::$baseConfig + [
-            'tokenAlgorithm' => 'HS256'
+            'tokenAlgorithm' => 'HS256',
         ]);
 
         $httpClient = $auth0->authentication()->getHttpClient();
@@ -283,7 +283,7 @@ class Auth0Test extends TestCase
         $token = (new TokenGenerator())->withHs256();
 
         $auth0 = new Auth0(self::$baseConfig + [
-            'tokenAlgorithm' => 'HS256'
+            'tokenAlgorithm' => 'HS256',
         ]);
 
         $httpClient = $auth0->authentication()->getHttpClient();
@@ -469,7 +469,7 @@ class Auth0Test extends TestCase
     public function testThatMaxAgeIsSetInLoginUrlFromInitialConfig(): void
     {
         $auth0 = new Auth0(self::$baseConfig + [
-            'tokenMaxAge' => 1000
+            'tokenMaxAge' => 1000,
         ]);
 
         $auth_url = $auth0->authentication()->getLoginLink();
@@ -488,11 +488,11 @@ class Auth0Test extends TestCase
     public function testThatMaxAgeIsOverriddenInLoginUrl(): void
     {
         $auth0 = new Auth0(self::$baseConfig + [
-            'tokenMaxAge' => 1000
+            'tokenMaxAge' => 1000,
         ]);
 
         $auth_url = $auth0->authentication()->getLoginLink([
-            'max_age' => 1001
+            'max_age' => 1001,
         ]);
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
@@ -510,7 +510,7 @@ class Auth0Test extends TestCase
     {
         $token = (new TokenGenerator())->withHs256();
         $auth0 = new Auth0(self::$baseConfig + [
-            'tokenAlgorithm' => 'HS256'
+            'tokenAlgorithm' => 'HS256',
         ]);
 
         $_SESSION['auth0_nonce'] = '__test_nonce__';
@@ -529,7 +529,7 @@ class Auth0Test extends TestCase
     {
         $token = (new TokenGenerator())->withHs256();
         $auth0 = new Auth0(self::$baseConfig + [
-            'tokenAlgorithm' => 'HS256'
+            'tokenAlgorithm' => 'HS256',
         ]);
 
         $_SESSION['auth0_nonce'] = '__invalid_nonce__';
@@ -550,13 +550,13 @@ class Auth0Test extends TestCase
         $drift = 100;
 
         $token = (new TokenGenerator())->withHs256([
-            'auth_time' => $now - $drift
+            'auth_time' => $now - $drift,
         ]);
 
         $auth0 = new Auth0(self::$baseConfig + [
             'tokenAlgorithm' => 'HS256',
             'tokenMaxAge' => $maxAge,
-            'tokenLeeway' => 0
+            'tokenLeeway' => 0,
         ]);
 
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
@@ -573,7 +573,7 @@ class Auth0Test extends TestCase
         $token = (new TokenGenerator())->withHs256();
         $auth0 = new Auth0(self::$baseConfig + [
             'tokenAlgorithm' => 'HS256',
-            'organization' => ['org8675309']
+            'organization' => ['org8675309'],
         ]);
 
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
@@ -590,12 +590,12 @@ class Auth0Test extends TestCase
         $orgId = 'org8675309';
 
         $token = (new TokenGenerator())->withHs256([
-            'org_id' => $orgId
+            'org_id' => $orgId,
         ]);
 
         $auth0 = new Auth0(self::$baseConfig + [
             'tokenAlgorithm' => 'HS256',
-            'organization' => [$orgId]
+            'organization' => [$orgId],
         ]);
 
         $decoded = $auth0->decode($token);
@@ -612,12 +612,12 @@ class Auth0Test extends TestCase
         $tokenOrgId = uniqid();
 
         $token = (new TokenGenerator())->withHs256([
-            'org_id' => $tokenOrgId
+            'org_id' => $tokenOrgId,
         ]);
 
         $auth0 = new Auth0(self::$baseConfig + [
             'tokenAlgorithm' => 'HS256',
-            'organization' => [$expectedOrgId]
+            'organization' => [$expectedOrgId],
         ]);
 
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
@@ -632,12 +632,12 @@ class Auth0Test extends TestCase
     public function testThatIdTokenLeewayFromConstructorIsUsed(): void
     {
         $token = (new TokenGenerator())->withHs256([
-            'exp' => time() - 100
+            'exp' => time() - 100,
         ]);
 
         $auth0 = new Auth0(self::$baseConfig + [
             'tokenAlgorithm' => 'HS256',
-            'tokenLeeway' => 120
+            'tokenLeeway' => 120,
         ]);
 
         $auth0->setIdToken($token);
@@ -660,7 +660,7 @@ class Auth0Test extends TestCase
         $pool->set($cacheKey, $mockJwks);
 
         $auth0 = new Auth0(self::$baseConfig + [
-            'tokenCache' => $pool
+            'tokenCache' => $pool,
         ]);
 
         $cachedJwks = $pool->get($cacheKey);
@@ -706,13 +706,11 @@ class Auth0Test extends TestCase
                 string $key,
                 $value
             ): void {
-                //
             }
 
             public function delete(
                 string $key
             ): void {
-                //
             }
         };
 

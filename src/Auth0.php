@@ -8,8 +8,6 @@ use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Configuration\SdkState;
-use Auth0\SDK\Exception\ConfigurationException;
-use Auth0\SDK\Exception\StateException;
 use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Utility\HttpResponse;
 
@@ -51,9 +49,9 @@ final class Auth0
      *
      * @param SdkConfiguration|array $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      *
-     * @throws ConfigurationException When `domain`, `clientId`, or `redirectUri` are not provided.
-     * @throws ConfigurationException When `tokenAlgorithm` is provided but the value is not supported.
-     * @throws ConfigurationException When `tokenMaxAge` or `tokenLeeway` are provided but the value is not numeric.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `domain`, `clientId`, or `redirectUri` are not provided.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenAlgorithm` is provided but the value is not supported.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenMaxAge` or `tokenLeeway` are provided but the value is not numeric.
      */
     public function __construct(
         $configuration
@@ -65,7 +63,7 @@ final class Auth0
 
         // We only accept an SdkConfiguration type.
         if (! $configuration instanceof SdkConfiguration) {
-            throw ConfigurationException::requiresConfiguration();
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
         }
 
         // Store the configuration internally.
@@ -142,7 +140,7 @@ final class Auth0
      * @param string $token ID token to verify and decode.
      * @param array $options Additional configuration options to pass during Token processing.
      *
-     * @throws InvalidTokenException
+     * @throws \Auth0\SDK\Exception\InvalidTokenException
      */
     public function decode(
         string $token,
@@ -176,10 +174,10 @@ final class Auth0
     /**
      * Exchange authorization code for access, ID, and refresh tokens
      *
-     * @throws CoreException If the state value is missing or invalid.
-     * @throws CoreException If there is already an active session.
-     * @throws ApiException If access token is missing from the response.
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\StateException If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException If there is already an active session.
+     * @throws \Auth0\SDK\Exception\ApiException If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
@@ -192,7 +190,7 @@ final class Auth0
 
         $state = $this->getRequestParameter('state');
         if (! $state || ! $this->transient->verify('state', $state)) {
-            throw StateException::invalidState();
+            throw \Auth0\SDK\Exception\StateException::invalidState();
         }
 
         $code_verifier = null;
@@ -200,19 +198,19 @@ final class Auth0
             $code_verifier = $this->transient->getOnce('code_verifier');
 
             if (! $code_verifier) {
-                throw StateException::missingCodeVerifier();
+                throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
             }
         }
 
         if ($this->state->hasUser()) {
-            throw StateException::existingSession();
+            throw \Auth0\SDK\Exception\StateException::existingSession();
         }
 
         $response = $this->authentication()->codeExchange($code, $this->configuration->getRedirectUri(), $code_verifier);
         $response = HttpResponse::getJson($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
-            throw StateException::badAccessToken();
+            throw \Auth0\SDK\Exception\StateException::badAccessToken();
         }
 
         $this->setAccessToken($response['access_token']);
@@ -223,7 +221,7 @@ final class Auth0
 
         if (isset($response['id_token'])) {
             if (! $this->transient->isset('nonce')) {
-                throw StateException::missingNonce();
+                throw \Auth0\SDK\Exception\StateException::missingNonce();
             }
 
             $this->setIdToken($response['id_token']);
@@ -250,8 +248,8 @@ final class Auth0
      * @param array $options Options for the token endpoint request.
      *                       - options.scope         Access token scope requested; optional.
      *
-     * @throws CoreException If the Auth0 object does not have access token and refresh token
-     * @throws ApiException If the Auth0 API did not renew access and ID token properly
+     * @throws \Auth0\SDK\Exception\StateException If the Auth0 object does not have access token and refresh token
+     * @throws \Auth0\SDK\Exception\ApiException If the Auth0 API did not renew access and ID token properly
      *
      * @link   https://auth0.com/docs/tokens/refresh-token/current
      */
@@ -261,14 +259,14 @@ final class Auth0
         $refreshToken = $this->state->getRefreshToken();
 
         if (! $refreshToken) {
-            throw StateException::failedRenewTokenMissingRefreshToken();
+            throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingRefreshToken();
         }
 
         $response = $this->authentication()->refreshToken($refreshToken, $options);
         $response = HttpResponse::getJson($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
-            throw StateException::failedRenewTokenMissingAccessToken();
+            throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingAccessToken();
         }
 
         $this->setAccessToken($response['access_token']);
@@ -281,8 +279,8 @@ final class Auth0
     /**
      * Get ID token from persisted session or from a code exchange
      *
-     * @throws ApiException (see self::exchange()).
-     * @throws CoreException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\CoreException (see self::exchange()).
      */
     public function getIdToken(): ?string
     {
@@ -296,8 +294,8 @@ final class Auth0
     /**
      * Get userinfo from persisted session or from a code exchange
      *
-     * @throws ApiException (see self::exchange()).
-     * @throws CoreException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\CoreException (see self::exchange()).
      */
     public function getUser(): ?array
     {
@@ -311,8 +309,8 @@ final class Auth0
     /**
      * Get access token from persisted session or from a code exchange
      *
-     * @throws ApiException (see self::exchange()).
-     * @throws CoreException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\CoreException (see self::exchange()).
      */
     public function getAccessToken(): ?string
     {
@@ -326,8 +324,8 @@ final class Auth0
     /**
      * Get refresh token from persisted session or from a code exchange
      *
-     * @throws ApiException (see self::exchange()).
-     * @throws CoreException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\CoreException (see self::exchange()).
      */
     public function getRefreshToken(): ?string
     {
@@ -343,8 +341,7 @@ final class Auth0
      *
      * @param string $idToken - ID token returned from the code exchange.
      *
-     * @throws CoreException
-     * @throws InvalidTokenException
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When an invalid token is passed.
      */
     public function setIdToken(
         string $idToken

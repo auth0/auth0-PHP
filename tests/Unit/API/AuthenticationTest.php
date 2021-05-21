@@ -56,7 +56,7 @@ test('getAuthorizationLink() is properly formatted', function(): void {
 
     $exampleScope = uniqid();
     $uri = $class->getAuthorizationLink([
-        'scope' => $exampleScope
+        'scope' => $exampleScope,
     ]);
 
     $this->assertStringContainsString('scope=' . rawurlencode($exampleScope), $uri);

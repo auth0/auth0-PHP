@@ -15,7 +15,7 @@ class EmailTemplatesMockedTest extends TestCase
     public function testGet(): void
     {
         $api = new MockManagementApi();
-        $request = $api->mock()->emailTemplates()->get('verify_email');
+        $api->mock()->emailTemplates()->get('verify_email');
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/email-templates/verify_email', $api->getRequestUrl());
@@ -31,7 +31,7 @@ class EmailTemplatesMockedTest extends TestCase
         ];
 
         $api = new MockManagementApi();
-        $request = $api->mock()->emailTemplates()->patch('reset_email', $patch_data);
+        $api->mock()->emailTemplates()->patch('reset_email', $patch_data);
 
         $this->assertEquals('PATCH', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/email-templates/reset_email', $api->getRequestUrl());
@@ -42,7 +42,7 @@ class EmailTemplatesMockedTest extends TestCase
     public function testCreate(): void
     {
         $api = new MockManagementApi();
-        $request = $api->mock()->emailTemplates()->create(
+        $api->mock()->emailTemplates()->create(
             'welcome_email',
             '__test_email_body__',
             'test@auth0.com',

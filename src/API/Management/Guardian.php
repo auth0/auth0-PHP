@@ -21,7 +21,7 @@ class Guardian extends GenericResource
      *
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api/management/v2#!/Guardian/get_factors
      */
@@ -41,7 +41,7 @@ class Guardian extends GenericResource
      * @param string              $id      Enrollment (by it's ID) to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api/management/v2#!/Guardian/get_enrollments_by_id
      */
@@ -64,7 +64,7 @@ class Guardian extends GenericResource
      * @param string              $id      Enrollment (by it's ID) to be deleted.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @see https://auth0.com/docs/api/management/v2#!/Guardian/delete_enrollments_by_id
      */

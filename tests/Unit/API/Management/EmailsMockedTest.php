@@ -15,7 +15,7 @@ class EmailsMockedTest extends TestCase
     public function testGetProvider(): void
     {
         $api = new MockManagementApi();
-        $request = $api->mock()->emails()->getProvider();
+        $api->mock()->emails()->getProvider();
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/emails/provider', $api->getRequestUrl());

@@ -23,7 +23,7 @@ class Users extends GenericResource
      * @param array               $body       Configuration for the new User. Some parameters are dependent upon the type of connection. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_users
      */
@@ -55,7 +55,7 @@ class Users extends GenericResource
      * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/users/search/v3
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_users
@@ -80,7 +80,7 @@ class Users extends GenericResource
      * @param string              $id      User (by their ID) to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      */
     public function get(
         string $id,
@@ -104,7 +104,7 @@ class Users extends GenericResource
      * @param array               $body    User data to update. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id
      */
@@ -129,7 +129,7 @@ class Users extends GenericResource
      * @param string              $id      User ID to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_users_by_id
      */
@@ -153,7 +153,7 @@ class Users extends GenericResource
      * @param array               $body    Additional body content to send with the API request.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_identities
      */
@@ -181,7 +181,7 @@ class Users extends GenericResource
      * @param string              $identityId ID of the secondary linked account
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_user_identity_by_user_id
      */
@@ -211,7 +211,7 @@ class Users extends GenericResource
      * @param array<string>       $roles   Array of roles to add.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
      */
@@ -243,7 +243,7 @@ class Users extends GenericResource
      * @param string              $id      User ID to get roles for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
      */
@@ -267,7 +267,7 @@ class Users extends GenericResource
      * @param array<string>       $roles   Array of permissions to remove.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_user_roles
      */
@@ -298,9 +298,9 @@ class Users extends GenericResource
      * @param array<array>        $permissions Array of permissions to add.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
-     * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is malformed.
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException Thrown if the permissions parameter is malformed.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_permissions
      */
@@ -334,7 +334,7 @@ class Users extends GenericResource
      * @param string              $id      User ID to get permissions for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_permissions
      */
@@ -358,9 +358,9 @@ class Users extends GenericResource
      * @param array<array>        $permissions Array of permissions to remove.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
-     * @throws InvalidPermissionsArrayException Thrown if the permissions parameter is malformed.
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException Thrown if the permissions parameter is malformed.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_permissions
      */
@@ -394,8 +394,8 @@ class Users extends GenericResource
      * @param string              $id      User ID to get logs entries for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_logs_by_user
      */
@@ -418,8 +418,8 @@ class Users extends GenericResource
      * @param string              $id      User ID to get organization entries for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @return mixed
      */
@@ -442,7 +442,7 @@ class Users extends GenericResource
      * @param string              $id      User ID to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
      */
@@ -465,8 +465,8 @@ class Users extends GenericResource
      * @param string              $id      User ID of the user to regenerate a multi-factor authentication recovery code for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
      */
@@ -489,8 +489,8 @@ class Users extends GenericResource
      * @param string              $id      User ID of the user to invalidate all remembered browsers and authentication factors for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_invalidate_remember_browser
      */
@@ -515,7 +515,7 @@ class Users extends GenericResource
      * @param string              $provider Multifactor provider to delete.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_multifactor_by_provider
      */

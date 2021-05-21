@@ -20,7 +20,7 @@ class ConnectionsMockedTest extends TestCase
         $strategy = 'test-strategy-01';
 
         $api = new MockManagementApi();
-        $request = $api->mock()->connections()->getAll([ 'strategy' => $strategy ]);
+        $api->mock()->connections()->getAll([ 'strategy' => $strategy ]);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertStringContainsString('https://api.test.local/api/v2/connections', $api->getRequestUrl());
@@ -35,7 +35,7 @@ class ConnectionsMockedTest extends TestCase
         $id = 'con_testConnection10';
 
         $api = new MockManagementApi();
-        $request = $api->mock()->connections()->get($id);
+        $api->mock()->connections()->get($id);
 
         $this->assertEquals('GET', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getRequestUrl());
@@ -50,7 +50,7 @@ class ConnectionsMockedTest extends TestCase
         $id = 'con_testConnection10';
 
         $api = new MockManagementApi();
-        $request = $api->mock()->connections()->delete($id);
+        $api->mock()->connections()->delete($id);
 
         $this->assertEquals('DELETE', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getRequestUrl());
@@ -66,7 +66,7 @@ class ConnectionsMockedTest extends TestCase
         $email = 'con_testConnection10@auth0.com';
 
         $api = new MockManagementApi();
-        $request = $api->mock()->connections()->deleteUser($id, $email);
+        $api->mock()->connections()->deleteUser($id, $email);
 
         $this->assertEquals('DELETE', $api->getRequestMethod());
         $this->assertStringContainsString('https://api.test.local/api/v2/connections/' . $id . '/users', $api->getRequestUrl());
@@ -83,7 +83,7 @@ class ConnectionsMockedTest extends TestCase
         $query = [ 'testing' => 'test '];
 
         $api = new MockManagementApi();
-        $request = $api->mock()->connections()->create($name, $strategy, $query);
+        $api->mock()->connections()->create($name, $strategy, $query);
 
         $request_body = $api->getRequestBody();
 
@@ -103,7 +103,7 @@ class ConnectionsMockedTest extends TestCase
         $update_data = ['metadata' => ['meta1' => 'value1']];
 
         $api = new MockManagementApi();
-        $request = $api->mock()->connections()->update($id, $update_data);
+        $api->mock()->connections()->update($id, $update_data);
 
         $request_body = $api->getRequestBody();
 

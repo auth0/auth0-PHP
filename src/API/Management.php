@@ -28,7 +28,6 @@ use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Utility\HttpClient;
 
 /**
@@ -171,7 +170,7 @@ final class Management
 
         // We only accept an SdkConfiguration type.
         if (! $configuration instanceof SdkConfiguration) {
-            throw ConfigurationException::requiresConfiguration();
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
         }
 
         // Store the configuration internally.

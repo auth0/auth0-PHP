@@ -10,7 +10,7 @@ test('__construct() throws an error when domain is not configured', function(): 
     $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_MISSING_DOMAIN);
 
-    $sdk = new SdkConfiguration();
+    new SdkConfiguration();
 });
 
 test('__construct() throws an error when clientId is not configured', function(): void {
@@ -19,8 +19,8 @@ test('__construct() throws an error when clientId is not configured', function()
     $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_MISSING_CLIENT_ID);
 
-    $sdk = new SdkConfiguration([
-        'domain' => $domain
+    new SdkConfiguration([
+        'domain' => $domain,
     ]);
 });
 
@@ -31,9 +31,9 @@ test('__construct() throws an error when redirectUri is not configured', functio
     $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_MISSING_REDIRECT_URI);
 
-    $sdk = new SdkConfiguration([
+    new SdkConfiguration([
         'domain' => $domain,
-        'clientId' => $clientId
+        'clientId' => $clientId,
     ]);
 });
 
@@ -76,8 +76,8 @@ test('__construct() does not accept invalid types from configuration array', fun
     $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_INCOMPATIBLE_NULLABLE, 'domain', 'string', 'integer'));
 
-    $sdk = new SdkConfiguration([
-        'domain' => $randomNumber
+    new SdkConfiguration([
+        'domain' => $randomNumber,
     ]);
 });
 
@@ -86,7 +86,7 @@ test('__construct() successfully only stores the host when passed a full uri as 
     $sdk = new SdkConfiguration([
         'domain' => 'https://test.auth0.com/.example-path/nonsense.txt',
         'clientId' => uniqid(),
-        'redirectUri' => uniqid()
+        'redirectUri' => uniqid(),
     ]);
 
     $this->assertEquals('test.auth0.com', $sdk->getDomain());

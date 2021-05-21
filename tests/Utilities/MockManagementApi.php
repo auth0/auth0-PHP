@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\Tests\Utilities;
 
 use Auth0\SDK\API\Management;
-use Auth0\SDK\Configuration\SdkConfiguration;
 
 /**
  * Class MockManagementApi.
@@ -26,7 +25,7 @@ class MockManagementApi extends MockApi
             'domain' => 'api.test.local',
             'clientId' => '__test_client_id__',
             'redirectUri' => uniqid(),
-            'managementToken' => '__api_token__'
+            'managementToken' => '__api_token__',
         ]);
     }
 

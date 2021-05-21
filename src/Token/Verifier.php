@@ -98,7 +98,7 @@ class Verifier
     /**
      * Verify the token signature.
      *
-     * @throws InvalidTokenException When signature verification fails. See exception message for details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When signature verification fails. See exception message for details.
      */
     public function verify(): self
     {
@@ -153,7 +153,7 @@ class Verifier
      *
      * @param string|null $expectsKid Optional. A key id we're currently expecting to retrieve. When retrieving a cache response, if the key isn't present, it will invalid the cache and fetch an updated JWKS.
      *
-     * @throws InvalidTokenException When the JWKS uri is not properly configured, or is unreachable.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When the JWKS uri is not properly configured, or is unreachable.
      */
     protected function getKeySet(
         ?string $expectsKid = null
@@ -203,7 +203,7 @@ class Verifier
      *
      * @return OpenSSLAsymmetricKey|resource
      *
-     * @throws InvalidTokenException When unable to retrieve key. See error message for details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When unable to retrieve key. See error message for details.
      */
     protected function getKey(
         string $kid

@@ -6,7 +6,6 @@ namespace Auth0\SDK\Utility;
 
 use Auth0\SDK\API\Header\Header;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Exception\NetworkException;
 use Auth0\SDK\Helpers\Requests\FilteredRequest;
 use Auth0\SDK\Helpers\Requests\PaginatedRequest;
 use Auth0\SDK\Helpers\Requests\RequestOptions;
@@ -186,7 +185,7 @@ class HttpRequest
     /**
      * Build the URL and make the request. Returns a ResponseInterface.
      *
-     * @throws NetworkException When there is an HTTP client error during the request, such as the host being unreachable.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP client error during the request, such as the host being unreachable.
      */
     public function call(): ResponseInterface
     {
@@ -253,7 +252,7 @@ class HttpRequest
             // Return the response.
             return $response;
         } catch (ClientExceptionInterface $exception) {
-            throw NetworkException::requestFailed($exception->getMessage());
+            throw \Auth0\SDK\Exception\NetworkException::requestFailed($exception->getMessage());
         }
     }
 

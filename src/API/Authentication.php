@@ -6,8 +6,6 @@ namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Header\AuthorizationBearer;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Exception\AuthenticationException;
-use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Helpers\PKCE;
 use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Utility\HttpClient;
@@ -48,7 +46,7 @@ final class Authentication
 
         // We only accept an SdkConfiguration type.
         if (! $configuration instanceof SdkConfiguration) {
-            throw ConfigurationException::requiresConfiguration();
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
         }
 
         // Store the configuration internally.
@@ -238,8 +236,8 @@ final class Authentication
      * @param array  $body    Optional. Additional content to include in the body of the API request. See @link for details.
      * @param array  $headers Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When Client Secret is not configured.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
@@ -248,7 +246,7 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! $this->configuration->hasClientSecret()) {
-            throw AuthenticationException::requiresClientSecret();
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresClientSecret();
         }
 
         $body = array_filter(array_merge([
@@ -272,9 +270,9 @@ final class Authentication
      * @param array  $authParams Optional.Append or override the link parameters (like scope, redirect_uri, protocol, response_type) when you send a link using email.
      * @param array  $headers    Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When Client Secret is not configured.
-     * @throws AuthenticationException When an invalid `email` or `type` are passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid `email` or `type` are passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
@@ -285,11 +283,11 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! mb_strlen($email)) {
-            throw AuthenticationException::emptyString('email');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('email');
         }
 
         if (! mb_strlen($type)) {
-            throw AuthenticationException::emptyString('type');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('type');
         }
 
         return $this->passwordlessStart(array_filter([
@@ -306,9 +304,9 @@ final class Authentication
      * @param string $phoneNumber Phone number to use.
      * @param array  $headers     Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When Client Secret is not configured.
-     * @throws AuthenticationException When an invalid $phoneNumber is passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $phoneNumber is passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
@@ -317,7 +315,7 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! mb_strlen($phoneNumber)) {
-            throw AuthenticationException::emptyString('phoneNumber');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('phoneNumber');
         }
 
         return $this->passwordlessStart(array_filter([
@@ -331,8 +329,8 @@ final class Authentication
      *
      * @param string $accessToken Bearer token to use for the request.
      *
-     * @throws AuthenticationException When an invalid $accessToken is passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $accessToken is passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#user-profile
      */
@@ -340,7 +338,7 @@ final class Authentication
         string $accessToken
     ): ResponseInterface {
         if (! mb_strlen($accessToken)) {
-            throw AuthenticationException::emptyString('phoneNumber');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('phoneNumber');
         }
 
         return $this->httpClient
@@ -357,8 +355,8 @@ final class Authentication
      * @param array  $params    Optional. Additional content to include in the body of the API request. See @link for details.
      * @param array  $headers   Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When an invalid $grantType is passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $grantType is passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#get-token
      */
@@ -368,7 +366,7 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! mb_strlen($grantType)) {
-            throw AuthenticationException::requiresGrantType();
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresGrantType();
         }
 
         return $this->httpClient
@@ -389,8 +387,8 @@ final class Authentication
      * @param string|null $redirectUri  Optional. Redirect URI sent with authorize request.
      * @param string|null $codeVerifier Optional. The clear-text version of the code_challenge from the /authorize call
      *
-     * @throws AuthenticationException When an invalid $code is passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $code is passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      */
     public function codeExchange(
         string $code,
@@ -398,7 +396,7 @@ final class Authentication
         ?string $codeVerifier = null
     ): ResponseInterface {
         if (! mb_strlen($code)) {
-            throw AuthenticationException::emptyString('code');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('code');
         }
 
         return $this->oauthToken('authorization_code', array_filter([
@@ -418,8 +416,8 @@ final class Authentication
      * @param array  $params     Optional. Additional content to include in the body of the API request. See @link for details.
      * @param array  $headers    Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When an invalid $username, $password, or $realm are passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $username, $password, or $realm are passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      */
     public function login(
         string $username,
@@ -429,15 +427,15 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! mb_strlen($username)) {
-            throw AuthenticationException::emptyString('username');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('username');
         }
 
         if (! mb_strlen($password)) {
-            throw AuthenticationException::emptyString('password');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('password');
         }
 
         if (! mb_strlen($realm)) {
-            throw AuthenticationException::emptyString('realm');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('realm');
         }
 
         return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', array_filter(array_merge([
@@ -456,8 +454,8 @@ final class Authentication
      * @param array  $params     Optional. Additional content to include in the body of the API request. See @link for details.
      * @param array  $headers    Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When an invalid $username or $password are passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $username or $password are passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api-auth/grant/password
      */
@@ -468,11 +466,11 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! mb_strlen($username)) {
-            throw AuthenticationException::emptyString('username');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('username');
         }
 
         if (! mb_strlen($password)) {
-            throw AuthenticationException::emptyString('password');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('password');
         }
 
         return $this->oauthToken('password', array_filter(array_merge([
@@ -488,8 +486,8 @@ final class Authentication
      * @param array  $params  Optional. Additional content to include in the body of the API request. See @link for details.
      * @param array  $headers Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When Client Secret is not configured.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api-auth/grant/client-credentials
      */
@@ -498,7 +496,7 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! $this->configuration->hasClientSecret()) {
-            throw AuthenticationException::requiresClientSecret();
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresClientSecret();
         }
 
         return $this->oauthToken('client_credentials', array_filter(array_merge([
@@ -514,9 +512,9 @@ final class Authentication
      * @param array  $params       Optional. Additional content to include in the body of the API request. See @link for details.
      * @param array  $headers      Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When Client Secret is not configured.
-     * @throws AuthenticationException When an invalid $refreshToken is passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $refreshToken is passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#refresh-token
      */
@@ -526,11 +524,11 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! mb_strlen($refreshToken)) {
-            throw AuthenticationException::emptyString('refreshToken');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('refreshToken');
         }
 
         if (! $this->configuration->hasClientSecret()) {
-            throw AuthenticationException::requiresClientSecret();
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresClientSecret();
         }
 
         return $this->oauthToken('refresh_token', array_filter(array_merge([
@@ -549,8 +547,8 @@ final class Authentication
      * @param array  $body       Optional. Additional content to include in the body of the API request. See @link for details.
      * @param array  $headers    Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When an invalid $email, $password, or $connection are passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $email, $password, or $connection are passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#signup
      */
@@ -562,15 +560,15 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! mb_strlen($email)) {
-            throw AuthenticationException::emptyString('email');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('email');
         }
 
         if (! mb_strlen($password)) {
-            throw AuthenticationException::emptyString('password');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('password');
         }
 
         if (! mb_strlen($connection)) {
-            throw AuthenticationException::emptyString('connection');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('connection');
         }
 
         return $this->httpClient
@@ -595,8 +593,8 @@ final class Authentication
      * @param array       $body       Optional. Additional content to include in the body of the API request. See @link for details.
      * @param array       $headers    Optional. Additional headers to send with the API request.
      *
-     * @throws AuthenticationException When an invalid $email or $connection are passed.
-     * @throws NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $email or $connection are passed.
+     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
      *
      * @link https://auth0.com/docs/api/authentication#change-password
      */
@@ -607,11 +605,11 @@ final class Authentication
         array $headers = []
     ): ResponseInterface {
         if (! mb_strlen($email)) {
-            throw AuthenticationException::emptyString('email');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('email');
         }
 
         if (! mb_strlen($connection)) {
-            throw AuthenticationException::emptyString('connection');
+            throw \Auth0\SDK\Exception\AuthenticationException::emptyString('connection');
         }
 
         return $this->httpClient

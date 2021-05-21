@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\Tests\Utilities;
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\Configuration\SdkConfiguration;
 
 /**
  * Class MockAuthenticationApi.
@@ -25,7 +24,7 @@ class MockAuthenticationApi extends MockApi
         $this->client = new Authentication([
             'domain' => 'api.test.local',
             'clientId' => '__test_client_id__',
-            'redirectUri' => uniqid()
+            'redirectUri' => uniqid(),
         ]);
     }
 

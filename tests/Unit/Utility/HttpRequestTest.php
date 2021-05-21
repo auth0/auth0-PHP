@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\Utility;
 
-use Auth0\SDK\API\Helpers\RequestBuilder;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpRequest;
-use Auth0\Tests\Utilities\MockManagementApi;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,7 +26,7 @@ class HttpRequestTest extends TestCase
         $config = new SdkConfiguration([
             'domain' => 'api.local.test',
             'clientId' => uniqid(),
-            'redirectUri' => uniqid()
+            'redirectUri' => uniqid(),
         ]);
 
         return new HttpRequest($config, $method, $basePath);

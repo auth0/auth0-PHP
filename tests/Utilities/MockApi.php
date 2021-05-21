@@ -65,7 +65,7 @@ abstract class MockApi
     ): void {
         $this->history[] = (object) [
             'request' => $request,
-            'response' => $response
+            'response' => $response,
         ];
     }
 

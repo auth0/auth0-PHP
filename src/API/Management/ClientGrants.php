@@ -24,7 +24,7 @@ class ClientGrants extends GenericResource
      * @param array               $scope    Optional. Scopes allowed for this client grant.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/post_client_grants
      */
@@ -57,7 +57,7 @@ class ClientGrants extends GenericResource
      * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
@@ -80,7 +80,7 @@ class ClientGrants extends GenericResource
      * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
@@ -107,7 +107,7 @@ class ClientGrants extends GenericResource
      * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
@@ -134,7 +134,7 @@ class ClientGrants extends GenericResource
      * @param array               $scope   Optional. Array of scopes to update; will replace existing scopes, not merge.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/patch_client_grants_by_id
      */
@@ -163,7 +163,7 @@ class ClientGrants extends GenericResource
      * @param string              $id      Grant (by it's ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException Thrown by the HTTP client when there is a problem with the API call.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
      */

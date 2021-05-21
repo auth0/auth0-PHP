@@ -23,7 +23,7 @@ class Blacklists extends GenericResource
      * @param string|null         $aud     Optional. JWT's aud claim (the client_id to which the JWT was issued).
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Blacklists/post_tokens
      */
@@ -55,7 +55,7 @@ class Blacklists extends GenericResource
      * @param string|null         $aud     Optional. Filter on the JWT's aud claim (the client_id to which the JWT was issued).
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens
      */
