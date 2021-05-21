@@ -23,7 +23,7 @@ class Guardian extends GenericResource
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Guardian/get_factors
+     * @link https://auth0.com/docs/api/management/v2#!/Guardian/get_factors
      */
     public function getFactors(
         ?RequestOptions $options = null
@@ -43,7 +43,7 @@ class Guardian extends GenericResource
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Guardian/get_enrollments_by_id
+     * @link https://auth0.com/docs/api/management/v2#!/Guardian/get_enrollments_by_id
      */
     public function getEnrollment(
         string $id,
@@ -66,7 +66,7 @@ class Guardian extends GenericResource
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Guardian/delete_enrollments_by_id
+     * @link https://auth0.com/docs/api/management/v2#!/Guardian/delete_enrollments_by_id
      */
     public function deleteEnrollment(
         string $id,

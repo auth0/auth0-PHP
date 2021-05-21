@@ -77,6 +77,9 @@ final class Auth0
         $this->restoreState();
     }
 
+    /**
+     * Create, configure, and return an instance of the Authentication class.
+     */
     public function authentication()
     {
         if ($this->authentication === null) {
@@ -86,6 +89,9 @@ final class Auth0
         return $this->authentication;
     }
 
+    /**
+     * Create, configure, and return an instance of the Management class.
+     */
     public function management()
     {
         if ($this->management === null) {
@@ -100,8 +106,7 @@ final class Auth0
      *
      * @param array $params Additional, valid parameters.
      *
-     * @see \Auth0\SDK\API\Authentication::getAuthorizationLink()
-     * @see https://auth0.com/docs/api/authentication#login
+     * @link https://auth0.com/docs/api/authentication#login
      */
     public function login(
         ?array $params = []
@@ -179,7 +184,7 @@ final class Auth0
      * @throws \Auth0\SDK\Exception\ApiException If access token is missing from the response.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
+     * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
     public function exchange(): bool
     {

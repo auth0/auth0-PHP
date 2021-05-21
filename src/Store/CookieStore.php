@@ -169,7 +169,7 @@ class CookieStore implements StoreInterface
      * @param string $value  Cookie value.
      * @param int    $expire Cookie expiration timecode.
      *
-     * @see https://github.com/php/php-src/blob/master/ext/standard/head.c#L77
+     * @link https://github.com/php/php-src/blob/master/ext/standard/head.c#L77
      */
     protected function getSameSiteCookieHeader(
         string $name,

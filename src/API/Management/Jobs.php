@@ -28,7 +28,7 @@ class Jobs extends GenericResource
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_imports
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/post_users_imports
      */
     public function createImportUsers(
         string $filePath,
@@ -61,7 +61,7 @@ class Jobs extends GenericResource
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports
      */
     public function createExportUsers(
         array $body = [],
@@ -86,7 +86,7 @@ class Jobs extends GenericResource
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Jobs/post_verification_email
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/post_verification_email
      */
     public function createSendVerificationEmail(
         string $userId,
@@ -117,7 +117,7 @@ class Jobs extends GenericResource
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id
      */
     public function get(
         string $id,
@@ -142,7 +142,7 @@ class Jobs extends GenericResource
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Jobs/get_errors
+     * @link https://auth0.com/docs/api/management/v2#!/Jobs/get_errors
      */
     public function getErrors(
         string $id,
