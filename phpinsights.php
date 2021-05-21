@@ -53,9 +53,6 @@ return [
         \SlevomatCodingStandard\Sniffs\Classes\RequireMultiLineMethodSignatureSniff::class => [
             'minLineLength' => '0',
         ],
-        \ObjectCalisthenics\Sniffs\Metrics\MaxNestingLevelSniff::class => [
-            'maxNestingLevel' => 5,
-        ],
     ],
 
     'requirements' => [
