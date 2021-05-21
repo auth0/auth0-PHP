@@ -4,55 +4,32 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
+use PHPUnit\Framework\TestCase;
 
-class BlacklistsTest extends ApiTests
+class BlacklistsTest extends TestCase
 {
-    /**
-     * Expected telemetry value.
-     */
-    protected static string $expectedTelemetry;
-
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$expectedTelemetry = $infoHeadersData->build();
-    }
-
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
+        $api->mock()->blacklists()->get('__test_aud__');
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/blacklists/tokens', $api->getRequestUrl());
 
-        $api->call()->blacklists()->get('__test_aud__');
-
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/blacklists/tokens', $api->getHistoryUrl());
-
-        $this->assertEquals('aud=__test_aud__', $api->getHistoryQuery());
+        $this->assertEquals('aud=__test_aud__', $api->getRequestQuery(null));
     }
 
     public function testBlacklist(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->blacklists()->create('__test_jti__', '__test_aud__');
+        $api->mock()->blacklists()->create('__test_jti__', '__test_aud__');
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/blacklists/tokens', $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/blacklists/tokens', $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('aud', $body);
         $this->assertEquals('__test_aud__', $body['aud']);
         $this->assertArrayHasKey('jti', $body);

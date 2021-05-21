@@ -4,42 +4,25 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class GuardianTest.
  */
-class GuardianTest extends ApiTests
+class GuardianTest extends TestCase
 {
-    /**
-     * Expected telemetry value.
-     */
-    protected static string $telemetry;
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$telemetry = $infoHeadersData->build();
-    }
-
     /**
      * Test that getFactors requests properly.
      */
     public function testGuardianGetFactor(): void
     {
-        $api = new MockManagementApi([new Response(200)]);
+        $api = new MockManagementApi();
+        $request = $api->mock()->guardian()->getFactors();
 
-        $api->call()->guardian()->getFactors();
-
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/guardian/factors', $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/guardian/factors', $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 
     /**
@@ -47,16 +30,14 @@ class GuardianTest extends ApiTests
      */
     public function testGuardianGetEnrollment(): void
     {
-        $api = new MockManagementApi([new Response(200)]);
+        $id = uniqid();
 
-        $api->call()->guardian()->getEnrollment('__test_factor_id__');
+        $api = new MockManagementApi();
+        $request = $api->mock()->guardian()->getEnrollment($id);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/guardian/enrollments/__test_factor_id__',
-            $api->getHistoryUrl()
-        );
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 
     /**
@@ -64,15 +45,13 @@ class GuardianTest extends ApiTests
      */
     public function testGuardianDeleteEnrollment(): void
     {
-        $api = new MockManagementApi([new Response(200)]);
+        $id = uniqid();
 
-        $api->call()->guardian()->deleteEnrollment('__test_factor_id__');
+        $api = new MockManagementApi();
+        $request = $api->mock()->guardian()->deleteEnrollment($id);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/guardian/enrollments/__test_factor_id__',
-            $api->getHistoryUrl()
-        );
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 }

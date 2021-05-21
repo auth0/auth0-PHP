@@ -4,37 +4,16 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
+use PHPUnit\Framework\TestCase;
 
-class TicketsTest extends ApiTests
+class TicketsTest extends TestCase
 {
-    /**
-     * Expected telemetry value.
-     */
-    protected static string $expectedTelemetry;
-
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$expectedTelemetry = $infoHeadersData->build();
-    }
-
     public function testCreateEmailVerification(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->tickets()->createEmailVerification(
+        $api->mock()->tickets()->createEmailVerification(
             '__test_user_id__',
             [
                 'identity' => [
@@ -44,11 +23,11 @@ class TicketsTest extends ApiTests
             ]
         );
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/tickets/email-verification', $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/tickets/email-verification', $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('user_id', $body);
         $this->assertEquals('__test_user_id__', $body['user_id']);
         $this->assertArrayHasKey('identity', $body);
@@ -60,15 +39,15 @@ class TicketsTest extends ApiTests
             $body['identity']
         );
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
     public function testCreatePasswordChange(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->tickets()->createPasswordChange(
+        $api->mock()->tickets()->createPasswordChange(
             [
                 'user_id' => '__test_user_id__',
                 'new_password' => '__test_password__',
@@ -79,11 +58,11 @@ class TicketsTest extends ApiTests
             ]
         );
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('user_id', $body);
         $this->assertEquals('__test_user_id__', $body['user_id']);
         $this->assertArrayHasKey('new_password', $body);
@@ -97,7 +76,7 @@ class TicketsTest extends ApiTests
         $this->assertArrayHasKey('client_id', $body);
         $this->assertEquals('__test_client_id__', $body['client_id']);
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 }

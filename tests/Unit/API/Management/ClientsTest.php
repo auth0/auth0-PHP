@@ -4,48 +4,26 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ClientsTest.
  */
-class ClientsTest extends ApiTests
+class ClientsTest extends TestCase
 {
-    /**
-     * Expected telemetry value.
-     */
-    protected static string $expectedTelemetry;
-
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$expectedTelemetry = $infoHeadersData->build();
-    }
-
     /**
      * Test getAll() request.
      */
     public function testGetAll(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
+        $api->mock()->clients()->getAll(['client_id' => '__test_client_id__', 'app_type' => '__test_app_type__']);
 
-        $api->call()->clients()->getAll(['client_id' => '__test_client_id__', 'app_type' => '__test_app_type__']);
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/clients', $api->getRequestUrl());
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/clients', $api->getHistoryUrl());
-
-        $query = '&' . $api->getHistoryQuery();
+        $query = $api->getRequestQuery();
         $this->assertStringContainsString('&client_id=__test_client_id__&app_type=__test_app_type__', $query);
     }
 
@@ -54,12 +32,11 @@ class ClientsTest extends ApiTests
      */
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
+        $api->mock()->clients()->get('__test_id__');
 
-        $api->call()->clients()->get('__test_id__');
-
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/clients/__test_id__', $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/clients/__test_id__', $api->getRequestUrl());
     }
 
     /**
@@ -67,12 +44,11 @@ class ClientsTest extends ApiTests
      */
     public function testDelete(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
+        $api->mock()->clients()->delete('__test_id__');
 
-        $api->call()->clients()->delete('__test_id__');
-
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/clients/__test_id__', $api->getHistoryUrl());
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/clients/__test_id__', $api->getRequestUrl());
     }
 
     /**
@@ -80,14 +56,13 @@ class ClientsTest extends ApiTests
      */
     public function testCreate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
+        $api->mock()->clients()->create('__test_name__', ['app_type' => '__test_app_type__']);
 
-        $api->call()->clients()->create('__test_name__', ['app_type' => '__test_app_type__']);
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/clients', $api->getRequestUrl());
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/clients', $api->getHistoryUrl());
-
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
         $this->assertEquals('__test_name__', $body['name']);
         $this->assertArrayHasKey('app_type', $body);
@@ -99,14 +74,13 @@ class ClientsTest extends ApiTests
      */
     public function testUpdate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
+        $api->mock()->clients()->update('__test_id__', ['name' => '__test_new_name__']);
 
-        $api->call()->clients()->update('__test_id__', ['name' => '__test_new_name__']);
+        $this->assertEquals('PATCH', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/clients/__test_id__', $api->getRequestUrl());
 
-        $this->assertEquals('PATCH', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/clients/__test_id__', $api->getHistoryUrl());
-
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
         $this->assertEquals('__test_new_name__', $body['name']);
     }

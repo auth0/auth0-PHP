@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,41 +13,20 @@ use PHPUnit\Framework\TestCase;
 class UsersMockedTest extends TestCase
 {
     /**
-     * Expected telemetry value.
-     */
-    protected static string $expectedTelemetry;
-
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$expectedTelemetry = $infoHeadersData->build();
-    }
-
-    /**
      * Test getAll() request.
      */
     public function testGetAll(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $id = uniqid();
 
-        $mockup = uniqid();
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->getAll(['test' => $id]);
 
-        $api->call()->users()->getAll(['test' => $mockup]);
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/users', $api->getRequestUrl());
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/users', $api->getHistoryUrl());
-
-        $query = '&' . $api->getHistoryQuery();
-        $this->assertStringContainsString('&test=' . $mockup, $query);
+        $query = $api->getRequestQuery();
+        $this->assertStringContainsString('&test=' . $id, $query);
     }
 
     /**
@@ -56,14 +34,13 @@ class UsersMockedTest extends TestCase
      */
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $id = uniqid();
 
-        $mockupId = uniqid();
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->get($id);
 
-        $api->call()->users()->get($mockupId);
-
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockupId, $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $id, $api->getRequestUrl());
     }
 
     /**
@@ -71,8 +48,6 @@ class UsersMockedTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'id' => uniqid(),
             'query' => [
@@ -83,18 +58,16 @@ class UsersMockedTest extends TestCase
             ],
         ];
 
-        $api->call()->users()->update(
-            $mockup->id,
-            $mockup->query
-        );
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->update($mockup->id, $mockup->query);
 
-        $this->assertEquals('PATCH', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id, $api->getHistoryUrl());
+        $this->assertEquals('PATCH', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id, $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('given_name', $body);
         $this->assertEquals($mockup->query['given_name'], $body['given_name']);
         $this->assertArrayHasKey('user_metadata', $body);
@@ -107,8 +80,6 @@ class UsersMockedTest extends TestCase
      */
     public function testCreate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'connection' => uniqid(),
             'query' => [
@@ -117,18 +88,16 @@ class UsersMockedTest extends TestCase
             ],
         ];
 
-        $api->call()->users()->create(
-            $mockup->connection,
-            $mockup->query
-        );
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->create($mockup->connection, $mockup->query);
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users', $api->getHistoryUrl());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('connection', $body);
         $this->assertEquals($mockup->connection, $body['connection']);
         $this->assertArrayHasKey('email', $body);
@@ -142,16 +111,15 @@ class UsersMockedTest extends TestCase
      */
     public function testDelete(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $id = uniqid();
 
-        $mockupId = uniqid();
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->delete($id);
 
-        $api->call()->users()->delete($mockupId);
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $id, $api->getRequestUrl());
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockupId, $api->getHistoryUrl());
-
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
@@ -160,8 +128,6 @@ class UsersMockedTest extends TestCase
      */
     public function testLinkAccount(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'id' => uniqid(),
             'query' => [
@@ -171,18 +137,16 @@ class UsersMockedTest extends TestCase
             ],
         ];
 
-        $api->call()->users()->linkAccount(
-            $mockup->id,
-            $mockup->query
-        );
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->linkAccount($mockup->id, $mockup->query);
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/identities', $api->getHistoryUrl());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/identities', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('provider', $body);
         $this->assertEquals($mockup->query['provider'], $body['provider']);
         $this->assertArrayHasKey('connection_id', $body);
@@ -196,27 +160,19 @@ class UsersMockedTest extends TestCase
      */
     public function testUnlinkAccount(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'id' => uniqid(),
             'provider' => uniqid(),
             'identity' => uniqid(),
         ];
 
-        $api->call()->users()->unlinkAccount(
-            $mockup->id,
-            $mockup->provider,
-            $mockup->identity
-        );
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->unlinkAccount($mockup->id, $mockup->provider, $mockup->identity);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockup->id . '/identities/' . $mockup->provider . '/' . $mockup->identity,
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/identities/' . $mockup->provider . '/' . $mockup->identity, $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
@@ -225,22 +181,18 @@ class UsersMockedTest extends TestCase
      */
     public function testDeleteMultifactorProvider(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'id' => uniqid(),
             'provider' => uniqid(),
         ];
 
-        $api->call()->users()->deleteMultifactorProvider($mockup->id, $mockup->provider);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->deleteMultifactorProvider($mockup->id, $mockup->provider);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockup->id . '/multifactor/' . $mockup->provider,
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/multifactor/' . $mockup->provider, $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
@@ -249,17 +201,13 @@ class UsersMockedTest extends TestCase
      */
     public function testThatGetRolesRequestIsFormattedProperly(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockupId = uniqid();
 
-        $api->call()->users()->getRoles($mockupId);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->getRoles($mockupId);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith(
-            'https://api.test.local/api/v2/users/' . $mockupId . '/roles',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/users/' . $mockupId . '/roles', $api->getRequestUrl());
     }
 
     /**
@@ -267,8 +215,6 @@ class UsersMockedTest extends TestCase
      */
     public function testRemoveRoles(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'id' => uniqid(),
             'roles' => [
@@ -277,18 +223,16 @@ class UsersMockedTest extends TestCase
             ],
         ];
 
-        $api->call()->users()->removeRoles($mockup->id, $mockup->roles);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->removeRoles($mockup->id, $mockup->roles);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockup->id . '/roles',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/roles', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('roles', $body);
         $this->assertCount(2, $body['roles']);
         $this->assertEquals($mockup->roles[0], $body['roles'][0]);
@@ -300,8 +244,6 @@ class UsersMockedTest extends TestCase
      */
     public function testAddRoles(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'id' => uniqid(),
             'roles' => [
@@ -310,18 +252,16 @@ class UsersMockedTest extends TestCase
             ],
         ];
 
-        $api->call()->users()->addRoles($mockup->id, $mockup->roles);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->addRoles($mockup->id, $mockup->roles);
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockup->id . '/roles',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/roles', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('roles', $body);
         $this->assertCount(2, $body['roles']);
         $this->assertEquals($mockup->roles[0], $body['roles'][0]);
@@ -333,17 +273,13 @@ class UsersMockedTest extends TestCase
      */
     public function testGetEnrollments(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockupId = uniqid();
 
-        $api->call()->users()->getEnrollments($mockupId);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->getEnrollments($mockupId);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockupId . '/enrollments',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockupId . '/enrollments', $api->getRequestUrl());
     }
 
     /**
@@ -351,17 +287,13 @@ class UsersMockedTest extends TestCase
      */
     public function testGetPermissions(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockupId = uniqid();
 
-        $api->call()->users()->getPermissions($mockupId);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->getPermissions($mockupId);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith(
-            'https://api.test.local/api/v2/users/' . $mockupId . '/permissions',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/users/' . $mockupId . '/permissions', $api->getRequestUrl());
     }
 
     /**
@@ -369,8 +301,6 @@ class UsersMockedTest extends TestCase
      */
     public function testRemovePermissions(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'id' => uniqid(),
             'permissions' => [
@@ -381,21 +311,16 @@ class UsersMockedTest extends TestCase
             ],
         ];
 
-        $api->call()->users()->removePermissions(
-            $mockup->id,
-            $mockup->permissions
-        );
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->removePermissions($mockup->id, $mockup->permissions);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockup->id . '/permissions',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/permissions', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('permissions', $body);
         $this->assertCount(1, $body['permissions']);
         $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
@@ -409,8 +334,6 @@ class UsersMockedTest extends TestCase
      */
     public function testThatAddPermissionsRequestIsFormattedProperly(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockup = (object) [
             'id' => uniqid(),
             'permissions' => [
@@ -421,21 +344,16 @@ class UsersMockedTest extends TestCase
             ],
         ];
 
-        $api->call()->users()->addPermissions(
-            $mockup->id,
-            $mockup->permissions
-        );
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->addPermissions($mockup->id, $mockup->permissions);
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockup->id . '/permissions',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/permissions', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('permissions', $body);
         $this->assertCount(1, $body['permissions']);
         $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
@@ -449,17 +367,13 @@ class UsersMockedTest extends TestCase
      */
     public function testGetLogs(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockupId = uniqid();
 
-        $api->call()->users()->getLogs($mockupId);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->getLogs($mockupId);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith(
-            'https://api.test.local/api/v2/users/' . $mockupId . '/logs',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/users/' . $mockupId . '/logs', $api->getRequestUrl());
     }
 
     /**
@@ -467,17 +381,13 @@ class UsersMockedTest extends TestCase
      */
     public function testGetOrganizations(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockupId = uniqid();
 
-        $api->call()->users()->getOrganizations($mockupId);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->getOrganizations($mockupId);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith(
-            'https://api.test.local/api/v2/users/' . $mockupId . '/organizations',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/users/' . $mockupId . '/organizations', $api->getRequestUrl());
     }
 
     /**
@@ -485,19 +395,15 @@ class UsersMockedTest extends TestCase
      */
     public function testThatCreateRecoveryCodeRequestIsFormattedProperly(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockupId = uniqid();
 
-        $api->call()->users()->createRecoveryCode($mockupId);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->createRecoveryCode($mockupId);
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockupId . '/recovery-code-regeneration',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockupId . '/recovery-code-regeneration', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 
@@ -506,19 +412,15 @@ class UsersMockedTest extends TestCase
      */
     public function testInvalidateBrowsers(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $mockupId = uniqid();
 
-        $api->call()->users()->invalidateBrowsers($mockupId);
+        $api = new MockManagementApi();
+        $request = $api->mock()->users()->invalidateBrowsers($mockupId);
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals(
-            'https://api.test.local/api/v2/users/' . $mockupId . '/multifactor/actions/invalidate-remember-browser',
-            $api->getHistoryUrl()
-        );
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockupId . '/multifactor/actions/invalidate-remember-browser', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 }

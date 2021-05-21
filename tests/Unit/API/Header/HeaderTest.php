@@ -8,7 +8,6 @@ use Auth0\SDK\API\Header\AuthorizationBearer;
 use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\API\Header\ForwardedFor;
 use Auth0\SDK\API\Header\Header;
-use Auth0\SDK\API\Header\Telemetry;
 use PHPUnit\Framework\TestCase;
 
 class HeaderTest extends TestCase
@@ -43,16 +42,6 @@ class HeaderTest extends TestCase
         $this->assertEquals('Content-Type', $header->getHeader());
         $this->assertEquals($contentType, $header->getValue());
         $this->assertEquals("Content-Type: $contentType\n", $header->get());
-    }
-
-    public function testTelemetry(): void
-    {
-        $telemetryVal = uniqid();
-        $header = new Telemetry($telemetryVal);
-
-        $this->assertEquals('Auth0-Client', $header->getHeader());
-        $this->assertEquals($telemetryVal, $header->getValue());
-        $this->assertEquals("Auth0-Client: $telemetryVal\n", $header->get());
     }
 
     public function testForwardedFor(): void

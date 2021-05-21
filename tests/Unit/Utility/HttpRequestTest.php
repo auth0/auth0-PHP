@@ -2,36 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Helpers;
+namespace Auth0\Tests\Unit\Utility;
 
 use Auth0\SDK\API\Helpers\RequestBuilder;
-use Auth0\Tests\API\ApiTests;
-use Auth0\Tests\Unit\API\Management\MockManagementApi;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpRequest;
+use Auth0\Tests\Utilities\MockManagementApi;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Class RequestBuilderTest
- * Tests the Auth0\SDK\API\Helpers\RequestBuilder class.
+ * Class HttpRequestTest
+ * Tests the Auth0\SDK\Utility\HttpRequest class.
  */
-class RequestBuilderTest extends ApiTests
+class HttpRequestTest extends TestCase
 {
     /**
      * Retrieve a mock RequestBuilder instance.
      *
      * @param mixed|null $basePath basePath to pass to RequestBuilder.
      */
-    private static function getUrlBuilder($basePath = null): RequestBuilder
-    {
-        return new RequestBuilder(
-            [
-                'domain' => 'api.local.test',
-                'method' => 'get',
-                'basePath' => $basePath,
-            ]
-        );
+    private static function getUrlBuilder(
+        string $basePath = '/',
+        string $method = 'get'
+    ): HttpRequest {
+        $config = new SdkConfiguration([
+            'domain' => 'api.local.test',
+            'clientId' => uniqid(),
+            'redirectUri' => uniqid()
+        ]);
+
+        return new HttpRequest($config, $method, $basePath);
     }
 
     /**
@@ -107,28 +107,15 @@ class RequestBuilderTest extends ApiTests
      */
     public function testThatBooleanFormParamsAreAdded(): void
     {
-        $history = [];
-        $mock = new MockHandler([new Response(200), new Response(200)]);
-        $handler = HandlerStack::create($mock);
-        $handler->push(Middleware::history($history));
+        $httpRequest = self::getUrlBuilder('/', 'post')->withFormParam('test', 'true');
+        $httpRequest->call();
 
-        $builder = new RequestBuilder(
-            [
-                'domain' => 'api.test.local',
-                'method' => 'post',
-                'guzzleOptions' => ['handler' => $handler],
-            ]
-        );
+        $this->assertEquals('test=true', $httpRequest->lastRequest->getBody()->__toString());
 
-        $builder->addFormParam('test', 'true');
-        $builder->call();
+        $httpRequest = self::getUrlBuilder('/', 'post')->withFormParam('test', 'false');
+        $httpRequest->call();
 
-        $this->assertEquals('test=true', $history[0]['request']->getBody());
-
-        $builder->addFormParam('test', 'false');
-        $builder->call();
-
-        $this->assertEquals('test=false', $history[1]['request']->getBody());
+        $this->assertEquals('test=false', $httpRequest->lastRequest->getBody()->__toString());
     }
 
     /**
@@ -176,53 +163,5 @@ class RequestBuilderTest extends ApiTests
         // Adding a parameter dictionary should be reflected in the RequestBuilder object.
         $builder->withParams(['param4' => 'value4', 'param2' => 'value5']);
         $this->assertEquals('?param4=value4&param2=value5', $builder->getParams());
-    }
-
-    /**
-     * Test that getGuzzleOptions() works.
-     */
-    public function testGetGuzzleOptions(): void
-    {
-        $options = self::getUrlBuilder()->getGuzzleOptions();
-
-        $this->assertArrayHasKey('base_uri', $options);
-        $this->assertEquals('api.local.test', $options['base_uri']);
-    }
-
-    /**
-     * Test that getGuzzleOptions w/ a base path works.
-     */
-    public function testGetGuzzleOptionsWithBasePath(): void
-    {
-        $options = self::getUrlBuilder('/api')->getGuzzleOptions();
-
-        $this->assertArrayHasKey('base_uri', $options);
-        $this->assertEquals('api.local.test/api', $options['base_uri']);
-    }
-
-    /**
-     * Test that return types are used correctly.
-     */
-    public function testReturnType(): void
-    {
-        $response = [new Response(200, ['Content-Type' => 'application/json'], '{"key":"__test_value__"}')];
-
-        // Test default return type matches "body".
-        $api = new MockManagementApi($response, ['return_type' => null]);
-        $results_default = $api->call()->tenants()->get();
-        $this->assertTrue(is_array($results_default));
-        $this->assertArrayHasKey('key', $results_default);
-        $this->assertEquals('__test_value__', $results_default['key']);
-
-        // Test that "body" return type gives us the same result.
-        $api = new MockManagementApi($response, ['return_type' => 'body']);
-        $results_body = $api->call()->tenants()->get();
-        $this->assertEquals($results_default, $results_body);
-
-        // Test that "headers" return type contains expected keys.
-        $api = new MockManagementApi($response, ['return_type' => 'headers']);
-        $results_headers = $api->call()->tenants()->get();
-        $this->assertArrayHasKey('Content-Type', $results_headers);
-        $this->assertEquals('application/json', $results_headers['Content-Type'][0]);
     }
 }

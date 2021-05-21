@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RulesTest.
  */
-class RulesTest extends ApiTests
+class RulesTest extends TestCase
 {
     /**
      * Default request headers.
@@ -22,14 +22,14 @@ class RulesTest extends ApiTests
      */
     public function testGetAll(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->rules()->getAll(['enabled' => true]);
+        $api->mock()->rules()->getAll(['enabled' => true]);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/rules', $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/rules', $api->getRequestUrl());
 
-        $query = $api->getHistoryQuery();
+        $query = $api->getRequestQuery();
         $this->assertStringContainsString('enabled=true', $query);
     }
 
@@ -38,14 +38,14 @@ class RulesTest extends ApiTests
      */
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
         $mockupId = uniqid();
 
-        $api->call()->rules()->get($mockupId);
+        $api->mock()->rules()->get($mockupId);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockupId, $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockupId, $api->getRequestUrl());
     }
 
     /**
@@ -53,14 +53,14 @@ class RulesTest extends ApiTests
      */
     public function testDelete(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
         $mockupId = uniqid();
 
-        $api->call()->rules()->delete($mockupId);
+        $api->mock()->rules()->delete($mockupId);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockupId, $api->getHistoryUrl());
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockupId, $api->getRequestUrl());
     }
 
     /**
@@ -68,7 +68,7 @@ class RulesTest extends ApiTests
      */
     public function testCreate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
         $mockup = (object) [
             'name' => uniqid(),
@@ -76,15 +76,15 @@ class RulesTest extends ApiTests
             'query' => [ 'test_parameter' => uniqid() ],
         ];
 
-        $api->call()->rules()->create($mockup->name, $mockup->script, $mockup->query);
+        $api->mock()->rules()->create($mockup->name, $mockup->script, $mockup->query);
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/rules', $api->getHistoryUrl());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/rules', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
         $this->assertEquals($mockup->name, $body['name']);
 
@@ -100,22 +100,22 @@ class RulesTest extends ApiTests
      */
     public function testUpdate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
         $mockup = (object) [
             'id' => uniqid(),
             'query' => [ 'test_parameter' => uniqid() ],
         ];
 
-        $api->call()->rules()->update($mockup->id, $mockup->query);
+        $api->mock()->rules()->update($mockup->id, $mockup->query);
 
-        $this->assertEquals('PATCH', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockup->id, $api->getHistoryUrl());
+        $this->assertEquals('PATCH', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockup->id, $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('test_parameter', $body);
         $this->assertEquals($mockup->query['test_parameter'], $body['test_parameter']);
     }
