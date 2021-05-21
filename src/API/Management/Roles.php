@@ -23,7 +23,7 @@ class Roles extends GenericResource
      * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_roles
      */
@@ -52,7 +52,7 @@ class Roles extends GenericResource
      * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_roles
      */
@@ -74,7 +74,7 @@ class Roles extends GenericResource
      * @param string              $id      Role ID to get.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_roles_by_id
      */
@@ -98,7 +98,7 @@ class Roles extends GenericResource
      * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/patch_roles_by_id
      */
@@ -124,7 +124,7 @@ class Roles extends GenericResource
      * @param string              $id      Role ID to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/delete_roles_by_id
      */
@@ -148,8 +148,8 @@ class Roles extends GenericResource
      * @param array               $permissions Permissions to add, array of permission arrays.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException Thrown if the permissions parameter is empty or invalid.
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException When the permissions parameter is empty or invalid.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_role_permission_assignment
      */
@@ -183,7 +183,7 @@ class Roles extends GenericResource
      * @param string              $id      Role ID to get permissions.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_role_permission
      */
@@ -207,8 +207,8 @@ class Roles extends GenericResource
      * @param array               $permissions Permissions to delete, array of permission arrays.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException Thrown if the permissions parameter is empty or invalid.
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException When the permissions parameter is empty or invalid.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/delete_role_permission_assignment
      */
@@ -243,7 +243,7 @@ class Roles extends GenericResource
      * @param array               $users   Array of user IDs to add to the role.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_role_users
      */
@@ -275,8 +275,8 @@ class Roles extends GenericResource
      * @param string              $id      Role ID assigned to users.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException Thrown if the id parameter is empty or is not a string.
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException When the id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_role_user
      */

@@ -26,7 +26,7 @@ class Organizations extends GenericResource
      * @param array               $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function create(
         string $name,
@@ -61,7 +61,7 @@ class Organizations extends GenericResource
      *
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getAll(
         ?RequestOptions $options = null
@@ -79,7 +79,7 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to retrieve details for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function get(
         string $id,
@@ -100,7 +100,7 @@ class Organizations extends GenericResource
      * @param string              $name    Organization (by name parameter provided during creation) to retrieve details for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getByName(
         string $name,
@@ -125,7 +125,7 @@ class Organizations extends GenericResource
      * @param array                $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null  $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function update(
         string $id,
@@ -160,7 +160,7 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function delete(
         string $id,
@@ -181,7 +181,7 @@ class Organizations extends GenericResource
      * @param array               $body         Additional body content to send with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addEnabledConnection(
         string $id,
@@ -210,7 +210,7 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to list connections of.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getEnabledConnections(
         string $id,
@@ -232,7 +232,7 @@ class Organizations extends GenericResource
      * @param string              $connectionId Connection (by ID) to retrieve details for.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getEnabledConnection(
         string $id,
@@ -257,7 +257,7 @@ class Organizations extends GenericResource
      * @param array               $body         Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function updateEnabledConnection(
         string $id,
@@ -283,7 +283,7 @@ class Organizations extends GenericResource
      * @param string              $connectionId Connection (by ID) to remove from organization.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeEnabledConnection(
         string $id,
@@ -307,7 +307,7 @@ class Organizations extends GenericResource
      * @param array               $members One or more users (by ID) to add from the organization.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addMembers(
         string $id,
@@ -335,7 +335,7 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to list members of.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getMembers(
         string $id,
@@ -357,7 +357,7 @@ class Organizations extends GenericResource
      * @param array               $members One or more users (by ID) to remove from the organization.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeMembers(
         string $id,
@@ -387,7 +387,7 @@ class Organizations extends GenericResource
      * @param array<string>       $roles   One or more roles (by ID) to add to the user.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addMemberRoles(
         string $id,
@@ -418,7 +418,7 @@ class Organizations extends GenericResource
      * @param string              $userId  User (by ID) to add role to.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getMemberRoles(
         string $id,
@@ -443,7 +443,7 @@ class Organizations extends GenericResource
      * @param array<string>       $roles   One or more roles (by ID) to remove from the user.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeMemberRoles(
         string $id,
@@ -479,7 +479,7 @@ class Organizations extends GenericResource
      * @param array               $body     Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function createInvitation(
         string $id,
@@ -524,7 +524,7 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to list invitations for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getInvitations(
         string $id,
@@ -546,7 +546,7 @@ class Organizations extends GenericResource
      * @param string              $invitationId Invitation (by ID) to request.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getInvitation(
         string $id,
@@ -570,7 +570,7 @@ class Organizations extends GenericResource
      * @param string              $invitationId Invitation (by ID) to request.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function deleteInvitation(
         string $id,

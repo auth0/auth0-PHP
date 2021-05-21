@@ -177,7 +177,7 @@ final class Auth0
      * @throws \Auth0\SDK\Exception\StateException If the state value is missing or invalid.
      * @throws \Auth0\SDK\Exception\StateException If there is already an active session.
      * @throws \Auth0\SDK\Exception\ApiException If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */

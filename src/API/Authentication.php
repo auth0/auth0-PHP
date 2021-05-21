@@ -237,7 +237,7 @@ final class Authentication
      * @param array  $headers Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
@@ -272,7 +272,7 @@ final class Authentication
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid `email` or `type` are passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
@@ -306,7 +306,7 @@ final class Authentication
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $phoneNumber is passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/authentication#get-code-or-link
      */
@@ -330,7 +330,7 @@ final class Authentication
      * @param string $accessToken Bearer token to use for the request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $accessToken is passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/authentication#user-profile
      */
@@ -356,7 +356,7 @@ final class Authentication
      * @param array  $headers   Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $grantType is passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/authentication#get-token
      */
@@ -388,7 +388,7 @@ final class Authentication
      * @param string|null $codeVerifier Optional. The clear-text version of the code_challenge from the /authorize call
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $code is passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function codeExchange(
         string $code,
@@ -417,7 +417,7 @@ final class Authentication
      * @param array  $headers    Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $username, $password, or $realm are passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function login(
         string $username,
@@ -455,7 +455,7 @@ final class Authentication
      * @param array  $headers    Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $username or $password are passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api-auth/grant/password
      */
@@ -487,7 +487,7 @@ final class Authentication
      * @param array  $headers Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api-auth/grant/client-credentials
      */
@@ -514,7 +514,7 @@ final class Authentication
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $refreshToken is passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/authentication#refresh-token
      */
@@ -548,7 +548,7 @@ final class Authentication
      * @param array  $headers    Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $email, $password, or $connection are passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/authentication#signup
      */
@@ -594,7 +594,7 @@ final class Authentication
      * @param array       $headers    Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $email or $connection are passed.
-     * @throws \Auth0\SDK\Exception\NetworkException When there is an HTTP error during the API request.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/authentication#change-password
      */
