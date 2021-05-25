@@ -181,7 +181,7 @@ final class Auth0
      *
      * @throws \Auth0\SDK\Exception\StateException If the state value is missing or invalid.
      * @throws \Auth0\SDK\Exception\StateException If there is already an active session.
-     * @throws \Auth0\SDK\Exception\ApiException If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\StateException If access token is missing from the response.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
@@ -264,7 +264,7 @@ final class Auth0
      *                       - options.scope         Access token scope requested; optional.
      *
      * @throws \Auth0\SDK\Exception\StateException If the Auth0 object does not have access token and refresh token
-     * @throws \Auth0\SDK\Exception\ApiException If the Auth0 API did not renew access and ID token properly
+     * @throws \Auth0\SDK\Exception\StateException If the Auth0 API did not renew access and ID token properly
      *
      * @link   https://auth0.com/docs/tokens/refresh-token/current
      */
@@ -294,7 +294,7 @@ final class Auth0
     /**
      * Get ID token from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getIdToken(): ?string
@@ -309,7 +309,7 @@ final class Auth0
     /**
      * Get userinfo from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getUser(): ?array
@@ -324,7 +324,7 @@ final class Auth0
     /**
      * Get access token from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getAccessToken(): ?string
@@ -339,7 +339,7 @@ final class Auth0
     /**
      * Get refresh token from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getRefreshToken(): ?string
@@ -354,7 +354,7 @@ final class Auth0
     /**
      * Get token expiration from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getTokenExpiration(): ?string
