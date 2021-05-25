@@ -15,8 +15,8 @@ trait ConfigurableMixin
         string $functionName,
         array $arguments
     ) {
-        if (strlen($functionName) > 4 && substr($functionName, 0, 3) === 'get' && ! $arguments) {
-            $propertyName = lcfirst(substr($functionName, 3));
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'get' && ! $arguments) {
+            $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
                 $propertyValue = $this->configuredState[$propertyName]->value;
@@ -31,14 +31,14 @@ trait ConfigurableMixin
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
         }
 
-        if (strlen($functionName) > 4 && substr($functionName, 0, 3) === 'set' && $arguments) {
-            $propertyName = lcfirst(substr($functionName, 3));
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'set' && $arguments) {
+            $propertyName = lcfirst(mb_substr($functionName, 3));
             $this->changeState($propertyName, $arguments[0]);
             return $this;
         }
 
-        if (strlen($functionName) > 4 && substr($functionName, 0, 3) === 'has' && ! $arguments) {
-            $propertyName = lcfirst(substr($functionName, 3));
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'has' && ! $arguments) {
+            $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
                 return $this->configuredState[$propertyName]->value !== null;
@@ -57,8 +57,8 @@ trait ConfigurableMixin
     public function validate(): self
     {
         foreach ($this->configuredValidations as $condition) {
-            if (is_string($condition) && strlen($condition) > 4 && (substr($condition, 0, 3) === 'get' || substr($condition, 0, 3) === 'has')) {
-                $propertyName = lcfirst(substr($condition, 3));
+            if (is_string($condition) && mb_strlen($condition) > 4 && (mb_substr($condition, 0, 3) === 'get' || mb_substr($condition, 0, 3) === 'has')) {
+                $propertyName = lcfirst(mb_substr($condition, 3));
 
                 if (isset($this->configuredState[$propertyName])) {
                     $lambda = function () use ($condition) {
