@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
-final class AuthenticationException extends \Auth0\SDK\Exception\CoreException implements \Throwable
+final class AuthenticationException extends \Auth0\SDK\Exception\SdkException implements \Throwable
 {
     public const MSG_REQUIRES_CLIENT_SECRET = 'A client secret must be configured for this request';
     public const MSG_REQUIRES_GRANT_TYPE = 'A grant type must be specified for this request';

@@ -7,6 +7,6 @@ namespace Auth0\SDK\Exception;
 /**
  * Represents all errors returned by the server
  */
-class ApiException extends \Exception
+final class ApiException extends \Auth0\SDK\Exception\SdkException implements \Throwable
 {
 }

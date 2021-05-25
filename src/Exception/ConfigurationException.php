@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
-final class ConfigurationException extends \Auth0\SDK\Exception\CoreException implements \Throwable
+final class ConfigurationException extends \Auth0\SDK\Exception\SdkException implements \Throwable
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
     public const MSG_MISSING_MANAGEMENT_KEY = 'A Management API token was not configured';
