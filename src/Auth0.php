@@ -8,7 +8,7 @@ use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Configuration\SdkState;
-use Auth0\SDK\Helpers\TransientStoreHandler;
+use Auth0\SDK\Utility\TransientStoreHandler;
 use Auth0\SDK\Utility\HttpResponse;
 
 /**
@@ -212,7 +212,7 @@ final class Auth0
         }
 
         $response = $this->authentication()->codeExchange($code, $this->configuration->getRedirectUri(), $code_verifier);
-        $response = HttpResponse::getJson($response);
+        $response = HttpResponse::decodeContent($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
             throw \Auth0\SDK\Exception\StateException::badAccessToken();
@@ -236,7 +236,7 @@ final class Auth0
 
         if ($user === null || $this->configuration->getQueryUserInfo() === true) {
             $user = $this->authentication()->userInfo($this->state->getAccessToken());
-            $user = HttpResponse::getJson($user);
+            $user = HttpResponse::decodeContent($user);
         }
 
         if ($user) {
@@ -268,7 +268,7 @@ final class Auth0
         }
 
         $response = $this->authentication()->refreshToken($refreshToken, $options);
-        $response = HttpResponse::getJson($response);
+        $response = HttpResponse::decodeContent($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
             throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingAccessToken();
