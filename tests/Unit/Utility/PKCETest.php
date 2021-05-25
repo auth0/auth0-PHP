@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Helpers;
+namespace Auth0\Tests\Unit\Utility;
 
 use Auth0\SDK\Utility\PKCE;
 use PHPUnit\Framework\TestCase;
