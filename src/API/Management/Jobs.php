@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Auth0\SDK\Utility\Request\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Jobs
  */
-class Jobs extends GenericResource
+class Jobs extends ManagementEndpoint
 {
     /**
      * Import users from a formatted file into a connection via a long-running job.
@@ -39,7 +39,7 @@ class Jobs extends GenericResource
         $this->validateString($filePath, 'filePath');
         $this->validateString($connectionId, 'connectionId');
 
-        $request = $this->apiClient->method('post', false)
+        $request = $this->apiClient->method('post')
             ->addPath('jobs', 'users-imports')
             ->addFile('users', $filePath)
             ->withFormParam('connection_id', $connectionId);
