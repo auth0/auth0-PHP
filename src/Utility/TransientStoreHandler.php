@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\Helpers;
+namespace Auth0\SDK\Utility;
 
 use Auth0\SDK\Contract\StoreInterface;
 

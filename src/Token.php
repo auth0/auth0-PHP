@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Helpers\TransientStoreHandler;
+use Auth0\SDK\Utility\TransientStoreHandler;
 use Auth0\SDK\Token\Parser;
 use Psr\SimpleCache\CacheInterface;
 

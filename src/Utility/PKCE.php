@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\Helpers;
+namespace Auth0\SDK\Utility;
 
 /**
  * Class PKCE.
@@ -29,7 +29,7 @@ class PKCE
 
         $string = '';
 
-        while (($len = strlen($string)) < $length) {
+        while (($len = mb_strlen($string)) < $length) {
             $size = $length - $len;
 
             try {
@@ -38,7 +38,7 @@ class PKCE
                 $bytes = openssl_random_pseudo_bytes($size);
             }
 
-            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+            $string .= mb_substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
         }
 
         return $string;

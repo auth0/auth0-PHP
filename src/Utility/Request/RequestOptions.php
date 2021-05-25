@@ -2,37 +2,35 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\Helpers\Requests;
+namespace Auth0\SDK\Utility\Request;
 
 /**
  * Class RequestOptions.
  */
-class RequestOptions
+final class RequestOptions
 {
     /**
-     * Internal state of the field-filtered request.
+     * An instance of FilteredRequest or null, for managing field-filtered requests.
      */
-    protected array $state = [];
+    protected ?FilteredRequest $fields = null;
+
+    /**
+     * An instance of PaginatedRequest or null, for managing paginated requests.
+     */
+    protected ?PaginatedRequest $pagination = null;
 
     /**
      * RequestOptions constructor
      *
-     * @param array<FilteredRequest|PaginatedRequest> $options An array of FilteredRequest or PaginatedRequest objects.
+     * @param FilteredRequest|null  $fields     An instance of FilteredRequest, for managing field-filtered requests.
+     * @param PaginatedRequest|null $pagination An instance of PaginatedRequest, for managing paginated requests.
      */
     public function __construct(
-        array $options = []
+        ?FilteredRequest $fields = null,
+        ?PaginatedRequest $pagination = null
     ) {
-        foreach ($options as $option) {
-            if ($option instanceof FilteredRequest) {
-                $this->state['fields'] = $option;
-                continue;
-            }
-
-            if ($option instanceof PaginatedRequest) {
-                $this->state['pagination'] = $option;
-                continue;
-            }
-        }
+        $this->fields = $fields;
+        $this->pagination = $pagination;
     }
 
     /**
@@ -43,7 +41,7 @@ class RequestOptions
     public function setFields(
         ?FilteredRequest $fields
     ): self {
-        $this->state['fields'] = $fields;
+        $this->fields = $fields;
         return $this;
     }
 
@@ -52,7 +50,7 @@ class RequestOptions
      */
     public function getFields(): ?FilteredRequest
     {
-        return $this->state['fields'];
+        return $this->fields;
     }
 
     /**
@@ -63,7 +61,7 @@ class RequestOptions
     public function setPagination(
         ?PaginatedRequest $pagination
     ): self {
-        $this->state['pagination'] = $pagination;
+        $this->pagination = $pagination;
         return $this;
     }
 
@@ -72,7 +70,7 @@ class RequestOptions
      */
     public function getPagination(): ?PaginatedRequest
     {
-        return $this->state['pagination'];
+        return $this->pagination;
     }
 
     /**
@@ -82,12 +80,12 @@ class RequestOptions
     {
         $response = [];
 
-        if ($this->state['fields']) {
-            $response += $this->state['fields']->build();
+        if ($this->fields !== null) {
+            $response += $this->fields->build();
         }
 
-        if ($this->state['pagination']) {
-            $response += $this->state['pagination']->build();
+        if ($this->pagination !== null) {
+            $response += $this->pagination->build();
         }
 
         return $response;

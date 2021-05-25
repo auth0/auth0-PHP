@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\Helpers\Requests;
+namespace Auth0\SDK\Utility\Request;
 
 /**
  * Class PaginatedRequest.
@@ -10,9 +10,20 @@ namespace Auth0\SDK\Helpers\Requests;
 class PaginatedRequest
 {
     /**
-     * Internal state of the paginated request.
+     * Page index of the results to return. First page is 0.
      */
-    protected array $state = [];
+    protected ?int $page = null;
+
+    /**
+     * Number of results per page. Paging is disabled if parameter not set.
+     */
+    protected ?int $perPage = null;
+
+
+    /**
+     * Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+     */
+    protected ?bool $includeTotals = null;
 
     /**
      * PaginatedRequest constructor.
@@ -26,9 +37,9 @@ class PaginatedRequest
         ?int $perPage = null,
         ?bool $includeTotals = null
     ) {
-        $this->state['page'] = $page;
-        $this->state['per_page'] = $perPage;
-        $this->state['include_totals'] = $includeTotals;
+        $this->page = $page;
+        $this->perPage = $perPage;
+        $this->includeTotals = $includeTotals;
     }
 
     /**
@@ -39,7 +50,7 @@ class PaginatedRequest
     public function setPage(
         int $page
     ): self {
-        $this->state['page'] = $page;
+        $this->page = $page;
 
         return $this;
     }
@@ -49,7 +60,7 @@ class PaginatedRequest
      */
     public function getPage(): ?int
     {
-        return $this->state['page'];
+        return $this->page;
     }
 
     /**
@@ -60,7 +71,7 @@ class PaginatedRequest
     public function setPerPage(
         int $perPage
     ): self {
-        $this->state['per_page'] = $perPage;
+        $this->perPage = $perPage;
 
         return $this;
     }
@@ -70,7 +81,7 @@ class PaginatedRequest
      */
     public function getPerPage(): ?int
     {
-        return $this->state['per_page'];
+        return $this->perPage;
     }
 
     /**
@@ -81,7 +92,7 @@ class PaginatedRequest
     public function setIncludeTotals(
         ?bool $includeTotals
     ): self {
-        $this->state['include_totals'] = $includeTotals;
+        $this->includeTotals = $includeTotals;
 
         return $this;
     }
@@ -91,7 +102,7 @@ class PaginatedRequest
      */
     public function getIncludeTotals(): ?bool
     {
-        return $this->state['include_totals'];
+        return $this->includeTotals;
     }
 
     /**
@@ -101,6 +112,17 @@ class PaginatedRequest
      */
     public function build(): array
     {
-        return array_filter($this->state);
+        $response = [];
+
+        if ($this->perPage !== null) {
+            $response['page'] = $this->page ?? 0;
+            $response['per_page'] = $this->perPage;
+
+            if ($this->includeTotals !== null) {
+                $response['include_totals'] = $this->includeTotals === true ? 'true' : 'false';
+            }
+        }
+
+        return $response;
     }
 }
