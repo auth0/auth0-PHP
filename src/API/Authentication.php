@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API;
 
-use Auth0\SDK\API\Header\AuthorizationBearer;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Helpers\PKCE;
-use Auth0\SDK\Helpers\TransientStoreHandler;
+use Auth0\SDK\Utility\PKCE;
+use Auth0\SDK\Utility\TransientStoreHandler;
 use Auth0\SDK\Utility\HttpClient;
 use Psr\Http\Message\ResponseInterface;
 
@@ -344,7 +343,7 @@ final class Authentication
         return $this->httpClient
             ->method('post')
             ->addPath('userinfo')
-            ->withHeader(new AuthorizationBearer($accessToken))
+            ->withHeader('Authorization', 'Bearer ' . $accessToken)
             ->call();
     }
 

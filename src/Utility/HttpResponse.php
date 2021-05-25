@@ -15,12 +15,14 @@ class HttpResponse
     /**
      * Returns true when the ResponseInterface identifies a 200 status code; otherwise false.
      *
-     * @param ResponseInterface $response A ResponseInterface instance to extract from.
+     * @param ResponseInterface $response           A ResponseInterface instance to extract from.
+     * @param int               $expectedStatusCode Optional. The status code expected to consider the request successful. Defaults to 200.
      */
     public static function wasSuccessful(
-        ResponseInterface $response
+        ResponseInterface $response,
+        int $expectedStatusCode = 200
     ): bool {
-        return $response->getStatusCode() === 200;
+        return $response->getStatusCode() === $expectedStatusCode;
     }
 
     /**
@@ -73,7 +75,7 @@ class HttpResponse
      *
      * @param ResponseInterface $response A ResponseInterface instance to extract from.
      */
-    public static function getJson(
+    public static function decodeContent(
         ResponseInterface $response
     ) {
         return json_decode(self::getContent($response), true);

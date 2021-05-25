@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility;
 
-use Auth0\SDK\API\Header\Header;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Helpers\Requests\FilteredRequest;
-use Auth0\SDK\Helpers\Requests\PaginatedRequest;
-use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Auth0\SDK\Utility\Request\FilteredRequest;
+use Auth0\SDK\Utility\Request\PaginatedRequest;
+use Auth0\SDK\Utility\Request\RequestOptions;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
@@ -218,13 +217,8 @@ class HttpRequest
         }
 
         // Add headers.
-        foreach ($headers as $headerKey => $header) {
-            if ($header instanceof Header) {
-                $headerKey = $header->getHeader();
-                $header = $header->getValue();
-            }
-
-            $httpRequest = $httpRequest->withHeader($headerKey, $header);
+        foreach ($headers as $headerName => $headerValue) {
+            $httpRequest = $httpRequest->withHeader($headerName, $headerValue);
         }
 
         // Add telemetry headers, if they're enabled.
@@ -264,8 +258,8 @@ class HttpRequest
     public function withHeaders(
         array $headers
     ): self {
-        foreach ($headers as $header) {
-            $this->withHeader($header);
+        foreach ($headers as $headerName => $headerValue) {
+            $this->withHeader($headerName, (string) $headerValue);
         }
 
         return $this;
@@ -277,9 +271,11 @@ class HttpRequest
      * @param Header $header Header to add.
      */
     public function withHeader(
-        Header $header
+        string $name,
+        string $value
     ): self {
-        $this->headers[$header->getHeader()] = $header->getValue();
+        $this->headers[$name] = $value;
+
         return $this;
     }
 
