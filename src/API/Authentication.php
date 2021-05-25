@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Auth0\SDK\API;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\PKCE;
 use Auth0\SDK\Utility\TransientStoreHandler;
-use Auth0\SDK\Utility\HttpClient;
 use Psr\Http\Message\ResponseInterface;
 
 /**

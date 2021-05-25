@@ -12,12 +12,12 @@ final class FilteredRequest
     /**
      * Fields to include or exclude from API responses.
      */
-    protected ?array $fields = null;
+    private ?array $fields = null;
 
     /**
      * True to include $fields, false to exclude $fields.
      */
-    protected ?bool $includeFields = null;
+    private ?bool $includeFields = null;
 
     /**
      * FilteredRequest constructor

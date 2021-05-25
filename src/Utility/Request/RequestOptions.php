@@ -12,12 +12,12 @@ final class RequestOptions
     /**
      * An instance of FilteredRequest or null, for managing field-filtered requests.
      */
-    protected ?FilteredRequest $fields = null;
+    private ?FilteredRequest $fields = null;
 
     /**
      * An instance of PaginatedRequest or null, for managing paginated requests.
      */
-    protected ?PaginatedRequest $pagination = null;
+    private ?PaginatedRequest $pagination = null;
 
     /**
      * RequestOptions constructor

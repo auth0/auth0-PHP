@@ -15,7 +15,7 @@ final class HttpClient
     /**
      * Instance of most recent HttpRequest
      */
-    public ?HttpRequest $lastRequest = null;
+    private ?HttpRequest $lastRequest = null;
 
     /**
      * Shared configuration data.
@@ -93,5 +93,13 @@ final class HttpClient
         ];
 
         return $this;
+    }
+
+    /**
+     * Return a HttpRequest representation of the last built request.
+     */
+    public function getLastRequest(): ?HttpRequest
+    {
+        return $this->lastRequest;
     }
 }

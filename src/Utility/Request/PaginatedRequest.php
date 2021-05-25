@@ -12,18 +12,17 @@ final class PaginatedRequest
     /**
      * Page index of the results to return. First page is 0.
      */
-    protected ?int $page = null;
+    private ?int $page = null;
 
     /**
      * Number of results per page. Paging is disabled if parameter not set.
      */
-    protected ?int $perPage = null;
-
+    private ?int $perPage = null;
 
     /**
      * Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
      */
-    protected ?bool $includeTotals = null;
+    private ?bool $includeTotals = null;
 
     /**
      * PaginatedRequest constructor.

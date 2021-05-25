@@ -17,47 +17,47 @@ final class Verifier
     /**
      * A string representing the headers and claims portions of a JWT.
      */
-    protected string $payload;
+    private string $payload;
 
     /**
      * A string representing the signature portion of a JWT.
      */
-    protected string $signature;
+    private string $signature;
 
     /**
      * An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
      */
-    protected array $headers;
+    private array $headers;
 
     /**
      * Client Secret found in the Application settings for verifying HS256 tokens.
      */
-    protected ?string $clientSecret = null;
+    private ?string $clientSecret = null;
 
     /**
      * Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
      */
-    protected ?string $algorithm = null;
+    private ?string $algorithm = null;
 
     /**
      * URI to the JWKS when verifying RS256 tokens.
      */
-    protected ?string $jwksUri = null;
+    private ?string $jwksUri = null;
 
     /**
      * Time in seconds to keep JWKS records cached. Defaults to 60.
      */
-    protected ?int $cacheExpires = null;
+    private ?int $cacheExpires = null;
 
     /**
      * An PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      */
-    protected ?CacheInterface $cache = null;
+    private ?CacheInterface $cache = null;
 
     /**
      * An PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      */
-    protected ?SdkConfiguration $configuration = null;
+    private ?SdkConfiguration $configuration = null;
 
     /**
      * Constructor for the Token Verifier class.
@@ -155,7 +155,7 @@ final class Verifier
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When the JWKS uri is not properly configured, or is unreachable.
      */
-    protected function getKeySet(
+    private function getKeySet(
         ?string $expectsKid = null
     ): array {
         if ($this->jwksUri === null) {
@@ -205,7 +205,7 @@ final class Verifier
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When unable to retrieve key. See error message for details.
      */
-    protected function getKey(
+    private function getKey(
         string $kid
     ) {
         $keys = $this->getKeySet($kid);
@@ -234,7 +234,7 @@ final class Verifier
      *
      * @param mixed $key An instance of OpenSSLAsymmetricKey (PHP 8.0+) or 'resource' (PHP <8.0).
      */
-    protected function freeKey(
+    private function freeKey(
         $key
     ): void {
         // openssl_free_key is deprecated in PHP 8.0, so avoid calling it there:

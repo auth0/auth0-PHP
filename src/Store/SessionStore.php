@@ -19,7 +19,7 @@ final class SessionStore implements StoreInterface
     /**
      * Session base name, configurable on instantiation.
      */
-    protected string $sessionBaseName;
+    private string $sessionBaseName;
 
     /**
      * SessionStore constructor.

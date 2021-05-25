@@ -8,8 +8,8 @@ use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Configuration\SdkState;
-use Auth0\SDK\Utility\TransientStoreHandler;
 use Auth0\SDK\Utility\HttpResponse;
+use Auth0\SDK\Utility\TransientStoreHandler;
 
 /**
  * Class Auth0

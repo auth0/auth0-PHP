@@ -16,12 +16,12 @@ final class Parser
     /**
      * Decoded representation of a JWT.
      */
-    protected array $token = [];
+    private array $token = [];
 
     /**
      * Instance of SdkConfiguration
      */
-    protected SdkConfiguration $configuration;
+    private SdkConfiguration $configuration;
 
     /**
      * Constructor for Token Parser class.
@@ -201,7 +201,7 @@ final class Parser
      *
      * @throws \JsonException When claims portion cannot be decoded properly.
      */
-    protected function decodeClaims(
+    private function decodeClaims(
         string $claims
     ): array {
         return json_decode(base64_decode(strtr($claims, '-_', '+/'), true), true, 512, JSON_THROW_ON_ERROR);
@@ -214,7 +214,7 @@ final class Parser
      *
      * @throws \JsonException When headers portion cannot be decoded properly.
      */
-    protected function decodeHeaders(
+    private function decodeHeaders(
         string $headers
     ): array {
         return json_decode(base64_decode(strtr($headers, '-_', '+/'), true), true, 512, JSON_THROW_ON_ERROR);
@@ -225,7 +225,7 @@ final class Parser
      *
      * @param string $signature String representing the signature portion of the JWT.
      */
-    protected function decodeSignature(
+    private function decodeSignature(
         string $signature
     ): string {
         return base64_decode(strtr($signature, '-_', '+/'), true);

@@ -15,7 +15,7 @@ final class HttpTelemetry
     /**
      * Default header data to send.
      */
-    protected static array $data = [];
+    private static array $data = [];
 
     /**
      * Set the main SDK name and version.

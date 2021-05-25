@@ -108,12 +108,12 @@ class HttpRequestTest extends TestCase
         $httpRequest = self::getUrlBuilder('/', 'post')->withFormParam('test', 'true');
         $httpRequest->call();
 
-        $this->assertEquals('test=true', $httpRequest->lastRequest->getBody()->__toString());
+        $this->assertEquals('test=true', $httpRequest->getLastRequest()->getBody()->__toString());
 
         $httpRequest = self::getUrlBuilder('/', 'post')->withFormParam('test', 'false');
         $httpRequest->call();
 
-        $this->assertEquals('test=false', $httpRequest->lastRequest->getBody()->__toString());
+        $this->assertEquals('test=false', $httpRequest->getLastRequest()->getBody()->__toString());
     }
 
     /**

@@ -21,62 +21,62 @@ final class HttpRequest
     /**
      * Stored instance of last send request.
      */
-    public ?RequestInterface $lastRequest = null;
+    private ?RequestInterface $lastRequest = null;
 
     /**
      * Shared configuration data.
      */
-    protected SdkConfiguration $configuration;
+    private SdkConfiguration $configuration;
 
     /**
      * Base API path for the request.
      */
-    protected string $basePath = '/';
+    private string $basePath = '/';
 
     /**
      * Path to request.
      */
-    protected array $path = [];
+    private array $path = [];
 
     /**
      * HTTP method to use for the request.
      */
-    protected string $method = '';
+    private string $method = '';
 
     /**
      * Headers to include for the request.
      */
-    protected array $headers = [];
+    private array $headers = [];
 
     /**
      * Domain to use for request.
      */
-    protected ?string $domain = null;
+    private ?string $domain = null;
 
     /**
      * URL parameters for the request.
      */
-    protected array $params = [];
+    private array $params = [];
 
     /**
      * Form parameters to send with the request.
      */
-    protected array $formParams = [];
+    private array $formParams = [];
 
     /**
      * Files to send with a multipart request.
      */
-    protected array $files = [];
+    private array $files = [];
 
     /**
      * Request body.
      */
-    protected string $body = '';
+    private string $body = '';
 
     /**
      * Mocked response.
      */
-    protected ?object $mockedResponse = null;
+    private ?object $mockedResponse = null;
 
     /**
      * HttpRequest constructor.
@@ -97,6 +97,14 @@ final class HttpRequest
         $this->headers = $headers;
         $this->domain = $domain;
         $this->mockedResponse = $mockedResponse;
+    }
+
+    /**
+     * Return a RequestInterface representation of the last sent request.
+     */
+    public function getLastRequest(): ?RequestInterface
+    {
+        return $this->lastRequest;
     }
 
     /**

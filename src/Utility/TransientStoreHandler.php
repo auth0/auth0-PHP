@@ -14,7 +14,7 @@ final class TransientStoreHandler
     /**
      * Storage method to use.
      */
-    public StoreInterface $store;
+    private StoreInterface $store;
 
     /**
      * TransientStoreHandler constructor.
@@ -25,6 +25,14 @@ final class TransientStoreHandler
         StoreInterface $store
     ) {
         $this->store = $store;
+    }
+
+    /**
+     * Return the current storage method.
+     */
+    public function getStore()
+    {
+        return $this->store;
     }
 
     /**

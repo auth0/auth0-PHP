@@ -12,7 +12,7 @@ final class Validator
     /**
      * Array representing the claims of a JWT.
      */
-    protected array $claims;
+    private array $claims;
 
     /**
      * Constructor for the Token Validator class.
@@ -247,7 +247,7 @@ final class Validator
      *
      * @param array $key The claim key to search for.
      */
-    protected function getClaim(
+    private function getClaim(
         string $key
     ) {
         if (! isset($this->claims[$key])) {
