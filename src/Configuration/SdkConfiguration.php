@@ -207,7 +207,7 @@ class SdkConfiguration implements ConfigurableContract
 
     public function buildDefaultOrganization(): ?string
     {
-        // Return the default audience.
+        // Return the default organization.
         if ($this->hasOrganization()) {
             return $this->getOrganization()[0] ?? '';
         }
