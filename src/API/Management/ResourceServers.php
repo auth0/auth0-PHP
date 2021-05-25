@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ResourceServers.
@@ -22,9 +23,7 @@ class ResourceServers extends GenericResource
      * @param array               $body       Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/post_resource_servers
      */
@@ -32,7 +31,7 @@ class ResourceServers extends GenericResource
         string $identifier,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($identifier, 'identifier');
         $this->validateArray($body, 'body');
 
@@ -53,15 +52,13 @@ class ResourceServers extends GenericResource
      *
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers
      */
     public function getAll(
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('resource-servers')
             ->withOptions($options)
@@ -75,16 +72,14 @@ class ResourceServers extends GenericResource
      * @param string              $id      Resource Server ID or identifier to get.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers_by_id
      */
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -101,9 +96,7 @@ class ResourceServers extends GenericResource
      * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/patch_resource_servers_by_id
      */
@@ -111,7 +104,7 @@ class ResourceServers extends GenericResource
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
@@ -129,16 +122,14 @@ class ResourceServers extends GenericResource
      * @param string              $id      Resource Server ID or identifier to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/delete_resource_servers_by_id
      */
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')

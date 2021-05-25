@@ -4,57 +4,36 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
+use PHPUnit\Framework\TestCase;
 
-class LogStreamsTest extends ApiTests
+class LogStreamsTest extends TestCase
 {
-    /**
-     * Expected telemetry value.
-     */
-    protected static string $expectedTelemetry;
-
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$expectedTelemetry = $infoHeadersData->build();
-    }
-
     public function testGetAll(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->logStreams()->getAll();
+        $api->mock()->logStreams()->getAll();
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/log-streams', $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/log-streams', $api->getRequestUrl());
     }
 
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->logStreams()->get('123');
+        $api->mock()->logStreams()->get('123');
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/log-streams/123', $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/log-streams/123', $api->getRequestUrl());
     }
 
     public function testThatCreateLogStreamRequestIsFormedCorrectly(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->logStreams()->create(
+        $api->mock()->logStreams()->create(
             'http',
             [
                 'httpEndpoint' => 'https://me.org',
@@ -65,13 +44,13 @@ class LogStreamsTest extends ApiTests
             'Test Stream'
         );
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/log-streams', $api->getHistoryUrl());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/log-streams', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
         $this->assertEquals('Test Stream', $body['name']);
         $this->assertArrayHasKey('type', $body);
@@ -85,34 +64,34 @@ class LogStreamsTest extends ApiTests
 
     public function testUpdate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->logStreams()->update(
+        $api->mock()->logStreams()->update(
             '123',
             ['name' => 'Test Name']
         );
 
-        $this->assertEquals('PATCH', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/log-streams/123', $api->getHistoryUrl());
+        $this->assertEquals('PATCH', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/log-streams/123', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
         $this->assertEquals('Test Name', $body['name']);
     }
 
     public function testDelete(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->logStreams()->delete('123');
+        $api->mock()->logStreams()->delete('123');
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/log-streams/123', $api->getHistoryUrl());
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/log-streams/123', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 }

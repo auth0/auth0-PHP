@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\SDK;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Token\Parser;
 use Psr\SimpleCache\CacheInterface;
 
@@ -29,18 +31,38 @@ class Token
     protected Parser $parser;
 
     /**
+     * Instance of SdkConfiguration
+     */
+    protected SdkConfiguration $configuration;
+
+    /**
+     * Instance of TransientStoreHandler for storing ephemeral data.
+     */
+    protected TransientStoreHandler $transient;
+
+    /**
      * Constructor for Token handling class.
      *
      * @param string $jwt  A JWT string to parse, and prepare for verification and validation.
      * @param int    $type Specify the Token type to toggle specific claim validations. Defaults to 1 for ID Token. See TYPE_ consts for options.
      *
-     * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
         string $jwt,
-        int $type = self::TYPE_ID_TOKEN
+        int $type = self::TYPE_ID_TOKEN,
+        ?SdkConfiguration $configuration = null
     ) {
+        // Store the type of token we're working with.
         $this->type = $type;
+
+        // Store the configuration internally.
+        $this->configuration = $configuration;
+
+        // Create a transient storage handler using the configured transientStorage medium.
+        $this->transient = new TransientStoreHandler($configuration->getTransientStorage());
+
+        // Begin parsing the token.
         $this->parse($jwt);
     }
 
@@ -49,34 +71,41 @@ class Token
      *
      * @param string $jwt The JWT string to process.
      *
-     * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function parse(
         string $jwt
     ): self {
-        $this->parser = (new Parser($jwt));
+        $this->parser = (new Parser($jwt, $this->configuration));
         return $this;
     }
 
     /**
      * Verify the signature of the Token using either RS256 or HS256.
      *
-     * @param string|null         $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
+     * @param string|null         $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256.
      * @param string|null         $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
      * @param string|null         $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
      * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
      * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      *
-     * @throws InvalidTokenException When Token signature verification fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
     public function verify(
-        ?string $algorithm = self::ALGO_RS256,
-        ?string $jwksUri = null,
+        ?string $tokenAlgorithm = null,
+        ?string $tokenJwksUri = null,
         ?string $clientSecret = null,
-        ?int $cacheExpires = null,
-        ?CacheInterface $cache = null
+        ?int $tokenCacheTtl = null,
+        ?CacheInterface $tokenCache = null
     ): self {
-        $this->parser->verify($algorithm, $jwksUri, $clientSecret, $cacheExpires, $cache);
+        $tokenAlgorithm = $tokenAlgorithm ?? $this->configuration->getTokenAlgorithm() ?? 'RS256';
+        $tokenJwksUri = $tokenJwksUri ?? $this->configuration->getTokenJwksUri() ?? null;
+        $clientSecret = $clientSecret ?? $this->configuration->getClientSecret() ?? null;
+        $tokenCacheTtl = $tokenCacheTtl ?? $this->configuration->getTokenCacheTtl() ?? null;
+        $tokenCache = $tokenCache ?? $this->configuration->getTokenCache() ?? null;
+
+        $this->parser->verify($tokenAlgorithm, $tokenJwksUri, $clientSecret, $tokenCacheTtl, $tokenCache);
+
         return $this;
     }
 
@@ -90,42 +119,64 @@ class Token
      * @param int|null    $maxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
      * @param int|null    $leeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
      *
-     * @throws InvalidTokenException When Token validation fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token validation fails. See the exception message for further details.
      */
     public function validate(
-        string $issuer,
-        array $audience,
-        ?array $organization = null,
-        ?string $nonce = null,
-        ?int $maxAge = null,
-        ?int $leeway = null
+        ?string $tokenIssuer = null,
+        ?array $tokenAudience = null,
+        ?array $tokenOrganization = null,
+        ?string $tokenNonce = null,
+        ?int $tokenMaxAge = null,
+        ?int $tokenLeeway = null,
+        ?int $tokenNow = null
     ): self {
+        $tokenIssuer = $tokenIssuer ?? 'https://' . $this->configuration->getDomain() . '/';
+        $tokenAudience = $tokenAudience ?? $this->configuration->getAudience() ?? null;
+        $tokenOrganization = $tokenOrganization ?? $this->configuration->getOrganization() ?? null;
+        $tokenNonce = $tokenNonce ?? $this->transient->getOnce('nonce') ?? null;
+        $tokenMaxAge = $tokenMaxAge ?? $this->transient->getOnce('max_age') ?? $this->configuration->getTokenMaxAge() ?? null;
+        $tokenLeeway = $tokenLeeway ?? $this->configuration->getTokenLeeway() ?? 60;
+
+        // If 'aud' claim check isn't defined, fallback to client id.
+        if ($tokenAudience === null) {
+            $tokenAudience = [ $this->configuration->getClientId() ];
+        }
+
+        // If pulling from transient storage, $tokenMaxAge might be a string.
+        if ($tokenMaxAge !== null && ! is_int($tokenMaxAge) && is_numeric($tokenMaxAge)) {
+            $tokenMaxAge = (int) $tokenMaxAge;
+        }
+
+        // If pulling from transient storage, $tokenLeeway might be a string.
+        if ($tokenLeeway !== null && ! is_int($tokenLeeway) && is_numeric($tokenLeeway)) {
+            $tokenLeeway = (int) $tokenLeeway;
+        }
+
         $validator = $this->parser->validate();
-        $now = time();
-        $leeway = $leeway ?? 60;
+        $now = $tokenNow ?? time();
 
         $validator
-            ->issuer($issuer)
-            ->audience($audience)
-            ->expiration($leeway, $now);
+            ->issuer($tokenIssuer)
+            ->audience($tokenAudience)
+            ->expiration($tokenLeeway, $now);
 
         if ($this->type === self::TYPE_ID_TOKEN) {
             $validator
                 ->subject()
                 ->issued()
-                ->authorizedParty($audience);
+                ->authorizedParty($tokenAudience);
         }
 
-        if ($nonce !== null) {
-            $validator->nonce($nonce);
+        if ($tokenNonce !== null) {
+            $validator->nonce($tokenNonce);
         }
 
-        if ($maxAge !== null) {
-            $validator->authTime($maxAge, $leeway, $now);
+        if ($tokenMaxAge !== null) {
+            $validator->authTime($tokenMaxAge, $tokenLeeway, $now);
         }
 
-        if ($organization !== null) {
-            $validator->organization($organization);
+        if ($tokenOrganization) {
+            $validator->organization($tokenOrganization);
         }
 
         return $this;

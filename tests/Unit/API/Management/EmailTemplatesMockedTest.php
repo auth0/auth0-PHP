@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,38 +12,17 @@ use PHPUnit\Framework\TestCase;
  */
 class EmailTemplatesMockedTest extends TestCase
 {
-    /**
-     * Expected telemetry value.
-     */
-    protected static string $expectedTelemetry;
-
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$expectedTelemetry = $infoHeadersData->build();
-    }
-
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-        $api->call()->emailTemplates()->get('verify_email');
+        $api = new MockManagementApi();
+        $api->mock()->emailTemplates()->get('verify_email');
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/email-templates/verify_email', $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/email-templates/verify_email', $api->getRequestUrl());
     }
 
     public function testPatch(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
         $patch_data = [
             'body' => '__test_email_body__',
             'from' => 'test@auth0.com',
@@ -52,19 +30,19 @@ class EmailTemplatesMockedTest extends TestCase
             'subject' => '__test_email_subject__',
         ];
 
-        $api->call()->emailTemplates()->patch('reset_email', $patch_data);
+        $api = new MockManagementApi();
+        $api->mock()->emailTemplates()->patch('reset_email', $patch_data);
 
-        $this->assertEquals('PATCH', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/email-templates/reset_email', $api->getHistoryUrl());
+        $this->assertEquals('PATCH', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/email-templates/reset_email', $api->getRequestUrl());
 
-        $this->assertEquals($patch_data, $api->getHistoryBody());
+        $this->assertEquals($patch_data, $api->getRequestBody());
     }
 
     public function testCreate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
-        $api->call()->emailTemplates()->create(
+        $api = new MockManagementApi();
+        $api->mock()->emailTemplates()->create(
             'welcome_email',
             '__test_email_body__',
             'test@auth0.com',
@@ -76,10 +54,10 @@ class EmailTemplatesMockedTest extends TestCase
             ]
         );
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/email-templates', $api->getHistoryUrl());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/email-templates', $api->getRequestUrl());
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('template', $body);
         $this->assertEquals('welcome_email', $body['template']);
         $this->assertArrayHasKey('enabled', $body);

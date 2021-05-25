@@ -16,7 +16,7 @@ class PKCE
      *
      * @param int $length Code verifier length
      *
-     * @see https://tools.ietf.org/html/rfc7636
+     * @link https://tools.ietf.org/html/rfc7636
      */
     public static function generateCodeVerifier(
         int $length = 43
@@ -53,7 +53,7 @@ class PKCE
      *
      * @param string $codeVerifier String to generate code challenge from.
      *
-     * @see https://auth0.com/docs/flows/concepts/auth-code-pkce
+     * @link https://auth0.com/docs/flows/concepts/auth-code-pkce
      */
     public static function generateCodeChallenge(
         string $codeVerifier

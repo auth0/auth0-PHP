@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use Auth0\Tests\API\ApiTests;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
+use PHPUnit\Framework\TestCase;
 
-class JobsTest extends ApiTests
+class JobsTest extends TestCase
 {
     protected const FORM_DATA_VALUE_KEY_OFFSET = 3;
 
@@ -18,24 +17,11 @@ class JobsTest extends ApiTests
     protected static string $testImportUsersJsonPath;
 
     /**
-     * Expected telemetry value.
-     */
-    protected static string $expectedTelemetry;
-
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
-
-    /**
      * Runs before test suite starts.
      */
     public static function setUpBeforeClass(): void
     {
         self::$testImportUsersJsonPath = AUTH0_PHP_TEST_JSON_DIR . 'test-import-users-file.json';
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$expectedTelemetry = $infoHeadersData->build();
     }
 
     /**
@@ -43,12 +29,12 @@ class JobsTest extends ApiTests
      */
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->jobs()->get('__test_id__');
+        $api->mock()->jobs()->get('__test_id__');
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__', $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__', $api->getRequestUrl());
     }
 
     /**
@@ -56,12 +42,12 @@ class JobsTest extends ApiTests
      */
     public function testGetErrors(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->jobs()->getErrors('__test_id__');
+        $api->mock()->jobs()->getErrors('__test_id__');
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__/errors', $api->getHistoryUrl());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__/errors', $api->getRequestUrl());
     }
 
     /**
@@ -69,9 +55,9 @@ class JobsTest extends ApiTests
      */
     public function testImportUsers(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->jobs()->createImportUsers(
+        $api->mock()->jobs()->createImportUsers(
             self::$testImportUsersJsonPath,
             '__test_conn_id__',
             [
@@ -81,13 +67,13 @@ class JobsTest extends ApiTests
             ]
         );
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/users-imports', $api->getHistoryUrl());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/jobs/users-imports', $api->getRequestUrl());
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertStringStartsWith('multipart/form-data', $headers['Content-Type'][0]);
 
-        $form_body = $api->getHistoryBodyAsString();
+        $form_body = $api->getRequestBodyAsString();
         $form_body_arr = explode("\r\n", $form_body);
 
         // Test that the form data contains our import file content.
@@ -117,9 +103,9 @@ class JobsTest extends ApiTests
      */
     public function testExportUsers(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->jobs()->createExportUsers(
+        $api->mock()->jobs()->createExportUsers(
             [
                 'connection_id' => '__test_conn_id__',
                 'limit' => 5,
@@ -128,11 +114,11 @@ class JobsTest extends ApiTests
             ]
         );
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/users-exports', $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/jobs/users-exports', $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
 
-        $request_body = $api->getHistoryBody();
+        $request_body = $api->getRequestBody();
 
         $this->assertNotEmpty($request_body['connection_id']);
         $this->assertEquals('__test_conn_id__', $request_body['connection_id']);
@@ -152,9 +138,9 @@ class JobsTest extends ApiTests
      */
     public function testSendVerificationEmail(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
+        $api = new MockManagementApi();
 
-        $api->call()->jobs()->createSendVerificationEmail(
+        $api->mock()->jobs()->createSendVerificationEmail(
             '__test_user_id__',
             [
                 'client_id' => '__test_client_id__',
@@ -165,11 +151,11 @@ class JobsTest extends ApiTests
             ]
         );
 
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/verification-email', $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/jobs/verification-email', $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
 
-        $body = $api->getHistoryBody();
+        $body = $api->getRequestBody();
         $this->assertArrayHasKey('user_id', $body);
         $this->assertEquals('__test_user_id__', $body['user_id']);
         $this->assertArrayHasKey('client_id', $body);
@@ -183,7 +169,7 @@ class JobsTest extends ApiTests
             $body['identity']
         );
 
-        $headers = $api->getHistoryHeaders();
+        $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 }

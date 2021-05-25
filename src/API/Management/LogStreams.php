@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class LogStreams.
@@ -23,9 +24,7 @@ class LogStreams extends GenericResource
      * @param string|null         $name    Optional. The name of the log stream.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/post_log_streams
      */
@@ -34,7 +33,7 @@ class LogStreams extends GenericResource
         array $sink,
         ?string $name = null,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($type, 'type');
         $this->validateArray($sink, 'sink');
 
@@ -60,15 +59,13 @@ class LogStreams extends GenericResource
      *
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/get_log_streams
      */
     public function getAll(
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('log-streams')
             ->withOptions($options)
@@ -82,16 +79,14 @@ class LogStreams extends GenericResource
      * @param string              $id      Log Stream ID to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/get_log_streams_by_id
      */
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -108,9 +103,7 @@ class LogStreams extends GenericResource
      * @param array               $body    Log Stream data to update. Only certain fields are update-able; see the linked documentation.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/patch_log_streams_by_id
      */
@@ -118,7 +111,7 @@ class LogStreams extends GenericResource
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
@@ -136,16 +129,14 @@ class LogStreams extends GenericResource
      * @param string              $id      ID of the Log Stream to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/delete_log_streams_by_id
      */
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')

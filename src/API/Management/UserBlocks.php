@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class UserBlocks.
@@ -21,14 +22,12 @@ class UserBlocks extends GenericResource
      * @param string              $id      User ID to query for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -44,14 +43,12 @@ class UserBlocks extends GenericResource
      * @param string              $id      The user_id of the user to update.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')
@@ -67,14 +64,12 @@ class UserBlocks extends GenericResource
      * @param string              $identifier Should be any of a username, phone number, or email.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getByIdentifier(
         string $identifier,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($identifier, 'identifier');
 
         return $this->apiClient->method('get')
@@ -91,14 +86,12 @@ class UserBlocks extends GenericResource
      * @param string              $identifier Should be any of a username, phone number, or email.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function deleteByIdentifier(
         string $identifier,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($identifier, 'identifier');
 
         return $this->apiClient->method('delete')

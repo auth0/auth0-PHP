@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class DeviceCredentials.
@@ -24,9 +25,7 @@ class DeviceCredentials extends GenericResource
      * @param array               $body       Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/post_device_credentials
      */
@@ -37,7 +36,7 @@ class DeviceCredentials extends GenericResource
         string $deviceId,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($deviceName, 'deviceName');
         $this->validateString($type, 'type');
         $this->validateString($value, 'value');
@@ -66,9 +65,7 @@ class DeviceCredentials extends GenericResource
      * @param string|null         $type     Optional. Type of credentials to retrieve. Must be `public_key`, `refresh_token` or `rotating_refresh_token`. The property will default to `refresh_token` when paging is requested
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials
      */
@@ -77,7 +74,7 @@ class DeviceCredentials extends GenericResource
         ?string $clientId = null,
         ?string $type = null,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($userId, 'userId');
 
         $payload = [
@@ -106,16 +103,14 @@ class DeviceCredentials extends GenericResource
      * @param string              $id      ID of the device credential to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/delete_device_credentials_by_id
      */
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('delete')

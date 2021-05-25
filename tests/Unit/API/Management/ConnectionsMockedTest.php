@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,38 +13,18 @@ use PHPUnit\Framework\TestCase;
 class ConnectionsMockedTest extends TestCase
 {
     /**
-     * Expected telemetry value.
-     */
-    protected static string $expectedTelemetry;
-
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$expectedTelemetry = $infoHeadersData->build();
-    }
-
-    /**
      * Test a getAll() request.
      */
     public function testGetAll(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
         $strategy = 'test-strategy-01';
 
-        $api->call()->connections()->getAll([ 'strategy' => $strategy ]);
+        $api = new MockManagementApi();
+        $api->mock()->connections()->getAll([ 'strategy' => $strategy ]);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertStringContainsString('https://api.test.local/api/v2/connections', $api->getHistoryUrl());
-        $this->assertStringContainsString('strategy=' . $strategy, $api->getHistoryQuery());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringContainsString('https://api.test.local/api/v2/connections', $api->getRequestUrl());
+        $this->assertStringContainsString('&strategy=' . $strategy, $api->getRequestQuery());
     }
 
     /**
@@ -53,14 +32,14 @@ class ConnectionsMockedTest extends TestCase
      */
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $id = 'con_testConnection10';
-        $api->call()->connections()->get($id);
 
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $api = new MockManagementApi();
+        $api->mock()->connections()->get($id);
+
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 
     /**
@@ -68,14 +47,14 @@ class ConnectionsMockedTest extends TestCase
      */
     public function testDelete(): void
     {
-        $api = new MockManagementApi([new Response(204)]);
-
         $id = 'con_testConnection10';
-        $api->call()->connections()->delete($id);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $api = new MockManagementApi();
+        $api->mock()->connections()->delete($id);
+
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 
     /**
@@ -83,15 +62,15 @@ class ConnectionsMockedTest extends TestCase
      */
     public function testDeleteUser(): void
     {
-        $api = new MockManagementApi([new Response(204)]);
-
         $id = 'con_testConnection10';
         $email = 'con_testConnection10@auth0.com';
-        $api->call()->connections()->deleteUser($id, $email);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertStringContainsString('https://api.test.local/api/v2/connections/' . $id . '/users', $api->getHistoryUrl());
-        $this->assertEquals('email=' . $email, $api->getHistoryQuery());
+        $api = new MockManagementApi();
+        $api->mock()->connections()->deleteUser($id, $email);
+
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertStringContainsString('https://api.test.local/api/v2/connections/' . $id . '/users', $api->getRequestUrl());
+        $this->assertEquals('email=' . rawurlencode($email), $api->getRequestQuery(null));
     }
 
     /**
@@ -99,20 +78,20 @@ class ConnectionsMockedTest extends TestCase
      */
     public function testCreate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $name = 'TestConnection01';
         $strategy = 'test-strategy-01';
         $query = [ 'testing' => 'test '];
 
-        $api->call()->connections()->create($name, $strategy, $query);
-        $request_body = $api->getHistoryBody();
+        $api = new MockManagementApi();
+        $api->mock()->connections()->create($name, $strategy, $query);
+
+        $request_body = $api->getRequestBody();
 
         $this->assertEquals($name, $request_body['name']);
         $this->assertEquals($strategy, $request_body['strategy']);
-        $this->assertEquals('POST', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/connections', $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('POST', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/connections', $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 
     /**
@@ -120,16 +99,17 @@ class ConnectionsMockedTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $api = new MockManagementApi([new Response(200, self::$headers)]);
-
         $id = 'con_testConnection10';
         $update_data = ['metadata' => ['meta1' => 'value1']];
-        $api->call()->connections()->update($id, $update_data);
-        $request_body = $api->getHistoryBody();
+
+        $api = new MockManagementApi();
+        $api->mock()->connections()->update($id, $update_data);
+
+        $request_body = $api->getRequestBody();
 
         $this->assertEquals($update_data, $request_body);
-        $this->assertEquals('PATCH', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('PATCH', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 }

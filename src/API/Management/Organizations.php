@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Organizations
@@ -25,9 +26,7 @@ class Organizations extends GenericResource
      * @param array               $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function create(
         string $name,
@@ -36,7 +35,7 @@ class Organizations extends GenericResource
         ?array $metadata = null,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($name, 'name');
         $this->validateString($displayName, 'displayName');
 
@@ -62,13 +61,11 @@ class Organizations extends GenericResource
      *
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getAll(
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('organizations')
             ->withOptions($options)
@@ -82,14 +79,12 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to retrieve details for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -105,14 +100,12 @@ class Organizations extends GenericResource
      * @param string              $name    Organization (by name parameter provided during creation) to retrieve details for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getByName(
         string $name,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($name, 'name');
 
         return $this->apiClient->method('get')
@@ -132,9 +125,7 @@ class Organizations extends GenericResource
      * @param array                $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null  $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function update(
         string $id,
@@ -143,7 +134,7 @@ class Organizations extends GenericResource
         ?array $metadata = null,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($displayName, 'displayName');
 
@@ -169,14 +160,12 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('delete')
             ->addPath('organizations', $id)
             ->withOptions($options)
@@ -192,16 +181,14 @@ class Organizations extends GenericResource
      * @param array               $body         Additional body content to send with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addEnabledConnection(
         string $id,
         string $connectionId,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($connectionId, 'connectionId');
 
@@ -223,14 +210,12 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to list connections of.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getEnabledConnections(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -247,15 +232,13 @@ class Organizations extends GenericResource
      * @param string              $connectionId Connection (by ID) to retrieve details for.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getEnabledConnection(
         string $id,
         string $connectionId,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($connectionId, 'connectionId');
 
@@ -274,16 +257,14 @@ class Organizations extends GenericResource
      * @param array               $body         Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function updateEnabledConnection(
         string $id,
         string $connectionId,
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($connectionId, 'connectionId');
 
@@ -302,15 +283,13 @@ class Organizations extends GenericResource
      * @param string              $connectionId Connection (by ID) to remove from organization.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeEnabledConnection(
         string $id,
         string $connectionId,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($connectionId, 'connectionId');
 
@@ -328,15 +307,13 @@ class Organizations extends GenericResource
      * @param array               $members One or more users (by ID) to add from the organization.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addMembers(
         string $id,
         array $members,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($members, 'members');
 
@@ -358,14 +335,12 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to list members of.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getMembers(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -382,15 +357,13 @@ class Organizations extends GenericResource
      * @param array               $members One or more users (by ID) to remove from the organization.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeMembers(
         string $id,
         array $members,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateArray($members, 'members');
 
@@ -414,16 +387,14 @@ class Organizations extends GenericResource
      * @param array<string>       $roles   One or more roles (by ID) to add to the user.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addMemberRoles(
         string $id,
         string $userId,
         array $roles,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($userId, 'userId');
         $this->validateArray($roles, 'roles');
@@ -447,15 +418,13 @@ class Organizations extends GenericResource
      * @param string              $userId  User (by ID) to add role to.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getMemberRoles(
         string $id,
         string $userId,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($userId, 'userId');
 
@@ -474,16 +443,14 @@ class Organizations extends GenericResource
      * @param array<string>       $roles   One or more roles (by ID) to remove from the user.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeMemberRoles(
         string $id,
         string $userId,
         array $roles,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($userId, 'userId');
         $this->validateArray($roles, 'roles');
@@ -512,9 +479,7 @@ class Organizations extends GenericResource
      * @param array               $body     Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function createInvitation(
         string $id,
@@ -523,7 +488,7 @@ class Organizations extends GenericResource
         array $invitee,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($clientId, 'clientId');
         $this->validateArray($inviter, 'inviter');
@@ -559,14 +524,12 @@ class Organizations extends GenericResource
      * @param string              $id      Organization (by ID) to list invitations for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getInvitations(
         string $id,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
 
         return $this->apiClient->method('get')
@@ -583,15 +546,13 @@ class Organizations extends GenericResource
      * @param string              $invitationId Invitation (by ID) to request.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getInvitation(
         string $id,
         string $invitationId,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($invitationId, 'invitationId');
 
@@ -609,15 +570,13 @@ class Organizations extends GenericResource
      * @param string              $invitationId Invitation (by ID) to request.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function deleteInvitation(
         string $id,
         string $invitationId,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($id, 'id');
         $this->validateString($invitationId, 'invitation');
 

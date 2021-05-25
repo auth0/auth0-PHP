@@ -19,6 +19,7 @@ return [
     'remove' => [
         \NunoMaduro\PhpInsights\Domain\Insights\ForbiddenGlobals::class,
         \NunoMaduro\PhpInsights\Domain\Insights\ForbiddenNormalClasses::class,
+        \NunoMaduro\PhpInsights\Domain\Insights\ForbiddenTraits::class,
         \NunoMaduro\PhpInsights\Domain\Sniffs\ForbiddenSetterSniff::class,
         \ObjectCalisthenics\Sniffs\Files\ClassTraitAndInterfaceLengthSniff::class,
         \ObjectCalisthenics\Sniffs\Files\FunctionLengthSniff::class,
@@ -33,9 +34,20 @@ return [
     ],
 
     'config' => [
+        \PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\DeprecatedFunctionsSniff::class => [
+            'exclude' => [
+                'src/Token/Verifier.php',
+            ],
+        ],
         \SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff::class => [
             'exclude' => [
-                'src/Store/EmptyStore.php',
+                'src/Configuration/SdkConfiguration.php',
+                'src/Configuration/SdkState.php',
+            ],
+        ],
+        \SlevomatCodingStandard\Sniffs\Classes\ModernClassNameReferenceSniff::class => [
+            'exclude' => [
+                'src/Mixins/ConfigurableMixin.php',
             ],
         ],
         \SlevomatCodingStandard\Sniffs\Classes\RequireMultiLineMethodSignatureSniff::class => [

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Stats.
@@ -20,15 +21,13 @@ class Stats extends GenericResource
      *
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Stats/get_active_users
      */
     public function getActiveUsers(
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('get')
             ->addPath('stats', 'active-users')
             ->withOptions($options)
@@ -43,9 +42,7 @@ class Stats extends GenericResource
      * @param string|null         $to      Optional. Ending from this date; YYYYMMDD format.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Stats/get_daily
      */
@@ -53,7 +50,7 @@ class Stats extends GenericResource
         ?string $from = null,
         ?string $to = null,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $client = $this->apiClient->method('get')
             ->addPath('stats', 'daily');
 

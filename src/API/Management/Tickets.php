@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Tickets.
@@ -22,9 +23,7 @@ class Tickets extends GenericResource
      * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @return array|null
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification
      */
@@ -32,7 +31,7 @@ class Tickets extends GenericResource
         string $userId,
         array $body = [],
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($userId, 'userId');
 
         $payload = [
@@ -53,14 +52,12 @@ class Tickets extends GenericResource
      * @param array               $body    Body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     *
-     * @return array|null
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function createPasswordChange(
         array $body,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         return $this->apiClient->method('post')
             ->addPath('tickets', 'password-change')
             ->withBody((object) $body)

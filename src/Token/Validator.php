@@ -30,7 +30,7 @@ class Validator
      *
      * @param array $expects An array of allowed values for the 'aud' claim. Successful if ANY match.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function audience(
         array $expects
@@ -59,7 +59,7 @@ class Validator
      * @param int      $leeway Leeway in seconds to allow during time calculations.
      * @param int|null $now    Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function authTime(
         int $maxAge,
@@ -87,7 +87,7 @@ class Validator
      *
      * @param array $expects An array of allowed values for the 'azp' claim. Successful if ANY match.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function authorizedParty(
         array $expects
@@ -119,7 +119,7 @@ class Validator
      * @param int      $leeway Leeway in seconds to allow during time calculations.
      * @param int|null $now    Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function expiration(
         int $leeway = 60,
@@ -144,7 +144,7 @@ class Validator
     /**
      * Validate the 'iat' claim is present.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function issued(): self
     {
@@ -162,7 +162,7 @@ class Validator
      *
      * @param array $expects The value to compare with the claim.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function issuer(
         string $expects
@@ -185,7 +185,7 @@ class Validator
      *
      * @param array $expects The value to compare with the claim.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function nonce(
         string $expects
@@ -208,7 +208,7 @@ class Validator
      *
      * @param array $expects An array of allowed values for the 'org_id' claim. Successful if ANY match.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function organization(
         array $expects
@@ -229,7 +229,7 @@ class Validator
     /**
      * Validate the 'sub' claim is present.
      *
-     * @throws InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
     public function subject(): self
     {

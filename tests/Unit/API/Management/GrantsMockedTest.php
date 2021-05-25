@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\API\Management;
 
-use Auth0\SDK\API\Helpers\InformationHeaders;
-use GuzzleHttp\Psr7\Response;
+use Auth0\Tests\Utilities\MockManagementApi;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,32 +13,16 @@ use PHPUnit\Framework\TestCase;
 class GrantsMockedTest extends TestCase
 {
     /**
-     * Expected telemetry value.
-     */
-    protected static string $telemetry;
-
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        $infoHeadersData = new InformationHeaders();
-        $infoHeadersData->setCorePackage();
-        self::$telemetry = $infoHeadersData->build();
-    }
-
-    /**
      * Test that getAll requests properly.
      */
     public function testGet(): void
     {
-        $api = new MockManagementApi([new Response(200)]);
+        $api = new MockManagementApi();
+        $api->mock()->grants()->getAll();
 
-        $api->call()->grants()->getAll();
-
-        $this->assertEquals('GET', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/grants', $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/grants', $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 
     /**
@@ -47,12 +30,14 @@ class GrantsMockedTest extends TestCase
      */
     public function testGetByClientId(): void
     {
-        $api = new MockManagementApi([new Response(200)]);
+        $id = uniqid();
 
-        $api->call()->grants()->getAllByClientId('__test_client_id__');
+        $api = new MockManagementApi();
+        $api->mock()->grants()->getAllByClientId($id);
 
-        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getHistoryUrl());
-        $this->assertEquals('client_id=__test_client_id__', $api->getHistoryQuery());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
+        $this->assertEquals('client_id=' . $id, $api->getRequestQuery(null));
     }
 
     /**
@@ -60,12 +45,14 @@ class GrantsMockedTest extends TestCase
      */
     public function testGetByAudience(): void
     {
-        $api = new MockManagementApi([new Response(200)]);
+        $id = uniqid();
 
-        $api->call()->grants()->getAllByAudience('__test_audience__');
+        $api = new MockManagementApi();
+        $api->mock()->grants()->getAllByAudience($id);
 
-        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getHistoryUrl());
-        $this->assertEquals('audience=__test_audience__', $api->getHistoryQuery());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
+        $this->assertEquals('audience=' . $id, $api->getRequestQuery(null));
     }
 
     /**
@@ -73,12 +60,14 @@ class GrantsMockedTest extends TestCase
      */
     public function testGetByUserId(): void
     {
-        $api = new MockManagementApi([new Response(200)]);
+        $id = uniqid();
 
-        $api->call()->grants()->getAllByUserId('__test_user_id__');
+        $api = new MockManagementApi();
+        $api->mock()->grants()->getAllByUserId($id);
 
-        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getHistoryUrl());
-        $this->assertEquals('user_id=__test_user_id__', $api->getHistoryQuery());
+        $this->assertEquals('GET', $api->getRequestMethod());
+        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
+        $this->assertEquals('user_id=' . $id, $api->getRequestQuery(null));
     }
 
     /**
@@ -86,13 +75,13 @@ class GrantsMockedTest extends TestCase
      */
     public function testDelete(): void
     {
-        $api = new MockManagementApi([new Response(204)]);
-
         $id = uniqid();
-        $api->call()->grants()->delete($id);
 
-        $this->assertEquals('DELETE', $api->getHistoryMethod());
-        $this->assertEquals('https://api.test.local/api/v2/grants/' . $id, $api->getHistoryUrl());
-        $this->assertEmpty($api->getHistoryQuery());
+        $api = new MockManagementApi();
+        $api->mock()->grants()->delete($id);
+
+        $this->assertEquals('DELETE', $api->getRequestMethod());
+        $this->assertEquals('https://api.test.local/api/v2/grants/' . $id, $api->getRequestUrl());
+        $this->assertEmpty($api->getRequestQuery());
     }
 }

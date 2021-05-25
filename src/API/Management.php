@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Header\AuthorizationBearer;
-use Auth0\SDK\API\Helpers\ApiClient;
 use Auth0\SDK\API\Management\Blacklists;
 use Auth0\SDK\API\Management\ClientGrants;
 use Auth0\SDK\API\Management\Clients;
@@ -28,16 +27,23 @@ use Auth0\SDK\API\Management\Tickets;
 use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpClient;
 
 /**
  * Class Management
  */
-class Management
+final class Management
 {
     /**
-     * Instance of Auth0\SDK\API\Helpers\ApiClient
+     * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    private ?ApiClient $apiClient = null;
+    private SdkConfiguration $configuration;
+
+    /**
+     * Instance of Auth0\SDK\API\Utility\HttpClient
+     */
+    private ?HttpClient $httpClient = null;
 
     /**
      * Instance of Auth0\SDK\API\Management\Blacklists
@@ -152,31 +158,44 @@ class Management
     /**
      * Management constructor.
      *
-     * @param string      $token         Access token for the Management API.
-     * @param string      $domain        Management API domain.
-     * @param array       $guzzleOptions Options for the Guzzle HTTP library.
-     * @param string|null $returnType    Return type for the HTTP request. Can be one of:
-     *                                   - `headers` to return only the response headers.
-     *                                   - `body` (default) to return only the response body.
-     *                                   - `object` to return the entire Reponse object.
+     * @param SdkConfiguration|array $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      */
     public function __construct(
-        string $token,
-        string $domain,
-        array $guzzleOptions = [],
-        ?string $returnType = null
+        $configuration
     ) {
-        $this->apiClient = new ApiClient(
-            [
-                'domain' => 'https://' . $domain,
-                'basePath' => '/api/v2/',
-                'guzzleOptions' => $guzzleOptions,
-                'returnType' => $returnType,
-                'headers' => [
-                    new AuthorizationBearer($token),
-                ],
-            ]
-        );
+        // If we're passed an array, construct a new SdkConfiguration from that structure.
+        if (is_array($configuration)) {
+            $configuration = new SdkConfiguration($configuration);
+        }
+
+        // We only accept an SdkConfiguration type.
+        if (! $configuration instanceof SdkConfiguration) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
+        }
+
+        // Store the configuration internally.
+        $this->configuration = $configuration;
+
+        // Retrieve any configured management token.
+        $managementToken = $configuration->getManagementToken();
+
+        // If no token was provided, try to get one.
+        if ($managementToken === null) {
+            $auth = new Authentication($configuration);
+            $response = $auth->clientCredentials(['audience' => $configuration->buildDomainUri() . '/api/v2/']);
+            $managementToken = $response['access_token'];
+        }
+
+        // Build the API client using the management token.
+        $this->httpClient = new HttpClient($this->configuration, '/api/v2/', [new AuthorizationBearer($managementToken)]);
+    }
+
+    /**
+     * Return the HttpClient instance being used for management API requests.
+     */
+    public function getHttpClient(): HttpClient
+    {
+        return $this->httpClient;
     }
 
     /**
@@ -185,7 +204,7 @@ class Management
     public function blacklists(): Blacklists
     {
         if ($this->blacklists === null) {
-            $this->blacklists = new Blacklists($this->apiClient);
+            $this->blacklists = new Blacklists($this->httpClient);
         }
 
         return $this->blacklists;
@@ -197,7 +216,7 @@ class Management
     public function clients(): Clients
     {
         if ($this->clients === null) {
-            $this->clients = new Clients($this->apiClient);
+            $this->clients = new Clients($this->httpClient);
         }
 
         return $this->clients;
@@ -209,7 +228,7 @@ class Management
     public function clientGrants(): ClientGrants
     {
         if ($this->clientGrants === null) {
-            $this->clientGrants = new ClientGrants($this->apiClient);
+            $this->clientGrants = new ClientGrants($this->httpClient);
         }
 
         return $this->clientGrants;
@@ -221,7 +240,7 @@ class Management
     public function connections(): Connections
     {
         if ($this->connections === null) {
-            $this->connections = new Connections($this->apiClient);
+            $this->connections = new Connections($this->httpClient);
         }
 
         return $this->connections;
@@ -233,7 +252,7 @@ class Management
     public function deviceCredentials(): DeviceCredentials
     {
         if ($this->deviceCredentials === null) {
-            $this->deviceCredentials = new DeviceCredentials($this->apiClient);
+            $this->deviceCredentials = new DeviceCredentials($this->httpClient);
         }
 
         return $this->deviceCredentials;
@@ -245,7 +264,7 @@ class Management
     public function emails(): Emails
     {
         if ($this->emails === null) {
-            $this->emails = new Emails($this->apiClient);
+            $this->emails = new Emails($this->httpClient);
         }
 
         return $this->emails;
@@ -257,7 +276,7 @@ class Management
     public function emailTemplates(): EmailTemplates
     {
         if ($this->emailTemplates === null) {
-            $this->emailTemplates = new EmailTemplates($this->apiClient);
+            $this->emailTemplates = new EmailTemplates($this->httpClient);
         }
 
         return $this->emailTemplates;
@@ -269,7 +288,7 @@ class Management
     public function grants(): Grants
     {
         if ($this->grants === null) {
-            $this->grants = new Grants($this->apiClient);
+            $this->grants = new Grants($this->httpClient);
         }
 
         return $this->grants;
@@ -281,7 +300,7 @@ class Management
     public function guardian(): Guardian
     {
         if ($this->guardian === null) {
-            $this->guardian = new Guardian($this->apiClient);
+            $this->guardian = new Guardian($this->httpClient);
         }
 
         return $this->guardian;
@@ -293,7 +312,7 @@ class Management
     public function jobs(): Jobs
     {
         if ($this->jobs === null) {
-            $this->jobs = new Jobs($this->apiClient);
+            $this->jobs = new Jobs($this->httpClient);
         }
 
         return $this->jobs;
@@ -305,7 +324,7 @@ class Management
     public function logs(): Logs
     {
         if ($this->logs === null) {
-            $this->logs = new Logs($this->apiClient);
+            $this->logs = new Logs($this->httpClient);
         }
 
         return $this->logs;
@@ -317,7 +336,7 @@ class Management
     public function logStreams(): LogStreams
     {
         if ($this->logStreams === null) {
-            $this->logStreams = new LogStreams($this->apiClient);
+            $this->logStreams = new LogStreams($this->httpClient);
         }
 
         return $this->logStreams;
@@ -329,7 +348,7 @@ class Management
     public function organizations(): Organizations
     {
         if ($this->organizations === null) {
-            $this->organizations = new Organizations($this->apiClient);
+            $this->organizations = new Organizations($this->httpClient);
         }
 
         return $this->organizations;
@@ -341,7 +360,7 @@ class Management
     public function roles(): Roles
     {
         if ($this->roles === null) {
-            $this->roles = new Roles($this->apiClient);
+            $this->roles = new Roles($this->httpClient);
         }
 
         return $this->roles;
@@ -353,7 +372,7 @@ class Management
     public function rules(): Rules
     {
         if ($this->rules === null) {
-            $this->rules = new Rules($this->apiClient);
+            $this->rules = new Rules($this->httpClient);
         }
 
         return $this->rules;
@@ -365,7 +384,7 @@ class Management
     public function resourceServers(): ResourceServers
     {
         if ($this->resourceServers === null) {
-            $this->resourceServers = new ResourceServers($this->apiClient);
+            $this->resourceServers = new ResourceServers($this->httpClient);
         }
 
         return $this->resourceServers;
@@ -377,7 +396,7 @@ class Management
     public function stats(): Stats
     {
         if ($this->stats === null) {
-            $this->stats = new Stats($this->apiClient);
+            $this->stats = new Stats($this->httpClient);
         }
 
         return $this->stats;
@@ -389,7 +408,7 @@ class Management
     public function tenants(): Tenants
     {
         if ($this->tenants === null) {
-            $this->tenants = new Tenants($this->apiClient);
+            $this->tenants = new Tenants($this->httpClient);
         }
 
         return $this->tenants;
@@ -401,7 +420,7 @@ class Management
     public function tickets(): Tickets
     {
         if ($this->tickets === null) {
-            $this->tickets = new Tickets($this->apiClient);
+            $this->tickets = new Tickets($this->httpClient);
         }
 
         return $this->tickets;
@@ -413,7 +432,7 @@ class Management
     public function userBlocks(): UserBlocks
     {
         if ($this->userBlocks === null) {
-            $this->userBlocks = new UserBlocks($this->apiClient);
+            $this->userBlocks = new UserBlocks($this->httpClient);
         }
 
         return $this->userBlocks;
@@ -425,7 +444,7 @@ class Management
     public function users(): Users
     {
         if ($this->users === null) {
-            $this->users = new Users($this->apiClient);
+            $this->users = new Users($this->httpClient);
         }
 
         return $this->users;
@@ -437,7 +456,7 @@ class Management
     public function usersByEmail(): UsersByEmail
     {
         if ($this->usersByEmail === null) {
-            $this->usersByEmail = new UsersByEmail($this->apiClient);
+            $this->usersByEmail = new UsersByEmail($this->httpClient);
         }
 
         return $this->usersByEmail;

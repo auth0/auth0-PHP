@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Token;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Psr\SimpleCache\CacheInterface;
 
@@ -18,15 +19,22 @@ class Parser
     protected array $token = [];
 
     /**
+     * Instance of SdkConfiguration
+     */
+    protected SdkConfiguration $configuration;
+
+    /**
      * Constructor for Token Parser class.
      *
      * @param string $jwt A JWT string to parse.
      *
-     * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
-        string $jwt
+        string $jwt,
+        SdkConfiguration $configuration
     ) {
+        $this->configuration = $configuration;
         $this->parse($jwt);
     }
 
@@ -35,7 +43,7 @@ class Parser
      *
      * @param string $jwt A JWT string to parse.
      *
-     * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function parse(
         string $jwt
@@ -79,7 +87,7 @@ class Parser
      * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
      * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      *
-     * @throws InvalidTokenException When Token signature verification fails. See the exception message for further details.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
     public function verify(
         ?string $algorithm = Token::ALGO_RS256,
@@ -88,7 +96,7 @@ class Parser
         ?int $cacheExpires = null,
         ?CacheInterface $cache = null
     ): self {
-        new Verifier(join('.', [$this->token['parts'][0], $this->token['parts'][1]]), $this->token['signature'], $this->token['headers'], $algorithm, $jwksUri, $clientSecret, $cacheExpires, $cache);
+        new Verifier($this->configuration, join('.', [$this->token['parts'][0], $this->token['parts'][1]]), $this->token['signature'], $this->token['headers'], $algorithm, $jwksUri, $clientSecret, $cacheExpires, $cache);
         return $this;
     }
 
@@ -191,7 +199,7 @@ class Parser
      *
      * @param string $claims String representing the claims portion of the JWT.
      *
-     * @throws JsonException When claims portion cannot be decoded properly.
+     * @throws \JsonException When claims portion cannot be decoded properly.
      */
     protected function decodeClaims(
         string $claims
@@ -204,7 +212,7 @@ class Parser
      *
      * @param string $headers String representing the headers portion of the JWT.
      *
-     * @throws JsonException When headers portion cannot be decoded properly.
+     * @throws \JsonException When headers portion cannot be decoded properly.
      */
     protected function decodeHeaders(
         string $headers

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Blacklists.
@@ -22,9 +23,7 @@ class Blacklists extends GenericResource
      * @param string|null         $aud     Optional. JWT's aud claim (the client_id to which the JWT was issued).
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Blacklists/post_tokens
      */
@@ -32,7 +31,7 @@ class Blacklists extends GenericResource
         string $jti,
         ?string $aud = null,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($jti, 'jti');
 
         $request = [ 'jti' => $jti ];
@@ -56,16 +55,14 @@ class Blacklists extends GenericResource
      * @param string|null         $aud     Optional. Filter on the JWT's aud claim (the client_id to which the JWT was issued).
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return array|null
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens
      */
     public function get(
         ?string $aud = null,
         ?RequestOptions $options = null
-    ): ?array {
+    ): ResponseInterface {
         $this->validateString($aud, 'aud');
 
         $client = $this->apiClient->method('get')
