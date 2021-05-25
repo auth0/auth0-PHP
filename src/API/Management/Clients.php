@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Clients
  */
-class Clients extends ManagementEndpoint
+final class Clients extends ManagementEndpoint
 {
     /**
      * Create a new Client.

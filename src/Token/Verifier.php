@@ -12,7 +12,7 @@ use Psr\SimpleCache\CacheInterface;
 /**
  * Class Verifier.
  */
-class Verifier
+final class Verifier
 {
     /**
      * A string representing the headers and claims portions of a JWT.

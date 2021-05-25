@@ -10,7 +10,7 @@ use Psr\Http\Message\StreamInterface;
 /**
  * Class HttpResponse
  */
-class HttpResponse
+final class HttpResponse
 {
     /**
      * Returns true when the ResponseInterface identifies a 200 status code; otherwise false.

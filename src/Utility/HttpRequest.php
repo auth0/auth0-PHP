@@ -16,7 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class HttpRequest
  */
-class HttpRequest
+final class HttpRequest
 {
     /**
      * Stored instance of last send request.

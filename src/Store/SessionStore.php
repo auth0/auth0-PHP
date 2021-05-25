@@ -14,7 +14,7 @@ use Auth0\SDK\Contract\StoreInterface;
  * response_mode of form_post, the session cookie MUST be set to SameSite=None and Secure using
  * session_set_cookie_params() or another method. This combination will be enforced by browsers in early 2020.
  */
-class SessionStore implements StoreInterface
+final class SessionStore implements StoreInterface
 {
     /**
      * Session base name, configurable on instantiation.

@@ -131,7 +131,7 @@ final class Auth0
     public function clear(): void
     {
         if ($this->configuration->hasSessionStorage()) {
-            foreach (['user', 'idToken', 'accessToken', 'refreshToken'] as $key) {
+            foreach (['user', 'idToken', 'accessToken', 'refreshToken', 'tokenExpiration'] as $key) {
                 $this->configuration->getSessionStorage()->delete($key);
             }
         }
@@ -212,6 +212,11 @@ final class Auth0
         }
 
         $response = $this->authentication()->codeExchange($code, $this->configuration->getRedirectUri(), $code_verifier);
+
+        if (! HttpResponse::wasSuccessful($response)) {
+            throw \Auth0\SDK\Exception\StateException::failedCodeExchange();
+        }
+
         $response = HttpResponse::decodeContent($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
@@ -230,6 +235,11 @@ final class Auth0
             }
 
             $this->setIdToken($response['id_token']);
+        }
+
+        if (isset($response['expires_in']) && is_numeric($response['expires_in'])) {
+            $expiresIn = time() + (int) $response['expires_in'];
+            $this->setTokenExpiration((string) $expiresIn);
         }
 
         $user = $this->state->getIdTokenDecoded();
@@ -285,7 +295,7 @@ final class Auth0
      * Get ID token from persisted session or from a code exchange
      *
      * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\CoreException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getIdToken(): ?string
     {
@@ -300,7 +310,7 @@ final class Auth0
      * Get userinfo from persisted session or from a code exchange
      *
      * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\CoreException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getUser(): ?array
     {
@@ -315,7 +325,7 @@ final class Auth0
      * Get access token from persisted session or from a code exchange
      *
      * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\CoreException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getAccessToken(): ?string
     {
@@ -330,7 +340,7 @@ final class Auth0
      * Get refresh token from persisted session or from a code exchange
      *
      * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\CoreException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
     public function getRefreshToken(): ?string
     {
@@ -339,6 +349,21 @@ final class Auth0
         }
 
         return $this->state->getRefreshToken();
+    }
+
+    /**
+     * Get token expiration from persisted session or from a code exchange
+     *
+     * @throws \Auth0\SDK\Exception\ApiException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
+     */
+    public function getTokenExpiration(): ?string
+    {
+        if (! $this->state->hasTokenExpiration()) {
+            $this->exchange();
+        }
+
+        return $this->state->getTokenExpiration();
     }
 
     /**
@@ -413,6 +438,23 @@ final class Auth0
     }
 
     /**
+     * Sets and persists the refresh token.
+     *
+     * @param string $refreshToken - refresh token returned from the code exchange.
+     */
+    public function setTokenExpiration(
+        string $tokenExpiration
+    ): self {
+        $this->state->setTokenExpiration($tokenExpiration);
+
+        if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistAccessToken()) {
+            $this->configuration->getSessionStorage()->set('tokenExpiration', $tokenExpiration);
+        }
+
+        return $this;
+    }
+
+    /**
      * Get the specified parameter from POST or GET, depending on configured response mode.
      */
     public function getRequestParameter(
@@ -481,6 +523,7 @@ final class Auth0
 
             if ($this->configuration->getPersistAccessToken()) {
                 $state['accessToken'] = $this->configuration->getSessionStorage()->get('accessToken');
+                $state['tokenExpiration'] = $this->configuration->getSessionStorage()->get('tokenExpiration');
             }
 
             if ($this->configuration->getPersistRefreshToken()) {

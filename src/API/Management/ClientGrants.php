@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Client_Grants
  */
-class ClientGrants extends ManagementEndpoint
+final class ClientGrants extends ManagementEndpoint
 {
     /**
      * Create a new Client Grant.

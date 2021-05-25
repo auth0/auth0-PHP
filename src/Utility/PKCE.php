@@ -7,7 +7,7 @@ namespace Auth0\SDK\Utility;
 /**
  * Class PKCE.
  */
-class PKCE
+final class PKCE
 {
     /**
      * Generate a random string of between 43 and 128 characters containing

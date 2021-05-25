@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Logs
  */
-class Logs extends ManagementEndpoint
+final class Logs extends ManagementEndpoint
 {
     /**
      * Retrieves log entries that match the specified search criteria (or list all entries if no criteria is used).

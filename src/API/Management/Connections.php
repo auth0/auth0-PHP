@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Connections
  */
-class Connections extends ManagementEndpoint
+final class Connections extends ManagementEndpoint
 {
     /**
      * Create a new Connection.

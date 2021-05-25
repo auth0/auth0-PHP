@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Emails
  */
-class Emails extends ManagementEndpoint
+final class Emails extends ManagementEndpoint
 {
     /**
      * Create the email provider.

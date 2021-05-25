@@ -11,7 +11,7 @@ use Psr\SimpleCache\CacheInterface;
 /**
  * Class Parser.
  */
-class Parser
+final class Parser
 {
     /**
      * Decoded representation of a JWT.

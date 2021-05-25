@@ -9,7 +9,7 @@ use Auth0\SDK\Contract\StoreInterface;
 /**
  * Class TransientStoreHandler
  */
-class TransientStoreHandler
+final class TransientStoreHandler
 {
     /**
      * Storage method to use.

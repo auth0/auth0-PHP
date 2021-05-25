@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Organizations
  */
-class Organizations extends ManagementEndpoint
+final class Organizations extends ManagementEndpoint
 {
     /**
      * Create an organization.

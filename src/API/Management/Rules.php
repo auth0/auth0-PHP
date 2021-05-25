@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Rules
  */
-class Rules extends ManagementEndpoint
+final class Rules extends ManagementEndpoint
 {
     /**
      * Create a new Rule.

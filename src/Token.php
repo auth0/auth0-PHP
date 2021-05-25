@@ -12,7 +12,7 @@ use Psr\SimpleCache\CacheInterface;
 /**
  * Class Token.
  */
-class Token
+final class Token
 {
     public const TYPE_ID_TOKEN = 1;
     public const TYPE_TOKEN = 2;

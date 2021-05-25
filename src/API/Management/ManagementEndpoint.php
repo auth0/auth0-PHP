@@ -10,7 +10,7 @@ use Auth0\SDK\Utility\HttpClient;
  * Class ManagementEndpoint.
  * Extended by Management API endpoints classes.
  */
-class ManagementEndpoint
+abstract class ManagementEndpoint
 {
     /**
      * Injected ApiClient instance to use.

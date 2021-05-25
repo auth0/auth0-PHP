@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class ApiClient
  */
-class HttpClient
+final class HttpClient
 {
     /**
      * Instance of most recent HttpRequest

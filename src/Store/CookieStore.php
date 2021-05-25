@@ -10,7 +10,7 @@ use Auth0\SDK\Contract\StoreInterface;
  * Class CookieStore.
  * This class provides a layer to persist transient auth data using cookies.
  */
-class CookieStore implements StoreInterface
+final class CookieStore implements StoreInterface
 {
     /**
      * Cookie base name.
