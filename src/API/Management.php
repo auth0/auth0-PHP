@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API;
 
-use Auth0\SDK\API\Header\AuthorizationBearer;
 use Auth0\SDK\API\Management\Blacklists;
 use Auth0\SDK\API\Management\ClientGrants;
 use Auth0\SDK\API\Management\Clients;
@@ -28,7 +27,9 @@ use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Utility\HttpClient;
+use Auth0\SDK\Utility\HttpResponse;
 
 /**
  * Class Management
@@ -183,11 +184,23 @@ final class Management
         if ($managementToken === null) {
             $auth = new Authentication($configuration);
             $response = $auth->clientCredentials(['audience' => $configuration->buildDomainUri() . '/api/v2/']);
-            $managementToken = $response['access_token'];
+
+            if (HttpResponse::wasSuccessful($response)) {
+                $response = HttpResponse::decodeContent($response);
+
+                if (isset($response['access_token'])) {
+                    $managementToken = $response['access_token'];
+                }
+            }
+        }
+
+        // No management token could be acquired.
+        if ($managementToken === null) {
+            throw ConfigurationException::requiresManagementToken();
         }
 
         // Build the API client using the management token.
-        $this->httpClient = new HttpClient($this->configuration, '/api/v2/', [new AuthorizationBearer($managementToken)]);
+        $this->httpClient = new HttpClient($this->configuration, '/api/v2/', ['Authorization' => 'Bearer ' . $managementToken]);
     }
 
     /**

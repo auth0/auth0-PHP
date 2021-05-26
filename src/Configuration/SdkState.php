@@ -10,7 +10,7 @@ use Auth0\SDK\Mixins\ConfigurableMixin;
 /**
  * Internal state container for use with Auth0\SDK
  */
-class SdkState implements ConfigurableContract
+final class SdkState implements ConfigurableContract
 {
     use ConfigurableMixin;
 
@@ -25,7 +25,8 @@ class SdkState implements ConfigurableContract
         ?string $accessToken = null,
         ?string $refreshToken = null,
         ?array $idTokenDecoded = null,
-        ?array $user = null
+        ?array $user = null,
+        ?string $accessTokenExpiration = null
     ) {
         $this->setState(func_get_args());
     }

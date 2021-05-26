@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
-final class StateException extends \Auth0\SDK\Exception\CoreException implements \Throwable
+final class StateException extends \Auth0\SDK\Exception\SdkException implements \Throwable
 {
     public const MSG_INVALID_STATE = 'Invalid state';
     public const MSG_MISSING_CODE_VERIFIER = 'Missing code_verifier';
@@ -13,6 +13,7 @@ final class StateException extends \Auth0\SDK\Exception\CoreException implements
     public const MSG_MISSING_NONCE = 'Nonce was not found in the application storage';
     public const MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN = 'Cannot renew access token; a refresh token is not available';
     public const MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN = 'Token did not refresh successfully; access token was not returned';
+    public const MSG_FAILED_CODE_EXCHANGE = 'Code exchange was unsuccessful; network error resulted in unfulfilled request';
 
     public static function invalidState(): self
     {
@@ -47,5 +48,10 @@ final class StateException extends \Auth0\SDK\Exception\CoreException implements
     public static function failedRenewTokenMissingAccessToken(): self
     {
         return new self(self::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
+    }
+
+    public static function failedCodeExchange(): self
+    {
+        return new self(self::MSG_FAILED_CODE_EXCHANGE);
     }
 }

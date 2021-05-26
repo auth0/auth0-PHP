@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Helpers;
+namespace Auth0\Tests\Unit\Utility;
 
-use Auth0\SDK\Helpers\TransientStoreHandler;
+use Auth0\SDK\Utility\TransientStoreHandler;
 use Auth0\SDK\Store\SessionStore;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +35,7 @@ class TransientStoreHandlerTest extends TestCase
         $issuedValue = $transientStore->issue('test_issue_key');
 
         $this->assertEquals($issuedValue, $_SESSION['test_store_test_issue_key']);
-        $this->assertGreaterThanOrEqual(16, strlen($issuedValue));
+        $this->assertGreaterThanOrEqual(16, mb_strlen($issuedValue));
     }
 
     public function testThatTransientIsGottenOnce(): void

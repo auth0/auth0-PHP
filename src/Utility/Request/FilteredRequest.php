@@ -2,17 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\Helpers\Requests;
+namespace Auth0\SDK\Utility\Request;
 
 /**
  * Class FilteredRequest.
  */
-class FilteredRequest
+final class FilteredRequest
 {
     /**
-     * Internal state of the field-filtered request.
+     * Fields to include or exclude from API responses.
      */
-    protected array $state = [];
+    private ?array $fields = null;
+
+    /**
+     * True to include $fields, false to exclude $fields.
+     */
+    private ?bool $includeFields = null;
 
     /**
      * FilteredRequest constructor
@@ -24,8 +29,8 @@ class FilteredRequest
         ?array $fields = null,
         ?bool $includeFields = null
     ) {
-        $this->state['fields'] = $fields ?? [];
-        $this->state['include_fields'] = $includeFields;
+        $this->fields = $fields;
+        $this->includeFields = $includeFields;
     }
 
     /**
@@ -36,7 +41,7 @@ class FilteredRequest
     public function setFields(
         array $fields
     ): self {
-        $this->state['fields'] = $fields;
+        $this->fields = $fields;
 
         return $this;
     }
@@ -46,7 +51,7 @@ class FilteredRequest
      */
     public function clearFields(): self
     {
-        $this->state['fields'] = [];
+        $this->fields = null;
 
         return $this;
     }
@@ -58,34 +63,7 @@ class FilteredRequest
      */
     public function getFields(): array
     {
-        return array_keys($this->state['fields']);
-    }
-
-    /**
-     * Add a value to `fields` for the filtered request.
-     *
-     * @param string $field Value of `field` parameter for the filtered request.
-     */
-    public function addField(
-        string $field
-    ): self {
-        $this->state['fields'][$field] = true;
-        return $this;
-    }
-
-    /**
-     * Add a value to `fields` for the filtered request.
-     *
-     * @param string $field Value of `field` parameter for the filtered request.
-     */
-    public function removeField(
-        string $field
-    ): self {
-        if (isset($this->state['fields'][$field])) {
-            unset($this->state['fields'][$field]);
-        }
-
-        return $this;
+        return $this->fields;
     }
 
     /**
@@ -96,7 +74,7 @@ class FilteredRequest
     public function setIncludeFields(
         ?bool $includeFields
     ): self {
-        $this->state['include_fields'] = $includeFields;
+        $this->includeFields = $includeFields;
 
         return $this;
     }
@@ -104,9 +82,9 @@ class FilteredRequest
     /**
      * Retrieve the `include_fields` for the filtered request.
      */
-    public function getIncludeFields(): ?int
+    public function getIncludeFields(): ?bool
     {
-        return $this->state['include_fields'];
+        return $this->includeFields;
     }
 
     /**
@@ -118,11 +96,11 @@ class FilteredRequest
     {
         $response = [];
 
-        if (count($this->state['fields'])) {
-            $response['fields'] = implode(',', array_keys($this->state['fields']));
+        if ($this->fields !== null && count($this->fields)) {
+            $response['fields'] = implode(',', array_unique(array_values($this->fields)));
 
-            if ($this->state['include_fields'] !== null) {
-                $response['include_fields'] = $this->state['include_fields'];
+            if ($this->includeFields !== null) {
+                $response['include_fields'] = $this->includeFields === true ? 'true' : 'false';
             }
         }
 

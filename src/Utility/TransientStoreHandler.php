@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\Helpers;
+namespace Auth0\SDK\Utility;
 
 use Auth0\SDK\Contract\StoreInterface;
 
 /**
  * Class TransientStoreHandler
  */
-class TransientStoreHandler
+final class TransientStoreHandler
 {
     /**
      * Storage method to use.
      */
-    public StoreInterface $store;
+    private StoreInterface $store;
 
     /**
      * TransientStoreHandler constructor.
@@ -25,6 +25,14 @@ class TransientStoreHandler
         StoreInterface $store
     ) {
         $this->store = $store;
+    }
+
+    /**
+     * Return the current storage method.
+     */
+    public function getStore()
+    {
+        return $this->store;
     }
 
     /**

@@ -7,10 +7,10 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\Utility\HttpClient;
 
 /**
- * Class GenericResource.
+ * Class ManagementEndpoint.
  * Extended by Management API endpoints classes.
  */
-class GenericResource
+abstract class ManagementEndpoint
 {
     /**
      * Injected ApiClient instance to use.
@@ -18,7 +18,7 @@ class GenericResource
     protected HttpClient $apiClient;
 
     /**
-     * GenericResource constructor.
+     * ManagementEndpoint constructor.
      *
      * @param ApiClient $apiClient ApiClient instance to use.
      */
@@ -73,7 +73,7 @@ class GenericResource
         string $variable,
         string $variableName
     ): void {
-        if (! strlen($variable)) {
+        if (! mb_strlen($variable)) {
             throw new \Auth0\SDK\Exception\EmptyOrInvalidParameterException($variableName);
         }
     }

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility;
 
-use Auth0\SDK\API\Header\Header;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Helpers\Requests\FilteredRequest;
-use Auth0\SDK\Helpers\Requests\PaginatedRequest;
-use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Auth0\SDK\Utility\Request\FilteredRequest;
+use Auth0\SDK\Utility\Request\PaginatedRequest;
+use Auth0\SDK\Utility\Request\RequestOptions;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
@@ -17,67 +16,67 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class HttpRequest
  */
-class HttpRequest
+final class HttpRequest
 {
     /**
      * Stored instance of last send request.
      */
-    public ?RequestInterface $lastRequest = null;
+    private ?RequestInterface $lastRequest = null;
 
     /**
      * Shared configuration data.
      */
-    protected SdkConfiguration $configuration;
+    private SdkConfiguration $configuration;
 
     /**
      * Base API path for the request.
      */
-    protected string $basePath = '/';
+    private string $basePath = '/';
 
     /**
      * Path to request.
      */
-    protected array $path = [];
+    private array $path = [];
 
     /**
      * HTTP method to use for the request.
      */
-    protected string $method = '';
+    private string $method = '';
 
     /**
      * Headers to include for the request.
      */
-    protected array $headers = [];
+    private array $headers = [];
 
     /**
      * Domain to use for request.
      */
-    protected ?string $domain = null;
+    private ?string $domain = null;
 
     /**
      * URL parameters for the request.
      */
-    protected array $params = [];
+    private array $params = [];
 
     /**
      * Form parameters to send with the request.
      */
-    protected array $formParams = [];
+    private array $formParams = [];
 
     /**
      * Files to send with a multipart request.
      */
-    protected array $files = [];
+    private array $files = [];
 
     /**
      * Request body.
      */
-    protected string $body = '';
+    private string $body = '';
 
     /**
      * Mocked response.
      */
-    protected ?object $mockedResponse = null;
+    private ?object $mockedResponse = null;
 
     /**
      * HttpRequest constructor.
@@ -98,6 +97,14 @@ class HttpRequest
         $this->headers = $headers;
         $this->domain = $domain;
         $this->mockedResponse = $mockedResponse;
+    }
+
+    /**
+     * Return a RequestInterface representation of the last sent request.
+     */
+    public function getLastRequest(): ?RequestInterface
+    {
+        return $this->lastRequest;
     }
 
     /**
@@ -218,13 +225,8 @@ class HttpRequest
         }
 
         // Add headers.
-        foreach ($headers as $headerKey => $header) {
-            if ($header instanceof Header) {
-                $headerKey = $header->getHeader();
-                $header = $header->getValue();
-            }
-
-            $httpRequest = $httpRequest->withHeader($headerKey, $header);
+        foreach ($headers as $headerName => $headerValue) {
+            $httpRequest = $httpRequest->withHeader($headerName, $headerValue);
         }
 
         // Add telemetry headers, if they're enabled.
@@ -264,8 +266,8 @@ class HttpRequest
     public function withHeaders(
         array $headers
     ): self {
-        foreach ($headers as $header) {
-            $this->withHeader($header);
+        foreach ($headers as $headerName => $headerValue) {
+            $this->withHeader($headerName, (string) $headerValue);
         }
 
         return $this;
@@ -277,9 +279,11 @@ class HttpRequest
      * @param Header $header Header to add.
      */
     public function withHeader(
-        Header $header
+        string $name,
+        string $value
     ): self {
-        $this->headers[$header->getHeader()] = $header->getValue();
+        $this->headers[$name] = $value;
+
         return $this;
     }
 

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Auth0\SDK;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Helpers\TransientStoreHandler;
 use Auth0\SDK\Token\Parser;
+use Auth0\SDK\Utility\TransientStoreHandler;
 use Psr\SimpleCache\CacheInterface;
 
 /**
  * Class Token.
  */
-class Token
+final class Token
 {
     public const TYPE_ID_TOKEN = 1;
     public const TYPE_TOKEN = 2;
@@ -23,22 +23,22 @@ class Token
     /**
      * A representation of the type of Token, to customize claim validations. See TYPE_ consts for options.
      */
-    protected int $type;
+    private int $type;
 
     /**
      * A unique, internal instance of \Auth0\SDK\Token\Parser
      */
-    protected Parser $parser;
+    private Parser $parser;
 
     /**
      * Instance of SdkConfiguration
      */
-    protected SdkConfiguration $configuration;
+    private SdkConfiguration $configuration;
 
     /**
      * Instance of TransientStoreHandler for storing ephemeral data.
      */
-    protected TransientStoreHandler $transient;
+    private TransientStoreHandler $transient;
 
     /**
      * Constructor for Token handling class.

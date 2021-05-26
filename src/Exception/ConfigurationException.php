@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
-final class ConfigurationException extends \Auth0\SDK\Exception\CoreException implements \Throwable
+final class ConfigurationException extends \Auth0\SDK\Exception\SdkException implements \Throwable
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
+    public const MSG_MISSING_MANAGEMENT_KEY = 'A Management API token was not configured';
     public const MSG_SET_IMMUTABLE = 'Changes cannot be applied to a locked configuration';
     public const MSG_SET_MISSING = 'Attempted to assign a value to undefined property "%s"';
     public const MSG_SET_INCOMPATIBLE = 'Parameter "%s" must be of type %s, %s used';
@@ -22,6 +23,11 @@ final class ConfigurationException extends \Auth0\SDK\Exception\CoreException im
     public static function requiresConfiguration(): self
     {
         return new self(self::MSG_CONFIGURATION_REQUIRED);
+    }
+
+    public static function requiresManagementToken(): self
+    {
+        return new self(self::MSG_MISSING_MANAGEMENT_KEY);
     }
 
     public static function setImmutable(): self

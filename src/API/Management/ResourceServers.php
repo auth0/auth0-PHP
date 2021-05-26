@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Auth0\SDK\Utility\Request\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers
  */
-class ResourceServers extends GenericResource
+final class ResourceServers extends ManagementEndpoint
 {
     /**
      * Create a new Resource Server.

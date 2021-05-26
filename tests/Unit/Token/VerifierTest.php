@@ -36,8 +36,8 @@ dataset('tokenRs256', static function () {
     $signature = TokenGenerator::decodePart($signature, false);
 
     // Mimic JWKS response format: strip opening and closing comment lines from public key, remove line breaks.
-    $keyPair['cert'] = trim(substr($keyPair['cert'], strpos($keyPair['cert'], "\n")+1));
-    $keyPair['cert'] = str_replace("\n", '', substr($keyPair['cert'], 0, strrpos($keyPair['cert'], "\n")));
+    $keyPair['cert'] = trim(mb_substr($keyPair['cert'], strpos($keyPair['cert'], "\n")+1));
+    $keyPair['cert'] = str_replace("\n", '', mb_substr($keyPair['cert'], 0, strrpos($keyPair['cert'], "\n")));
 
     yield [ $keyPair, $token, $payload, $signature, $headers, 'https://test.auth0.com/.well-known/jwks.json', md5('https://test.auth0.com/.well-known/jwks.json') ];
 });

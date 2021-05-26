@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Helpers;
+namespace Auth0\Tests\Unit\Utility;
 
-use Auth0\SDK\Helpers\PKCE;
+use Auth0\SDK\Utility\PKCE;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,7 +23,7 @@ class PKCETest extends TestCase
     {
         $code_verifier = PKCE::generateCodeVerifier(43);
         $this->assertNotEmpty($code_verifier);
-        $this->assertSame(43, strlen($code_verifier));
+        $this->assertSame(43, mb_strlen($code_verifier));
     }
 
     public function testThanGenerateCodeChallengeGenerateExpectedValue(): void

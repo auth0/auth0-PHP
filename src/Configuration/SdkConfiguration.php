@@ -109,7 +109,7 @@ use Psr\SimpleCache\CacheInterface;
  * @method public bool hasTransientStorage()
  * @method public bool hasUsePkce()
  */
-class SdkConfiguration implements ConfigurableContract
+final class SdkConfiguration implements ConfigurableContract
 {
     use ConfigurableMixin;
 

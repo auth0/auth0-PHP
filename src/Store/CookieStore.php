@@ -62,7 +62,7 @@ class CookieStore implements StoreInterface
         $this->sessionBaseName = $options['base_name'] ?? 'auth0';
         $this->expiration = $options['expiration'] ?? 600;
 
-        if (isset($options['samesite']) && is_string($options['samesite']) && strlen($options['samesite'])) {
+        if (isset($options['samesite']) && is_string($options['samesite']) && mb_strlen($options['samesite'])) {
             $sameSite = ucfirst($options['samesite']);
 
             if (in_array($sameSite, ['None', 'Strict', 'Lax'])) {
@@ -155,7 +155,7 @@ class CookieStore implements StoreInterface
     ): string {
         $key_name = $key;
 
-        if (strlen($this->sessionBaseName)) {
+        if (mb_strlen($this->sessionBaseName)) {
             $key_name = $this->sessionBaseName . '_' . $key_name;
         }
 

@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility;
 
-use Auth0\SDK\API\Header\ContentType;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class ApiClient
  */
-class HttpClient
+final class HttpClient
 {
     /**
      * Instance of most recent HttpRequest
      */
-    public ?HttpRequest $lastRequest = null;
+    private ?HttpRequest $lastRequest = null;
 
     /**
      * Shared configuration data.
@@ -31,7 +30,7 @@ class HttpClient
     /**
      * Headers to set for all calls.
      */
-    private array $headers;
+    private array $headers = [];
 
     /**
      * Mocked responses to pass to HttpRequest instances for testing.
@@ -61,8 +60,7 @@ class HttpClient
      * @param bool   $set_content_type Automatically set a content-type header.
      */
     public function method(
-        string $method,
-        bool $setContentType = true
+        string $method
     ): HttpRequest {
         $method = strtolower($method);
         $nextMockedResponse = null;
@@ -72,11 +70,12 @@ class HttpClient
         }
 
         $builder = new HttpRequest($this->configuration, $method, $this->basePath, $this->headers, $nextMockedResponse);
-        $builder->withHeaders($this->headers);
 
-        if ($setContentType && in_array($method, ['patch', 'post', 'put', 'delete'])) {
-            $builder->withHeader(new ContentType('application/json'));
+        if (in_array($method, ['post', 'put', 'patch', 'delete'])) {
+            $builder->withHeader('Content-Type', 'application/json');
         }
+
+        $builder->withHeaders($this->headers);
 
         return $this->lastRequest = $builder;
     }
@@ -94,5 +93,13 @@ class HttpClient
         ];
 
         return $this;
+    }
+
+    /**
+     * Return a HttpRequest representation of the last built request.
+     */
+    public function getLastRequest(): ?HttpRequest
+    {
+        return $this->lastRequest;
     }
 }

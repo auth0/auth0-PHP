@@ -302,7 +302,7 @@ class Auth0Test extends TestCase
         $this->assertArrayNotHasKey('auth0_state', $_SESSION);
 
         $auth0->renew(['scope' => 'openid']);
-        $request = $httpClient->lastRequest->lastRequest;
+        $request = $httpClient->getLastRequest()->getLastRequest();
         parse_str($request->getBody()->__toString(), $requestBody);
 
         $this->assertEquals('__test_access_token__', $auth0->getAccessToken());

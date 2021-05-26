@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Helpers\Requests\RequestOptions;
+use Auth0\SDK\Utility\Request\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @link https://auth0.com/docs/api/management/v2#!/User_Blocks
  */
-class UserBlocks extends GenericResource
+final class UserBlocks extends ManagementEndpoint
 {
     /**
      * Retrieve a list of blocked IP addresses for the login identifiers (email, username, phone number, etc) associated with the specified user.
