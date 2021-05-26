@@ -26,7 +26,7 @@ final class SdkState implements ConfigurableContract
         ?string $refreshToken = null,
         ?array $idTokenDecoded = null,
         ?array $user = null,
-        ?string $tokenExpiration = null
+        ?string $accessTokenExpiration = null
     ) {
         $this->setState(func_get_args());
     }

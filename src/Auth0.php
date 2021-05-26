@@ -131,7 +131,7 @@ final class Auth0
     public function clear(): void
     {
         if ($this->configuration->hasSessionStorage()) {
-            foreach (['user', 'idToken', 'accessToken', 'refreshToken', 'tokenExpiration'] as $key) {
+            foreach (['user', 'idToken', 'accessToken', 'refreshToken', 'accessTokenExpiration'] as $key) {
                 $this->configuration->getSessionStorage()->delete($key);
             }
         }
@@ -239,7 +239,7 @@ final class Auth0
 
         if (isset($response['expires_in']) && is_numeric($response['expires_in'])) {
             $expiresIn = time() + (int) $response['expires_in'];
-            $this->setTokenExpiration((string) $expiresIn);
+            $this->setAccessTokenExpiration((string) $expiresIn);
         }
 
         $user = $this->state->getIdTokenDecoded();
@@ -357,13 +357,13 @@ final class Auth0
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
-    public function getTokenExpiration(): ?string
+    public function getAccessTokenExpiration(): ?string
     {
-        if (! $this->state->hasTokenExpiration()) {
+        if (! $this->state->hasAccessTokenExpiration()) {
             $this->exchange();
         }
 
-        return $this->state->getTokenExpiration();
+        return $this->state->getAccessTokenExpiration();
     }
 
     /**
@@ -442,13 +442,13 @@ final class Auth0
      *
      * @param string $refreshToken - refresh token returned from the code exchange.
      */
-    public function setTokenExpiration(
-        string $tokenExpiration
+    public function setAccessTokenExpiration(
+        string $accessTokenExpiration
     ): self {
-        $this->state->setTokenExpiration($tokenExpiration);
+        $this->state->setAccessTokenExpiration($accessTokenExpiration);
 
         if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistAccessToken()) {
-            $this->configuration->getSessionStorage()->set('tokenExpiration', $tokenExpiration);
+            $this->configuration->getSessionStorage()->set('accessTokenExpiration', $accessTokenExpiration);
         }
 
         return $this;
@@ -523,7 +523,7 @@ final class Auth0
 
             if ($this->configuration->getPersistAccessToken()) {
                 $state['accessToken'] = $this->configuration->getSessionStorage()->get('accessToken');
-                $state['tokenExpiration'] = $this->configuration->getSessionStorage()->get('tokenExpiration');
+                $state['accessTokenExpiration'] = $this->configuration->getSessionStorage()->get('accessTokenExpiration');
             }
 
             if ($this->configuration->getPersistRefreshToken()) {
