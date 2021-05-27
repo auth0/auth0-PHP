@@ -85,7 +85,7 @@ final class HttpClient
         $this->mockedResponses[] = (object) [
             'response' => $response,
             'callback' => $callback,
-            'exception' => $exception
+            'exception' => $exception,
         ];
 
         return $this;

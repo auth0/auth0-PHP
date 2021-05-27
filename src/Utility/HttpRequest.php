@@ -101,7 +101,7 @@ final class HttpRequest
         $this->basePath = $basePath;
         $this->headers = $headers;
         $this->domain = $domain;
-        $this->mockedResponses =& $mockedResponses;
+        $this->mockedResponses = & $mockedResponses;
     }
 
     /**

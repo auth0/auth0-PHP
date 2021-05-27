@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility;
 
-use Iterator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 

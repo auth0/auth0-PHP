@@ -24,8 +24,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
     public function __construct(
         HttpClient $httpClient
-    )
-    {
+    ) {
         $this->httpClient = $httpClient;
         $this->processLastResponse();
     }
@@ -227,7 +226,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                     }
 
                     if ($resultKey !== 'start') {
-                        for ($i=0; $i < count($result); $i++) {
+                        for ($i = 0; $i < count($result); $i++) {
                             $this->results[$start + $i] = $result[$i];
                         }
                     }
