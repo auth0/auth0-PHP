@@ -133,7 +133,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
             // Issue next paged request.
             try {
-                $response = $lastBuilder->call();
+                $lastBuilder->call();
             } catch (NetworkException $exception) {
                 return false;
             }
@@ -165,7 +165,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
             // Issue next paged request.
             try {
-                $response = $lastBuilder->call();
+                $lastBuilder->call();
             } catch (NetworkException $exception) {
                 return false;
             }
