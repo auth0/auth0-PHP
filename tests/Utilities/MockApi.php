@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Utilities;
 
+use Auth0\SDK\Utility\HttpClient;
 use Http\Discovery\Psr18ClientDiscovery;
 use Http\Discovery\Strategy\MockClientStrategy;
-use Mockery;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -34,7 +34,7 @@ abstract class MockApi
         $this->setClient();
 
         if (! $responses) {
-            $responses[] = Mockery::mock(ResponseInterface::class);
+            $responses[] = HttpResponseGenerator::create();
         }
 
         // Setup the API class' mock httpClient with the response payload.
@@ -52,6 +52,22 @@ abstract class MockApi
      * Returns an instance of the configured API class.
      */
     abstract public function mock();
+
+    /**
+     * Returns the current client.
+     */
+    public function getClient(): MockApi
+    {
+        return $this->client;
+    }
+
+    /**
+     * Returns the current HTTPClient.
+     */
+    public function getHttpClient(): HttpClient
+    {
+        return $this->client->getHttpClient();
+    }
 
     /**
      * Callback fired whenever the HttpClient instance of an API class would use sendRequest.

@@ -38,7 +38,7 @@ final class Roles extends ManagementEndpoint
             'name' => $name,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('roles')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -60,7 +60,7 @@ final class Roles extends ManagementEndpoint
         array $parameters = [],
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('roles')
             ->withParams($parameters)
             ->withOptions($options)
@@ -84,7 +84,7 @@ final class Roles extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('roles', $id)
             ->withOptions($options)
             ->call();
@@ -110,7 +110,7 @@ final class Roles extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('roles', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -134,7 +134,7 @@ final class Roles extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('roles', $id)
             ->withOptions($options)
             ->call();
@@ -169,7 +169,7 @@ final class Roles extends ManagementEndpoint
             $payload['permissions'][] = (object) $permission;
         }
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('roles', $id, 'permissions')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -193,7 +193,7 @@ final class Roles extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('roles', $id, 'permissions')
             ->withOptions($options)
             ->call();
@@ -228,7 +228,7 @@ final class Roles extends ManagementEndpoint
             $payload['permissions'][] = (object) $permission;
         }
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('roles', $id, 'permissions')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -255,7 +255,7 @@ final class Roles extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateArray($users, 'users');
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('roles', $id, 'users')
             ->withBody(
                 (object) [
@@ -286,7 +286,7 @@ final class Roles extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('roles', $id, 'users')
             ->withOptions($options)
             ->call();

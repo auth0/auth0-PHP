@@ -49,7 +49,7 @@ final class DeviceCredentials extends ManagementEndpoint
             'device_id' => $deviceId,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('device-credentials')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -89,7 +89,7 @@ final class DeviceCredentials extends ManagementEndpoint
             $payload['type'] = $type;
         }
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('device-credentials')
             ->withParams($payload)
             ->withOptions($options)
@@ -113,7 +113,7 @@ final class DeviceCredentials extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('device-credentials', $id)
             ->withOptions($options)
             ->call();

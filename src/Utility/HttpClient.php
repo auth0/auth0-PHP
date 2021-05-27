@@ -63,13 +63,7 @@ final class HttpClient
         string $method
     ): HttpRequest {
         $method = strtolower($method);
-        $nextMockedResponse = null;
-
-        if (count($this->mockedResponses)) {
-            $nextMockedResponse = array_shift($this->mockedResponses);
-        }
-
-        $builder = new HttpRequest($this->configuration, $method, $this->basePath, $this->headers, $nextMockedResponse);
+        $builder = new HttpRequest($this->configuration, $method, $this->basePath, $this->headers, null, $this->mockedResponses);
 
         if (in_array($method, ['post', 'put', 'patch', 'delete'])) {
             $builder->withHeader('Content-Type', 'application/json');
@@ -85,12 +79,37 @@ final class HttpClient
      */
     public function mockResponse(
         ResponseInterface $response,
-        ?callable $callback = null
+        ?callable $callback = null,
+        ?\Exception $exception = null
     ): self {
         $this->mockedResponses[] = (object) [
             'response' => $response,
             'callback' => $callback,
+            'exception' => $exception
         ];
+
+        return $this;
+    }
+
+    /**
+     * Inject a series of Psr\Http\Message\ResponseInterface objects into created HttpRequest clients.
+     */
+    public function mockResponses(
+        array $responses
+    ): self {
+        foreach ($responses as $response) {
+            if ($response instanceof ResponseInterface) {
+                $response = [ 'response' => $response ];
+            }
+
+            if (! isset($response['response'])) {
+                continue;
+            }
+
+            if ($response['response'] instanceof ResponseInterface) {
+                $this->mockResponse($response['response'], $response['callback'] ?? null);
+            }
+        }
 
         return $this;
     }

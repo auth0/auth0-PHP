@@ -30,7 +30,7 @@ final class Logs extends ManagementEndpoint
         array $parameters = [],
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('logs')
             ->withParams($parameters)
             ->withOptions($options)
@@ -54,7 +54,7 @@ final class Logs extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('logs', $id)
             ->withOptions($options)
             ->call();

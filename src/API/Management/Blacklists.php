@@ -41,7 +41,7 @@ final class Blacklists extends ManagementEndpoint
             $request['aud'] = $aud;
         }
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('blacklists', 'tokens')
             ->withBody((object) $request)
             ->withOptions($options)
@@ -65,7 +65,7 @@ final class Blacklists extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($aud, 'aud');
 
-        $client = $this->apiClient->method('get')
+        $client = $this->getHttpClient()->method('get')
             ->addPath('blacklists', 'tokens');
 
         if ($aud !== null) {

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\HttpClient;
+use Auth0\SDK\Utility\HttpRequest;
+use Auth0\SDK\Utility\HttpResponsePaginator;
 
 /**
  * Class ManagementEndpoint.
@@ -13,27 +15,43 @@ use Auth0\SDK\Utility\HttpClient;
 abstract class ManagementEndpoint
 {
     /**
-     * Injected ApiClient instance to use.
+     * Injected HttpClient instance to use.
      */
-    protected HttpClient $apiClient;
+    private HttpClient $httpClient;
 
     /**
      * ManagementEndpoint constructor.
      *
-     * @param ApiClient $apiClient ApiClient instance to use.
+     * @param HttpClient $httpClient HttpClient instance to use.
      */
     public function __construct(
-        HttpClient $apiClient
+        HttpClient $httpClient
     ) {
-        $this->apiClient = $apiClient;
+        $this->httpClient = $httpClient;
     }
 
     /**
-     * Get the injected ApiClient instance.
+     * Get the injected HttpClient instance.
      */
-    public function getApiClient(): HttpClient
+    public function getHttpClient(): HttpClient
     {
-        return $this->apiClient;
+        return $this->httpClient;
+    }
+
+    /**
+     * Return an instance of HttpRequest representing the last issued request.
+     */
+    public function getLastRequest(): HttpRequest
+    {
+        return $this->httpClient->getLastRequest();
+    }
+
+    /**
+     * Return a ResponsePaginator instance configured for the last HttpRequest.
+     */
+    public function getResponsePaginator(): HttpResponsePaginator
+    {
+        return new HttpResponsePaginator($this->httpClient);
     }
 
     /**

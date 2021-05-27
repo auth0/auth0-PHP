@@ -38,7 +38,7 @@ final class Tickets extends ManagementEndpoint
             'user_id' => $userId,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('tickets', 'email-verification')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -58,7 +58,7 @@ final class Tickets extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('tickets', 'password-change')
             ->withBody((object) $body)
             ->withOptions($options)

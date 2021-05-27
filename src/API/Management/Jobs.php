@@ -39,7 +39,7 @@ final class Jobs extends ManagementEndpoint
         $this->validateString($filePath, 'filePath');
         $this->validateString($connectionId, 'connectionId');
 
-        $request = $this->apiClient->method('post')
+        $request = $this->getHttpClient()->method('post')
             ->addPath('jobs', 'users-imports')
             ->addFile('users', $filePath)
             ->withFormParam('connection_id', $connectionId);
@@ -69,7 +69,7 @@ final class Jobs extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('jobs', 'users-exports')
             ->withBody((object) $body)
             ->withOptions($options)
@@ -99,7 +99,7 @@ final class Jobs extends ManagementEndpoint
             'user_id' => $userId,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('jobs', 'verification-email')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -125,7 +125,7 @@ final class Jobs extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('jobs', $id)
             ->withOptions($options)
             ->call();
@@ -150,7 +150,7 @@ final class Jobs extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('jobs', $id, 'errors')
             ->withOptions($options)
             ->call();

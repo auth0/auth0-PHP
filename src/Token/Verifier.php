@@ -179,7 +179,7 @@ final class Verifier
             }
         }
 
-        $keys = (new HttpRequest($this->configuration, 'get', $path, [], null, $scheme . '://' . $jwksUri['host']))->call();
+        $keys = (new HttpRequest($this->configuration, 'get', $path, [], $scheme . '://' . $jwksUri['host']))->call();
 
         if (is_array($keys) && isset($keys['keys']) && count($keys['keys'])) {
             foreach ($keys['keys'] as $key) {

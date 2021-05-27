@@ -58,7 +58,7 @@ final class EmailTemplates extends ManagementEndpoint
             'enabled' => $enabled,
         ] + $additional;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('email-templates')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -83,7 +83,7 @@ final class EmailTemplates extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($templateName, 'templateName');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('email-templates', $templateName)
             ->withOptions($options)
             ->call();
@@ -111,7 +111,7 @@ final class EmailTemplates extends ManagementEndpoint
         $this->validateString($templateName, 'templateName');
         $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('put')
+        return $this->getHttpClient()->method('put')
             ->addPath('email-templates', $templateName)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -140,7 +140,7 @@ final class EmailTemplates extends ManagementEndpoint
         $this->validateString($templateName, 'templateName');
         $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('email-templates', $templateName)
             ->withBody((object) $body)
             ->withOptions($options)

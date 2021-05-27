@@ -28,7 +28,7 @@ final class Stats extends ManagementEndpoint
     public function getActiveUsers(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('stats', 'active-users')
             ->withOptions($options)
             ->call();
@@ -51,7 +51,7 @@ final class Stats extends ManagementEndpoint
         ?string $to = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $client = $this->apiClient->method('get')
+        $client = $this->getHttpClient()->method('get')
             ->addPath('stats', 'daily');
 
         if ($from !== null) {

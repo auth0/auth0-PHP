@@ -42,7 +42,7 @@ final class Connections extends ManagementEndpoint
             'strategy' => $strategy,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('connections')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -64,7 +64,7 @@ final class Connections extends ManagementEndpoint
         array $parameters = [],
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('connections')
             ->withParams($parameters)
             ->withOptions($options)
@@ -88,7 +88,7 @@ final class Connections extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('connections', $id)
             ->withOptions($options)
             ->call();
@@ -113,7 +113,7 @@ final class Connections extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('connections', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -137,7 +137,7 @@ final class Connections extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('connections', $id)
             ->withOptions($options)
             ->call();
@@ -163,7 +163,7 @@ final class Connections extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateEmail($email, 'email');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('connections', $id, 'users')
             ->withParam('email', $email)
             ->withOptions($options)

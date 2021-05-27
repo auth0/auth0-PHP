@@ -19,11 +19,6 @@ use Psr\Http\Message\ResponseInterface;
 final class HttpRequest
 {
     /**
-     * Stored instance of last send request.
-     */
-    private ?RequestInterface $lastRequest = null;
-
-    /**
      * Shared configuration data.
      */
     private SdkConfiguration $configuration;
@@ -74,9 +69,19 @@ final class HttpRequest
     private string $body = '';
 
     /**
+     * Stored instance of last send request.
+     */
+    private ?RequestInterface $lastRequest = null;
+
+    /**
+     * Stored instance of last received response.
+     */
+    private ?ResponseInterface $lastResponse = null;
+
+    /**
      * Mocked response.
      */
-    private ?object $mockedResponse = null;
+    private ?array $mockedResponses = null;
 
     /**
      * HttpRequest constructor.
@@ -88,15 +93,15 @@ final class HttpRequest
         string $method,
         string $basePath = '/',
         array $headers = [],
-        ?object $mockedResponse = null,
-        ?string $domain = null
+        ?string $domain = null,
+        ?array &$mockedResponses = null
     ) {
         $this->configuration = $configuration;
         $this->method = $method;
         $this->basePath = $basePath;
         $this->headers = $headers;
         $this->domain = $domain;
-        $this->mockedResponse = $mockedResponse;
+        $this->mockedResponses =& $mockedResponses;
     }
 
     /**
@@ -105,6 +110,14 @@ final class HttpRequest
     public function getLastRequest(): ?RequestInterface
     {
         return $this->lastRequest;
+    }
+
+    /**
+     * Return a ResponseInterface representation of the last received response.
+     */
+    public function getLastResponse(): ?ResponseInterface
+    {
+        return $this->lastResponse;
     }
 
     /**
@@ -202,6 +215,7 @@ final class HttpRequest
         $httpClient = $this->configuration->getHttpClient();
         $httpRequest = $httpRequestFactory->createRequest($this->method, $uri);
         $headers = $this->headers;
+        $mockedResponse = null;
 
         // Write a body, if available (e.g. a JSON object body, etc.)
         if ($this->body) {
@@ -235,21 +249,28 @@ final class HttpRequest
         }
 
         // IF we are mocking responses, add the mocked response to the client response stack.
-        if ($this->mockedResponse && method_exists($httpClient, 'addResponse')) {
-            $httpClient->addResponse($this->mockedResponse->response);
+        if ($this->mockedResponses && method_exists($httpClient, 'addResponse')) {
+            $mockedResponse = array_shift($this->mockedResponses);
+            $httpClient->addResponse($mockedResponse->response);
         }
 
         // Store the request so it can be potentially reviewed later for error troubleshooting, etc.
         $this->lastRequest = $httpRequest;
 
         try {
+            if ($mockedResponse && $mockedResponse->exception instanceof \Exception) {
+                throw $mockedResponse->exception;
+            }
+
             // Use the http client to issue the request and collect the response.
             $response = $httpClient->sendRequest($httpRequest);
 
             // Used for unit testing: if we're mocking responses and have a callback assigned, invoke that callback with our request and response.
-            if ($this->mockedResponse && $this->mockedResponse->callback && is_callable($this->mockedResponse->callback)) {
-                call_user_func($this->mockedResponse->callback, $httpRequest, $response);
+            if ($mockedResponse && $mockedResponse->callback && is_callable($mockedResponse->callback)) {
+                call_user_func($mockedResponse->callback, $httpRequest, $response);
             }
+
+            $this->lastResponse = $response;
 
             // Return the response.
             return $response;
