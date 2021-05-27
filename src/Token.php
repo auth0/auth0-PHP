@@ -51,13 +51,13 @@ final class Token
     public function __construct(
         string $jwt,
         int $type = self::TYPE_ID_TOKEN,
-        ?SdkConfiguration $configuration = null
+        SdkConfiguration &$configuration
     ) {
         // Store the type of token we're working with.
         $this->type = $type;
 
         // Store the configuration internally.
-        $this->configuration = $configuration;
+        $this->configuration = & $configuration;
 
         // Create a transient storage handler using the configured transientStorage medium.
         $this->transient = new TransientStoreHandler($configuration->getTransientStorage());
@@ -76,7 +76,7 @@ final class Token
     public function parse(
         string $jwt
     ): self {
-        $this->parser = (new Parser($jwt, $this->configuration));
+        $this->parser = new Parser($jwt, $this->configuration);
         return $this;
     }
 

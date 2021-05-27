@@ -8,7 +8,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class ApiClient
+ * Class HttpClient
  */
 final class HttpClient
 {
@@ -38,16 +38,16 @@ final class HttpClient
     private array $mockedResponses = [];
 
     /**
-     * ApiClient constructor.
+     * HttpClient constructor.
      *
      * @param array $config Configuration for this client.
      */
     public function __construct(
-        SdkConfiguration $configuration,
+        SdkConfiguration &$configuration,
         string $basePath = '/',
         array $headers = []
     ) {
-        $this->configuration = $configuration;
+        $this->configuration = & $configuration;
 
         $this->basePath = $basePath;
         $this->headers = $headers;

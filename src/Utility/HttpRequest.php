@@ -89,14 +89,14 @@ final class HttpRequest
      * @param array $config Configuration array passed to \Auth0\SDK\API\Management constructor.
      */
     public function __construct(
-        SdkConfiguration $configuration,
+        SdkConfiguration &$configuration,
         string $method,
         string $basePath = '/',
         array $headers = [],
         ?string $domain = null,
         ?array &$mockedResponses = null
     ) {
-        $this->configuration = $configuration;
+        $this->configuration = & $configuration;
         $this->method = $method;
         $this->basePath = $basePath;
         $this->headers = $headers;
