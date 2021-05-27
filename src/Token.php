@@ -49,9 +49,9 @@ final class Token
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
+        SdkConfiguration &$configuration,
         string $jwt,
-        int $type = self::TYPE_ID_TOKEN,
-        SdkConfiguration &$configuration
+        int $type = self::TYPE_ID_TOKEN
     ) {
         // Store the type of token we're working with.
         $this->type = $type;

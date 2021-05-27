@@ -157,7 +157,7 @@ final class Auth0
         ?int $tokenNow = null
     ): Token {
         // instantiate Token handler using the provided JWT, expecting an ID token, using the SDK configuration.
-        $token = new Token($token, Token::TYPE_ID_TOKEN, $this->configuration);
+        $token = new Token($this->configuration, $token, Token::TYPE_ID_TOKEN);
 
         // Verify token signature.
         $token->verify();
