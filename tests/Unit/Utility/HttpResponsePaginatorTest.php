@@ -59,7 +59,7 @@ test('returns loaded results', function(): void {
     $this->assertEquals(3, count($this->paginator));
 
     foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('user' . $index + 1, $result);
+        $this->assertEquals('user' . ($index + 1), $result);
     }
 });
 
@@ -87,7 +87,7 @@ test('sends network requests for paginated results', function(): void {
     $this->assertEquals(4, count($this->paginator));
 
     foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('user' . $index + 1, $result);
+        $this->assertEquals('user' . ($index + 1), $result);
     }
 
     $this->assertEquals(1, $this->paginator->countNetworkRequests());
@@ -113,7 +113,7 @@ test('recreates an http request that was issued without pagination', function():
     $this->assertEquals(2, count($this->paginator));
 
     foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('user' . $index + 1, $result);
+        $this->assertEquals('user' . ($index + 1), $result);
     }
 
     $this->assertEquals(1, $this->paginator->countNetworkRequests());
@@ -142,7 +142,7 @@ test('silently exits iteration after network error', function(): void {
     $this->paginator = $sdk->getResponsePaginator();
 
     foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('user' . $index + 1, $result);
+        $this->assertEquals('user' . ($index + 1), $result);
     }
 
     $this->assertEquals(200, count($this->paginator));
