@@ -20,6 +20,16 @@ final class PaginatedRequest
     private ?int $perPage = null;
 
     /**
+     * Optional ID from which to start selection. If not specified, checkpoint pagination is disabled.
+     */
+    private ?string $from = null;
+
+    /**
+     * Number of results per page for checkpoint pagination.
+     */
+    private ?int $take = null;
+
+    /**
      * Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
      */
     private ?bool $includeTotals = null;
@@ -34,11 +44,13 @@ final class PaginatedRequest
     public function __construct(
         ?int $page = null,
         ?int $perPage = null,
-        ?bool $includeTotals = null
+        ?bool $includeTotals = null,
+        ?string $from = null
     ) {
         $this->page = $page;
         $this->perPage = $perPage;
         $this->includeTotals = $includeTotals;
+        $this->from = $from;
     }
 
     /**
@@ -84,6 +96,48 @@ final class PaginatedRequest
     }
 
     /**
+     * Set the `from` for the checkpoint-paginated request.
+     *
+     * @param string $from Value of `from` parameter for the checkpoint-paginated request.
+     */
+    public function setFrom(
+        string $from
+    ): self {
+        $this->from = $from;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the `from` for the checkpoint-paginated request.
+     */
+    public function getFrom(): ?string
+    {
+        return $this->from;
+    }
+
+    /**
+     * Set the `take` for the paginated request.
+     *
+     * @param int $take Value of `take` parameter for the checkpoint-paginated request.
+     */
+    public function setTake(
+        int $take
+    ): self {
+        $this->take = $take;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve the `take` for the checkpoint-paginated request.
+     */
+    public function getTake(): ?int
+    {
+        return $this->take;
+    }
+
+    /**
      * Set the `include_totals` for the paginated request.
      *
      * @param ?bool $includeTotals Value of `include_totals` parameter for the paginated request.
@@ -113,7 +167,23 @@ final class PaginatedRequest
     {
         $response = [];
 
-        if ($this->perPage !== null) {
+        // Are we using checkpoint pagination's ?take param?
+        if ($this->take !== null) {
+            $response['take'] = $this->take;
+        }
+
+        // Are we using checkpoint pagination's ?from param?
+        if ($this->from !== null) {
+            $response['from'] = $this->from;
+
+            // Treat per_page as take for checkpoint pagination when a 'take' value isn't provided.
+            if ($this->take === null && $this->perPage !== null) {
+                $response['take'] = $this->perPage;
+            }
+        }
+
+        // If we aren't using checkpoint pagination, and have set per_page ...
+        if (! $this->take && ! $this->from && $this->perPage !== null) {
             $response['page'] = $this->page ?? 0;
             $response['per_page'] = $this->perPage;
 

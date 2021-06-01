@@ -2,14 +2,49 @@
 
 declare(strict_types=1);
 
-use Auth0\SDK\Exception\NetworkException;
+use Auth0\SDK\Utility\Request\PaginatedRequest;
+use Auth0\SDK\Utility\Request\RequestOptions;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\MockManagementApi;
 
 uses()->group('network')->group('pagination');
 
+test('throws an error when paginating without any request prepared', function(): void {
+    $sdk = (new MockManagementApi())->mock();
+
+    $this->expectException(\Auth0\SDK\Exception\PaginatorException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
+
+    $this->paginator = $sdk->getResponsePaginator();
+});
+
+test('throws an error when attempting to initiate pagination on a failed network request', function(): void {
+    $sdk = new MockManagementApi(null);
+
+    $sdk->getHttpClient()->mockResponse(
+        HttpResponseGenerator::create('', 500),
+        null,
+        \Auth0\SDK\Exception\NetworkException::requestFailed('Mocked network failure.')
+    );
+
+    $sdk = $sdk->mock();
+
+    try {
+        $sdk->users()->getAll();
+    } catch (\Throwable $th) { // phpcs:ignore
+        // Ignore the mocked network error.
+    }
+
+    $this->expectException(\Auth0\SDK\Exception\PaginatorException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
+
+    $this->paginator = $sdk->getResponsePaginator();
+});
+
 test('returns a count of 0 when there are no results', function(): void {
     $sdk = (new MockManagementApi())->mock();
+    $sdk->users()->getAll();
+
     $this->paginator = $sdk->getResponsePaginator();
 
     $this->assertEquals(0, count($this->paginator));
@@ -22,8 +57,8 @@ test('returns a count when there are results', function(): void {
             'total' => 2,
             'limit' => 2,
             'length' => 2,
-            'users' => ['user1', 'user2']
-        ]))
+            'users' => ['user1', 'user2'],
+        ])),
     ]))->mock();
 
     $sdk->users()->getAll();
@@ -32,7 +67,19 @@ test('returns a count when there are results', function(): void {
     $this->assertEquals(2, count($this->paginator));
 });
 
-test('fails when used with a non-GET api request', function(): void {
+test('throws an error when used with a non-GET endpoint', function(): void {
+    $sdk = (new MockManagementApi())->mock();
+    $sdk->blacklists()->get(uniqid());
+
+    $badEndpointPath = $sdk->getLastRequest()->getLastRequest()->getUri()->getPath();
+
+    $this->expectException(\Auth0\SDK\Exception\PaginatorException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\PaginatorException::MSG_HTTP_ENDPOINT_UNSUPPORTED, $badEndpointPath));
+
+    $this->paginator = $sdk->getResponsePaginator();
+});
+
+test('throws an error when used with an unsupported endpoint', function(): void {
     $sdk = (new MockManagementApi())->mock();
     $sdk->users()->create(uniqid(), [uniqid()]);
 
@@ -49,8 +96,8 @@ test('returns loaded results', function(): void {
             'total' => 3,
             'limit' => 3,
             'length' => 3,
-            'users' => ['user1', 'user2', 'user3']
-        ]))
+            'users' => ['user1', 'user2', 'user3'],
+        ])),
     ]))->mock();
 
     $sdk->users()->getAll();
@@ -63,21 +110,21 @@ test('returns loaded results', function(): void {
     }
 });
 
-test('sends network requests for paginated results', function(): void {
+test('returns network requests for paginated results', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'start' => 0,
             'total' => 4,
             'limit' => 2,
             'length' => 2,
-            'users' => ['user1', 'user2']
+            'users' => ['user1', 'user2'],
         ])),
         HttpResponseGenerator::create(json_encode([
             'start' => 2,
             'total' => 4,
             'limit' => 2,
             'length' => 2,
-            'users' => ['user3', 'user4']
+            'users' => ['user3', 'user4'],
         ])),
     ]))->mock();
 
@@ -93,47 +140,39 @@ test('sends network requests for paginated results', function(): void {
     $this->assertEquals(1, $this->paginator->countNetworkRequests());
 });
 
-test('recreates an http request that was issued without pagination', function(): void {
+test('uses http request replay when request is invoked without pagination', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
-            'user1', 'user2'
+            'user1',
+            'user2',
         ])),
         HttpResponseGenerator::create(json_encode([
-            'start' => 0,
-            'total' => 2,
-            'limit' => 2,
-            'length' => 2,
-            'users' => ['user1', 'user2']
-        ]))
+            'user1',
+            'user2',
+        ])),
     ]))->mock();
 
     $sdk->users()->getAll();
     $this->paginator = $sdk->getResponsePaginator();
 
-    $this->assertEquals(2, count($this->paginator));
-
-    foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('user' . ($index + 1), $result);
-    }
-
     $this->assertEquals(1, $this->paginator->countNetworkRequests());
 });
 
-test('silently exits iteration after network error', function(): void {
+test('ignores network errors and exits iteration', function(): void {
     $sdk = new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'start' => 0,
             'total' => 200,
             'limit' => 1,
             'length' => 1,
-            'users' => ['user1']
-        ]))
+            'users' => ['user1'],
+        ])),
     ]);
 
     $sdk->getHttpClient()->mockResponse(
         HttpResponseGenerator::create('', 500),
         null,
-        NetworkException::requestFailed('Mocked network failure.')
+        \Auth0\SDK\Exception\NetworkException::requestFailed('Mocked network failure.')
     );
 
     $sdk = $sdk->mock();
@@ -147,4 +186,46 @@ test('silently exits iteration after network error', function(): void {
 
     $this->assertEquals(200, count($this->paginator));
     $this->assertEquals(1, $this->paginator->countNetworkRequests());
+});
+
+test('uses checkpoint pagination params when appropriate', function(): void {
+    $sdk = (new MockManagementApi([
+        HttpResponseGenerator::create(json_encode([
+            'organizations' => ['org1', 'org2'],
+            'next' => 'test1',
+        ])),
+        HttpResponseGenerator::create(json_encode([
+            'organizations' => ['org3', 'org4'],
+            'next' => 'test2',
+        ])),
+        HttpResponseGenerator::create(json_encode([
+            'organizations' => ['org5', 'org6'],
+        ])),
+    ]))->mock();
+
+    $pagination = (new PaginatedRequest())->setTake(2);
+
+    $sdk->organizations()->getAll(new RequestOptions(null, $pagination));
+    $this->paginator = $sdk->getResponsePaginator();
+
+    $this->assertEquals(-1, count($this->paginator));
+
+    foreach ($this->paginator as $index => $result) {
+        $this->assertEquals('org' . ($index + 1), $result);
+    }
+
+    $this->assertEquals(2, $this->paginator->countNetworkRequests());
+});
+
+test('throws an error if checkpoint pagination is used on an unsupported endpoint', function(): void {
+    $sdk = (new MockManagementApi())->mock();
+    $pagination = (new PaginatedRequest())->setTake(2);
+    $sdk->users()->getAll([], new RequestOptions(null, $pagination));
+
+    $badEndpointPath = $sdk->getLastRequest()->getLastRequest()->getUri()->getPath();
+
+    $this->expectException(\Auth0\SDK\Exception\PaginatorException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\PaginatorException::MSG_HTTP_ENDPOINT_DOES_NOT_SUPPORT_CHECKPOINT_PAGINATION, $badEndpointPath));
+
+    $this->paginator = $sdk->getResponsePaginator();
 });
