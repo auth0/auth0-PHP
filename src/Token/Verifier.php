@@ -242,6 +242,7 @@ final class Verifier
             return;
         }
 
+        // phpcs:ignore
         // TODO: Remove when PHP 7.x support is EOL
         openssl_free_key($key);
     }

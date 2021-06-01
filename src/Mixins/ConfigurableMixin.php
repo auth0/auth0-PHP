@@ -93,7 +93,10 @@ trait ConfigurableMixin
     ): self {
         $this->configuredState = [];
 
+        // phpcs:ignore
         // TODO: Replace get_class() w/ ::class when 7.x support is dropped.
+
+        // phpcs:ignore
         $constructor = new \ReflectionMethod(get_class($this) . '::__construct');
         $parameters = $constructor->getParameters();
         $arguments = $args[0];

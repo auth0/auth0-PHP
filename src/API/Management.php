@@ -27,7 +27,6 @@ use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
@@ -198,7 +197,7 @@ final class Management
 
         // No management token could be acquired.
         if ($managementToken === null) {
-            throw ConfigurationException::requiresManagementToken();
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresManagementToken();
         }
 
         // Build the API client using the management token.

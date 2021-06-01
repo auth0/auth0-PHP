@@ -23,23 +23,26 @@ abstract class MockApi
     /**
      * MockApi constructor.
      *
-     * @param array $responses Array of mock Psr\Http\Message\ResponseInterface objects.
+     * @param array|null $responses Array of mock Psr\Http\Message\ResponseInterface objects. If an empty array, an empty successful response will be mocked. If null, nothing will be mocked.
      */
-    public function __construct(array $responses = [])
-    {
+    public function __construct(
+        ?array $responses = []
+    ) {
         // Allow mock HttpClient to be auto-discovered for use in testing.
         Psr18ClientDiscovery::prependStrategy(MockClientStrategy::class);
 
         // Create an instance of the intended API.
         $this->setClient();
 
-        if (! $responses) {
+        if ($responses !== null && ! count($responses)) {
             $responses[] = HttpResponseGenerator::create();
         }
 
         // Setup the API class' mock httpClient with the response payload.
-        foreach ($responses as $response) {
-            $this->client->getHttpClient()->mockResponse($response, [$this, 'onFetch']);
+        if ($responses !== null && count($responses)) {
+            foreach ($responses as $response) {
+                $this->client->getHttpClient()->mockResponse($response, [$this, 'onFetch']);
+            }
         }
     }
 

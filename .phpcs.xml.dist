@@ -112,7 +112,6 @@
     <rule ref="SlevomatCodingStandard.ControlStructures.LanguageConstructWithParentheses"/>
     <rule ref="SlevomatCodingStandard.Exceptions.DeadCatch"/>
     <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure"/>
-    <rule ref="SlevomatCodingStandard.Functions.UnusedParameter"/>
     <rule ref="SlevomatCodingStandard.Functions.UselessParameterDefaultValue"/>
     <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedExceptions"/>
     <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
@@ -149,7 +148,6 @@
     <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint"/>
 
     <!-- Code > Functions -->
-    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
     <rule ref="Generic.Functions.CallTimePassByReference"/>
     <rule ref="Generic.PHP.DeprecatedFunctions"/>
     <rule ref="Generic.PHP.ForbiddenFunctions"/>
@@ -164,11 +162,9 @@
     <rule ref="Generic.Files.OneClassPerFile"/>
     <rule ref="PSR1.Classes.ClassDeclaration"/>
     <rule ref="Squiz.Classes.ValidClassName"/>
-    <rule ref="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming"/>
-    <rule ref="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming"/>
 
     <!-- Architecture > Files -->
-    <rule ref="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming"/>
+    <!-- -->
 
     <!-- Architecture > Functions -->
     <!-- -->
