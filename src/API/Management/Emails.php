@@ -42,7 +42,7 @@ final class Emails extends ManagementEndpoint
             'credentials' => (object) $credentials,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('emails', 'provider')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -62,7 +62,7 @@ final class Emails extends ManagementEndpoint
     public function getProvider(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('emails', 'provider')
             ->withOptions($options)
             ->call();
@@ -95,7 +95,7 @@ final class Emails extends ManagementEndpoint
             'credentials' => (object) $credentials,
         ] + $body;
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('emails', 'provider')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -115,7 +115,7 @@ final class Emails extends ManagementEndpoint
     public function deleteProvider(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('emails', 'provider')
             ->withOptions($options)
             ->call();

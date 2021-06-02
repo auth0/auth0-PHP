@@ -54,7 +54,7 @@ class SessionStoreTest extends TestCase
     public function testInitSession(): void
     {
         // Suppressing "headers already sent" warning related to cookies.
-        @self::$sessionStore->set(self::TEST_KEY, self::TEST_VALUE);
+        @self::$sessionStore->set(self::TEST_KEY, self::TEST_VALUE); // phpcs:ignore
 
         // Make sure we have a session to check.
         $this->assertNotEmpty(session_id());
@@ -118,7 +118,7 @@ class SessionStoreTest extends TestCase
         $this->assertEquals($test_base_name . '_' . self::TEST_KEY, $test_this_key_name);
 
         // Suppressing "headers already sent" warning related to cookies.
-        @self::$sessionStore->set(self::TEST_KEY, self::TEST_VALUE);
+        @self::$sessionStore->set(self::TEST_KEY, self::TEST_VALUE); // phpcs:ignore
 
         $this->assertEquals(self::TEST_VALUE, self::$sessionStore->get(self::TEST_KEY));
     }

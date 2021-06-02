@@ -39,7 +39,7 @@ final class Users extends ManagementEndpoint
             'connection' => $connection,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('users')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -64,7 +64,7 @@ final class Users extends ManagementEndpoint
         array $parameters = [],
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('users')
             ->withParams($parameters)
             ->withOptions($options)
@@ -88,7 +88,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('users', $id)
             ->withOptions($options)
             ->call();
@@ -115,7 +115,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('users', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -139,7 +139,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('users', $id)
             ->withOptions($options)
             ->call();
@@ -165,7 +165,7 @@ final class Users extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'identities')
             ->withBody((object) $body)
             ->withOptions($options)
@@ -195,7 +195,7 @@ final class Users extends ManagementEndpoint
         $this->validateString($provider, 'provider');
         $this->validateString($identityId, 'identityId');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('users', $id, 'identities', $provider, $identityId)
             ->withOptions($options)
             ->call();
@@ -223,7 +223,7 @@ final class Users extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateArray($roles, 'roles');
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'roles')
             ->withBody(
                 (object) [
@@ -253,7 +253,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'roles')
             ->withOptions($options)
             ->call();
@@ -279,7 +279,7 @@ final class Users extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateArray($roles, 'roles');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('users', $id, 'roles')
             ->withBody(
                 (object) [
@@ -320,7 +320,7 @@ final class Users extends ManagementEndpoint
             $payload['permissions'][] = (object) $permission;
         }
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'permissions')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -344,7 +344,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'permissions')
             ->withOptions($options)
             ->call();
@@ -380,7 +380,7 @@ final class Users extends ManagementEndpoint
             $payload['permissions'][] = (object) $permission;
         }
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('users', $id, 'permissions')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -405,7 +405,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'logs')
             ->withOptions($options)
             ->call();
@@ -429,7 +429,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'organizations')
             ->withOptions($options)
             ->call();
@@ -452,7 +452,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'enrollments')
             ->withOptions($options)
             ->call();
@@ -476,7 +476,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'recovery-code-regeneration')
             ->withOptions($options)
             ->call();
@@ -500,7 +500,7 @@ final class Users extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'multifactor', 'actions', 'invalidate-remember-browser')
             ->withOptions($options)
             ->call();
@@ -527,7 +527,7 @@ final class Users extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateString($provider, 'provider');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('users', $id, 'multifactor', $provider)
             ->withOptions($options)
             ->call();

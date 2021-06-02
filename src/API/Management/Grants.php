@@ -30,7 +30,7 @@ final class Grants extends ManagementEndpoint
         array $parameters = [],
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('grants')
             ->withParams($parameters)
             ->withOptions($options)
@@ -132,7 +132,7 @@ final class Grants extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('grants', $id)
             ->withOptions($options)
             ->call();

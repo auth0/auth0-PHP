@@ -40,7 +40,7 @@ final class Rules extends ManagementEndpoint
             'script' => $script,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('rules')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -62,7 +62,7 @@ final class Rules extends ManagementEndpoint
         array $parameters = [],
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('rules')
             ->withParams($parameters)
             ->withOptions($options)
@@ -86,7 +86,7 @@ final class Rules extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('rules', $id)
             ->withOptions($options)
             ->call();
@@ -112,7 +112,7 @@ final class Rules extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('rules', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -136,7 +136,7 @@ final class Rules extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('rules', $id)
             ->withOptions($options)
             ->call();

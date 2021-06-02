@@ -39,7 +39,7 @@ final class ResourceServers extends ManagementEndpoint
             'identifier' => $identifier,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('resource-servers')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -59,7 +59,7 @@ final class ResourceServers extends ManagementEndpoint
     public function getAll(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('resource-servers')
             ->withOptions($options)
             ->call();
@@ -82,7 +82,7 @@ final class ResourceServers extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('resource-servers', $id)
             ->withOptions($options)
             ->call();
@@ -108,7 +108,7 @@ final class ResourceServers extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('resource-servers', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -132,7 +132,7 @@ final class ResourceServers extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('resource-servers', $id)
             ->withOptions($options)
             ->call();

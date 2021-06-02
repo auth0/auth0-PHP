@@ -30,7 +30,7 @@ final class UserBlocks extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('user-blocks', $id)
             ->withOptions($options)
             ->call();
@@ -51,7 +51,7 @@ final class UserBlocks extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('user-blocks', $id)
             ->withOptions($options)
             ->call();
@@ -72,7 +72,7 @@ final class UserBlocks extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($identifier, 'identifier');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('user-blocks')
             ->withParam('identifier', $identifier)
             ->withOptions($options)
@@ -94,7 +94,7 @@ final class UserBlocks extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($identifier, 'identifier');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('user-blocks')
             ->withParam('identifier', $identifier)
             ->withOptions($options)

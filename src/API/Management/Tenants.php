@@ -28,7 +28,7 @@ final class Tenants extends ManagementEndpoint
     public function get(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('tenants', 'settings')
             ->withOptions($options)
             ->call();
@@ -49,7 +49,7 @@ final class Tenants extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('tenants', 'settings')
             ->withBody((object) $body)
             ->withOptions($options)

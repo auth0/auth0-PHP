@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Utilities;
 
+use Auth0\SDK\Utility\HttpClient;
 use Http\Discovery\Psr18ClientDiscovery;
 use Http\Discovery\Strategy\MockClientStrategy;
-use Mockery;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -23,23 +23,26 @@ abstract class MockApi
     /**
      * MockApi constructor.
      *
-     * @param array $responses Array of mock Psr\Http\Message\ResponseInterface objects.
+     * @param array|null $responses Array of mock Psr\Http\Message\ResponseInterface objects. If an empty array, an empty successful response will be mocked. If null, nothing will be mocked.
      */
-    public function __construct(array $responses = [])
-    {
+    public function __construct(
+        ?array $responses = []
+    ) {
         // Allow mock HttpClient to be auto-discovered for use in testing.
         Psr18ClientDiscovery::prependStrategy(MockClientStrategy::class);
 
         // Create an instance of the intended API.
         $this->setClient();
 
-        if (! $responses) {
-            $responses[] = Mockery::mock(ResponseInterface::class);
+        if ($responses !== null && ! count($responses)) {
+            $responses[] = HttpResponseGenerator::create();
         }
 
         // Setup the API class' mock httpClient with the response payload.
-        foreach ($responses as $response) {
-            $this->client->getHttpClient()->mockResponse($response, [$this, 'onFetch']);
+        if ($responses !== null && count($responses)) {
+            foreach ($responses as $response) {
+                $this->client->getHttpClient()->mockResponse($response, [$this, 'onFetch']);
+            }
         }
     }
 
@@ -52,6 +55,22 @@ abstract class MockApi
      * Returns an instance of the configured API class.
      */
     abstract public function mock();
+
+    /**
+     * Returns the current client.
+     */
+    public function getClient(): MockApi
+    {
+        return $this->client;
+    }
+
+    /**
+     * Returns the current HTTPClient.
+     */
+    public function getHttpClient(): HttpClient
+    {
+        return $this->client->getHttpClient();
+    }
 
     /**
      * Callback fired whenever the HttpClient instance of an API class would use sendRequest.

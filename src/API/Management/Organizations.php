@@ -48,7 +48,7 @@ final class Organizations extends ManagementEndpoint
             ] + $body
         );
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('organizations')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -66,7 +66,7 @@ final class Organizations extends ManagementEndpoint
     public function getAll(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations')
             ->withOptions($options)
             ->call();
@@ -87,7 +87,7 @@ final class Organizations extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id)
             ->withOptions($options)
             ->call();
@@ -108,7 +108,7 @@ final class Organizations extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($name, 'name');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations', 'name', $name)
             ->withOptions($options)
             ->call();
@@ -146,7 +146,7 @@ final class Organizations extends ManagementEndpoint
             ] + $body
         );
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('organizations', $id)
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -166,7 +166,7 @@ final class Organizations extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id)
             ->withOptions($options)
             ->call();
@@ -196,7 +196,7 @@ final class Organizations extends ManagementEndpoint
             'connection_id' => $connectionId,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('organizations', $id, 'enabled_connections')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -218,7 +218,7 @@ final class Organizations extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'enabled_connections')
             ->withOptions($options)
             ->call();
@@ -242,7 +242,7 @@ final class Organizations extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateString($connectionId, 'connectionId');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
             ->withOptions($options)
             ->call();
@@ -268,7 +268,7 @@ final class Organizations extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateString($connectionId, 'connectionId');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -293,7 +293,7 @@ final class Organizations extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateString($connectionId, 'connectionId');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
             ->withOptions($options)
             ->call();
@@ -321,7 +321,7 @@ final class Organizations extends ManagementEndpoint
             'members' => $members,
         ];
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('organizations', $id, 'members')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -343,7 +343,7 @@ final class Organizations extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'members')
             ->withOptions($options)
             ->call();
@@ -371,7 +371,7 @@ final class Organizations extends ManagementEndpoint
             'members' => $members,
         ];
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id, 'members')
             ->withBody($payload)
             ->withOptions($options)
@@ -403,7 +403,7 @@ final class Organizations extends ManagementEndpoint
             'roles' => $roles,
         ];
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('organizations', $id, 'members', $userId, 'roles')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -428,7 +428,7 @@ final class Organizations extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateString($userId, 'userId');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'members', $userId, 'roles')
             ->withOptions($options)
             ->call();
@@ -459,7 +459,7 @@ final class Organizations extends ManagementEndpoint
             'roles' => $roles,
         ];
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id, 'members', $userId, 'roles')
             ->withBody($payload)
             ->withOptions($options)
@@ -510,7 +510,7 @@ final class Organizations extends ManagementEndpoint
             ] + $body
         );
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('organizations', $id, 'invitations')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -532,7 +532,7 @@ final class Organizations extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'invitations')
             ->withOptions($options)
             ->call();
@@ -556,7 +556,7 @@ final class Organizations extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateString($invitationId, 'invitationId');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'invitations', $invitationId)
             ->withOptions($options)
             ->call();
@@ -580,7 +580,7 @@ final class Organizations extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateString($invitationId, 'invitation');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id, 'invitations', $invitationId)
             ->withOptions($options)
             ->call();

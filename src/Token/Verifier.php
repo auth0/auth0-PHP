@@ -72,7 +72,7 @@ final class Verifier
      * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      */
     public function __construct(
-        SdkConfiguration $configuration,
+        SdkConfiguration &$configuration,
         string $payload,
         string $signature,
         array $headers,
@@ -82,7 +82,7 @@ final class Verifier
         ?int $cacheExpires = null,
         ?CacheInterface $cache = null
     ) {
-        $this->configuration = $configuration;
+        $this->configuration = & $configuration;
         $this->payload = $payload;
         $this->signature = $signature;
         $this->headers = $headers;
@@ -179,7 +179,7 @@ final class Verifier
             }
         }
 
-        $keys = (new HttpRequest($this->configuration, 'get', $path, [], null, $scheme . '://' . $jwksUri['host']))->call();
+        $keys = (new HttpRequest($this->configuration, 'get', $path, [], $scheme . '://' . $jwksUri['host']))->call();
 
         if (is_array($keys) && isset($keys['keys']) && count($keys['keys'])) {
             foreach ($keys['keys'] as $key) {
@@ -242,6 +242,7 @@ final class Verifier
             return;
         }
 
+        // phpcs:ignore
         // TODO: Remove when PHP 7.x support is EOL
         openssl_free_key($key);
     }

@@ -28,7 +28,7 @@ final class UsersByEmail extends ManagementEndpoint
         string $email,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('users-by-email')
             ->withParam('email', $email)
             ->withOptions($options)

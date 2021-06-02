@@ -27,9 +27,10 @@ use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Utility\HttpClient;
+use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
+use Auth0\SDK\Utility\HttpResponsePaginator;
 
 /**
  * Class Management
@@ -196,7 +197,7 @@ final class Management
 
         // No management token could be acquired.
         if ($managementToken === null) {
-            throw ConfigurationException::requiresManagementToken();
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresManagementToken();
         }
 
         // Build the API client using the management token.
@@ -209,6 +210,22 @@ final class Management
     public function getHttpClient(): HttpClient
     {
         return $this->httpClient;
+    }
+
+    /**
+     * Return an instance of HttpRequest representing the last issued request.
+     */
+    public function getLastRequest(): HttpRequest
+    {
+        return $this->httpClient->getLastRequest();
+    }
+
+    /**
+     * Return a ResponsePaginator instance configured for the last HttpRequest.
+     */
+    public function getResponsePaginator(): HttpResponsePaginator
+    {
+        return new HttpResponsePaginator($this->httpClient);
     }
 
     /**

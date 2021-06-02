@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 class HttpResponseGenerator
 {
     public static function create(
-        string $body,
+        string $body = '',
         int $statusCode = 200
     ): ResponseInterface {
         $response = Mockery::mock(ResponseInterface::class);

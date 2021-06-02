@@ -37,7 +37,7 @@ final class ClientGrants extends ManagementEndpoint
         $this->validateString($clientId, 'clientId');
         $this->validateString($audience, 'audience');
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('client-grants')
             ->withBody(
                 (object) [
@@ -65,7 +65,7 @@ final class ClientGrants extends ManagementEndpoint
         array $parameters = [],
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('client-grants')
             ->withParams($parameters)
             ->withOptions($options)
@@ -145,7 +145,7 @@ final class ClientGrants extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('client-grants', $id)
             ->withBody(
                 (object) [
@@ -173,7 +173,7 @@ final class ClientGrants extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('client-grants', $id)
             ->withOptions($options)
             ->call();

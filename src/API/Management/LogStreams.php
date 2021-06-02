@@ -46,7 +46,7 @@ final class LogStreams extends ManagementEndpoint
             $payload['name'] = $name;
         }
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('log-streams')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -66,7 +66,7 @@ final class LogStreams extends ManagementEndpoint
     public function getAll(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('log-streams')
             ->withOptions($options)
             ->call();
@@ -89,7 +89,7 @@ final class LogStreams extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('log-streams', $id)
             ->withOptions($options)
             ->call();
@@ -115,7 +115,7 @@ final class LogStreams extends ManagementEndpoint
         $this->validateString($id, 'id');
         $this->validateArray($body, 'body');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('log-streams', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -139,7 +139,7 @@ final class LogStreams extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('log-streams', $id)
             ->withOptions($options)
             ->call();

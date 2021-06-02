@@ -38,7 +38,7 @@ final class Clients extends ManagementEndpoint
             'name' => $name,
         ] + $body;
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('clients')
             ->withBody((object) $payload)
             ->withOptions($options)
@@ -62,7 +62,7 @@ final class Clients extends ManagementEndpoint
         array $parameters = [],
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('clients')
             ->withParams($parameters)
             ->withOptions($options)
@@ -88,7 +88,7 @@ final class Clients extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('clients', $id)
             ->withOptions($options)
             ->call();
@@ -115,7 +115,7 @@ final class Clients extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('clients', $id)
             ->withBody($body)
             ->withOptions($options)
@@ -139,7 +139,7 @@ final class Clients extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('clients', $id)
             ->withOptions($options)
             ->call();

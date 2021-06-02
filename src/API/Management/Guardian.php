@@ -28,7 +28,7 @@ final class Guardian extends ManagementEndpoint
     public function getFactors(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('guardian', 'factors')
             ->withOptions($options)
             ->call();
@@ -51,7 +51,7 @@ final class Guardian extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('guardian', 'enrollments', $id)
             ->withOptions($options)
             ->call();
@@ -74,7 +74,7 @@ final class Guardian extends ManagementEndpoint
     ): ResponseInterface {
         $this->validateString($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('guardian', 'enrollments', $id)
             ->withOptions($options)
             ->call();
