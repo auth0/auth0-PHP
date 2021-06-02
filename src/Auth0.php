@@ -245,8 +245,11 @@ final class Auth0
         $user = $this->state->getIdTokenDecoded();
 
         if ($user === null || $this->configuration->getQueryUserInfo() === true) {
-            $user = $this->authentication()->userInfo($this->state->getAccessToken());
-            $user = HttpResponse::decodeContent($user);
+            $response = $this->authentication()->userInfo($response['access_token']);
+
+            if (HttpResponse::wasSuccessful($response)) {
+                $user = HttpResponse::decodeContent($response);
+            }
         }
 
         if ($user) {
@@ -289,6 +292,37 @@ final class Auth0
         if (isset($response['id_token'])) {
             $this->setIdToken($response['id_token']);
         }
+    }
+
+    /**
+     * Return an object representing the current session state (including id token, access token, access token expiration, refresh token and user data) without triggering an authorization flow. Returns null when session data is not available.
+     */
+    public function getState(): ?object
+    {
+        $user = $this->state->getUser();
+
+        if (! $user) {
+            return null;
+        }
+
+        $token = $this->state->getIdToken();
+        $accessToken = $this->state->getAccessToken();
+        $accessTokenExpiration = (int) $this->state->getAccessTokenExpiration();
+        $accessTokenExpired = false;
+        $refreshToken = $this->state->getRefreshToken();
+
+        if (time() >= $accessTokenExpiration) {
+            $accessTokenExpired = true;
+        }
+
+        return (object) [
+            'user' => $user,
+            'token' => $token,
+            'accessToken' => $accessToken,
+            'accessTokenExpiration' => $accessTokenExpiration,
+            'accessTokenExpired' => $accessTokenExpired,
+            'refreshToken' => $refreshToken,
+        ];
     }
 
     /**
