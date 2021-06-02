@@ -13,33 +13,6 @@ use Psr\Http\Message\ResponseInterface;
 final class HttpResponsePaginator implements \Countable, \Iterator
 {
     /**
-     * These endpoints support basic pagination parameters (page, per_page, include_totals).
-     */
-    private const SUPPORTED_ENDPOINTS = [
-        '/api/v2/client-grants',
-        '/api/v2/clients',
-        '/api/v2/device-credentials',
-        '/api/v2/grants',
-        '/api/v2/hooks',
-        '/api/v2/logs',
-        '/api/v2/organizations',
-        '^\/api\/v2\/organizations\/(.*)\/members$',
-        '^\/api\/v2\/organizations\/(.*)\/invitations$',
-        '^\/api\/v2\/organizations\/(.*)\/enabled_connections$',
-        '^\/api\/v2\/organizations\/(.*)\/members\/(.*)\/roles$',
-        '/api/v2/resource-servers',
-        '/api/v2/roles',
-        '^\/api\/v2\/roles\/(.*)\/permissions$',
-        '^\/api\/v2\/roles\/(.*)\/users$',
-        '/api/v2/rules',
-        '/api/v2/users',
-        '^\/api\/v2\/users\/(.*)\/roles$',
-        '^\/api\/v2\/users\/(.*)\/logs$',
-        '^\/api\/v2\/users\/(.*)\/organizations$',
-        '^\/api\/v2\/users\/(.*)\/permissions$',
-    ];
-
-    /**
      * These endpoints support checkpoint-based pagination (from, take). A 'next' value will be present in responses if more results are available.
      */
     private const SUPPORTED_ENDPOINTS_WITH_CHECKPOINT = [
@@ -117,28 +90,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         // Get the last request path.
         $requestPath = mb_strtolower($lastRequest->getUri()->getPath());
 
-        // Iterate through SUPPORTED_ENDPOINTS to check if this endpoint will work for pagination.
-        foreach (self::SUPPORTED_ENDPOINTS as $endpoint) {
-            // Try a plain text match first:
-            if ($endpoint === $requestPath) {
-                // Match! Break out of loop and give this paginator a green light for processing.
-                $endpointSupported = true;
-                break;
-            }
-
-            // Perform regex matches where appropriate:
-            if (mb_substr($endpoint, 0, 1) === '^' && preg_match('/' . $endpoint . '/', $requestPath) === 1) {
-                // Match! Break out of loop and give this paginator a green light for processing.
-                $endpointSupported = true;
-                break;
-            }
-        }
-
-        // The provided endpoint is not supported for pagination; throw an error.
-        if (! $endpointSupported) {
-            throw \Auth0\SDK\Exception\PaginatorException::httpEndpointUnsupported($requestPath);
-        }
-
+        // Get the last request query to check for checkpoint pagination params.
         $requestQuery = '&' . $lastRequest->getUri()->getQuery();
 
         if (mb_strpos($requestQuery, '&take=') !== false || mb_strpos($requestQuery, '&from=') !== false) {
@@ -186,7 +138,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     public function count(): int
     {
         if ($this->usingCheckpointPagination) {
-            return -1;
+            throw \Auth0\SDK\Exception\PaginatorException::httpCheckpointCannotBeCounted();
         }
 
         return $this->requestTotal;
@@ -263,51 +215,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     }
 
     /**
-     * Set an HttpRequest's pagination params to safe defaults. Triggered when a HttpResponse is provided that isn't paginated, or doesn't have include_totals set (required for iteration.)
-     */
-    private function resetResults(
-        int $depth = 0
-    ): bool {
-        if ($this->lastBuilder()) {
-            // Retrieve the active HttpRequest instance to repeat the request.
-            $lastBuilder = $this->lastBuilder();
-
-            // Get the current HttpRequest parameters.
-            $params = $lastBuilder->getParams();
-
-            // Ensure basic pagination details are included in the request.
-
-            // Is ?page= present? If not, request the first page.
-            if (! mb_strstr($params, 'page=')) {
-                $lastBuilder->withParam('page', 0);
-            }
-
-            // Is ?per_page present? If not, set a sane default.
-            if (! mb_strstr($params, 'per_page=')) {
-                $lastBuilder->withParam('per_page', 100);
-            }
-
-            // Ensure ?include_totals=true is present, required to iterate using this class.
-            $lastBuilder->withParam('include_totals', true);
-
-            // Increment our network request tracker for reference.
-            ++$this->requestCount;
-
-            // Issue next paged request.
-            try {
-                $lastBuilder->call();
-            } catch (\Auth0\SDK\Exception\NetworkException $exception) {
-                return false;
-            }
-
-            // Process the response.
-            return $this->processLastResponse($depth + 1);
-        }
-
-        return false;
-    }
-
-    /**
      * Make a network request for the next page of results.
      */
     private function getNextResults(): bool
@@ -347,9 +254,8 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     /**
      * Process the previous HttpResponse results and cache them for iterator content.
      */
-    private function processLastResponse(
-        int $depth = 0
-    ): bool {
+    private function processLastResponse(): bool
+    {
         $lastRequest = $this->lastRequest();
         $lastResponse = $this->lastResponse();
 
@@ -359,20 +265,17 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                 // Decode the response.
                 $results = HttpResponse::decodeContent($lastResponse);
 
+                // If not using checkpoint pagination, grab the 'start' value.
                 $start = $results['start'] ?? null;
+
+                // There is no 'start' key, the request was probably made without the include_totals param.
+                if ($start === null && ! $this->usingCheckpointPagination) {
+                    throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
+                }
 
                 // No results, abort processing.
                 if (! is_array($results) || ! count($results)) {
                     return false;
-                }
-
-                // There is no 'start' key, the request was probably made without the include_totals param. Try again using safe pagination defaults.
-                if ($start === null && ! $this->usingCheckpointPagination) {
-                    if ($depth >= 1) {
-                        return false;
-                    }
-
-                    return $this->resetResults($depth);
                 }
 
                 $hadResults = false;
@@ -428,12 +331,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
             }
 
             return false;
-        }
-
-        // No request has been issued yet; do we at least have a builder?
-        if ($this->lastBuilder()) {
-            // Try issuing the request.
-            return $this->resetResults();
         }
 
         return false;
