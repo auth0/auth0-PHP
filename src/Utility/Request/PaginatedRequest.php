@@ -161,7 +161,7 @@ final class PaginatedRequest
     /**
      * Return an array representing the paginated request.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function build(): array
     {
@@ -183,7 +183,7 @@ final class PaginatedRequest
         }
 
         // If we aren't using checkpoint pagination, and have set per_page ...
-        if (! $this->take && ! $this->from && $this->perPage !== null) {
+        if ($this->take === null && $this->from === null && $this->perPage !== null) {
             $response['page'] = $this->page ?? 0;
             $response['per_page'] = $this->perPage;
 

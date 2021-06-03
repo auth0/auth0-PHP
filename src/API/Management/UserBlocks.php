@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -28,7 +29,7 @@ final class UserBlocks extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('user-blocks', $id)
@@ -49,7 +50,7 @@ final class UserBlocks extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('user-blocks', $id)
@@ -70,7 +71,7 @@ final class UserBlocks extends ManagementEndpoint
         string $identifier,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($identifier, 'identifier');
+        Validate::string($identifier, 'identifier');
 
         return $this->getHttpClient()->method('get')
             ->addPath('user-blocks')
@@ -92,7 +93,7 @@ final class UserBlocks extends ManagementEndpoint
         string $identifier,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($identifier, 'identifier');
+        Validate::string($identifier, 'identifier');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('user-blocks')

@@ -38,7 +38,7 @@ final class Tenants extends ManagementEndpoint
      * Update tenant settings.
      * Required scope: `update:tenant_settings`
      *
-     * @param array               $body    Updated settings to send to the API. See @link for supported options.
+     * @param array<mixed>        $body    Updated settings to send to the API. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.

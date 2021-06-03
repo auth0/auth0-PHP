@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
-final class ConfigurationException extends \Auth0\SDK\Exception\SdkException implements \Throwable
+final class ConfigurationException extends SdkException
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
     public const MSG_MISSING_MANAGEMENT_KEY = 'A Management API token was not configured';
@@ -20,73 +20,78 @@ final class ConfigurationException extends \Auth0\SDK\Exception\SdkException imp
     public const MSG_MISSING_REDIRECT_URI = 'Missing or invalid `redirectUri` configuration';
     public const MSG_INVALID_TOKEN_ALGORITHM = 'Invalid token algorithm; must be "HS256" or "RS256"';
 
-    public static function requiresConfiguration(): self
-    {
-        return new self(self::MSG_CONFIGURATION_REQUIRED);
+    public static function requiresConfiguration(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_CONFIGURATION_REQUIRED, 0, $previous);
     }
 
-    public static function requiresManagementToken(): self
-    {
-        return new self(self::MSG_MISSING_MANAGEMENT_KEY);
+    public static function requiresManagementToken(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_MISSING_MANAGEMENT_KEY, 0, $previous);
     }
 
-    public static function setImmutable(): self
-    {
-        return new self(self::MSG_SET_IMMUTABLE);
+    public static function setImmutable(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_SET_IMMUTABLE, 0, $previous);
     }
 
     public static function setMissing(
-        string $propertyName
+        string $propertyName,
+        ?\Throwable $previous = null
     ): self {
-        return new self(sprintf(self::MSG_SET_MISSING, $propertyName));
+        return new self(sprintf(self::MSG_SET_MISSING, $propertyName), 0, $previous);
     }
 
     public static function setIncompatible(
         string $propertyName,
         string $expectedType,
-        string $usedType
+        string $usedType,
+        ?\Throwable $previous = null
     ): self {
-        return new self(sprintf(self::MSG_SET_INCOMPATIBLE, $propertyName, $expectedType, $usedType));
+        return new self(sprintf(self::MSG_SET_INCOMPATIBLE, $propertyName, $expectedType, $usedType), 0, $previous);
     }
 
     public static function setIncompatibleNullable(
         string $propertyName,
         string $expectedType,
-        string $usedType
+        string $usedType,
+        ?\Throwable $previous = null
     ): self {
-        return new self(sprintf(self::MSG_SET_INCOMPATIBLE_NULLABLE, $propertyName, $expectedType, $usedType));
+        return new self(sprintf(self::MSG_SET_INCOMPATIBLE_NULLABLE, $propertyName, $expectedType, $usedType), 0, $previous);
     }
 
     public static function getMissing(
-        string $propertyName
+        string $propertyName,
+        ?\Throwable $previous = null
     ): self {
-        return new self(sprintf(self::MSG_GET_MISSING, $propertyName));
+        return new self(sprintf(self::MSG_GET_MISSING, $propertyName), 0, $previous);
     }
 
     public static function validationFailed(
-        string $propertyName
+        string $propertyName,
+        ?\Throwable $previous = null
     ): self {
-        switch ($propertyName) {
-            case 'domain':
-                return new self(self::MSG_MISSING_DOMAIN);
-                break;
-
-            case 'clientId':
-                return new self(self::MSG_MISSING_CLIENT_ID);
-                break;
-
-            case 'redirectUri':
-                return new self(self::MSG_MISSING_REDIRECT_URI);
-                break;
-
-            default:
-                return new self(sprintf(self::MSG_VALIDATION_FAILED, $propertyName));
-                break;
+        if ($propertyName === 'domain') {
+            return new self(self::MSG_MISSING_DOMAIN, 0, $previous);
         }
+
+        if ($propertyName === 'clientId') {
+            return new self(self::MSG_MISSING_CLIENT_ID, 0, $previous);
+        }
+
+        if ($propertyName === 'redirectUri') {
+            return new self(self::MSG_MISSING_REDIRECT_URI, 0, $previous);
+        }
+
+        return new self(sprintf(self::MSG_VALIDATION_FAILED, $propertyName), 0, $previous);
     }
 
-    public static function invalidAlgorithm(): self
-    {
-        return new self(self::MSG_INVALID_TOKEN_ALGORITHM);
+    public static function invalidAlgorithm(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_INVALID_TOKEN_ALGORITHM, 0, $previous);
     }
 }

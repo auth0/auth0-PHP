@@ -40,6 +40,8 @@ final class HttpResponse
      * Extract the headers from an HTTP response (ResponseInterface).
      *
      * @param ResponseInterface $response A ResponseInterface instance to extract from.
+     *
+     * @return array<array<string>>
      */
     public static function getHeaders(
         ResponseInterface $response
@@ -51,6 +53,8 @@ final class HttpResponse
      * Extract the content from an HTTP response (ResponseInterface).
      *
      * @param ResponseInterface $response A ResponseInterface instance to extract from.
+     *
+     * @psalm-suppress RedundantConditionGivenDocblockType
      */
     public static function getContent(
         ResponseInterface $response
@@ -58,26 +62,26 @@ final class HttpResponse
         $body = $response->getBody();
 
         // True response bodies are of type StreamInterface and need transformed to strings.
-        if ($body instanceof StreamInterface) {
+        if ($body instanceof StreamInterface) { // @phpstan-ignore-line
             return $body->__toString();
         }
 
-        // Simplification for mocked responses.
-        if (is_string($body)) {
-            return $body;
-        }
-
-        return '';
+        // @phpstan-ignore-next-line
+        return (string) $body;
     }
 
     /**
      * Extract the content from an HTTP response and parse as JSON (ResponseInterface).
      *
      * @param ResponseInterface $response A ResponseInterface instance to extract from.
+     *
+     * @return mixed
+     *
+     * @throws \JsonException When JSON decoding fails.
      */
     public static function decodeContent(
         ResponseInterface $response
     ) {
-        return json_decode(self::getContent($response), true);
+        return json_decode(self::getContent($response), true, 512, JSON_THROW_ON_ERROR);
     }
 }

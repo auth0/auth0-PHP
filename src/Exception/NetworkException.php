@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
-final class NetworkException extends \Auth0\SDK\Exception\SdkException implements \Throwable
+final class NetworkException extends SdkException
 {
     public const MSG_NETWORK_REQUEST_FAILED = 'Unable to complete network request; %s';
 
     public static function requestFailed(
-        string $httpClientMessage
+        string $httpClientMessage,
+        ?\Throwable $previous = null
     ): self {
-        return new self(sprintf(self::MSG_NETWORK_REQUEST_FAILED, $httpClientMessage));
+        return new self(sprintf(self::MSG_NETWORK_REQUEST_FAILED, $httpClientMessage), 0, $previous);
     }
 }

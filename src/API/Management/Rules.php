@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -19,9 +21,9 @@ final class Rules extends ManagementEndpoint
      * Create a new Rule.
      * Required scope: `create:rules`
      *
-     * @param array               $name    Name of this rule.
-     * @param array               $script  Code to be executed when this rule runs.
-     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param string              $name    Name of this rule.
+     * @param string              $script  Code to be executed when this rule runs.
+     * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -32,17 +34,17 @@ final class Rules extends ManagementEndpoint
     public function create(
         string $name,
         string $script,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $payload = [
+        $body = Shortcut::mergeArrays([
             'name' => $name,
             'script' => $script,
-        ] + $body;
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('rules')
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -51,20 +53,20 @@ final class Rules extends ManagementEndpoint
      * Get all Rules, by page if desired.
      * Required scope: `read:rules`
      *
-     * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array<int|string|null>|null $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Rules/get_rules
      */
     public function getAll(
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
         return $this->getHttpClient()->method('get')
             ->addPath('rules')
-            ->withParams($parameters)
+            ->withParams($parameters ?? [])
             ->withOptions($options)
             ->call();
     }
@@ -84,7 +86,7 @@ final class Rules extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('rules', $id)
@@ -97,7 +99,7 @@ final class Rules extends ManagementEndpoint
      * Required scope: `update:rules`
      *
      * @param string              $id      Rule ID to delete.
-     * @param array               $body    Rule data to update.
+     * @param array<mixed>        $body    Rule data to update.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -109,8 +111,8 @@ final class Rules extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($body, 'body');
+        Validate::string($id, 'id');
+        Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('rules', $id)
@@ -134,7 +136,7 @@ final class Rules extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('rules', $id)

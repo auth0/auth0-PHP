@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -20,7 +22,7 @@ final class Users extends ManagementEndpoint
      * Required scope: `create:users`
      *
      * @param string              $connection Connection (by ID) to use for the new User.
-     * @param array               $body       Configuration for the new User. Some parameters are dependent upon the type of connection. See @link for supported options.
+     * @param array<mixed>        $body       Configuration for the new User. Some parameters are dependent upon the type of connection. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -32,12 +34,12 @@ final class Users extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($connection, 'connection');
-        $this->validateArray($body, 'body');
+        Validate::string($connection, 'connection');
+        Validate::array($body, 'body');
 
-        $payload = [
+        $payload = Shortcut::mergeArrays([
             'connection' => $connection,
-        ] + $body;
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('users')
@@ -52,8 +54,8 @@ final class Users extends ManagementEndpoint
      * - `read:users` for any call to this endpoint.
      * - `read:user_idp_tokens` to retrieve the "access_token" field for logged-in identities.
      *
-     * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array<int|string|null>|null $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -61,12 +63,12 @@ final class Users extends ManagementEndpoint
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_users
      */
     public function getAll(
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
         return $this->getHttpClient()->method('get')
             ->addPath('users')
-            ->withParams($parameters)
+            ->withParams($parameters ?? [])
             ->withOptions($options)
             ->call();
     }
@@ -86,7 +88,7 @@ final class Users extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('users', $id)
@@ -101,7 +103,7 @@ final class Users extends ManagementEndpoint
      * - `update:users_app_metadata` for any update that includes "user_metadata" or "app_metadata" fields.
      *
      * @param string              $id      User (by their ID) to update.
-     * @param array               $body    User data to update. See @link for supported options.
+     * @param array<mixed>        $body    User data to update. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -113,7 +115,7 @@ final class Users extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('users', $id)
@@ -137,7 +139,7 @@ final class Users extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('users', $id)
@@ -150,7 +152,7 @@ final class Users extends ManagementEndpoint
      * Required scope: `update:users`
      *
      * @param string              $id      User ID of the primary account.
-     * @param array               $body    Additional body content to send with the API request.
+     * @param array<mixed>        $body    Additional body content to send with the API request.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -162,8 +164,8 @@ final class Users extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($body, 'body');
+        Validate::string($id, 'id');
+        Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'identities')
@@ -191,9 +193,9 @@ final class Users extends ManagementEndpoint
         string $identityId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($provider, 'provider');
-        $this->validateString($identityId, 'identityId');
+        Validate::string($id, 'id');
+        Validate::string($provider, 'provider');
+        Validate::string($identityId, 'identityId');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('users', $id, 'identities', $provider, $identityId)
@@ -220,8 +222,8 @@ final class Users extends ManagementEndpoint
         array $roles,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($roles, 'roles');
+        Validate::string($id, 'id');
+        Validate::array($roles, 'roles');
 
         return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'roles')
@@ -251,7 +253,7 @@ final class Users extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'roles')
@@ -276,8 +278,8 @@ final class Users extends ManagementEndpoint
         array $roles,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($roles, 'roles');
+        Validate::string($id, 'id');
+        Validate::array($roles, 'roles');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('users', $id, 'roles')
@@ -298,8 +300,8 @@ final class Users extends ManagementEndpoint
      * @param array<array>        $permissions Array of permissions to add.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException When the user_id parameter is empty or is not a string.
-     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException When the permissions parameter is malformed.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the permissions parameter is malformed.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_permissions
@@ -309,8 +311,8 @@ final class Users extends ManagementEndpoint
         array $permissions,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validatePermissions($permissions);
+        Validate::string($id, 'id');
+        Validate::permissions($permissions);
 
         $payload = [
             'permissions' => [],
@@ -342,7 +344,7 @@ final class Users extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'permissions')
@@ -358,8 +360,8 @@ final class Users extends ManagementEndpoint
      * @param array<array>        $permissions Array of permissions to remove.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException When the user_id parameter is empty or is not a string.
-     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException When the permissions parameter is malformed.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the permissions parameter is malformed.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/delete_permissions
@@ -369,8 +371,8 @@ final class Users extends ManagementEndpoint
         array $permissions,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validatePermissions($permissions);
+        Validate::string($id, 'id');
+        Validate::permissions($permissions);
 
         $payload = [
             'permissions' => [],
@@ -394,7 +396,7 @@ final class Users extends ManagementEndpoint
      * @param string              $id      User ID to get logs entries for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException When the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the user_id parameter is empty or is not a string.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/get_logs_by_user
@@ -403,7 +405,7 @@ final class Users extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'logs')
@@ -418,16 +420,14 @@ final class Users extends ManagementEndpoint
      * @param string              $id      User ID to get organization entries for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException When the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the user_id parameter is empty or is not a string.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
-     *
-     * @return mixed
      */
     public function getOrganizations(
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'organizations')
@@ -450,7 +450,7 @@ final class Users extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('users', $id, 'enrollments')
@@ -465,7 +465,7 @@ final class Users extends ManagementEndpoint
      * @param string              $id      User ID of the user to regenerate a multi-factor authentication recovery code for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException When the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the user_id parameter is empty or is not a string.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
@@ -474,7 +474,7 @@ final class Users extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'recovery-code-regeneration')
@@ -489,7 +489,7 @@ final class Users extends ManagementEndpoint
      * @param string              $id      User ID of the user to invalidate all remembered browsers and authentication factors for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException When the user_id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the user_id parameter is empty or is not a string.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_invalidate_remember_browser
@@ -498,7 +498,7 @@ final class Users extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('post')
             ->addPath('users', $id, 'multifactor', 'actions', 'invalidate-remember-browser')
@@ -524,8 +524,8 @@ final class Users extends ManagementEndpoint
         string $provider,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($provider, 'provider');
+        Validate::string($id, 'id');
+        Validate::string($provider, 'provider');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('users', $id, 'multifactor', $provider)

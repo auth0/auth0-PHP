@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -20,7 +21,7 @@ final class LogStreams extends ManagementEndpoint
      * Required scope: `create:log_streams`
      *
      * @param string              $type    The type of log stream being created.
-     * @param array               $sink    The type of log stream determines the properties required in the sink payload; see the linked documentation.
+     * @param array<string>       $sink    The type of log stream determines the properties required in the sink payload; see the linked documentation.
      * @param string|null         $name    Optional. The name of the log stream.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
@@ -34,8 +35,8 @@ final class LogStreams extends ManagementEndpoint
         ?string $name = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($type, 'type');
-        $this->validateArray($sink, 'sink');
+        Validate::string($type, 'type');
+        Validate::array($sink, 'sink');
 
         $payload = [
             'type' => $type,
@@ -87,7 +88,7 @@ final class LogStreams extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('log-streams', $id)
@@ -100,7 +101,7 @@ final class LogStreams extends ManagementEndpoint
      * Required scope: `update:log_streams`
      *
      * @param string              $id      ID of the Log Stream to update.
-     * @param array               $body    Log Stream data to update. Only certain fields are update-able; see the linked documentation.
+     * @param array<mixed>        $body    Log Stream data to update. Only certain fields are update-able; see the linked documentation.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -112,8 +113,8 @@ final class LogStreams extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($body, 'body');
+        Validate::string($id, 'id');
+        Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('log-streams', $id)
@@ -137,7 +138,7 @@ final class LogStreams extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('log-streams', $id)

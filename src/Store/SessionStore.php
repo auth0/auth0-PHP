@@ -19,7 +19,7 @@ final class SessionStore implements StoreInterface
     /**
      * Session base name, configurable on instantiation.
      */
-    private string $sessionBaseName;
+    private ?string $sessionBaseName = null;
 
     /**
      * SessionStore constructor.
@@ -93,7 +93,7 @@ final class SessionStore implements StoreInterface
     ): string {
         $key_name = $key;
 
-        if (mb_strlen($this->sessionBaseName)) {
+        if ($this->sessionBaseName !== null) {
             $key_name = $this->sessionBaseName . '_' . $key_name;
         }
 
@@ -105,7 +105,9 @@ final class SessionStore implements StoreInterface
      */
     private function initSession(): void
     {
-        if (! session_id()) {
+        $sessionId = session_id();
+
+        if ($sessionId === '' || $sessionId === false) {
             session_start();
         }
     }

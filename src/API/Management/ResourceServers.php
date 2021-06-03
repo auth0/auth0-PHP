@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -19,9 +21,9 @@ final class ResourceServers extends ManagementEndpoint
      * Create a new Resource Server.
      * Required scope: `create:resource_servers`
      *
-     * @param string              $identifier API identifier to use.
-     * @param array               $body       Additional body content to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                 $identifier API identifier to use.
+     * @param array<mixed> $body     Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null    $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -32,12 +34,12 @@ final class ResourceServers extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($identifier, 'identifier');
-        $this->validateArray($body, 'body');
+        Validate::string($identifier, 'identifier');
+        Validate::array($body, 'body');
 
-        $payload = [
+        $payload = Shortcut::mergeArrays([
             'identifier' => $identifier,
-        ] + $body;
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('resource-servers')
@@ -80,7 +82,7 @@ final class ResourceServers extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('resource-servers', $id)
@@ -93,7 +95,7 @@ final class ResourceServers extends ManagementEndpoint
      * Required scope: `update:resource_servers`
      *
      * @param string              $id      Resource Server ID or identifier to update.
-     * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>        $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -105,8 +107,8 @@ final class ResourceServers extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($body, 'body');
+        Validate::string($id, 'id');
+        Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('resource-servers', $id)
@@ -130,7 +132,7 @@ final class ResourceServers extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('resource-servers', $id)

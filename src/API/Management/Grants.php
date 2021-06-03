@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -19,20 +21,20 @@ final class Grants extends ManagementEndpoint
      * Retrieve the grants associated with your account.
      * Required scope: `read:grants`
      *
-     * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array<int|string|null>|null $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
     public function getAll(
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
         return $this->getHttpClient()->method('get')
             ->addPath('grants')
-            ->withParams($parameters)
+            ->withParams($parameters ?? [])
             ->withOptions($options)
             ->call();
     }
@@ -41,9 +43,9 @@ final class Grants extends ManagementEndpoint
      * Get Grants by Client ID with pagination.
      * Required scope: `read:grants`
      *
-     * @param string              $clientId   Client ID to filter Grants.
-     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                      $clientId   Client ID to filter Grants.
+     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -51,25 +53,25 @@ final class Grants extends ManagementEndpoint
      */
     public function getAllByClientId(
         string $clientId,
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($clientId, 'clientId');
+        Validate::string($clientId, 'clientId');
 
-        $payload = [
+        $parameters = Shortcut::mergeArrays([
             'client_id' => $clientId,
-        ] + $parameters;
+        ], $parameters);
 
-        return $this->getAll($payload, $options);
+        return $this->getAll($parameters, $options);
     }
 
     /**
      * Get Grants by Audience with pagination.
      * Required scope: `read:grants`
      *
-     * @param string              $audience   Audience to filter Grants.
-     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                      $audience   Audience to filter Grants.
+     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -77,25 +79,25 @@ final class Grants extends ManagementEndpoint
      */
     public function getAllByAudience(
         string $audience,
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($audience, 'audience');
+        Validate::string($audience, 'audience');
 
-        $payload = [
+        $parameters = Shortcut::mergeArrays([
             'audience' => $audience,
-        ] + $parameters;
+        ], $parameters ?? []);
 
-        return $this->getAll($payload, $options);
+        return $this->getAll($parameters, $options);
     }
 
     /**
      * Get Grants by User ID with pagination.
      * Required scope: `read:grants`
      *
-     * @param string              $userId     User ID to filter Grants.
-     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                      $userId     User ID to filter Grants.
+     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -103,16 +105,16 @@ final class Grants extends ManagementEndpoint
      */
     public function getAllByUserId(
         string $userId,
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($userId, 'userId');
+        Validate::string($userId, 'userId');
 
-        $payload = [
+        $parameters = Shortcut::mergeArrays([
             'user_id' => $userId,
-        ] + $parameters;
+        ], $parameters);
 
-        return $this->getAll($payload, $options);
+        return $this->getAll($parameters, $options);
     }
 
     /**
@@ -130,7 +132,7 @@ final class Grants extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('grants', $id)

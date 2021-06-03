@@ -20,14 +20,23 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
-  run-quality-checks:
+  run-phpinsights:
     steps:
-      - run: php ./vendor/bin/phpinsights --no-interaction --min-quality=50 --min-complexity=50 --min-architecture=50 --min-style=5
-  run-test-suite:
+      - run: php ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
+  run-phpstan:
     steps:
-      - run: php ./vendor/bin/pest --stop-on-failure --coverage-clover=build/coverage.xml
+      - run: php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M
+  run-psalm:
+    steps:
+      - run: php ./vendor/bin/psalm
+  run-pest:
+    steps:
+      - run: php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - store_artifacts:
-          path: build/coverage.xml
+          path: build/coverage/*
+  run-infection:
+    steps:
+      - run: php ./vendor/bin/infection --min-msi=48 --min-covered-msi=70 --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage
 
 jobs:
   php_7_4:
@@ -35,15 +44,19 @@ jobs:
       - image: circleci/php:7.4
     steps:
       - prepare
-      - run-quality-checks
-      - run-test-suite
+      - run-phpinsights
+      - run-phpstan
+      - run-pest
+      - run-infection
   php_8_0:
     docker:
       - image: circleci/php:8.0
     steps:
       - prepare
-      - run-quality-checks
-      - run-test-suite
+      - run-phpinsights
+      - run-phpstan
+      - run-pest
+      - run-infection
   snyk:
     docker:
       - image: snyk/snyk-cli:composer

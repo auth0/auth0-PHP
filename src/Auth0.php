@@ -12,8 +12,7 @@ use Auth0\SDK\Utility\HttpResponse;
 use Auth0\SDK\Utility\TransientStoreHandler;
 
 /**
- * Class Auth0
- * Provides access to Auth0 API functionality.
+ * Class Auth0.
  */
 final class Auth0
 {
@@ -47,7 +46,7 @@ final class Auth0
     /**
      * Auth0 Constructor.
      *
-     * @param SdkConfiguration|array $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      *
      * @throws \Auth0\SDK\Exception\ConfigurationException When `domain`, `clientId`, or `redirectUri` are not provided.
      * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenAlgorithm` is provided but the value is not supported.
@@ -59,11 +58,6 @@ final class Auth0
         // If we're passed an array, construct a new SdkConfiguration from that structure.
         if (is_array($configuration)) {
             $configuration = new SdkConfiguration($configuration);
-        }
-
-        // We only accept an SdkConfiguration type.
-        if (! $configuration instanceof SdkConfiguration) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
         }
 
         // Store the configuration internally.
@@ -80,7 +74,7 @@ final class Auth0
     /**
      * Create, configure, and return an instance of the Authentication class.
      */
-    public function authentication()
+    public function authentication(): Authentication
     {
         if ($this->authentication === null) {
             $this->authentication = new Authentication($this->configuration);
@@ -92,7 +86,7 @@ final class Auth0
     /**
      * Create, configure, and return an instance of the Management class.
      */
-    public function management()
+    public function management(): Management
     {
         if ($this->management === null) {
             $this->management = new Management($this->configuration);
@@ -104,22 +98,25 @@ final class Auth0
     /**
      * Redirect to the hosted login page for a specific client.
      *
-     * @param array $params Additional, valid parameters.
+     * @param array<int|string|null>|null $params Additional parameters to include with the request.
      *
      * @link https://auth0.com/docs/api/authentication#login
      */
     public function login(
-        ?array $params = []
+        ?array $params = null
     ): void {
         header('Location: ' . $this->authentication()->getLoginLink($params));
     }
 
     /**
      * Delete any persistent data and clear out all stored properties, and redirect to Auth0 /logout endpoint.
+     *
+     * @param string|null                 $returnUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
+     * @param array<int|string|null>|null $params    Optional. Additional parameters to include with the request.
      */
     public function logout(
-        string $returnUri,
-        array $params = []
+        ?string $returnUri = null,
+        ?array $params = null
     ): void {
         $this->clear();
         header('Location: ' . $this->authentication()->getLogoutLink($returnUri, $params));
@@ -142,8 +139,13 @@ final class Auth0
     /**
      * Verifies and decodes an ID token using the properties in this class.
      *
-     * @param string $token ID token to verify and decode.
-     * @param array $options Additional configuration options to pass during Token processing.
+     * @param string             $token             ID token to verify and decode.
+     * @param array<string>      $tokenAudience     Optional. An array of allowed values for the 'aud' claim. Successful if ANY match.
+     * @param array<string>|null $tokenOrganization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
+     * @param string|null        $tokenNonce        Optional. The value expected for the 'nonce' claim.
+     * @param int|null           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
+     * @param int|null           $tokenLeeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
+     * @param int|null           $tokenNow          Optional. Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException
      */
@@ -189,20 +191,21 @@ final class Auth0
     public function exchange(): bool
     {
         $code = $this->getRequestParameter('code');
-        if (! $code) {
+        $state = $this->getRequestParameter('state');
+        $code_verifier = null;
+
+        if ($code === null) {
             return false;
         }
 
-        $state = $this->getRequestParameter('state');
-        if (! $state || ! $this->transient->verify('state', $state)) {
+        if ($state === null || ! $this->transient->verify('state', $state)) {
             throw \Auth0\SDK\Exception\StateException::invalidState();
         }
 
-        $code_verifier = null;
         if ($this->configuration->getUsePkce()) {
             $code_verifier = $this->transient->getOnce('code_verifier');
 
-            if (! $code_verifier) {
+            if ($code_verifier === null) {
                 throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
             }
         }
@@ -239,7 +242,7 @@ final class Auth0
 
         if (isset($response['expires_in']) && is_numeric($response['expires_in'])) {
             $expiresIn = time() + (int) $response['expires_in'];
-            $this->setAccessTokenExpiration((string) $expiresIn);
+            $this->setAccessTokenExpiration($expiresIn);
         }
 
         $user = $this->state->getIdTokenDecoded();
@@ -252,10 +255,7 @@ final class Auth0
             }
         }
 
-        if ($user) {
-            $this->setUser($user);
-        }
-
+        $this->setUser($user ?? []);
         return true;
     }
 
@@ -263,24 +263,22 @@ final class Auth0
      * Renews the access token and ID token using an existing refresh token.
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
      *
-     * @param array $options Options for the token endpoint request.
-     *                       - options.scope         Access token scope requested; optional.
+     * @param array<int|string|null>|null $params Optional. Additional parameters to include with the request.
      *
-     * @throws \Auth0\SDK\Exception\StateException If the Auth0 object does not have access token and refresh token
-     * @throws \Auth0\SDK\Exception\StateException If the Auth0 API did not renew access and ID token properly
+     * @throws \Auth0\SDK\Exception\StateException If the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly.
      *
      * @link   https://auth0.com/docs/tokens/refresh-token/current
      */
     public function renew(
-        array $options = []
+        ?array $params = null
     ): void {
         $refreshToken = $this->state->getRefreshToken();
 
-        if (! $refreshToken) {
+        if ($refreshToken === null) {
             throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingRefreshToken();
         }
 
-        $response = $this->authentication()->refreshToken($refreshToken, $options);
+        $response = $this->authentication()->refreshToken($refreshToken, $params);
         $response = HttpResponse::decodeContent($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
@@ -301,18 +299,22 @@ final class Auth0
     {
         $user = $this->state->getUser();
 
-        if (! $user) {
+        if ($user === null) {
             return null;
         }
 
         $token = $this->state->getIdToken();
         $accessToken = $this->state->getAccessToken();
-        $accessTokenExpiration = (int) $this->state->getAccessTokenExpiration();
+        $accessTokenExpiration = $this->state->getAccessTokenExpiration();
         $accessTokenExpired = false;
         $refreshToken = $this->state->getRefreshToken();
 
-        if (time() >= $accessTokenExpiration) {
-            $accessTokenExpired = true;
+        if ($accessTokenExpiration === null) {
+            $accessTokenExpired = null;
+        } else {
+            if (time() >= $accessTokenExpiration) {
+                $accessTokenExpired = true;
+            }
         }
 
         return (object) [
@@ -342,6 +344,8 @@ final class Auth0
 
     /**
      * Get userinfo from persisted session or from a code exchange
+     *
+     * @return array<array|int|string>|null
      *
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
@@ -391,7 +395,7 @@ final class Auth0
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
      */
-    public function getAccessTokenExpiration(): ?string
+    public function getAccessTokenExpiration(): ?int
     {
         if (! $this->state->hasAccessTokenExpiration()) {
             $this->exchange();
@@ -403,7 +407,7 @@ final class Auth0
     /**
      * Sets, validates, and persists the ID token.
      *
-     * @param string $idToken - ID token returned from the code exchange.
+     * @param string $idToken Id token returned from the code exchange.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When an invalid token is passed.
      */
@@ -423,7 +427,7 @@ final class Auth0
     /**
      * Set the user property to a userinfo array and, if configured, persist
      *
-     * @param array $user - userinfo from Auth0.
+     * @param array<array|int|string> $user User data to store.
      */
     public function setUser(
         array $user
@@ -440,7 +444,7 @@ final class Auth0
     /**
      * Sets and persists the access token.
      *
-     * @param string $accessToken - access token returned from the code exchange.
+     * @param string $accessToken Access token returned from the code exchange.
      */
     public function setAccessToken(
         string $accessToken
@@ -457,7 +461,7 @@ final class Auth0
     /**
      * Sets and persists the refresh token.
      *
-     * @param string $refreshToken - refresh token returned from the code exchange.
+     * @param string $refreshToken Refresh token returned from the code exchange.
      */
     public function setRefreshToken(
         string $refreshToken
@@ -474,10 +478,10 @@ final class Auth0
     /**
      * Sets and persists the refresh token.
      *
-     * @param string $refreshToken - refresh token returned from the code exchange.
+     * @param int $accessTokenExpiration Unix timestamp representing the expiration time on the access token.
      */
     public function setAccessTokenExpiration(
-        string $accessTokenExpiration
+        int $accessTokenExpiration
     ): self {
         $this->state->setAccessTokenExpiration($accessTokenExpiration);
 
@@ -490,6 +494,8 @@ final class Auth0
 
     /**
      * Get the specified parameter from POST or GET, depending on configured response mode.
+     *
+     * @param string $parameterName Name of the parameter to pull from the request.
      */
     public function getRequestParameter(
         string $parameterName
@@ -516,7 +522,7 @@ final class Auth0
         $orgId = $this->getRequestParameter('organization');
         $orgName = $this->getRequestParameter('organization_name');
 
-        if ($invite && $orgId && $orgName) {
+        if ($invite !== null && $orgId !== null && $orgName !== null) {
             return (object) [
                 'invitation' => $invite,
                 'organization' => $orgId,
@@ -534,7 +540,7 @@ final class Auth0
     {
         $invite = $this->getInvitationParameters();
 
-        if ($invite) {
+        if ($invite !== null) {
             $this->login([
                 'invitation' => $invite->invitation,
                 'organization' => $invite->organization,
@@ -542,6 +548,9 @@ final class Auth0
         }
     }
 
+    /**
+     * Retrieve state from session storage and configure SDK state.
+     */
     private function restoreState(): void
     {
         $state = [];
@@ -557,7 +566,12 @@ final class Auth0
 
             if ($this->configuration->getPersistAccessToken()) {
                 $state['accessToken'] = $this->configuration->getSessionStorage()->get('accessToken');
-                $state['accessTokenExpiration'] = $this->configuration->getSessionStorage()->get('accessTokenExpiration');
+
+                $expires = $this->configuration->getSessionStorage()->get('accessTokenExpiration');
+
+                if ($expires !== null) {
+                    $state['accessTokenExpiration'] = (int) $expires;
+                }
             }
 
             if ($this->configuration->getPersistRefreshToken()) {

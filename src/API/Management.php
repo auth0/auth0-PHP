@@ -45,7 +45,7 @@ final class Management
     /**
      * Instance of Auth0\SDK\API\Utility\HttpClient
      */
-    private ?HttpClient $httpClient = null;
+    private HttpClient $httpClient;
 
     /**
      * Instance of Auth0\SDK\API\Management\Blacklists
@@ -160,7 +160,9 @@ final class Management
     /**
      * Management constructor.
      *
-     * @param SdkConfiguration|array $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     *
+     * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(
         $configuration
@@ -176,7 +178,7 @@ final class Management
         }
 
         // Store the configuration internally.
-        $this->configuration = $configuration;
+        $this->configuration = & $configuration;
 
         // Retrieve any configured management token.
         $managementToken = $configuration->getManagementToken();
@@ -215,7 +217,7 @@ final class Management
     /**
      * Return an instance of HttpRequest representing the last issued request.
      */
-    public function getLastRequest(): HttpRequest
+    public function getLastRequest(): ?HttpRequest
     {
         return $this->httpClient->getLastRequest();
     }

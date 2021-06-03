@@ -29,18 +29,24 @@ final class HttpClient
 
     /**
      * Headers to set for all calls.
+     *
+     * @var array<int|string>
      */
     private array $headers = [];
 
     /**
      * Mocked responses to pass to HttpRequest instances for testing.
+     *
+     * @var array<object>
      */
     private array $mockedResponses = [];
 
     /**
      * HttpClient constructor.
      *
-     * @param array $config Configuration for this client.
+     * @param SdkConfiguration  $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string            $basePath        Optional. The base URI path from which additional pathing and parameters should be appended.
+     * @param array<int|string> $headers         Optional. Additional headers to send with the HTTP request.
      */
     public function __construct(
         SdkConfiguration &$configuration,
@@ -56,16 +62,15 @@ final class HttpClient
     /**
      * Create a new HttpRequest instance.
      *
-     * @param string $method           HTTP method to use (GET, POST, PATCH, etc).
-     * @param bool   $set_content_type Automatically set a content-type header.
+     * @param string $method HTTP method to use (GET, POST, PATCH, etc).
      */
     public function method(
         string $method
     ): HttpRequest {
-        $method = strtolower($method);
+        $method = mb_strtolower($method);
         $builder = new HttpRequest($this->configuration, $method, $this->basePath, $this->headers, null, $this->mockedResponses);
 
-        if (in_array($method, ['post', 'put', 'patch', 'delete'])) {
+        if (in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
             $builder->withHeader('Content-Type', 'application/json');
         }
 
@@ -93,6 +98,8 @@ final class HttpClient
 
     /**
      * Inject a series of Psr\Http\Message\ResponseInterface objects into created HttpRequest clients.
+     *
+     * @param array<ResponseInterface|array> $responses An array of ResponseInterface objects, or an array of arrays containing ResponseInterfaces with callbacks.
      */
     public function mockResponses(
         array $responses

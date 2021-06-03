@@ -11,13 +11,15 @@ final class Validator
 {
     /**
      * Array representing the claims of a JWT.
+     *
+     * @var array<array|int|string>
      */
     private array $claims;
 
     /**
      * Constructor for the Token Validator class.
      *
-     * @param array $claims Array representing the claims of a JWT.
+     * @param array<array|int|string> $claims Array representing the claims of a JWT.
      */
     public function __construct(
         array $claims
@@ -28,7 +30,7 @@ final class Validator
     /**
      * Validate the 'aud' claim.
      *
-     * @param array $expects An array of allowed values for the 'aud' claim. Successful if ANY match.
+     * @param array<string> $expects An array of allowed values for the 'aud' claim. Successful if ANY match.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
@@ -41,11 +43,11 @@ final class Validator
             throw \Auth0\SDK\Exception\InvalidTokenException::missingAudienceClaim();
         }
 
-        if (is_string($audience)) {
+        if (! is_array($audience)) {
             $audience = [ $audience ];
         }
 
-        if (count(array_intersect($audience, $expects))) {
+        if (count(array_intersect($audience, $expects)) !== 0) {
             return $this;
         }
 
@@ -69,11 +71,11 @@ final class Validator
         $authTime = $this->getClaim('auth_time');
         $now = $now ?? time();
 
-        if ($authTime === null) {
+        if ($authTime === null || ! is_numeric($authTime)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingAuthTimeClaim();
         }
 
-        $validUntil = $authTime + $maxAge + $leeway;
+        $validUntil = (int) $authTime + $maxAge + $leeway;
 
         if ($now > $validUntil) {
             throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedAuthTimeClaim($now, $validUntil);
@@ -85,7 +87,7 @@ final class Validator
     /**
      * Validate the 'azp' claim.
      *
-     * @param array $expects An array of allowed values for the 'azp' claim. Successful if ANY match.
+     * @param array<string> $expects An array of allowed values for the 'azp' claim. Successful if ANY match.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
@@ -101,7 +103,7 @@ final class Validator
         if (is_array($audience)) {
             $azp = $this->getClaim('azp');
 
-            if ($azp === null) {
+            if ($azp === null || ! is_string($azp)) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::missingAzpClaim();
             }
 
@@ -128,11 +130,11 @@ final class Validator
         $expires = $this->getClaim('exp');
         $now = $now ?? time();
 
-        if ($expires === null) {
+        if ($expires === null || ! is_numeric($expires)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingExpClaim();
         }
 
-        $expires += $leeway;
+        $expires = (int) $expires + $leeway;
 
         if ($now > $expires) {
             throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedExpClaim($now, $expires);
@@ -160,7 +162,7 @@ final class Validator
     /**
      * Validate the 'iss' claim.
      *
-     * @param array $expects The value to compare with the claim.
+     * @param string $expects The value to compare with the claim.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
@@ -169,7 +171,7 @@ final class Validator
     ): self {
         $claim = $this->getClaim('iss');
 
-        if ($claim === null) {
+        if ($claim === null || ! is_string($claim)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingIssClaim();
         }
 
@@ -183,7 +185,7 @@ final class Validator
     /**
      * Validate the 'nonce' claim.
      *
-     * @param array $expects The value to compare with the claim.
+     * @param string $expects The value to compare with the claim.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
@@ -192,7 +194,7 @@ final class Validator
     ): self {
         $claim = $this->getClaim('nonce');
 
-        if ($claim === null) {
+        if ($claim === null || ! is_string($claim)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingNonceClaim();
         }
 
@@ -206,7 +208,7 @@ final class Validator
     /**
      * Validate the 'org_id' claim.
      *
-     * @param array $expects An array of allowed values for the 'org_id' claim. Successful if ANY match.
+     * @param array<string> $expects An array of allowed values for the 'org_id' claim. Successful if ANY match.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
      */
@@ -215,11 +217,11 @@ final class Validator
     ): self {
         $claim = $this->getClaim('org_id');
 
-        if ($claim === null) {
+        if ($claim === null || ! is_string($claim)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingOrgIdClaim();
         }
 
-        if (! in_array($claim, $expects)) {
+        if (! in_array($claim, $expects, true)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedOrgIdClaim(implode(', ', $expects), $claim);
         }
 
@@ -245,7 +247,9 @@ final class Validator
     /**
      * Return a claim by it's key. Null if not present.
      *
-     * @param array $key The claim key to search for.
+     * @param string $key The claim key to search for.
+     *
+     * @return array<string>|int|string|null
      */
     private function getClaim(
         string $key

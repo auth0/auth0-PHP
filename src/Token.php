@@ -43,8 +43,9 @@ final class Token
     /**
      * Constructor for Token handling class.
      *
-     * @param string $jwt  A JWT string to parse, and prepare for verification and validation.
-     * @param int    $type Specify the Token type to toggle specific claim validations. Defaults to 1 for ID Token. See TYPE_ consts for options.
+     * @param SdkConfiguration $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string           $jwt             A JWT string to parse, and prepare for verification and validation.
+     * @param int              $type            Specify the Token type to toggle specific claim validations. Defaults to 1 for ID Token. See TYPE_ consts for options.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
@@ -83,11 +84,11 @@ final class Token
     /**
      * Verify the signature of the Token using either RS256 or HS256.
      *
-     * @param string|null         $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256.
-     * @param string|null         $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null         $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     * @param string|null         $tokenAlgorithm Optional. Algorithm to use for verification. Expects either RS256 or HS256.
+     * @param string|null         $tokenJwksUri   Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param string|null         $clientSecret   Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param int|null            $tokenCacheTtl  Optional. Time in seconds to keep JWKS records cached.
+     * @param CacheInterface|null $tokenCache     Optional. A PSR-16 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
@@ -98,13 +99,19 @@ final class Token
         ?int $tokenCacheTtl = null,
         ?CacheInterface $tokenCache = null
     ): self {
-        $tokenAlgorithm = $tokenAlgorithm ?? $this->configuration->getTokenAlgorithm() ?? 'RS256';
+        $tokenAlgorithm = $tokenAlgorithm ?? $this->configuration->getTokenAlgorithm();
         $tokenJwksUri = $tokenJwksUri ?? $this->configuration->getTokenJwksUri() ?? null;
         $clientSecret = $clientSecret ?? $this->configuration->getClientSecret() ?? null;
-        $tokenCacheTtl = $tokenCacheTtl ?? $this->configuration->getTokenCacheTtl() ?? null;
+        $tokenCacheTtl = $tokenCacheTtl ?? $this->configuration->getTokenCacheTtl();
         $tokenCache = $tokenCache ?? $this->configuration->getTokenCache() ?? null;
 
-        $this->parser->verify($tokenAlgorithm, $tokenJwksUri, $clientSecret, $tokenCacheTtl, $tokenCache);
+        $this->parser->verify(
+            $tokenAlgorithm,
+            $tokenJwksUri,
+            $clientSecret,
+            $tokenCacheTtl,
+            $tokenCache,
+        );
 
         return $this;
     }
@@ -112,12 +119,13 @@ final class Token
     /**
      * Validate the claims of the token.
      *
-     * @param string      $issuer       The value expected for the 'iss' claim.
-     * @param array       $audience     An array of allowed values for the 'aud' claim. Successful if ANY match.
-     * @param array|null  $organization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
-     * @param string|null $nonce        Optional. The value expected for the 'nonce' claim.
-     * @param int|null    $maxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
-     * @param int|null    $leeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
+     * @param string             $tokenIssuer       The value expected for the 'iss' claim.
+     * @param array<string>      $tokenAudience     An array of allowed values for the 'aud' claim. Successful if ANY match.
+     * @param array<string>|null $tokenOrganization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
+     * @param string|null        $tokenNonce        Optional. The value expected for the 'nonce' claim.
+     * @param int|null           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
+     * @param int|null           $tokenLeeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
+     * @param int|null           $tokenNow          Optional. Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token validation fails. See the exception message for further details.
      */
@@ -138,18 +146,13 @@ final class Token
         $tokenLeeway = $tokenLeeway ?? $this->configuration->getTokenLeeway() ?? 60;
 
         // If 'aud' claim check isn't defined, fallback to client id.
-        if ($tokenAudience === null) {
+        if ($tokenAudience === null || count($tokenAudience) === 0) {
             $tokenAudience = [ $this->configuration->getClientId() ];
         }
 
         // If pulling from transient storage, $tokenMaxAge might be a string.
-        if ($tokenMaxAge !== null && ! is_int($tokenMaxAge) && is_numeric($tokenMaxAge)) {
+        if ($tokenMaxAge !== null) {
             $tokenMaxAge = (int) $tokenMaxAge;
-        }
-
-        // If pulling from transient storage, $tokenLeeway might be a string.
-        if ($tokenLeeway !== null && ! is_int($tokenLeeway) && is_numeric($tokenLeeway)) {
-            $tokenLeeway = (int) $tokenLeeway;
         }
 
         $validator = $this->parser->validate();
@@ -175,7 +178,7 @@ final class Token
             $validator->authTime($tokenMaxAge, $tokenLeeway, $now);
         }
 
-        if ($tokenOrganization) {
+        if ($tokenOrganization !== null) {
             $validator->organization($tokenOrganization);
         }
 
@@ -185,7 +188,7 @@ final class Token
     /**
      * Get the contents of the 'aud' claim, always returned an array. Null if not present.
      *
-     * @return array|null
+     * @return array<string>|null
      */
     public function getAudience(): ?array
     {
@@ -265,7 +268,7 @@ final class Token
     /**
      * Export the state of the Token object as a PHP array.
      *
-     * @return array
+     * @return array<array|int|string>
      */
     public function toArray(): array
     {
@@ -277,6 +280,6 @@ final class Token
      */
     public function toJson(): string
     {
-        return json_encode($this->toArray(), JSON_PRETTY_PRINT);
+        return json_encode($this->toArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
     }
 }

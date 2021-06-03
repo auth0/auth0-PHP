@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -22,7 +24,7 @@ final class DeviceCredentials extends ManagementEndpoint
      * @param string              $type       Type of credential. Must be public_key.
      * @param string              $value      Base64 encoded string containing the credential.
      * @param string              $deviceId   Unique identifier for the device. Recommend using Android_ID on Android and identifierForVendor.
-     * @param array               $body       Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>|null   $body       Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -34,24 +36,24 @@ final class DeviceCredentials extends ManagementEndpoint
         string $type,
         string $value,
         string $deviceId,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($deviceName, 'deviceName');
-        $this->validateString($type, 'type');
-        $this->validateString($value, 'value');
-        $this->validateString($deviceId, 'deviceId');
+        Validate::string($deviceName, 'deviceName');
+        Validate::string($type, 'type');
+        Validate::string($value, 'value');
+        Validate::string($deviceId, 'deviceId');
 
-        $payload = [
+        $body = Shortcut::mergeArrays([
             'device_name' => $deviceName,
             'type' => $type,
             'value' => $value,
             'device_id' => $deviceId,
-        ] + $body;
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('device-credentials')
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -75,7 +77,7 @@ final class DeviceCredentials extends ManagementEndpoint
         ?string $type = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($userId, 'userId');
+        Validate::string($userId, 'userId');
 
         $payload = [
             'user_id' => $userId,
@@ -111,7 +113,7 @@ final class DeviceCredentials extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('device-credentials', $id)

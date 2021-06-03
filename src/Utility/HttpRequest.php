@@ -12,6 +12,7 @@ use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Class HttpRequest
@@ -30,6 +31,8 @@ final class HttpRequest
 
     /**
      * Path to request.
+     *
+     * @var array<string>
      */
     private array $path = [];
 
@@ -40,6 +43,8 @@ final class HttpRequest
 
     /**
      * Headers to include for the request.
+     *
+     * @var array<mixed>
      */
     private array $headers = [];
 
@@ -50,16 +55,22 @@ final class HttpRequest
 
     /**
      * URL parameters for the request.
+     *
+     * @var array<int|string|null>
      */
     private array $params = [];
 
     /**
      * Form parameters to send with the request.
+     *
+     * @var array<mixed>
      */
     private array $formParams = [];
 
     /**
      * Files to send with a multipart request.
+     *
+     * @var array<mixed>
      */
     private array $files = [];
 
@@ -80,13 +91,20 @@ final class HttpRequest
 
     /**
      * Mocked response.
+     *
+     * @var array<object>
      */
     private ?array $mockedResponses = null;
 
     /**
      * HttpRequest constructor.
      *
-     * @param array $config Configuration array passed to \Auth0\SDK\API\Management constructor.
+     * @param SdkConfiguration   $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string             $method          Required. Type of HTTP request method to use, e.g. 'GET' or 'POST'.
+     * @param string             $basePath        Optional. The base URI path from which additional pathing and parameters should be appended.
+     * @param array<int|string>  $headers         Optional. Additional headers to send with the HTTP request.
+     * @param string|null        $domain          Optional. The domain portion of the URI in which to send this request.
+     * @param array<object>|null $mockedResponses Optional. Only intended for unit testing purposes.
      */
     public function __construct(
         SdkConfiguration &$configuration,
@@ -97,7 +115,7 @@ final class HttpRequest
         ?array &$mockedResponses = null
     ) {
         $this->configuration = & $configuration;
-        $this->method = $method;
+        $this->method = mb_strtolower($method);
         $this->basePath = $basePath;
         $this->headers = $headers;
         $this->domain = $domain;
@@ -153,7 +171,7 @@ final class HttpRequest
             }
         }
 
-        return ! count($params) ? '' : '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+        return count($params) === 0 ? '' : '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
     }
 
     /**
@@ -174,7 +192,7 @@ final class HttpRequest
      * Add a form value to be sent with the request.
      *
      * @param string          $key Form parameter key.
-     * @param string|bool|int $value Form parameter value.
+     * @param bool|int|string $value Form parameter value.
      */
     public function withFormParam(
         string $key,
@@ -187,8 +205,7 @@ final class HttpRequest
     /**
      * Add one or more form values to be sent with the request.
      *
-     * @param string          $key Form parameter key.
-     * @param string|bool|int $value Form parameter value.
+     * @param array<bool|int|string>|null $params Form parameters to use with the request.
      */
     public function withFormParams(
         ?array $params = null
@@ -218,21 +235,21 @@ final class HttpRequest
         $mockedResponse = null;
 
         // Write a body, if available (e.g. a JSON object body, etc.)
-        if ($this->body) {
+        if (mb_strlen($this->body) !== 0) {
             $httpRequest->getBody()->write($this->body);
         }
 
-        if ($this->files) {
+        if (count($this->files) !== 0) {
             // If we're sending a file, build a multipart message.
             $multipart = $this->buildMultiPart();
             // Set the request body to the built multipart message.
-            $httpRequest->getBody()->write($multipart['stream']->__toString());
+            $httpRequest->getBody()->write($multipart['stream']->__toString()); // @phpstan-ignore-line
             // Set the content-type header to multipart/form-data.
             $headers['Content-Type'] = 'multipart/form-data; boundary="' . $multipart['boundary'] . '"';
         } else {
-            if ($this->formParams) {
+            if (count($this->formParams) !== 0) {
                 // If we're sending form parameters, build the query and ensure it's encoded properly.
-                $httpRequest->getBody()->write(http_build_query($this->formParams), '', '&', PHP_QUERY_RFC1738);
+                $httpRequest->getBody()->write(http_build_query($this->formParams, '', '&', PHP_QUERY_RFC1738));
                 // Set the content-type header to application/x-www-form-urlencoded.
                 $headers['Content-Type'] = 'application/x-www-form-urlencoded';
             }
@@ -249,25 +266,25 @@ final class HttpRequest
         }
 
         // IF we are mocking responses, add the mocked response to the client response stack.
-        if ($this->mockedResponses && method_exists($httpClient, 'addResponse')) {
+        if ($this->mockedResponses !== null && count($this->mockedResponses) !== 0 && method_exists($httpClient, 'addResponse')) {
             $mockedResponse = array_shift($this->mockedResponses);
-            $httpClient->addResponse($mockedResponse->response);
+            $httpClient->addResponse($mockedResponse->response); // @phpstan-ignore-line
         }
 
         // Store the request so it can be potentially reviewed later for error troubleshooting, etc.
         $this->lastRequest = $httpRequest;
 
         try {
-            if ($mockedResponse && $mockedResponse->exception instanceof \Exception) {
-                throw $mockedResponse->exception;
+            if ($mockedResponse && $mockedResponse->exception instanceof \Exception) { // @phpstan-ignore-line
+                throw $mockedResponse->exception; // @phpstan-ignore-line
             }
 
             // Use the http client to issue the request and collect the response.
             $response = $httpClient->sendRequest($httpRequest);
 
             // Used for unit testing: if we're mocking responses and have a callback assigned, invoke that callback with our request and response.
-            if ($mockedResponse && $mockedResponse->callback && is_callable($mockedResponse->callback)) {
-                call_user_func($mockedResponse->callback, $httpRequest, $response);
+            if ($mockedResponse && $mockedResponse->callback && is_callable($mockedResponse->callback)) { // @phpstan-ignore-line
+                call_user_func($mockedResponse->callback, $httpRequest, $response); // @phpstan-ignore-line
             }
 
             $this->lastResponse = $response;
@@ -275,14 +292,14 @@ final class HttpRequest
             // Return the response.
             return $response;
         } catch (ClientExceptionInterface $exception) {
-            throw \Auth0\SDK\Exception\NetworkException::requestFailed($exception->getMessage());
+            throw \Auth0\SDK\Exception\NetworkException::requestFailed($exception->getMessage(), $exception);
         }
     }
 
     /**
      * Set multiple headers for the request.
      *
-     * @param array $headers Array of headers to set.
+     * @param array<int|string> $headers Array of headers to set.
      */
     public function withHeaders(
         array $headers
@@ -297,7 +314,8 @@ final class HttpRequest
     /**
      * Add a header to the request.
      *
-     * @param Header $header Header to add.
+     * @param string $name  Key name for header to add to request.
+     * @param string $value Value for header to add to request.
      */
     public function withHeader(
         string $name,
@@ -311,8 +329,8 @@ final class HttpRequest
     /**
      * Set the body of the request.
      *
-     * @param string|array|object $body       Body to send.
-     * @param string              $jsonEncode True if the $body be encoded as JSON before sending.
+     * @param mixed $body       Body content to send.
+     * @param bool  $jsonEncode Optional. Defaults to true. Encode the $body as JSON prior to sending request.
      */
     public function withBody(
         $body,
@@ -332,7 +350,7 @@ final class HttpRequest
      * Add a URL parameter to the request.
      *
      * @param string          $key   URL parameter key.
-     * @param string|bool|int $value URL parameter value.
+     * @param bool|int|string $value URL parameter value.
      */
     public function withParam(
         string $key,
@@ -345,14 +363,16 @@ final class HttpRequest
     /**
      * Add URL parameters using $key => $value array.
      *
-     * @param array|null $parameters URL parameters to add.
+     * @param array<int|string|null>|null $parameters URL parameters to add.
      */
     public function withParams(
         ?array $parameters
     ): self {
         if ($parameters !== null) {
             foreach ($parameters as $key => $value) {
-                $this->withParam((string) $key, $value);
+                if ($value !== null) {
+                    $this->withParam((string) $key, $value);
+                }
             }
         }
 
@@ -405,38 +425,26 @@ final class HttpRequest
     }
 
     /**
-     * Set the return type for this request.
-     *
-     * @param string $type Request type of "headers" or "body" or "object".
-     */
-    public function setReturnType(
-        ?string $type
-    ): self {
-        if ($type === null || ! in_array($type, $this->returnTypes)) {
-            $type = 'body';
-        }
-
-        $this->returnType = $type;
-        return $this;
-    }
-
-    /**
      * Build a multi-part request.
      *
-     * @return array
+     * @return array<mixed>
      */
     private function buildMultiPart(): array
     {
         $builder = new MultipartStreamBuilder($this->configuration->getHttpStreamFactory());
 
         foreach ($this->files as $field => $file) {
-            $builder
-                ->addResource($field, fopen($file, 'r'));
+            $resource = fopen($file, 'r');
+
+            if ($resource !== false) {
+                $builder->addResource($field, $resource);
+            }
         }
 
         foreach ($this->formParams as $param => $value) {
-            $builder
-                ->addResource($param, $value);
+            if (is_string($value) || is_resource($value) || $value instanceof StreamInterface) {
+                $builder->addResource($param, $value);
+            }
         }
 
         return [

@@ -75,6 +75,8 @@ final class RequestOptions
 
     /**
      * Return an array representing the field-filtered request.
+     *
+     * @return array<int|string>
      */
     public function build(): array
     {

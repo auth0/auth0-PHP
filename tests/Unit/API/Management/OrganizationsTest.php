@@ -65,8 +65,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid name.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
 
         $api->mock()->organizations()->create('', '');
     }
@@ -78,8 +78,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid displayName.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'displayName'));
 
         $api->mock()->organizations()->create('test-organization', '');
     }
@@ -129,8 +129,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->update('', '');
     }
@@ -142,8 +142,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid displayName.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'displayName'));
 
         $api->mock()->organizations()->update('test-organization', '');
     }
@@ -171,8 +171,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->update('', '');
     }
@@ -210,8 +210,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->get('');
     }
@@ -236,8 +236,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid name.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
 
         $api->mock()->organizations()->getByName('');
     }
@@ -262,8 +262,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->getEnabledConnections('');
     }
@@ -288,8 +288,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->getEnabledConnection('', '');
     }
@@ -301,8 +301,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid connectionId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
 
         $api->mock()->organizations()->getEnabledConnection('test-organization', '');
     }
@@ -331,8 +331,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->addEnabledConnection('', '', ['assign_membership_on_login' => true]);
     }
@@ -344,8 +344,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid connectionId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
 
         $api->mock()->organizations()->addEnabledConnection('test-organization', '', ['assign_membership_on_login' => true]);
     }
@@ -377,8 +377,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->updateEnabledConnection('', '', ['assign_membership_on_login' => true]);
     }
@@ -390,8 +390,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid connectionId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
 
         $api->mock()->organizations()->updateEnabledConnection('test-organization', '', ['assign_membership_on_login' => true]);
     }
@@ -416,8 +416,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->removeEnabledConnection('', '');
     }
@@ -429,8 +429,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid connectionId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
 
         $api->mock()->organizations()->removeEnabledConnection('test-organization', '');
     }
@@ -455,8 +455,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->getMembers('');
     }
@@ -488,8 +488,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->addMembers('', []);
     }
@@ -501,8 +501,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid members.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'members'));
 
         $api->mock()->organizations()->addMembers('test-organization', []);
     }
@@ -531,8 +531,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->removeMembers('', []);
     }
@@ -544,8 +544,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid members.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'members'));
 
         $api->mock()->organizations()->removeMembers('test-organization', []);
     }
@@ -570,8 +570,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->getMemberRoles('', '');
     }
@@ -583,8 +583,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid userId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
 
         $api->mock()->organizations()->getMemberRoles('test-organization', '');
     }
@@ -616,8 +616,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->addMemberRoles('', '', []);
     }
@@ -629,8 +629,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid userId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
 
         $api->mock()->organizations()->addMemberRoles('test-organization', '', []);
     }
@@ -642,8 +642,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid roles.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'roles'));
 
         $api->mock()->organizations()->addMemberRoles('test-organization', 'test-rule', []);
     }
@@ -672,8 +672,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->removeMemberRoles('', '', []);
     }
@@ -685,8 +685,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid userId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
 
         $api->mock()->organizations()->removeMemberRoles('test-organization', '', []);
     }
@@ -698,8 +698,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid roles.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'roles'));
 
         $api->mock()->organizations()->removeMemberRoles('test-organization', 'test-rule', []);
     }
@@ -724,8 +724,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->getInvitations('');
     }
@@ -750,8 +750,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->getInvitation('', '');
     }
@@ -763,8 +763,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid invitationId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitationId'));
 
         $api->mock()->organizations()->getInvitation('test-organization', '');
     }
@@ -807,8 +807,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->createInvitation('', '', [], []);
     }
@@ -820,8 +820,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid clientId.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'clientId'));
 
         $api->mock()->organizations()->createInvitation('test-organization', '', [], []);
     }
@@ -833,8 +833,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid inviter.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'inviter'));
 
         $api->mock()->organizations()->createInvitation('test-organization', 'test-client', [], []);
     }
@@ -846,8 +846,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid invitee.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitee'));
 
         $api->mock()->organizations()->createInvitation('test-organization', 'test-client', ['test' => 'test'], []);
     }
@@ -859,8 +859,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid inviter.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'inviter.name'));
 
         $api->mock()->organizations()->createInvitation('test-organization', 'test-client', ['test' => 'test'], ['test' => 'test']);
     }
@@ -872,8 +872,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid invitee.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitee.email'));
 
         $api->mock()->organizations()->createInvitation('test-organization', 'test-client', ['name' => 'Test Sender'], ['test' => 'test']);
     }
@@ -898,8 +898,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid id.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
         $api->mock()->organizations()->deleteInvitation('', '');
     }
@@ -911,8 +911,8 @@ class OrganizationsTest extends TestCase
     {
         $api = new MockManagementApi();
 
-        $this->expectException(\Auth0\SDK\Exception\EmptyOrInvalidParameterException::class);
-        $this->expectExceptionMessage('Empty or invalid invitation.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitation'));
 
         $api->mock()->organizations()->deleteInvitation('test-organization', '');
     }

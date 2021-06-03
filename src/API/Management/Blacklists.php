@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -32,12 +33,12 @@ final class Blacklists extends ManagementEndpoint
         ?string $aud = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($jti, 'jti');
+        Validate::string($jti, 'jti');
 
         $request = [ 'jti' => $jti ];
 
         if ($aud !== null) {
-            $this->validateString($aud, 'aud');
+            Validate::string($aud, 'aud');
             $request['aud'] = $aud;
         }
 
@@ -63,8 +64,6 @@ final class Blacklists extends ManagementEndpoint
         ?string $aud = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($aud, 'aud');
-
         $client = $this->getHttpClient()->method('get')
             ->addPath('blacklists', 'tokens');
 

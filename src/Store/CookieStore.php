@@ -17,7 +17,7 @@ class CookieStore implements StoreInterface
      * Use config key 'base_name' to set this during instantiation.
      * Default is 'auth0'
      */
-    protected string $sessionBaseName;
+    protected ?string $sessionBaseName = null;
 
     /**
      * Cookie expiration length, in seconds.
@@ -44,35 +44,25 @@ class CookieStore implements StoreInterface
     protected ?int $now = null;
 
     /**
-     * Support legacy browsers for SameSite=None.
-     * This will set/get/delete a fallback cookie with no SameSite attribute if $this->sameSite is None.
-     * Use config key 'legacy_samesite_none' to set this during instantiation.
-     * Default is true.
-     */
-    protected bool $legacySameSiteNone;
-
-    /**
      * CookieStore constructor.
      *
-     * @param array $options Cookie options. See class properties above for keys and types allowed.
+     * @param array<mixed> $options Cookie options. See class properties above for keys and types allowed.
      */
     public function __construct(
         array $options = []
     ) {
         $this->sessionBaseName = $options['base_name'] ?? 'auth0';
-        $this->expiration = $options['expiration'] ?? 600;
+        $this->expiration = isset($options['expiration']) ? (int) $options['expiration'] : 600;
 
-        if (isset($options['samesite']) && is_string($options['samesite']) && mb_strlen($options['samesite'])) {
+        if (isset($options['samesite']) && mb_strlen($options['samesite']) !== 0) {
             $sameSite = ucfirst($options['samesite']);
 
-            if (in_array($sameSite, ['None', 'Strict', 'Lax'])) {
+            if (in_array($sameSite, ['None', 'Strict', 'Lax'], true)) {
                 $this->sameSite = $sameSite;
             }
         }
 
-        $this->now = $options['now'] ?? null;
-
-        $this->legacySameSiteNone = $options['legacy_samesite_none'] ?? true;
+        $this->now = isset($options['now']) ? (int) $options['now'] : null;
     }
 
     /**
@@ -88,17 +78,11 @@ class CookieStore implements StoreInterface
         $key_name = $this->getCookieName($key);
         $_COOKIE[$key_name] = $value;
 
-        if ($this->sameSite) {
+        if ($this->sameSite !== null) {
             // Core setcookie() does not handle SameSite before PHP 7.3.
             $this->setCookieHeader($key_name, $value, $this->getExpTimecode());
         } else {
             $this->setCookie($key_name, $value, $this->getExpTimecode());
-        }
-
-        // If we're using SameSite=None, set a fallback cookie with no SameSite attribute.
-        if ($this->legacySameSiteNone && $this->sameSite === 'None') {
-            $_COOKIE['_' . $key_name] = $value;
-            $this->setCookie('_' . $key_name, $value, $this->getExpTimecode());
         }
     }
 
@@ -118,11 +102,6 @@ class CookieStore implements StoreInterface
         $key_name = $this->getCookieName($key);
         $value = $default;
 
-        // If handling legacy browsers, check for fallback value.
-        if ($this->legacySameSiteNone) {
-            $value = $_COOKIE['_' . $key_name] ?? $value;
-        }
-
         return $_COOKIE[$key_name] ?? $value;
     }
 
@@ -137,12 +116,6 @@ class CookieStore implements StoreInterface
         $key_name = $this->getCookieName($key);
         unset($_COOKIE[$key_name]);
         $this->setCookie($key_name, '', 0);
-
-        // If we set a legacy fallback value, remove that as well.
-        if ($this->legacySameSiteNone) {
-            unset($_COOKIE['_' . $key_name]);
-            $this->setCookie('_' . $key_name, '', 0);
-        }
     }
 
     /**
@@ -155,7 +128,7 @@ class CookieStore implements StoreInterface
     ): string {
         $key_name = $key;
 
-        if (mb_strlen($this->sessionBaseName)) {
+        if ($this->sessionBaseName !== null) {
             $key_name = $this->sessionBaseName . '_' . $key_name;
         }
 

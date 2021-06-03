@@ -7,6 +7,7 @@ namespace Auth0\SDK\Token;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Utility\HttpRequest;
+use Auth0\SDK\Utility\HttpResponse;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -26,6 +27,8 @@ final class Verifier
 
     /**
      * An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
+     *
+     * @var array<int|string>
      */
     private array $headers;
 
@@ -64,7 +67,7 @@ final class Verifier
      *
      * @param string              $payload      A string representing the headers and claims portions of a JWT.
      * @param string              $signature    A string representing the signature portion of a JWT.
-     * @param array               $headers      An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
+     * @param array<int|string>   $headers      An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
      * @param string|null         $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
      * @param string|null         $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
      * @param string|null         $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
@@ -99,6 +102,8 @@ final class Verifier
      * Verify the token signature.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When signature verification fails. See exception message for details.
+     *
+     * @psalm-suppress PossiblyInvalidArgument
      */
     public function verify(): self
     {
@@ -108,8 +113,8 @@ final class Verifier
             throw \Auth0\SDK\Exception\InvalidTokenException::missingAlgHeader();
         }
 
-        if ($this->algorithm && ($this->algorithm !== $alg)) {
-            throw \Auth0\SDK\Exception\InvalidTokenException::unexpectedSigningAlgorithm($this->algorithm, $alg);
+        if ($this->algorithm !== null && $this->algorithm !== $alg) {
+            throw \Auth0\SDK\Exception\InvalidTokenException::unexpectedSigningAlgorithm($this->algorithm, (string) $alg);
         }
 
         if ($alg === Token::ALGO_RS256) {
@@ -119,7 +124,7 @@ final class Verifier
                 throw \Auth0\SDK\Exception\InvalidTokenException::missingKidHeader();
             }
 
-            $key = $this->getKey($kid);
+            $key = $this->getKey((string) $kid);
             $valid = openssl_verify($this->payload, $this->signature, $key, OPENSSL_ALGO_SHA256);
             $this->freeKey($key);
 
@@ -131,7 +136,7 @@ final class Verifier
         }
 
         if ($alg === Token::ALGO_HS256) {
-            if (! $this->clientSecret) {
+            if ($this->clientSecret === null) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::requiresClientSecret();
             }
 
@@ -145,13 +150,15 @@ final class Verifier
             return $this;
         }
 
-        throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm($alg);
+        throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg);
     }
 
     /**
      * Query a JWKS endpoint and return an array representing the key set.
      *
      * @param string|null $expectsKid Optional. A key id we're currently expecting to retrieve. When retrieving a cache response, if the key isn't present, it will invalid the cache and fetch an updated JWKS.
+     *
+     * @return array<int|string, mixed>
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When the JWKS uri is not properly configured, or is unreachable.
      */
@@ -165,32 +172,46 @@ final class Verifier
         $jwksCacheKey = md5($this->jwksUri);
         $jwksUri = parse_url($this->jwksUri);
 
+        if (! is_array($jwksUri)) {
+            return [];
+        }
+
         $scheme = $jwksUri['scheme'] ?? 'https';
         $path = $jwksUri['path'] ?? '/.well-known/jwks.json';
+        $host = $jwksUri['host'] ?? $this->configuration->getDomain();
+
         $response = [];
 
         if ($this->cache !== null) {
             $cached = $this->cache->get($jwksCacheKey);
 
             if ($cached !== null) {
-                if ($expectsKid === null || $expectsKid !== null && isset($cached[$expectsKid])) {
+                if ($expectsKid === null || isset($cached[$expectsKid])) {
                     return $cached;
                 }
             }
         }
 
-        $keys = (new HttpRequest($this->configuration, 'get', $path, [], $scheme . '://' . $jwksUri['host']))->call();
+        $keys = (new HttpRequest($this->configuration, 'get', $path, [], $scheme . '://' . $host))->call();
 
-        if (is_array($keys) && isset($keys['keys']) && count($keys['keys'])) {
-            foreach ($keys['keys'] as $key) {
-                if (isset($key['kid']) && isset($key['x5c']) && is_array($key['x5c']) && count($key['x5c'])) {
-                    $response[$key['kid']] = $key;
+        if (HttpResponse::wasSuccessful($keys)) {
+            try {
+                $keys = HttpResponse::decodeContent($keys);
+            } catch (\Throwable $throwable) {
+                return [];
+            }
+
+            if (is_array($keys) && isset($keys['keys']) && count($keys['keys']) !== 0) {
+                foreach ($keys['keys'] as $key) {
+                    if (isset($key['kid']) && isset($key['x5c']) && is_array($key['x5c']) && count($key['x5c']) !== 0) {
+                        $response[$key['kid']] = $key;
+                    }
                 }
             }
-        }
 
-        if (count($response) && $this->cache !== null) {
-            $this->cache->set($jwksCacheKey, $response, $this->cacheExpires ?? 60);
+            if (count($response) !== 0 && $this->cache !== null) {
+                $this->cache->set($jwksCacheKey, $response, $this->cacheExpires ?? 60);
+            }
         }
 
         return $response;
@@ -201,7 +222,7 @@ final class Verifier
      *
      * @param string $kid The 'kid' header value to use for key lookup.
      *
-     * @return OpenSSLAsymmetricKey|resource
+     * @return \OpenSSLAsymmetricKey|resource
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When unable to retrieve key. See error message for details.
      */
@@ -222,7 +243,7 @@ final class Verifier
 
         $details = openssl_pkey_get_details($key);
 
-        if ($details['type'] !== OPENSSL_KEYTYPE_RSA) {
+        if ($details === false || $details['type'] !== OPENSSL_KEYTYPE_RSA) {
             throw \Auth0\SDK\Exception\InvalidTokenException::badSignatureIncompatibleAlgorithm();
         }
 

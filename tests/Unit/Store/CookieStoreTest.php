@@ -58,7 +58,7 @@ class CookieStoreTest extends TestCase
      *
      * @param object $mock Mock object to reflect.
      *
-     * @return array
+     * @return array<mixed>
      */
     public function getMockInvocations(object $mock): array
     {
@@ -99,10 +99,9 @@ class CookieStoreTest extends TestCase
         $mockStore->set('test_set_key', '__test_set_value__');
 
         $this->assertEquals('__test_set_value__', $_COOKIE['auth0_test_set_key']);
-        $this->assertArrayNotHasKey('_auth0_test_set_key', $_COOKIE);
 
-        $this->assertCount(0, (array) $this->getMockInvocations(self::$mockSpyHeader));
-        $this->assertCount(1, (array) $this->getMockInvocations(self::$mockSpyCookie));
+        $this->assertCount(0, $this->getMockInvocations(self::$mockSpyHeader));
+        $this->assertCount(1, $this->getMockInvocations(self::$mockSpyCookie));
 
         $setCookieParams = $this->getMockInvocations(self::$mockSpyCookie)[0]->getParameters();
 
@@ -120,9 +119,8 @@ class CookieStoreTest extends TestCase
         $mockStore->set('test_set_key', '__test_set_value__');
 
         $this->assertEquals('__test_set_value__', $_COOKIE['auth0_test_set_key']);
-        $this->assertEquals('__test_set_value__', $_COOKIE['_auth0_test_set_key']);
 
-        $this->assertCount(1, (array) $this->getMockInvocations(self::$mockSpyHeader));
+        $this->assertCount(1, $this->getMockInvocations(self::$mockSpyHeader));
 
         $setHeaderParams = $this->getMockInvocations(self::$mockSpyHeader)[0]->getParameters();
 
@@ -130,33 +128,7 @@ class CookieStoreTest extends TestCase
         $this->assertEquals('__test_set_value__', $setHeaderParams[1]);
         $this->assertEquals(20, $setHeaderParams[2]);
 
-        $this->assertCount(1, (array) $this->getMockInvocations(self::$mockSpyCookie));
-
-        $setCookieParams = $this->getMockInvocations(self::$mockSpyCookie)[0]->getParameters();
-
-        $this->assertEquals('_auth0_test_set_key', $setCookieParams[0]);
-        $this->assertEquals('__test_set_value__', $setCookieParams[1]);
-        $this->assertEquals(20, $setCookieParams[2]);
-    }
-
-    /**
-     * Test same-site: none (no legacy)
-     */
-    public function testSetSameSiteNoneNoLegacy(): void
-    {
-        $mockStore = $this->getMock(['legacy_samesite_none' => false, 'samesite' => 'None']);
-        $mockStore->set('test_set_key', '__test_set_value__');
-
-        $this->assertEquals('__test_set_value__', $_COOKIE['auth0_test_set_key']);
-        $this->assertArrayNotHasKey('_auth0_test_set_key', $_COOKIE);
-        $this->assertCount(0, (array) $this->getMockInvocations(self::$mockSpyCookie));
-        $this->assertCount(1, (array) $this->getMockInvocations(self::$mockSpyHeader));
-
-        $setCookieParams = $this->getMockInvocations(self::$mockSpyHeader)[0]->getParameters();
-
-        $this->assertEquals('auth0_test_set_key', $setCookieParams[0]);
-        $this->assertEquals('__test_set_value__', $setCookieParams[1]);
-        $this->assertGreaterThanOrEqual(time() + 600, $setCookieParams[2]);
+        $this->assertCount(0, $this->getMockInvocations(self::$mockSpyCookie));
     }
 
     /**
@@ -167,30 +139,9 @@ class CookieStoreTest extends TestCase
         $store = new CookieStore();
 
         $_COOKIE['auth0_test_get_key'] = '__test_get_value__';
-        $_COOKIE['_auth0_test_get_key'] = '__test_get_legacy_value__';
 
         $this->assertEquals('__test_get_value__', $store->get('test_get_key'));
         $this->assertEquals('__test_default_value__', $store->get('test_empty_key', '__test_default_value__'));
-
-        unset($_COOKIE['auth0_test_get_key']);
-        $this->assertEquals('__test_get_legacy_value__', $store->get('test_get_key'));
-    }
-
-    /**
-     * Test Get No Legacy
-     */
-    public function testGetNoLegacy(): void
-    {
-        $store = new CookieStore(['legacy_samesite_none' => false]);
-
-        $_COOKIE['auth0_test_get_key'] = '__test_get_value__';
-        $_COOKIE['_auth0_test_get_key'] = '__test_get_legacy_value__';
-
-        $this->assertEquals('__test_get_value__', $store->get('test_get_key'));
-        $this->assertEquals('__test_default_value__', $store->get('test_empty_key', '__test_default_value__'));
-
-        unset($_COOKIE['auth0_test_get_key']);
-        $this->assertNull($store->get('test_get_key'));
     }
 
     /**
@@ -199,27 +150,19 @@ class CookieStoreTest extends TestCase
     public function testDelete(): void
     {
         $_COOKIE['auth0_test_delete_key'] = '__test_delete_value__';
-        $_COOKIE['_auth0_test_delete_key'] = '__test_delete_value__';
 
         $mockStore = $this->getMock();
         $mockStore->delete('test_delete_key');
 
         $this->assertNull($mockStore->get('test_delete_key'));
         $this->assertArrayNotHasKey('auth0_test_delete_key', $_COOKIE);
-        $this->assertArrayNotHasKey('_auth0_test_delete_key', $_COOKIE);
 
-        $this->assertCount(0, (array) $this->getMockInvocations(self::$mockSpyHeader));
-        $this->assertCount(2, (array) $this->getMockInvocations(self::$mockSpyCookie));
+        $this->assertCount(0, $this->getMockInvocations(self::$mockSpyHeader));
+        $this->assertCount(1, $this->getMockInvocations(self::$mockSpyCookie));
 
         $setCookieParams = $this->getMockInvocations(self::$mockSpyCookie)[0]->getParameters();
 
         $this->assertEquals('auth0_test_delete_key', $setCookieParams[0]);
-        $this->assertEquals('', $setCookieParams[1]);
-        $this->assertEquals(0, $setCookieParams[2]);
-
-        $setCookieParams = $this->getMockInvocations(self::$mockSpyCookie)[1]->getParameters();
-
-        $this->assertEquals('_auth0_test_delete_key', $setCookieParams[0]);
         $this->assertEquals('', $setCookieParams[1]);
         $this->assertEquals(0, $setCookieParams[2]);
     }
@@ -230,16 +173,14 @@ class CookieStoreTest extends TestCase
     public function testDeleteNoLegacy(): void
     {
         $_COOKIE['auth0_test_delete_key'] = '__test_delete_value__';
-        $_COOKIE['_auth0_test_delete_key'] = '__test_delete_value__';
 
-        $mockStore = $this->getMock(['legacy_samesite_none' => false]);
+        $mockStore = $this->getMock();
         $mockStore->delete('test_delete_key');
 
         $this->assertNull($mockStore->get('test_delete_key'));
         $this->assertArrayNotHasKey('auth0_test_delete_key', $_COOKIE);
-        $this->assertArrayHasKey('_auth0_test_delete_key', $_COOKIE);
 
-        $this->assertCount(1, (array) $this->getMockInvocations(self::$mockSpyCookie));
+        $this->assertCount(1, $this->getMockInvocations(self::$mockSpyCookie));
 
         $setCookieParams = $this->getMockInvocations(self::$mockSpyCookie)[0]->getParameters();
 

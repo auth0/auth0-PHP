@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -55,12 +56,12 @@ final class Stats extends ManagementEndpoint
             ->addPath('stats', 'daily');
 
         if ($from !== null) {
-            $this->validateString($from, 'from');
+            Validate::string($from, 'from');
             $client->withParam('from', $from);
         }
 
         if ($to !== null) {
-            $this->validateString($to, 'to');
+            Validate::string($to, 'to');
             $client->withParam('to', $to);
         }
 
