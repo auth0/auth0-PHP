@@ -7,6 +7,7 @@ namespace Auth0\Tests\Unit;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Store\SessionStore;
+use Auth0\SDK\Utility\Shortcut;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Cache\Adapter\PHPArray\ArrayCachePool;
@@ -765,7 +766,7 @@ class Auth0Test extends TestCase
     {
         $config = self::$baseConfig;
         unset($config['transientStorage']);
-        $auth0 = new Auth0(array_filter($config));
+        $auth0 = new Auth0(Shortcut::filterArray($config));
         $auth0->authentication()->getLoginLink(['nonce' => '__test_cookie_nonce__']);
 
         $this->assertEquals('__test_cookie_nonce__', $_COOKIE['auth0_nonce']);

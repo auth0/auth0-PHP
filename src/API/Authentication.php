@@ -290,7 +290,7 @@ final class Authentication
         Validate::string($email, 'email');
         Validate::string($type, 'type');
 
-        $body = array_filter([
+        $body = Shortcut::filterArray([
             'email' => trim($email),
             'connection' => 'email',
             'send' => trim($type),
@@ -318,7 +318,7 @@ final class Authentication
     ): ResponseInterface {
         Validate::string($phoneNumber, 'phoneNumber');
 
-        $body = array_filter([
+        $body = Shortcut::filterArray([
             'phone_number' => trim($phoneNumber),
             'connection' => 'sms',
         ]);
@@ -397,7 +397,7 @@ final class Authentication
     ): ResponseInterface {
         Validate::string($code, 'code');
 
-        return $this->oauthToken('authorization_code', array_filter([
+        return $this->oauthToken('authorization_code', Shortcut::filterArray([
             'client_secret' => $this->configuration->getClientSecret(),
             'redirect_uri' => Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri(),
             'code' => trim($code),

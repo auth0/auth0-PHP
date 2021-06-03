@@ -98,7 +98,7 @@ final class HttpTelemetry
             self::setCorePackage();
         }
 
-        return array_filter([
+        return Shortcut::filterArray([
             'name' => self::$packageName,
             'version' => self::$packageVersion,
             'env' => self::$environment,
