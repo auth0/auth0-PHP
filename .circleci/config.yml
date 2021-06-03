@@ -67,7 +67,7 @@ commands:
           at: .
       - run:
           name: Run mutation tests
-          command: php ./vendor/bin/infection --min-msi=48 --min-covered-msi=70 --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage
+          command: php ./vendor/bin/infection --no-progress --min-msi=48 --min-covered-msi=70 --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage
 
 jobs:
   php_7_4:
