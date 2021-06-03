@@ -5,7 +5,7 @@ commands:
     steps:
       - checkout
       - run:
-          name: Update composer.
+          name: Perform composer self-update
           command: sudo composer self-update
       - restore_cache:
           keys:
@@ -18,10 +18,10 @@ commands:
             sudo docker-php-ext-enable pcov
             sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - run:
-          name: Install composer dependencies.
+          name: Install composer dependencies
           command: composer install -n --prefer-dist
       - run:
-          name: Update composer dependencies.
+          name: Update composer dependencies
           command: composer update --prefer-dist --no-interaction
       - persist_to_workspace:
           root: .
@@ -65,7 +65,9 @@ commands:
     steps:
       - attach_workspace:
           at: .
-      - run: php ./vendor/bin/infection --min-msi=48 --min-covered-msi=70 --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage
+      - run:
+          name: Run mutation tests
+          command: php ./vendor/bin/infection --min-msi=48 --min-covered-msi=70 --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage
 
 jobs:
   php_7_4:
