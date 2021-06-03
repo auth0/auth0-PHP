@@ -20,22 +20,31 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
+
   run-phpinsights:
     steps:
       - run: php ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
-  run-phpstan:
+
+      run-phpstan:
     steps:
       - run: php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M
-  run-psalm:
+
+      run-psalm:
     steps:
       - run: php ./vendor/bin/psalm
-  run-pest:
+
+      run-pest:
     steps:
       - run: php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
-      - store_artifacts:
-          path: build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
+
   run-infection:
     steps:
+      - attach_workspace:
+          at: .
       - run: php ./vendor/bin/infection --min-msi=48 --min-covered-msi=70 --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage
 
 jobs:
