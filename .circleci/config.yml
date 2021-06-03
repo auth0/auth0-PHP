@@ -25,15 +25,15 @@ commands:
     steps:
       - run: php ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
 
-      run-phpstan:
+  run-phpstan:
     steps:
       - run: php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M
 
-      run-psalm:
+  run-psalm:
     steps:
       - run: php ./vendor/bin/psalm
 
-      run-pest:
+  run-pest:
     steps:
       - run: php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - persist_to_workspace:
