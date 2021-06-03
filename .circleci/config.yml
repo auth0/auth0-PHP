@@ -33,7 +33,7 @@ commands:
     steps:
       - run: php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - store_artifacts:
-          path: build/coverage/*
+          path: build
   run-infection:
     steps:
       - run: php ./vendor/bin/infection --min-msi=48 --min-covered-msi=70 --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage
