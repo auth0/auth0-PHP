@@ -4,13 +4,25 @@ commands:
   prepare:
     steps:
       - checkout
-      - run: sudo composer self-update
+      - run:
+          name: Update composer.
+          command: sudo composer self-update
       - restore_cache:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
             - composer-v1-{{ .Environment.CIRCLE_JOB }}
-      - run: composer install -n --prefer-dist
-      - run: composer update --prefer-dist --no-interaction
+      - run:
+          name: Enable code coverage
+          command: |
+            sudo pecl install pcov
+            sudo docker-php-ext-enable pcov
+            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - run:
+          name: Install composer dependencies.
+          command: composer install -n --prefer-dist
+      - run:
+          name: Update composer dependencies.
+          command: composer update --prefer-dist --no-interaction
       - persist_to_workspace:
           root: .
           paths:
@@ -23,19 +35,27 @@ commands:
 
   run-phpinsights:
     steps:
-      - run: php ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
+      - run:
+          name: Run phpinsights tests
+          command: php ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
 
   run-phpstan:
     steps:
-      - run: php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M
+      - run:
+          name: Run phpstan tests
+          command: php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M
 
   run-psalm:
     steps:
-      - run: php ./vendor/bin/psalm
+      - run:
+          name: Run psalm tests
+          command: php ./vendor/bin/psalm
 
   run-pest:
     steps:
-      - run: php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
+      - run:
+          name: Run pest tests
+          command: php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - persist_to_workspace:
           root: .
           paths:
@@ -57,6 +77,7 @@ jobs:
       - run-phpstan
       - run-pest
       - run-infection
+
   php_8_0:
     docker:
       - image: circleci/php:8.0
@@ -66,6 +87,7 @@ jobs:
       - run-phpstan
       - run-pest
       - run-infection
+
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
@@ -86,6 +108,7 @@ workflows:
     jobs:
       - php_7_4
       - php_8_0
+
   vulnerability-check:
     jobs:
       - php_7_4
