@@ -92,6 +92,67 @@ test('__construct() successfully only stores the host when passed a full uri as 
     $this->assertEquals('test.auth0.com', $sdk->getDomain());
 });
 
+test('__construct() throws an exception if domain is an empty string', function(): void {
+    $clientId = uniqid();
+    $redirectUri = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_MISSING_DOMAIN);
+
+    $sdk = new SdkConfiguration([
+        'domain' => '',
+        'clientId' => $clientId,
+        'redirectUri' => $redirectUri,
+    ]);
+});
+
+test('__construct() throws an exception if an invalid token algorithm is specified', function(): void {
+    $domain = uniqid();
+    $clientId = uniqid();
+    $redirectUri = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_INVALID_TOKEN_ALGORITHM);
+
+    $sdk = new SdkConfiguration([
+        'domain' => $domain,
+        'clientId' => $clientId,
+        'redirectUri' => $redirectUri,
+        'tokenAlgorithm' => 'X8675309'
+    ]);
+});
+
+test('__construct() throws an exception if an invalid token leeway is specified', function(): void {
+    $domain = uniqid();
+    $clientId = uniqid();
+    $redirectUri = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'tokenLeeway'));
+
+    $sdk = new SdkConfiguration([
+        'domain' => $domain,
+        'clientId' => $clientId,
+        'redirectUri' => $redirectUri,
+        'tokenLeeway' => 'TEST'
+    ]);
+});
+
+test('__construct() converts token leeway passed as a string into an int silently', function(): void {
+    $domain = uniqid();
+    $clientId = uniqid();
+    $redirectUri = uniqid();
+
+    $sdk = new SdkConfiguration([
+        'domain' => $domain,
+        'clientId' => $clientId,
+        'redirectUri' => $redirectUri,
+        'tokenLeeway' => '300'
+    ]);
+
+    $this->assertEquals(300, $sdk->getTokenLeeway());
+});
+
 test('successfully updates values', function(): void
 {
     $domain1 = uniqid();
@@ -152,6 +213,18 @@ test('buildDomainUri() returns a properly formatted uri', function(): void
     ]);
 
     $this->assertEquals('https://' . $domain, $sdk->buildDomainUri());
+});
+
+test('buildScopeString() returns an empty string when there are no scopes defined', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+        'scope' => [],
+    ]);
+
+    $this->assertEquals('', $sdk->buildScopeString());
 });
 
 test('buildScopeString() successfully converts the array to a string', function(): void

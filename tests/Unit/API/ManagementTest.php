@@ -6,7 +6,7 @@ use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 
-uses()->group('authentication');
+uses()->group('management');
 
 beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class PaginatorException extends SdkException
 {
     public const MSG_HTTP_METHOD_UNSUPPORTED = 'This request type is not supported. You can only paginate GET requests.';

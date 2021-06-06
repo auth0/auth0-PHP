@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class ArgumentException extends SdkException
 {
     public const MSG_VALUE_CANNOT_BE_EMPTY = 'A value for `%s` must be provided';

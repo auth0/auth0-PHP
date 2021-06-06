@@ -91,7 +91,7 @@ final class DeviceCredentials extends ManagementEndpoint
             $payload['type'] = $type;
         }
 
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()->method('get')
             ->addPath('device-credentials')
             ->withParams($payload)
             ->withOptions($options)

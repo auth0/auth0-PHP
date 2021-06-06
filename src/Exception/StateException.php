@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class StateException extends SdkException
 {
     public const MSG_INVALID_STATE = 'Invalid state';

@@ -206,7 +206,7 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function buildScopeString(): ?string
     {
-        if ($this->hasScope()) {
+        if ($this->hasScope() && count($this->getScope()) !== 0) {
             return implode(' ', $this->getScope());
         }
 
@@ -219,7 +219,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function buildDefaultOrganization(): ?string
     {
         // Return the default organization.
-        if ($this->hasOrganization()) {
+        if ($this->hasOrganization() && count($this->getOrganization()) !== 0) {
             return $this->getOrganization()[0] ?? '';
         }
 
@@ -232,7 +232,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function buildDefaultAudience(): ?string
     {
         // Return the default audience.
-        if ($this->hasAudience()) {
+        if ($this->hasAudience() && count($this->getAudience()) !== 0) {
             return $this->getAudience()[0] ?? '';
         }
 

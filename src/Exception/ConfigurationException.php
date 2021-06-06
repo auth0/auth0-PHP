@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class ConfigurationException extends SdkException
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';

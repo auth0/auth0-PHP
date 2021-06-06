@@ -2,37 +2,52 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
-
+use Auth0\SDK\Utility\Request\FilteredRequest;
+use Auth0\SDK\Utility\Request\PaginatedRequest;
+use Auth0\SDK\Utility\Request\RequestOptions;
 use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
 
-class BlacklistsTest extends TestCase
-{
-    public function testGet(): void
-    {
-        $api = new MockManagementApi();
-        $api->mock()->blacklists()->get('__test_aud__');
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/blacklists/tokens', $api->getRequestUrl());
+uses()->group('management', 'blacklists');
 
-        $this->assertEquals('aud=__test_aud__', $api->getRequestQuery(null));
-    }
+beforeEach(function(): void {
+    $this->sdk = new MockManagementApi();
 
-    public function testBlacklist(): void
-    {
-        $api = new MockManagementApi();
+    $this->filteredRequest = new FilteredRequest();
+    $this->paginatedRequest = new PaginatedRequest();
+    $this->requestOptions = new RequestOptions(
+        $this->filteredRequest,
+        $this->paginatedRequest
+    );
+});
 
-        $api->mock()->blacklists()->create('__test_jti__', '__test_aud__');
+test('create() issues valid requests', function(): void {
+    $endpoint = $this->sdk->mock()->blacklists();
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/blacklists/tokens', $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
+    $jti = uniqid();
+    $aud = uniqid();
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('aud', $body);
-        $this->assertEquals('__test_aud__', $body['aud']);
-        $this->assertArrayHasKey('jti', $body);
-        $this->assertEquals('__test_jti__', $body['jti']);
-    }
-}
+    $endpoint->create($jti, $aud);
+
+    $this->assertEquals('POST', $this->sdk->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/blacklists/tokens', $this->sdk->getRequestUrl());
+    $this->assertEmpty($this->sdk->getRequestQuery());
+
+    $body = $this->sdk->getRequestBody();
+    $this->assertArrayHasKey('aud', $body);
+    $this->assertEquals($aud, $body['aud']);
+    $this->assertArrayHasKey('jti', $body);
+    $this->assertEquals($jti, $body['jti']);
+});
+
+test('get() issues valid requests', function(): void {
+    $endpoint = $this->sdk->mock()->blacklists();
+
+    $aud = uniqid();
+
+    $endpoint->get($aud);
+
+    $this->assertEquals('GET', $this->sdk->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/blacklists/tokens', $this->sdk->getRequestUrl());
+
+    $this->assertEquals('aud=' . $aud, $this->sdk->getRequestQuery(null));
+});

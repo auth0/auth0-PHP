@@ -57,7 +57,7 @@ commands:
     steps:
       - run:
           name: Run Pest unit tests
-          command: php ./vendor/bin/pest --stop-on-failure --min=70 --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
+          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - persist_to_workspace:
           root: .
           paths:

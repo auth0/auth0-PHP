@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Exception;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class InvalidTokenException extends SdkException
 {
     public const MSG_BAD_SEPARATORS = 'The JWT string must contain two dots';
