@@ -284,11 +284,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                     throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
                 }
 
-                /**
-                 * If not using checkpoint pagination, grab the 'start' value.
-                 *
-                 * @psalm-suppress MixedAssignment
-                 */
+                // If not using checkpoint pagination, grab the 'start' value.
                 $start = $results['start'] ?? null;
 
                 // There is no 'start' key, the request was probably made without the include_totals param.
@@ -310,9 +306,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                 $hadResults = false;
                 $nextCheckpoint = null;
 
-                /**
-                 * @psalm-suppress MixedAssignment
-                 */
                 foreach ($results as $resultKey => $result) {
                     if (! $this->usingCheckpointPagination) {
                         if ($resultKey === 'limit') {

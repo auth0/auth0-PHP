@@ -26,21 +26,21 @@ final class Parser
     /**
      * Each of the 3 sections of the JWT separated for easier processing.
      *
-     * @var array<int, string>
+     * @var array<int,string>
      */
     private ?array $tokenParts = null;
 
     /**
      * Decoded headers contained within the JWT.
      *
-     * @var array<int|string>
+     * @var array<string,int|string>
      */
     private ?array $tokenHeaders = null;
 
     /**
      * Decoded claims contained within the JWT.
      *
-     * @var array<array|int|string>
+     * @var array<string,array|int|string>
      */
     private ?array $tokenClaims = null;
 
@@ -140,7 +140,7 @@ final class Parser
     /**
      * Return an array representing the Token's claims.
      *
-     * @return array<array|int|string>
+     * @return array<mixed>
      */
     public function export(): array
     {
@@ -175,7 +175,7 @@ final class Parser
     /**
      * Return an array representing the Token's claims.
      *
-     * @return array<array|int|string>
+     * @return array<string,array|int|string>
      */
     public function getClaims(): array
     {

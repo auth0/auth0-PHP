@@ -76,8 +76,6 @@ final class TransientStoreHandler
      * Get a value and delete it from storage.
      *
      * @param string $key Key to get and delete.
-     *
-     * @psalm-suppress MixedAssignment
      */
     public function getOnce(
         string $key

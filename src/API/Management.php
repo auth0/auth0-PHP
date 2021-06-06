@@ -186,13 +186,17 @@ final class Management
         // If no token was provided, try to get one.
         if ($managementToken === null) {
             $auth = new Authentication($configuration);
-            $response = $auth->clientCredentials(['audience' => $configuration->buildDomainUri() . '/api/v2/']);
+            $domain = $configuration->buildDomainUri();
 
-            if (HttpResponse::wasSuccessful($response)) {
-                $response = HttpResponse::decodeContent($response);
+            if ($domain !== null) {
+                $response = $auth->clientCredentials(['audience' => $domain . '/api/v2/']);
 
-                if (isset($response['access_token'])) {
-                    $managementToken = $response['access_token'];
+                if (HttpResponse::wasSuccessful($response)) {
+                    $response = HttpResponse::decodeContent($response);
+
+                    if (isset($response['access_token'])) {
+                        $managementToken = $response['access_token'];
+                    }
                 }
             }
         }
@@ -203,7 +207,7 @@ final class Management
         }
 
         // Build the API client using the management token.
-        $this->httpClient = new HttpClient($this->configuration, '/api/v2/', ['Authorization' => 'Bearer ' . $managementToken]);
+        $this->httpClient = new HttpClient($this->configuration, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
     }
 
     /**

@@ -204,13 +204,13 @@ final class Verifier
             if (is_array($keys) && isset($keys['keys']) && count($keys['keys']) !== 0) {
                 foreach ($keys['keys'] as $key) {
                     if (isset($key['kid']) && isset($key['x5c']) && is_array($key['x5c']) && count($key['x5c']) !== 0) {
-                        $response[$key['kid']] = $key;
+                        $response[(string) $key['kid']] = $key;
                     }
                 }
             }
 
             if (count($response) !== 0 && $this->cache !== null) {
-                $this->cache->set($jwksCacheKey, $response, $this->cacheExpires ?? 60);
+                $this->cache->set($jwksCacheKey, $response, intval($this->cacheExpires ?? 60));
             }
         }
 
@@ -225,6 +225,8 @@ final class Verifier
      * @return \OpenSSLAsymmetricKey|resource
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When unable to retrieve key. See error message for details.
+     *
+     * @psalm-suppress UndefinedDocblockClass
      */
     private function getKey(
         string $kid
@@ -235,7 +237,7 @@ final class Verifier
             throw \Auth0\SDK\Exception\InvalidTokenException::badSignatureMissingKid();
         }
 
-        $key = openssl_pkey_get_public("-----BEGIN CERTIFICATE-----\n" . chunk_split($keys[$kid]['x5c'][0], 64, "\n") . '-----END CERTIFICATE-----');
+        $key = openssl_pkey_get_public("-----BEGIN CERTIFICATE-----\n" . chunk_split((string) $keys[$kid]['x5c'][0], 64, "\n") . '-----END CERTIFICATE-----');
 
         if (is_bool($key)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
@@ -258,13 +260,20 @@ final class Verifier
     private function freeKey(
         $key
     ): void {
-        // openssl_free_key is deprecated in PHP 8.0, so avoid calling it there:
+        /**
+         * openssl_free_key is deprecated in PHP 8.0, so avoid calling it there:
+         *
+         * @psalm-suppress UndefinedClass
+         */
         if ($key instanceof \OpenSSLAsymmetricKey) {
             return;
         }
 
-        // phpcs:ignore
-        // TODO: Remove when PHP 7.x support is EOL
-        openssl_free_key($key);
+        /**
+         * TODO: Remove when PHP 7.x support is EOL
+         *
+         * @psalm-suppress MixedArgument
+         */
+        openssl_free_key($key); // phpcs:ignore
     }
 }

@@ -23,10 +23,10 @@ final class Jobs extends ManagementEndpoint
      * - `create:users`
      * - `read:users`
      *
-     * @param string                      $filePath     Path to formatted file to import.
-     * @param string                      $connectionId Id of the Connection to use.
-     * @param array<bool|int|string>|null $parameters   Optional.Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null         $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                             $filePath     Path to formatted file to import.
+     * @param string                             $connectionId Id of the Connection to use.
+     * @param array<string,bool|int|string>|null $parameters   Optional.Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <psalm
-    errorLevel="2"
+    errorLevel="1"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
@@ -11,10 +11,15 @@
     </projectFiles>
 
     <issueHandlers>
-        <PossiblyNullReference errorLevel="suppress" />
+        <MixedArgument errorLevel="suppress" />
+        <MixedArgumentTypeCoercion errorLevel="suppress" />
+        <MixedArrayAccess errorLevel="suppress" />
+        <MixedAssignment errorLevel="suppress" />
+        <MixedInferredReturnType errorLevel="suppress" />
+        <MixedPropertyTypeCoercion errorLevel="suppress" />
+        <MixedReturnStatement errorLevel="suppress" />
         <PossiblyNullArgument errorLevel="suppress" />
         <PossiblyNullPropertyAssignmentValue errorLevel="suppress" />
-        <MixedArrayAccess errorLevel="suppress" />
-        <MixedPropertyTypeCoercion errorLevel="suppress" />
+        <PossiblyNullReference errorLevel="suppress" />
     </issueHandlers>
 </psalm>

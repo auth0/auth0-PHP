@@ -18,7 +18,6 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\SimpleCache\CacheInterface;
-use ReflectionException;
 
 /**
  * Configuration container for use with Auth0\SDK
@@ -330,58 +329,12 @@ final class SdkConfiguration implements ConfigurableContract
      * Fires when a validation event fails to pass, such as a bad parameter type being used.
      *
      * @param string      $parameter The name of the parameter that failed validation.
-     * @param string|null $reason    A description of why the validation failed.
      *
      * @throws ConfigurationException When invoked.
      */
     private function onValidationException(
-        string $parameter,
-        ?string $reason = null
+        string $parameter
     ): void {
         throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($parameter);
-    }
-
-    /**
-     * Export the current state of the configuration as a serialized string.
-     */
-    private function export(): string
-    {
-        // Serialize the configuration state and return it as a string of stored values.
-        return serialize((object) [
-            'state' => $this->configuredState,
-            'validations' => $this->configuredValidations,
-            'immutable' => $this->configurationImmutable,
-        ]);
-    }
-
-    /**
-     * Import a serialized configuration state and return a new SdkConfiguration.
-     *
-     * @param string $serialized The serialized configuration state.
-     *
-     * @throws ReflectionException When the class does not exist.
-     */
-    private static function import(
-        string $serialized
-    ): self {
-        // Create configuration from stored values.
-        $deserialized = unserialize($serialized);
-
-        // Create a ReflectionClass for SdkConfiguration.
-        $class = new \ReflectionClass(self::class);
-
-        // Create a new SdkConfiguration without running the __constructor.
-        $instance = $class->newInstanceWithoutConstructor();
-
-        // Import the configuration into the new SdkConfiguration instance.
-        $instance->configuredState = $deserialized->state;
-        $instance->configuredValidations = $deserialized->validations;
-        $instance->configurationImmutable = $deserialized->immutable;
-
-        // Run configuration setup to wire validation lambdas, default storage, etc.
-        $instance->setupConfiguration();
-
-        // Return the instance.
-        return $instance;
     }
 }

@@ -345,7 +345,7 @@ final class Auth0
     /**
      * Get userinfo from persisted session or from a code exchange
      *
-     * @return array<array|int|string>|null
+     * @return array<string,array|int|string>|null
      *
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
@@ -542,8 +542,8 @@ final class Auth0
 
         if ($invite !== null) {
             $this->login([
-                'invitation' => $invite->invitation,
-                'organization' => $invite->organization,
+                'invitation' => (string) $invite->invitation,
+                'organization' => (string) $invite->organization,
             ]);
         }
     }

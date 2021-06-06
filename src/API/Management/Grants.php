@@ -21,8 +21,8 @@ final class Grants extends ManagementEndpoint
      * Retrieve the grants associated with your account.
      * Required scope: `read:grants`
      *
-     * @param array<int|string|null>|null $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array<string,int|string|null>|null $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -43,9 +43,9 @@ final class Grants extends ManagementEndpoint
      * Get Grants by Client ID with pagination.
      * Required scope: `read:grants`
      *
-     * @param string                      $clientId   Client ID to filter Grants.
-     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                             $clientId   Client ID to filter Grants.
+     * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -69,9 +69,9 @@ final class Grants extends ManagementEndpoint
      * Get Grants by Audience with pagination.
      * Required scope: `read:grants`
      *
-     * @param string                      $audience   Audience to filter Grants.
-     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                             $audience   Audience to filter Grants.
+     * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -95,9 +95,9 @@ final class Grants extends ManagementEndpoint
      * Get Grants by User ID with pagination.
      * Required scope: `read:grants`
      *
-     * @param string                      $userId     User ID to filter Grants.
-     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                             $userId     User ID to filter Grants.
+     * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *

@@ -12,14 +12,14 @@ final class Validator
     /**
      * Array representing the claims of a JWT.
      *
-     * @var array<array|int|string>
+     * @var array<string,array|int|string>
      */
     private array $claims;
 
     /**
      * Constructor for the Token Validator class.
      *
-     * @param array<array|int|string> $claims Array representing the claims of a JWT.
+     * @param array<string,array|int|string> $claims Array representing the claims of a JWT.
      */
     public function __construct(
         array $claims
@@ -249,7 +249,7 @@ final class Validator
      *
      * @param string $key The claim key to search for.
      *
-     * @return array<string>|int|string|null
+     * @return array<mixed>|int|string|null
      */
     private function getClaim(
         string $key

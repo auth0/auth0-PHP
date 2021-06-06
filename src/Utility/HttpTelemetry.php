@@ -90,7 +90,7 @@ final class HttpTelemetry
     /**
      * Get the current header data as an array.
      *
-     * @return array<string|array>
+     * @return array<mixed>
      */
     public static function get(): array
     {

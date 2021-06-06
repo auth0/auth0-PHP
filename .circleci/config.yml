@@ -36,26 +36,26 @@ commands:
   run-phpinsights:
     steps:
       - run:
-          name: Run phpinsights tests
+          name: Run PHP Insights code quality analysis
           command: php ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
 
   run-phpstan:
     steps:
       - run:
-          name: Run phpstan tests
+          name: Run PHPStan static code analysis
           command: php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M
 
   run-psalm:
     steps:
       - run:
-          name: Run psalm tests
-          command: php ./vendor/bin/psalm
+          name: Run Psalm static code analysis
+          command: php ./vendor/bin/psalm --threads=4
 
   run-pest:
     steps:
       - run:
-          name: Run pest tests
-          command: php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
+          name: Run Pest unit tests
+          command: php ./vendor/bin/pest --stop-on-failure --min 70 --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - persist_to_workspace:
           root: .
           paths:
@@ -66,8 +66,8 @@ commands:
       - attach_workspace:
           at: .
       - run:
-          name: Run mutation tests
-          command: php ./vendor/bin/infection --no-progress --min-msi=48 --min-covered-msi=70 --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage
+          name: Run Infection mutation tests
+          command: php ./vendor/bin/infection --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
 
 jobs:
   php_7_4:
@@ -77,6 +77,7 @@ jobs:
       - prepare
       - run-phpinsights
       - run-phpstan
+      - run-psalm
       - run-pest
       - run-infection
 
@@ -87,6 +88,7 @@ jobs:
       - prepare
       - run-phpinsights
       - run-phpstan
+      - run-psalm
       - run-pest
       - run-infection
 

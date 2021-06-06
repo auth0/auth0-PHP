@@ -268,7 +268,7 @@ final class Token
     /**
      * Export the state of the Token object as a PHP array.
      *
-     * @return array<array|int|string>
+     * @return array<mixed>
      */
     public function toArray(): array
     {

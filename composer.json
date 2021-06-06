@@ -53,17 +53,17 @@
     "sort-packages": true
   },
   "scripts": {
-    "phpinsights": "php ./vendor/bin/phpinsights -v --no-interaction",
-    "phpstan": "php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
-    "psalm": "php ./vendor/bin/psalm",
-    "pest": "php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml",
-    "infection": "php ./vendor/bin/infection --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage",
+    "phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
+    "phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
+    "psalm": "@php ./vendor/bin/psalm --threads=4",
+    "pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
+    "infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest",
     "test": [
       "@phpinsights",
       "@phpstan",
       "@psalm",
-      "@pest",
-      "@infection"
+      "@php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml",
+      "@php ./vendor/bin/infection --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage"
     ]
   }
 }

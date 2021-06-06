@@ -44,7 +44,7 @@ final class HttpRequest
     /**
      * Headers to include for the request.
      *
-     * @var array<mixed>
+     * @var array<string,mixed>
      */
     private array $headers = [];
 
@@ -56,21 +56,21 @@ final class HttpRequest
     /**
      * URL parameters for the request.
      *
-     * @var array<int|string|null>
+     * @var array<string,int|string|null>
      */
     private array $params = [];
 
     /**
      * Form parameters to send with the request.
      *
-     * @var array<mixed>
+     * @var array<string,mixed>
      */
     private array $formParams = [];
 
     /**
      * Files to send with a multipart request.
      *
-     * @var array<mixed>
+     * @var array<string,mixed>
      */
     private array $files = [];
 
@@ -226,7 +226,7 @@ final class HttpRequest
      */
     public function call(): ResponseInterface
     {
-        $domain = $this->domain ?? $this->configuration->buildDomainUri();
+        $domain = $this->domain ?? $this->configuration->buildDomainUri() ?? '';
         $uri = $domain . $this->basePath . $this->getUrl();
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();
@@ -242,10 +242,16 @@ final class HttpRequest
         if (count($this->files) !== 0) {
             // If we're sending a file, build a multipart message.
             $multipart = $this->buildMultiPart();
-            // Set the request body to the built multipart message.
-            $httpRequest->getBody()->write($multipart['stream']->__toString()); // @phpstan-ignore-line
+            /**
+             * Set the request body to the built multipart message.
+             *
+             * @psalm-suppress MixedMethodCall,MixedArgument
+             *
+             * @phpstan-ignore-next-line
+             */
+            $httpRequest->getBody()->write($multipart['stream']->__toString());
             // Set the content-type header to multipart/form-data.
-            $headers['Content-Type'] = 'multipart/form-data; boundary="' . $multipart['boundary'] . '"';
+            $headers['Content-Type'] = 'multipart/form-data; boundary="' . (string) $multipart['boundary'] . '"';
         } else {
             if (count($this->formParams) !== 0) {
                 // If we're sending form parameters, build the query and ensure it's encoded properly.
@@ -255,9 +261,9 @@ final class HttpRequest
             }
         }
 
-        // Add headers.
+        // Add headers to request payload.
         foreach ($headers as $headerName => $headerValue) {
-            $httpRequest = $httpRequest->withHeader($headerName, $headerValue);
+            $httpRequest = $httpRequest->withHeader($headerName, (string) $headerValue);
         }
 
         // Add telemetry headers, if they're enabled.
@@ -299,7 +305,7 @@ final class HttpRequest
     /**
      * Set multiple headers for the request.
      *
-     * @param array<int|string> $headers Array of headers to set.
+     * @param array<string,int|string> $headers Array of headers to set.
      */
     public function withHeaders(
         array $headers
@@ -337,12 +343,12 @@ final class HttpRequest
         bool $jsonEncode = true
     ): self {
         if (is_object($body)) {
-            $body = json_encode($body, JSON_FORCE_OBJECT);
+            $body = json_encode($body, JSON_FORCE_OBJECT | JSON_THROW_ON_ERROR);
         } elseif (is_array($body) || is_string($body) && $jsonEncode === true) {
-            $body = json_encode($body);
+            $body = json_encode($body, JSON_THROW_ON_ERROR);
         }
 
-        $this->body = $body;
+        $this->body = (string) $body;
         return $this;
     }
 
@@ -427,14 +433,14 @@ final class HttpRequest
     /**
      * Build a multi-part request.
      *
-     * @return array<mixed>
+     * @return array<string,mixed>
      */
     private function buildMultiPart(): array
     {
         $builder = new MultipartStreamBuilder($this->configuration->getHttpStreamFactory());
 
         foreach ($this->files as $field => $file) {
-            $resource = fopen($file, 'r');
+            $resource = fopen((string) $file, 'r');
 
             if ($resource !== false) {
                 $builder->addResource($field, $resource);

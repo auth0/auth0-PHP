@@ -30,7 +30,7 @@ final class HttpClient
     /**
      * Headers to set for all calls.
      *
-     * @var array<int|string>
+     * @var array<string,int|string>
      */
     private array $headers = [];
 
@@ -114,7 +114,14 @@ final class HttpClient
             }
 
             if ($response['response'] instanceof ResponseInterface) {
-                $this->mockResponse($response['response'], $response['callback'] ?? null);
+                $callback = $response['callback'] ?? null;
+
+                if ($callback !== null && is_callable($callback)) {
+                    $this->mockResponse($response['response'], $callback);
+                    continue;
+                }
+
+                $this->mockResponse($response['response']);
             }
         }
 
