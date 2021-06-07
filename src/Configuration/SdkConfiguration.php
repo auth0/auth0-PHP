@@ -118,7 +118,7 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * SdkConfiguration Constructor
      *
-     * @param array<mixed>|null      $configuration        Optional. An array of parameter keys (matching this constructor's arguments) and values. Overrides any passed arguments with the same key name.
+     * @param array<mixed>|null             $configuration        Optional. An array of parameter keys (matching this constructor's arguments) and values. Overrides any passed arguments with the same key name.
      * @param string|null                   $domain               Required, if not specified in $configuration. Auth0 domain for your tenant.
      * @param string|null                   $clientId             Required, if not specified in $configuration. Client ID, found in the Auth0 Application settings.
      * @param string|null                   $redirectUri          Required, if not specified in $configuration. Authentication callback uri, as defined in your Auth0 Application settings.
