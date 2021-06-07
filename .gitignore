@@ -12,3 +12,4 @@ phpcs.xml
 .DS_Store
 infection.log
 infection.mutators.md
+.vscode

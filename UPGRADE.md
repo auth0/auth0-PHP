@@ -16,9 +16,9 @@ As is to be expected with a major release, there are breaking changes in this up
 
 ### New minimum PHP version: 7.4
 
-v8.0 requires PHP 7.4 or higher. 8.0 is supported and it's use with this library is preferred and encouraged.
+v8.0 requires PHP 7.4 or higher. 8.0 is supported, and its use with this library is preferred and encouraged.
 
-🚨 Note: 7.4 will be the final release in PHP's 7.x branch, and will exit [supported status](https://www.php.net/supported-versions.php) in November 2022, at which point this library will only support PHP 8+ going forward as well.
+🚨 Note: 7.4 will be the final release in PHP's 7.x branch and will exit [supported status](https://www.php.net/supported-versions.php) in November 2022, at which point this library will only support PHP 8+ going forward as well.
 
 ### Configuring Auth0 SDK 8.0
 
@@ -40,7 +40,7 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-Developers can opt to simply pass an array to the base Auth0 SDK class, and an SdkConfiguration will be generated for you:
+Developers can opt to pass an array to the base Auth0 SDK class, and an SdkConfiguration will be generated:
 
 ```php
 use Auth0\SDK\Auth0;
@@ -54,7 +54,7 @@ $auth0 = new Auth0([
 ]);
 ```
 
-From there, simply use the SDK's API factories (like `authentication()` and `management()`) to keep using this configuration throughout the SDK without any additional work. You can make changes to your configuration at any time by keeping your SdkConfiguration instance referenceable within your application:
+From there, use the SDK's API factories (like `authentication()` and `management()`) to keep using this configuration throughout the SDK without any additional work. You can make changes to your configuration at any time by keeping your SdkConfiguration instance referenceable within your application:
 
 ```php
 use Auth0\SDK\Auth0;
@@ -82,7 +82,7 @@ As the SdkConfiguration is passed by reference, the Auth0 SDK will automatically
 
 ### Updated Configuration Options
 
-Some options names have been updated since v7 for clarity. You should reference the SdkConfiguration constructor comments for an up to date list, as new additions may be added with later releases. At the time of this guide being written however, these arguments are available:
+Some options names have been updated since v7 for clarity. You should reference the SdkConfiguration constructor comments for an up to date list, as new additions may be added with later releases. At the time of this guide being written, however, these arguments are available:
 
 ```
 string|null                   $domain               Required. Auth0 domain for your tenant.
@@ -93,11 +93,11 @@ array<string>|null            $audience             Optional. One or more API id
 array<string>|null            $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'org_id' claim to successfully validate an ID Token.
 bool                          $usePkce              Optional. Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests.
 array<string>                 $scope                Optional. One or more scopes to request for Tokens.
-string                        $responseMode         Optional. Defaults to 'query'. Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
-string                        $responseType         Optional. Defaults to 'code'. Use 'code' for server side flows and 'token' for application side flows
+string                        $responseMode         Optional. Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
+string                        $responseType         Optional. Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow
 string                        $tokenAlgorithm       Optional. Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
 string|null                   $tokenJwksUri         Optional. URI to the JWKS when verifying RS256 tokens.
-int|null                      $tokenMaxAge          Optional. Maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
+int|null                      $tokenMaxAge          Optional. The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
 int                           $tokenLeeway          Optional. Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
 CacheInterface|null           $tokenCache           Optional. A PSR-16 compatible cache adapter for storing JSON Web Key Sets (JWKS).
 int                           $tokenCacheTtl        Optional. How long (in seconds) to keep a JWKS cached.
@@ -113,12 +113,12 @@ bool                          $persistAccessToken   Optional. Defaults to true. 
 bool                          $persistRefreshToken  Optional. Defaults to true. Whether data about the Refresh Token should be persisted to session storage.
 StoreInterface|null           $transientStorage     Optional. Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as a nonce.
 bool                          $queryUserInfo        Optional. Defaults to false. Whether to query the /userinfo endpoint during an authorization code exchange.
-string|null                   $managementToken      Optional. A Management API access token. If not provided, and the Management API is invoked, one will attempt to be generated for you using your provided credentials. This requires a $clientSecret be provided.
+string|null                   $managementToken      Optional. A Management API access token. If not provided, and the Management API is invoked, one will attempt to be generated for you using your provided credentials. This requires a $clientSecret to be provided.
 ```
 
 ### Authentication and Management Factories
 
-SDK v8 offers a cleaner approach of accessing the Authentication and Management API classes without having to reconfigure them independently: simply configure the base Auth0 SDK class, and use the factory methods to configure these classes for you:
+SDK v8 offers a cleaner approach of accessing the Authentication and Management API classes without having to reconfigure them independently: configure the base Auth0 SDK class, and use the factory methods to configure these classes for you:
 
 ```php
 use Auth0\SDK\Auth0;
@@ -142,9 +142,9 @@ $response = $auth0->management()->users()->getAll();
 
 ### PSR-18 and PSR-17 factories
 
-Previous versions of the SDK had a hard dependency on Guzzle for issuing network requests. SDK v8 uses a more modern approach of accepting developer-supplied PSR-18 and PSR-17 factory interfaces for making these requests. We strongly encourage you to pass the factories of your choice during SDK configuration, but if none are provided the SDK will make a best effort attempt at auto-discovering any available options already present in your application.
+Previous versions of the SDK had a hard dependency on Guzzle for issuing network requests. SDK v8 uses a more modern approach of accepting developer-supplied PSR-18 and PSR-17 factory interfaces for making these requests. We strongly encourage you to pass the factories of your choice during SDK configuration, but if none are provided, the SDK will make a best-effort attempt at auto-discovering any available options already present in your application.
 
-As an example, let's say your application is already incorporating [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which includes PSR-18 and PSR-17 factories respectively. Simply pass these to the SDK to use them for Auth0 network requests as well:
+As an example, let's say your application is already incorporating [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which includes PSR-18 and PSR-17 factories, respectively. Pass these to the SDK to use them for Auth0 network requests as well:
 
 ```php
 use Auth0\SDK\Auth0;
@@ -179,7 +179,7 @@ The libraries specified above are simply examples: any PSR-18 and PSR-17 complia
 
 ### Using PSR-7 responses
 
-Most functions that issue network requests now return PSR-7 response objects, which allow you a greater deal of control over analyzing and handling the response, such as troubleshooting errors and analyzing headers. We've included a utility class for simplifying working with these responses in general use cases:
+Most functions that issue network requests now return PSR-7 response objects, which allow you a greater deal of control over handling the response, such as troubleshooting errors and analyzing headers. We've included a utility class for simplifying working with these responses in general use cases:
 
 ```php
 use Auth0\SDK\Auth0;
@@ -198,7 +198,7 @@ if (HttpResponse::wasSuccessful($response)) { // Checks that the status code was
 }
 ```
 
-Alternatively, the same can be achieved with the native PSR-7 standard API without using the HttpResponse helper:
+Alternatively, you can achieve the same results with the native PSR-7 standard API without using the HttpResponse helper:
 
 ```php
 use Auth0\SDK\Auth0;
@@ -216,7 +216,7 @@ if ($response->getStatusCode() === 200) {
 
 ### New field filtering and pagination interface
 
-To streamline the API, a new argument has been added to most network endpoints, accepting a new RequestOptions type. RequestOptions allows you to easily specify field-filtered and paginated requests:
+A new argument has been added to most network endpoints, accepting a new RequestOptions type. RequestOptions allows you to specify field-filtered and paginated requests easily:
 
 ```php
 use Auth0\SDK\Auth0;
@@ -302,9 +302,9 @@ foreach ($users as $user) {
 
 ### GetState replaced with new function
 
-In 7.x, `Auth0::getState` was a method for pulling the 'state' parameter from the query string or form submission body. This functionality has now been rolled into `Auth0::getRequestParameter()`, which is a generic for pulling any value from the query string or form submission body.
+In 7.x, `Auth0::getState` was a method for pulling the 'state' parameter from the query string or form submission body. This functionality has now been rolled into `Auth0::getRequestParameter()`, which is a generic method for pulling any value from the query string or form submission body.
 
-In 8.x, getState is now a convenience function which now returns the available token, access token, access token expiration timestamp, and refresh token (if available) when they are available from storage. It also offers a new bool, accessTokenExpired, which you can more easily compare to decide if you need to renew or prompt to login back in.
+In 8.x, getState is now a convenience function that now returns the available token, access token, access token expiration timestamp, and refresh token (if available) when they are available from storage. It also offers a new bool, accessTokenExpired, which you can more easily compare to decide if you need to renew or prompt to login back in.
 
 This essentially saves you the need for calling getIdToken(), getUser(), getAccessToken(), getRefreshToken() and getAccessTokenExpiration() separately. Also, unlike these functions, getState() will not throw an error if any of these are available, it will simply return a null value. Example usage:
 
@@ -374,39 +374,39 @@ $auth0 = new Auth0([
 ]);
 ```
 
-The `id_token_aud` and `id_token_iss` configuration keys have been removed and their values will now be ignored.
+The `id_token_aud` and `id_token_iss` configuration keys have been removed, and their values will now be ignored.
 
-The `state_handler` configuration key has been removed and the `transient_store` configuration key has been added. See the **State and nonce handling** section below for more information about the changes with state handling.
+The `state_handler` configuration key has been removed, and the `transient_store` configuration key has been added. See the **State and nonce handling** section below for more information about the changes with state handling.
 
 The ability to pass `false` in the `store` configuration key has been removed. Set `store` to an instance of `EmptyStore` or set all `persist_*` configuration keys to `false` to skip all persistence.
 
-The `cache_handler` configuration key must now be an instance of `Psr\SimpleCache\CacheInterface`. See the **Cache handling** section below for more information.
+The `cache_handler` configuration key must now be an instance of `Psr\SimpleCache\CacheInterface.` See the **Cache handling** section below for more information.
 
 The default `secret_base64_encoded` value is now `false` and is no longer stored in a property.
 
-The `client_secret` configuration key is no longer required for class initialization (but will throw an exception in certain methods when required). If `secret_base64_encoded` is set to `true` then then the `clientSecret` property will now contain the decoded secret. If your Application is using an encoded secret, this encoding can be turned off tby rotating the client secret in the Auth0 Application settings.
+The `client_secret` configuration key is no longer required for class initialization (but will throw an exception in certain methods when required). If `secret_base64_encoded` is set to `true` then then the `clientSecret` property will now contain the decoded secret. If your application is using an encoded secret, this encoding can be turned off by rotating the client secret in the Auth0 Application settings.
 
 The `session_cookie_expires` configuration key has been removed. The session cookie expiration should be managed in the application. If you were using this setting before, [see the PHP core function session_set_cookie_params()](https://www.php.net/manual/en/function.session-set-cookie-params.php) to set this value after upgrading.
 
 The `session_base_name` configuration key has been removed. Instead, pass an instance of `StoreInterface` in the `store` configuration key with the modified name.
 
-The `skip_userinfo` configuration key now defaults to `true`. This means that the persisted user identity will now come from the ID token rather than a call to the userinfo endpoint. This can be set to `false` to return to the behavior in v5.
+The `skip_userinfo` configuration key now defaults to `true.` This means that the persisted user identity will now come from the ID token rather than a call to the userinfo endpoint. This can be set to `false` to return to the behavior in v5.
 
-The ENV variables `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, and `AUTH0_REDIRECT_URI` will now be used automatically for the `domain`, `client_id`, and `redirect_uri` configuration keys, respectively.
+The ENV variables `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, and `AUTH0_REDIRECT_URI` will now be used automatically for the `domain`, `client_id,` and `redirect_uri` configuration keys, respectively.
 
 The `debug` configuration key was removed.
 
 ### Cache handling
 
-Cache handling has been changed in v7 to conform to the PSR-16 standard (see the discussion [here](https://github.com/auth0/auth0-PHP/issues/282)). Objects passed to the `cache_handler` configuration key in `Auth0` and the first parameter of the `JWKFetcher` class should be instances of `Psr\SimpleCache\CacheInterface`.
+Cache handling has been changed in v7 to conform to the PSR-16 standard (see the discussion [here](https://github.com/auth0/auth0-PHP/issues/282)). Objects passed to the `cache_handler` configuration key in `Auth0,` and the first parameter of the `JWKFetcher` class should be instances of `Psr\SimpleCache\CacheInterface.`
 
 ### State and nonce handling
 
-The handling for transient authentication data, such as `state` and `nonce`, has been changed.
+The handling for transient authentication data, such as `state` and `nonce,` has been changed.
 
 In an effort to enforce security standards set forth in the OAuth and OpenID Connect specifications, `state` checking on the callback route and `nonce` checking for all received ID tokens is now mandatory. Applications that require IdP-initiated sign-on should add a login route that uses `Auth0->getLoginUrl()` to redirect through Auth0 with valid state and nonce values. The URL to this route should be saved to the **Application Login URI** field in your Auth0 Application to assist with this scenario.
 
-The handling for these values was changed from PHP session-stored values to cookies using the new `CookieStore` class. This was done so PHP session usage was not required and to assist with applications using a `form_post` reponse mode. This change may require server-level whitelisting of cookie names (`auth0__nonce` and `auth0__state` by default) on some managed hosts. The `transient_store` configuration key in the `Auth0` class can be used to switch back to PHP sessions or provide another method.
+The handling for these values was changed from PHP session-stored values to cookies using the new `CookieStore` class. This was done, so PHP session usage was not required and to assist with applications using a `form_post` response mode. This change may require server-level white-listing of cookie names (`auth0__nonce` and `auth0__state` by default) on some managed hosts. The `transient_store` configuration key in the `Auth0` class can be used to switch back to PHP sessions or provide another method.
 
 The default state key was changed from `auth0__webauth_state` to `auth0__state`.
 
@@ -417,10 +417,10 @@ The following classes were removed in v7:
 - Class `Firebase\JWT\JWT` provided by the `firebase/php-jwt` package was replaced with classes from the `lcobucci/jwt` package
 - Class `JWTVerifier` was removed, see the `Auth0->decodeIdToken()` method for how to use the replacement classes
 - Class `StateHandler` was removed, see the **State and nonce handling** section above for more information
-- Class `SessionStateHandler` was removed, see the **State and nonce handling** section above for more information
-- Class `DummyStateHandler` was removed, see the **State and nonce handling** section above for more information
-- Interface `CacheHandler` was removed, see the **Cache handling** section above for more information
-- Class `FileSystemCacheHandler` was removed, see the **Cache handling** section above for more information
+- Class `SessionStateHandler` was removed. See the **State and nonce handling** section above for more information
+- Class `DummyStateHandler` was removed. See the **State and nonce handling** section above for more information
+- Interface `CacheHandler` was removed. See the **Cache handling** section above for more information
+- Class `FileSystemCacheHandler` was removed. See the **Cache handling** section above for more information
 - Class `TokenGenerator` was removed, no replacement provided
 - Class `Oauth2Client` was removed, no replacement provided
 - Class `Auth0Api` was removed, no replacement provided
