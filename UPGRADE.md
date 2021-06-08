@@ -40,7 +40,7 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-Developers can opt to pass an array to the base Auth0 SDK class, and an SdkConfiguration will be generated:
+Developers can opt to pass an array to the base Auth0 SDK class, and a SdkConfiguration will be built:
 
 ```php
 use Auth0\SDK\Auth0;
@@ -213,10 +213,10 @@ $response = $auth0->management()->users()->getAll();
 
 if (HttpResponse::wasSuccessful($response)) { // Checks that the status code was 200
     $users = HttpResponse::decodeContent($response); // Parses the response body as JSON and returns the resulting object
-    var_dump($users);
+    print_r($users);
 
     $headers = HttpResponse::getHeaders($response); // Get an array containing all the headers attached to the response.
-    var_dump($headers);
+    print_r($headers);
 }
 ```
 
@@ -231,8 +231,8 @@ $auth0 = new Auth0(/* ...configuration */);
 $response = $auth0->management()->users()->getAll();
 
 if ($response->getStatusCode() === 200) {
-    var_dump(json_decode($response->getBody()->__toString(), true, 512, JSON_THROW_ON_ERROR));
-    var_dump($response->getHeaders());
+    print_r(json_decode($response->getBody()->__toString(), true, 512, JSON_THROW_ON_ERROR));
+    print_r($response->getHeaders());
 }
 ```
 
@@ -291,7 +291,7 @@ echo 'There are ' . count($users) . ' results available from the API.';
 
 // Our new iterator will make new, paginated network requests as necessary to retrieve more results:
 foreach ($users as $user) {
-    var_dump($user);
+    print_r($user);
 }
 
 // You can find out how many network requests were made with this helper method:
