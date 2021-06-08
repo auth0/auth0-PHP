@@ -305,7 +305,7 @@ final class Auth0
             return null;
         }
 
-        $token = $this->state->getIdToken();
+        $idToken = $this->state->getIdToken();
         $accessToken = $this->state->getAccessToken();
         $accessTokenExpiration = (int) $this->state->getAccessTokenExpiration();
         $accessTokenExpired = time() >= $accessTokenExpiration;
@@ -313,7 +313,7 @@ final class Auth0
 
         return (object) [
             'user' => $user,
-            'idToken' => $token,
+            'idToken' => $idToken,
             'accessToken' => $accessToken,
             'accessTokenExpiration' => $accessTokenExpiration,
             'accessTokenExpired' => $accessTokenExpired,
