@@ -321,6 +321,45 @@ if ($state) {
 }
 ```
 
+### Class and Method Changes
+
+### Improved
+
+These methods were changed in SDK 8.0:
+
+- Public method `RequestBuilder->withHeader()` now only accepts a `Header` instance as an argument.
+- Public method `Authentication->code_exchange()` now throws an `ApiException` if class-level `client_secret` is empty
+- Public method `Authentication->client_credentials()` now throws an `ApiException` if `audience` is empty
+- Public method `Authentication->get_authorize_link()` now adds class-level `scope` and `audience` if none are passed in
+
+### Removed
+
+These methods were removed in SDK 8.0:
+
+- Public magic method `ApiClient->__call()` was removed, use `ApiClient->method()` to indicate an HTTP verb to use
+- Public magic method `RequestBuilder->__call()` was removed, use `RequestBuilder->addPath()` to add paths
+- Public method `RequestBuilder->addPathVariable()` was removed, use `RequestBuilder->addPath()` to add paths
+- Public method `RequestBuilder->dump()` was removed, no replacement provided
+- Public method `RequestBuilder->withParams()` was removed, use `RequestBuilder->withDictParams()` to add params
+- Public method `InformationHeaders->setEnvironment()` was removed, no replacement provided
+- Public method `InformationHeaders->setDependency()` was removed, no replacement provided
+- Public method `InformationHeaders->setDependencyData()` was removed, no replacement provided
+- Public method `ClientGrants->get()` was removed, no replacement provided
+- Public method `Users->search()` was removed, use `Users->getAll()` instead
+- Public method `Users->unlinkDevice()` was removed, no replacement provided
+- Public method `JWKFetcher->requestJwkX5c()` was removed, use `JWKFetcher->getKeys()` instead
+- Public method `JWKFetcher->findJwk()` was removed, use `JWKFetcher->getKeys()` instead
+- Public method `JWKFetcher->subArrayHasEmptyFirstItem()` was removed, no replacement provided
+- Public method `JWKFetcher->fetchKeys()` was removed, use `JWKFetcher->getKeys()` instead
+- Public method `Authentication->authorize_with_ro()` was removed, no replacement provided
+- Public method `Authentication->authorize_with_accesstoken()` was removed, no replacement provided
+- Public method `Authentication->impersonate()` was removed, no replacement provided
+- Public method `Authentication->email_code_passwordless_verify()` was removed, no replacement provided
+- Public method `Authentication->sms_code_passwordless_verify()` was removed, no replacement provided
+- Public method `Auth0->setDebugger()` was removed, no replacement provided
+- Protected method `Authentication->setApiClient()` was removed, no replacement provided
+- Protected method `Management->setApiClient()` was removed, no replacement provided
+
 ---
 
 ## Upgrading from v5.x → v7.x
