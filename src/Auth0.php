@@ -295,9 +295,9 @@ final class Auth0
     }
 
     /**
-     * Return an object representing the current session state (including id token, access token, access token expiration, refresh token and user data) without triggering an authorization flow. Returns null when session data is not available.
+     * Return an object representing the current session credentials (including id token, access token, access token expiration, refresh token and user data) without triggering an authorization flow. Returns null when session data is not available.
      */
-    public function getState(): ?object
+    public function getCredentials(): ?object
     {
         $user = $this->state->getUser();
 
@@ -308,16 +308,12 @@ final class Auth0
         $token = $this->state->getIdToken();
         $accessToken = $this->state->getAccessToken();
         $accessTokenExpiration = (int) $this->state->getAccessTokenExpiration();
-        $accessTokenExpired = false;
+        $accessTokenExpired = time() >= $accessTokenExpiration;
         $refreshToken = $this->state->getRefreshToken();
-
-        if (time() >= $accessTokenExpiration) {
-            $accessTokenExpired = true;
-        }
 
         return (object) [
             'user' => $user,
-            'token' => $token,
+            'idToken' => $token,
             'accessToken' => $accessToken,
             'accessTokenExpiration' => $accessTokenExpiration,
             'accessTokenExpired' => $accessTokenExpired,
