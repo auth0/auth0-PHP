@@ -18,7 +18,7 @@ As is to be expected with a major release, there are breaking changes in this up
 
 - SDK v8.0 requires PHP 7.4 or higher. PHP 8.0 is supported, and its use with this library is preferred and strongly encouraged.
 - 7.4 will be the final release in PHP's 7.x branch. This SDK will only support PHP 8.0+ after 7.4 leaves [supported status](https://www.php.net/supported-versions.php) in November 2022.
-- We strongly encourage developers to make use of PHP 8.0's new [named arguments language feature](https://stitcher.io/blog/php-8-named-arguments). Once 7.4 support ends, we will no longer consider method argument order changes to be a breaking change.
+- We strongly encourage you make use of PHP 8.0's new [named arguments language feature](https://stitcher.io/blog/php-8-named-arguments). Once 7.4 support ends, we will no longer consider method argument order changes to be a breaking change.
 
 ### Configuring Auth0 SDK 8.0
 
@@ -40,7 +40,7 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-Developers can opt to pass an array to the base Auth0 SDK class, and a SdkConfiguration will be built:
+You can opt to pass an array to the base Auth0 SDK class, and a SdkConfiguration will be automatically built for you behind the scenes. Key names must match the same camelCase format of the constructor arguments for SdkConfiguration.
 
 ```php
 use Auth0\SDK\Auth0;
