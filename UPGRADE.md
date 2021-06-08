@@ -4,21 +4,21 @@
 
 Our version 8 release includes a number of significant improvements:
 
-- Adoption of [newer PHP language features](https://stitcher.io/blog/new-in-php-74) including typed properties, null coalescing assignment operators, and array spreading.
-- Support for custom [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) factories for network requests. [PSR-7](https://www.php-fig.org/psr/psr-7/) responses are also now returned throughout the SDK.
-- Refactored codebase offering improved performance and a streamlined API.
+- Adoption of [modern PHP language features](https://stitcher.io/blog/new-in-php-74) including typed properties, null coalescing assignment operators, and array spreading.
+- Support for custom [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) factories for customizing network requests. [PSR-7](https://www.php-fig.org/psr/psr-7/) responses are also now returned throughout the SDK.
+- The codebase has been streamlined, offering a cleaner API and improved performance.
 - [Fluent interface](https://en.wikipedia.org/wiki/Fluent_interface#PHP) throughout the SDK, offering simplified usage.
 - Optional auto-pagination of Management API endpoints that support pagination.
 - [PKCE](https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce) is now enabled by default.
 - Improved JWT processing and fewer dependencies.
 
-As is to be expected with a major release, there are breaking changes in this update. Please ensure you read this guide thoroughly and prepare your app before upgrading to v8.
+As is to be expected with a major release, there are breaking changes in this update. Please ensure you read this guide thoroughly and prepare your app before upgrading to SDK v8.
 
-### New minimum PHP version: 7.4
+### New minimum PHP version: 7.4 (8.0 preferred)
 
-v8.0 requires PHP 7.4 or higher. 8.0 is supported, and its use with this library is preferred and encouraged.
-
-🚨 Note: 7.4 will be the final release in PHP's 7.x branch and will exit [supported status](https://www.php.net/supported-versions.php) in November 2022, at which point this library will only support PHP 8+ going forward as well.
+- SDK v8.0 requires PHP 7.4 or higher. PHP 8.0 is supported, and its use with this library is preferred and strongly encouraged.
+- 7.4 will be the final release in PHP's 7.x branch. This SDK will only support PHP 8.0+ after 7.4 leaves [supported status](https://www.php.net/supported-versions.php) in November 2022.
+- We strongly encourage developers to make use of PHP 8.0's new [named arguments language feature](https://stitcher.io/blog/php-8-named-arguments). Once 7.4 support ends, we will no longer consider method argument order changes to be a breaking change.
 
 ### Configuring Auth0 SDK 8.0
 
@@ -45,6 +45,7 @@ Developers can opt to pass an array to the base Auth0 SDK class, and an SdkConfi
 ```php
 use Auth0\SDK\Auth0;
 
+// PHP 7.4-compatible array syntax
 $auth0 = new Auth0([
     'domain' => 'your-tenant.auth0.com',
     'clientId' => 'application_client_id',
@@ -54,7 +55,7 @@ $auth0 = new Auth0([
 ]);
 ```
 
-From there, use the SDK's API factories (like `authentication()` and `management()`) to keep using this configuration throughout the SDK without any additional work. You can make changes to your configuration at any time by keeping your SdkConfiguration instance referenceable within your application:
+You can now use the SDK's API factories `authentication()` and `management()`, which will return API classes configured for you based on your SdkConfiguration.
 
 ```php
 use Auth0\SDK\Auth0;
@@ -71,14 +72,35 @@ $configuration = new SdkConfiguration(
 
 $auth0 = new Auth0($configuration);
 
-echo $configuration->getDomain(); // Prints 'your-tenant.auth0.com'
-
-$configuration->setDomain('another-tenant.auth0.com');
-
-echo $configuration->getDomain(); // Prints 'another-tenant.auth0.com'
+$authentication = $auth0->authentication();
+$management = $auth0->management();
 ```
 
-As the SdkConfiguration is passed by reference, the Auth0 SDK will automatically recognize changes to your SdkConfiguration and use them immediately.
+After initializing the Auth0 SDK with your configuration, you can keep a reference to the SdkConfiguration within your app so you can makes changes later. The SDK automatically recognize changes to your SdkConfiguration and use them.
+
+```php
+$configuration = new SdkConfiguration(
+    domain: 'your-tenant.auth0.com',
+    clientid: 'application_client_id',
+    clientSecret: 'application_client_secret',
+    redirectUri: 'https://yourapplication.com/auth/callback',
+    tokenAlgorithm: 'RS256'
+]);
+
+$auth0 = new Auth0($configuration);
+
+// Prints 'your-tenant.auth0.com'
+echo $configuration->getDomain();
+
+// Change the configuration
+$configuration->setDomain('another-tenant.auth0.com');
+
+// Prints 'another-tenant.auth0.com'
+echo $configuration->getDomain();
+
+// Will authenticate the user with 'another-tenant.auth0.com'
+$auth->login();
+```
 
 ### Updated Configuration Options
 
@@ -276,35 +298,11 @@ foreach ($users as $user) {
 echo 'We made ' . $users->countNetworkRequests() . ' paginated network requests.';
 ```
 
-Checkpoint pagination is supported similarly;
-
-```php
-use Auth0\SDK\Auth0;
-use Auth0\SDK\Utility\Request\{RequestOptions, FilteredRequest, PaginatedRequest};
-
-$auth0 = new Auth0(/* ...configuration */);
-
-$response = $auth0->management()->users()->getAll(
-    request: new RequestOptions(
-        pagination: new PaginatedRequest(
-            from: null, // Optionally set a starting point
-            take: 50
-        )
-    )
-);
-
-$users = $auth0->management()->getResponsePaginator();
-
-foreach ($users as $user) {
-    var_dump($user);
-}
-```
-
 ### GetState replaced with new function
 
 In 7.x, `Auth0::getState` was a method for pulling the 'state' parameter from the query string or form submission body. This functionality has now been rolled into `Auth0::getRequestParameter()`, which is a generic method for pulling any value from the query string or form submission body.
 
-In 8.x, getState is now a convenience function that now returns the available token, access token, access token expiration timestamp, and refresh token (if available) when they are available from storage. It also offers a new bool, accessTokenExpired, which you can more easily compare to decide if you need to renew or prompt to login back in.
+In 8.x, getState is now a convenience function that now returns the available Id Token, Access Token, Access Token expiration timestamp, and Refresh Token (if one is available) when they are available from storage. It also offers accessTokenExpired, which you can more easily compare to decide if you need to renew or prompt to login back in.
 
 This essentially saves you the need for calling getIdToken(), getUser(), getAccessToken(), getRefreshToken() and getAccessTokenExpiration() separately. Also, unlike these functions, getState() will not throw an error if any of these are available, it will simply return a null value. Example usage:
 
@@ -339,8 +337,8 @@ if ($state) {
     }
   }
 
-  // 👌 Everything is good. Let's just dump info about the user, as an example.
-  var_dump($state->user);
+  // Everything is good. Let's echo info about the user as an example.
+  print_r($state->user);
 }
 
 echo "Done!";
