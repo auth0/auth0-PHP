@@ -35,7 +35,7 @@ $configuration = new SdkConfiguration(
     clientSecret: 'application_client_secret',
     redirectUri: 'https://yourapplication.com/auth/callback',
     tokenAlgorithm: 'RS256'
-]);
+);
 
 $auth0 = new Auth0($configuration);
 ```
@@ -68,7 +68,7 @@ $configuration = new SdkConfiguration(
     clientSecret: 'application_client_secret',
     redirectUri: 'https://yourapplication.com/auth/callback',
     tokenAlgorithm: 'RS256'
-]);
+);
 
 $auth0 = new Auth0($configuration);
 
@@ -85,7 +85,7 @@ $configuration = new SdkConfiguration(
     clientSecret: 'application_client_secret',
     redirectUri: 'https://yourapplication.com/auth/callback',
     tokenAlgorithm: 'RS256'
-]);
+);
 
 $auth0 = new Auth0($configuration);
 
@@ -192,7 +192,7 @@ $configuration = new SdkConfiguration(
     httpRequestFactory: $httpFactory
     httpResponseFactory: $httpFactory
     httpStreamFactory: $httpFactory
-]);
+);
 
 $auth0 = new Auth0($configuration);
 ```
@@ -262,7 +262,7 @@ $response = $auth0->management()->users()->getAll(
 );
 ```
 
-### Auto-pagination support
+### Auto-pagination support available
 
 The new HttpResponsePaginator utility can be used with endpoints that support pagination or checkpoint pagination to return a PHP-native iterator type, which will automatically request new pages of results as you loop through them.
 
@@ -298,7 +298,7 @@ foreach ($users as $user) {
 echo 'We made ' . $users->countNetworkRequests() . ' paginated network requests.';
 ```
 
-### GetState replaced with new function
+### Auth0::getState() now silently returns session data
 
 In 7.x, `Auth0::getState` was a method for pulling the 'state' parameter from the query string or form submission body. This functionality has now been rolled into `Auth0::getRequestParameter()`, which is a generic method for pulling any value from the query string or form submission body.
 
@@ -340,8 +340,6 @@ if ($state) {
   // Everything is good. Let's echo info about the user as an example.
   print_r($state->user);
 }
-
-echo "Done!";
 ```
 
 ---
