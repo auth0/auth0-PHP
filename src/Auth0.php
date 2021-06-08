@@ -299,7 +299,7 @@ final class Auth0
     {
         $user = $this->state->getUser();
 
-        if (! $user) {
+        if ($user === null) {
             return null;
         }
 
