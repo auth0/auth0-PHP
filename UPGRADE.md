@@ -2,7 +2,7 @@
 
 ## Upgrading from v7.x → v8.0
 
-Our version 8 release includes a number of significant improvements:
+Our version 8 release includes many significant improvements:
 
 - Adoption of [modern PHP language features](https://stitcher.io/blog/new-in-php-74) including typed properties, null coalescing assignment operators, and array spreading.
 - Support for custom [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) factories for customizing network requests. [PSR-7](https://www.php-fig.org/psr/psr-7/) responses are also now returned throughout the SDK.
@@ -104,15 +104,15 @@ $auth->login();
 
 ### Updated Configuration Options
 
-Some options names have been updated since v7 for clarity. You should reference the SdkConfiguration constructor comments for an up to date list, as new additions may be added with later releases. At the time of this guide being written, however, these arguments are available:
+Some options names have been updated since v7 for clarity. It would be best if you referenced the SdkConfiguration constructor comments for an up-to-date list, as new additions may be added with later releases. At the time of this guide being written, however, these arguments are available:
 
 ```
 string|null                   $domain               Required. Auth0 domain for your tenant.
 string|null                   $clientId             Required. Client ID, found in the Auth0 Application settings.
-string|null                   $redirectUri          Required. Authentication callback uri, as defined in your Auth0 Application settings.
+string|null                   $redirectUri          Required. Authentication callback URI, as defined in your Auth0 Application settings.
 string|null                   $clientSecret         Optional. Client Secret, found in the Auth0 Application settings.
-array<string>|null            $audience             Optional. One or more API identifiers, found in your Auth0 API settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'aud' claim to successfully validate an ID Token.
-array<string>|null            $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'org_id' claim to successfully validate an ID Token.
+array<string>|null            $audience             Optional. One or more API identifiers, found in your Auth0 API settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
+array<string>|null            $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
 bool                          $usePkce              Optional. Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests.
 array<string>                 $scope                Optional. One or more scopes to request for Tokens.
 string                        $responseMode         Optional. Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
@@ -135,7 +135,7 @@ bool                          $persistAccessToken   Optional. Defaults to true. 
 bool                          $persistRefreshToken  Optional. Defaults to true. Whether data about the Refresh Token should be persisted to session storage.
 StoreInterface|null           $transientStorage     Optional. Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as a nonce.
 bool                          $queryUserInfo        Optional. Defaults to false. Whether to query the /userinfo endpoint during an authorization code exchange.
-string|null                   $managementToken      Optional. A Management API access token. If not provided, and the Management API is invoked, one will attempt to be generated for you using your provided credentials. This requires a $clientSecret to be provided.
+string|null                   $managementToken      Optional. A Management API Access Token. If not provided and the Management API is invoked, one will attempt to be generated for you using your provided credentials. This requires a $clientSecret to be provided.
 ```
 
 ### Authentication and Management Factories
@@ -164,7 +164,7 @@ $response = $auth0->management()->users()->getAll();
 
 ### PSR-18 and PSR-17 factories
 
-Previous versions of the SDK had a hard dependency on Guzzle for issuing network requests. SDK v8 uses a more modern approach of accepting developer-supplied PSR-18 and PSR-17 factory interfaces for making these requests. We strongly encourage you to pass the factories of your choice during SDK configuration, but if none are provided, the SDK will make a best-effort attempt at auto-discovering any available options already present in your application.
+Previous versions of the SDK had a hard dependency on Guzzle for issuing network requests. SDK v8 uses a more modern approach of accepting developer-supplied PSR-18 and PSR-17 factory interfaces for making these requests. We strongly encourage you to pass the factories of your choice during SDK configuration. Still, if none are provided, the SDK will make a best-effort attempt at auto-discovering any available options already present in your application.
 
 As an example, let's say your application is already incorporating [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which includes PSR-18 and PSR-17 factories, respectively. Pass these to the SDK to use them for Auth0 network requests as well:
 
@@ -264,7 +264,7 @@ $response = $auth0->management()->users()->getAll(
 
 ### Auto-pagination support available
 
-The new HttpResponsePaginator utility can be used with endpoints that support pagination or checkpoint pagination to return a PHP-native iterator type, which will automatically request new pages of results as you loop through them.
+You can use the new HttpResponsePaginator utility with endpoints that support pagination to return a PHP-native iterator type, which will automatically request new pages of results as you loop through it.
 
 ```php
 use Auth0\SDK\Auth0;
@@ -286,7 +286,7 @@ $response = $auth0->management()->users()->getAll(
 // Return an HttpResponsePaginator pre-configured with our request above:
 $users = $auth0->management()->getResponsePaginator();
 
-// Count will use the total results available as reported from the API, rather than what are loaded into memory.
+// Count will use the total results available as reported from the API rather than what is loaded into memory.
 echo 'There are ' . count($users) . ' results available from the API.';
 
 // Our new iterator will make new, paginated network requests as necessary to retrieve more results:
@@ -300,9 +300,9 @@ echo 'We made ' . $users->countNetworkRequests() . ' paginated network requests.
 
 ### Auth0::getState() now silently returns session data
 
-In 7.x, `Auth0::getState` was a method for pulling the 'state' parameter from the query string or form submission body. This functionality has now been rolled into `Auth0::getRequestParameter()`, which is a generic method for pulling any value from the query string or form submission body.
+In 7.x, `Auth0::getState` was a method for pulling the 'state' parameter from the query string or form submission body. This functionality has been replaced by the generic `Auth0::getRequestParameter()` method in SDK 8.0.
 
-In 8.x, getState is now a convenience function that now returns the available Id Token, Access Token, Access Token expiration timestamp, and Refresh Token (if one is available) when they are available from storage. It also offers accessTokenExpired, which you can more easily compare to decide if you need to renew or prompt to login back in.
+In 8.x, `Auth0::getState` is a convenience function that returns the available Id Token, Access Token, Access Token expiration timestamp, and Refresh Token (if one is available) when they are available from storage. It also offers accessTokenExpired, which you can more easily compare to decide if you need to renew or prompt to login back in.
 
 This essentially saves you the need for calling getIdToken(), getUser(), getAccessToken(), getRefreshToken() and getAccessTokenExpiration() separately. Also, unlike these functions, getState() will not throw an error if any of these are available, it will simply return a null value. Example usage:
 
@@ -346,7 +346,7 @@ if ($state) {
 
 ## Upgrading from v5.x → v7.x
 
-The v7 major release adds some new features, removes a number of deprecated methods and classes, and changes how some applications need to be configured. Please read through this guide to make sure your application is up to date before upgrading to v7.
+The v7 major release adds some new features, removes several deprecated methods and classes, and changes how some applications need to be configured. Please read through this guide to make sure your application is up to date before upgrading to v7.
 
 Only potentially breaking changes are covered in this guide. For a list of all changes for this major, see [the 7.0.0 milestone on GitHub](https://github.com/auth0/auth0-PHP/issues?q=is%3Aclosed+milestone%3A7.0.0).
 
