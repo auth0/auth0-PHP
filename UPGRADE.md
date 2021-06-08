@@ -145,7 +145,7 @@ $response = $auth0->management()->users()->getAll();
 
 Previous versions of the SDK had a hard dependency on Guzzle for issuing network requests. SDK v8 uses a more modern approach of accepting developer-supplied PSR-18 and PSR-17 factory interfaces for making these requests. We strongly encourage you to pass the factories of your choice during SDK configuration. The SDK will make a best-effort attempt at auto-discovering any compatible libraries present in your application when none are specified.
 
-As an example, let's say your application is already incorporating [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which includes PSR-18 and PSR-17 factories, respectively. Pass these to the SDK to use them for Auth0 network requests as well:
+As an example, let's say your application is already incorporating [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which include PSR-18 and PSR-17 factories, respectively. Pass these to the SDK to use them:
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -279,7 +279,7 @@ echo 'We made ' . $users->countNetworkRequests() . ' paginated network requests.
 
 ### Using the new Auth0::getCredentials() method to retrieve session credentials
 
-`Auth0::getCredentials` is a new convenience function that returns the available Id Token, Access Token, Access Token expiration timestamp, and Refresh Token (if one is available) when they are available from storage. It also offers accessTokenExpired, a bool which you can more easily compare to decide if you need to renew or prompt to login back in.
+`Auth0::getCredentials` is a new convenience function that returns the available Id Token, Access Token, Access Token expiration timestamp, and Refresh Token (if one is available) when they are available from session storage. It also offers accessTokenExpired, a bool which you can more easily compare to decide if you need to renew or prompt to log back in.
 
 ```PHP
 use Auth0\SDK\Auth0;
