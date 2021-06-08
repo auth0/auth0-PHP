@@ -31,7 +31,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 // PHP 8.0 named arguments syntax
 $configuration = new SdkConfiguration(
     domain: 'your-tenant.auth0.com',
-    clientid: 'application_client_id',
+    clientId: 'application_client_id',
     clientSecret: 'application_client_secret',
     redirectUri: 'https://yourapplication.com/auth/callback',
     tokenAlgorithm: 'RS256'
@@ -64,7 +64,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 // PHP 8.0 named arguments syntax
 $configuration = new SdkConfiguration(
     domain: 'your-tenant.auth0.com',
-    clientid: 'application_client_id',
+    clientId: 'application_client_id',
     clientSecret: 'application_client_secret',
     redirectUri: 'https://yourapplication.com/auth/callback',
     tokenAlgorithm: 'RS256'
@@ -81,7 +81,7 @@ After initializing the Auth0 SDK with your configuration, you can keep a referen
 ```php
 $configuration = new SdkConfiguration(
     domain: 'your-tenant.auth0.com',
-    clientid: 'application_client_id',
+    clientId: 'application_client_id',
     clientSecret: 'application_client_secret',
     redirectUri: 'https://yourapplication.com/auth/callback',
     tokenAlgorithm: 'RS256'
@@ -182,7 +182,7 @@ $httpClient = new MultiCurl($httpFactory);
 
 $configuration = new SdkConfiguration(
     domain: 'your-tenant.auth0.com',
-    clientid: 'application_client_id',
+    clientId: 'application_client_id',
     redirectUri: 'https://yourapplication.com/auth/callback',
 
     // Specify a PSR-18 HTTP client factory:
