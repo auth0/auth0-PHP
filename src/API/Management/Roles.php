@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -20,7 +22,7 @@ final class Roles extends ManagementEndpoint
      * Required scope: `create:roles`
      *
      * @param string              $name    Role name.
-     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -29,18 +31,18 @@ final class Roles extends ManagementEndpoint
      */
     public function create(
         string $name,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($name, 'name');
+        Validate::string($name, 'name');
 
-        $payload = [
+        $body = Shortcut::mergeArrays([
             'name' => $name,
-        ] + $body;
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('roles')
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -49,20 +51,20 @@ final class Roles extends ManagementEndpoint
      * Get all Roles
      * Required scope: `read:roles`
      *
-     * @param array               $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array<int|string|null>|null $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_roles
      */
     public function getAll(
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
         return $this->getHttpClient()->method('get')
             ->addPath('roles')
-            ->withParams($parameters)
+            ->withParams($parameters ?? [])
             ->withOptions($options)
             ->call();
     }
@@ -82,7 +84,7 @@ final class Roles extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('roles', $id)
@@ -95,7 +97,7 @@ final class Roles extends ManagementEndpoint
      * Required scope: `update:roles`
      *
      * @param string              $id      Role ID update.
-     * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>        $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -107,8 +109,8 @@ final class Roles extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($body, 'body');
+        Validate::string($id, 'id');
+        Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('roles', $id)
@@ -132,7 +134,7 @@ final class Roles extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('roles', $id)
@@ -145,10 +147,10 @@ final class Roles extends ManagementEndpoint
      * Required scope: `update:roles`
      *
      * @param string              $id          Role ID to get permissions.
-     * @param array               $permissions Permissions to add, array of permission arrays.
+     * @param array<array>        $permissions Permissions to add, array of permission arrays.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException When the permissions parameter is empty or invalid.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the permissions parameter is empty or invalid.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/post_role_permission_assignment
@@ -158,8 +160,8 @@ final class Roles extends ManagementEndpoint
         array $permissions,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validatePermissions($permissions);
+        Validate::string($id, 'id');
+        Validate::permissions($permissions);
 
         $payload = [
             'permissions' => [],
@@ -191,7 +193,7 @@ final class Roles extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('roles', $id, 'permissions')
@@ -204,10 +206,10 @@ final class Roles extends ManagementEndpoint
      * Required scope: `update:roles`
      *
      * @param string              $id          Role ID to get permissions.
-     * @param array               $permissions Permissions to delete, array of permission arrays.
+     * @param array<array>        $permissions Permissions to delete, array of permission arrays.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\InvalidPermissionsArrayException When the permissions parameter is empty or invalid.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the permissions parameter is empty or invalid.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/delete_role_permission_assignment
@@ -217,8 +219,8 @@ final class Roles extends ManagementEndpoint
         array $permissions,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validatePermissions($permissions);
+        Validate::string($id, 'id');
+        Validate::permissions($permissions);
 
         $payload = [
             'permissions' => [],
@@ -240,7 +242,7 @@ final class Roles extends ManagementEndpoint
      * Required scope: `update:roles`
      *
      * @param string              $id      Role ID to add users.
-     * @param array               $users   Array of user IDs to add to the role.
+     * @param array<string>       $users   Array of user IDs to add to the role.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -252,8 +254,8 @@ final class Roles extends ManagementEndpoint
         array $users,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($users, 'users');
+        Validate::string($id, 'id');
+        Validate::array($users, 'users');
 
         return $this->getHttpClient()->method('post')
             ->addPath('roles', $id, 'users')
@@ -275,7 +277,7 @@ final class Roles extends ManagementEndpoint
      * @param string              $id      Role ID assigned to users.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\EmptyOrInvalidParameterException When the id parameter is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException When the id parameter is empty or is not a string.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Roles/get_role_user
@@ -284,7 +286,7 @@ final class Roles extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('roles', $id, 'users')

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -21,9 +23,9 @@ final class Organizations extends ManagementEndpoint
      *
      * @param string              $name        The name of the Organization. Cannot be changed later.
      * @param string              $displayName The displayed name of the Organization.
-     * @param array|null          $branding    An array containing branding customizations for the organization.
-     * @param array|null          $metadata    Optional. Additional metadata to store about the organization.
-     * @param array               $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>|null   $branding    An array containing branding customizations for the organization.
+     * @param array<mixed>|null   $metadata    Optional. Additional metadata to store about the organization.
+     * @param array<mixed>|null   $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -33,24 +35,22 @@ final class Organizations extends ManagementEndpoint
         string $displayName,
         ?array $branding = null,
         ?array $metadata = null,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($name, 'name');
-        $this->validateString($displayName, 'displayName');
+        Validate::string($name, 'name');
+        Validate::string($displayName, 'displayName');
 
-        $payload = array_filter(
-            [
-                'name' => $name,
-                'display_name' => $displayName,
-                'branding' => $branding ? (object) $branding : null,
-                'metadata' => $metadata ? (object) $metadata : null,
-            ] + $body
-        );
+        $body = Shortcut::mergeArrays([
+            'name' => $name,
+            'display_name' => $displayName,
+            'branding' => $branding !== null && count($branding) !== 0 ? (object) $branding : null,
+            'metadata' => $metadata !== null && count($metadata) !== 0 ? (object) $metadata : null,
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('organizations')
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -85,7 +85,7 @@ final class Organizations extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id)
@@ -106,7 +106,7 @@ final class Organizations extends ManagementEndpoint
         string $name,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($name, 'name');
+        Validate::string($name, 'name');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', 'name', $name)
@@ -120,9 +120,9 @@ final class Organizations extends ManagementEndpoint
      *
      * @param string               $id          Organization (by ID) to update.
      * @param string               $displayName The displayed name of the Organization.
-     * @param array|null           $branding    An array containing branding customizations for the organization.
-     * @param array|null           $metadata    Optional. Additional metadata to store about the organization.
-     * @param array                $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>|null    $branding    An array containing branding customizations for the organization.
+     * @param array<mixed>|null    $metadata    Optional. Additional metadata to store about the organization.
+     * @param array<mixed>|null    $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null  $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -132,23 +132,21 @@ final class Organizations extends ManagementEndpoint
         string $displayName,
         ?array $branding = null,
         ?array $metadata = null,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($displayName, 'displayName');
+        Validate::string($id, 'id');
+        Validate::string($displayName, 'displayName');
 
-        $payload = array_filter(
-            [
-                'display_name' => $displayName,
-                'branding' => $branding ? (object) $branding : null,
-                'metadata' => $metadata ? (object) $metadata : null,
-            ] + $body
-        );
+        $body = Shortcut::mergeArrays([
+            'display_name' => $displayName,
+            'branding' => $branding !== null && count($branding) !== 0 ? (object) $branding : null,
+            'metadata' => $metadata !== null && count($metadata) !== 0 ? (object) $metadata : null,
+        ], $body);
 
         return $this->getHttpClient()->method('patch')
             ->addPath('organizations', $id)
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -166,6 +164,8 @@ final class Organizations extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
+        Validate::string($id, 'id');
+
         return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id)
             ->withOptions($options)
@@ -178,7 +178,7 @@ final class Organizations extends ManagementEndpoint
      *
      * @param string              $id           Organization (by ID) to add a connection to.
      * @param string              $connectionId Connection (by ID) to add to organization.
-     * @param array               $body         Additional body content to send with the API request. See @link for supported options.
+     * @param array<mixed>        $body         Additional body content to send with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -189,16 +189,16 @@ final class Organizations extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($connectionId, 'connectionId');
+        Validate::string($id, 'id');
+        Validate::string($connectionId, 'connectionId');
 
-        $payload = [
+        $body = Shortcut::mergeArrays([
             'connection_id' => $connectionId,
-        ] + $body;
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('organizations', $id, 'enabled_connections')
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -216,7 +216,7 @@ final class Organizations extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'enabled_connections')
@@ -239,8 +239,8 @@ final class Organizations extends ManagementEndpoint
         string $connectionId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($connectionId, 'connectionId');
+        Validate::string($id, 'id');
+        Validate::string($connectionId, 'connectionId');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
@@ -254,7 +254,7 @@ final class Organizations extends ManagementEndpoint
      *
      * @param string              $id           Organization (by ID) to add a connection to.
      * @param string              $connectionId Connection (by ID) to add to organization.
-     * @param array               $body         Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>        $body         Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -265,8 +265,8 @@ final class Organizations extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($connectionId, 'connectionId');
+        Validate::string($id, 'id');
+        Validate::string($connectionId, 'connectionId');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
@@ -290,8 +290,8 @@ final class Organizations extends ManagementEndpoint
         string $connectionId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($connectionId, 'connectionId');
+        Validate::string($id, 'id');
+        Validate::string($connectionId, 'connectionId');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
@@ -304,7 +304,7 @@ final class Organizations extends ManagementEndpoint
      * Required scope: `update:organization_members`
      *
      * @param string              $id      Organization (by ID) to add new members to.
-     * @param array               $members One or more users (by ID) to add from the organization.
+     * @param array<string>       $members One or more users (by ID) to add from the organization.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -314,8 +314,8 @@ final class Organizations extends ManagementEndpoint
         array $members,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($members, 'members');
+        Validate::string($id, 'id');
+        Validate::array($members, 'members');
 
         $payload = [
             'members' => $members,
@@ -341,7 +341,7 @@ final class Organizations extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'members')
@@ -354,7 +354,7 @@ final class Organizations extends ManagementEndpoint
      * Required scope: `delete:organization_members`
      *
      * @param string              $id      Organization (by ID) users belong to.
-     * @param array               $members One or more users (by ID) to remove from the organization.
+     * @param array<string>       $members One or more users (by ID) to remove from the organization.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -364,8 +364,8 @@ final class Organizations extends ManagementEndpoint
         array $members,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateArray($members, 'members');
+        Validate::string($id, 'id');
+        Validate::array($members, 'members');
 
         $payload = [
             'members' => $members,
@@ -395,9 +395,9 @@ final class Organizations extends ManagementEndpoint
         array $roles,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($userId, 'userId');
-        $this->validateArray($roles, 'roles');
+        Validate::string($id, 'id');
+        Validate::string($userId, 'userId');
+        Validate::array($roles, 'roles');
 
         $payload = [
             'roles' => $roles,
@@ -425,8 +425,8 @@ final class Organizations extends ManagementEndpoint
         string $userId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($userId, 'userId');
+        Validate::string($id, 'id');
+        Validate::string($userId, 'userId');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'members', $userId, 'roles')
@@ -451,9 +451,9 @@ final class Organizations extends ManagementEndpoint
         array $roles,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($userId, 'userId');
-        $this->validateArray($roles, 'roles');
+        Validate::string($id, 'id');
+        Validate::string($userId, 'userId');
+        Validate::array($roles, 'roles');
 
         $payload = [
             'roles' => $roles,
@@ -470,14 +470,14 @@ final class Organizations extends ManagementEndpoint
      * Create an invitation for an organization
      * Required scope: `create:organization_invitations`
      *
-     * @param string              $id       Organization (by ID) to create the invitation for.
-     * @param string              $clientId Client (by ID) to create the invitation for. This Client must be associated with the Organization.
-     * @param array               $inviter  An array containing information about the inviter. Requires a 'name' key minimally.
-     *                                      - 'name' Required. A name to identify who is sending the invitation.
-     * @param array               $invitee  An array containing information about the invitee. Requires an 'email' key.
-     *                                      - 'email' Required. An email address where the invitation should be sent.
-     * @param array               $body     Optional. Additional body content to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string        $id       Organization (by ID) to create the invitation for.
+     * @param string        $clientId Client (by ID) to create the invitation for. This Client must be associated with the Organization.
+     * @param array<string> $inviter  An array containing information about the inviter. Requires a 'name' key minimally.
+     *                                - 'name' Required. A name to identify who is sending the invitation.
+     * @param array<string> $invitee  An array containing information about the invitee. Requires an 'email' key.
+     *                                - 'email' Required. An email address where the invitation should be sent.
+     * @param array<mixed>|null       $body     Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null     $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
@@ -486,33 +486,31 @@ final class Organizations extends ManagementEndpoint
         string $clientId,
         array $inviter,
         array $invitee,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($clientId, 'clientId');
-        $this->validateArray($inviter, 'inviter');
-        $this->validateArray($invitee, 'invitee');
+        Validate::string($id, 'id');
+        Validate::string($clientId, 'clientId');
+        Validate::array($inviter, 'inviter');
+        Validate::array($invitee, 'invitee');
 
         if (! isset($inviter['name'])) {
-            throw new \Auth0\SDK\Exception\EmptyOrInvalidParameterException('inviter');
+            throw \Auth0\SDK\Exception\ArgumentException::missing('inviter.name');
         }
 
         if (! isset($invitee['email'])) {
-            throw new \Auth0\SDK\Exception\EmptyOrInvalidParameterException('invitee');
+            throw \Auth0\SDK\Exception\ArgumentException::missing('invitee.email');
         }
 
-        $payload = array_filter(
-            [
-                'client_id' => $clientId,
-                'inviter' => (object) $inviter,
-                'invitee' => (object) $invitee,
-            ] + $body
-        );
+        $body = Shortcut::mergeArrays([
+            'client_id' => $clientId,
+            'inviter' => (object) $inviter,
+            'invitee' => (object) $invitee,
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('organizations', $id, 'invitations')
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -530,7 +528,7 @@ final class Organizations extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'invitations')
@@ -553,8 +551,8 @@ final class Organizations extends ManagementEndpoint
         string $invitationId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($invitationId, 'invitationId');
+        Validate::string($id, 'id');
+        Validate::string($invitationId, 'invitationId');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'invitations', $invitationId)
@@ -577,8 +575,8 @@ final class Organizations extends ManagementEndpoint
         string $invitationId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
-        $this->validateString($invitationId, 'invitation');
+        Validate::string($id, 'id');
+        Validate::string($invitationId, 'invitation');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id, 'invitations', $invitationId)

@@ -1,0 +1,15 @@
+{
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "logs": {
+        "text": "infection.log",
+        "perMutator": "infection.mutators.md"
+    },
+    "mutators": {
+        "@default": true
+    },
+    "testFramework": "pest"
+}

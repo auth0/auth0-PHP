@@ -7,6 +7,7 @@ namespace Auth0\Tests\Unit;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Store\SessionStore;
+use Auth0\SDK\Utility\Shortcut;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Cache\Adapter\PHPArray\ArrayCachePool;
@@ -114,8 +115,11 @@ class Auth0Test extends TestCase
         ]);
 
         $httpClient = $auth0->authentication()->getHttpClient();
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6"}'));
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"sub":"__test_sub__"}'));
+
+        $httpClient->mockResponses([
+            HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6"}'),
+            HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+        ]);
 
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
@@ -139,8 +143,11 @@ class Auth0Test extends TestCase
         $auth0 = new Auth0(self::$baseConfig);
 
         $httpClient = $auth0->authentication()->getHttpClient();
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'));
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"sub":"123"}'));
+
+        $httpClient->mockResponses([
+            HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
+            HttpResponseGenerator::create('{"sub":"123"}')
+        ]);
 
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
@@ -162,8 +169,11 @@ class Auth0Test extends TestCase
         $auth0 = new Auth0(self::$baseConfig);
 
         $httpClient = $auth0->authentication()->getHttpClient();
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'));
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"sub":"__test_sub__"}'));
+
+        $httpClient->mockResponses([
+            HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
+            HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+        ]);
 
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
@@ -187,8 +197,11 @@ class Auth0Test extends TestCase
         ]);
 
         $httpClient = $auth0->authentication()->getHttpClient();
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'));
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"sub":"__test_sub__"}'));
+
+        $httpClient->mockResponses([
+            HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
+            HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+        ]);
 
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
@@ -213,8 +226,11 @@ class Auth0Test extends TestCase
         ]);
 
         $httpClient = $auth0->authentication()->getHttpClient();
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '"}'));
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"sub":"__test_sub__"}'));
+
+        $httpClient->mockResponses([
+            HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '"}'),
+            HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+        ]);
 
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
@@ -236,7 +252,11 @@ class Auth0Test extends TestCase
         $auth0 = new Auth0(self::$baseConfig);
 
         $httpClient = $auth0->authentication()->getHttpClient();
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3"}'));
+
+        $httpClient->mockResponses([
+            HttpResponseGenerator::create('{"access_token":"1.2.3"}'),
+            HttpResponseGenerator::create('{}')
+        ]);
 
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
@@ -259,8 +279,12 @@ class Auth0Test extends TestCase
         $auth0 = new Auth0(self::$baseConfig);
 
         $httpClient = $auth0->authentication()->getHttpClient();
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4"}'));
-        $httpClient->mockResponse(HttpResponseGenerator::create('{}'));
+
+        $httpClient->mockResponses([
+            HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4"}'),
+            HttpResponseGenerator::create('{}'),
+            HttpResponseGenerator::create('{}'),
+        ]);
 
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
@@ -287,8 +311,11 @@ class Auth0Test extends TestCase
         ]);
 
         $httpClient = $auth0->authentication()->getHttpClient();
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'));
-        $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $token . '"}'));
+
+        $httpClient->mockResponses([
+            HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'),
+            HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $token . '"}'),
+        ]);
 
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
@@ -739,7 +766,7 @@ class Auth0Test extends TestCase
     {
         $config = self::$baseConfig;
         unset($config['transientStorage']);
-        $auth0 = new Auth0(array_filter($config));
+        $auth0 = new Auth0(Shortcut::filterArray($config));
         $auth0->authentication()->getLoginLink(['nonce' => '__test_cookie_nonce__']);
 
         $this->assertEquals('__test_cookie_nonce__', $_COOKIE['auth0_nonce']);

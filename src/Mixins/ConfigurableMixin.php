@@ -4,40 +4,61 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Mixins;
 
+use Auth0\SDK\Exception\ConfigurationException;
+use ReflectionException;
+
 trait ConfigurableMixin
 {
+    /**
+     * Tracks the state of the current configuration.
+     *
+     * @var array<object>
+     */
     private array $configuredState = [];
-    private array $configuredValidations = [];
-    private bool $configurationImmutable = false;
-    private array $configuredValidationsLambdas = [];
 
+    /**
+     * Tracks any configured validator functions to be called during validate().
+     *
+     * @var array<string>
+     */
+    private array $configuredValidations = [];
+
+    /**
+     * When true, changes can no longer be applied to the configuration.
+     */
+    private bool $configurationImmutable = false;
+
+    /**
+     * Handler for get{VariableName}(), set{VariableName}(), and has{VariableName}() "magic" functions.
+     *
+     * @param string       $functionName The name of the magic function being invoked.
+     * @param array<mixed> $arguments    Any arguments being passed to the magic function.
+     *
+     * @return mixed|void
+     *
+     * @throws ConfigurationException When a magic function is used improperly.
+     */
     public function __call(
         string $functionName,
         array $arguments
     ) {
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'get' && ! $arguments) {
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'get' && count($arguments) === 0) {
             $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
-                $propertyValue = $this->configuredState[$propertyName]->value;
-
-                if (method_exists($this, 'handleStateChange') && is_callable([$this, 'handleStateChange'])) {
-                    return $this->handleStateChange($propertyName, $propertyValue);
-                }
-
-                return $propertyValue;
+                return $this->configuredState[$propertyName]->value;
             }
 
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
         }
 
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'set' && $arguments) {
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'set' && count($arguments) !== 0) {
             $propertyName = lcfirst(mb_substr($functionName, 3));
             $this->changeState($propertyName, $arguments[0]);
             return $this;
         }
 
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'has' && ! $arguments) {
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'has' && count($arguments) === 0) {
             $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
@@ -46,27 +67,33 @@ trait ConfigurableMixin
 
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
         }
+
+        return;
     }
 
+    /**
+     * Make the configuration immutable, so changes can no longer be applied. Once locked the configuration cannot be unlocked.
+     */
     public function lock(): self
     {
         $this->configurationImmutable = true;
         return $this;
     }
 
+    /**
+     * Invoke any configured validation functions to determine if the configuration is valid.
+     *
+     * @throws ConfigurationException When the configuration fails to pass a validation check.
+     */
     public function validate(): self
     {
         foreach ($this->configuredValidations as $condition) {
-            if (is_string($condition) && mb_strlen($condition) > 4 && (mb_substr($condition, 0, 3) === 'get' || mb_substr($condition, 0, 3) === 'has')) {
+            if (mb_strlen($condition) > 4 && (mb_substr($condition, 0, 3) === 'get' || mb_substr($condition, 0, 3) === 'has')) {
                 $propertyName = lcfirst(mb_substr($condition, 3));
 
                 if (isset($this->configuredState[$propertyName])) {
-                    $lambda = function () use ($condition) {
-                        return call_user_func([$this, $condition]) !== null;
-                    };
-
-                    if (! $lambda()) {
-                        if (method_exists($this, 'onValidationException') && is_callable([$this, 'onValidationException'])) {
+                    if (call_user_func([$this, $condition]) === null) {
+                        if (method_exists($this, 'onValidationException')) {
                             $this->onValidationException($propertyName);
                         }
 
@@ -79,8 +106,17 @@ trait ConfigurableMixin
         return $this;
     }
 
+    /**
+     * Restore all aspects of the configuration to it's default values.
+     *
+     * @throws ConfigurationException When the configuration has been locked.
+     */
     public function reset(): self
     {
+        if ($this->configurationImmutable) {
+            throw \Auth0\SDK\Exception\ConfigurationException::setImmutable();
+        }
+
         foreach ($this->configuredState as $parameterKey => $parameterValue) {
             $this->configuredState[$parameterKey]->value = $parameterValue->defaultValue;
         }
@@ -88,6 +124,14 @@ trait ConfigurableMixin
         return $this;
     }
 
+    /**
+     * Import the configuration from an arguments array imported from a __constructor() method.
+     *
+     * @param mixed $args One or more of arguments from a class __constructor().
+     *
+     * @throws ReflectionException When the class or method does not exist.
+     * @throws ConfigurationException When the configuration is locked, or an invalid property type is used.
+     */
     private function setState(
         ...$args
     ): self {
@@ -102,10 +146,16 @@ trait ConfigurableMixin
         $arguments = $args[0];
         $usingArgumentsArray = false;
 
-        if ($parameters) {
+        if (count($parameters) !== 0) {
+            $typeName = $parameters[0]->getType();
+
+            if ($typeName instanceof \ReflectionNamedType) {
+                $typeName = $typeName->getName();
+            }
+
             if (
                 $parameters[0]->getName() === 'configuration' &&
-                $parameters[0]->getType()->getName() === 'array' &&
+                $typeName === 'array' &&
                 $parameters[0]->getPosition() === 0 &&
                 $parameters[0]->allowsNull()
             ) {
@@ -120,10 +170,16 @@ trait ConfigurableMixin
             }
 
             foreach ($parameters as $parameter) {
+                $typeName = $parameter->getType();
+
+                if ($typeName instanceof \ReflectionNamedType) {
+                    $typeName = $typeName->getName();
+                }
+
                 $newProperty = [
                     'allowsNull' => $parameter->allowsNull(),
                     'defaultValue' => null,
-                    'type' => $parameter->getType()->getName(),
+                    'type' => $typeName,
                 ];
 
                 if ($parameter->isDefaultValueAvailable()) {
@@ -133,7 +189,7 @@ trait ConfigurableMixin
                 $newPropertyName = $parameter->getName();
                 $newPropertyValue = $newProperty['defaultValue'];
 
-                if ($arguments) {
+                if (count($arguments) !== 0) {
                     if ($usingArgumentsArray) {
                         $newPropertyValue = $arguments[$parameter->getName()] ?? $parameter->getDefaultValue();
                     } else {
@@ -151,6 +207,11 @@ trait ConfigurableMixin
         return $this;
     }
 
+    /**
+     * Define validation functions to use for validate().
+     *
+     * @param array<string> $validations A list of function names to invoke upon validation. These should return a bool, or throw an error if they fail to pass.
+     */
     private function setValidations(
         array $validations = []
     ): self {
@@ -158,11 +219,14 @@ trait ConfigurableMixin
         return $this;
     }
 
-    private function export(): array
-    {
-        return $this->configuredState;
-    }
-
+    /**
+     * Mutates the configured state of a property. Applies checks on type, nullability and other safety measures.
+     *
+     * @param string $propertyName The name of the property being mutated.
+     * @param mixed $propertyValue The new value for the property.
+     *
+     * @throws ConfigurationException When an incompatible property value type is used.
+     */
     private function changeState(
         string $propertyName,
         $propertyValue
@@ -193,7 +257,7 @@ trait ConfigurableMixin
             }
         }
 
-        if (method_exists($this, 'onStateChange') && is_callable([$this, 'onStateChange'])) {
+        if (method_exists($this, 'onStateChange')) {
             $propertyValue = $this->onStateChange($propertyName, $propertyValue);
         }
 

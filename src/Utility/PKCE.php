@@ -22,9 +22,7 @@ final class PKCE
         int $length = 43
     ): string {
         if ($length < 43 || $length > 128) {
-            throw new \InvalidArgumentException(
-                'Code verifier must be created with a minimum length of 43 characters and a maximum length of 128 characters.'
-            );
+            throw \Auth0\SDK\Exception\ArgumentException::codeVerifierLength();
         }
 
         $string = '';
@@ -35,7 +33,7 @@ final class PKCE
             try {
                 $bytes = random_bytes($size);
             } catch (\Exception $exception) {
-                $bytes = openssl_random_pseudo_bytes($size);
+                $bytes = (string) openssl_random_pseudo_bytes($size);
             }
 
             $string .= mb_substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);

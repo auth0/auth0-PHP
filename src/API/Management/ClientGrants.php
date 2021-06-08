@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -21,7 +23,7 @@ final class ClientGrants extends ManagementEndpoint
      *
      * @param string              $clientId Client ID to receive the grant.
      * @param string              $audience Audience identifier for the API being granted.
-     * @param array               $scope    Optional. Scopes allowed for this client grant.
+     * @param array<string>|null  $scope    Optional. Scopes allowed for this client grant.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -31,11 +33,11 @@ final class ClientGrants extends ManagementEndpoint
     public function create(
         string $clientId,
         string $audience,
-        array $scope = [],
+        ?array $scope = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($clientId, 'clientId');
-        $this->validateString($audience, 'audience');
+        Validate::string($clientId, 'clientId');
+        Validate::string($audience, 'audience');
 
         return $this->getHttpClient()->method('post')
             ->addPath('client-grants')
@@ -43,7 +45,7 @@ final class ClientGrants extends ManagementEndpoint
                 (object) [
                     'client_id' => $clientId,
                     'audience' => $audience,
-                    'scope' => $scope,
+                    'scope' => $scope ?? [],
                 ]
             )
             ->withOptions($options)
@@ -54,20 +56,20 @@ final class ClientGrants extends ManagementEndpoint
      * Retrieve client grants, by page if desired.
      * Required scope: `read:client_grants`
      *
-     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array<int|string|null> $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null    $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
     public function getAll(
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
         return $this->getHttpClient()->method('get')
             ->addPath('client-grants')
-            ->withParams($parameters)
+            ->withParams($parameters ?? [])
             ->withOptions($options)
             ->call();
     }
@@ -76,9 +78,9 @@ final class ClientGrants extends ManagementEndpoint
      * Get Client Grants by audience.
      * Required scope: `read:client_grants`
      *
-     * @param string              $audience   API Audience to filter by.
-     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                      $audience   API Audience to filter by.
+     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -86,26 +88,25 @@ final class ClientGrants extends ManagementEndpoint
      */
     public function getAllByAudience(
         string $audience,
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($audience, 'audience');
+        Validate::string($audience, 'audience');
 
-        return $this->getAll(
-            [
-                'audience' => $audience,
-            ] + $parameters,
-            $options
-        );
+        $parameters = Shortcut::mergeArrays([
+            'audience' => $audience,
+        ], $parameters);
+
+        return $this->getAll($parameters, $options);
     }
 
     /**
      * Get Client Grants by Client ID.
      * Required scope: `read:client_grants`
      *
-     * @param string              $clientId   Client ID to filter by.
-     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                      $clientId   Client ID to filter by.
+     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -113,17 +114,16 @@ final class ClientGrants extends ManagementEndpoint
      */
     public function getAllByClientId(
         string $clientId,
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($clientId, 'clientId');
+        Validate::string($clientId, 'clientId');
 
-        return $this->getAll(
-            [
-                'client_id' => $clientId,
-            ] + $parameters,
-            $options
-        );
+        $parameters = Shortcut::mergeArrays([
+            'client_id' => $clientId,
+        ], $parameters);
+
+        return $this->getAll($parameters, $options);
     }
 
     /**
@@ -131,7 +131,7 @@ final class ClientGrants extends ManagementEndpoint
      * Required scope: `update:client_grants`
      *
      * @param string              $id      Grant (by it's ID) to update.
-     * @param array               $scope   Optional. Array of scopes to update; will replace existing scopes, not merge.
+     * @param array<string>|null  $scope   Optional. Array of scopes to update; will replace existing scopes, not merge.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -140,16 +140,16 @@ final class ClientGrants extends ManagementEndpoint
      */
     public function update(
         string $id,
-        array $scope = [],
+        ?array $scope = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('client-grants', $id)
             ->withBody(
                 (object) [
-                    'scope' => $scope,
+                    'scope' => $scope ?? [],
                 ]
             )
             ->withOptions($options)
@@ -171,7 +171,7 @@ final class ClientGrants extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('client-grants', $id)

@@ -14,8 +14,8 @@ class PKCETest extends TestCase
 {
     public function testThatGenerateCodeVerifierThrowsExceptionWhenLengthIsInvalid(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Code verifier must be created with a minimum length of 43 characters and a maximum length of 128 characters.');
+        $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+        $this->expectExceptionMessage(\Auth0\SDK\Exception\ArgumentException::MSG_PKCE_CODE_VERIFIER_LENGTH);
         PKCE::generateCodeVerifier(10);
     }
 

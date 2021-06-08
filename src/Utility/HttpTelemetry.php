@@ -13,9 +13,21 @@ use Auth0\SDK\Auth0;
 final class HttpTelemetry
 {
     /**
-     * Default header data to send.
+     * Library package name to send with telemetry headers.
      */
-    private static array $data = [];
+    private static ?string $packageName = null;
+
+    /**
+     * Library package version to send with telemetry headers.
+     */
+    private static ?string $packageVersion = null;
+
+    /**
+     * Additional environmental data tp send with telemetry headers, such as PHP version.
+     *
+     * @var array<mixed>|null
+     */
+    private static ?array $environment = null;
 
     /**
      * Set the main SDK name and version.
@@ -27,8 +39,8 @@ final class HttpTelemetry
         string $name,
         string $version
     ): void {
-        self::$data['name'] = $name;
-        self::$data['version'] = $version;
+        self::$packageName = $name;
+        self::$packageVersion = $version;
     }
 
     /**
@@ -36,8 +48,15 @@ final class HttpTelemetry
      */
     public static function setCorePackage(): void
     {
+        $phpVersion = phpversion();
+
+        // phpversion() can potentially return false in unusual circumstances; set PHP version to an empty string in those cases.
+        if ($phpVersion === false) {
+            $phpVersion = '';
+        }
+
         self::setPackage('auth0-php', Auth0::VERSION);
-        self::setEnvProperty('php', phpversion());
+        self::setEnvProperty('php', $phpVersion);
     }
 
     /**
@@ -50,36 +69,40 @@ final class HttpTelemetry
         string $name,
         string $version
     ): void {
-        if (! isset(self::$data['env']) || ! is_array(self::$data['env'])) {
-            self::$data['env'] = [];
+        if (self::$environment === null) {
+            self::$environment = [];
         }
 
-        self::$data['env'][$name] = $version;
+        self::$environment[$name] = $version;
     }
 
     /**
      * Replace the current env data with new data.
      *
-     * @param array $data Env data to add.
+     * @param array<mixed> $data Env data to add.
      */
     public static function setEnvironmentData(
         array $data
     ): void {
-        self::$data['env'] = $data;
+        self::$environment = $data;
     }
 
     /**
      * Get the current header data as an array.
      *
-     * @return array
+     * @return array<mixed>
      */
     public static function get(): array
     {
-        if (! isset(self::$data['name'])) {
+        if (self::$packageName === null) {
             self::setCorePackage();
         }
 
-        return self::$data;
+        return Shortcut::filterArray([
+            'name' => self::$packageName,
+            'version' => self::$packageVersion,
+            'env' => self::$environment,
+        ]);
     }
 
     /**
@@ -87,7 +110,7 @@ final class HttpTelemetry
      */
     public static function build(): string
     {
-        return base64_encode(json_encode(self::get()));
+        return base64_encode(json_encode(self::get(), JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -95,7 +118,7 @@ final class HttpTelemetry
      */
     public static function reset(): void
     {
+        self::$environment = null;
         self::setCorePackage();
-        self::$data = [];
     }
 }

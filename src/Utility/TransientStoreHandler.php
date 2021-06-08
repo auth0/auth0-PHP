@@ -19,7 +19,7 @@ final class TransientStoreHandler
     /**
      * TransientStoreHandler constructor.
      *
-     * @param Store $store Storage method to use.
+     * @param StoreInterface $store Storage method to use.
      */
     public function __construct(
         StoreInterface $store
@@ -30,7 +30,7 @@ final class TransientStoreHandler
     /**
      * Return the current storage method.
      */
-    public function getStore()
+    public function getStore(): StoreInterface
     {
         return $this->store;
     }
@@ -109,7 +109,7 @@ final class TransientStoreHandler
         try {
             $random_bytes = random_bytes($length);
         } catch (\Exception $exception) {
-            $random_bytes = openssl_random_pseudo_bytes($length);
+            $random_bytes = (string) openssl_random_pseudo_bytes($length);
         }
 
         return bin2hex($random_bytes);

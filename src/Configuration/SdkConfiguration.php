@@ -6,9 +6,11 @@ namespace Auth0\SDK\Configuration;
 
 use Auth0\SDK\Contract\ConfigurableContract;
 use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Mixins\ConfigurableMixin;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Store\SessionStore;
+use Http\Discovery\Exception\NotFoundException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
 use Psr\Http\Client\ClientInterface;
@@ -20,94 +22,94 @@ use Psr\SimpleCache\CacheInterface;
 /**
  * Configuration container for use with Auth0\SDK
  *
- * @method public ConfigurationInterface setAudience(?array $audience = null)
- * @method public ConfigurationInterface setClientId(?string $clientId = null)
- * @method public ConfigurationInterface setClientSecret(?string $clientSecret = null)
- * @method public ConfigurationInterface setDomain(?string $domain = null)
- * @method public ConfigurationInterface setHttpClient(?ClientInterface $httpClient = null)
- * @method public ConfigurationInterface setHttpRequestFactory(?RequestFactoryInterface $httpRequestFactory = null)
- * @method public ConfigurationInterface setHttpResponseFactory(?ResponseFactoryInterface $httpResponseFactory = null)
- * @method public ConfigurationInterface setHttpStreamFactory(?StreamFactoryInterface $httpStreamFactory = null)
- * @method public ConfigurationInterface setHttpTelemetry(bool $httpTelemetry = true)
- * @method public ConfigurationInterface setManagementToken(?string $managementToken = null)
- * @method public ConfigurationInterface setOrganization(?array $organization = null)
- * @method public ConfigurationInterface setQueryUserInfo(bool $queryUserInfo = false)
- * @method public ConfigurationInterface setRedirectUri(?string $redirectUri = null)
- * @method public ConfigurationInterface setResponseMode(string $responseMode = 'query')
- * @method public ConfigurationInterface setResponseType(string $responseType = 'code')
- * @method public ConfigurationInterface setSessionStorage(?StoreInterface $sessionStorage = null)
- * @method public ConfigurationInterface setScope(?array $scope = null)
- * @method public ConfigurationInterface setTokenAlgorithm(string $tokenAlgorithm = 'RS256')
- * @method public ConfigurationInterface setTokenCache(?CacheItemInterface $cache = null)
- * @method public ConfigurationInterface setTokenCacheTtl(int $tokenCacheTtl = 60)
- * @method public ConfigurationInterface setTokenJwksUri(?string $tokenJwksUri = null)
- * @method public ConfigurationInterface setTokenLeeway(int $tokenLeeway = 60)
- * @method public ConfigurationInterface setTokenMaxAge(?int $tokenMaxAge = null)
- * @method public ConfigurationInterface setPersistAccessToken(bool $persistAccessToken = true)
- * @method public ConfigurationInterface setPersistIdToken(bool $persistIdToken = true)
- * @method public ConfigurationInterface setPersistRefreshToken(bool $persistRefreshToken = true)
- * @method public ConfigurationInterface setPersistUser(bool $persistUser = true)
- * @method public ConfigurationInterface setTransientStorage(?StoreInterface $transientStorage = null)
- * @method public ConfigurationInterface setUsePkce(bool $usePkce)
+ * @method SdkConfiguration setAudience(?array $audience = null)
+ * @method SdkConfiguration setClientId(?string $clientId = null)
+ * @method SdkConfiguration setClientSecret(?string $clientSecret = null)
+ * @method SdkConfiguration setDomain(?string $domain = null)
+ * @method SdkConfiguration setHttpClient(?ClientInterface $httpClient = null)
+ * @method SdkConfiguration setHttpRequestFactory(?RequestFactoryInterface $httpRequestFactory = null)
+ * @method SdkConfiguration setHttpResponseFactory(?ResponseFactoryInterface $httpResponseFactory = null)
+ * @method SdkConfiguration setHttpStreamFactory(?StreamFactoryInterface $httpStreamFactory = null)
+ * @method SdkConfiguration setHttpTelemetry(bool $httpTelemetry = true)
+ * @method SdkConfiguration setManagementToken(?string $managementToken = null)
+ * @method SdkConfiguration setOrganization(?array $organization = null)
+ * @method SdkConfiguration setQueryUserInfo(bool $queryUserInfo = false)
+ * @method SdkConfiguration setRedirectUri(?string $redirectUri = null)
+ * @method SdkConfiguration setResponseMode(string $responseMode = 'query')
+ * @method SdkConfiguration setResponseType(string $responseType = 'code')
+ * @method SdkConfiguration setSessionStorage(?StoreInterface $sessionStorage = null)
+ * @method SdkConfiguration setScope(?array $scope = null)
+ * @method SdkConfiguration setTokenAlgorithm(string $tokenAlgorithm = 'RS256')
+ * @method SdkConfiguration setTokenCache(?CacheInterface $cache = null)
+ * @method SdkConfiguration setTokenCacheTtl(int $tokenCacheTtl = 60)
+ * @method SdkConfiguration setTokenJwksUri(?string $tokenJwksUri = null)
+ * @method SdkConfiguration setTokenLeeway(int $tokenLeeway = 60)
+ * @method SdkConfiguration setTokenMaxAge(?int $tokenMaxAge = null)
+ * @method SdkConfiguration setPersistAccessToken(bool $persistAccessToken = true)
+ * @method SdkConfiguration setPersistIdToken(bool $persistIdToken = true)
+ * @method SdkConfiguration setPersistRefreshToken(bool $persistRefreshToken = true)
+ * @method SdkConfiguration setPersistUser(bool $persistUser = true)
+ * @method SdkConfiguration setTransientStorage(?StoreInterface $transientStorage = null)
+ * @method SdkConfiguration setUsePkce(bool $usePkce)
  *
- * @method public array|null getAudience()
- * @method public string|null getClientId()
- * @method public string|null getClientSecret()
- * @method public string|null getDomain()
- * @method public ClientInterface|null getHttpClient()
- * @method public RequestFactoryInterface|null getHttpRequestFactory()
- * @method public ResponseFactoryInterface|null getHttpResponseFactory()
- * @method public StreamFactoryInterface|null getHttpStreamFactory()
- * @method public bool getHttpTelemetry()
- * @method public string|null getManagementToken()
- * @method public array|null getOrganization()
- * @method public bool getQueryUserInfo()
- * @method public string|null getRedirectUri()
- * @method public string getResponseMode()
- * @method public string getResponseType()
- * @method public StoreInterface|null getSessionStorage()
- * @method public array|null getScope()
- * @method public string getTokenAlgorithm()
- * @method public CacheItemInterface|null getTokenCache()
- * @method public int getTokenCacheTtl()
- * @method public string|null getTokenJwksUri()
- * @method public int|null getTokenLeeway()
- * @method public int|null getTokenMaxAge()
- * @method public bool getPersistAccessToken()
- * @method public bool getPersistIdToken()
- * @method public bool getPersistRefreshToken()
- * @method public bool getPersistUser()
- * @method public StoreInterface|null getTransientStorage()
- * @method public bool getUsePkce()
+ * @method array<string>|null getAudience()
+ * @method string getClientId()
+ * @method string|null getClientSecret()
+ * @method string getDomain()
+ * @method ClientInterface|null getHttpClient()
+ * @method RequestFactoryInterface|null getHttpRequestFactory()
+ * @method ResponseFactoryInterface|null getHttpResponseFactory()
+ * @method StreamFactoryInterface|null getHttpStreamFactory()
+ * @method bool getHttpTelemetry()
+ * @method string|null getManagementToken()
+ * @method array<string>|null getOrganization()
+ * @method bool getQueryUserInfo()
+ * @method string getRedirectUri()
+ * @method string getResponseMode()
+ * @method string getResponseType()
+ * @method StoreInterface|null getSessionStorage()
+ * @method array<string> getScope()
+ * @method string getTokenAlgorithm()
+ * @method CacheInterface|null getTokenCache()
+ * @method int getTokenCacheTtl()
+ * @method string|null getTokenJwksUri()
+ * @method int|null getTokenLeeway()
+ * @method int|null getTokenMaxAge()
+ * @method bool getPersistAccessToken()
+ * @method bool getPersistIdToken()
+ * @method bool getPersistRefreshToken()
+ * @method bool getPersistUser()
+ * @method StoreInterface|null getTransientStorage()
+ * @method bool getUsePkce()
  *
- * @method public bool hasAudience()
- * @method public bool hasClientId()
- * @method public bool hasClientSecret()
- * @method public bool hasDomain()
- * @method public bool hasHttpClient()
- * @method public bool hasHttpRequestFactory()
- * @method public bool hasHttpResponseFactory()
- * @method public bool hasHttpStreamFactory()
- * @method public bool hasHttpTelemetry()
- * @method public bool hasManagementToken()
- * @method public bool hasOrganization()
- * @method public bool hasQueryUserInfo()
- * @method public bool hasRedirectUri()
- * @method public bool hasResponseMode()
- * @method public bool hasResponseType()
- * @method public bool hasSessionStorage()
- * @method public bool hasScope()
- * @method public bool hasTokenAlgorithm()
- * @method public bool hasTokenCache()
- * @method public bool hasTokenCacheTtl()
- * @method public bool hasTokenLeeway()
- * @method public bool hasTokenMaxAge()
- * @method public bool hasPersistAccessToken()
- * @method public bool hasPersistIdToken()
- * @method public bool hasPersistRefreshToken()
- * @method public bool hasPersistUser()
- * @method public bool hasTransientStorage()
- * @method public bool hasUsePkce()
+ * @method bool hasAudience()
+ * @method bool hasClientId()
+ * @method bool hasClientSecret()
+ * @method bool hasDomain()
+ * @method bool hasHttpClient()
+ * @method bool hasHttpRequestFactory()
+ * @method bool hasHttpResponseFactory()
+ * @method bool hasHttpStreamFactory()
+ * @method bool hasHttpTelemetry()
+ * @method bool hasManagementToken()
+ * @method bool hasOrganization()
+ * @method bool hasQueryUserInfo()
+ * @method bool hasRedirectUri()
+ * @method bool hasResponseMode()
+ * @method bool hasResponseType()
+ * @method bool hasSessionStorage()
+ * @method bool hasScope()
+ * @method bool hasTokenAlgorithm()
+ * @method bool hasTokenCache()
+ * @method bool hasTokenCacheTtl()
+ * @method bool hasTokenLeeway()
+ * @method bool hasTokenMaxAge()
+ * @method bool hasPersistAccessToken()
+ * @method bool hasPersistIdToken()
+ * @method bool hasPersistRefreshToken()
+ * @method bool hasPersistUser()
+ * @method bool hasTransientStorage()
+ * @method bool hasUsePkce()
  */
 final class SdkConfiguration implements ConfigurableContract
 {
@@ -116,22 +118,22 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * SdkConfiguration Constructor
      *
-     * @param array|null                    $configuration        Optional. An array of parameter keys (matching this constructor's arguments) and values. Overrides any passed arguments with the same key name.
-     * @param string|null                   $domain               Required. Auth0 domain for your tenant.
-     * @param string|null                   $clientId             Required. Client ID, found in the Auth0 Application settings.
-     * @param string|null                   $redirectUri          Required. Authentication callback uri, as defined in your Auth0 Application settings.
+     * @param array<mixed>|null      $configuration        Optional. An array of parameter keys (matching this constructor's arguments) and values. Overrides any passed arguments with the same key name.
+     * @param string|null                   $domain               Required, if not specified in $configuration. Auth0 domain for your tenant.
+     * @param string|null                   $clientId             Required, if not specified in $configuration. Client ID, found in the Auth0 Application settings.
+     * @param string|null                   $redirectUri          Required, if not specified in $configuration. Authentication callback uri, as defined in your Auth0 Application settings.
      * @param string|null                   $clientSecret         Optional. Client Secret, found in the Auth0 Application settings.
-     * @param array|null                    $audience             Optional. One or more API identifiers, found in your Auth0 API settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'aud' claim to successfully validate an ID Token.
-     * @param array|null                    $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'org_id' claim to successfully validate an ID Token.
+     * @param array<string>|null            $audience             Optional. One or more API identifiers, found in your Auth0 API settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'aud' claim to successfully validate an ID Token.
+     * @param array<string>|null            $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'org_id' claim to successfully validate an ID Token.
      * @param bool                          $usePkce              Optional. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests. Defaults to true. See https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce
-     * @param array                         $scope                Optional. One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
+     * @param array<string>                 $scope                Optional. One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
      * @param string                        $responseMode         Optional. Defaults to 'query'. Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
      * @param string                        $responseType         Optional. Defaults to 'code'. Use 'code' for server side flows and 'token' for application side flows
      * @param string                        $tokenAlgorithm       Optional. Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
      * @param string|null                   $tokenJwksUri         Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null                   $tokenMaxAge          Optional. Maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
+     * @param int|null                      $tokenMaxAge          Optional. Maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
      * @param int                           $tokenLeeway          Optional. Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
-     * @param CacheItemInterface|null       $tokenCache           Optional. A PSR-16 compatible cache adapter for storing JSON Web Key Sets (JWKS).
+     * @param CacheInterface|null           $tokenCache           Optional. A PSR-16 compatible cache adapter for storing JSON Web Key Sets (JWKS).
      * @param int                           $tokenCacheTtl        Optional. How long (in seconds) to keep a JWKS cached.
      * @param ClientInterface|null          $httpClient           Optional. A PSR-18 compatible HTTP client to use for API requests.
      * @param RequestFactoryInterface|null  $httpRequestFactory   Optional. A PSR-17 compatible request factory to generate HTTP requests.
@@ -191,52 +193,77 @@ final class SdkConfiguration implements ConfigurableContract
         $this->validate();
     }
 
+    /**
+     * Return the configured domain with protocol.
+     */
     public function buildDomainUri(): ?string
     {
         return 'https://' . $this->getDomain();
     }
 
+    /**
+     * Return the configured scopes as a space-delimited string.
+     */
     public function buildScopeString(): ?string
     {
         if ($this->hasScope()) {
-            return implode(' ', $this->getScope());
+            $scope = $this->getScope();
+
+            if (count($scope) !== 0) {
+                return implode(' ', $scope);
+            }
         }
 
         return '';
     }
 
+    /**
+     * Get the first configured organization.
+     */
     public function buildDefaultOrganization(): ?string
     {
         // Return the default organization.
         if ($this->hasOrganization()) {
-            return $this->getOrganization()[0] ?? '';
+            $organization = $this->getOrganization();
+
+            if ($organization !== null && count($organization) !== 0) {
+                return $organization[0];
+            }
         }
 
         return '';
     }
 
+    /**
+     * Get the first configured audience.
+     */
     public function buildDefaultAudience(): ?string
     {
         // Return the default audience.
         if ($this->hasAudience()) {
-            return $this->getAudience()[0] ?? '';
+            $audience = $this->getAudience();
+
+            if ($audience !== null && count($audience) !== 0) {
+                return $audience[0] ?? '';
+            }
         }
 
         return '';
     }
 
+    /**
+     * Setup SDK defaults based on the configured state.
+     *
+     * @throws NotFoundException When a PSR-18 or PSR-17 are not configured, and cannot be discovered.
+     */
     private function setupConfiguration(): void
     {
-        $this->configureValidationLambdas();
-
         if (! $this->getSessionStorage() instanceof StoreInterface) {
             $this->setSessionStorage(new SessionStore());
         }
 
         if (! $this->getTransientStorage() instanceof StoreInterface) {
             $this->setTransientStorage(new CookieStore([
-                // Use configuration option or class default.
-                'legacy_samesite_none' => $config['legacy_samesite_none_cookie'] ?? null,
                 'samesite' => $this->getResponseMode() === 'form_post' ? 'None' : 'Lax',
             ]));
         }
@@ -262,6 +289,16 @@ final class SdkConfiguration implements ConfigurableContract
         }
     }
 
+    /**
+     * Fires when the configuration state changes, to ensure changes are formatted correctly.
+     *
+     * @param string $propertyName The property being mutated.
+     * @param mixed  $propertyValue The new value of the property.
+     *
+     * @return mixed
+     *
+     * @throws ConfigurationException When a validation check for the mutation fails to pass, such as a incompatible type being used.
+     */
     private function onStateChange(
         string $propertyName,
         $propertyValue
@@ -270,12 +307,16 @@ final class SdkConfiguration implements ConfigurableContract
             return $propertyValue;
         }
 
-        if ($propertyName === 'domain' && $propertyValue) {
-            $host = parse_url($propertyValue, PHP_URL_HOST);
-            return $host ?? $propertyValue;
+        if ($propertyName === 'domain') {
+            if (is_string($propertyValue) && mb_strlen($propertyValue) !== 0) {
+                $host = parse_url($propertyValue, PHP_URL_HOST);
+                return $host ?? $propertyValue;
+            }
+
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
         }
 
-        if ($propertyName === 'tokenAlgorithm' && ! in_array($propertyValue, ['HS256', 'RS256'])) {
+        if ($propertyName === 'tokenAlgorithm' && ! in_array($propertyValue, ['HS256', 'RS256'], true)) {
             throw \Auth0\SDK\Exception\ConfigurationException::invalidAlgorithm();
         }
 
@@ -296,44 +337,16 @@ final class SdkConfiguration implements ConfigurableContract
         return $propertyValue;
     }
 
+    /**
+     * Fires when a validation event fails to pass, such as a bad parameter type being used.
+     *
+     * @param string      $parameter The name of the parameter that failed validation.
+     *
+     * @throws ConfigurationException When invoked.
+     */
     private function onValidationException(
-        string $parameter,
-        ?string $reason = null
+        string $parameter
     ): void {
         throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($parameter);
-    }
-
-    private function export(): string
-    {
-        // Serialize the configuration state and return it as a string of stored values.
-        return serialize((object) [
-            'state' => $this->configuredState,
-            'validations' => $this->configuredValidations,
-            'immutable' => $this->configurationImmutable,
-        ]);
-    }
-
-    private static function import(
-        string $serialized
-    ): self {
-        // Create configuration from stored values.
-        $deserialized = unserialize($serialized);
-
-        // Create a ReflectionClass for SdkConfiguration.
-        $class = new \ReflectionClass(self::class);
-
-        // Create a new SdkConfiguration without running the __constructor.
-        $instance = $class->newInstanceWithoutConstructor();
-
-        // Import the configuration into the new SdkConfiguration instance.
-        $instance->configuredState = $deserialized->state;
-        $instance->configuredValidations = $deserialized->validations;
-        $instance->configuredImmutable = $deserialized->immutable;
-
-        // Run configuration setup to wire validation lambdas, default storage, etc.
-        $instance->setupConfiguration();
-
-        // Return the instance.
-        return $instance;
     }
 }

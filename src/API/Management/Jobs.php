@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -21,10 +23,10 @@ final class Jobs extends ManagementEndpoint
      * - `create:users`
      * - `read:users`
      *
-     * @param string              $filePath     Path to formatted file to import.
-     * @param string              $connectionId Id of the Connection to use.
-     * @param array               $parameters   Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                             $filePath     Path to formatted file to import.
+     * @param string                             $connectionId Id of the Connection to use.
+     * @param array<string,bool|int|string>|null $parameters   Optional.Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
@@ -33,19 +35,21 @@ final class Jobs extends ManagementEndpoint
     public function createImportUsers(
         string $filePath,
         string $connectionId,
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($filePath, 'filePath');
-        $this->validateString($connectionId, 'connectionId');
+        Validate::string($filePath, 'filePath');
+        Validate::string($connectionId, 'connectionId');
 
         $request = $this->getHttpClient()->method('post')
             ->addPath('jobs', 'users-imports')
             ->addFile('users', $filePath)
             ->withFormParam('connection_id', $connectionId);
 
-        foreach ($parameters as $key => $value) {
-            $request->withFormParam($key, $value);
+        if ($parameters !== null && count($parameters) !== 0) {
+            foreach ($parameters as $key => $value) {
+                $request->withFormParam($key, $value);
+            }
         }
 
         return $request->withOptions($options)
@@ -56,7 +60,7 @@ final class Jobs extends ManagementEndpoint
      * Export all users to a file via a long-running job.
      * Required scope: `read:users`
      *
-     * @param array               $body    Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>        $body    Body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -64,10 +68,10 @@ final class Jobs extends ManagementEndpoint
      * @link https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports
      */
     public function createExportUsers(
-        array $body = [],
+        array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateArray($body, 'body');
+        Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('post')
             ->addPath('jobs', 'users-exports')
@@ -81,7 +85,7 @@ final class Jobs extends ManagementEndpoint
      * Required scope: `update:users`
      *
      * @param string              $userId  User ID of the user to send the verification email to.
-     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -90,18 +94,18 @@ final class Jobs extends ManagementEndpoint
      */
     public function createSendVerificationEmail(
         string $userId,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($userId, 'userId');
+        Validate::string($userId, 'userId');
 
-        $payload = [
+        $body = Shortcut::mergeArrays([
             'user_id' => $userId,
-        ] + $body;
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('jobs', 'verification-email')
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -123,7 +127,7 @@ final class Jobs extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('jobs', $id)
@@ -148,7 +152,7 @@ final class Jobs extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('jobs', $id, 'errors')

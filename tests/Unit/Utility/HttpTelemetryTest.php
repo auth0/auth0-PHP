@@ -22,7 +22,7 @@ class HttpTelemetryTest extends TestCase
         HttpTelemetry::setPackage('test_name', '1.2.3');
         $headers = HttpTelemetry::get();
 
-        $this->assertCount(2, $headers);
+        $this->assertCount(3, $headers);
         $this->assertArrayHasKey('name', $headers);
         $this->assertEquals('test_name', $headers['name']);
         $this->assertArrayHasKey('version', $headers);
@@ -65,7 +65,10 @@ class HttpTelemetryTest extends TestCase
         $header_data = [
             'name' => 'test_name_2',
             'version' => '5.6.7',
-            'env' => ['test_env_name_3' => '6.7.8'],
+            'env' => [
+                'php' => PHP_VERSION,
+                'test_env_name_3' => '6.7.8',
+            ],
         ];
         HttpTelemetry::setPackage($header_data['name'], $header_data['version']);
         HttpTelemetry::setEnvProperty('test_env_name_3', '6.7.8');

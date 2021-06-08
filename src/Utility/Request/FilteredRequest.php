@@ -11,6 +11,8 @@ final class FilteredRequest
 {
     /**
      * Fields to include or exclude from API responses.
+     *
+     * @var array<string>
      */
     private ?array $fields = null;
 
@@ -22,8 +24,8 @@ final class FilteredRequest
     /**
      * FilteredRequest constructor
      *
-     * @param array|null $fields        Fields to include or exclude from API responses.
-     * @param bool|null  $includeFields True to include $fields, false to exclude $fields.
+     * @param array<string>|null $fields        Fields to include or exclude from API responses.
+     * @param bool|null          $includeFields True to include $fields, false to exclude $fields.
      */
     public function __construct(
         ?array $fields = null,
@@ -36,7 +38,7 @@ final class FilteredRequest
     /**
      * Set the `fields` for the filtered request.
      *
-     * @param array $fields Value of `fields` parameter for the filtered request.
+     * @param array<string> $fields Value of `fields` parameter for the filtered request.
      */
     public function setFields(
         array $fields
@@ -59,9 +61,9 @@ final class FilteredRequest
     /**
      * Retrieve the `fields` for the filtered request.
      *
-     * @return array
+     * @return array<string>|null
      */
-    public function getFields(): array
+    public function getFields(): ?array
     {
         return $this->fields;
     }
@@ -90,13 +92,13 @@ final class FilteredRequest
     /**
      * Return an array representing the field-filtered request.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function build(): array
     {
         $response = [];
 
-        if ($this->fields !== null && count($this->fields)) {
+        if ($this->fields !== null && count($this->fields) >= 1) {
             $response['fields'] = implode(',', array_unique(array_values($this->fields)));
 
             if ($this->includeFields !== null) {

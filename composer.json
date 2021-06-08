@@ -25,12 +25,18 @@
     "cache/adapter-common": "^1.0",
     "cache/array-adapter": "^1.0",
     "cache/hierarchical-cache": "^1.0",
+    "ergebnis/phpstan-rules": "^0.15",
     "firebase/php-jwt": "^5.0",
+    "infection/infection": "^0.23",
     "mockery/mockery": "^1.4",
     "nunomaduro/phpinsights": "^1.14 || dev-master",
     "nyholm/psr7": "^1.4",
     "pestphp/pest": "^1.0",
-    "php-http/mock-client": "^1.4"
+    "php-http/mock-client": "^1.4",
+    "phpstan/phpstan": "^0.12",
+    "phpstan/phpstan-strict-rules": "^0.12",
+    "thecodingmachine/phpstan-strict-rules": "^0.12",
+    "vimeo/psalm": "^4.7"
   },
   "autoload": {
     "psr-4": {
@@ -47,9 +53,17 @@
     "sort-packages": true
   },
   "scripts": {
-    "test": "pest --stop-on-failure --coverage",
-    "lint": "phpinsights -v",
-    "lint-style": "phpcs -s",
-    "lint-style-fix": "phpcbf"
+    "phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
+    "phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
+    "psalm": "@php ./vendor/bin/psalm --threads=4",
+    "pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
+    "infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest",
+    "test": [
+      "@phpinsights",
+      "@phpstan",
+      "@psalm",
+      "@php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml",
+      "@php ./vendor/bin/infection --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage"
+    ]
   }
 }

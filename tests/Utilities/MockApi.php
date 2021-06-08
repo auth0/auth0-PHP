@@ -130,7 +130,7 @@ abstract class MockApi
     /**
      * Get the body from a mocked request.
      *
-     * @return array|\stdClass
+     * @return array<mixed>\stdClass
      */
     public function getRequestBody()
     {
@@ -148,7 +148,7 @@ abstract class MockApi
     /**
      * Get the headers from a mocked request.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function getRequestHeaders(): array
     {

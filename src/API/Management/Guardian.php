@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -49,7 +50,7 @@ final class Guardian extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('guardian', 'enrollments', $id)
@@ -72,7 +73,7 @@ final class Guardian extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('guardian', 'enrollments', $id)

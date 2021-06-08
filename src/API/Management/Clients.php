@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -20,7 +22,7 @@ final class Clients extends ManagementEndpoint
      * Required scope: `create:clients`
      *
      * @param string              $name    Name of the new client.
-     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -29,18 +31,18 @@ final class Clients extends ManagementEndpoint
      */
     public function create(
         string $name,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($name, 'name');
+        Validate::string($name, 'name');
 
-        $payload = [
+        $body = Shortcut::mergeArrays([
             'name' => $name,
-        ] + $body;
+        ], $body);
 
         return $this->getHttpClient()->method('post')
             ->addPath('clients')
-            ->withBody((object) $payload)
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -51,20 +53,20 @@ final class Clients extends ManagementEndpoint
      * - `read:clients` for any call to this endpoint.
      * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
      *
-     * @param array               $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients
      */
     public function getAll(
-        array $parameters = [],
+        ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
         return $this->getHttpClient()->method('get')
             ->addPath('clients')
-            ->withParams($parameters)
+            ->withParams($parameters ?? [])
             ->withOptions($options)
             ->call();
     }
@@ -86,7 +88,7 @@ final class Clients extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('clients', $id)
@@ -101,7 +103,7 @@ final class Clients extends ManagementEndpoint
      * - `update:client_keys` to update "client_secret" and "encryption_key" attributes.
      *
      * @param string              $id      Client (by it's ID) to update.
-     * @param array               $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -110,14 +112,14 @@ final class Clients extends ManagementEndpoint
      */
     public function update(
         string $id,
-        array $body = [],
+        ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('clients', $id)
-            ->withBody($body)
+            ->withBody($body ?? [])
             ->withOptions($options)
             ->call();
     }
@@ -137,7 +139,7 @@ final class Clients extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $this->validateString($id, 'id');
+        Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('clients', $id)

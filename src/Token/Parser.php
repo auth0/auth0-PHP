@@ -14,19 +14,46 @@ use Psr\SimpleCache\CacheInterface;
 final class Parser
 {
     /**
-     * Decoded representation of a JWT.
-     */
-    private array $token = [];
-
-    /**
      * Instance of SdkConfiguration
      */
     private SdkConfiguration $configuration;
 
     /**
+     * The unaltered JWT string that was passed to the class constructor.
+     */
+    private ?string $tokenRaw = null;
+
+    /**
+     * Each of the 3 sections of the JWT separated for easier processing.
+     *
+     * @var array<int,string>
+     */
+    private ?array $tokenParts = null;
+
+    /**
+     * Decoded headers contained within the JWT.
+     *
+     * @var array<string,int|string>
+     */
+    private ?array $tokenHeaders = null;
+
+    /**
+     * Decoded claims contained within the JWT.
+     *
+     * @var array<string,array|int|string>
+     */
+    private ?array $tokenClaims = null;
+
+    /**
+     * The decoded signature hash for the JWT.
+     */
+    private ?string $tokenSignature = null;
+
+    /**
      * Constructor for Token Parser class.
      *
-     * @param string $jwt A JWT string to parse.
+     * @param string           $jwt             A JWT string to parse.
+     * @param SdkConfiguration $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
@@ -47,27 +74,22 @@ final class Parser
      */
     public function parse(
         string $jwt
-    ): array {
+    ): void {
         $parts = explode('.', $jwt);
 
         if (count($parts) !== 3) {
             throw \Auth0\SDK\Exception\InvalidTokenException::badSeparators();
         }
 
-        $decoded = [
-            'raw' => $jwt,
-            'parts' => $parts,
-            'headers' => $this->decodeHeaders($parts[0]),
-            'claims' => $this->decodeClaims($parts[1]),
-            'signature' => $this->decodeSignature($parts[2]),
-        ];
+        $this->tokenRaw = $jwt;
+        $this->tokenParts = $parts;
+        $this->tokenHeaders = $this->decodeHeaders($parts[0]);
+        $this->tokenClaims = $this->decodeClaims($parts[1]);
+        $this->tokenSignature = $this->decodeSignature($parts[2]);
 
-        if (! isset($decoded['headers']['typ'])) {
-            $decoded['headers']['typ'] = 'JWT';
+        if (! isset($this->tokenHeaders['typ'])) {
+            $this->tokenHeaders['typ'] = 'JWT';
         }
-
-        $this->token = $decoded;
-        return $this->token;
     }
 
     /**
@@ -75,7 +97,7 @@ final class Parser
      */
     public function validate(): Validator
     {
-        return new Validator($this->token['claims']);
+        return new Validator($this->getClaims());
     }
 
     /**
@@ -85,7 +107,7 @@ final class Parser
      * @param string|null         $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
      * @param string|null         $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
      * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     * @param CacheInterface|null $cache        Optional. A PSR-16 ("SimpleCache") CacheInterface instance to cache JWKS results within.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
@@ -96,12 +118,29 @@ final class Parser
         ?int $cacheExpires = null,
         ?CacheInterface $cache = null
     ): self {
-        new Verifier($this->configuration, join('.', [$this->token['parts'][0], $this->token['parts'][1]]), $this->token['signature'], $this->token['headers'], $algorithm, $jwksUri, $clientSecret, $cacheExpires, $cache);
+        $parts = $this->getParts();
+        $signature = $this->getSignature() ?? '';
+        $headers = $this->getHeaders();
+
+        new Verifier(
+            $this->configuration,
+            join('.', [$parts[0], $parts[1]]),
+            $signature,
+            $headers,
+            $algorithm,
+            $jwksUri,
+            $clientSecret,
+            $cacheExpires,
+            $cache,
+        );
+
         return $this;
     }
 
     /**
      * Return an array representing the Token's claims.
+     *
+     * @return array<mixed>
      */
     public function export(): array
     {
@@ -129,19 +168,24 @@ final class Parser
     public function getClaim(
         string $key
     ) {
-        if (! isset($this->token['claims'][$key])) {
-            return null;
-        }
-
-        return $this->token['claims'][$key];
+        $claims = $this->getClaims();
+        return $claims[$key] ?? null;
     }
 
     /**
      * Return an array representing the Token's claims.
+     *
+     * @return array<string,array|int|string>
      */
     public function getClaims(): array
     {
-        return $this->token['claims'] ?? [];
+        $claims = $this->tokenClaims;
+
+        if (! is_array($claims)) {
+            return [];
+        }
+
+        return $claims;
     }
 
     /**
@@ -163,19 +207,33 @@ final class Parser
     public function getHeader(
         string $key
     ): ?string {
-        if (! isset($this->token['headers'][$key])) {
-            return null;
+        $headers = $this->getHeaders();
+
+        if (isset($headers[$key])) {
+            return (string) $headers[$key];
         }
 
-        return (string) $this->token['headers'][$key];
+        return null;
     }
 
     /**
      * Return an array representing the Token's headers.
+     *
+     * @return array<int|string>
      */
     public function getHeaders(): array
     {
-        return $this->token['headers'] ?? [];
+        return $this->tokenHeaders ?? [];
+    }
+
+    /**
+     * Return an array representing the Token's decoded parts.
+     *
+     * @return array<string>
+     */
+    public function getParts(): array
+    {
+        return $this->tokenParts ?? [];
     }
 
     /**
@@ -183,15 +241,15 @@ final class Parser
      */
     public function getRaw(): ?string
     {
-        return $this->token['raw'] ?? null;
+        return $this->tokenRaw;
     }
 
     /**
      * Return the signature portion of the JWT.
      */
-    public function getSignature(): string
+    public function getSignature(): ?string
     {
-        return $this->token['signature'] ?? '';
+        return $this->tokenSignature;
     }
 
     /**
@@ -199,12 +257,20 @@ final class Parser
      *
      * @param string $claims String representing the claims portion of the JWT.
      *
+     * @return array<array|int|string>|null
+     *
      * @throws \JsonException When claims portion cannot be decoded properly.
      */
     private function decodeClaims(
         string $claims
-    ): array {
-        return json_decode(base64_decode(strtr($claims, '-_', '+/'), true), true, 512, JSON_THROW_ON_ERROR);
+    ): ?array {
+        $decoded = base64_decode(strtr($claims, '-_', '+/'), true);
+
+        if ($decoded !== false) {
+            return json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        return null;
     }
 
     /**
@@ -212,12 +278,20 @@ final class Parser
      *
      * @param string $headers String representing the headers portion of the JWT.
      *
+     * @return array<int|string>|null
+     *
      * @throws \JsonException When headers portion cannot be decoded properly.
      */
     private function decodeHeaders(
         string $headers
-    ): array {
-        return json_decode(base64_decode(strtr($headers, '-_', '+/'), true), true, 512, JSON_THROW_ON_ERROR);
+    ): ?array {
+        $decoded = base64_decode(strtr($headers, '-_', '+/'), true);
+
+        if ($decoded !== false) {
+            return json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        return null;
     }
 
     /**
@@ -227,7 +301,13 @@ final class Parser
      */
     private function decodeSignature(
         string $signature
-    ): string {
-        return base64_decode(strtr($signature, '-_', '+/'), true);
+    ): ?string {
+        $decoded = base64_decode(strtr($signature, '-_', '+/'), true);
+
+        if ($decoded !== false) {
+            return $decoded;
+        }
+
+        return null;
     }
 }
