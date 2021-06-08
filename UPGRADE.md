@@ -55,27 +55,6 @@ $auth0 = new Auth0([
 ]);
 ```
 
-You can now use the SDK's API factories `authentication()` and `management()`, which will return API classes configured for you based on your SdkConfiguration.
-
-```php
-use Auth0\SDK\Auth0;
-use Auth0\SDK\Configuration\SdkConfiguration;
-
-// PHP 8.0 named arguments syntax
-$configuration = new SdkConfiguration(
-    domain: 'your-tenant.auth0.com',
-    clientId: 'application_client_id',
-    clientSecret: 'application_client_secret',
-    redirectUri: 'https://yourapplication.com/auth/callback',
-    tokenAlgorithm: 'RS256'
-);
-
-$auth0 = new Auth0($configuration);
-
-$authentication = $auth0->authentication();
-$management = $auth0->management();
-```
-
 After initializing the Auth0 SDK with your configuration, you can keep a reference to the SdkConfiguration within your app so you can makes changes later. The SDK automatically recognize changes to your SdkConfiguration and use them.
 
 ```php
