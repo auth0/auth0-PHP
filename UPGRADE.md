@@ -95,7 +95,7 @@ array<string>|null            $organization         Optional. One or more Organi
 bool                          $usePkce              Optional. Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests.
 array<string>                 $scope                Optional. One or more scopes to request for Tokens.
 string                        $responseMode         Optional. Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
-string                        $responseType         Optional. Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow
+string                        $responseType         Optional. Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow.
 string                        $tokenAlgorithm       Optional. Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
 string|null                   $tokenJwksUri         Optional. URI to the JWKS when verifying RS256 tokens.
 int|null                      $tokenMaxAge          Optional. The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
