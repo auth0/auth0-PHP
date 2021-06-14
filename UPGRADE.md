@@ -354,10 +354,20 @@ These classes and traits were added in SDK 8.0:
 - Class `Auth0\SDK\Exception\NetworkException`.
 - Class `Auth0\SDK\Exception\PaginatorException`.
 - Class `Auth0\SDK\Exception\StateException`.
-- Class `Auth0\SDK\Token`.
 - Class `Auth0\SDK\Token\Parser`.
 - Class `Auth0\SDK\Token\Validator`.
 - Class `Auth0\SDK\Token\Verifier`.
+- Class `Auth0\SDK\Token`.
+- Class `Auth0\SDK\Utility\Request\FilteredRequest`.
+- Class `Auth0\SDK\Utility\Request\PaginatedRequest`.
+- Class `Auth0\SDK\Utility\Request\RequestOptions`.
+- Class `Auth0\SDK\Utility\HttpClient`.
+- Class `Auth0\SDK\Utility\HttpRequest`.
+- Class `Auth0\SDK\Utility\HttpResponse`.
+- Class `Auth0\SDK\Utility\HttpResponsePaginator`.
+- Class `Auth0\SDK\Utility\HttpTelemetry`.
+- Class `Auth0\SDK\Utility\Shortcut`.
+- Class `Auth0\SDK\Utility\Validate`.
 
 - Trait `Auth0\SDK\Mixins\ConfigurableMixin`.
 
@@ -365,9 +375,39 @@ These classes and traits were added in SDK 8.0:
 
 These classes were updated in SDK 8.0:
 
+- Class `Auth0\SDK\Auth0` was updated:
+
+  - `__construct` was updated:
+    - `configuration` was added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
+    - All other arguments were removed.
+  - Public method `authentication()` was added, and returns a pre-configured singleton of the `Auth0\SDK\API\Authentication` class.
+  - Public method `management()` was added, and returns a pre-configured singleton of the `Auth0\SDK\API\Management` class.
+  - Public method `login()` was updated:
+    - Method now accepts an argument, `params`: an array of parameters to pass with the API request.
+    - Arguments `state`, `connection`, and `additionalParameters` have been removed. Use the new `params` argument for these uses.
+  - Public method `signup()` was added as a convenience. This method will pass the ?screen_hint=signup param, supported by the New Universal Login Experience.
+  - Public method `getLoginUrl()` was moved to `Auth0\SDK\API\Authentication\getLoginLink()`, and:
+    - Argument `params` is now a nullable array.
+  - Public method `renewTokens()` was renamed to `renew()`, and:
+    - Argument `options` was renamed to `params` and is now a nullable array.
+  - Public method `decodeIdToken()` was renamed to `decode()`, and:
+    - Argument `idToken` was renamed to `token`.
+    - Argument `verifierOptions` was removed.
+    - Arguments `tokenAudience` and `tokenOrganization` were added as optional, nullable arrays.
+    - Argument `tokenNonce` was added as an optional string.
+    - Arguments `tokenMaxAge`, `tokenLeeway`, and `tokenNow` were added as optional, nullable integers.
+    - Now returns an instance of `Auth0\SDK\Token` instead of an array.
+  - Public methods `getAuthorizationCode()` and `getState()` were removed; please use `getRequestParameter()` method.
+  - Public method `deleteAllPersistentData()` was renamed to `clear()`.
+  - Public methods `getNonce()` and `urlSafeBase64Decode()` were removed.
+  - Public methods `getAccessTokenExpiration()` and `setAccessTokenExpiration()` were added for retrieving for storing an access token expiration timestamp in session storage, respectively.
+  - Public method `getCredentials()` was added as a convenience. This method returns the Id Token, Access Token, Refresh Token, Access Token expiration timestamp, and user data from an available session, without invoking an authorization flow, exchange or raising an error if a session is not available.
+
 - Class `Auth0\SDK\API\Authentication` was updated:
 
-  - Constructor was updated to require a configuration format identical to the base `Auth0\SDK\Auth0` class: a `SdkConfiguration` class, or an array of configuration options.
+  - `__construct` was updated:
+    - `configuration` was added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
+    - All other arguments were removed.
   - Public method 'getHttpClient()' was added.
   - Public method `get_authorize_link()` was renamed to `getAuthorizationLink()`, and:
     - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options.
@@ -435,7 +475,9 @@ These classes were updated in SDK 8.0:
 
 - Class `Auth0\SDK\API\Management` was updated:
 
-  - Constructor was updated to require a configuration format identical to the base `Auth0\SDK\Auth0` class: a `SdkConfiguration` class, or an array of configuration options.
+  - `__construct` was updated:
+    - `configuration` was added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
+    - All other arguments were removed.
   - Public method 'getHttpClient()' was added.
   - Public method `getResponsePaginator()` was added.
 
@@ -450,22 +492,40 @@ These classes were updated in SDK 8.0:
     - Their functionality have been rolled into the new `Auth0\SDK\Utility\Validate` utility class.
 
 - Class `Auth0\SDK\Store\StoreInterface` was moved to `Auth0\SDK\Contract\StoreInterface`.
-- Class `Auth0\SDK\Exception\CoreException` was renamed to `Auth0\SDK\Contract\SdkException`.
+- Class `Auth0\SDK\Exception\CoreException` was moved to `Auth0\SDK\Contract\SdkException`.
+- Class `Auth0\SDK\Helpers\PKCE` was moved to `Auth0\SDK\Utility\PKCE`.
+- Class `Auth0\SDK\Helpers\TransientStoreHandler` was moved to `Auth0\SDK\Utility\TransientStoreHandler`.
 
 ### Classes Removed
 
 These classes were removed in SDK 8.0:
 
-- Class `Auth0\SDK\API\Header\AuthorizationBearer`
-- Class `Auth0\SDK\API\Header\ContentType`.
-- Class `Auth0\SDK\API\Header\ForwardedFor`.
-- Class `Auth0\SDK\API\Header\Header`.
-- Class `Auth0\SDK\API\Header\Telemetry`.
-- Class `Auth0\SDK\API\Helpers\ApiClient`.
-- Class `Auth0\SDK\API\Helpers\InformationHeaders`.
-- Class `Auth0\SDK\API\Helpers\RequestBuilder`.
-- Class `Auth0\SDK\Exception\ApiException`.
-- Class `Auth0\SDK\Store\EmptyStore`.
+- All `Auth0\SDK\API\Header` classes were removed, and the header management behavior is now handled using simple key-value pairs within `headers` arguments on individual methods.
+
+  - Class `Auth0\SDK\API\Header\AuthorizationBearer`.
+  - Class `Auth0\SDK\API\Header\ContentType`.
+  - Class `Auth0\SDK\API\Header\ForwardedFor`.
+  - Class `Auth0\SDK\API\Header\Header`.
+  - Class `Auth0\SDK\API\Header\Telemetry`.
+
+- All `Auth0\SDK\API\Helpers` classes were removed, and their functionality replaced by alternatives classes. Note that behavior in the alternative classes is not always identical. Please review the new classes' API documentation.
+
+  - Class `Auth0\SDK\API\Helpers\ApiClient` was superseded by `Auth0\SDK\Utility\HttpClient`.
+  - Class `Auth0\SDK\API\Helpers\RequestBuilder` was superseded by `Auth0\SDK\Utility\HttpRequest`.
+  - Class `Auth0\SDK\API\Helpers\InformationHeaders` was superseded by `Auth0\SDK\Utility\HttpTelemetry`.
+
+- All token-related classes have been removed, and their functionality replaced by the new `Auth0\SDK\Token`, `Auth0\SDK\Token\Parser`, `Auth0\SDK\Token\Validator`, and `Auth0\SDK\Token\Verifier` classes.
+
+  - Class `Auth0\SDK\Helpers\Tokens\AsymmetricVerifier`.
+  - Class `Auth0\SDK\Helpers\Tokens\IdTokenVerifier`.
+  - Class `Auth0\SDK\Helpers\Tokens\SignatureVerifier`.
+  - Class `Auth0\SDK\Helpers\Tokens\SymmetricVerifier`.
+  - Class `Auth0\SDK\Helpers\Tokens\TokenVerifier`.
+  - Class `Auth0\SDK\Helpers\JWKFetcher`.
+
+- Class `Auth0\SDK\Exception\ApiException` was superseded by more specific exception classes.
+- Class `Auth0\SDK\Helpers\Cache\NoCacheHandler` was no longer relevant.
+- Class `Auth0\SDK\Store\EmptyStore` was no longer relevant.
 
 ---
 
