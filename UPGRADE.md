@@ -22,7 +22,7 @@ As is to be expected with a major release, there are breaking changes in this up
 
 ### Configuring Auth0 SDK 8.0
 
-Most classes throughout the SDK accept a new specialized configuration interface called SdkConfiguration:
+Most class constructors throughout the SDK accept a new `SdkConfiguration` configuration class, which shares your app configuration by reference throughout the SDK's subclasses, allowing you to make changes on-the-fly from within your app:
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -40,7 +40,7 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-Alternatively, you can use an array to configure the base Auth0 SDK class, and a SdkConfiguration will instantiate for you. Key names must match the same camelCase format of the constructor arguments for SdkConfiguration.
+Alternatively, you can use an array to configure the base `Auth0` class, and a `SdkConfiguration` will instantiate for you. Key names must match the same camelCase format of the constructor arguments for `SdkConfiguration`.
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -55,7 +55,7 @@ $auth0 = new Auth0([
 ]);
 ```
 
-After initializing the Auth0 SDK with your configuration, you can keep a reference to the SdkConfiguration within your app so you can make changes later. The SDK automatically recognizes changes to your SdkConfiguration and uses them.
+After initializing the Auth0 SDK with your configuration, you can keep a reference to the `SdkConfiguration` within your app so you can make changes later. The SDK automatically recognizes changes to your `SdkConfiguration` and uses them.
 
 ```PHP
 $configuration = new SdkConfiguration(
@@ -117,9 +117,16 @@ bool                          $queryUserInfo        Optional. Defaults to false.
 string|null                   $managementToken      Optional. An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
 ```
 
+↗ [Learn more about PSR-16 caches.](https://www.php-fig.org/psr/psr-16/)<br />
+↗ [Learn more about PSR-17 HTTP Factories,](https://www.php-fig.org/psr/psr-17/) which are used to create [PSR-7 HTTP messages.](https://www.php-fig.org/psr/psr-7/)<br />
+↗ [Learn more about the PSR-18 HTTP Client standard.](https://www.php-fig.org/psr/psr-18/)<br />
+↗ [Find PSR-16 cache libraries on Packagist.](https://packagist.org/search/?query=PSR-16&type=library&tags=psr%2016)<br />
+↗ [Find PSR-17 HTTP factory libraries on Packagist.](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017)<br />
+↗ [Find PSR-18 HTTP client libraries on Packagist.](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018)
+
 ### Using the new Authentication and Management Factories
 
-SDK v8 offers a cleaner approach of accessing the Authentication and Management API classes without having to reconfigure them independently: configure the base Auth0 SDK class, and use the factory methods to configure these classes for you:
+SDK v8.0 offers a cleaner approach of accessing the Authentication and Management API sub-classes without having to reconfigure them independently: configure the base `Auth0` class, and use the factory methods to configure these API sub-classes for you:
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -143,7 +150,7 @@ $response = $auth0->management()->users()->getAll();
 
 ### Support for PSR-18 and PSR-17 factories
 
-Previous versions of the SDK had a hard dependency on Guzzle for issuing network requests. SDK v8 uses a more modern approach of accepting developer-supplied PSR-18 and PSR-17 factory interfaces for making these requests. We strongly encourage you to pass the factories of your choice during SDK configuration. The SDK will make a best-effort attempt at auto-discovering any compatible libraries present in your application when none are specified.
+Previous versions of the Auth0 PHP SDK had a dependency on [Guzzle](http://guzzlephp.org/) for issuing network requests. SDK v8.0 uses a more modern approach of accepting developer-supplied [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) factory interfaces for making these requests. We strongly encourage you to pass the factories of your choice during SDK configuration. The SDK will make a best-effort attempt at auto-discovering any compatible libraries present in your application when none are specified.
 
 As an example, let's say your application is already incorporating [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which include PSR-18 and PSR-17 factories, respectively. Pass these to the SDK to use them:
 
@@ -176,11 +183,18 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-The libraries specified above are simply examples: any PSR-18 and PSR-17 compliant libraries can be used, including Guzzle.
+The libraries specified above are simply examples: any PSR-18 and PSR-17 compliant libraries can be used.
+
+↗ [Guzzle 7 natively supports PSR-18.](https://docs.php-http.org/en/latest/clients/guzzle7-adapter.html)<br />
+↗ [Guzzle 6 is compatible with an adaptor library.](https://github.com/php-http/guzzle6-adapter)<br />
+↗ [Symfony's HttpClient component natively supports PSR-18.](https://symfony.com/doc/current/http_client.html#psr-18-and-psr-17)<br />
+↗ [Learn about other compatible libraries from PHP-HTTP.](https://docs.php-http.org/en/latest/clients.html)<br />
+↗ [Search packagist for other PSR-17 HTTP factory libraries.](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017)<br />
+↗ [Search packagist for other PSR-18 HTTP client libraries.](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018)
 
 ### Support for PSR-7 responses
 
-Most functions that issue network requests now return PSR-7 response objects, which allow you a greater deal of control over handling the response, such as troubleshooting errors and analyzing headers. We've included a utility class for simplifying working with these responses in general use cases:
+Most functions that issue network requests now return [PSR-7](https://www.php-fig.org/psr/psr-7/) message interfaces, which allow you a greater deal of control over handling the response, such as troubleshooting errors and analyzing headers. We've included a utility class for simplifying working with these responses in general use cases:
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -188,6 +202,7 @@ use Auth0\SDK\Utility\HttpResponse;
 
 $auth0 = new Auth0(/* ...configuration */);
 
+// Get all users via fluent interface
 $response = $auth0->management()->users()->getAll();
 
 if (HttpResponse::wasSuccessful($response)) { // Checks that the status code was 200
@@ -199,7 +214,7 @@ if (HttpResponse::wasSuccessful($response)) { // Checks that the status code was
 }
 ```
 
-Alternatively, you can achieve the same results with the native PSR-7 standard API without using the HttpResponse helper:
+Alternatively, you can achieve the same results with the native PSR-7 standard API without using the `HttpResponse` utility class:
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -207,17 +222,18 @@ use Auth0\SDK\Utility\HttpResponse;
 
 $auth0 = new Auth0(/* ...configuration */);
 
+// Get all users via fluent interface
 $response = $auth0->management()->users()->getAll();
 
-if ($response->getStatusCode() === 200) {
-    print_r(json_decode($response->getBody()->__toString(), true, 512, JSON_THROW_ON_ERROR));
-    print_r($response->getHeaders());
+if ($response->getStatusCode() === 200) { // Checks that the status code was 200
+    print_r(json_decode($response->getBody()->__toString(), true, 512, JSON_THROW_ON_ERROR)); // Print the parsed JSON response body
+    print_r($response->getHeaders()); // Print the array containing all the headers attached to the response.
 }
 ```
 
 ### Using the new field filtering and pagination API
 
-A new argument has been added to most network endpoints, accepting a new RequestOptions type. RequestOptions allows you to specify field-filtered and paginated requests easily:
+A new argument has been added to most network endpoints, accepting a new `RequestOptions` class type. `RequestOptions` allows you to specify field-filtered and paginated requests easily:
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -241,9 +257,11 @@ $response = $auth0->management()->users()->getAll(
 );
 ```
 
+↗ [Learn more about paginating Auth0 API endpoints here.](https://auth0.com/docs/api#pagination).
+
 ### Auto-pagination support available
 
-You can use the new HttpResponsePaginator utility with endpoints that support pagination to return a PHP-native iterator type, which will automatically request new pages of results as you loop through it.
+You can use the new `HttpResponsePaginator` utility class with endpoints that support pagination to return a PHP-native iterator type, which will automatically request new pages of results as you loop through it.
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -277,9 +295,11 @@ foreach ($users as $user) {
 echo 'We made ' . $users->countNetworkRequests() . ' paginated network requests.';
 ```
 
-### Using the new Auth0::getCredentials() method to retrieve session credentials
+⚠️ Note that SDK 8.0's `HttpResponsePaginator` does not currently support checkpoint pagination. This will be introduced in a later release.
 
-`Auth0::getCredentials` is a new convenience function that returns the available Id Token, Access Token, Access Token expiration timestamp, and Refresh Token (if one is available) when they are available from session storage. It also offers accessTokenExpired, a bool which you can more easily compare to decide if you need to renew or prompt to log back in.
+### Using the new `Auth0::getCredentials()` method to retrieve session credentials
+
+`Auth0::getCredentials` is a new convenience function that returns the available Id Token, Access Token, Access Token expiration timestamp, and Refresh Token (if one is available) when they are available from session storage. It also returns a `accessTokenExpired` bool value that you can more easily compare to decide if you need to renew or prompt to log back in.
 
 ```PHP
 use Auth0\SDK\Auth0;
@@ -317,46 +337,135 @@ if ($credentials) {
 }
 ```
 
-This saves you from needing to call getIdToken(), getUser(), getAccessToken(), getRefreshToken() and getAccessTokenExpiration() separately if you simply want to inspect credentials. getState() will not throw an error if credentials aren't available, it will simply return a null value.
+This saves you from needing to call `Auth0::getIdToken()`, `Auth0::getUser()`, `Auth0::getAccessToken()`, `Auth0::getRefreshToken()`, and `Auth0::getAccessTokenExpiration()` separately if you simply want to inspect credentials. `Auth0::getCredentials()` will not throw an error if credentials aren't available, it will simply return a null value.
 
 ### Class and Method Changes
 
-### Improved
+### New Additions
 
-These methods were changed in SDK 8.0:
+These classes and traits were <mark style="background: green">added</mark> in SDK 8.0:
 
-- Public method `RequestBuilder->withHeader()` now only accepts a `Header` instance as an argument.
-- Public method `Authentication->code_exchange()` now throws an `ApiException` if class-level `client_secret` is empty
-- Public method `Authentication->client_credentials()` now throws an `ApiException` if `audience` is empty
-- Public method `Authentication->get_authorize_link()` now adds class-level `scope` and `audience` if none are passed in
+- Class `Auth0\SDK\Configuration\SdkConfiguration`.
+- Class `Auth0\SDK\Configuration\SdkState`.
+- Class `Auth0\SDK\Contract\ConfigurableContract`.
+- Class `Auth0\SDK\Exception\ArgumentException`.
+- Class `Auth0\SDK\Exception\AuthenticationException`.
+- Class `Auth0\SDK\Exception\ConfigurationException`.
+- Class `Auth0\SDK\Exception\NetworkException`.
+- Class `Auth0\SDK\Exception\PaginatorException`.
+- Class `Auth0\SDK\Exception\StateException`.
+- Class `Auth0\SDK\Token`.
+- Class `Auth0\SDK\Token\Parser`.
+- Class `Auth0\SDK\Token\Validator`.
+- Class `Auth0\SDK\Token\Verifier`.
 
-### Removed
+- Trait `Auth0\SDK\Mixins\ConfigurableMixin`.
 
-These methods were removed in SDK 8.0:
+### Updated Class APIs
 
-- Public magic method `ApiClient->__call()` was removed, use `ApiClient->method()` to indicate an HTTP verb to use
-- Public magic method `RequestBuilder->__call()` was removed, use `RequestBuilder->addPath()` to add paths
-- Public method `RequestBuilder->addPathVariable()` was removed, use `RequestBuilder->addPath()` to add paths
-- Public method `RequestBuilder->dump()` was removed, no replacement provided
-- Public method `RequestBuilder->withParams()` was removed, use `RequestBuilder->withDictParams()` to add params
-- Public method `InformationHeaders->setEnvironment()` was removed, no replacement provided
-- Public method `InformationHeaders->setDependency()` was removed, no replacement provided
-- Public method `InformationHeaders->setDependencyData()` was removed, no replacement provided
-- Public method `ClientGrants->get()` was removed, no replacement provided
-- Public method `Users->search()` was removed, use `Users->getAll()` instead
-- Public method `Users->unlinkDevice()` was removed, no replacement provided
-- Public method `JWKFetcher->requestJwkX5c()` was removed, use `JWKFetcher->getKeys()` instead
-- Public method `JWKFetcher->findJwk()` was removed, use `JWKFetcher->getKeys()` instead
-- Public method `JWKFetcher->subArrayHasEmptyFirstItem()` was removed, no replacement provided
-- Public method `JWKFetcher->fetchKeys()` was removed, use `JWKFetcher->getKeys()` instead
-- Public method `Authentication->authorize_with_ro()` was removed, no replacement provided
-- Public method `Authentication->authorize_with_accesstoken()` was removed, no replacement provided
-- Public method `Authentication->impersonate()` was removed, no replacement provided
-- Public method `Authentication->email_code_passwordless_verify()` was removed, no replacement provided
-- Public method `Authentication->sms_code_passwordless_verify()` was removed, no replacement provided
-- Public method `Auth0->setDebugger()` was removed, no replacement provided
-- Protected method `Authentication->setApiClient()` was removed, no replacement provided
-- Protected method `Management->setApiClient()` was removed, no replacement provided
+These classes were <mark style="background: orange">updated</mark> in SDK 8.0:
+
+- Class `Auth0\SDK\API\Authentication` was <mark style="background: orange">updated</mark>:
+
+  - Constructor was <mark style="background: orange">updated</mark> to require a configuration format identical to the base `Auth0\SDK\Auth0` class: a `SdkConfiguration` class, or an array of configuration options.
+  - Public method 'getHttpClient()' was <mark style="background: green">added</mark>.
+  - Public method `get_authorize_link()` was <mark style="background: orange">renamed</mark> to `getAuthorizationLink()`, and:
+    - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options.
+  - Public method `get_samlp_link()` was <mark style="background: orange">renamed</mark> to `getSamlpLink()`, and:
+    - Argument `client_id` was <mark style="background: orange">renamed</mark> to `clientId`.
+  - Public method `get_samlp_metadata_link()` was <mark style="background: orange">renamed</mark> to `getSamlpMetadataLink()`, and:
+    - Argument `client_id` was <mark style="background: orange">renamed</mark> to `clientId`.
+  - Public method `get_wsfed_link()` was <mark style="background: orange">renamed</mark> to `getWsfedLink()`, and:
+    - Argument `client_id` was <mark style="background: orange">renamed</mark> to `clientId`.
+  - Public method `get_wsfed_metadata_link()` was <mark style="background: orange">renamed</mark> to `getWsfedMetadataLink()`.
+  - Public method `get_logout_link()` was <mark style="background: orange">renamed</mark> to `getLogoutLink()`, and:
+    - Argument `returnTo` was <mark style="background: orange">renamed</mark> to `returnUri`.
+    - Arguments `client_id` and `federated` were <mark style="background: red">removed</mark>.
+    - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options.
+  - Public method `passwordlessStart()` was <mark style="background: green">added</mark>.
+  - Public method `email_passwordless_start()` was <mark style="background: orange">renamed</mark> to `emailPasswordlessStart()`, and:
+    - Argument `authParams` was <mark style="background: orange">updated</mark> to be nullable, and defaults to null.
+    - Argument `headers` was <mark style="background: green">added</mark> to specify additional headers to pass with the request.
+    - Argument `forwarded_for` was <mark style="background: red">removed</mark>. Use the new `headers` argument with a 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `sms_passwordless_start()` was <mark style="background: orange">renamed</mark> to `smsPasswordlessStart()`, and:
+    - Argument `phone_number` was <mark style="background: orange">renamed</mark> to `phoneNumber`.
+    - Argument `headers` was <mark style="background: green">added</mark> to specify additional headers to pass with the request.
+    - Argument `forwarded_for` was <mark style="background: red">removed</mark>. Use the new `headers` argument with a 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `userinfo()` was <mark style="background: orange">renamed</mark> to `userInfo()`, and:
+    - Argument `access_token` was <mark style="background: orange">renamed</mark> to `accessToken`.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `oauth_token()` was <mark style="background: orange">renamed</mark> to `oauthToken()`, and:
+    - Argument `grantType` was <mark style="background: green">added</mark> and requires a string.
+    - Arguments `headers` and `params` were <mark style="background: green">added</mark> as optional, nullable arrays.
+    - Argument `options` was <mark style="background: red">removed</mark>. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `code_exchange()` was <mark style="background: orange">renamed</mark> to `codeExchange()`, and:
+    - Argument `redirect_uri` was <mark style="background: orange">renamed</mark> to `returnUri`.
+    - Argument `code_verifier` was <mark style="background: orange">renamed</mark> to `codeVerifier`.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `login()` was <mark style="background: orange">updated</mark>:
+    - Arguments `username`, `password`, and `realm` were <mark style="background: green">added</mark> as required strings.
+    - Arguments `headers` and `params` were <mark style="background: green">added</mark> as optional, nullable arrays.
+    - Argument `ip_address` was <mark style="background: red">removed</mark>. Use the new `headers` argument with a 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
+    - Argument `options` was <mark style="background: red">removed</mark>. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `login_with_default_directory()` was <mark style="background: orange">renamed</mark> to `loginWithDefaultDirectory()`, and:
+    - Arguments `username` and `password` were <mark style="background: green">added</mark> as required strings.
+    - Arguments `headers` and `params` were <mark style="background: green">added</mark> as optional, nullable arrays.
+    - Argument `ip_address` was <mark style="background: red">removed</mark>. Use the new `headers` argument with a 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
+    - Argument `options` was <mark style="background: red">removed</mark>. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `client_credentials()` was <mark style="background: orange">renamed</mark> to `clientCredentials()`, and:
+    - Arguments `headers` and `params` were <mark style="background: green">added</mark> as optional, nullable arrays.
+    - Argument `options` was <mark style="background: red">removed</mark>. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `refresh_token()` <mark style="background: orange">renamed</mark> to `refreshToken()`, and:
+    - Argument `refresh_token` was <mark style="background: orange">renamed</mark> to `refreshToken`.
+    - Arguments `headers` and `params` were <mark style="background: green">added</mark> as optional, nullable arrays.
+    - Argument `options` was <mark style="background: red">removed</mark>. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `dbconnections_signup()` was <mark style="background: orange">renamed</mark> to `dbConnectionsSignup()`, and:
+    - Arguments `body` and `headers` were <mark style="background: green">added</mark> as optional, nullable arrays.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `dbconnections_change_password()` was <mark style="background: orange">changed</mark> to `dbConnectionsChangePassword()`, and:
+    - Arguments `body` and `headers` were <mark style="background: green">added</mark> as optional, nullable arrays.
+    - Argument `password` was <mark style="background: red">removed</mark>. Use the new `body` argument for this behavior.
+
+- Class `Auth0\SDK\API\Management` was <mark style="background: orange">updated</mark>:
+
+  - Constructor was <mark style="background: orange">updated</mark> to require a configuration format identical to the base `Auth0\SDK\Auth0` class: a `SdkConfiguration` class, or an array of configuration options.
+  - Public method 'getHttpClient()' was <mark style="background: green">added</mark>.
+  - Public method `getResponsePaginator()` was <mark style="background: green">added</mark>.
+
+- Class `Auth0\SDK\API\Management\GenericResource` was <mark style="background: orange">renamed</mark> to `Auth0\SDK\API\Management\ManagementEndpoint`, and:
+
+  - Constructor was <mark style="background: orange">updated</mark> to require an `HttpClient` instance; previously expected an `ApiClient` instance.
+  - Public method `getApiClient()` was <mark style="background: orange">renamed</mark> to `getHttpClient()`.
+  - Public method `getLastRequest()` was <mark style="background: green">added</mark>.
+  - Public methods `normalizeRequest()`, `normalizePagination()`, `normalizeIncludeTotals()`, and `normalizeIncludeFields()` were <mark style="background: red">removed</mark>, and:
+    - Their functionality have been rolled into the new `Auth0\SDK\Utility\Request\RequestOptions`, `Auth0\SDK\Utility\Request\FilteredRequest`, and `Auth0\SDK\Utility\Request\PaginatedRequest` utility classes.
+  - Public methods `checkInvalidPermissions()`, `checkEmptyOrInvalidString()`, and `checkEmptyOrInvalidArray()` were <mark style="background: red">removed</mark>, and:
+    - Their functionality have been rolled into the new `Auth0\SDK\Utility\Validate` utility class.
+
+- Class `Auth0\SDK\Store\StoreInterface` was <mark style="background: orange">moved</mark> to `Auth0\SDK\Contract\StoreInterface`.
+- Class `Auth0\SDK\Exception\CoreException` was <mark style="background: orange">renamed</mark> to `Auth0\SDK\Contract\SdkException`.
+
+### Classes Removed
+
+These classes were <mark style="background: red">removed</mark> in SDK 8.0:
+
+- Class `Auth0\SDK\API\Header\AuthorizationBearer`
+- Class `Auth0\SDK\API\Header\ContentType`.
+- Class `Auth0\SDK\API\Header\ForwardedFor`.
+- Class `Auth0\SDK\API\Header\Header`.
+- Class `Auth0\SDK\API\Header\Telemetry`.
+- Class `Auth0\SDK\API\Helpers\ApiClient`.
+- Class `Auth0\SDK\API\Helpers\InformationHeaders`.
+- Class `Auth0\SDK\API\Helpers\RequestBuilder`.
+- Class `Auth0\SDK\Exception\ApiException`.
+- Class `Auth0\SDK\Store\EmptyStore`.
 
 ---
 
