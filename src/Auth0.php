@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Configuration\SdkState;
 use Auth0\SDK\Utility\HttpResponse;
+use Auth0\SDK\Utility\Shortcut;
 use Auth0\SDK\Utility\TransientStoreHandler;
 
 /**
@@ -96,7 +97,7 @@ final class Auth0
     }
 
     /**
-     * Redirect to the hosted login page for a specific client.
+     * Redirect to the login page.
      *
      * @param array<int|string|null>|null $params Additional parameters to include with the request.
      *
@@ -106,6 +107,24 @@ final class Auth0
         ?array $params = null
     ): void {
         header('Location: ' . $this->authentication()->getLoginLink($params));
+    }
+
+    /**
+     * Redirect to the signup page, if using the New Universal Login Experience.
+     *
+     * @param array<int|string|null>|null $params Additional parameters to include with the request.
+     *
+     * @link https://auth0.com/docs/universal-login/new-experience
+     * @link https://auth0.com/docs/api/authentication#login
+     */
+    public function signup(
+        ?array $params = null
+    ): void {
+        $params = Shortcut::mergeArrays([
+            'screen_hint' => 'signup'
+        ], $params);
+
+        $this->login($params);
     }
 
     /**
