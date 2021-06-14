@@ -19,9 +19,10 @@ The Auth0 PHP SDK is a straightforward and rigorously tested library for accessi
   - [3.7. Using the Authentication API](#37-using-the-authentication-api)
   - [3.8. Using the Management API](#38-using-the-management-api)
   - [3.9. Using the Organizations API](#39-using-the-organizations-api)
-    - [3.9.1. Logging in with an Organization](#391-logging-in-with-an-organization)
-    - [3.9.2. Accepting user invitations](#392-accepting-user-invitations)
-    - [3.9.3. Validation guidance](#393-validation-guidance)
+    - [3.9.1. Initializing the SDK with Organizations](#391-initializing-the-sdk-with-organizations)
+    - [3.9.2. Logging in with an Organization](#392-logging-in-with-an-organization)
+    - [3.9.3. Accepting user invitations](#393-accepting-user-invitations)
+    - [3.9.4. Validation guidance for supporting multiple organizations](#394-validation-guidance-for-supporting-multiple-organizations)
 - [4. Documentation](#4-documentation)
 - [5. Contributing](#5-contributing)
 - [6. Support + Feedback](#6-support--feedback)
@@ -160,6 +161,7 @@ try {
 More advanced applications can access the SDK's full suite of authentication API functions using the `Auth0\SDK\API\Authentication` class:
 
 ```PHP
+<?php
 // 🧩 Include the configuration code from the 'SDK Initialization' step above here.
 
 // Get a configured instance of the Auth0\SDK\API\Authentication class:
@@ -181,7 +183,8 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 
 $configuration = new SdkConfiguration(
-    // ... other configuration options, as outlined in the 'SDK Initialization' step above.
+    // 🧩  Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
+
     managementToken: '{{YOUR_ACCESS_TOKEN}}'
 );
 
@@ -199,7 +202,7 @@ $management = $auth0->management();
 
 Using Organizations, you can:
 
-- Represent teams, business customers, partner companies, or any logical grouping of users that should have different ways of accessing your application, as organizations.
+- Represent teams, business customers, partner companies, or any logical grouping of users that should have different ways of accessing your application as organizations.
 - Manage their membership in a variety of ways, including user invitation.
 - Configure branded, federated login flows for each organization.
 - Implement role-based access control, such that users can have different roles when authenticating in the context of various organizations.
@@ -207,127 +210,86 @@ Using Organizations, you can:
 
 Note that Organizations is currently only available to customers on our Enterprise and Startup subscription plans.
 
-#### 3.9.1. Logging in with an Organization
+#### 3.9.1. Initializing the SDK with Organizations
 
-Configure the Authentication API client with your Organization ID:
+Configure the SDK with your Organization ID:
 
 ```PHP
+<?php
 use Auth0\SDK\Auth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
 
-$auth0 = new Auth0([
-  // Found in your Auth0 dashboard, under your organization settings:
-  'organization' => '{YOUR_ORGANIZATION_ID}',
+$configuration = new SdkConfiguration(
+    // 🧩  Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
 
-  // Found in your Auth0 dashboard, under your application settings:
-  'domain'       => '{YOUR_TENANT}.auth0.com',
-  'client_id'    => '{YOUR_APPLICATION_CLIENT_ID}',
-  'redirect_uri' => 'https://{YOUR_APPLICATION_CALLBACK_URL}',
-]);
+    // Found in your Auth0 dashboard, under your organization settings:
+    organization: [ '{{YOUR_ORGANIZATION_ID}}' ]
+);
 ```
 
-Redirect to the Universal Login page using the configured organization:
+#### 3.9.2. Logging in with an Organization
+
+With the SDK initialized using your Organization, you can simply use the `Auth0::login()` method as you normally would. Methods throughout the SDK will use the organization you configured in their API calls.
 
 ```PHP
-$auth0->login();
+<?php
+// 🧩 Include the configuration code from the 'Initializing the SDK with Organizations' step above here.
+
+$session = $auth0->getCredentials();
+
+// Is this end-user already signed in?
+if ($session === null) {
+  // They are not. Redirect the end user to the login page.
+  $auth0->login();
+  exit;
+}
 ```
 
-#### 3.9.2. Accepting user invitations
+#### 3.9.3. Accepting user invitations
 
-Auth0 Organizations allow users to be invited using emailed links, which will direct a user back to your application. The URL the user will arrive at is based on your configured `Application Login URI,` which you can change from your application's settings inside the Auth0 dashboard.
+Auth0 Organizations allow users to be invited using emailed links, which will direct a user back to your application. The user will be sent to your application URL based on your configured `Application Login URI,` which you can change from your application's settings inside the Auth0 dashboard.
 
 When the user arrives at your application using an invite link, you can expect three query parameters to be provided: `invitation,` `organization,` and `organization_name.` These will always be delivered using a GET request.
 
 A helper function is provided to handle extracting these query parameters and automatically redirecting to the Universal Login page:
 
 ```PHP
-// Expects the Auth0 SDK to be configured first, as demonstrated above.
+<?php
+// 🧩 Include the configuration code from the 'Initializing the SDK with Organizations' step above here.
+
 $auth0->handleInvitation();
 ```
 
-Suppose you prefer to have more control over this process. In that case, extract the relevant query parameters using `getInvitationParameters()`, and then initiate the Universal Login redirect yourself:
+Suppose you prefer to have more control over this process. In that case, extract the relevant query parameters using `getInvitationParameters(),` and then initiate the Universal Login redirect yourself:
 
 ```PHP
-// Expects the Auth0 SDK to be configured first, as demonstrated above.
+<?php
+// 🧩 Include the configuration code from the 'Initializing the SDK with Organizations' step above here.
 
 // Returns an object containing the invitation query parameters, or null if they aren't present
 if ($invite = $auth0->getInvitationParameters()) {
   // Does the invite organization match your intended organization?
-  if ($invite->organization !== '{YOUR_ORGANIZATION_ID}') {
+  if ($invite->organization !== '{{YOUR_ORGANIZATION_ID}}') {
     throw new Exception("This invitation isn't intended for this service. Please have your administrator check the service configuration and request a new invitation.");
   }
 
   // Redirect to Universal Login using the emailed invitation
-  $auth0->login(null, null, [
-    'invitation'   => $invite->invitation,
-    'organization' => $invite->organization
+  $auth0->login([
+    'invitation' => $invite->invitation,
+    'organization' => $invite->organization,
   ]);
 }
 ```
 
-After successful authentication via the Universal Login Page, the user will arrive back at your application using your configured `redirect_uri`, their token will be automatically validated, and the user will have an authenticated session. Use `getUser()` to retrieve details about the authenticated user.
+After successful authentication via the Universal Login Page, the user will arrive back at your application using your configured `redirect_uri,` their token will be validated, and they will have an authenticated session. Use `Auth0::getCredentials()` to retrieve details about the authenticated user.
 
-#### 3.9.3. Validation guidance
+#### 3.9.4. Validation guidance for supporting multiple organizations
 
-In the examples above, our application is operating with a single, configured Organization. By initializing the SDK with the `organization` option, we are telling the internal ID Token verifier (`IdTokenVerifier`) to validate an `org_id` claim's presence and match what was provided.
+In the examples above, our application is operating with a single, configured Organization. By initializing the SDK with the `organization` argument as we have, we tell the internal token verifier to validate an `org_id` claim's presence and match what was provided.
 
-Your application might not know the Organization ID ahead of time or potentially need to support multiple organizations.
+In some cases, your application may need to support validating tokens' `org_id` claims for several different organizations. When initializing the SDK, the `organization` argument accepts an array of organizations; during token validation, if ANY of those organization ids match, the token is accepted. When creating links or issuing API calls, the first organization in that array will be used. You can alter this at any time by updating your `SdkConfiguration` or passing custom parameters to those methods.
 
-Your application should validate an `org_id` claim to ensure the value received is expected and known by your application.
-
-This could be achieved by reading the value of "org_id" returned by the `getUser()` method. An example might look like this:
-
-```PHP
-use Auth0\SDK\Auth0;
-
-// Example: a list of organizations our app supports
-$allowedOrganizations = ['org_123', 'org_456'];
-$defaultOrganization = $allowedOrganizations[0];
-
-// For this scenario, do not pass any `organization` during SDK initialization. You'll handle the organization validation yourself.
-$auth0 = new Auth0([
-  // Found in your Auth0 dashboard, under Application settings:
-  'domain'       => '{YOUR_TENANT}.auth0.com',
-  'client_id'    => '{YOUR_APPLICATION_CLIENT_ID}',
-  'redirect_uri' => 'https://{YOUR_APPLICATION_CALLBACK_URL}',
-]);
-
-// Are they authenticated?
-if ($user = $auth0->getUser()) {
-  // Do they have an organization claim?
-  if (! isset($user['org_id'])) {
-    // They do not; stop processing their request.
-    throw new Exception('Please sign in using an organization.');
-  }
-
-  // Does the claim match an expected organization?
-  if (! in_array($user['org_id'], $allowedOrganizations)) {
-    // It does not; stop processing their request.
-    throw new Exception('Access denied.');
-  }
-}
-
-// Do we have an incoming invitation?
-if ($invite = $auth0->getInvitationParameters()) {
-  // Is the invite for an expected organization?
-  if (! in_array($invite->organization, $allowedOrganizations)) {
-    throw new Exception("This invitation isn't intended for this service. Please have your administrator check the service configuration and request a new invitation.");
-  }
-
-  // Redirect to Universal Login using the invitation
-  $auth0->login(null, null, [
-    'invitation'   => $invite->invitation,
-    'organization' => $invite->organization
-  ]);
-}
-
-// Redirect to Universal Login using our default organization
-$auth0->login(null, null, [
-  'organization' => $defaultOrganization
-]);
-
-```
-
-If the claim is not valid, your application should reject the token. See [https://auth0.com/docs/organizations/using-tokens](https://auth0.com/docs/organizations/using-tokens) for more information.
+This should cover most cases, but in the event you need to build a more complex application with custom token validation code, it's crucial your application should an `org_id` claim to ensure the value received is expected and known by your application. If the claim is not valid, your application should reject the token. See [https://auth0.com/docs/organizations/using-tokens](https://auth0.com/docs/organizations/using-tokens) for more information.
 
 ## 4. Documentation
 
