@@ -12,6 +12,7 @@ The Auth0 PHP SDK is a straightforward and rigorously tested library for accessi
   - [Getting Started](#getting-started)
   - [Installation](#installation)
   - [SDK Initialization](#sdk-initialization)
+  - [Configuration Options](#configuration-options)
   - [Getting an active session](#getting-an-active-session)
   - [Logging in](#logging-in)
   - [Logging out](#logging-out)
@@ -33,8 +34,11 @@ The Auth0 PHP SDK is a straightforward and rigorously tested library for accessi
 
 ## Requirements
 
-- PHP 7.4 or 8.0+
+- PHP [7.4](https://www.php.net/ChangeLog-7.php) or [8.0](https://www.php.net/ChangeLog-8.php)
 - [Composer](https://getcomposer.org/)
+- A PSR-17 HTTP factory library. (↗ [Find libraries](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017))
+- A PSR-18 HTTP client library. (↗ [Find libraries](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018))
+- A PSR-16 caching library is strongly recommended for performance reasons. (↗ [Find libraries](https://packagist.org/search/?query=PSR-16&type=library&tags=psr%2016))
 
 ⚠️ PHP 7.3 is supported on the SDK 7.0 branch through December 2021.
 
@@ -48,7 +52,7 @@ To get started, you'll need to create a [free Auth0 account](https://auth0.com/s
 
 ### Installation
 
-The supported method of SDK installation is through [Composer](https://getcomposer.org/):
+The supported method of SDK installation is through [Composer](https://getcomposer.org/). From your terminal shell, `cd` into your project directory and issue the following command:
 
 ```bash
 $ composer require auth0/auth0-php
@@ -57,6 +61,21 @@ $ composer require auth0/auth0-php
 You can find guidance on installing Composer [here](https://getcomposer.org/doc/00-intro.md).
 
 > ⚠️ Your application must include the Composer autoloader, [as explained here](https://getcomposer.org/doc/01-basic-usage.md#autoloading), for the SDK to be usable within your application.
+
+Next, you will want ensure your application has [PSR-17](https://www.php-fig.org/psr/psr-17/) and [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible libraries installed. These are used for network requests. As an example, let's say you wish to use [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which include PSR-18 and PSR-17 factories, respectively:
+
+```bash
+$ composer require kriswallsmith/buzz nyholm/psr7
+```
+
+The libraries specified above are simply examples. Any libraries that support the PSR-18 and PSR-17 standards will work.
+
+↗ [Guzzle 7 natively supports PSR-18.](https://docs.php-http.org/en/latest/clients/guzzle7-adapter.html)<br />
+↗ [Guzzle 6 is compatible with an adaptor library.](https://github.com/php-http/guzzle6-adapter)<br />
+↗ [Symfony's HttpClient component natively supports PSR-18.](https://symfony.com/doc/current/http_client.html#psr-18-and-psr-17)<br />
+↗ [Learn about other compatible libraries from PHP-HTTP.](https://docs.php-http.org/en/latest/clients.html)<br />
+↗ [Search packagist for other PSR-17 HTTP factory libraries.](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017)<br />
+↗ [Search packagist for other PSR-18 HTTP client libraries.](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018)
 
 ### SDK Initialization
 
@@ -83,6 +102,47 @@ $auth0 = new Auth0($configuration);
 ```
 
 > ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
+
+### Configuration Options
+
+| Option Name           | Allowed Types                     | Required | Default                          | Description                                                                                                                                                                                                                             |
+| --------------------- | --------------------------------- | -------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `domain`              | `string`,`null`                   | ✅       |                                  | Auth0 domain for your tenant.                                                                                                                                                                                                           |
+| `clientId`            | `string`,`null`                   | ✅       |                                  | Client ID, found in the Auth0 Application settings.                                                                                                                                                                                     |
+| `redirectUri`         | `string`,`null`                   | ✅       |                                  | Authentication callback URI, as defined in your Auth0 Application settings.                                                                                                                                                             |
+| `clientSecret`        | `string`,`null`                   |          | `null`                           | Client Secret, found in the Auth0 Application settings.                                                                                                                                                                                 |
+| `audience`            | `array<string>`,`null`            |          | `null`                           | One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.              |
+| `organization`        | `array<string>`,`null`            |          | `null`                           | One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully. |
+| `usePkce`             | `bool`                            |          | `true`                           | Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests.                                                                                                                                                            |
+| `scope`               | `array<string>`                   |          | `['openid', 'profile', 'email']` | One or more scopes to request for Tokens. [Learn more.](https://auth0.com/docs/scopes)                                                                                                                                                  |
+| `responseMode`        | `string`                          |          | `query`                          | Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.                                                                                                                                      |
+| `responseType`        | `string`                          |          | `code`                           | Use 'code' for server-side flows and 'token' for application side flow.                                                                                                                                                                 |
+| `tokenAlgorithm`      | `string`                          |          | `RS256`                          | Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.                                                                                                                                                             |
+| `tokenJwksUri`        | `string`,`null`                   |          | `null`                           | URI to the JWKS when verifying RS256 tokens.                                                                                                                                                                                            |
+| `tokenMaxAge`         | `int`,`null`                      |          | `null`                           | The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.                                                                                                                                        |
+| `tokenLeeway`         | `int`,`null`                      |          | `60`                             | Leeway (in seconds) to allow during time calculations with Token validation.                                                                                                                                                            |
+| `tokenCache`          | `CacheInterface`,`null`           |          | `null`                           | A PSR-16 compatible cache adapter for storing JSON Web Key Sets (JWKS).                                                                                                                                                                 |
+| `tokenCacheTtl`       | `int`                             |          | `60`                             | How long (in seconds) to keep a JWKS cached.                                                                                                                                                                                            |
+| `httpClient`          | `ClientInterface`,`null`          |          | `null`                           | A PSR-18 compatible HTTP client to use for API requests.                                                                                                                                                                                |
+| `httpRequestFactory`  | `RequestFactoryInterface`,`null`  |          | `null`                           | A PSR-17 compatible request factory to generate HTTP requests.                                                                                                                                                                          |
+| `httpResponseFactory` | `ResponseFactoryInterface`,`null` |          | `null`                           | A PSR-17 compatible response factory to generate HTTP responses.                                                                                                                                                                        |
+| `httpStreamFactory`   | `StreamFactoryInterface`,`null`   |          | `null`                           | A PSR-17 compatible stream factory to create request body streams.                                                                                                                                                                      |
+| `httpTelemetry`       | `bool`                            |          | `true`                           | If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.                                                                                                                     |
+| `sessionStorage`      | `StoreInterface`,`null`           |          | `null`                           | A StoreInterface-compatible class for storing Token state. `null` will cause the SDK to use PHP native sessions.                                                                                                                        |
+| `persistUser`         | `bool`                            |          | `true`                           | If true, the user data will persist in session storage.                                                                                                                                                                                 |
+| `persistIdToken`      | `bool`                            |          | `true`                           | If true, the Id Token will persist in session storage.                                                                                                                                                                                  |
+| `persistAccessToken`  | `bool`                            |          | `true`                           | If true, the Access Token will persist in session storage.                                                                                                                                                                              |
+| `persistRefreshToken` | `bool`                            |          | `true`                           | If true, the Refresh Token will persist in session storage.                                                                                                                                                                             |
+| `transientStorage`    | `StoreInterface`,`null`           |          | `null`                           | A StoreInterface-compatible class for storing ephemeral state data, such as a nonce.                                                                                                                                                    |
+| `queryUserInfo`       | `bool`                            |          | `false`                          | If true, always query the /userinfo endpoint during an authorization code exchange.                                                                                                                                                     |
+| `managementToken`     | `string`,`null`                   |          | `null`                           | An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your configured `clientSecret`.                                                                            |
+
+↗ [Learn more about PSR-16 caches.](https://www.php-fig.org/psr/psr-16/)<br />
+↗ [Learn more about PSR-17 HTTP Factories,](https://www.php-fig.org/psr/psr-17/) which are used to create [PSR-7 HTTP messages.](https://www.php-fig.org/psr/psr-7/)<br />
+↗ [Learn more about the PSR-18 HTTP Client standard.](https://www.php-fig.org/psr/psr-18/)<br />
+↗ [Find PSR-16 cache libraries on Packagist.](https://packagist.org/search/?query=PSR-16&type=library&tags=psr%2016)<br />
+↗ [Find PSR-17 HTTP factory libraries on Packagist.](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017)<br />
+↗ [Find PSR-18 HTTP client libraries on Packagist.](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018)
 
 ### Getting an active session
 
