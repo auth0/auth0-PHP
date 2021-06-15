@@ -240,9 +240,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpResponse;
 
 $configuration = new SdkConfiguration(
-    /*
-        🧩 Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
-    */
+    // 🧩 Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
 
     // The process for retrieving an Access Token for Management API endpoints is described here:
     // https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php
@@ -318,9 +316,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpResponse;
 
 $configuration = new SdkConfiguration(
-    /*
-        🧩 Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
-    */
+    // 🧩 Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
 
     // Found in your Auth0 dashboard, under your organization settings.
     // Note that this must be configured as an array.
