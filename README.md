@@ -89,9 +89,7 @@ $auth0 = new Auth0($configuration);
 
 // 🧩 Include the configuration code from the 'SDK Initialization' step above here.
 
-/**
- * Auth0::getCredentials() returns either null if no session is active, or an object.
- */
+// Auth0::getCredentials() returns either null if no session is active, or an object.
 $session = $auth0->getCredentials();
 
 if ($session !== null) {
@@ -180,7 +178,10 @@ if ($session->accessTokenExpired) {
     } catch (StateException $e) {
         // There was an error trying to renew the token. Clear the session.
         $auth0->clear();
-        $session = null;
+
+        // Prompt to login again.
+        $auth0->login();
+        exit;
     }
 }
 ```
