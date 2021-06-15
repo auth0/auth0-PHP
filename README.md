@@ -40,7 +40,7 @@ The Auth0 PHP SDK is a straightforward and rigorously tested library for accessi
 - A PSR-18 HTTP client library. (↗ [Find libraries](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018))
 - A PSR-16 caching library is strongly recommended for performance reasons. (↗ [Find libraries](https://packagist.org/search/?query=PSR-16&type=library&tags=psr%2016))
 
-⚠️ PHP 7.3 is supported on the SDK 7.0 branch through December 2021.
+⚠️ PHP 7.3 is supported on the SDK 7.0 branch through December 2021. This README.md is relevant for the SDK 8.0 branch. Please review the README.md within the 7.0 branch for guidance on that version.
 
 🗓 This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP releases after they reach end-of-life. Composer handles these deprecations safely, so this is not considered a breaking change and can occur in major releases. Please ensure you are always running the latest PHP runtime to keep receiving our latest library updates.
 
