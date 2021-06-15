@@ -135,6 +135,8 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
+As mentioned in the [installation step](#installation), these are just examples: any PSR-18 or PSR-17 compatible libraries you choose to use in your application will be compatible here.
+
 ### Configuration Options
 
 When configuring the SDK, you can either instantiate `SdkConfiguration` and pass options as named arguments in PHP 8 (strongly recommended), or as an array. The [SDK Initialization step above](#sdk-initialization) uses named arguments. Another method of configuring the SDK is passing an array of key-values matching the argument names, and values of the matching allowed types. For example:
