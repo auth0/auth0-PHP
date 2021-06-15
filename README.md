@@ -103,6 +103,38 @@ $auth0 = new Auth0($configuration);
 
 > ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
 
+During configuration, you should pass instances of the PSR-18 and PSR-17 libraries your application is using:
+
+```PHP
+<?php
+use Auth0\SDK\Auth0;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpResponse;
+use Buzz\Client\MultiCurl;
+use Nyholm\Psr7\Factory\Psr17Factory;
+
+// PSR-17 HTTP Factory (creates http requests and responses)
+$Psr17Library = new Psr17Factory();
+
+ // PSR-18 HTTP Client (delivers http requests created by the PSR-17 factory above)
+$Psr18Library = new MultiCurl($Psr17Library);
+
+// Configure the Sdk using these libraries
+$configuration = new SdkConfiguration(
+    // 🧩 Other configuration options, such as those demonstrated above, here.
+
+    // An instance of your PSR-18 HTTP Client library:
+    httpClient: $Psr18Library,
+
+    // Instances of your PSR-17 HTTP Client library:
+    httpRequestFactory: $Psr17Library,
+    httpResponseFactory: $Psr17Library,
+    httpStreamFactory: $Psr17Library,
+);
+
+$auth0 = new Auth0($configuration);
+```
+
 ### Configuration Options
 
 When configuring the SDK, you can either instantiate `SdkConfiguration` and pass options as named arguments in PHP 8 (strongly recommended), or as an array. The [SDK Initialization step above](#sdk-initialization) uses named arguments. Another method of configuring the SDK is passing an array of key-values matching the argument names, and values of the matching allowed types. For example:
