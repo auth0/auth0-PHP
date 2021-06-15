@@ -105,7 +105,7 @@ $auth0 = new Auth0($configuration);
 
 ### Configuration Options
 
-When configuring the SDK, you can either instantiate an instance of `SdkConfiguration` and pass options as named arguments in PHP 8 (strongly recommended), or as an array. The [SDK Initialization step above](#sdk-initialization) uses named arguments. Another method of configuring the SDK is passing an array of key-values matching the argument names, and values of the matching allowed types. For example:
+When configuring the SDK, you can either instantiate `SdkConfiguration` and pass options as named arguments in PHP 8 (strongly recommended), or as an array. The [SDK Initialization step above](#sdk-initialization) uses named arguments. Another method of configuring the SDK is passing an array of key-values matching the argument names, and values of the matching allowed types. For example:
 
 ```PHP
 <?php
@@ -455,8 +455,9 @@ Suppose you prefer to have more control over this process. In that case, extract
 
 // Returns an object containing the invitation query parameters, or null if they aren't present
 if ($invite = $auth0->getInvitationParameters()) {
-  // Does the invite organization match your intended organization?
-  if ($invite->organization !== '{{YOUR_ORGANIZATION_ID}}') {
+  // Does the invite organization match one of your configured organizations?
+  if (in_array($invite->organization, $configuration->getOrganization()) === false) {
+    // It does not. Throw an error; for example:
     throw new Exception("This invitation isn't intended for this service. Please have your administrator check the service configuration and request a new invitation.");
   }
 
