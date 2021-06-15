@@ -8,9 +8,9 @@
 The Auth0 PHP SDK is a straightforward and rigorously tested library for accessing Auth0's Authentication and Management API endpoints using modern PHP releases. Auth0 enables you to integrate authentication and authorization for your applications rapidly so that you can focus on your core business. [Learn more.](https://auth0.com/why-auth0)
 
 - [Requirements](#requirements)
-- [Installation](#installation)
 - [Usage](#usage)
   - [Getting Started](#getting-started)
+  - [Installation](#installation)
   - [SDK Initialization](#sdk-initialization)
   - [Getting an active session](#getting-an-active-session)
   - [Logging in](#logging-in)
@@ -40,7 +40,13 @@ The Auth0 PHP SDK is a straightforward and rigorously tested library for accessi
 
 🗓 This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP releases after they reach end-of-life. Composer handles these deprecations safely, so this is not considered a breaking change and can occur in major releases. Please ensure you are always running the latest PHP runtime to keep receiving our latest library updates.
 
-## Installation
+## Usage
+
+### Getting Started
+
+To get started, you'll need to create a [free Auth0 account](https://auth0.com/signup) and register an [Application](https://auth0.com/docs/applications).
+
+### Installation
 
 The supported method of SDK installation is through [Composer](https://getcomposer.org/):
 
@@ -50,11 +56,7 @@ $ composer require auth0/auth0-php
 
 You can find guidance on installing Composer [here](https://getcomposer.org/doc/00-intro.md).
 
-## Usage
-
-### Getting Started
-
-To get started, you'll need to create a [free Auth0 account](https://auth0.com/signup) and register an [Application](https://auth0.com/docs/applications).
+> ⚠️ Your application must include the Composer autoloader, [as explained here](https://getcomposer.org/doc/01-basic-usage.md#autoloading), for the SDK to be usable within your application.
 
 ### SDK Initialization
 
