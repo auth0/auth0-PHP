@@ -12,10 +12,10 @@ The Auth0 PHP SDK is a straightforward and rigorously tested library for accessi
 - [Usage](#usage)
   - [Getting Started](#getting-started)
   - [SDK Initialization](#sdk-initialization)
-  - [Checking for an active session and returning tokens and user data](#checking-for-an-active-session-and-returning-tokens-and-user-data)
+  - [Getting an active session](#getting-an-active-session)
   - [Logging in](#logging-in)
   - [Logging out](#logging-out)
-  - [Renewing token](#renewing-token)
+  - [Renewing tokens](#renewing-tokens)
   - [Decoding an Id Token](#decoding-an-id-token)
   - [Using the Authentication API](#using-the-authentication-api)
   - [Using the Management API](#using-the-management-api)
@@ -82,7 +82,7 @@ $auth0 = new Auth0($configuration);
 
 > ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
 
-### Checking for an active session and returning tokens and user data
+### Getting an active session
 
 ```PHP
 <?php
@@ -150,7 +150,7 @@ if ($session) {
 }
 ```
 
-### Renewing token
+### Renewing tokens
 
 Your application must request the `offline_access` scope to retrieve the Refresh Token necessary for this.
 
