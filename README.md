@@ -432,9 +432,9 @@ if ($session === null) {
 
 #### Accepting user invitations
 
-Auth0 Organizations allow users to be invited using emailed links, which will direct a user back to your application. The user will be sent to your application URL based on your configured `Application Login URI,` which you can change from your application's settings inside the Auth0 dashboard.
+Auth0 Organizations allow users to be invited using emailed links, which will direct a user back to your application. The user will be sent to your application URL based on your configured `Application Login URI`, which you can change from your application's settings inside the Auth0 dashboard.
 
-When the user arrives at your application using an invite link, three query parameters are available: `invitation,` `organization,` and `organization_name.` These will always be delivered using a GET request.
+When the user arrives at your application using an invite link, three query parameters are available: `invitation`, `organization`, and `organization_name.` These will always be delivered using a GET request.
 
 A helper function is provided to handle extracting these query parameters and automatically redirecting to the Universal Login page:
 
@@ -446,7 +446,7 @@ A helper function is provided to handle extracting these query parameters and au
 $auth0->handleInvitation();
 ```
 
-Suppose you prefer to have more control over this process. In that case, extract the relevant query parameters using `getInvitationParameters(),` and then initiate the Universal Login redirect yourself:
+Suppose you prefer to have more control over this process. In that case, extract the relevant query parameters using `getInvitationParameters()`, and then initiate the Universal Login redirect yourself:
 
 ```PHP
 <?php
@@ -469,7 +469,7 @@ if ($invite = $auth0->getInvitationParameters()) {
 }
 ```
 
-After successful authentication via the Universal Login Page, the user will arrive back at your application using your configured `redirect_uri,` their token will be validated, and they will have an authenticated session. Use `Auth0::getCredentials()` to retrieve details about the authenticated user.
+After successful authentication via the Universal Login Page, the user will arrive back at your application using your configured `redirect_uri`, their token will be validated, and they will have an authenticated session. Use `Auth0::getCredentials()` to retrieve details about the authenticated user.
 
 #### Validation guidance for supporting multiple organizations
 
