@@ -461,7 +461,7 @@ if ($invite = $auth0->getInvitationParameters()) {
     throw new Exception("This invitation isn't intended for this service. Please have your administrator check the service configuration and request a new invitation.");
   }
 
-  // Redirect to Universal Login using the emailed invitation
+  // Redirect to Universal Login using the emailed invitation code and Organization Id
   $auth0->login([
     'invitation' => $invite->invitation,
     'organization' => $invite->organization,
