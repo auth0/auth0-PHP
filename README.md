@@ -105,6 +105,27 @@ $auth0 = new Auth0($configuration);
 
 ### Configuration Options
 
+When configuring the SDK, you can either instantiate an instance of `SdkConfiguration` and pass options as named arguments in PHP 8 (strongly recommended), or as an array. The [SDK Initialization step above](#sdk-initialization) uses named arguments. Another method of configuring the SDK is passing an array of key-values matching the argument names, and values of the matching allowed types. For example:
+
+```PHP
+<?php
+use Auth0\SDK\Auth0;
+use Auth0\SDK\Utility\HttpResponse;
+
+$auth0 = new Auth0([
+    'domain' => '{{YOUR_TENANT}}.auth0.com',
+    'clientId' => '{{YOUR_APPLICATION_CLIENT_ID}}',
+    'clientSecret' => '{{YOUR_APPLICATION_CLIENT_SECRET}}',
+    'redirectUri' => 'https://{{YOUR_APPLICATION_CALLBACK_URL}}',
+]);
+```
+
+> ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
+
+This method is discouraged because you lose out on type hinting, but is useful in PHP 7.4 where named arguments are not supported.
+
+The following options are available for your configuration:
+
 | Option Name           | Allowed Types                     | Required | Default                          | Description                                                                                                                                                                                                                             |
 | --------------------- | --------------------------------- | -------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `domain`              | `string`,`null`                   | ✅       |                                  | Auth0 domain for your tenant.                                                                                                                                                                                                           |
