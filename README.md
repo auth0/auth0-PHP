@@ -7,35 +7,40 @@
 
 The Auth0 PHP SDK is a straightforward and rigorously tested library for accessing Auth0's Authentication and Management API endpoints using modern PHP releases. Auth0 enables you to integrate authentication and authorization for your applications rapidly so that you can focus on your core business. [Learn more.](https://auth0.com/why-auth0)
 
-- [1. Requirements](#1-requirements)
-- [2. Installation](#2-installation)
-- [3. Using the SDK](#3-using-the-sdk)
-  - [3.1. Getting Started](#31-getting-started)
-  - [3.2. SDK Initialization](#32-sdk-initialization)
-  - [3.3. Checking for an active session and returning tokens and user data](#33-checking-for-an-active-session-and-returning-tokens-and-user-data)
-  - [3.4. Logging in an end-user](#34-logging-in-an-end-user)
-  - [3.5. Logging out an end-user](#35-logging-out-an-end-user)
-  - [3.6. Decoding an Id Token](#36-decoding-an-id-token)
-  - [3.7. Using the Authentication API](#37-using-the-authentication-api)
-  - [3.8. Using the Management API](#38-using-the-management-api)
-  - [3.9. Using the Organizations API](#39-using-the-organizations-api)
-    - [3.9.1. Initializing the SDK with Organizations](#391-initializing-the-sdk-with-organizations)
-    - [3.9.2. Logging in with an Organization](#392-logging-in-with-an-organization)
-    - [3.9.3. Accepting user invitations](#393-accepting-user-invitations)
-    - [3.9.4. Validation guidance for supporting multiple organizations](#394-validation-guidance-for-supporting-multiple-organizations)
-- [4. Documentation](#4-documentation)
-- [5. Contributing](#5-contributing)
-- [6. Support + Feedback](#6-support--feedback)
-- [7. Vulnerability Reporting](#7-vulnerability-reporting)
-- [8. What is Auth0?](#8-what-is-auth0)
-- [9. License](#9-license)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Getting Started](#getting-started)
+  - [SDK Initialization](#sdk-initialization)
+  - [Checking for an active session and returning tokens and user data](#checking-for-an-active-session-and-returning-tokens-and-user-data)
+  - [Logging in](#logging-in)
+  - [Logging out](#logging-out)
+  - [Renewing token](#renewing-token)
+  - [Decoding an Id Token](#decoding-an-id-token)
+  - [Using the Authentication API](#using-the-authentication-api)
+  - [Using the Management API](#using-the-management-api)
+  - [Using Organizations](#using-organizations)
+    - [Initializing the SDK with Organizations](#initializing-the-sdk-with-organizations)
+    - [Logging in with an Organization](#logging-in-with-an-organization)
+    - [Accepting user invitations](#accepting-user-invitations)
+    - [Validation guidance for supporting multiple organizations](#validation-guidance-for-supporting-multiple-organizations)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [Support + Feedback](#support--feedback)
+- [Vulnerability Reporting](#vulnerability-reporting)
+- [What is Auth0?](#what-is-auth0)
+- [License](#license)
 
-## 1. Requirements
+## Requirements
 
 - PHP 7.4 or 8.0+
 - [Composer](https://getcomposer.org/)
 
-## 2. Installation
+⚠️ PHP 7.3 is supported on the SDK 7.0 branch through December 2021.
+
+🗓 This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP releases after they reach end-of-life. Composer handles these deprecations safely, so this is not considered a breaking change and can occur in major releases. Please ensure you are always running the latest PHP runtime to keep receiving our latest library updates.
+
+## Installation
 
 The supported method of SDK installation is through [Composer](https://getcomposer.org/):
 
@@ -43,15 +48,15 @@ The supported method of SDK installation is through [Composer](https://getcompos
 $ composer require auth0/auth0-php
 ```
 
-Guidance on setting up Composer can be found in our [documentation](https://auth0.com/docs/libraries/auth0-php#installation).
+You can find guidance on installing Composer [here](https://getcomposer.org/doc/00-intro.md).
 
-## 3. Using the SDK
+## Usage
 
-### 3.1. Getting Started
+### Getting Started
 
 To get started, you'll need to create a [free Auth0 account](https://auth0.com/signup) and register an [Application](https://auth0.com/docs/applications).
 
-### 3.2. SDK Initialization
+### SDK Initialization
 
 Begin by instantiating the SDK and passing the appropriate configuration options:
 
@@ -59,6 +64,7 @@ Begin by instantiating the SDK and passing the appropriate configuration options
 <?php
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpResponse;
 
 $configuration = new SdkConfiguration(
     // The values below are found in the Auth0 dashboard, under application settings:
@@ -74,12 +80,13 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-⚠️ **Note:** _You should **never** hard-code these values in a real-world application. Consider using environment variables to store and pass these values to your application._
+> ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
 
-### 3.3. Checking for an active session and returning tokens and user data
+### Checking for an active session and returning tokens and user data
 
 ```PHP
 <?php
+
 // 🧩 Include the configuration code from the 'SDK Initialization' step above here.
 
 /**
@@ -91,16 +98,16 @@ if ($session !== null) {
     // The Id Token for the user as a string.
     $idToken = $session->idToken;
 
-    // The access token for the user, as a string.
+    // The Access Token for the user, as a string.
     $accessToken = $session->accessToken;
 
-    // A unix timestamp representing when the access token is expected to expire, as an int.
+    // A Unix timestamp representing when the Access Token is expected to expire, as an int.
     $accessTokenExpiration = $session->accessTokenExpiration;
 
-    // A bool; if time() has beyond the value of $accessTokenExpiration, this will be true.
+    // A bool; if time() is greater than the value of $accessTokenExpiration, this will be true.
     $accessTokenExpired = $session->accessTokenExpired;
 
-    // A refresh token, if available, as a string.
+    // A Refresh Token, if available, as a string.
     $refreshToken = $session->refreshToken;
 
     // Data about the user as an array.
@@ -108,60 +115,99 @@ if ($session !== null) {
 }
 ```
 
-### 3.4. Logging in an end-user
+### Logging in
 
 ```PHP
 <?php
+
 // 🧩 Include the configuration code from the 'SDK Initialization' step above here.
 
 $session = $auth0->getCredentials();
 
 // Is this end-user already signed in?
 if ($session === null) {
-  // They are not. Redirect the end user to the login page.
-  $auth0->login();
-  exit;
+    // They are not. Redirect the end user to the login page.
+    $auth0->login();
+    exit;
 }
 ```
 
-### 3.5. Logging out an end-user
+### Logging out
 
 When signing out an end-user from your application, it's important to use Auth0's /logout endpoint to sign them out properly:
 
 ```PHP
 <?php
+
 // 🧩 Include the configuration code from the 'SDK Initialization' step above here.
 
 $session = $auth0->getCredentials();
 
 if ($session) {
-  // Clear the end-user's session, and redirect them to the Auth0 /logout endpoint.
-  $auth0->logout();
-  exit;
+    // Clear the end-user's session, and redirect them to the Auth0 /logout endpoint.
+    $auth0->logout();
+    exit;
 }
 ```
 
-### 3.6. Decoding an Id Token
+### Renewing token
+
+Your application must request the `offline_access` scope to retrieve the Refresh Token necessary for this.
+
+```PHP
+<?php
+
+/*
+    🧩 Include the configuration code from the 'SDK Initialization' step above here.
+    ⚠️ Add the 'offline_access' scope during configuration to retrieve Refresh Tokens.
+*/
+
+$session = $auth0->getCredentials();
+
+// Is this end-user already signed in?
+if ($session === null) {
+    // They are not. Redirect the end user to the login page.
+    // 🔎 Logging in after adding the 'offline_access' scope is necessary for this to work to retrieve Refresh Tokens.
+    $auth0->login();
+    exit;
+}
+
+// Is this end-user already signed in? If so, is their session expired?
+if ($session->accessTokenExpired) {
+    try {
+        // Token has expired, attempt to renew it.
+        $auth0->renew();
+    } catch (StateException $e) {
+        // There was an error trying to renew the token. Clear the session.
+        $auth0->clear();
+        $session = null;
+    }
+}
+```
+
+### Decoding an Id Token
 
 In instances where you need to manually decode an Id Token, such as a custom API service you've built, you can use the `Auth0::decode()` method:
 
 ```PHP
 <?php
+
 // 🧩 Include the configuration code from the 'SDK Initialization' step above here.
 
 try {
-  $token = $auth0->decode('{{YOUR_ID_TOKEN}}');
+    $token = $auth0->decode('{{YOUR_ID_TOKEN}}');
 } catch (\Auth0\SDK\Exception\InvalidTokenException $exception) {
-  die("Unable to decode Id Token; " . $exception->getMessage());
+    die("Unable to decode Id Token; " . $exception->getMessage());
 }
 ```
 
-### 3.7. Using the Authentication API
+### Using the Authentication API
 
 More advanced applications can access the SDK's full suite of authentication API functions using the `Auth0\SDK\API\Authentication` class:
 
 ```PHP
 <?php
+
 // 🧩 Include the configuration code from the 'SDK Initialization' step above here.
 
 // Get a configured instance of the Auth0\SDK\API\Authentication class:
@@ -171,32 +217,82 @@ $authentication = $auth0->authentication();
 $auth0->emailPasswordlessStart(/* ...configuration */);
 ```
 
-### 3.8. Using the Management API
+Alternatively, the SDK supports a fluent interface for more concise calls:
+
+```PHP
+<?php
+
+// 🧩 Include the configuration code from the 'SDK Initialization' step above here.
+
+// Start a passwordless login:
+$authentication = $auth0->authentication()->emailPasswordlessStart(/* ...configuration */);
+```
+
+### Using the Management API
 
 This SDK offers an interface for Auth0's Management API, which, to access, requires an Access Token that is explicitly issued for your tenant's Management API by specifying the corresponding Audience.
-
-The process for retrieving such an Access Token is described in our [documentation](https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php).
 
 ```PHP
 <?php
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpResponse;
 
 $configuration = new SdkConfiguration(
-    // 🧩  Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
+    /*
+        🧩 Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
+    */
 
+    // The process for retrieving an Access Token for Management API endpoints is described here:
+    // https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php
     managementToken: '{{YOUR_ACCESS_TOKEN}}'
 );
 
 $auth0 = new Auth0($configuration);
+```
+
+> ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
+
+Once configured, use the `Auth0::management()` method to get a configured instance of the `Auth0\SDK\API\Management` class:
+
+```PHP
+<?php
+
+// 🧩 Include the configuration code from the above example here.
 
 // Get a configured instance of the Auth0\SDK\API\Management class:
 $management = $auth0->management();
+
+// Request users from the /users Management API endpoint
+$response = $management->users()->getAll();
+
+// Was the API request successful?
+if (HttpResponse::wasSuccessful($response)) {
+    // It was, decode the JSON into a PHP array:
+    $response = HttpResponse::decodeContent($response);
+    print_r($response);
+}
 ```
 
-⚠️ **Note:** _You should **never** hard-code these values in a real-world application. Consider using environment variables to store and pass these values to your application._
+Alternatively, the SDK supports a fluent interface for more concise calls:
 
-### 3.9. Using the Organizations API
+```PHP
+<?php
+
+// 🧩 Include the configuration code from the above example here.
+
+// Request users from the /users Management API endpoint
+$management = $auth0->management()->users()->getAll();
+
+// Was the API request successful?
+if (HttpResponse::wasSuccessful($response)) {
+    // It was, decode the JSON into a PHP array:
+    $response = HttpResponse::decodeContent($response);
+    print_r($response);
+}
+```
+
+### Using Organizations
 
 [Organizations](https://auth0.com/docs/organizations) is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications.
 
@@ -204,13 +300,13 @@ Using Organizations, you can:
 
 - Represent teams, business customers, partner companies, or any logical grouping of users that should have different ways of accessing your application as organizations.
 - Manage their membership in a variety of ways, including user invitation.
-- Configure branded, federated login flows for each organization.
+- Configure branded, federated login flows for each Organization.
 - Implement role-based access control, such that users can have different roles when authenticating in the context of various organizations.
 - Build administration capabilities into your products, using the Organizations API, so that those businesses can manage their organizations.
 
 Note that Organizations is currently only available to customers on our Enterprise and Startup subscription plans.
 
-#### 3.9.1. Initializing the SDK with Organizations
+#### Initializing the SDK with Organizations
 
 Configure the SDK with your Organization ID:
 
@@ -218,21 +314,30 @@ Configure the SDK with your Organization ID:
 <?php
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpResponse;
 
 $configuration = new SdkConfiguration(
-    // 🧩  Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
+    /*
+        🧩 Include other required configuration options, such as outlined in the 'SDK Initialization' step above here.
+    */
 
-    // Found in your Auth0 dashboard, under your organization settings:
+    // Found in your Auth0 dashboard, under your organization settings.
+    // Note that this must be configured as an array.
     organization: [ '{{YOUR_ORGANIZATION_ID}}' ]
 );
+
+$auth0 = new Auth0($configuration);
 ```
 
-#### 3.9.2. Logging in with an Organization
+> ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
 
-With the SDK initialized using your Organization, you can simply use the `Auth0::login()` method as you normally would. Methods throughout the SDK will use the organization you configured in their API calls.
+#### Logging in with an Organization
+
+With the SDK initialized using your Organization, you can use the `Auth0::login()` method as you normally would. Methods throughout the SDK will use the Organization Id you configured in their API calls.
 
 ```PHP
 <?php
+
 // 🧩 Include the configuration code from the 'Initializing the SDK with Organizations' step above here.
 
 $session = $auth0->getCredentials();
@@ -245,16 +350,17 @@ if ($session === null) {
 }
 ```
 
-#### 3.9.3. Accepting user invitations
+#### Accepting user invitations
 
 Auth0 Organizations allow users to be invited using emailed links, which will direct a user back to your application. The user will be sent to your application URL based on your configured `Application Login URI,` which you can change from your application's settings inside the Auth0 dashboard.
 
-When the user arrives at your application using an invite link, you can expect three query parameters to be provided: `invitation,` `organization,` and `organization_name.` These will always be delivered using a GET request.
+When the user arrives at your application using an invite link, three query parameters are available: `invitation,` `organization,` and `organization_name.` These will always be delivered using a GET request.
 
 A helper function is provided to handle extracting these query parameters and automatically redirecting to the Universal Login page:
 
 ```PHP
 <?php
+
 // 🧩 Include the configuration code from the 'Initializing the SDK with Organizations' step above here.
 
 $auth0->handleInvitation();
@@ -264,6 +370,7 @@ Suppose you prefer to have more control over this process. In that case, extract
 
 ```PHP
 <?php
+
 // 🧩 Include the configuration code from the 'Initializing the SDK with Organizations' step above here.
 
 // Returns an object containing the invitation query parameters, or null if they aren't present
@@ -283,15 +390,15 @@ if ($invite = $auth0->getInvitationParameters()) {
 
 After successful authentication via the Universal Login Page, the user will arrive back at your application using your configured `redirect_uri,` their token will be validated, and they will have an authenticated session. Use `Auth0::getCredentials()` to retrieve details about the authenticated user.
 
-#### 3.9.4. Validation guidance for supporting multiple organizations
+#### Validation guidance for supporting multiple organizations
 
-In the examples above, our application is operating with a single, configured Organization. By initializing the SDK with the `organization` argument as we have, we tell the internal token verifier to validate an `org_id` claim's presence and match what was provided.
+In the examples above, our application is operating with a single, configured Organization. By initializing the SDK with the `organization` argument, we tell the internal token verifier to validate an `org_id` claim's presence and match what was provided.
 
-In some cases, your application may need to support validating tokens' `org_id` claims for several different organizations. When initializing the SDK, the `organization` argument accepts an array of organizations; during token validation, if ANY of those organization ids match, the token is accepted. When creating links or issuing API calls, the first organization in that array will be used. You can alter this at any time by updating your `SdkConfiguration` or passing custom parameters to those methods.
+In some cases, your application may need to support validating tokens' `org_id` claims for several different organizations. When initializing the SDK, the `organization` argument accepts an array of organizations; during token validation, if ANY of those organization ids match, the token is accepted. When creating links or issuing API calls, the first Organization Id in that array will be used. You can alter this at any time by updating your `SdkConfiguration` or passing custom parameters to those methods.
 
-This should cover most cases, but in the event you need to build a more complex application with custom token validation code, it's crucial your application should an `org_id` claim to ensure the value received is expected and known by your application. If the claim is not valid, your application should reject the token. See [https://auth0.com/docs/organizations/using-tokens](https://auth0.com/docs/organizations/using-tokens) for more information.
+> ⚠️ If you have a more complex application with custom token validation code, you must validate the `org_id` claim on tokens to ensure the value received is expected and known by your application. If the claim is not valid, your application should reject the token. See [https://auth0.com/docs/organizations/using-tokens](https://auth0.com/docs/organizations/using-tokens) for more information.
 
-## 4. Documentation
+## Documentation
 
 - [Documentation](https://auth0.com/docs/libraries/auth0-php)
   - [Installation](https://auth0.com/docs/libraries/auth0-php#installation)
@@ -304,7 +411,7 @@ This should cover most cases, but in the event you need to build a more complex 
   - [Basic authentication example](https://auth0.com/docs/quickstart/webapp/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-web-app/tree/master/00-Starter-Seed))
   - [Authenticated backend API example](https://auth0.com/docs/quickstart/backend/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-api-samples/tree/master/01-Authenticate))
 
-## 5. Contributing
+## Contributing
 
 We appreciate your feedback and contributions to the project! Before you get started, please review the following:
 
@@ -312,7 +419,7 @@ We appreciate your feedback and contributions to the project! Before you get sta
 - [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 - [The Auth0 PHP SDK contribution guide](CONTRIBUTING.md)
 
-## 6. Support + Feedback
+## Support + Feedback
 
 - The [Auth0 Community](https://community.auth0.com/) is a valuable resource for asking questions and finding answers, staffed by the Auth0 team and a community of enthusiastic developers
 - For code-level support (such as feature requests and bug reports), we encourage you to [open issues](https://github.com/auth0/auth0-PHP/issues) here on our repo
@@ -320,11 +427,11 @@ We appreciate your feedback and contributions to the project! Before you get sta
 
 Further details about our support solutions are [available on our website.](https://auth0.com/docs/support)
 
-## 7. Vulnerability Reporting
+## Vulnerability Reporting
 
 Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
-## 8. What is Auth0?
+## What is Auth0?
 
 Auth0 helps you to:
 
@@ -337,7 +444,7 @@ Auth0 helps you to:
 
 [Why Auth0?](https://auth0.com/why-auth0)
 
-## 9. License
+## License
 
 The Auth0 PHP SDK is open source software licensed under [the MIT license](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE.txt) file for more info.
 
