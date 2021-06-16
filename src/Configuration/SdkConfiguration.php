@@ -214,7 +214,7 @@ final class SdkConfiguration implements ConfigurableContract
             }
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -231,7 +231,7 @@ final class SdkConfiguration implements ConfigurableContract
             }
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -248,7 +248,7 @@ final class SdkConfiguration implements ConfigurableContract
             }
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -270,22 +270,38 @@ final class SdkConfiguration implements ConfigurableContract
 
         // If a PSR-18 compatible client wasn't provided, try to discover one.
         if (! $this->getHttpClient() instanceof ClientInterface) {
-            $this->setHttpClient(Psr18ClientDiscovery::find());
+            try {
+                $this->setHttpClient(Psr18ClientDiscovery::find());
+            } catch (\Throwable $th) {
+                throw \Auth0\SDK\Exception\ConfigurationException::missingPsr18Library();
+            }
         }
 
         // If a PSR-17 compatible request factory wasn't provided, try to discover one.
         if (! $this->getHttpRequestFactory() instanceof RequestFactoryInterface) {
-            $this->setHttpRequestFactory(Psr17FactoryDiscovery::findRequestFactory());
+            try {
+                $this->setHttpRequestFactory(Psr17FactoryDiscovery::findRequestFactory());
+            } catch (NotFoundException $exception) {
+                throw \Auth0\SDK\Exception\ConfigurationException::missingPsr17Library();
+            }
         }
 
         // If a PSR-17 compatible response factory wasn't provided, try to discover one.
         if (! $this->getHttpResponseFactory() instanceof ResponseFactoryInterface) {
-            $this->setHttpResponseFactory(Psr17FactoryDiscovery::findResponseFactory());
+            try {
+                $this->setHttpResponseFactory(Psr17FactoryDiscovery::findResponseFactory());
+            } catch (NotFoundException $exception) {
+                throw \Auth0\SDK\Exception\ConfigurationException::missingPsr17Library();
+            }
         }
 
         // If a PSR-17 compatible stream factory wasn't provided, try to discover one.
         if (! $this->getHttpStreamFactory() instanceof StreamFactoryInterface) {
-            $this->setHttpStreamFactory(Psr17FactoryDiscovery::findStreamFactory());
+            try {
+                $this->setHttpStreamFactory(Psr17FactoryDiscovery::findStreamFactory());
+            } catch (NotFoundException $exception) {
+                throw \Auth0\SDK\Exception\ConfigurationException::missingPsr17Library();
+            }
         }
     }
 
@@ -332,6 +348,14 @@ final class SdkConfiguration implements ConfigurableContract
             }
 
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
+        }
+
+        if (in_array($propertyName, ['organization', 'audience'])) {
+            if (is_array($propertyValue) && count($propertyValue) !== 0) {
+                return $propertyValue;
+            }
+
+            return null;
         }
 
         return $propertyValue;

@@ -23,6 +23,9 @@ final class ConfigurationException extends SdkException
     public const MSG_MISSING_REDIRECT_URI = 'Missing or invalid `redirectUri` configuration';
     public const MSG_INVALID_TOKEN_ALGORITHM = 'Invalid token algorithm; must be "HS256" or "RS256"';
 
+    public const MSG_NO_PSR18_LIBRARY = 'No compatible PSR-18 library was configured, and one could not be auto-discovered.';
+    public const MSG_NO_PSR17_LIBRARY = 'No compatible PSR-17 library was configured, and one could not be auto-discovered.';
+
     public static function requiresConfiguration(
         ?\Throwable $previous = null
     ): self {
@@ -96,5 +99,17 @@ final class ConfigurationException extends SdkException
         ?\Throwable $previous = null
     ): self {
         return new self(self::MSG_INVALID_TOKEN_ALGORITHM, 0, $previous);
+    }
+
+    public static function missingPsr18Library(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_NO_PSR18_LIBRARY, 0, $previous);
+    }
+
+    public static function missingPsr17Library(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_NO_PSR17_LIBRARY, 0, $previous);
     }
 }

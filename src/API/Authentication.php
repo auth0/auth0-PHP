@@ -80,14 +80,14 @@ final class Authentication
     public function getAuthorizationLink(
         ?array $params = null
     ): string {
-        $params = Shortcut::mergeArrays([
+        $params = Shortcut::mergeArrays(Shortcut::filterArray([
             'client_id' => $this->configuration->getClientId(),
             'response_type' => $this->configuration->getResponseType(),
             'redirect_uri' => $this->configuration->getRedirectUri(),
             'audience' => $this->configuration->buildDefaultAudience(),
             'scope' => $this->configuration->buildScopeString(),
             'organization' => $this->configuration->buildDefaultOrganization(),
-        ], $params);
+        ]), $params);
 
         return sprintf(
             '%s/authorize?%s',
@@ -179,14 +179,14 @@ final class Authentication
     public function getLoginLink(
         ?array $params = null
     ): string {
-        $params = Shortcut::mergeArrays([
+        $params = Shortcut::mergeArrays(Shortcut::filterArray([
             'scope' => $this->configuration->buildScopeString(),
             'audience' => $this->configuration->buildDefaultAudience(),
             'response_mode' => $this->configuration->getResponseMode(),
             'response_type' => $this->configuration->getResponseType(),
             'redirect_uri' => $this->configuration->getRedirectUri(),
             'max_age' => $this->configuration->getTokenMaxAge(),
-        ], $params);
+        ]), $params);
 
         if (! isset($params['state'])) {
             // No state provided by application so generate, store, and send one.
@@ -229,10 +229,10 @@ final class Authentication
         ?string $returnUri = null,
         ?array $params = null
     ): string {
-        $payload = Shortcut::mergeArrays([
+        $payload = Shortcut::mergeArrays(Shortcut::filterArray([
             'returnTo' => Shortcut::trimNull($returnUri) ?? $this->configuration->getRedirectUri(),
             'client_id' => $this->configuration->getClientId(),
-        ], $params);
+        ]), $params);
 
         return sprintf(
             '%s/v2/logout?%s',
@@ -373,9 +373,14 @@ final class Authentication
     ): ResponseInterface {
         Validate::string($grantType, 'grantType');
 
+        if (! $this->configuration->hasClientSecret()) {
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresClientSecret();
+        }
+
         $params = Shortcut::mergeArrays([
             'grant_type' => trim($grantType),
             'client_id' => $this->configuration->getClientId(),
+            'client_secret' => $this->configuration->getClientSecret(),
         ], $params);
 
         return $this->httpClient
@@ -404,7 +409,6 @@ final class Authentication
         Validate::string($code, 'code');
 
         return $this->oauthToken('authorization_code', Shortcut::filterArray([
-            'client_secret' => $this->configuration->getClientSecret(),
             'redirect_uri' => Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri(),
             'code' => trim($code),
             'code_verifier' => Shortcut::trimNull($codeVerifier),
@@ -438,7 +442,6 @@ final class Authentication
             'username' => trim($username),
             'password' => trim($password),
             'realm' => trim($realm),
-            'client_secret' => $this->configuration->getClientSecret(),
         ], $params);
 
         return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', $params, $headers ?? []);
@@ -469,7 +472,6 @@ final class Authentication
         $params = Shortcut::mergeArrays([
             'username' => trim($username),
             'password' => trim($password),
-            'client_secret' => $this->configuration->getClientSecret(),
         ], $params);
 
         return $this->oauthToken('password', $params, $headers ?? []);
@@ -495,7 +497,6 @@ final class Authentication
         }
 
         $params = Shortcut::mergeArrays([
-            'client_secret' => $this->configuration->getClientSecret(),
             'audience' => $this->configuration->buildDefaultAudience(),
         ], $params);
 
@@ -526,7 +527,6 @@ final class Authentication
         }
 
         $params = Shortcut::mergeArrays([
-            'client_secret' => $this->configuration->getClientSecret(),
             'refresh_token' => trim($refreshToken),
         ], $params);
 

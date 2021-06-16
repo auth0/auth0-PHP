@@ -11,4 +11,31 @@ namespace Auth0\SDK\Exception;
  */
 abstract class SdkException extends \Exception
 {
+    final public function __construct(
+        string $message,
+        int $code = 0,
+        ?\Throwable $previous = null
+    ) {
+        if ($previous !== null) {
+
+        }
+
+        // $exceptionClass = new \ReflectionClass(get_class($this));
+
+        // $exceptionMessage = new \ReflectionProperty($this, 'getMessage');
+        // $exceptionMessage->setAccessible(true);
+
+        // $property = new \ReflectionProperty($json['class'], $key);
+        // $property->setAccessible(true);
+        // $json['additionalProperties'][$key] = serialize($property->getValue($throwable));
+
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? null;
+
+        if ($backtrace !== null) {
+            $this->file = $backtrace['file'];
+            $this->line = $backtrace['line'];
+        }
+
+        parent::__construct($message, $code, $previous);
+    }
 }

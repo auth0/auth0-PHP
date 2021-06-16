@@ -25,6 +25,30 @@ final class Shortcut
     }
 
     /**
+     * Accept a null or array, and always returns a null if array is empty.
+     *
+     * @param string|null $value The value to trim, if a string, or null.
+     */
+    public static function nullifyEmptyArray(
+        ?array $value,
+        bool $returnObject = false
+    ) {
+        if ($value === null) {
+            return null;
+        }
+
+        if (count($value) === 0) {
+            return null;
+        }
+
+        if ($returnObject) {
+            return (object) $value;
+        }
+
+        return $value;
+    }
+
+    /**
      * Progressively merge any number of arrays, overwriting values from left to right. Filters null values.
      *
      * @param array<mixed>|null $arrays One or more arrays to merge and filter.
