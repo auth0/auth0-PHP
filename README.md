@@ -447,7 +447,7 @@ $auth0 = new Auth0($configuration);
 
 #### Logging in with an Organization
 
-With the SDK initialized using your Organization, you can use the `Auth0::login()` method as you normally would. Methods throughout the SDK will use the Organization Id you configured in their API calls.
+With the SDK initialized using your Organization Id, you can use the `Auth0::login()` method as you normally would. Methods throughout the SDK will use the Organization Id you configured in their API calls.
 
 ```PHP
 <?php
