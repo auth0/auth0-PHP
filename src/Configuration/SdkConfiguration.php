@@ -196,7 +196,7 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * Return the configured domain with protocol.
      */
-    public function buildDomainUri(): ?string
+    public function buildDomainUri(): string
     {
         return 'https://' . $this->getDomain();
     }

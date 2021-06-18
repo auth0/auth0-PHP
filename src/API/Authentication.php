@@ -160,13 +160,7 @@ final class Authentication
      */
     public function getWsfedMetadataLink(): string
     {
-        $domain = $this->configuration->buildDomainUri();
-
-        if ($domain !== null) {
-            return $domain . '/wsfed/FederationMetadata/2007-06/FederationMetadata.xml';
-        }
-
-        return '';
+        return $this->configuration->buildDomainUri() . '/wsfed/FederationMetadata/2007-06/FederationMetadata.xml';
     }
 
     /**

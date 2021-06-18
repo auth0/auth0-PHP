@@ -169,7 +169,7 @@ final class Verifier
             throw \Auth0\SDK\Exception\InvalidTokenException::requiresJwksUri();
         }
 
-        $jwksCacheKey = md5($this->jwksUri);
+        $jwksCacheKey = hash('sha256', $this->jwksUri);
         $jwksUri = parse_url($this->jwksUri);
 
         if (! is_array($jwksUri)) {

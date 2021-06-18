@@ -186,17 +186,13 @@ final class Management
         // If no token was provided, try to get one.
         if ($managementToken === null) {
             $auth = new Authentication($configuration);
-            $domain = $configuration->buildDomainUri();
+            $response = $auth->clientCredentials(['audience' => $configuration->buildDomainUri() . '/api/v2/']);
 
-            if ($domain !== null) {
-                $response = $auth->clientCredentials(['audience' => $domain . '/api/v2/']);
+            if (HttpResponse::wasSuccessful($response)) {
+                $response = HttpResponse::decodeContent($response);
 
-                if (HttpResponse::wasSuccessful($response)) {
-                    $response = HttpResponse::decodeContent($response);
-
-                    if (isset($response['access_token'])) {
-                        $managementToken = $response['access_token'];
-                    }
+                if (isset($response['access_token'])) {
+                    $managementToken = $response['access_token'];
                 }
             }
         }
