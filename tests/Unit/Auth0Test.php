@@ -676,7 +676,7 @@ class Auth0Test extends TestCase
      */
     public function testThatCacheHandlerCanBeSet(): void
     {
-        $cacheKey = md5('https://test.auth0.com/.well-known/jwks.json');
+        $cacheKey = hash('sha256', 'https://test.auth0.com/.well-known/jwks.json');
         $mockJwks = [
             '__test_kid__' => [
                 'x5c' => ['123'],
