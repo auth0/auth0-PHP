@@ -20,6 +20,192 @@ As is to be expected with a major release, there are breaking changes in this up
 - 7.4 will be the final release in PHP's 7.x branch. This SDK will only support PHP 8.0+ after 7.4 leaves [supported status](https://www.php.net/supported-versions.php) in November 2022.
 - We strongly encourage you to make use of PHP 8.0's new [named arguments language feature](https://stitcher.io/blog/php-8-named-arguments). Once 7.4 support ends, we will no longer consider method argument order changes to be a breaking change.
 
+### Class and Method Changes
+
+### Potentially Breaking Changes
+
+These classes were updated in SDK 8.0:
+
+- Class `Auth0\SDK\Auth0` updated:
+
+  - `__construct` updated:
+    - `configuration` added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
+    - All other arguments have been removed.
+  - Public method `authentication()` added. It returns a pre-configured singleton of the `Auth0\SDK\API\Authentication` class.
+  - Public method `management()` added. It returns a pre-configured singleton of the `Auth0\SDK\API\Management` class.
+  - Public method `login()` updated:
+    - Method now accepts an argument, `params`: an array of parameters to pass with the API request.
+    - Arguments `state`, `connection`, and `additionalParameters` have been removed. Use the new `params` argument for these uses.
+  - Public method `signup()` added as a convenience. This method will pass the ?screen_hint=signup param, supported by the New Universal Login Experience.
+  - Public method `getLoginUrl()` moved to `Auth0\SDK\API\Authentication\getLoginLink()`, and:
+    - Argument `params` is now a nullable array.
+  - Public method `renewTokens()` renamed to `renew()`, and:
+    - Argument `options` renamed to `params` and is now a nullable array.
+  - Public method `decodeIdToken()` renamed to `decode()`, and:
+    - Argument `idToken` renamed to `token.`
+    - Argument `verifierOptions` removed.
+    - Arguments `tokenAudience` and `tokenOrganization` added as optional, nullable arrays.
+    - Argument `tokenNonce` added as an optional string.
+    - Arguments `tokenMaxAge`, `tokenLeeway`, and `tokenNow` were added as optional, nullable integers.
+    - Now returns an instance of `Auth0\SDK\Token` instead of an array.
+  - Public methods `getAuthorizationCode()` and `getState()` were removed; please use `getRequestParameter()` method.
+  - Public method `deleteAllPersistentData()` renamed to `clear()`.
+  - Public methods `getNonce()` and `urlSafeBase64Decode()` were removed.
+  - Public methods `getAccessTokenExpiration()` and `setAccessTokenExpiration()` were added for retrieving for storing an access token expiration timestamp in session storage, respectively.
+  - Public method `getCredentials()` added as a convenience. This method returns the Id Token, Access Token, Refresh Token, Access Token expiration timestamp, and user data from an available session without invoking an authorization flow, exchange, or raising an error if a session is not available.
+
+- Class `Auth0\SDK\API\Authentication` updated:
+
+  - `__construct` updated:
+    - `configuration` added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
+    - All other arguments have been removed.
+  - Public method 'getHttpClient()' added.
+  - Public method `get_authorize_link()` renamed to `getAuthorizationLink()`, and:
+    - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options.
+  - Public method `get_samlp_link()` renamed to `getSamlpLink()`, and:
+    - Argument `client_id` renamed to `clientId`.
+  - Public method `get_samlp_metadata_link()` renamed to `getSamlpMetadataLink()`, and:
+    - Argument `client_id` renamed to `clientId`.
+  - Public method `get_wsfed_link()` renamed to `getWsfedLink()`, and:
+    - Argument `client_id` renamed to `clientId`.
+  - Public method `get_wsfed_metadata_link()` renamed to `getWsfedMetadataLink()`.
+  - Public method `get_logout_link()` renamed to `getLogoutLink()`, and:
+    - Argument `returnTo` renamed to `returnUri`.
+    - Arguments `client_id` and `federated` were removed.
+    - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options.
+  - Public method `passwordlessStart()` added.
+  - Public method `email_passwordless_start()` renamed to `emailPasswordlessStart()`, and:
+    - Argument `authParams` updated to be nullable and defaults to null.
+    - Argument `headers` added to specify additional headers to pass with the request.
+    - Argument `forwarded_for` removed. Use the new `headers` argument with an 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `sms_passwordless_start()` renamed to `smsPasswordlessStart()`, and:
+    - Argument `phone_number` renamed to `phoneNumber`.
+    - Argument `headers` added to specify additional headers to pass with the request.
+    - Argument `forwarded_for` removed. Use the new `headers` argument with an 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `userinfo()` renamed to `userInfo()`, and:
+    - Argument `access_token` renamed to `accessToken`.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `oauth_token()` renamed to `oauthToken()`, and:
+    - Argument `grantType` added. It requires a string.
+    - Arguments `headers` and `params` were added as optional, nullable arrays.
+    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `code_exchange()` renamed to `codeExchange()`, and:
+    - Argument `redirect_uri` renamed to `returnUri`.
+    - Argument `code_verifier` renamed to `codeVerifier`.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `login()` updated:
+    - Arguments `username`, `password,` and `realm` added as required strings.
+    - Arguments `headers` and `params` were added as optional, nullable arrays.
+    - Argument `ip_address` removed. Use the new `headers` argument with an 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
+    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `login_with_default_directory()` renamed to `loginWithDefaultDirectory()`, and:
+    - Arguments `username` and `password` added as required strings.
+    - Arguments `headers` and `params` were added as optional, nullable arrays.
+    - Argument `ip_address` removed. Use the new `headers` argument with an 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
+    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `client_credentials()` renamed to `clientCredentials()`, and:
+    - Arguments `headers` and `params` were added as optional, nullable arrays.
+    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `refresh_token()` renamed to `refreshToken()`, and:
+    - Argument `refresh_token` renamed to `refreshToken`.
+    - Arguments `headers` and `params` were added as optional, nullable arrays.
+    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `dbconnections_signup()` renamed to `dbConnectionsSignup()`, and:
+    - Arguments `body` and `headers` added as optional, nullable arrays.
+    - Now returns a PSR-7 ResponseInterface, instead of an array.
+  - Public method `dbconnections_change_password()` changed to `dbConnectionsChangePassword()`, and:
+    - Arguments `body` and `headers` added as optional, nullable arrays.
+    - Argument `password` removed. Use the new `body` argument for this behavior.
+
+- Class `Auth0\SDK\API\Management` updated:
+
+  - `__construct` updated:
+    - `configuration` added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
+    - All other arguments have been removed.
+  - Public method 'getHttpClient()' added.
+  - Public method `getResponsePaginator()` added.
+
+- Class `Auth0\SDK\API\Management\GenericResource` renamed to `Auth0\SDK\API\Management\ManagementEndpoint`, and:
+
+  - Constructor updated to require an `HttpClient` instance; previously expected an `ApiClient` instance.
+  - Public method `getApiClient()` renamed to `getHttpClient()`.
+  - Public method `getLastRequest()` added.
+  - Public methods `normalizeRequest()`, `normalizePagination()`, `normalizeIncludeTotals()`, and `normalizeIncludeFields()` were removed, and:
+    - Their functionality has been rolled into the new `Auth0\SDK\Utility\Request\RequestOptions`, `Auth0\SDK\Utility\Request\FilteredRequest`, and `Auth0\SDK\Utility\Request\PaginatedRequest` utility classes.
+  - Public methods `checkInvalidPermissions()`, `checkEmptyOrInvalidString()`, and `checkEmptyOrInvalidArray()` were removed, and:
+    - Their functionality has been rolled into the new `Auth0\SDK\Utility\Validate` utility class.
+
+- Class `Auth0\SDK\Store\StoreInterface` moved to `Auth0\SDK\Contract\StoreInterface`.
+- Class `Auth0\SDK\Exception\CoreException` moved to `Auth0\SDK\Contract\SdkException`.
+- Class `Auth0\SDK\Helpers\PKCE` moved to `Auth0\SDK\Utility\PKCE`.
+- Class `Auth0\SDK\Helpers\TransientStoreHandler` moved to `Auth0\SDK\Utility\TransientStoreHandler`.
+
+### Classes Removed
+
+- All `Auth0\SDK\API\Header` classes:
+
+  - Class `Auth0\SDK\API\Header\AuthorizationBearer`.
+  - Class `Auth0\SDK\API\Header\ContentType`.
+  - Class `Auth0\SDK\API\Header\ForwardedFor`.
+  - Class `Auth0\SDK\API\Header\Header`.
+  - Class `Auth0\SDK\API\Header\Telemetry`.
+
+- All `Auth0\SDK\API\Helpers` classes:
+
+  - Class `Auth0\SDK\API\Helpers\ApiClient` superseded by `Auth0\SDK\Utility\HttpClient`.
+  - Class `Auth0\SDK\API\Helpers\RequestBuilder` superseded by `Auth0\SDK\Utility\HttpRequest`.
+  - Class `Auth0\SDK\API\Helpers\InformationHeaders` superseded by `Auth0\SDK\Utility\HttpTelemetry`.
+
+- All token-related classes have been replaced by the new `Auth0\SDK\Token`, `Auth0\SDK\Token\Parser`, `Auth0\SDK\Token\Validator`, and `Auth0\SDK\Token\Verifier` classes.
+
+  - Class `Auth0\SDK\Helpers\Tokens\AsymmetricVerifier`.
+  - Class `Auth0\SDK\Helpers\Tokens\IdTokenVerifier`.
+  - Class `Auth0\SDK\Helpers\Tokens\SignatureVerifier`.
+  - Class `Auth0\SDK\Helpers\Tokens\SymmetricVerifier`.
+  - Class `Auth0\SDK\Helpers\Tokens\TokenVerifier`.
+  - Class `Auth0\SDK\Helpers\JWKFetcher`.
+
+- Class `Auth0\SDK\Exception\ApiException` superseded by more specific exception classes.
+- Class `Auth0\SDK\Helpers\Cache\NoCacheHandler` no longer relevant.
+- Class `Auth0\SDK\Store\EmptyStore` no longer relevant.
+
+### New Additions
+
+These classes and traits were added in SDK 8.0:
+
+- Class `Auth0\SDK\Configuration\SdkConfiguration`.
+- Class `Auth0\SDK\Configuration\SdkState`.
+- Class `Auth0\SDK\Contract\ConfigurableContract`.
+- Class `Auth0\SDK\Exception\ArgumentException`.
+- Class `Auth0\SDK\Exception\AuthenticationException`.
+- Class `Auth0\SDK\Exception\ConfigurationException`.
+- Class `Auth0\SDK\Exception\NetworkException`.
+- Class `Auth0\SDK\Exception\PaginatorException`.
+- Class `Auth0\SDK\Exception\StateException`.
+- Class `Auth0\SDK\Token\Parser`.
+- Class `Auth0\SDK\Token\Validator`.
+- Class `Auth0\SDK\Token\Verifier`.
+- Class `Auth0\SDK\Token`.
+- Class `Auth0\SDK\Utility\Request\FilteredRequest`.
+- Class `Auth0\SDK\Utility\Request\PaginatedRequest`.
+- Class `Auth0\SDK\Utility\Request\RequestOptions`.
+- Class `Auth0\SDK\Utility\HttpClient`.
+- Class `Auth0\SDK\Utility\HttpRequest`.
+- Class `Auth0\SDK\Utility\HttpResponse`.
+- Class `Auth0\SDK\Utility\HttpResponsePaginator`.
+- Class `Auth0\SDK\Utility\HttpTelemetry`.
+- Class `Auth0\SDK\Utility\Shortcut`.
+- Class `Auth0\SDK\Utility\Validate`.
+
+- Trait `Auth0\SDK\Mixins\ConfigurableMixin`.
+
 ### Configuring Auth0 SDK 8.0
 
 Most class constructors throughout the SDK accept a new `SdkConfiguration` configuration class, which shares your app configuration by reference throughout the SDK's subclasses, allowing you to make changes on the fly from within your app:
@@ -338,192 +524,6 @@ if ($credentials) {
 ```
 
 This saves you from needing to call `Auth0::getIdToken()`, `Auth0::getUser()`, `Auth0::getAccessToken()`, `Auth0::getRefreshToken()`, and `Auth0::getAccessTokenExpiration()` separately if you simply want to inspect credentials. `Auth0::getCredentials()` will not throw an error if credentials aren't available, it will simply return a null value.
-
-### Class and Method Changes
-
-### New Additions
-
-These classes and traits were added in SDK 8.0:
-
-- Class `Auth0\SDK\Configuration\SdkConfiguration`.
-- Class `Auth0\SDK\Configuration\SdkState`.
-- Class `Auth0\SDK\Contract\ConfigurableContract`.
-- Class `Auth0\SDK\Exception\ArgumentException`.
-- Class `Auth0\SDK\Exception\AuthenticationException`.
-- Class `Auth0\SDK\Exception\ConfigurationException`.
-- Class `Auth0\SDK\Exception\NetworkException`.
-- Class `Auth0\SDK\Exception\PaginatorException`.
-- Class `Auth0\SDK\Exception\StateException`.
-- Class `Auth0\SDK\Token\Parser`.
-- Class `Auth0\SDK\Token\Validator`.
-- Class `Auth0\SDK\Token\Verifier`.
-- Class `Auth0\SDK\Token`.
-- Class `Auth0\SDK\Utility\Request\FilteredRequest`.
-- Class `Auth0\SDK\Utility\Request\PaginatedRequest`.
-- Class `Auth0\SDK\Utility\Request\RequestOptions`.
-- Class `Auth0\SDK\Utility\HttpClient`.
-- Class `Auth0\SDK\Utility\HttpRequest`.
-- Class `Auth0\SDK\Utility\HttpResponse`.
-- Class `Auth0\SDK\Utility\HttpResponsePaginator`.
-- Class `Auth0\SDK\Utility\HttpTelemetry`.
-- Class `Auth0\SDK\Utility\Shortcut`.
-- Class `Auth0\SDK\Utility\Validate`.
-
-- Trait `Auth0\SDK\Mixins\ConfigurableMixin`.
-
-### Updated Class APIs
-
-These classes were updated in SDK 8.0:
-
-- Class `Auth0\SDK\Auth0` updated:
-
-  - `__construct` updated:
-    - `configuration` added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
-    - All other arguments have been removed.
-  - Public method `authentication()` added. It returns a pre-configured singleton of the `Auth0\SDK\API\Authentication` class.
-  - Public method `management()` added. It returns a pre-configured singleton of the `Auth0\SDK\API\Management` class.
-  - Public method `login()` updated:
-    - Method now accepts an argument, `params`: an array of parameters to pass with the API request.
-    - Arguments `state`, `connection`, and `additionalParameters` have been removed. Use the new `params` argument for these uses.
-  - Public method `signup()` added as a convenience. This method will pass the ?screen_hint=signup param, supported by the New Universal Login Experience.
-  - Public method `getLoginUrl()` moved to `Auth0\SDK\API\Authentication\getLoginLink()`, and:
-    - Argument `params` is now a nullable array.
-  - Public method `renewTokens()` renamed to `renew()`, and:
-    - Argument `options` renamed to `params` and is now a nullable array.
-  - Public method `decodeIdToken()` renamed to `decode()`, and:
-    - Argument `idToken` renamed to `token.`
-    - Argument `verifierOptions` removed.
-    - Arguments `tokenAudience` and `tokenOrganization` added as optional, nullable arrays.
-    - Argument `tokenNonce` added as an optional string.
-    - Arguments `tokenMaxAge`, `tokenLeeway`, and `tokenNow` were added as optional, nullable integers.
-    - Now returns an instance of `Auth0\SDK\Token` instead of an array.
-  - Public methods `getAuthorizationCode()` and `getState()` were removed; please use `getRequestParameter()` method.
-  - Public method `deleteAllPersistentData()` renamed to `clear()`.
-  - Public methods `getNonce()` and `urlSafeBase64Decode()` were removed.
-  - Public methods `getAccessTokenExpiration()` and `setAccessTokenExpiration()` were added for retrieving for storing an access token expiration timestamp in session storage, respectively.
-  - Public method `getCredentials()` added as a convenience. This method returns the Id Token, Access Token, Refresh Token, Access Token expiration timestamp, and user data from an available session without invoking an authorization flow, exchange, or raising an error if a session is not available.
-
-- Class `Auth0\SDK\API\Authentication` updated:
-
-  - `__construct` updated:
-    - `configuration` added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
-    - All other arguments have been removed.
-  - Public method 'getHttpClient()' added.
-  - Public method `get_authorize_link()` renamed to `getAuthorizationLink()`, and:
-    - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options.
-  - Public method `get_samlp_link()` renamed to `getSamlpLink()`, and:
-    - Argument `client_id` renamed to `clientId`.
-  - Public method `get_samlp_metadata_link()` renamed to `getSamlpMetadataLink()`, and:
-    - Argument `client_id` renamed to `clientId`.
-  - Public method `get_wsfed_link()` renamed to `getWsfedLink()`, and:
-    - Argument `client_id` renamed to `clientId`.
-  - Public method `get_wsfed_metadata_link()` renamed to `getWsfedMetadataLink()`.
-  - Public method `get_logout_link()` renamed to `getLogoutLink()`, and:
-    - Argument `returnTo` renamed to `returnUri`.
-    - Arguments `client_id` and `federated` were removed.
-    - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options.
-  - Public method `passwordlessStart()` added.
-  - Public method `email_passwordless_start()` renamed to `emailPasswordlessStart()`, and:
-    - Argument `authParams` updated to be nullable and defaults to null.
-    - Argument `headers` added to specify additional headers to pass with the request.
-    - Argument `forwarded_for` removed. Use the new `headers` argument with an 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `sms_passwordless_start()` renamed to `smsPasswordlessStart()`, and:
-    - Argument `phone_number` renamed to `phoneNumber`.
-    - Argument `headers` added to specify additional headers to pass with the request.
-    - Argument `forwarded_for` removed. Use the new `headers` argument with an 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `userinfo()` renamed to `userInfo()`, and:
-    - Argument `access_token` renamed to `accessToken`.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `oauth_token()` renamed to `oauthToken()`, and:
-    - Argument `grantType` added. It requires a string.
-    - Arguments `headers` and `params` were added as optional, nullable arrays.
-    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `code_exchange()` renamed to `codeExchange()`, and:
-    - Argument `redirect_uri` renamed to `returnUri`.
-    - Argument `code_verifier` renamed to `codeVerifier`.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `login()` updated:
-    - Arguments `username`, `password,` and `realm` added as required strings.
-    - Arguments `headers` and `params` were added as optional, nullable arrays.
-    - Argument `ip_address` removed. Use the new `headers` argument with an 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
-    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `login_with_default_directory()` renamed to `loginWithDefaultDirectory()`, and:
-    - Arguments `username` and `password` added as required strings.
-    - Arguments `headers` and `params` were added as optional, nullable arrays.
-    - Argument `ip_address` removed. Use the new `headers` argument with an 'AUTH0_FORWARDED_FOR' key-value pair for this behavior.
-    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `client_credentials()` renamed to `clientCredentials()`, and:
-    - Arguments `headers` and `params` were added as optional, nullable arrays.
-    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `refresh_token()` renamed to `refreshToken()`, and:
-    - Argument `refresh_token` renamed to `refreshToken`.
-    - Arguments `headers` and `params` were added as optional, nullable arrays.
-    - Argument `options` removed. Use the new `headers` and `params` arguments for these functions.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `dbconnections_signup()` renamed to `dbConnectionsSignup()`, and:
-    - Arguments `body` and `headers` added as optional, nullable arrays.
-    - Now returns a PSR-7 ResponseInterface, instead of an array.
-  - Public method `dbconnections_change_password()` changed to `dbConnectionsChangePassword()`, and:
-    - Arguments `body` and `headers` added as optional, nullable arrays.
-    - Argument `password` removed. Use the new `body` argument for this behavior.
-
-- Class `Auth0\SDK\API\Management` updated:
-
-  - `__construct` updated:
-    - `configuration` added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
-    - All other arguments have been removed.
-  - Public method 'getHttpClient()' added.
-  - Public method `getResponsePaginator()` added.
-
-- Class `Auth0\SDK\API\Management\GenericResource` renamed to `Auth0\SDK\API\Management\ManagementEndpoint`, and:
-
-  - Constructor updated to require an `HttpClient` instance; previously expected an `ApiClient` instance.
-  - Public method `getApiClient()` renamed to `getHttpClient()`.
-  - Public method `getLastRequest()` added.
-  - Public methods `normalizeRequest()`, `normalizePagination()`, `normalizeIncludeTotals()`, and `normalizeIncludeFields()` were removed, and:
-    - Their functionality has been rolled into the new `Auth0\SDK\Utility\Request\RequestOptions`, `Auth0\SDK\Utility\Request\FilteredRequest`, and `Auth0\SDK\Utility\Request\PaginatedRequest` utility classes.
-  - Public methods `checkInvalidPermissions()`, `checkEmptyOrInvalidString()`, and `checkEmptyOrInvalidArray()` were removed, and:
-    - Their functionality has been rolled into the new `Auth0\SDK\Utility\Validate` utility class.
-
-- Class `Auth0\SDK\Store\StoreInterface` moved to `Auth0\SDK\Contract\StoreInterface`.
-- Class `Auth0\SDK\Exception\CoreException` moved to `Auth0\SDK\Contract\SdkException`.
-- Class `Auth0\SDK\Helpers\PKCE` moved to `Auth0\SDK\Utility\PKCE`.
-- Class `Auth0\SDK\Helpers\TransientStoreHandler` moved to `Auth0\SDK\Utility\TransientStoreHandler`.
-
-### Classes Removed
-
-- All `Auth0\SDK\API\Header` classes:
-
-  - Class `Auth0\SDK\API\Header\AuthorizationBearer`.
-  - Class `Auth0\SDK\API\Header\ContentType`.
-  - Class `Auth0\SDK\API\Header\ForwardedFor`.
-  - Class `Auth0\SDK\API\Header\Header`.
-  - Class `Auth0\SDK\API\Header\Telemetry`.
-
-- All `Auth0\SDK\API\Helpers` classes:
-
-  - Class `Auth0\SDK\API\Helpers\ApiClient` superseded by `Auth0\SDK\Utility\HttpClient`.
-  - Class `Auth0\SDK\API\Helpers\RequestBuilder` superseded by `Auth0\SDK\Utility\HttpRequest`.
-  - Class `Auth0\SDK\API\Helpers\InformationHeaders` superseded by `Auth0\SDK\Utility\HttpTelemetry`.
-
-- All token-related classes have been replaced by the new `Auth0\SDK\Token`, `Auth0\SDK\Token\Parser`, `Auth0\SDK\Token\Validator`, and `Auth0\SDK\Token\Verifier` classes.
-
-  - Class `Auth0\SDK\Helpers\Tokens\AsymmetricVerifier`.
-  - Class `Auth0\SDK\Helpers\Tokens\IdTokenVerifier`.
-  - Class `Auth0\SDK\Helpers\Tokens\SignatureVerifier`.
-  - Class `Auth0\SDK\Helpers\Tokens\SymmetricVerifier`.
-  - Class `Auth0\SDK\Helpers\Tokens\TokenVerifier`.
-  - Class `Auth0\SDK\Helpers\JWKFetcher`.
-
-- Class `Auth0\SDK\Exception\ApiException` superseded by more specific exception classes.
-- Class `Auth0\SDK\Helpers\Cache\NoCacheHandler` no longer relevant.
-- Class `Auth0\SDK\Store\EmptyStore` no longer relevant.
 
 ---
 
