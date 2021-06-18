@@ -350,7 +350,7 @@ final class SdkConfiguration implements ConfigurableContract
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
         }
 
-        if (in_array($propertyName, ['organization', 'audience'])) {
+        if (in_array($propertyName, ['organization', 'audience'], true)) {
             if (is_array($propertyValue) && count($propertyValue) !== 0) {
                 return $propertyValue;
             }

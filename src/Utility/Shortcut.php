@@ -27,7 +27,9 @@ final class Shortcut
     /**
      * Accept a null or array, and always returns a null if array is empty.
      *
-     * @param string|null $value The value to trim, if a string, or null.
+     * @param array<mixed>|null $value The value to trim, if a string, or null.
+     *
+     * @return array<mixed>|object|null
      */
     public static function nullifyEmptyArray(
         ?array $value,

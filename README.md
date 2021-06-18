@@ -2,6 +2,8 @@
 
 [![Build Status](https://img.shields.io/circleci/project/github/auth0/auth0-PHP/master.svg)](https://circleci.com/gh/auth0/auth0-PHP)
 [![Code Coverage](https://codecov.io/gh/auth0/auth0-PHP/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/auth0-PHP)
+[![Latest Stable Version](https://img.shields.io/packagist/v/auth0/auth0-PHP?label=stable)](https://packagist.org/packages/auth0/auth0-PHP)
+[![Supported PHP Versions](https://img.shields.io/packagist/php-v/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-PHP)
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-PHP)
 [![FOSSA Status](https://app.fossa.com/api/projects/custom%2B4989%2Fgit%40github.com%3Aauth0%2Fauth0-PHP.git.svg?type=shield)](https://app.fossa.com/projects/custom%2B4989%2Fgit%40github.com%3Aauth0%2Fauth0-PHP.git?ref=badge_shield)
 
@@ -36,13 +38,13 @@ The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessi
 
 - PHP [7.4](https://www.php.net/ChangeLog-7.php) or [8.0](https://www.php.net/ChangeLog-8.php)
 - [Composer](https://getcomposer.org/)
-- A PSR-17 HTTP factory library. (↗ [Find libraries](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017))
-- A PSR-18 HTTP client library. (↗ [Find libraries](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018))
-- A PSR-16 caching library is strongly recommended for performance reasons. (↗ [Find libraries](https://packagist.org/search/?query=PSR-16&type=library&tags=psr%2016))
+- A [PSR-17](https://www.php-fig.org/psr/psr-17/) HTTP factory library. (↗ [Find libraries](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017))
+- A [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP client library. (↗ [Find libraries](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018))
+- A [PSR-16](https://www.php-fig.org/psr/psr-16/) caching library is strongly recommended for performance reasons. (↗ [Find libraries](https://packagist.org/search/?query=PSR-16&type=library&tags=psr%2016))
 
-⚠️ PHP 7.3 is supported on the SDK 7.0 branch through December 2021. This README.md is relevant for the SDK 8.0 branch. Please review the README.md within the 7.0 branch for guidance on that version.
+> ⚠️ PHP 7.3 is supported on the SDK 7.0 branch through December 2021. This README.md is relevant for the SDK 8.0 branch. Please review the README.md within the 7.0 branch for guidance on that version.
 
-🗓 This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP releases after they reach end-of-life. As Composer handles these deprecations safely, this is not considered a breaking change and we may drop version support with minor library releases. Please ensure you are always running the latest PHP version to keep your application up to date with PHP's security fixes, and continue to receive our latest library updates.
+> ⚠️ This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP releases after they reach end-of-life. As Composer handles these deprecations safely, this is not considered a breaking change and we may drop version support with minor library releases. Please ensure you are always running the latest PHP version to keep your application up to date with PHP's security fixes, and continue to receive our latest library updates.
 
 ## Usage
 
@@ -101,7 +103,7 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-> ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
+> ⚠️ You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application.
 
 During configuration, you should pass instances of the PSR-18 and PSR-17 libraries your application is using:
 
@@ -154,7 +156,7 @@ $auth0 = new Auth0([
 ]);
 ```
 
-> ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
+> ⚠️ You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application.
 
 This method is discouraged because you lose out on type hinting, but is useful in PHP 7.4 where named arguments are not supported.
 
@@ -367,7 +369,7 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-> ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
+> ⚠️ You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application.
 
 Once configured, use the `Auth0::management()` method to get a configured instance of the `Auth0\SDK\API\Management` class:
 
@@ -410,17 +412,7 @@ if (HttpResponse::wasSuccessful($response)) {
 
 ### Using Organizations
 
-[Organizations](https://auth0.com/docs/organizations) is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications.
-
-Using Organizations, you can:
-
-- Represent teams, business customers, partner companies, or any logical grouping of users that should have different ways of accessing your application as organizations.
-- Manage their membership in a variety of ways, including user invitation.
-- Configure branded, federated login flows for each Organization.
-- Implement role-based access control, such that users can have different roles when authenticating in the context of various organizations.
-- Build administration capabilities into your products, using the Organizations API, so that those businesses can manage their organizations.
-
-Note that Organizations is currently only available to customers on our Enterprise and Startup subscription plans.
+[Organizations](https://auth0.com/docs/organizations) is a set of features that provide better support for developers who build and maintain SaaS and Business-to-Business (B2B) applications. Organizations are currently only available to customers on our Enterprise and Startup subscription plans.
 
 #### Initializing the SDK with Organizations
 
@@ -443,7 +435,7 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-> ⚠️ **Note:** _You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application._
+> ⚠️ You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application.
 
 #### Logging in with an Organization
 
