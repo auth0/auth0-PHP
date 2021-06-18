@@ -83,7 +83,7 @@ $auth->login();
 
 ### Updated Configuration Options
 
-Some options names have changed for clarity. It would be best to reference the SdkConfiguration constructor comments for an up-to-date list, as there may be new additions with later releases. At the time of this guide's writing, these options are available:
+Some options names have changed for clarity. It would be best to reference the `SdkConfiguration` constructor comments for an up-to-date list, as there may be new additions with later releases. At the time of this guide's writing, these options are available:
 
 ```text
 string|null                   $domain               Required. Auth0 domain for your tenant.
