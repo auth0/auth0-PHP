@@ -10,8 +10,8 @@ use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Utility\Shortcut;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\TokenGenerator;
-use Cache\Adapter\PHPArray\ArrayCachePool;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
  * Class Auth0Test.
@@ -683,14 +683,16 @@ class Auth0Test extends TestCase
             ],
         ];
 
-        $pool = new ArrayCachePool();
-        $pool->set($cacheKey, $mockJwks);
+        $pool = new ArrayAdapter();
+        $item = $pool->getItem($cacheKey);
+        $item->set($mockJwks);
+        $pool->save($item);
 
         $auth0 = new Auth0(self::$baseConfig + [
             'tokenCache' => $pool,
         ]);
 
-        $cachedJwks = $pool->get($cacheKey);
+        $cachedJwks = $pool->getItem($cacheKey)->get();
         $this->assertNotEmpty($cachedJwks);
         $this->assertArrayHasKey('__test_kid__', $cachedJwks);
         $this->assertEquals($mockJwks, $cachedJwks);

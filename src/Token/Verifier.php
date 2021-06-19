@@ -8,7 +8,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
-use Psr\SimpleCache\CacheInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Class Verifier.
@@ -53,26 +53,23 @@ final class Verifier
     private ?int $cacheExpires = null;
 
     /**
-     * An PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     * An PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
      */
-    private ?CacheInterface $cache = null;
-
-    /**
-     * An PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
-     */
+    private ?CacheItemPoolInterface $cache = null;
+    
     private ?SdkConfiguration $configuration = null;
 
     /**
      * Constructor for the Token Verifier class.
      *
-     * @param string              $payload      A string representing the headers and claims portions of a JWT.
-     * @param string              $signature    A string representing the signature portion of a JWT.
-     * @param array<int|string>   $headers      An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
-     * @param string|null         $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
-     * @param string|null         $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null         $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null            $cacheExpires Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheInterface|null $cache        Optional. A PSR-6 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     * @param string                      $payload      A string representing the headers and claims portions of a JWT.
+     * @param string                      $signature    A string representing the signature portion of a JWT.
+     * @param array<int|string>           $headers      An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
+     * @param string|null                 $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
+     * @param string|null                 $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param string|null                 $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param int|null                    $cacheExpires Optional. Time in seconds to keep JWKS records cached.
+     * @param CacheItemPoolInterface|null $cache        Optional. A PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
      */
     public function __construct(
         SdkConfiguration &$configuration,
@@ -83,7 +80,7 @@ final class Verifier
         ?string $jwksUri = null,
         ?string $clientSecret = null,
         ?int $cacheExpires = null,
-        ?CacheInterface $cache = null
+        ?CacheItemPoolInterface $cache = null
     ) {
         $this->configuration = & $configuration;
         $this->payload = $payload;
@@ -183,11 +180,11 @@ final class Verifier
         $response = [];
 
         if ($this->cache !== null) {
-            $cached = $this->cache->get($jwksCacheKey);
-
-            if ($cached !== null) {
-                if ($expectsKid === null || isset($cached[$expectsKid])) {
-                    return $cached;
+            $item = $this->cache->getItem($jwksCacheKey);
+            if ($item->isHit()) {
+                $value = $item->get();
+                if ($expectsKid === null || isset($value[$expectsKid])) {
+                    return $value;
                 }
             }
         }
@@ -210,7 +207,10 @@ final class Verifier
             }
 
             if (count($response) !== 0 && $this->cache !== null) {
-                $this->cache->set($jwksCacheKey, $response, intval($this->cacheExpires ?? 60));
+                $item = $this->cache->getItem($jwksCacheKey);
+                $item->set($response);
+                $item->expiresAfter($this->cacheExpires ?? 60);
+                $this->cache->save($item);
             }
         }
 
