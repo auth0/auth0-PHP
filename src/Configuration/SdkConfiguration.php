@@ -186,7 +186,6 @@ final class SdkConfiguration implements ConfigurableContract
         $this->setValidations([
             'getDomain',
             'getClientId',
-            'getRedirectUri',
         ]);
 
         $this->setupConfiguration();
