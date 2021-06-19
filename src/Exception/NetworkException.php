@@ -7,7 +7,7 @@ namespace Auth0\SDK\Exception;
 /**
  * @codeCoverageIgnore
  */
-final class NetworkException extends SdkException
+final class NetworkException extends \Exception implements Auth0Exception
 {
     public const MSG_NETWORK_REQUEST_FAILED = 'Unable to complete network request; %s';
 
