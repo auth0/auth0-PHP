@@ -251,6 +251,7 @@ class CookieStore implements StoreInterface
 
         $iv = openssl_random_pseudo_bytes($ivLen);
 
+        // @phpstan-ignore-next-line
         if ($iv === false) {
             return '';
         }
