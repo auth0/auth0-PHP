@@ -250,6 +250,11 @@ class CookieStore implements StoreInterface
         }
 
         $iv = openssl_random_pseudo_bytes($ivLen);
+
+        if ($iv === false) {
+            return '';
+        }
+
         $encrypted = openssl_encrypt(serialize($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
         return base64_encode(json_encode(serialize(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]), JSON_THROW_ON_ERROR));
     }
