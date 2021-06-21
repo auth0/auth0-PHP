@@ -49,7 +49,7 @@ final class Auth0
      *
      * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      *
-     * @throws \Auth0\SDK\Exception\ConfigurationException When `domain`, `clientId`, or `redirectUri` are not provided.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `domain` or `clientId` are not provided.
      * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenAlgorithm` is provided but the value is not supported.
      * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenMaxAge` or `tokenLeeway` are provided but the value is not numeric.
      */
@@ -342,7 +342,7 @@ final class Auth0
      * Get ID token from persisted session or from a code exchange
      *
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
      */
     public function getIdToken(): ?string
     {
@@ -359,7 +359,7 @@ final class Auth0
      * @return array<string,array|int|string>|null
      *
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
      */
     public function getUser(): ?array
     {
@@ -374,7 +374,7 @@ final class Auth0
      * Get access token from persisted session or from a code exchange
      *
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
      */
     public function getAccessToken(): ?string
     {
@@ -389,7 +389,7 @@ final class Auth0
      * Get refresh token from persisted session or from a code exchange
      *
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
      */
     public function getRefreshToken(): ?string
     {
@@ -404,7 +404,7 @@ final class Auth0
      * Get token expiration from persisted session or from a code exchange
      *
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\SdkException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
      */
     public function getAccessTokenExpiration(): ?int
     {

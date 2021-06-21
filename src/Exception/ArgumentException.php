@@ -7,7 +7,7 @@ namespace Auth0\SDK\Exception;
 /**
  * @codeCoverageIgnore
  */
-final class ArgumentException extends SdkException
+final class ArgumentException extends \Exception implements Auth0Exception
 {
     public const MSG_VALUE_CANNOT_BE_EMPTY = 'A value for `%s` must be provided';
     public const MSG_PKCE_CODE_VERIFIER_LENGTH = 'Code verifier must be created with a minimum length of 43 characters and a maximum length of 128 characters.';

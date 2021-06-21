@@ -80,10 +80,16 @@ final class Authentication
     public function getAuthorizationLink(
         ?array $params = null
     ): string {
+        $returnUri = $this->configuration->getRedirectUri();
+
+        if ($returnUri === null) {
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
+        }
+
         $params = Shortcut::mergeArrays(Shortcut::filterArray([
             'client_id' => $this->configuration->getClientId(),
             'response_type' => $this->configuration->getResponseType(),
-            'redirect_uri' => $this->configuration->getRedirectUri(),
+            'redirect_uri' => $returnUri,
             'audience' => $this->configuration->buildDefaultAudience(),
             'scope' => $this->configuration->buildScopeString(),
             'organization' => $this->configuration->buildDefaultOrganization(),
@@ -173,12 +179,18 @@ final class Authentication
     public function getLoginLink(
         ?array $params = null
     ): string {
+        $returnUri = $this->configuration->getRedirectUri();
+
+        if ($returnUri === null) {
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
+        }
+
         $params = Shortcut::mergeArrays(Shortcut::filterArray([
             'scope' => $this->configuration->buildScopeString(),
             'audience' => $this->configuration->buildDefaultAudience(),
             'response_mode' => $this->configuration->getResponseMode(),
             'response_type' => $this->configuration->getResponseType(),
-            'redirect_uri' => $this->configuration->getRedirectUri(),
+            'redirect_uri' => $returnUri,
             'max_age' => $this->configuration->getTokenMaxAge(),
         ]), $params);
 
@@ -223,8 +235,14 @@ final class Authentication
         ?string $returnUri = null,
         ?array $params = null
     ): string {
-        $payload = Shortcut::mergeArrays(Shortcut::filterArray([
-            'returnTo' => Shortcut::trimNull($returnUri) ?? $this->configuration->getRedirectUri(),
+        $returnUri = Shortcut::trimNull($returnUri) ?? $this->configuration->getRedirectUri() ?? null;
+
+        if ($returnUri === null) {
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
+        }
+
+        $payload = Shortcut::mergeArrays([
+            'returnTo' => $returnUri,
             'client_id' => $this->configuration->getClientId(),
         ]), $params);
 
@@ -389,7 +407,7 @@ final class Authentication
      * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type
      *
      * @param string      $code         Authorization code received during login.
-     * @param string|null $redirectUri  Optional. Redirect URI sent with authorize request.
+     * @param string|null $redirectUri  Optional. Redirect URI sent with authorize request. Defaults to the SDK's configured redirectUri.
      * @param string|null $codeVerifier Optional. The clear-text version of the code_challenge from the /authorize call
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid $code is passed.
@@ -402,8 +420,14 @@ final class Authentication
     ): ResponseInterface {
         Validate::string($code, 'code');
 
+        $returnUri = Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri() ?? null;
+
+        if ($returnUri === null) {
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
+        }
+
         return $this->oauthToken('authorization_code', Shortcut::filterArray([
-            'redirect_uri' => Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri(),
+            'redirect_uri' => $returnUri,
             'code' => trim($code),
             'code_verifier' => Shortcut::trimNull($codeVerifier),
         ]));

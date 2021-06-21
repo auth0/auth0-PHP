@@ -6,6 +6,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\Verifier;
 use Auth0\Tests\Utilities\TokenGenerator;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 beforeEach(function() {
     $this->configuration = new SdkConfiguration([
@@ -88,12 +89,10 @@ test('[RS256] getKeySet() throws an error when jwks uri is not reachable', funct
 })->with('jwksUri');
 
 test('[RS256] getKeySet() does not make a network request when there are matching cached results', function($jwksUri, $jwksCacheKey): void {
-    $cache = new \Cache\Adapter\PHPArray\ArrayCachePool();
-    $cache->set($jwksCacheKey, [
-        '__test_kid__' => [
-            'x5c' => ['123'],
-        ],
-    ]);
+    $cache = new ArrayAdapter();
+    $item = $cache->getItem($jwksCacheKey);
+    $item->set(['__test_kid__' => ['x5c' => ['123']]]);
+    $cache->save($item);
 
     $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE);
@@ -103,12 +102,10 @@ test('[RS256] getKeySet() does not make a network request when there are matchin
 })->with('jwksUri');
 
 test('[RS256] getKeySet() invalidates cache when expected key is missing', function($jwksUri, $jwksCacheKey): void {
-    $cache = new \Cache\Adapter\PHPArray\ArrayCachePool();
-    $cache->set($jwksCacheKey, [
-        '__test_kid__' => [
-            'x5c' => ['123'],
-        ],
-    ]);
+    $cache = new ArrayAdapter();
+    $item = $cache->getItem($jwksCacheKey);
+    $item->set(['__test_kid__' => ['x5c' => ['123']]]);
+    $cache->save($item);
 
     $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
 
@@ -118,13 +115,10 @@ test('[RS256] getKeySet() invalidates cache when expected key is missing', funct
 
 test('[RS256] verify() succeeds when signing key is correct', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
     $headers = TokenGenerator::decodePart($headers);
-
-    $cache = new \Cache\Adapter\PHPArray\ArrayCachePool();
-    $cache->set($jwksCacheKey, [
-        '__test_kid__' => [
-            'x5c' => [$keyPair['cert']],
-        ],
-    ]);
+    $cache = new ArrayAdapter();
+    $item = $cache->getItem($jwksCacheKey);
+    $item->set(['__test_kid__' => ['x5c' => [$keyPair['cert']]]]);
+    $cache->save($item);
 
     $this->assertIsObject(new Verifier($this->configuration, $payload, $signature, $headers, Token::ALGO_RS256, $jwksUri, null, null, $cache));
 })->with('tokenRs256');
@@ -134,12 +128,10 @@ test('[RS256] verify() throws an error when signing key is wrong', function($key
 
     $differentKeyPair = TokenGenerator::generateRsaKeyPair();
 
-    $cache = new \Cache\Adapter\PHPArray\ArrayCachePool();
-    $cache->set($jwksCacheKey, [
-        '__test_kid__' => [
-            'x5c' => [$differentKeyPair['cert']],
-        ],
-    ]);
+    $cache = new ArrayAdapter();
+    $item = $cache->getItem($jwksCacheKey);
+    $item->set(['__test_kid__' => ['x5c' => [$differentKeyPair['cert']]]]);
+    $cache->save($item);
 
     $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE);

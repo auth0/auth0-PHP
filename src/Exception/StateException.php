@@ -7,7 +7,7 @@ namespace Auth0\SDK\Exception;
 /**
  * @codeCoverageIgnore
  */
-final class StateException extends SdkException
+final class StateException extends \Exception implements Auth0Exception
 {
     public const MSG_INVALID_STATE = 'Invalid state';
     public const MSG_MISSING_CODE_VERIFIER = 'Missing code_verifier';

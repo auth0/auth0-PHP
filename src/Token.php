@@ -7,7 +7,7 @@ namespace Auth0\SDK;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token\Parser;
 use Auth0\SDK\Utility\TransientStoreHandler;
-use Psr\SimpleCache\CacheInterface;
+use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Class Token.
@@ -84,11 +84,11 @@ final class Token
     /**
      * Verify the signature of the Token using either RS256 or HS256.
      *
-     * @param string|null         $tokenAlgorithm Optional. Algorithm to use for verification. Expects either RS256 or HS256.
-     * @param string|null         $tokenJwksUri   Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null         $clientSecret   Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null            $tokenCacheTtl  Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheInterface|null $tokenCache     Optional. A PSR-16 ("SimpleCache") CacheInterface instance to cache JWKS results within.
+     * @param string|null                 $tokenAlgorithm Optional. Algorithm to use for verification. Expects either RS256 or HS256.
+     * @param string|null                 $tokenJwksUri   Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param string|null                 $clientSecret   Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param int|null                    $tokenCacheTtl  Optional. Time in seconds to keep JWKS records cached.
+     * @param CacheItemPoolInterface|null $tokenCache     Optional. A PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
@@ -97,7 +97,7 @@ final class Token
         ?string $tokenJwksUri = null,
         ?string $clientSecret = null,
         ?int $tokenCacheTtl = null,
-        ?CacheInterface $tokenCache = null
+        ?CacheItemPoolInterface $tokenCache = null
     ): self {
         $tokenAlgorithm = $tokenAlgorithm ?? $this->configuration->getTokenAlgorithm();
         $tokenJwksUri = $tokenJwksUri ?? $this->configuration->getTokenJwksUri() ?? null;

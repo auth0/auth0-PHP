@@ -7,7 +7,7 @@ namespace Auth0\SDK\Exception;
 /**
  * @codeCoverageIgnore
  */
-final class ConfigurationException extends SdkException
+final class ConfigurationException extends \Exception implements Auth0Exception
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
     public const MSG_MISSING_MANAGEMENT_KEY = 'A Management API token was not configured';

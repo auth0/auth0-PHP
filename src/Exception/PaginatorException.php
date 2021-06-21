@@ -7,7 +7,7 @@ namespace Auth0\SDK\Exception;
 /**
  * @codeCoverageIgnore
  */
-final class PaginatorException extends SdkException
+final class PaginatorException extends \Exception implements Auth0Exception
 {
     public const MSG_HTTP_METHOD_UNSUPPORTED = 'This request type is not supported. You can only paginate GET requests.';
     public const MSG_HTTP_BAD_RESPONSE = 'Unable to paginate request. Please ensure the endpoint you are using supports pagination, and that you are using the include_totals params.';

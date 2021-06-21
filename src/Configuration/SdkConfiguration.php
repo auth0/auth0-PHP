@@ -13,11 +13,11 @@ use Auth0\SDK\Store\SessionStore;
 use Http\Discovery\Exception\NotFoundException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Psr\SimpleCache\CacheInterface;
 
 /**
  * Configuration container for use with Auth0\SDK
@@ -44,7 +44,7 @@ use Psr\SimpleCache\CacheInterface;
  * @method SdkConfiguration setScope(?array $scope = null)
  * @method SdkConfiguration setSessionStorage(?StoreInterface $sessionStorage = null)
  * @method SdkConfiguration setTokenAlgorithm(string $tokenAlgorithm = 'RS256')
- * @method SdkConfiguration setTokenCache(?CacheInterface $cache = null)
+ * @method SdkConfiguration setTokenCache(?CacheItemPoolInterface $cache = null)
  * @method SdkConfiguration setTokenCacheTtl(int $tokenCacheTtl = 60)
  * @method SdkConfiguration setTokenJwksUri(?string $tokenJwksUri = null)
  * @method SdkConfiguration setTokenLeeway(int $tokenLeeway = 60)
@@ -68,13 +68,13 @@ use Psr\SimpleCache\CacheInterface;
  * @method bool getPersistRefreshToken()
  * @method bool getPersistUser()
  * @method bool getQueryUserInfo()
- * @method string getRedirectUri()
+ * @method string|null getRedirectUri()
  * @method string getResponseMode()
  * @method string getResponseType()
  * @method array<string> getScope()
  * @method StoreInterface|null getSessionStorage()
  * @method string getTokenAlgorithm()
- * @method CacheInterface|null getTokenCache()
+ * @method CacheItemPoolInterface|null getTokenCache()
  * @method int getTokenCacheTtl()
  * @method string|null getTokenJwksUri()
  * @method int|null getTokenLeeway()
@@ -118,10 +118,10 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * SdkConfiguration Constructor
      *
-     * @param array<mixed>|null             $configuration        Optional. An key-value array matching this constructor's arguments. Overrides any passed arguments with the same key name.
-     * @param string|null                   $domain               Required. Auth0 domain for your tenant.
-     * @param string|null                   $clientId             Required. Client ID, found in the Auth0 Application settings.
-     * @param string|null                   $redirectUri          Required. Authentication callback URI, as defined in your Auth0 Application settings.
+     * @param array<mixed>|null             $configuration        Optional. An array of parameter keys (matching this constructor's arguments) and values. Overrides any passed arguments with the same key name.
+     * @param string|null                   $domain               Required, if not specified in $configuration. Auth0 domain for your tenant.
+     * @param string|null                   $clientId             Required, if not specified in $configuration. Client ID, found in the Auth0 Application settings.
+     * @param string|null                   $redirectUri          Optional, if not specified in $configuration. Authentication callback uri, as defined in your Auth0 Application settings.
      * @param string|null                   $clientSecret         Optional. Client Secret, found in the Auth0 Application settings.
      * @param array<string>|null            $audience             Optional. One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
      * @param array<string>|null            $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
@@ -133,7 +133,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param string|null                   $tokenJwksUri         Optional. URI to the JWKS when verifying RS256 tokens.
      * @param int|null                      $tokenMaxAge          Optional. The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
      * @param int                           $tokenLeeway          Optional. Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
-     * @param CacheInterface|null           $tokenCache           Optional. A PSR-16 compatible cache adapter for storing JSON Web Key Sets (JWKS).
+     * @param CacheItemPoolInterface|null   $tokenCache           Optional. A PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS).
      * @param int                           $tokenCacheTtl        Optional. How long (in seconds) to keep a JWKS cached.
      * @param ClientInterface|null          $httpClient           Optional. A PSR-18 compatible HTTP client to use for API requests.
      * @param RequestFactoryInterface|null  $httpRequestFactory   Optional. A PSR-17 compatible request factory to generate HTTP requests.
@@ -165,7 +165,7 @@ final class SdkConfiguration implements ConfigurableContract
         ?string $tokenJwksUri = null,
         ?int $tokenMaxAge = null,
         int $tokenLeeway = 60,
-        ?CacheInterface $tokenCache = null,
+        ?CacheItemPoolInterface $tokenCache = null,
         int $tokenCacheTtl = 60,
         ?ClientInterface $httpClient = null,
         ?RequestFactoryInterface $httpRequestFactory = null,
@@ -186,7 +186,6 @@ final class SdkConfiguration implements ConfigurableContract
         $this->setValidations([
             'getDomain',
             'getClientId',
-            'getRedirectUri',
         ]);
 
         $this->setupConfiguration();
