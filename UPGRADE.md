@@ -294,6 +294,11 @@ ResponseFactoryInterface|null $httpResponseFactory  Optional. A PSR-17 compatibl
 StreamFactoryInterface|null   $httpStreamFactory    Optional. A PSR-17 compatible stream factory to create request body streams.
 bool                          $httpTelemetry        Optional. Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
 StoreInterface|null           $sessionStorage       Optional. Defaults to use PHP native sessions. A StoreInterface-compatible class for storing Token state.
+string|null                   $cookieSecret         Optional. The secret is used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback.
+string|null                   $cookieDomain         Optional. Defaults to the value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains, the domain must be prefixed with a dot like '.example.com'.
+int                           $cookieExpires        Optional. Defaults to 0. How long, in seconds, before cookies expire. If set to 0, the cookie will expire at the end of the session (when the browser closes).
+string                        $cookiePath           Optional. Defaults to '/'. Specifies the path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
+bool                          $cookieSecure         Optional. Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
 bool                          $persistUser          Optional. Defaults to true. If true, the user data will persist in session storage.
 bool                          $persistIdToken       Optional. Defaults to true. If true, the Id Token will persist in session storage.
 bool                          $persistAccessToken   Optional. Defaults to true. If true, the Access Token will persist in session storage.
