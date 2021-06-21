@@ -26,11 +26,13 @@ test('__construct() throws an error when clientId is not configured', function()
 
 test('__construct() accepts a configuration array', function(): void {
     $domain = uniqid();
+    $cookieSecret = uniqid();
     $clientId = uniqid();
     $redirectUri = uniqid();
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
+        'cookieSecret' => $cookieSecret,
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
@@ -44,11 +46,13 @@ test('__construct() overrides arguments with configuration array', function(): v
 {
     $domain = uniqid();
     $domain2 = uniqid();
+    $cookieSecret = uniqid();
     $clientId = uniqid();
     $redirectUri = uniqid();
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
+        'cookieSecret' => $cookieSecret,
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ], $domain2);
@@ -72,6 +76,7 @@ test('__construct() successfully only stores the host when passed a full uri as 
 {
     $sdk = new SdkConfiguration([
         'domain' => 'https://test.auth0.com/.example-path/nonsense.txt',
+        'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
     ]);
@@ -80,6 +85,7 @@ test('__construct() successfully only stores the host when passed a full uri as 
 });
 
 test('__construct() throws an exception if domain is an empty string', function(): void {
+    $cookieSecret = uniqid();
     $clientId = uniqid();
     $redirectUri = uniqid();
 
@@ -88,6 +94,7 @@ test('__construct() throws an exception if domain is an empty string', function(
 
     $sdk = new SdkConfiguration([
         'domain' => '',
+        'cookieSecret' => $cookieSecret,
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
@@ -95,6 +102,7 @@ test('__construct() throws an exception if domain is an empty string', function(
 
 test('__construct() throws an exception if an invalid token algorithm is specified', function(): void {
     $domain = uniqid();
+    $cookieSecret = uniqid();
     $clientId = uniqid();
     $redirectUri = uniqid();
 
@@ -103,6 +111,7 @@ test('__construct() throws an exception if an invalid token algorithm is specifi
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
+        'cookieSecret' => $cookieSecret,
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
         'tokenAlgorithm' => 'X8675309'
@@ -111,6 +120,7 @@ test('__construct() throws an exception if an invalid token algorithm is specifi
 
 test('__construct() throws an exception if an invalid token leeway is specified', function(): void {
     $domain = uniqid();
+    $cookieSecret = uniqid();
     $clientId = uniqid();
     $redirectUri = uniqid();
 
@@ -119,6 +129,7 @@ test('__construct() throws an exception if an invalid token leeway is specified'
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
+        'cookieSecret' => $cookieSecret,
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
         'tokenLeeway' => 'TEST'
@@ -127,11 +138,13 @@ test('__construct() throws an exception if an invalid token leeway is specified'
 
 test('__construct() converts token leeway passed as a string into an int silently', function(): void {
     $domain = uniqid();
+    $cookieSecret = uniqid();
     $clientId = uniqid();
     $redirectUri = uniqid();
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
+        'cookieSecret' => $cookieSecret,
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
         'tokenLeeway' => '300'
@@ -143,28 +156,34 @@ test('__construct() converts token leeway passed as a string into an int silentl
 test('successfully updates values', function(): void
 {
     $domain1 = uniqid();
+    $cookieSecret1 = uniqid();
     $clientId1 = uniqid();
     $redirectUri1 = uniqid();
 
     $domain2 = uniqid();
+    $cookieSecret2 = uniqid();
     $clientId2 = uniqid();
     $redirectUri2 = uniqid();
 
     $sdk = new SdkConfiguration([
         'domain' => $domain1,
+        'cookieSecret' => $cookieSecret1,
         'clientId' => $clientId1,
         'redirectUri' => $redirectUri1,
     ]);
 
     $this->assertEquals($domain1, $sdk->getDomain());
+    $this->assertEquals($cookieSecret1, $sdk->getCookieSecret());
     $this->assertEquals($clientId1, $sdk->getClientId());
     $this->assertEquals($redirectUri1, $sdk->getRedirectUri());
 
     $sdk->setDomain($domain2);
+    $sdk->setCookieSecret($cookieSecret2);
     $sdk->setClientId($clientId2);
     $sdk->setRedirectUri($redirectUri2);
 
     $this->assertEquals($domain2, $sdk->getDomain());
+    $this->assertEquals($cookieSecret2, $sdk->getCookieSecret());
     $this->assertEquals($clientId2, $sdk->getClientId());
     $this->assertEquals($redirectUri2, $sdk->getRedirectUri());
 });
@@ -175,6 +194,7 @@ test('successfully resets values', function(): void
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
+        'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
         'usePkce' => false,
@@ -195,6 +215,7 @@ test('buildDomainUri() returns a properly formatted uri', function(): void
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
+        'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
     ]);
@@ -206,6 +227,7 @@ test('buildScopeString() returns an empty string when there are no scopes define
 {
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
+        'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
         'scope' => [],
@@ -218,6 +240,7 @@ test('buildScopeString() successfully converts the array to a string', function(
 {
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
+        'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
         'scope' => ['one', 'two', 'three'],
@@ -230,6 +253,7 @@ test('buildDefaultOrganization() successfully returns the first organization', f
 {
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
+        'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
         'organization' => ['org1', 'org2', 'org3'],
@@ -242,6 +266,7 @@ test('buildDefaultAudience() successfully returns the first audience', function(
 {
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
+        'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
         'audience' => ['aud1', 'aud2', 'aud3'],

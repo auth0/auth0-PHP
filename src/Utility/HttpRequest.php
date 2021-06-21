@@ -226,7 +226,7 @@ final class HttpRequest
      */
     public function call(): ResponseInterface
     {
-        $domain = $this->domain ?? $this->configuration->buildDomainUri() ?? '';
+        $domain = $this->configuration->buildDomainUri();
         $uri = $domain . $this->basePath . $this->getUrl();
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();

@@ -8,9 +8,9 @@ use Auth0\Tests\Utilities\MockManagementApi;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class GrantsTestMocked.
+ * Class GrantsTest.
  */
-class GrantsMockedTest extends TestCase
+class GrantsTest extends TestCase
 {
     /**
      * Test that getAll requests properly.

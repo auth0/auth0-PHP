@@ -25,6 +25,44 @@ final class Shortcut
     }
 
     /**
+     * Accept a null or array, and always returns a null if array is empty.
+     *
+     * @param array<mixed>|null $value The value to trim, if a string, or null.
+     *
+     * @return array<mixed>
+     */
+    public static function nullifyEmptyArray(
+        ?array $value
+    ): ?array {
+        if ($value === null) {
+            return null;
+        }
+
+        if (count($value) === 0) {
+            return null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Accept a null or array, and always returns a null if array is empty.
+     *
+     * @param array<mixed>|null $value The value to trim, if a string, or null.
+     */
+    public static function nullifyEmptyArrayAsObject(
+        ?array $value
+    ): ?object {
+        $value = self::nullifyEmptyArray($value);
+
+        if ($value !== null) {
+            return (object) $value;
+        }
+
+        return $value;
+    }
+
+    /**
      * Progressively merge any number of arrays, overwriting values from left to right. Filters null values.
      *
      * @param array<mixed>|null $arrays One or more arrays to merge and filter.

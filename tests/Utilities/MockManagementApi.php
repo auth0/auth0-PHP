@@ -24,6 +24,7 @@ class MockManagementApi extends MockApi
         $this->client = new Management([
             'domain' => 'api.test.local',
             'clientId' => '__test_client_id__',
+            'cookieSecret' => uniqid(),
             'redirectUri' => uniqid(),
             'managementToken' => '__api_token__',
         ]);

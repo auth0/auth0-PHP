@@ -8,9 +8,9 @@ use Auth0\Tests\Utilities\MockManagementApi;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RolesTestMocked.
+ * Class RolesMocked.
  */
-class RolesMockedTest extends TestCase
+class RolesTest extends TestCase
 {
     /**
      * Test a basic getAll roles call.

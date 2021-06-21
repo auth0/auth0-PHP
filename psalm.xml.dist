@@ -11,6 +11,7 @@
     </projectFiles>
 
     <issueHandlers>
+        <InvalidStringClass errorLevel="suppress" />
         <MixedArgument errorLevel="suppress" />
         <MixedArgumentTypeCoercion errorLevel="suppress" />
         <MixedArrayAccess errorLevel="suppress" />

@@ -105,6 +105,10 @@ final class Token
         $tokenCacheTtl = $tokenCacheTtl ?? $this->configuration->getTokenCacheTtl();
         $tokenCache = $tokenCache ?? $this->configuration->getTokenCache() ?? null;
 
+        if ($tokenJwksUri === null) {
+            $tokenJwksUri = $this->configuration->buildDomainUri() . '/.well-known/jwks.json';
+        }
+
         $this->parser->verify(
             $tokenAlgorithm,
             $tokenJwksUri,

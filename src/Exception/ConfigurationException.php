@@ -11,6 +11,7 @@ final class ConfigurationException extends \Exception implements Auth0Exception
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
     public const MSG_MISSING_MANAGEMENT_KEY = 'A Management API token was not configured';
+    public const MSG_MISSING_COOKIE_SECRET = 'Missing or invalid `cookieSecret` configuration';
     public const MSG_SET_IMMUTABLE = 'Changes cannot be applied to a locked configuration';
     public const MSG_SET_MISSING = 'Attempted to assign a value to undefined property "%s"';
     public const MSG_SET_INCOMPATIBLE = 'Parameter "%s" must be of type %s, %s used';
@@ -23,6 +24,9 @@ final class ConfigurationException extends \Exception implements Auth0Exception
     public const MSG_MISSING_REDIRECT_URI = 'Missing or invalid `redirectUri` configuration';
     public const MSG_INVALID_TOKEN_ALGORITHM = 'Invalid token algorithm; must be "HS256" or "RS256"';
 
+    public const MSG_NO_PSR18_LIBRARY = 'No compatible PSR-18 library was configured, and one could not be auto-discovered.';
+    public const MSG_NO_PSR17_LIBRARY = 'No compatible PSR-17 library was configured, and one could not be auto-discovered.';
+
     public static function requiresConfiguration(
         ?\Throwable $previous = null
     ): self {
@@ -33,6 +37,12 @@ final class ConfigurationException extends \Exception implements Auth0Exception
         ?\Throwable $previous = null
     ): self {
         return new self(self::MSG_MISSING_MANAGEMENT_KEY, 0, $previous);
+    }
+
+    public static function requiresCookieSecret(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_MISSING_COOKIE_SECRET, 0, $previous);
     }
 
     public static function setImmutable(
@@ -85,6 +95,10 @@ final class ConfigurationException extends \Exception implements Auth0Exception
             return new self(self::MSG_MISSING_CLIENT_ID, 0, $previous);
         }
 
+        if ($propertyName === 'cookieSecret') {
+            return new self(self::MSG_MISSING_COOKIE_SECRET, 0, $previous);
+        }
+
         if ($propertyName === 'redirectUri') {
             return new self(self::MSG_MISSING_REDIRECT_URI, 0, $previous);
         }
@@ -96,5 +110,17 @@ final class ConfigurationException extends \Exception implements Auth0Exception
         ?\Throwable $previous = null
     ): self {
         return new self(self::MSG_INVALID_TOKEN_ALGORITHM, 0, $previous);
+    }
+
+    public static function missingPsr18Library(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_NO_PSR18_LIBRARY, 0, $previous);
+    }
+
+    public static function missingPsr17Library(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_NO_PSR17_LIBRARY, 0, $previous);
     }
 }

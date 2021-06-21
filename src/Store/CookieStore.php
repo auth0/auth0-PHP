@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Utility\Validate;
 
 /**
  * Class CookieStore.
@@ -12,57 +14,43 @@ use Auth0\SDK\Contract\StoreInterface;
  */
 class CookieStore implements StoreInterface
 {
+    public const KEY_HASHING_ALGO = 'sha256';
+    public const KEY_CHUNKING_THRESHOLD = 4096;
+    public const KEY_SEPARATOR = '_';
+    public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
+
+    /**
+     * Instance of SdkConfiguration, for shared configuration across classes.
+     */
+    private SdkConfiguration $configuration;
+
     /**
      * Cookie base name.
-     * Use config key 'base_name' to set this during instantiation.
-     * Default is 'auth0'
+     * Use 'cookiePrefix' argument to set this during instantiation.
      */
-    protected ?string $sessionBaseName = null;
+    private string $cookiePrefix;
 
     /**
-     * Cookie expiration length, in seconds.
-     * This will be added to current time or $this->now to set cookie expiration time.
-     * Use config key 'expiration' to set this during instantiation.
-     * Default is 600.
+     * Number of bytes to deduct/buffer from KEY_CHUNKING_THRESHOLD before chunking begins.
      */
-    protected int $expiration;
-
-    /**
-     * SameSite attribute for all cookies set with class instance.
-     * Must be one of None, Strict, Lax (default is no SameSite attribute).
-     * Use config key 'samesite' to set this during instantiation.
-     * Default is no SameSite attribute set.
-     */
-    protected ?string $sameSite = null;
-
-    /**
-     * Time to use as "now" in expiration calculations.
-     * Used primarily for testing.
-     * Use config key 'now' to set this during instantiation.
-     * Default is current server time.
-     */
-    protected ?int $now = null;
+    private int $chunkingThreshold;
 
     /**
      * CookieStore constructor.
      *
-     * @param array<mixed> $options Cookie options. See class properties above for keys and types allowed.
+     * @param SdkConfiguration $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string           $cookiePrefix    Optional. A string to prefix stored cookie keys with.
      */
     public function __construct(
-        array $options = []
+        SdkConfiguration &$configuration,
+        string $cookiePrefix = 'auth0'
     ) {
-        $this->sessionBaseName = $options['base_name'] ?? 'auth0';
-        $this->expiration = isset($options['expiration']) ? (int) $options['expiration'] : 600;
+        Validate::string($cookiePrefix, 'cookiePrefix');
 
-        if (isset($options['samesite']) && mb_strlen($options['samesite']) !== 0) {
-            $sameSite = ucfirst($options['samesite']);
+        $this->configuration = & $configuration;
+        $this->cookiePrefix = $cookiePrefix;
 
-            if (in_array($sameSite, ['None', 'Strict', 'Lax'], true)) {
-                $this->sameSite = $sameSite;
-            }
-        }
-
-        $this->now = isset($options['now']) ? (int) $options['now'] : null;
+        $this->chunkingThreshold = self::KEY_CHUNKING_THRESHOLD - strlen(hash(self::KEY_HASHING_ALGO, 'threshold'));
     }
 
     /**
@@ -75,15 +63,48 @@ class CookieStore implements StoreInterface
         string $key,
         $value
     ): void {
-        $key_name = $this->getCookieName($key);
-        $_COOKIE[$key_name] = $value;
+        Validate::string($key, 'key');
 
-        if ($this->sameSite !== null) {
-            // Core setcookie() does not handle SameSite before PHP 7.3.
-            $this->setCookieHeader($key_name, $value, $this->getExpTimecode());
-        } else {
-            $this->setCookie($key_name, $value, $this->getExpTimecode());
+        $cookieName = $this->getCookieName($key);
+
+        $expiration = $this->configuration->getCookieExpires();
+
+        if ($expiration !== 0) {
+            $expiration = time() + $expiration;
         }
+
+        $cookieOptions = [
+            'expires' => $expiration,
+            'domain' => $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'],
+            'path' => $this->configuration->getCookiePath(),
+            'secure' => $this->configuration->getCookieSecure(),
+            'httponly' => true,
+            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
+        ];
+
+        $value = $this->encrypt($value);
+
+        $_COOKIE[$cookieName] = $value;
+
+        if (strlen($value) >= $this->chunkingThreshold) {
+            $chunks = str_split($value, $this->chunkingThreshold);
+
+            // @phpstan-ignore-next-line
+            if ($chunks !== false) {
+                $chunkIndex = 1;
+
+                setcookie(join(self::KEY_SEPARATOR, [ $cookieName, '0']), (string) count($chunks), $cookieOptions);
+
+                foreach ($chunks as $chunk) {
+                    setcookie(join(self::KEY_SEPARATOR, [ $cookieName, $chunkIndex]), $chunk, $cookieOptions);
+                    $chunkIndex++;
+                }
+
+                return;
+            }
+        }
+
+        setcookie($cookieName, $value, $cookieOptions);
     }
 
     /**
@@ -99,10 +120,41 @@ class CookieStore implements StoreInterface
         string $key,
         $default = null
     ) {
-        $key_name = $this->getCookieName($key);
-        $value = $default;
+        Validate::string($key, 'key');
 
-        return $_COOKIE[$key_name] ?? $value;
+        $cookieName = $this->getCookieName($key);
+        $chunks = $this->isCookieChunked($key);
+        $value = '';
+
+        if ($chunks === null) {
+            return $default;
+        }
+
+        if ($chunks !== 0) {
+            for ($chunk = 1; $chunk <= $chunks; $chunk++) {
+                $chunkData = $_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, $chunk])] ?? null;
+
+                if ($chunkData === null) {
+                    return $default;
+                }
+
+                $value .= (string) $chunkData;
+            }
+        }
+
+        if ($chunks === 0) {
+            $value = $_COOKIE[$cookieName] ?? null;
+        }
+
+        if ($value !== null && mb_strlen($value) !== 0) {
+            $data = $this->decrypt($value);
+
+            if ($data !== null) {
+                return $data;
+            }
+        }
+
+        return $default;
     }
 
     /**
@@ -113,9 +165,35 @@ class CookieStore implements StoreInterface
     public function delete(
         string $key
     ): void {
-        $key_name = $this->getCookieName($key);
-        unset($_COOKIE[$key_name]);
-        $this->setCookie($key_name, '', 0);
+        Validate::string($key, 'key');
+
+        $cookieName = $this->getCookieName($key);
+        $chunks = $this->isCookieChunked($key);
+        $cookieOptions = [
+            'expires' => time() - 1000,
+            'path' => $this->configuration->getCookiePath(),
+            'domain' => $this->configuration->getCookieDomain() ?? '',
+            'secure' => $this->configuration->getCookieSecure(),
+            'httponly' => true,
+            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
+        ];
+
+        if ($chunks === null) {
+            return;
+        }
+
+        unset($_COOKIE[$cookieName]);
+        setcookie($cookieName, '', $cookieOptions);
+
+        if ($chunks !== 0) {
+            unset($_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, '0'])]);
+            setcookie(join(self::KEY_SEPARATOR, [ $cookieName, '0']), '', $cookieOptions);
+
+            for ($chunk = 1; $chunk <= $chunks; $chunk++) {
+                unset($_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, $chunk])]);
+                setcookie(join(self::KEY_SEPARATOR, [ $cookieName, $chunk]), '', $cookieOptions);
+            }
+        }
     }
 
     /**
@@ -126,91 +204,106 @@ class CookieStore implements StoreInterface
     public function getCookieName(
         string $key
     ): string {
-        $key_name = $key;
-
-        if ($this->sessionBaseName !== null) {
-            $key_name = $this->sessionBaseName . '_' . $key_name;
-        }
-
-        return $key_name;
+        return hash(self::KEY_HASHING_ALGO, $this->cookiePrefix . '_' . trim($key));
     }
 
     /**
-     * Build the header to use when setting SameSite cookies.
+     * Determine the chunkiness of a cookie. Returns the number of chunks, or 0 if unchunked. If the cookie wasn't found, returns null.
      *
-     * @param string $name   Cookie name.
-     * @param string $value  Cookie value.
-     * @param int    $expire Cookie expiration timecode.
-     *
-     * @link https://github.com/php/php-src/blob/master/ext/standard/head.c#L77
+     * @param string $key Cookie name to lookup.
      */
-    protected function getSameSiteCookieHeader(
-        string $name,
-        string $value,
-        int $expire
+    private function isCookieChunked(
+        string $key
+    ): ?int {
+        Validate::string($key, 'key');
+
+        $cookieName = $this->getCookieName($key);
+
+        if (isset($_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, '0'])])) {
+            return (int) $_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, '0'])];
+        }
+
+        if (isset($_COOKIE[$cookieName])) {
+            return 0;
+        }
+
+        return null;
+    }
+
+    /**
+     * Encrypt data for safe storage format for a cookie.
+     *
+     * @param mixed $data Data to encrypt.
+     */
+    private function encrypt(
+        $data
     ): string {
-        $date = new \Datetime();
-        $date->setTimestamp($expire)
-            ->setTimezone(new \DateTimeZone('GMT'));
+        $secret = $this->configuration->getCookieSecret();
+        $ivLen = openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
 
-        $illegalChars = ",; \t\r\n\013\014";
-        $illegalCharsMsg = ',; \\t\\r\\n\\013\\014';
+        if ($secret === null) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
+        }
 
-        if (strpbrk($name, $illegalChars) !== false) {
-            trigger_error("Cookie names cannot contain any of the following '" . $illegalCharsMsg . "'", E_USER_WARNING);
+        if ($ivLen === false) {
             return '';
         }
 
-        if (strpbrk($value, $illegalChars) !== false) {
-            trigger_error("Cookie values cannot contain any of the following '" . $illegalCharsMsg . "'", E_USER_WARNING);
+        $iv = openssl_random_pseudo_bytes($ivLen);
+
+        // @phpstan-ignore-next-line
+        if ($iv === false) {
             return '';
         }
 
-        return sprintf(
-            'Set-Cookie: %s=%s; path=/; expires=%s; HttpOnly; SameSite=%s%s',
-            $name,
-            $value,
-            $date->format($date::COOKIE),
-            $this->sameSite,
-            $this->sameSite === 'None' ? '; Secure' : ''
-        );
+        $encrypted = openssl_encrypt(serialize($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+        return base64_encode(json_encode(serialize(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]), JSON_THROW_ON_ERROR));
     }
 
     /**
-     * Get cookie expiration timecode to use.
-     */
-    protected function getExpTimecode(): int
-    {
-        return ($this->now ?? time()) + $this->expiration;
-    }
-
-    /**
-     * Wrapper around PHP core setcookie() function to assist with testing.
+     * Decrypt data from a stored cookie string.
      *
-     * @param string $name   Complete cookie name to set.
-     * @param string $value  Value of the cookie to set.
-     * @param int    $expire Expiration time in Unix timecode format.
-     */
-    protected function setCookie(
-        string $name,
-        string $value,
-        int $expire
-    ): bool {
-        return setcookie($name, $value, $expire, '/', '', false, true);
-    }
-
-    /**
-     * Wrapper around PHP core header() function to assist with testing.
+     * @param string $data String representing an encrypted data structure.
      *
-     * @param string $name   Complete cookie name to set.
-     * @param string $value  Value of the cookie to set.
-     * @param int    $expire Expiration time in Unix timecode format.
+     * @return mixed
      */
-    protected function setCookieHeader(
-        string $name,
-        string $value,
-        int $expire
-    ): void {
-        header($this->getSameSiteCookieHeader($name, $value, $expire), false);
+    private function decrypt(
+        string $data
+    ) {
+        Validate::string($data, 'data');
+
+        $secret = $this->configuration->getCookieSecret();
+
+        if ($secret === null) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
+        }
+
+        $data = base64_decode($data, true);
+
+        if ($data === false) {
+            return null;
+        }
+
+        $data = json_decode($data, true);
+
+        if ($data === null) {
+            return null;
+        }
+
+        $data = unserialize($data);
+        $iv = base64_decode($data['iv'], true);
+        $tag = base64_decode($data['tag'], true);
+
+        if ($iv === false || $tag === false) {
+            return null;
+        }
+
+        $data = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+
+        if ($data === false) {
+            return null;
+        }
+
+        return unserialize($data);
     }
 }

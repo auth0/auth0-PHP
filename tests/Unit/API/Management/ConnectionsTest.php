@@ -8,9 +8,9 @@ use Auth0\Tests\Utilities\MockManagementApi;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ConnectionsTestMocked.
+ * Class ConnectionsTest.
  */
-class ConnectionsMockedTest extends TestCase
+class ConnectionsTest extends TestCase
 {
     /**
      * Test a getAll() request.

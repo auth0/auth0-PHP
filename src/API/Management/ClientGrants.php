@@ -130,7 +130,7 @@ final class ClientGrants extends ManagementEndpoint
      * Update an existing Client Grant.
      * Required scope: `update:client_grants`
      *
-     * @param string              $id      Grant (by it's ID) to update.
+     * @param string              $grantId Grant (by it's ID) to update.
      * @param array<string>|null  $scope   Optional. Array of scopes to update; will replace existing scopes, not merge.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
@@ -139,14 +139,14 @@ final class ClientGrants extends ManagementEndpoint
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/patch_client_grants_by_id
      */
     public function update(
-        string $id,
+        string $grantId,
         ?array $scope = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        Validate::string($grantId, 'grantId');
 
         return $this->getHttpClient()->method('patch')
-            ->addPath('client-grants', $id)
+            ->addPath('client-grants', $grantId)
             ->withBody(
                 (object) [
                     'scope' => $scope ?? [],
@@ -160,7 +160,7 @@ final class ClientGrants extends ManagementEndpoint
      * Delete a Client Grant by ID.
      * Required scope: `delete:client_grants`
      *
-     * @param string              $id      Grant (by it's ID) to delete.
+     * @param string              $grantId Grant (by it's ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
@@ -168,13 +168,13 @@ final class ClientGrants extends ManagementEndpoint
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
      */
     public function delete(
-        string $id,
+        string $grantId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        Validate::string($grantId, 'grantId');
 
         return $this->getHttpClient()->method('delete')
-            ->addPath('client-grants', $id)
+            ->addPath('client-grants', $grantId)
             ->withOptions($options)
             ->call();
     }

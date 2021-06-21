@@ -23,7 +23,7 @@ final class Organizations extends ManagementEndpoint
      *
      * @param string              $name        The name of the Organization. Cannot be changed later.
      * @param string              $displayName The displayed name of the Organization.
-     * @param array<mixed>|null   $branding    An array containing branding customizations for the organization.
+     * @param array<mixed>|null   $branding    Optional. An array containing branding customizations for the organization.
      * @param array<mixed>|null   $metadata    Optional. Additional metadata to store about the organization.
      * @param array<mixed>|null   $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
@@ -44,8 +44,8 @@ final class Organizations extends ManagementEndpoint
         $body = Shortcut::mergeArrays([
             'name' => $name,
             'display_name' => $displayName,
-            'branding' => $branding !== null && count($branding) !== 0 ? (object) $branding : null,
-            'metadata' => $metadata !== null && count($metadata) !== 0 ? (object) $metadata : null,
+            'branding' => Shortcut::nullifyEmptyArrayAsObject($branding),
+            'metadata' => Shortcut::nullifyEmptyArrayAsObject($metadata),
         ], $body);
 
         return $this->getHttpClient()->method('post')
@@ -120,7 +120,7 @@ final class Organizations extends ManagementEndpoint
      *
      * @param string               $id          Organization (by ID) to update.
      * @param string               $displayName The displayed name of the Organization.
-     * @param array<mixed>|null    $branding    An array containing branding customizations for the organization.
+     * @param array<mixed>|null    $branding    Optional. An array containing branding customizations for the organization.
      * @param array<mixed>|null    $metadata    Optional. Additional metadata to store about the organization.
      * @param array<mixed>|null    $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null  $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
@@ -140,8 +140,8 @@ final class Organizations extends ManagementEndpoint
 
         $body = Shortcut::mergeArrays([
             'display_name' => $displayName,
-            'branding' => $branding !== null && count($branding) !== 0 ? (object) $branding : null,
-            'metadata' => $metadata !== null && count($metadata) !== 0 ? (object) $metadata : null,
+            'branding' => Shortcut::nullifyEmptyArrayAsObject($branding),
+            'metadata' => Shortcut::nullifyEmptyArrayAsObject($metadata),
         ], $body);
 
         return $this->getHttpClient()->method('patch')

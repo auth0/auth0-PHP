@@ -56,8 +56,11 @@ final class Verifier
      * An PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
      */
     private ?CacheItemPoolInterface $cache = null;
-    
-    private ?SdkConfiguration $configuration = null;
+
+    /**
+     * Instance of SdkConfiguration, for shared configuration across classes.
+     */
+    private SdkConfiguration $configuration;
 
     /**
      * Constructor for the Token Verifier class.
@@ -166,7 +169,7 @@ final class Verifier
             throw \Auth0\SDK\Exception\InvalidTokenException::requiresJwksUri();
         }
 
-        $jwksCacheKey = md5($this->jwksUri);
+        $jwksCacheKey = hash('sha256', $this->jwksUri);
         $jwksUri = parse_url($this->jwksUri);
 
         if (! is_array($jwksUri)) {

@@ -166,13 +166,7 @@ final class Authentication
      */
     public function getWsfedMetadataLink(): string
     {
-        $domain = $this->configuration->buildDomainUri();
-
-        if ($domain !== null) {
-            return $domain . '/wsfed/FederationMetadata/2007-06/FederationMetadata.xml';
-        }
-
-        return '';
+        return $this->configuration->buildDomainUri() . '/wsfed/FederationMetadata/2007-06/FederationMetadata.xml';
     }
 
     /**
@@ -198,22 +192,9 @@ final class Authentication
             'response_type' => $this->configuration->getResponseType(),
             'redirect_uri' => $returnUri,
             'max_age' => $this->configuration->getTokenMaxAge(),
+            'state' => $this->transient->issue('state'),
+            'nonce' => $this->transient->issue('nonce'),
         ]), $params);
-
-        if (! isset($params['state'])) {
-            // No state provided by application so generate, store, and send one.
-            $params['state'] = $this->transient->issue('state');
-        } else {
-            // Store the passed-in value.
-            $this->transient->store('state', (string) $params['state']);
-        }
-
-        // ID token nonce validation is required so auth params must include one.
-        if (! isset($params['nonce'])) {
-            $params['nonce'] = $this->transient->issue('nonce');
-        } else {
-            $this->transient->store('nonce', (string) $params['nonce']);
-        }
 
         if ($this->configuration->getUsePkce()) {
             $codeVerifier = PKCE::generateCodeVerifier(128);
@@ -391,9 +372,14 @@ final class Authentication
     ): ResponseInterface {
         Validate::string($grantType, 'grantType');
 
+        if (! $this->configuration->hasClientSecret()) {
+            throw \Auth0\SDK\Exception\AuthenticationException::requiresClientSecret();
+        }
+
         $params = Shortcut::mergeArrays([
             'grant_type' => trim($grantType),
             'client_id' => $this->configuration->getClientId(),
+            'client_secret' => $this->configuration->getClientSecret(),
         ], $params);
 
         return $this->httpClient
@@ -428,7 +414,6 @@ final class Authentication
         }
 
         return $this->oauthToken('authorization_code', Shortcut::filterArray([
-            'client_secret' => $this->configuration->getClientSecret(),
             'redirect_uri' => $returnUri,
             'code' => trim($code),
             'code_verifier' => Shortcut::trimNull($codeVerifier),
@@ -462,7 +447,6 @@ final class Authentication
             'username' => trim($username),
             'password' => trim($password),
             'realm' => trim($realm),
-            'client_secret' => $this->configuration->getClientSecret(),
         ], $params);
 
         return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', $params, $headers ?? []);
@@ -493,7 +477,6 @@ final class Authentication
         $params = Shortcut::mergeArrays([
             'username' => trim($username),
             'password' => trim($password),
-            'client_secret' => $this->configuration->getClientSecret(),
         ], $params);
 
         return $this->oauthToken('password', $params, $headers ?? []);
@@ -519,7 +502,6 @@ final class Authentication
         }
 
         $params = Shortcut::mergeArrays([
-            'client_secret' => $this->configuration->getClientSecret(),
             'audience' => $this->configuration->buildDefaultAudience(),
         ], $params);
 
@@ -550,7 +532,6 @@ final class Authentication
         }
 
         $params = Shortcut::mergeArrays([
-            'client_secret' => $this->configuration->getClientSecret(),
             'refresh_token' => trim($refreshToken),
         ], $params);
 

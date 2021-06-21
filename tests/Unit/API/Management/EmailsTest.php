@@ -21,7 +21,7 @@ beforeEach(function(): void {
 });
 
 test('createProvider() throws an error when missing required arguments', function(): void {
-    $endpoint = $this->sdk->mock()->Emails();
+    $endpoint = $this->sdk->mock()->emails();
 
     $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
@@ -35,7 +35,7 @@ test('createProvider() throws an error when missing required arguments', functio
 });
 
 test('createProvider() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->Emails();
+    $endpoint = $this->sdk->mock()->emails();
 
     $name = uniqid();
     $credentials = uniqid();
@@ -57,7 +57,7 @@ test('createProvider() issues valid requests', function(): void {
 });
 
 test('getProvider() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->Emails();
+    $endpoint = $this->sdk->mock()->emails();
 
     $endpoint->getProvider();
 
@@ -66,7 +66,7 @@ test('getProvider() issues valid requests', function(): void {
 });
 
 test('updateProvider() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->Emails();
+    $endpoint = $this->sdk->mock()->emails();
 
     $name = uniqid();
     $credentials = uniqid();
@@ -88,7 +88,7 @@ test('updateProvider() issues valid requests', function(): void {
 });
 
 test('delete() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->Emails();
+    $endpoint = $this->sdk->mock()->emails();
 
     $endpoint->deleteProvider();
 

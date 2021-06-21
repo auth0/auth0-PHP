@@ -11,6 +11,7 @@ uses()->group('management');
 beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([
         'domain' => 'https://test-domain.auth0.com',
+        'cookieSecret' => uniqid(),
         'clientId' => '__test_client_id__',
         'redirectUri' => 'https://some-app.auth0.com',
         'audience' => ['aud1', 'aud2', 'aud3'],

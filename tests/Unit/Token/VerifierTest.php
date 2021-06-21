@@ -12,12 +12,13 @@ beforeEach(function() {
     $this->configuration = new SdkConfiguration([
         'domain' => uniqid(),
         'clientId' => uniqid(),
+        'cookieSecret' => uniqid(),
         'redirectUri' => uniqid(),
     ]);
 });
 
 dataset('jwksUri', static function () {
-    yield [ 'https://test.auth0.com/.well-known/jwks.json', md5('https://test.auth0.com/.well-known/jwks.json') ];
+    yield [ 'https://test.auth0.com/.well-known/jwks.json', hash('sha256', 'https://test.auth0.com/.well-known/jwks.json') ];
 });
 
 dataset('tokenHs256', static function () {
@@ -40,7 +41,7 @@ dataset('tokenRs256', static function () {
     $keyPair['cert'] = trim(mb_substr($keyPair['cert'], strpos($keyPair['cert'], "\n")+1));
     $keyPair['cert'] = str_replace("\n", '', mb_substr($keyPair['cert'], 0, strrpos($keyPair['cert'], "\n")));
 
-    yield [ $keyPair, $token, $payload, $signature, $headers, 'https://test.auth0.com/.well-known/jwks.json', md5('https://test.auth0.com/.well-known/jwks.json') ];
+    yield [ $keyPair, $token, $payload, $signature, $headers, 'https://test.auth0.com/.well-known/jwks.json', hash('sha256', 'https://test.auth0.com/.well-known/jwks.json') ];
 });
 
 test('verify() throws an error when token alg claim is missing', function(): void {
