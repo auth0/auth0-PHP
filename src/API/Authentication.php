@@ -80,16 +80,17 @@ final class Authentication
     public function getAuthorizationLink(
         ?array $params = null
     ): string {
-        $returnUri = $this->configuration->getRedirectUri();
+        $redirectUri = isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null;
+        $redirectUri = Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri() ?? null;
 
-        if ($returnUri === null) {
+        if ($redirectUri === null) {
             throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
         }
 
         $params = Shortcut::mergeArrays(Shortcut::filterArray([
             'client_id' => $this->configuration->getClientId(),
             'response_type' => $this->configuration->getResponseType(),
-            'redirect_uri' => $returnUri,
+            'redirect_uri' => $redirectUri,
             'audience' => $this->configuration->buildDefaultAudience(),
             'scope' => $this->configuration->buildScopeString(),
             'organization' => $this->configuration->buildDefaultOrganization(),
@@ -179,9 +180,10 @@ final class Authentication
     public function getLoginLink(
         ?array $params = null
     ): string {
-        $returnUri = $this->configuration->getRedirectUri();
+        $redirectUri = isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null;
+        $redirectUri = Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri() ?? null;
 
-        if ($returnUri === null) {
+        if ($redirectUri === null) {
             throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
         }
 
@@ -190,7 +192,7 @@ final class Authentication
             'audience' => $this->configuration->buildDefaultAudience(),
             'response_mode' => $this->configuration->getResponseMode(),
             'response_type' => $this->configuration->getResponseType(),
-            'redirect_uri' => $returnUri,
+            'redirect_uri' => $redirectUri,
             'max_age' => $this->configuration->getTokenMaxAge(),
             'state' => $this->transient->issue('state'),
             'nonce' => $this->transient->issue('nonce'),
