@@ -35,7 +35,6 @@ parameters:
         - '#Call to function method_exists\(\) with \$this\(Auth0\\SDK\\Configuration\\(.*)\) and (.*) will always evaluate to true.#'
         - '#Class "Auth0\\SDK\\Exception\\(.*)" is not allowed to extend "Exception".#'
         - '#Class "Auth0\\SDK\\API\\Management\\(.*)" is not allowed to extend "Auth0\\SDK\\API\\Management\\ManagementEndpoint".#'
-        - '#Class "Auth0\\SDK\\Exception\\(.*)" is not allowed to extend "Auth0\\SDK\\Exception\\SdkException".#'
         - '#Cannot call method getName\(\) on ReflectionType\|null.#'
         - '#Cannot call method createRequest\(\) on Psr\\Http\\Message\\RequestFactoryInterface\|null.#'
         - '#Parameter \#1 \$object of function method_exists expects object\|string, Psr\\Http\\Client\\ClientInterface\|null given.#'

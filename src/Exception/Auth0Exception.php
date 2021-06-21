@@ -9,6 +9,6 @@ namespace Auth0\SDK\Exception;
  *
  * @codeCoverageIgnore
  */
-abstract class SdkException extends \Exception
+interface Auth0Exception extends \Throwable
 {
 }

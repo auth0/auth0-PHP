@@ -7,7 +7,7 @@ namespace Auth0\SDK\Exception;
 /**
  * @codeCoverageIgnore
  */
-final class InvalidTokenException extends SdkException
+final class InvalidTokenException extends \Exception implements Auth0Exception
 {
     public const MSG_BAD_SEPARATORS = 'The JWT string must contain two dots';
     public const MSG_BAD_SIGNATURE = 'Cannot verify signature';
