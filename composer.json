@@ -59,6 +59,7 @@
     "pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
     "infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest",
     "test": [
+      "Composer\\Config::disableProcessTimeout",
       "@phpinsights",
       "@phpstan",
       "@psalm",
