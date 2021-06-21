@@ -27,7 +27,7 @@
     "firebase/php-jwt": "^5.0",
     "infection/infection": "^0.23",
     "mockery/mockery": "^1.4",
-    "nunomaduro/phpinsights": "^1.14 || dev-master",
+    "nunomaduro/phpinsights": "^2.0",
     "nyholm/psr7": "^1.4",
     "pestphp/pest": "^1.0",
     "php-http/mock-client": "^1.4",
@@ -54,7 +54,7 @@
   "scripts": {
     "phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
     "phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
-    "psalm": "@php ./vendor/bin/psalm --threads=4",
+    "psalm": "@php ./vendor/bin/psalm",
     "phpmd": "@php ./vendor/bin/phpmd src text phpmd.ruleset.xml.dist",
     "pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
     "infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest",
