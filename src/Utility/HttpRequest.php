@@ -115,7 +115,7 @@ final class HttpRequest
         ?array &$mockedResponses = null
     ) {
         $this->configuration = & $configuration;
-        $this->method = mb_strtolower($method);
+        $this->method = mb_strtoupper($method);
         $this->basePath = $basePath;
         $this->headers = $headers;
         $this->domain = $domain;
