@@ -286,7 +286,7 @@ string                        $tokenAlgorithm       Optional. Defaults to 'RS256
 string|null                   $tokenJwksUri         Optional. URI to the JWKS when verifying RS256 tokens.
 int|null                      $tokenMaxAge          Optional. The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
 int                           $tokenLeeway          Optional. Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
-CacheInterface|null           $tokenCache           Optional. A PSR-16 compatible cache adapter for storing JSON Web Key Sets (JWKS).
+CacheItemPoolInterface|null   $tokenCache           Optional. A PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS).
 int                           $tokenCacheTtl        Optional. How long (in seconds) to keep a JWKS cached.
 ClientInterface|null          $httpClient           Optional. A PSR-18 compatible HTTP client to use for API requests.
 RequestFactoryInterface|null  $httpRequestFactory   Optional. A PSR-17 compatible request factory to generate HTTP requests.
@@ -301,12 +301,13 @@ bool                          $persistRefreshToken  Optional. Defaults to true. 
 StoreInterface|null           $transientStorage     Optional. Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as a nonce.
 bool                          $queryUserInfo        Optional. Defaults to false. If true, query the /userinfo endpoint during an authorization code exchange.
 string|null                   $managementToken      Optional. An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
+CacheItemPoolInterface|null   $managementTokenCache Optional. A PSR-6 compatible cache adapter for storing management access tokens.
 ```
 
-↗ [Learn more about PSR-16 caches.](https://www.php-fig.org/psr/psr-16/)<br />
+↗ [Learn more about PSR-6 caches.](https://www.php-fig.org/psr/psr-6/)<br />
 ↗ [Learn more about PSR-17 HTTP Factories,](https://www.php-fig.org/psr/psr-17/) which are used to create [PSR-7 HTTP messages.](https://www.php-fig.org/psr/psr-7/)<br />
 ↗ [Learn more about the PSR-18 HTTP Client standard.](https://www.php-fig.org/psr/psr-18/)<br />
-↗ [Find PSR-16 cache libraries on Packagist.](https://packagist.org/search/?query=PSR-16&type=library&tags=psr%2016)<br />
+↗ [Find PSR-6 cache libraries on Packagist.](https://packagist.org/search/?query=PSR-6&type=library&tags=psr%206)<br />
 ↗ [Find PSR-17 HTTP factory libraries on Packagist.](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017)<br />
 ↗ [Find PSR-18 HTTP client libraries on Packagist.](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018)
 
