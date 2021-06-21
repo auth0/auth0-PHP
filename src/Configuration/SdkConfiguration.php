@@ -13,11 +13,11 @@ use Auth0\SDK\Store\SessionStore;
 use Http\Discovery\Exception\NotFoundException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Psr\SimpleCache\CacheInterface;
 
 /**
  * Configuration container for use with Auth0\SDK
@@ -40,7 +40,7 @@ use Psr\SimpleCache\CacheInterface;
  * @method SdkConfiguration setSessionStorage(?StoreInterface $sessionStorage = null)
  * @method SdkConfiguration setScope(?array $scope = null)
  * @method SdkConfiguration setTokenAlgorithm(string $tokenAlgorithm = 'RS256')
- * @method SdkConfiguration setTokenCache(?CacheInterface $cache = null)
+ * @method SdkConfiguration setTokenCache(?CacheItemPoolInterface $cache = null)
  * @method SdkConfiguration setTokenCacheTtl(int $tokenCacheTtl = 60)
  * @method SdkConfiguration setTokenJwksUri(?string $tokenJwksUri = null)
  * @method SdkConfiguration setTokenLeeway(int $tokenLeeway = 60)
@@ -70,7 +70,7 @@ use Psr\SimpleCache\CacheInterface;
  * @method StoreInterface|null getSessionStorage()
  * @method array<string> getScope()
  * @method string getTokenAlgorithm()
- * @method CacheInterface|null getTokenCache()
+ * @method CacheItemPoolInterface|null getTokenCache()
  * @method int getTokenCacheTtl()
  * @method string|null getTokenJwksUri()
  * @method int|null getTokenLeeway()
@@ -133,7 +133,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param string|null                   $tokenJwksUri         Optional. URI to the JWKS when verifying RS256 tokens.
      * @param int|null                      $tokenMaxAge          Optional. Maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
      * @param int                           $tokenLeeway          Optional. Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
-     * @param CacheInterface|null           $tokenCache           Optional. A PSR-16 compatible cache adapter for storing JSON Web Key Sets (JWKS).
+     * @param CacheItemPoolInterface|null   $tokenCache           Optional. A PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS).
      * @param int                           $tokenCacheTtl        Optional. How long (in seconds) to keep a JWKS cached.
      * @param ClientInterface|null          $httpClient           Optional. A PSR-18 compatible HTTP client to use for API requests.
      * @param RequestFactoryInterface|null  $httpRequestFactory   Optional. A PSR-17 compatible request factory to generate HTTP requests.
@@ -165,7 +165,7 @@ final class SdkConfiguration implements ConfigurableContract
         ?string $tokenJwksUri = null,
         ?int $tokenMaxAge = null,
         int $tokenLeeway = 60,
-        ?CacheInterface $tokenCache = null,
+        ?CacheItemPoolInterface $tokenCache = null,
         int $tokenCacheTtl = 60,
         ?ClientInterface $httpClient = null,
         ?RequestFactoryInterface $httpRequestFactory = null,
