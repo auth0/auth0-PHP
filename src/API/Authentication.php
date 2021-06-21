@@ -244,7 +244,7 @@ final class Authentication
         $payload = Shortcut::mergeArrays([
             'returnTo' => $returnUri,
             'client_id' => $this->configuration->getClientId(),
-        ]), $params);
+        ], $params);
 
         return sprintf(
             '%s/v2/logout?%s',

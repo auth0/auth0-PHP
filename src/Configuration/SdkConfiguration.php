@@ -32,6 +32,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setHttpStreamFactory(?StreamFactoryInterface $httpStreamFactory = null)
  * @method SdkConfiguration setHttpTelemetry(bool $httpTelemetry = true)
  * @method SdkConfiguration setManagementToken(?string $managementToken = null)
+ * @method SdkConfiguration setManagementTokenCache(?CacheItemPoolInterface $cache = null)
  * @method SdkConfiguration setOrganization(?array $organization = null)
  * @method SdkConfiguration setPersistAccessToken(bool $persistAccessToken = true)
  * @method SdkConfiguration setPersistIdToken(bool $persistIdToken = true)
@@ -62,6 +63,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method StreamFactoryInterface|null getHttpStreamFactory()
  * @method bool getHttpTelemetry()
  * @method string|null getManagementToken()
+ * @method CacheItemPoolInterface|null getManagementTokenCache()
  * @method array<string>|null getOrganization()
  * @method bool getPersistAccessToken()
  * @method bool getPersistIdToken()
@@ -92,6 +94,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool hasHttpStreamFactory()
  * @method bool hasHttpTelemetry()
  * @method bool hasManagementToken()
+ * @method bool hasManagementTokenCache()
  * @method bool hasOrganization()
  * @method bool hasPersistAccessToken()
  * @method bool hasPersistIdToken()
@@ -179,7 +182,8 @@ final class SdkConfiguration implements ConfigurableContract
         bool $persistRefreshToken = true,
         ?StoreInterface $transientStorage = null,
         bool $queryUserInfo = false,
-        ?string $managementToken = null
+        ?string $managementToken = null,
+        ?CacheItemPoolInterface $managementTokenCache = null
     ) {
         $this->setState(func_get_args());
 

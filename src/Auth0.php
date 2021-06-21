@@ -121,7 +121,7 @@ final class Auth0
         ?array $params = null
     ): void {
         $params = Shortcut::mergeArrays([
-            'screen_hint' => 'signup'
+            'screen_hint' => 'signup',
         ], $params);
 
         $this->login($params);

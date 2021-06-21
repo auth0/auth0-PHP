@@ -11,18 +11,4 @@ namespace Auth0\SDK\Exception;
  */
 interface Auth0Exception extends \Throwable
 {
-    final public function __construct(
-        string $message,
-        int $code = 0,
-        ?\Throwable $previous = null
-    ) {
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1] ?? null;
-
-        if ($backtrace !== null) {
-            $this->file = $backtrace['file'];
-            $this->line = $backtrace['line'];
-        }
-
-        parent::__construct($message, $code, $previous);
-    }
 }

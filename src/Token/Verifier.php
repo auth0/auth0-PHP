@@ -56,8 +56,11 @@ final class Verifier
      * An PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
      */
     private ?CacheItemPoolInterface $cache = null;
-    
-    private ?SdkConfiguration $configuration = null;
+
+    /**
+     * Instance of SdkConfiguration, for shared configuration across classes.
+     */
+    private SdkConfiguration $configuration;
 
     /**
      * Constructor for the Token Verifier class.

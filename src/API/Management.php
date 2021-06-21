@@ -183,7 +183,20 @@ final class Management
         // Retrieve any configured management token.
         $managementToken = $configuration->getManagementToken();
 
-        // If no token was provided, try to get one.
+        // PSR-6 cache to use for management access token caching.
+        $cache = $configuration->getManagementTokenCache();
+
+        // If no token was provided, try to get one from cache.
+        if ($managementToken === null) {
+            if ($cache !== null) {
+                $item = $cache->getItem('managementAccessToken');
+                if ($item->isHit()) {
+                    $managementToken = $item->get();
+                }
+            }
+        }
+
+        // If no token was provided or available from cache, try to get one.
         if ($managementToken === null) {
             $auth = new Authentication($configuration);
             $response = $auth->clientCredentials(['audience' => $configuration->buildDomainUri() . '/api/v2/']);
@@ -193,6 +206,15 @@ final class Management
 
                 if (isset($response['access_token'])) {
                     $managementToken = $response['access_token'];
+
+                    // If cache is available, store the token.
+                    if ($cache !== null) {
+                        $cachedKey = $cache->getItem('managementAccessToken');
+                        $cachedKey->set($managementToken);
+                        $cachedKey->expiresAfter((int) ($response['expires_in'] ?? 3600));
+
+                        $cache->save($cachedKey);
+                    }
                 }
             }
         }
