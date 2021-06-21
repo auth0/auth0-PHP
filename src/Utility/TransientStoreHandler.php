@@ -107,11 +107,11 @@ final class TransientStoreHandler
         int $length = 16
     ): string {
         try {
-            $random_bytes = random_bytes($length);
+            $randomBytes = random_bytes($length);
         } catch (\Exception $exception) {
-            $random_bytes = (string) openssl_random_pseudo_bytes($length);
+            $randomBytes = (string) openssl_random_pseudo_bytes($length);
         }
 
-        return bin2hex($random_bytes);
+        return bin2hex($randomBytes);
     }
 }

@@ -31,6 +31,7 @@
     "nyholm/psr7": "^1.4",
     "pestphp/pest": "^1.0",
     "php-http/mock-client": "^1.4",
+    "phpmd/phpmd": "^2.10",
     "phpstan/phpstan": "^0.12",
     "phpstan/phpstan-strict-rules": "^0.12",
     "thecodingmachine/phpstan-strict-rules": "^0.12",
@@ -54,6 +55,7 @@
     "phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
     "phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
     "psalm": "@php ./vendor/bin/psalm --threads=4",
+    "phpmd": "@php ./vendor/bin/phpmd src text phpmd.ruleset.xml.dist",
     "pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
     "infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest",
     "test": [

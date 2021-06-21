@@ -47,6 +47,7 @@ return [
             'exclude' => [
                 'src/Configuration/SdkConfiguration.php',
                 'src/Configuration/SdkState.php',
+                'src/API/Management.php',
             ],
         ],
         \SlevomatCodingStandard\Sniffs\Classes\ModernClassNameReferenceSniff::class => [

@@ -44,8 +44,8 @@ final class Organizations extends ManagementEndpoint
         $body = Shortcut::mergeArrays([
             'name' => $name,
             'display_name' => $displayName,
-            'branding' => Shortcut::nullifyEmptyArray($branding, true),
-            'metadata' => Shortcut::nullifyEmptyArray($metadata, true),
+            'branding' => Shortcut::nullifyEmptyArrayAsObject($branding),
+            'metadata' => Shortcut::nullifyEmptyArrayAsObject($metadata),
         ], $body);
 
         return $this->getHttpClient()->method('post')
@@ -140,8 +140,8 @@ final class Organizations extends ManagementEndpoint
 
         $body = Shortcut::mergeArrays([
             'display_name' => $displayName,
-            'branding' => Shortcut::nullifyEmptyArray($branding, true),
-            'metadata' => Shortcut::nullifyEmptyArray($metadata, true),
+            'branding' => Shortcut::nullifyEmptyArrayAsObject($branding),
+            'metadata' => Shortcut::nullifyEmptyArrayAsObject($metadata),
         ], $body);
 
         return $this->getHttpClient()->method('patch')

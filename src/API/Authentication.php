@@ -192,22 +192,9 @@ final class Authentication
             'response_type' => $this->configuration->getResponseType(),
             'redirect_uri' => $returnUri,
             'max_age' => $this->configuration->getTokenMaxAge(),
+            'state' => $this->transient->issue('state'),
+            'nonce' => $this->transient->issue('nonce'),
         ]), $params);
-
-        if (! isset($params['state'])) {
-            // No state provided by application so generate, store, and send one.
-            $params['state'] = $this->transient->issue('state');
-        } else {
-            // Store the passed-in value.
-            $this->transient->store('state', (string) $params['state']);
-        }
-
-        // ID token nonce validation is required so auth params must include one.
-        if (! isset($params['nonce'])) {
-            $params['nonce'] = $this->transient->issue('nonce');
-        } else {
-            $this->transient->store('nonce', (string) $params['nonce']);
-        }
 
         if ($this->configuration->getUsePkce()) {
             $codeVerifier = PKCE::generateCodeVerifier(128);

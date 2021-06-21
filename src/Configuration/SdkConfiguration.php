@@ -9,7 +9,6 @@ use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Mixins\ConfigurableMixin;
 use Auth0\SDK\Store\CookieStore;
-use Auth0\SDK\Store\SessionStore;
 use Http\Discovery\Exception\NotFoundException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
@@ -23,6 +22,11 @@ use Psr\Http\Message\StreamFactoryInterface;
  * Configuration container for use with Auth0\SDK
  *
  * @method SdkConfiguration setAudience(?array $audience = null)
+ * @method SdkConfiguration setCookieDomain(?string $cookieDomain = null)
+ * @method SdkConfiguration setCookieExpires(int $cookieExpires = 0)
+ * @method SdkConfiguration setCookiePath(string $cookiePath = '/')
+ * @method SdkConfiguration setCookieSecret(?string $cookieSecret)
+ * @method SdkConfiguration setCookieSecure(bool $cookieSecure = false)
  * @method SdkConfiguration setClientId(?string $clientId = null)
  * @method SdkConfiguration setClientSecret(?string $clientSecret = null)
  * @method SdkConfiguration setDomain(?string $domain = null)
@@ -54,6 +58,11 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setUsePkce(bool $usePkce)
  *
  * @method array<string>|null getAudience()
+ * @method string|null getCookieDomain()
+ * @method int getCookieExpires()
+ * @method string getCookiePath()
+ * @method string|null getCookieSecret()
+ * @method bool getCookieSecure()
  * @method string getClientId()
  * @method string|null getClientSecret()
  * @method string getDomain()
@@ -85,6 +94,11 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool getUsePkce()
  *
  * @method bool hasAudience()
+ * @method bool hasCookieDomain()
+ * @method bool hasCookieExpires()
+ * @method bool hasCookiePath()
+ * @method bool hasCookieSecret()
+ * @method bool hasCookieSecure()
  * @method bool hasClientId()
  * @method bool hasClientSecret()
  * @method bool hasDomain()
@@ -121,10 +135,10 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * SdkConfiguration Constructor
      *
-     * @param array<mixed>|null             $configuration        Optional. An array of parameter keys (matching this constructor's arguments) and values. Overrides any passed arguments with the same key name.
-     * @param string|null                   $domain               Required, if not specified in $configuration. Auth0 domain for your tenant.
-     * @param string|null                   $clientId             Required, if not specified in $configuration. Client ID, found in the Auth0 Application settings.
-     * @param string|null                   $redirectUri          Optional, if not specified in $configuration. Authentication callback uri, as defined in your Auth0 Application settings.
+     * @param array<mixed>|null             $configuration        Optional. An key-value array matching this constructor's arguments. Overrides any passed arguments with the same key name.
+     * @param string|null                   $domain               Required. Auth0 domain for your tenant.
+     * @param string|null                   $clientId             Required. Client ID, found in the Auth0 Application settings.
+     * @param string|null                   $redirectUri          Optional. Authentication callback URI, as defined in your Auth0 Application settings.
      * @param string|null                   $clientSecret         Optional. Client Secret, found in the Auth0 Application settings.
      * @param array<string>|null            $audience             Optional. One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
      * @param array<string>|null            $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
@@ -143,12 +157,17 @@ final class SdkConfiguration implements ConfigurableContract
      * @param ResponseFactoryInterface|null $httpResponseFactory  Optional. A PSR-17 compatible response factory to generate HTTP responses.
      * @param StreamFactoryInterface|null   $httpStreamFactory    Optional. A PSR-17 compatible stream factory to create request body streams.
      * @param bool                          $httpTelemetry        Optional. Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
-     * @param StoreInterface|null           $sessionStorage       Optional. Defaults to use PHP native sessions. A StoreInterface-compatible class for storing Token state.
+     * @param StoreInterface|null           $sessionStorage       Optional. Defaults to use cookies. A StoreInterface-compatible class for storing Token state.
+     * @param string|null                   $cookieSecret         Optional. The secret used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback.
+     * @param string|null                   $cookieDomain         Optional. Defaults to value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
+     * @param int                           $cookieExpires        Optional. Defaults to 0. How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
+     * @param string                        $cookiePath           Optional. Defaults to '/'. Specifies path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
+     * @param bool                          $cookieSecure         Optional. Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
      * @param bool                          $persistUser          Optional. Defaults to true. If true, the user data will persist in session storage.
      * @param bool                          $persistIdToken       Optional. Defaults to true. If true, the Id Token will persist in session storage.
      * @param bool                          $persistAccessToken   Optional. Defaults to true. If true, the Access Token will persist in session storage.
      * @param bool                          $persistRefreshToken  Optional. Defaults to true. If true, the Refresh Token will persist in session storage.
-     * @param StoreInterface|null           $transientStorage     Optional. Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as a nonce.
+     * @param StoreInterface|null           $transientStorage     Optional. Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as nonces.
      * @param bool                          $queryUserInfo        Optional. Defaults to false. If true, query the /userinfo endpoint during an authorization code exchange.
      * @param string|null                   $managementToken      Optional. An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
      */
@@ -176,6 +195,11 @@ final class SdkConfiguration implements ConfigurableContract
         ?StreamFactoryInterface $httpStreamFactory = null,
         bool $httpTelemetry = true,
         ?StoreInterface $sessionStorage = null,
+        ?string $cookieSecret = null,
+        ?string $cookieDomain = null,
+        int $cookieExpires = 0,
+        string $cookiePath = '/',
+        bool $cookieSecure = false,
         bool $persistUser = true,
         bool $persistIdToken = true,
         bool $persistAccessToken = true,
@@ -262,13 +286,11 @@ final class SdkConfiguration implements ConfigurableContract
     private function setupConfiguration(): void
     {
         if (! $this->getSessionStorage() instanceof StoreInterface) {
-            $this->setSessionStorage(new SessionStore());
+            $this->setSessionStorage(new CookieStore($this));
         }
 
         if (! $this->getTransientStorage() instanceof StoreInterface) {
-            $this->setTransientStorage(new CookieStore([
-                'samesite' => $this->getResponseMode() === 'form_post' ? 'None' : 'Lax',
-            ]));
+            $this->setTransientStorage(new CookieStore($this));
         }
 
         // If a PSR-18 compatible client wasn't provided, try to discover one.
@@ -304,6 +326,22 @@ final class SdkConfiguration implements ConfigurableContract
                 $this->setHttpStreamFactory(Psr17FactoryDiscovery::findStreamFactory());
             } catch (NotFoundException $exception) {
                 throw \Auth0\SDK\Exception\ConfigurationException::missingPsr17Library();
+            }
+        }
+
+        if (! $this->hasCookieDomain()) {
+            $domain = $_SERVER['HTTP_HOST'] ?? $this->getRedirectUri();
+
+            if ($domain !== null) {
+                $parsed = parse_url($domain, PHP_URL_HOST);
+
+                if (is_string($parsed)) {
+                    $domain = $parsed;
+                }
+
+                if ($domain) {
+                    $this->setCookieDomain($domain);
+                }
             }
         }
     }

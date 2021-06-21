@@ -12,6 +12,7 @@ beforeEach(function() {
     $this->configuration = new SdkConfiguration([
         'domain' => uniqid(),
         'clientId' => uniqid(),
+        'cookieSecret' => uniqid(),
         'redirectUri' => uniqid(),
     ]);
 });

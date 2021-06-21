@@ -29,12 +29,11 @@ final class Shortcut
      *
      * @param array<mixed>|null $value The value to trim, if a string, or null.
      *
-     * @return array<mixed>|object|null
+     * @return array<mixed>
      */
     public static function nullifyEmptyArray(
-        ?array $value,
-        bool $returnObject = false
-    ) {
+        ?array $value
+    ): ?array {
         if ($value === null) {
             return null;
         }
@@ -43,7 +42,20 @@ final class Shortcut
             return null;
         }
 
-        if ($returnObject) {
+        return $value;
+    }
+
+    /**
+     * Accept a null or array, and always returns a null if array is empty.
+     *
+     * @param array<mixed>|null $value The value to trim, if a string, or null.
+     */
+    public static function nullifyEmptyArrayAsObject(
+        ?array $value
+    ): ?object {
+        $value = self::nullifyEmptyArray($value);
+
+        if ($value !== null) {
             return (object) $value;
         }
 

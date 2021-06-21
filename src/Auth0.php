@@ -97,6 +97,14 @@ final class Auth0
     }
 
     /**
+     * Retrieve the SdkConfiguration instance.
+     */
+    public function configuration(): SdkConfiguration
+    {
+        return $this->configuration;
+    }
+
+    /**
      * Redirect to the login page.
      *
      * @param array<int|string|null>|null $params Additional parameters to include with the request.
@@ -211,37 +219,40 @@ final class Auth0
     {
         $code = $this->getRequestParameter('code');
         $state = $this->getRequestParameter('state');
-        $code_verifier = null;
+        $codeVerifier = null;
 
         if ($code === null) {
             return false;
         }
 
         if ($state === null || ! $this->transient->verify('state', $state)) {
+            $this->clear();
             throw \Auth0\SDK\Exception\StateException::invalidState();
         }
 
         if ($this->configuration->getUsePkce()) {
-            $code_verifier = $this->transient->getOnce('code_verifier');
+            $codeVerifier = $this->transient->getOnce('code_verifier');
 
-            if ($code_verifier === null) {
+            if ($codeVerifier === null) {
                 throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
             }
         }
 
         if ($this->state->hasUser()) {
-            throw \Auth0\SDK\Exception\StateException::existingSession();
+            $this->clear();
         }
 
-        $response = $this->authentication()->codeExchange($code, $this->configuration->getRedirectUri(), $code_verifier);
+        $response = $this->authentication()->codeExchange($code, $this->configuration->getRedirectUri(), $codeVerifier);
 
         if (! HttpResponse::wasSuccessful($response)) {
+            $this->clear();
             throw \Auth0\SDK\Exception\StateException::failedCodeExchange();
         }
 
         $response = HttpResponse::decodeContent($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
+            $this->clear();
             throw \Auth0\SDK\Exception\StateException::badAccessToken();
         }
 
@@ -253,6 +264,7 @@ final class Auth0
 
         if (isset($response['id_token'])) {
             if (! $this->transient->isset('nonce')) {
+                $this->clear();
                 throw \Auth0\SDK\Exception\StateException::missingNonce();
             }
 

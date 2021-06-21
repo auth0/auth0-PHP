@@ -25,6 +25,7 @@ class HttpRequestTest extends TestCase
     ): HttpRequest {
         $config = new SdkConfiguration([
             'domain' => 'api.local.test',
+            'cookieSecret' => uniqid(),
             'clientId' => uniqid(),
             'redirectUri' => uniqid(),
         ]);
