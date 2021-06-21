@@ -24,19 +24,6 @@ test('__construct() throws an error when clientId is not configured', function()
     ]);
 });
 
-test('__construct() throws an error when redirectUri is not configured', function(): void {
-    $domain = uniqid();
-    $clientId = uniqid();
-
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_MISSING_REDIRECT_URI);
-
-    new SdkConfiguration([
-        'domain' => $domain,
-        'clientId' => $clientId,
-    ]);
-});
-
 test('__construct() accepts a configuration array', function(): void {
     $domain = uniqid();
     $clientId = uniqid();
