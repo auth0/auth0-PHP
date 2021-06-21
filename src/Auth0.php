@@ -48,7 +48,7 @@ final class Auth0
      *
      * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      *
-     * @throws \Auth0\SDK\Exception\ConfigurationException When `domain`, `clientId`, or `redirectUri` are not provided.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `domain` or `clientId` are not provided.
      * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenAlgorithm` is provided but the value is not supported.
      * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenMaxAge` or `tokenLeeway` are provided but the value is not numeric.
      */

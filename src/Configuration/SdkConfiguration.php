@@ -64,7 +64,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method string|null getManagementToken()
  * @method array<string>|null getOrganization()
  * @method bool getQueryUserInfo()
- * @method string getRedirectUri()
+ * @method string|null getRedirectUri()
  * @method string getResponseMode()
  * @method string getResponseType()
  * @method StoreInterface|null getSessionStorage()
@@ -118,10 +118,10 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * SdkConfiguration Constructor
      *
-     * @param array<mixed>|null      $configuration        Optional. An array of parameter keys (matching this constructor's arguments) and values. Overrides any passed arguments with the same key name.
+     * @param array<mixed>|null             $configuration        Optional. An array of parameter keys (matching this constructor's arguments) and values. Overrides any passed arguments with the same key name.
      * @param string|null                   $domain               Required, if not specified in $configuration. Auth0 domain for your tenant.
      * @param string|null                   $clientId             Required, if not specified in $configuration. Client ID, found in the Auth0 Application settings.
-     * @param string|null                   $redirectUri          Required, if not specified in $configuration. Authentication callback uri, as defined in your Auth0 Application settings.
+     * @param string|null                   $redirectUri          Optional, if not specified in $configuration. Authentication callback uri, as defined in your Auth0 Application settings.
      * @param string|null                   $clientSecret         Optional. Client Secret, found in the Auth0 Application settings.
      * @param array<string>|null            $audience             Optional. One or more API identifiers, found in your Auth0 API settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'aud' claim to successfully validate an ID Token.
      * @param array<string>|null            $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The first supplied identifier will be used when generating links. If provided, at least one of these values must match the 'org_id' claim to successfully validate an ID Token.
@@ -186,7 +186,6 @@ final class SdkConfiguration implements ConfigurableContract
         $this->setValidations([
             'getDomain',
             'getClientId',
-            'getRedirectUri',
         ]);
 
         $this->setupConfiguration();
