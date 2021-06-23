@@ -383,7 +383,7 @@ class Auth0Test extends TestCase
             'invitation' => '__test_invitation__',
         ];
 
-        $auth_url = $auth0->authentication()->getLoginLink($custom_params);
+        $auth_url = $auth0->authentication()->getLoginLink(null, $custom_params);
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
 
@@ -409,7 +409,7 @@ class Auth0Test extends TestCase
             'response_mode' => 'form_post',
         ];
 
-        $auth_url = $auth0->authentication()->getLoginLink($override_params);
+        $auth_url = $auth0->authentication()->getLoginLink(null, $override_params);
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
 
@@ -517,7 +517,7 @@ class Auth0Test extends TestCase
             'tokenMaxAge' => 1000,
         ]);
 
-        $auth_url = $auth0->authentication()->getLoginLink([
+        $auth_url = $auth0->authentication()->getLoginLink(null, [
             'max_age' => 1001,
         ]);
 
@@ -576,6 +576,7 @@ class Auth0Test extends TestCase
     public function testThatIdTokenOrganizationIsCheckedWhenSet(): void
     {
         $token = (new TokenGenerator())->withHs256();
+
         $auth0 = new Auth0(self::$baseConfig + [
             'tokenAlgorithm' => 'HS256',
             'organization' => ['org8675309'],
@@ -584,7 +585,7 @@ class Auth0Test extends TestCase
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
         $this->expectExceptionMessage(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_ORG_ID_CLAIM);
 
-        $auth0->setIdToken($token);
+        $auth0->decode($token);
     }
 
     /**
@@ -628,7 +629,7 @@ class Auth0Test extends TestCase
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
         $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISMATCHED_ORG_ID_CLAIM, $expectedOrgId, $tokenOrgId));
 
-        $auth0->setIdToken($token);
+        $auth0->decode($token);
     }
 
     /**
@@ -679,7 +680,7 @@ class Auth0Test extends TestCase
         $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
         $this->expectExceptionMessage('Cannot verify signature');
 
-        $auth0->setIdToken((new TokenGenerator())->withRs256([], null, ['kid' => '__test_kid__']));
+        $auth0->decode((new TokenGenerator())->withRs256([], null, ['kid' => '__test_kid__']));
     }
 
     /**
@@ -702,7 +703,7 @@ class Auth0Test extends TestCase
             ) {
                 $response = '__test_custom_store__' . $key . '__';
 
-                if ($key === 'user') {
+                if ($key === 'user' || $key === 'accessTokenScope') {
                     return [ $response ];
                 }
 
