@@ -14,12 +14,16 @@
     "php": "^7.4 || ^8.0",
     "ext-json": "*",
     "ext-openssl": "*",
+    "ext-filter": "*",
+    "ext-hash": "*",
+    "ext-mbstring": "*",
     "php-http/discovery": "^1.0",
-    "php-http/httplug": "^2.0",
     "php-http/multipart-stream-builder": "^1.1",
+    "psr/cache": "^1.0 || ^2.0 || ^3.0",
+    "psr/event-dispatcher": "^1.0",
     "psr/http-client-implementation": "^1.0",
-    "psr/http-message": "^1.0",
-    "psr/cache": "^1.0 || ^2.0 || ^3.0"
+    "psr/http-message-implementation": "^1.0",
+    "psr/http-factory-implementation": "^1.0"
   },
   "require-dev": {
     "symfony/cache": "^4.4 || ^5.2",
@@ -54,7 +58,7 @@
   "scripts": {
     "phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
     "phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
-    "psalm": "@php ./vendor/bin/psalm",
+    "psalm": "@php ./vendor/bin/psalm --no-cache",
     "phpmd": "@php ./vendor/bin/phpmd src text phpmd.ruleset.xml.dist",
     "pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
     "infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest",
