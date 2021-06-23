@@ -155,7 +155,7 @@ final class Auth0
     public function clear(): void
     {
         if ($this->configuration->hasSessionStorage()) {
-            foreach (['user', 'idToken', 'accessToken', 'refreshToken', 'accessTokenExpiration'] as $key) {
+            foreach (['user', 'idToken', 'accessToken', 'accessTokenScope', 'refreshToken', 'accessTokenExpiration'] as $key) {
                 $this->configuration->getSessionStorage()->delete($key);
             }
         }
