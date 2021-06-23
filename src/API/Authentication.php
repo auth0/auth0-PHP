@@ -173,14 +173,16 @@ final class Authentication
     /**
      * Build the login URL.
      *
+     * @param string|null                 $redirectUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
      * @param array<int|string|null>|null $params Optional. Additional parameters to include with the request. See @link for details.
      *
      * @link https://auth0.com/docs/api/authentication#authorize-application
      */
     public function getLoginLink(
+        ?string $redirectUri = null,
         ?array $params = null
     ): string {
-        $redirectUri = isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null;
+        $redirectUri = $redirectUri ?? (isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null);
         $redirectUri = Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri() ?? null;
 
         if ($redirectUri === null) {
@@ -224,6 +226,7 @@ final class Authentication
         ?string $returnUri = null,
         ?array $params = null
     ): string {
+        $returnUri = $returnUri ?? (isset($params['returnTo']) ? (string) $params['returnTo'] : null);
         $returnUri = Shortcut::trimNull($returnUri) ?? $this->configuration->getRedirectUri() ?? null;
 
         if ($returnUri === null) {

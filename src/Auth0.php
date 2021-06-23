@@ -114,7 +114,7 @@ final class Auth0
     public function login(
         ?array $params = null
     ): void {
-        header('Location: ' . $this->authentication()->getLoginLink($params));
+        header('Location: ' . $this->authentication()->getLoginLink(null, $params));
     }
 
     /**
@@ -206,7 +206,9 @@ final class Auth0
     }
 
     /**
-     * Exchange authorization code for access, ID, and refresh tokens
+     * Exchange authorization code for access, ID, and refresh tokens.
+     *
+     * @param string|null $redirectUri  Optional. Redirect URI sent with authorize request. Defaults to the SDK's configured redirectUri.
      *
      * @throws \Auth0\SDK\Exception\StateException If the state value is missing or invalid.
      * @throws \Auth0\SDK\Exception\StateException If there is already an active session.
@@ -215,11 +217,13 @@ final class Auth0
      *
      * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
-    public function exchange(): bool
-    {
+    public function exchange(
+        ?string $redirectUri = null,
+    ): bool {
         $code = $this->getRequestParameter('code');
         $state = $this->getRequestParameter('state');
         $codeVerifier = null;
+        $user = null;
 
         if ($code === null) {
             return false;
@@ -242,7 +246,7 @@ final class Auth0
             $this->clear();
         }
 
-        $response = $this->authentication()->codeExchange($code, $this->configuration->getRedirectUri(), $codeVerifier);
+        $response = $this->authentication()->codeExchange($code, $redirectUri, $codeVerifier);
 
         if (! HttpResponse::wasSuccessful($response)) {
             $this->clear();
@@ -258,6 +262,10 @@ final class Auth0
 
         $this->setAccessToken($response['access_token']);
 
+        if (isset($response['scope'])) {
+            $this->setAccessTokenScope(explode(' ', $response['scope']));
+        }
+
         if (isset($response['refresh_token'])) {
             $this->setRefreshToken($response['refresh_token']);
         }
@@ -269,14 +277,13 @@ final class Auth0
             }
 
             $this->setIdToken($response['id_token']);
+            $user = $this->decode($response['id_token'])->toArray();
         }
 
         if (isset($response['expires_in']) && is_numeric($response['expires_in'])) {
             $expiresIn = time() + (int) $response['expires_in'];
             $this->setAccessTokenExpiration($expiresIn);
         }
-
-        $user = $this->state->getIdTokenDecoded();
 
         if ($user === null || $this->configuration->getQueryUserInfo() === true) {
             $response = $this->authentication()->userInfo($response['access_token']);
@@ -336,6 +343,7 @@ final class Auth0
 
         $idToken = $this->state->getIdToken();
         $accessToken = $this->state->getAccessToken();
+        $accessTokenScope = $this->state->getAccessTokenScope();
         $accessTokenExpiration = (int) $this->state->getAccessTokenExpiration();
         $accessTokenExpired = time() >= $accessTokenExpiration;
         $refreshToken = $this->state->getRefreshToken();
@@ -344,6 +352,7 @@ final class Auth0
             'user' => $user,
             'idToken' => $idToken,
             'accessToken' => $accessToken,
+            'accessTokenScope' => $accessTokenScope ?? [],
             'accessTokenExpiration' => $accessTokenExpiration,
             'accessTokenExpired' => $accessTokenExpired,
             'refreshToken' => $refreshToken,
@@ -415,6 +424,23 @@ final class Auth0
     /**
      * Get token expiration from persisted session or from a code exchange
      *
+     * @return array<string>
+     *
+     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
+     */
+    public function getAccessTokenScope(): ?array
+    {
+        if (! $this->state->hasAccessTokenScope()) {
+            $this->exchange();
+        }
+
+        return $this->state->getAccessTokenScope();
+    }
+
+    /**
+     * Get token expiration from persisted session or from a code exchange
+     *
      * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
      * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
      */
@@ -437,7 +463,6 @@ final class Auth0
     public function setIdToken(
         string $idToken
     ): self {
-        $this->state->setIdTokenDecoded($this->decode($idToken)->toArray());
         $this->state->setIdToken($idToken);
 
         if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistIdToken()) {
@@ -499,7 +524,24 @@ final class Auth0
     }
 
     /**
-     * Sets and persists the refresh token.
+     * Sets and persists the access token scope.
+     *
+     * @param array<string> $accessTokenScope An array of scopes for the access token.
+     */
+    public function setAccessTokenScope(
+        array $accessTokenScope
+    ): self {
+        $this->state->setAccessTokenScope($accessTokenScope);
+
+        if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistAccessToken()) {
+            $this->configuration->getSessionStorage()->set('accessTokenScope', $accessTokenScope);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets and persists the access token expiration unix timestmap.
      *
      * @param int $accessTokenExpiration Unix timestamp representing the expiration time on the access token.
      */
@@ -589,6 +631,7 @@ final class Auth0
 
             if ($this->configuration->getPersistAccessToken()) {
                 $state['accessToken'] = $this->configuration->getSessionStorage()->get('accessToken');
+                $state['accessTokenScope'] = $this->configuration->getSessionStorage()->get('accessTokenScope');
 
                 $expires = $this->configuration->getSessionStorage()->get('accessTokenExpiration');
 
