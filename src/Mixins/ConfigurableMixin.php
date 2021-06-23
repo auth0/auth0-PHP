@@ -29,7 +29,7 @@ trait ConfigurableMixin
     private bool $configurationImmutable = false;
 
     /**
-     * Handler for get{VariableName}(), set{VariableName}(), and has{VariableName}() "magic" functions.
+     * Handler for get{VariableName}(), set{VariableName}(), push{VariableName}(), and has{VariableName}() "magic" functions.
      *
      * @param string       $functionName The name of the magic function being invoked.
      * @param array<mixed> $arguments    Any arguments being passed to the magic function.
@@ -56,6 +56,31 @@ trait ConfigurableMixin
             $propertyName = lcfirst(mb_substr($functionName, 3));
             $this->changeState($propertyName, $arguments[0]);
             return $this;
+        }
+
+        if (mb_strlen($functionName) > 5 && mb_substr($functionName, 0, 4) === 'push' && count($arguments) !== 0) {
+            $propertyName = lcfirst(mb_substr($functionName, 4));
+
+            if (isset($this->configuredState[$propertyName])) {
+                if (! is_array($arguments[0])) {
+                    $arguments[0] = [ $arguments[0] ];
+                }
+
+                if (is_array($this->configuredState[$propertyName]->value)) {
+                    $this->changeState($propertyName, array_merge($this->configuredState[$propertyName]->value, $arguments[0]));
+                    return $this;
+                }
+
+                if ($this->configuredState[$propertyName]->value === null) {
+                    $this->changeState($propertyName, $arguments[0]);
+                    return $this;
+                }
+
+                $this->changeState($propertyName, $arguments[0]);
+                return $this->configuredState[$propertyName]->value;
+            }
+
+            throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
         }
 
         if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'has' && count($arguments) === 0) {
