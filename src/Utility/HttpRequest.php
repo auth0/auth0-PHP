@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\Utility;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Event\HttpRequestBuilt;
+use Auth0\SDK\Event\HttpResponseReceived;
 use Auth0\SDK\Utility\Request\FilteredRequest;
 use Auth0\SDK\Utility\Request\PaginatedRequest;
 use Auth0\SDK\Utility\Request\RequestOptions;
@@ -277,7 +279,10 @@ final class HttpRequest
             $httpClient->addResponse($mockedResponse->response); // @phpstan-ignore-line
         }
 
-        // Store the request so it can be potentially reviewed later for error troubleshooting, etc.
+        // Dispatch event to listeners of Auth0\SDK\EventHttpRequestBuilt.
+        $this->configuration->getEventDispatcher()->dispatch(new HttpRequestBuilt($httpRequest));
+
+        // Store the request so it can be potentially reviewed later for error troubleshooting, testing, etc.
         $this->lastRequest = $httpRequest;
 
         try {
@@ -286,17 +291,21 @@ final class HttpRequest
             }
 
             // Use the http client to issue the request and collect the response.
-            $response = $httpClient->sendRequest($httpRequest);
+            $httpResponse = $httpClient->sendRequest($httpRequest);
 
             // Used for unit testing: if we're mocking responses and have a callback assigned, invoke that callback with our request and response.
             if ($mockedResponse && $mockedResponse->callback && is_callable($mockedResponse->callback)) { // @phpstan-ignore-line
-                call_user_func($mockedResponse->callback, $httpRequest, $response); // @phpstan-ignore-line
+                call_user_func($mockedResponse->callback, $httpRequest, $httpResponse); // @phpstan-ignore-line
             }
 
-            $this->lastResponse = $response;
+            // Dispatch event to listeners of Auth0\SDK\HttpResponseReceived.
+            $this->configuration->getEventDispatcher()->dispatch(new HttpResponseReceived($httpResponse, $httpRequest));
+
+            // Store the last response so it can be potentially reviewed later for error troubleshooting, testing, etc.
+            $this->lastResponse = $httpResponse;
 
             // Return the response.
-            return $response;
+            return $httpResponse;
         } catch (ClientExceptionInterface $exception) {
             throw \Auth0\SDK\Exception\NetworkException::requestFailed($exception->getMessage(), $exception);
         }
