@@ -132,6 +132,10 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool hasTokenMaxAge()
  * @method bool hasTransientStorage()
  * @method bool hasUsePkce()
+ *
+ * @method bool pushScope($scope)
+ * @method bool pushAudience($audience)
+ * @method bool pushOrganization($organization)
  */
 final class SdkConfiguration implements ConfigurableContract
 {
