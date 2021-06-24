@@ -115,6 +115,7 @@ final class Auth0
         ?array $params = null
     ): void {
         header('Location: ' . $this->authentication()->getLoginLink(null, $params));
+        exit;
     }
 
     /**
@@ -147,12 +148,13 @@ final class Auth0
     ): void {
         $this->clear();
         header('Location: ' . $this->authentication()->getLogoutLink($returnUri, $params));
+        exit;
     }
 
     /**
      * Delete any persistent data and clear out all stored properties.
      */
-    public function clear(): void
+    public function clear(): self
     {
         if ($this->configuration->hasSessionStorage()) {
             foreach (['user', 'idToken', 'accessToken', 'accessTokenScope', 'refreshToken', 'accessTokenExpiration'] as $key) {
@@ -161,6 +163,8 @@ final class Auth0
         }
 
         $this->state->reset();
+
+        return $this;
     }
 
     /**
@@ -309,7 +313,7 @@ final class Auth0
      */
     public function renew(
         ?array $params = null
-    ): void {
+    ): self {
         $refreshToken = $this->state->getRefreshToken();
 
         if ($refreshToken === null) {
@@ -328,6 +332,8 @@ final class Auth0
         if (isset($response['id_token'])) {
             $this->setIdToken($response['id_token']);
         }
+
+        return $this;
     }
 
     /**
@@ -601,7 +607,7 @@ final class Auth0
     /**
      * If invitation parameters are present in the request, handle extraction and automatically redirect to Universal Login.
      */
-    public function handleInvitation(): void
+    public function handleInvitation(): self
     {
         $invite = $this->getInvitationParameters();
 
@@ -611,12 +617,14 @@ final class Auth0
                 'organization' => (string) $invite->organization,
             ]);
         }
+
+        return $this;
     }
 
     /**
      * Retrieve state from session storage and configure SDK state.
      */
-    private function restoreState(): void
+    private function restoreState(): self
     {
         $state = [];
 
@@ -646,5 +654,7 @@ final class Auth0
         }
 
         $this->state = new SdkState($state);
+
+        return $this;
     }
 }
