@@ -18,6 +18,7 @@
     "ext-hash": "*",
     "ext-mbstring": "*",
     "php-http/discovery": "^1.0",
+    "php-http/httplug": "^2.2",
     "php-http/multipart-stream-builder": "^1.1",
     "psr/cache": "^1.0 || ^2.0 || ^3.0",
     "psr/event-dispatcher": "^1.0",
