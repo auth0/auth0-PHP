@@ -184,6 +184,8 @@ final class Authentication
     ): string {
         $redirectUri = $redirectUri ?? (isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null);
         $redirectUri = Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri() ?? null;
+        $state = $params['state'] ?? $this->transient->issue('state');
+        $nonce = $params['nonce'] ?? $this->transient->issue('nonce');
 
         if ($redirectUri === null) {
             throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
@@ -196,8 +198,8 @@ final class Authentication
             'response_type' => $this->configuration->getResponseType(),
             'redirect_uri' => $redirectUri,
             'max_age' => $this->configuration->getTokenMaxAge(),
-            'state' => $this->transient->issue('state'),
-            'nonce' => $this->transient->issue('nonce'),
+            'state' => $state,
+            'nonce' => $nonce,
         ]), $params);
 
         if ($this->configuration->getUsePkce()) {
@@ -282,7 +284,7 @@ final class Authentication
      *
      * @param string                 $email      Email address to use.
      * @param string                 $type       Use null or "link" to send a link, use "code" to send a verification code.
-     * @param array<string>|null     $authParams Optional. Append or override the link parameters (like scope, redirect_uri, protocol, response_type) when you send a link using email.
+     * @param array<string>|null     $params     Optional. Append or override the link parameters (like scope, redirect_uri, protocol, response_type) when you send a link using email.
      * @param array<int|string>|null $headers    Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
@@ -294,17 +296,17 @@ final class Authentication
     public function emailPasswordlessStart(
         string $email,
         string $type,
-        ?array $authParams = null,
+        ?array $params = null,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::string($email, 'email');
+        Validate::email($email, 'email');
         Validate::string($type, 'type');
 
         $body = Shortcut::filterArray([
             'email' => trim($email),
             'connection' => 'email',
             'send' => trim($type),
-            'authParams' => $authParams ?? [],
+            'authParams' => $params ?? [],
         ]);
 
         return $this->passwordlessStart($body, $headers ?? []);
