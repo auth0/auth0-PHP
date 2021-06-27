@@ -63,13 +63,6 @@
     "phpmd": "@php ./vendor/bin/phpmd src text phpmd.ruleset.xml.dist",
     "pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
     "infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest",
-    "test": [
-      "Composer\\Config::disableProcessTimeout",
-      "@phpinsights",
-      "@phpstan",
-      "@psalm",
-      "@php ./vendor/bin/pest --stop-on-failure --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml",
-      "@php ./vendor/bin/infection --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage"
-    ]
+    "tests": "docker compose run --rm tests"
   }
 }
