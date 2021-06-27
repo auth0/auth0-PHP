@@ -66,21 +66,7 @@ class CookieStore implements StoreInterface
         Validate::string($key, 'key');
 
         $cookieName = $this->getCookieName($key);
-
-        $expiration = $this->configuration->getCookieExpires();
-
-        if ($expiration !== 0) {
-            $expiration = time() + $expiration;
-        }
-
-        $cookieOptions = [
-            'expires' => $expiration,
-            'domain' => $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'],
-            'path' => $this->configuration->getCookiePath(),
-            'secure' => $this->configuration->getCookieSecure(),
-            'httponly' => true,
-            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
-        ];
+        $cookieOptions = $this->getCookieOptions();
 
         $value = $this->encrypt($value);
 
@@ -158,40 +144,57 @@ class CookieStore implements StoreInterface
     }
 
     /**
+     * Removes all persisted values.
+     */
+    public function deleteAll(): void
+    {
+        $cookies = $_COOKIE;
+        $prefix = $this->cookiePrefix . '_';
+
+        while (current($cookies)) {
+            $cookieName = key($cookies);
+
+            if (is_string($cookieName) && mb_substr($cookieName, 0, strlen($prefix)) === $prefix) {
+                $this->delete($cookieName, false);
+            }
+
+            next($cookies);
+        }
+    }
+
+    /**
      * Removes a persisted value identified by $key.
      *
      * @param string $key Cookie to delete.
      */
     public function delete(
-        string $key
+        string $key,
+        bool $applyPrefix = true
     ): void {
         Validate::string($key, 'key');
 
-        $cookieName = $this->getCookieName($key);
-        $chunks = $this->isCookieChunked($key);
-        $cookieOptions = [
-            'expires' => time() - 1000,
-            'path' => $this->configuration->getCookiePath(),
-            'domain' => $this->configuration->getCookieDomain() ?? '',
-            'secure' => $this->configuration->getCookieSecure(),
-            'httponly' => true,
-            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
-        ];
+        if ($applyPrefix) {
+            $key = $this->getCookieName($key);
+        }
+
+        $chunks = $this->isCookieChunked($key, $applyPrefix);
 
         if ($chunks === null) {
             return;
         }
 
-        unset($_COOKIE[$cookieName]);
-        setcookie($cookieName, '', $cookieOptions);
+        $cookieOptions = $this->getCookieOptions(-1000);
+
+        unset($_COOKIE[$key]);
+        setcookie($key, '', $cookieOptions);
 
         if ($chunks !== 0) {
-            unset($_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, '0'])]);
-            setcookie(join(self::KEY_SEPARATOR, [ $cookieName, '0']), '', $cookieOptions);
+            unset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])]);
+            setcookie(join(self::KEY_SEPARATOR, [ $key, '0']), '', $cookieOptions);
 
             for ($chunk = 1; $chunk <= $chunks; $chunk++) {
-                unset($_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, $chunk])]);
-                setcookie(join(self::KEY_SEPARATOR, [ $cookieName, $chunk]), '', $cookieOptions);
+                unset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, $chunk])]);
+                setcookie(join(self::KEY_SEPARATOR, [ $key, $chunk]), '', $cookieOptions);
             }
         }
     }
@@ -204,26 +207,29 @@ class CookieStore implements StoreInterface
     public function getCookieName(
         string $key
     ): string {
-        return hash(self::KEY_HASHING_ALGO, $this->cookiePrefix . '_' . trim($key));
+        return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, trim($key));
     }
 
     /**
      * Determine the chunkiness of a cookie. Returns the number of chunks, or 0 if unchunked. If the cookie wasn't found, returns null.
      *
-     * @param string $key Cookie name to lookup.
+     * @param string $cookieName Cookie name to lookup.
      */
     private function isCookieChunked(
-        string $key
+        string $key,
+        bool $applyPrefix = true
     ): ?int {
         Validate::string($key, 'key');
 
-        $cookieName = $this->getCookieName($key);
-
-        if (isset($_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, '0'])])) {
-            return (int) $_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, '0'])];
+        if ($applyPrefix) {
+            $key = $this->getCookieName($key);
         }
 
-        if (isset($_COOKIE[$cookieName])) {
+        if (isset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])])) {
+            return (int) $_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])];
+        }
+
+        if (isset($_COOKIE[$key])) {
             return 0;
         }
 
@@ -305,5 +311,38 @@ class CookieStore implements StoreInterface
         }
 
         return unserialize($data);
+    }
+
+    /**
+     * Build options array for use with setcookie()
+     *
+     * @param int|null $expires
+     *
+     * @return array<mixed>
+     */
+    private function getCookieOptions(
+        ?int $expires = null
+    ): array {
+        $expires = $expires ?? $this->configuration->getCookieExpires();
+
+        if ($expires !== 0) {
+            $expires = time() + $expires;
+        }
+
+        $options = [
+            'expires' => $expires,
+            'path' => $this->configuration->getCookiePath(),
+            'secure' => $this->configuration->getCookieSecure(),
+            'httponly' => true,
+            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
+        ];
+
+        $domain = $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'] ?? null;
+
+        if ($domain !== null) {
+            $options['domain'] = $domain;
+        }
+
+        return $options;
     }
 }

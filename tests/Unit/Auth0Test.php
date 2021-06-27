@@ -720,6 +720,10 @@ class Auth0Test extends TestCase
                 string $key
             ): void {
             }
+
+            public function deleteAll(): void
+            {
+            }
         };
 
         $auth0 = new Auth0(self::$baseConfig + ['sessionStorage' => $storeMock]);

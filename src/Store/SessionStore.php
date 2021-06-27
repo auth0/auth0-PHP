@@ -82,6 +82,25 @@ final class SessionStore implements StoreInterface
     }
 
     /**
+     * Removes all persisted values.
+     */
+    public function deleteAll(): void
+    {
+        $session = $_SESSION;
+        $prefix = $this->sessionPrefix . '_';
+
+        while (current($session)) {
+            $sessionKey = key($session);
+
+            if (is_string($sessionKey) && mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
+                unset($_SESSION[$sessionKey]);
+            }
+
+            next($session);
+        }
+    }
+
+    /**
      * Removes a persisted value identified by $key.
      *
      * @param string $key Session key to delete.

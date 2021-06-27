@@ -41,4 +41,9 @@ interface StoreInterface
     public function delete(
         string $key
     ): void;
+
+    /**
+     * Remove all stored values
+     */
+    public function deleteAll(): void;
 }
