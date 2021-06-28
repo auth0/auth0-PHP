@@ -219,7 +219,7 @@ class CookieStore implements StoreInterface
     /**
      * Determine the chunkiness of a cookie. Returns the number of chunks, or 0 if unchunked. If the cookie wasn't found, returns null.
      *
-     * @param string $cookieName Cookie name to lookup.
+     * @param string $key Cookie name to lookup.
      */
     private function isCookieChunked(
         string $key
