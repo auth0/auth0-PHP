@@ -106,13 +106,15 @@ final class Auth0
     }
 
     /**
-     * Redirect to the login page.
+     * Return the url to the login page.
      *
+     * @param string|null                 $redirectUrl Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
      * @param array<int|string|null>|null $params Additional parameters to include with the request.
      *
      * @link https://auth0.com/docs/api/authentication#login
      */
     public function login(
+        ?string $redirectUrl = null,
         ?array $params = null
     ): string {
         $params = $params ?? [];
@@ -133,29 +135,31 @@ final class Auth0
             $this->transient->store('max_age', (string) $params['max_age']);
         }
 
-        return $this->authentication()->getLoginLink((string) $state, null, $params);
+        return $this->authentication()->getLoginLink((string) $state, $redirectUrl, $params);
     }
 
     /**
-     * Redirect to the signup page, if using the New Universal Login Experience.
+     * Return the url to the signup page when using the New Universal Login Experience.
      *
+     * @param string|null                 $redirectUrl Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
      * @param array<int|string|null>|null $params Additional parameters to include with the request.
      *
      * @link https://auth0.com/docs/universal-login/new-experience
      * @link https://auth0.com/docs/api/authentication#login
      */
     public function signup(
+        ?string $redirectUrl = null,
         ?array $params = null
-    ): void {
+    ): string {
         $params = Shortcut::mergeArrays([
             'screen_hint' => 'signup',
         ], $params);
 
-        $this->login($params);
+        return $this->login($redirectUrl, $params);
     }
 
     /**
-     * Delete any persistent data and clear out all stored properties, and redirect to Auth0 /logout endpoint.
+     * Delete any persistent data and clear out all stored properties, and return the URI to Auth0 /logout endpoint for redirection.
      *
      * @param string|null                 $returnUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
      * @param array<int|string|null>|null $params    Optional. Additional parameters to include with the request.
@@ -165,10 +169,10 @@ final class Auth0
     public function logout(
         ?string $returnUri = null,
         ?array $params = null
-    ): void {
+    ): string {
         $this->clear();
-        header('Location: ' . $this->authentication()->getLogoutLink($returnUri, $params));
-        exit;
+
+        return $this->authentication()->getLogoutLink($returnUri, $params);
     }
 
     /**
@@ -643,7 +647,7 @@ final class Auth0
         $invite = $this->getInvitationParameters();
 
         if ($invite !== null) {
-            $this->login([
+            $this->login(null, [
                 'invitation' => (string) $invite->invitation,
                 'organization' => (string) $invite->organization,
             ]);

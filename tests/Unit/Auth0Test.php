@@ -444,7 +444,7 @@ class Auth0Test extends TestCase
     {
         $auth0 = new Auth0(self::$baseConfig);
 
-        $auth_url = $auth0->login();
+        $auth_url = $auth0->login(uniqid());
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
@@ -500,7 +500,7 @@ class Auth0Test extends TestCase
             'tokenMaxAge' => 1000,
         ]);
 
-        $auth_url = $auth0->login();
+        $auth_url = $auth0->login(uniqid());
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
@@ -517,7 +517,7 @@ class Auth0Test extends TestCase
             'tokenMaxAge' => 1000,
         ]);
 
-        $auth_url = $auth0->login([
+        $auth_url = $auth0->login(uniqid(), [
             'max_age' => 1001,
         ]);
 
