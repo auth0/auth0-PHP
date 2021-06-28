@@ -15,7 +15,6 @@
     "ext-json": "*",
     "ext-openssl": "*",
     "ext-filter": "*",
-    "ext-hash": "*",
     "ext-mbstring": "*",
     "php-http/discovery": "^1.0",
     "php-http/httplug": "^2.2",
