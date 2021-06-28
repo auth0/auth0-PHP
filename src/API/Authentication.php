@@ -282,10 +282,10 @@ final class Authentication
     /**
      * Start passwordless login process for email
      *
-     * @param string                    $email      Email address to use.
-     * @param string                    $type       Use null or "link" to send a link, use "code" to send a verification code.
-     * @param array<string,string>|null $params     Optional. Append or override the link parameters (like scope, redirect_uri, protocol, response_type) when you send a link using email.
-     * @param array<int|string>|null    $headers    Optional. Additional headers to send with the API request.
+     * @param string                         $email      Email address to use.
+     * @param string                         $type       Use null or "link" to send a link, use "code" to send a verification code.
+     * @param array<string,string|null>|null $params     Optional. Append or override the link parameters (like scope, redirect_uri, protocol, response_type) when you send a link using email.
+     * @param array<int|string>|null         $headers    Optional. Additional headers to send with the API request.
      *
      * @throws \Auth0\SDK\Exception\AuthenticationException When Client Secret is not configured.
      * @throws \Auth0\SDK\Exception\AuthenticationException When an invalid `email` or `type` are passed.
