@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Mixins;
 
 use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\SDK\Utility\Shortcut;
 use ReflectionException;
 
 trait ConfigurableMixin
@@ -66,17 +67,22 @@ trait ConfigurableMixin
                     $arguments[0] = [ $arguments[0] ];
                 }
 
-                if (is_array($this->configuredState[$propertyName]->value)) {
-                    $this->changeState($propertyName, array_merge($this->configuredState[$propertyName]->value, $arguments[0]));
-                    return $this;
-                }
+                $arguments = Shortcut::filterArray($arguments);
 
-                if ($this->configuredState[$propertyName]->value === null) {
+                if (count($arguments) !== 0) {
+                    if (is_array($this->configuredState[$propertyName]->value)) {
+                        $this->changeState($propertyName, array_merge($this->configuredState[$propertyName]->value, $arguments[0]));
+                        return $this;
+                    }
+
+                    if ($this->configuredState[$propertyName]->value === null) {
+                        $this->changeState($propertyName, $arguments[0]);
+                        return $this;
+                    }
+
                     $this->changeState($propertyName, $arguments[0]);
-                    return $this;
                 }
 
-                $this->changeState($propertyName, $arguments[0]);
                 return $this->configuredState[$propertyName]->value;
             }
 
