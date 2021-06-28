@@ -117,6 +117,7 @@ final class Auth0
     ): string {
         $params = $params ?? [];
         $state = $params['state'] ?? $this->transient->issue('state');
+        $params['nonce'] = $params['nonce'] ?? $this->transient->issue('nonce');
         $params['max_age'] = $params['max_age'] ?? $this->configuration->getTokenMaxAge();
 
         unset($params['state']);
