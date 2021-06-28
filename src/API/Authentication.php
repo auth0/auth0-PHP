@@ -6,9 +6,7 @@ namespace Auth0\SDK\API;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpClient;
-use Auth0\SDK\Utility\PKCE;
 use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\TransientStoreHandler;
 use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
@@ -26,11 +24,6 @@ final class Authentication
      * Instance of SdkConfiguration, for shared configuration across classes.
      */
     private SdkConfiguration $configuration;
-
-    /**
-     * Instance of TransientStoreHandler for storing ephemeral data.
-     */
-    private TransientStoreHandler $transient;
 
     /**
      * Authentication constructor.
@@ -55,9 +48,6 @@ final class Authentication
         // Store the configuration internally.
         $this->configuration = & $configuration;
 
-        // Create a transient storage handler using the configured transientStorage medium.
-        $this->transient = new TransientStoreHandler($configuration->getTransientStorage());
-
         // Build the HTTP client.
         $this->httpClient = new HttpClient($this->configuration);
     }
@@ -68,39 +58,6 @@ final class Authentication
     public function getHttpClient(): HttpClient
     {
         return $this->httpClient;
-    }
-
-    /**
-     * Builds and returns the authorization URL.
-     *
-     * @param array<int|string|null> $params Optional. Additional parameters to include with the request. See @link for details.
-     *
-     * @link https://auth0.com/docs/api/authentication#authorize-application
-     */
-    public function getAuthorizationLink(
-        ?array $params = null
-    ): string {
-        $redirectUri = isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null;
-        $redirectUri = Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri() ?? null;
-
-        if ($redirectUri === null) {
-            throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
-        }
-
-        $params = Shortcut::mergeArrays(Shortcut::filterArray([
-            'client_id' => $this->configuration->getClientId(),
-            'response_type' => $this->configuration->getResponseType(),
-            'redirect_uri' => $redirectUri,
-            'audience' => $this->configuration->buildDefaultAudience(),
-            'scope' => $this->configuration->buildScopeString(),
-            'organization' => $this->configuration->buildDefaultOrganization(),
-        ]), $params);
-
-        return sprintf(
-            '%s/authorize?%s',
-            $this->configuration->buildDomainUri(),
-            http_build_query($params, '', '&', PHP_QUERY_RFC3986)
-        );
     }
 
     /**
@@ -173,47 +130,42 @@ final class Authentication
     /**
      * Build the login URL.
      *
+     * @param string                      $state       A CSRF mitigating value, also useful for restoring the previous state of your app. See https://auth0.com/docs/protocols/state-parameters
      * @param string|null                 $redirectUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
-     * @param array<int|string|null>|null $params Optional. Additional parameters to include with the request. See @link for details.
+     * @param array<int|string|null>|null $params      Optional. Additional parameters to include with the request. See @link for details.
      *
      * @link https://auth0.com/docs/api/authentication#authorize-application
      */
     public function getLoginLink(
+        string $state,
         ?string $redirectUri = null,
         ?array $params = null
     ): string {
+        Validate::string($state, 'state');
+
         $redirectUri = $redirectUri ?? (isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null);
         $redirectUri = Shortcut::trimNull($redirectUri) ?? $this->configuration->getRedirectUri() ?? null;
-        $state = $params['state'] ?? $this->transient->issue('state');
-        $nonce = $params['nonce'] ?? $this->transient->issue('nonce');
 
         if ($redirectUri === null) {
             throw \Auth0\SDK\Exception\AuthenticationException::requiresReturnUri();
         }
 
         $params = Shortcut::mergeArrays(Shortcut::filterArray([
-            'scope' => $this->configuration->buildScopeString(),
+            'state' => $state,
+            'client_id' => $this->configuration->getClientId(),
             'audience' => $this->configuration->buildDefaultAudience(),
+            'organization' => $this->configuration->buildDefaultOrganization(),
+            'redirect_uri' => $redirectUri,
+            'scope' => $this->configuration->buildScopeString(),
             'response_mode' => $this->configuration->getResponseMode(),
             'response_type' => $this->configuration->getResponseType(),
-            'redirect_uri' => $redirectUri,
-            'max_age' => $this->configuration->getTokenMaxAge(),
-            'state' => $state,
-            'nonce' => $nonce,
         ]), $params);
 
-        if ($this->configuration->getUsePkce()) {
-            $codeVerifier = PKCE::generateCodeVerifier(128);
-            $params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
-            $params['code_challenge_method'] = 'S256';
-            $this->transient->store('code_verifier', $codeVerifier);
-        }
-
-        if (isset($params['max_age'])) {
-            $this->transient->store('max_age', (string) $params['max_age']);
-        }
-
-        return $this->getAuthorizationLink($params);
+        return sprintf(
+            '%s/authorize?%s',
+            $this->configuration->buildDomainUri(),
+            http_build_query($params, '', '&', PHP_QUERY_RFC3986)
+        );
     }
 
     /**

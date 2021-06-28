@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Configuration\SdkState;
 use Auth0\SDK\Utility\HttpResponse;
+use Auth0\SDK\Utility\PKCE;
 use Auth0\SDK\Utility\Shortcut;
 use Auth0\SDK\Utility\TransientStoreHandler;
 
@@ -113,9 +114,25 @@ final class Auth0
      */
     public function login(
         ?array $params = null
-    ): void {
-        header('Location: ' . $this->authentication()->getLoginLink(null, $params));
-        exit;
+    ): string {
+        $params = $params ?? [];
+        $state = $params['state'] ?? $this->transient->issue('state');
+        $params['max_age'] = $params['max_age'] ?? $this->configuration->getTokenMaxAge();
+
+        unset($params['state']);
+
+        if ($this->configuration->getUsePkce()) {
+            $codeVerifier = PKCE::generateCodeVerifier(128);
+            $params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
+            $params['code_challenge_method'] = 'S256';
+            $this->transient->store('code_verifier', $codeVerifier);
+        }
+
+        if ($params['max_age'] !== null) {
+            $this->transient->store('max_age', (string) $params['max_age']);
+        }
+
+        return $this->authentication()->getLoginLink((string) $state, null, $params);
     }
 
     /**
@@ -141,6 +158,8 @@ final class Auth0
      *
      * @param string|null                 $returnUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
      * @param array<int|string|null>|null $params    Optional. Additional parameters to include with the request.
+     *
+     * @link https://auth0.com/docs/api/authentication#logout
      */
     public function logout(
         ?string $returnUri = null,
@@ -195,16 +214,27 @@ final class Auth0
         // Verify token signature.
         $token->verify();
 
+        $tokenMaxAge = $tokenMaxAge ?? $this->transient->getOnce('max_age') ?? null;
+
+        // If pulling from transient storage, $tokenMaxAge might be a string.
+        if ($tokenMaxAge !== null) {
+            $tokenMaxAge = (int) $tokenMaxAge;
+        }
+
         // Validate token claims.
         $token->validate(
             null,
             $tokenAudience,
             $tokenOrganization,
-            $tokenNonce,
-            $tokenMaxAge,
+            $tokenNonce ?? $this->transient->getOnce('nonce') ?? null,
+            $tokenMaxAge ?? null,
             $tokenLeeway,
             $tokenNow
         );
+
+        // Ensure transient-stored values are cleared, even if overriding values were passed to the  method.
+        $this->transient->delete('max_age');
+        $this->transient->delete('nonce');
 
         return $token;
     }

@@ -31,21 +31,21 @@ test('__construct() fails without a configuration', function(): void {
 
 test('__construct() successfully loads an inherited configuration', function(): void {
     $class = $this->sdk->authentication();
-    $uri = $class->getLoginLink();
+    $uri = $class->getLoginLink(uniqid());
 
     $this->assertStringContainsString($this->configuration->getDomain(), $uri);
 });
 
 test('__construct() successfully loads a direct configuration', function(): void {
     $class = new Authentication($this->configuration);
-    $uri = $class->getLoginLink();
+    $uri = $class->getLoginLink(uniqid());
 
     $this->assertStringContainsString($this->configuration->getDomain(), $uri);
 });
 
-test('getAuthorizationLink() is properly formatted', function(): void {
+test('getLoginLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
-    $uri = $class->getAuthorizationLink();
+    $uri = $class->getLoginLink(uniqid());
 
     $this->assertStringContainsString($this->configuration->getDomain(), $uri);
     $this->assertStringContainsString('client_id=' . rawurlencode($this->configuration->getClientId()), $uri);
@@ -56,7 +56,7 @@ test('getAuthorizationLink() is properly formatted', function(): void {
     $this->assertStringContainsString('organization=' . rawurlencode($this->configuration->buildDefaultOrganization()), $uri);
 
     $exampleScope = uniqid();
-    $uri = $class->getAuthorizationLink([
+    $uri = $class->getLoginLink(uniqid(), null, [
         'scope' => $exampleScope,
     ]);
 

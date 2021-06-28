@@ -73,6 +73,17 @@ final class TransientStoreHandler
     }
 
     /**
+     * Delete a stored value from storage.
+     *
+     * @param string $key Key to get and delete.
+     */
+    public function delete(
+        string $key
+    ): void {
+        $this->store->delete($key);
+    }
+
+    /**
      * Get a value and delete it from storage.
      *
      * @param string $key Key to get and delete.

@@ -6,7 +6,6 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token\Parser;
-use Auth0\SDK\Utility\TransientStoreHandler;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
@@ -36,11 +35,6 @@ final class Token
     private SdkConfiguration $configuration;
 
     /**
-     * Instance of TransientStoreHandler for storing ephemeral data.
-     */
-    private TransientStoreHandler $transient;
-
-    /**
      * Constructor for Token handling class.
      *
      * @param SdkConfiguration $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
@@ -59,9 +53,6 @@ final class Token
 
         // Store the configuration internally.
         $this->configuration = & $configuration;
-
-        // Create a transient storage handler using the configured transientStorage medium.
-        $this->transient = new TransientStoreHandler($configuration->getTransientStorage());
 
         // Begin parsing the token.
         $this->parse($jwt);
@@ -145,18 +136,13 @@ final class Token
         $tokenIssuer = $tokenIssuer ?? 'https://' . $this->configuration->getDomain() . '/';
         $tokenAudience = $tokenAudience ?? $this->configuration->getAudience() ?? null;
         $tokenOrganization = $tokenOrganization ?? $this->configuration->getOrganization() ?? null;
-        $tokenNonce = $tokenNonce ?? $this->transient->getOnce('nonce') ?? null;
-        $tokenMaxAge = $tokenMaxAge ?? $this->transient->getOnce('max_age') ?? $this->configuration->getTokenMaxAge() ?? null;
+        $tokenNonce = $tokenNonce ?? null;
+        $tokenMaxAge = $tokenMaxAge ?? $this->configuration->getTokenMaxAge() ?? null;
         $tokenLeeway = $tokenLeeway ?? $this->configuration->getTokenLeeway() ?? 60;
 
         // If 'aud' claim check isn't defined, fallback to client id.
         if ($tokenAudience === null || count($tokenAudience) === 0) {
             $tokenAudience = [ $this->configuration->getClientId() ];
-        }
-
-        // If pulling from transient storage, $tokenMaxAge might be a string.
-        if ($tokenMaxAge !== null) {
-            $tokenMaxAge = (int) $tokenMaxAge;
         }
 
         $validator = $this->parser->validate();

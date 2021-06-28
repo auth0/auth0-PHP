@@ -354,7 +354,7 @@ class Auth0Test extends TestCase
     {
         $auth0 = new Auth0(self::$baseConfig);
 
-        $parsed_url = parse_url($auth0->authentication()->getLoginLink());
+        $parsed_url = parse_url($auth0->authentication()->getLoginLink(uniqid()));
 
         $this->assertEquals('https', $parsed_url['scheme']);
         $this->assertEquals('__test_domain__', $parsed_url['host']);
@@ -383,7 +383,7 @@ class Auth0Test extends TestCase
             'invitation' => '__test_invitation__',
         ];
 
-        $auth_url = $auth0->authentication()->getLoginLink(null, $custom_params);
+        $auth_url = $auth0->authentication()->getLoginLink(uniqid(), null, $custom_params);
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
 
@@ -409,7 +409,7 @@ class Auth0Test extends TestCase
             'response_mode' => 'form_post',
         ];
 
-        $auth_url = $auth0->authentication()->getLoginLink(null, $override_params);
+        $auth_url = $auth0->authentication()->getLoginLink(uniqid(), null, $override_params);
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
 
@@ -429,7 +429,7 @@ class Auth0Test extends TestCase
 
         $auth0 = new Auth0($custom_config);
 
-        $auth_url = $auth0->authentication()->getLoginLink();
+        $auth_url = $auth0->authentication()->getLoginLink(uniqid(), null, ['nonce' => uniqid()]);
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
 
@@ -440,11 +440,11 @@ class Auth0Test extends TestCase
     /**
      * Test that get login url generates challenge and challenge method when PKCE is enabled.
      */
-    public function testThatGetLoginUrlGeneratesChallengeAndChallengeMethodWhenPkceIsEnabled(): void
+    public function testThatLoginGeneratesChallengeAndChallengeMethodWhenPkceIsEnabled(): void
     {
         $auth0 = new Auth0(self::$baseConfig);
 
-        $auth_url = $auth0->authentication()->getLoginLink();
+        $auth_url = $auth0->login();
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
@@ -500,7 +500,7 @@ class Auth0Test extends TestCase
             'tokenMaxAge' => 1000,
         ]);
 
-        $auth_url = $auth0->authentication()->getLoginLink();
+        $auth_url = $auth0->login();
 
         $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
         $url_query = explode('&', $parsed_url_query);
@@ -517,7 +517,7 @@ class Auth0Test extends TestCase
             'tokenMaxAge' => 1000,
         ]);
 
-        $auth_url = $auth0->authentication()->getLoginLink(null, [
+        $auth_url = $auth0->login([
             'max_age' => 1001,
         ]);
 
