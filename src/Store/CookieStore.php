@@ -65,12 +65,12 @@ class CookieStore implements StoreInterface
     ): void {
         Validate::string($key, 'key');
 
-        $cookieName = $this->getCookieName($key);
+        $key = $this->getCookieName($key);
         $cookieOptions = $this->getCookieOptions();
 
         $value = $this->encrypt($value);
 
-        $_COOKIE[$cookieName] = $value;
+        $_COOKIE[$key] = $value;
 
         if (strlen($value) >= $this->chunkingThreshold) {
             $chunks = str_split($value, $this->chunkingThreshold);
@@ -79,10 +79,10 @@ class CookieStore implements StoreInterface
             if ($chunks !== false) {
                 $chunkIndex = 1;
 
-                setcookie(join(self::KEY_SEPARATOR, [ $cookieName, '0']), (string) count($chunks), $cookieOptions);
+                setcookie(join(self::KEY_SEPARATOR, [ $key, '0']), (string) count($chunks), $cookieOptions);
 
                 foreach ($chunks as $chunk) {
-                    setcookie(join(self::KEY_SEPARATOR, [ $cookieName, $chunkIndex]), $chunk, $cookieOptions);
+                    setcookie(join(self::KEY_SEPARATOR, [ $key, $chunkIndex]), $chunk, $cookieOptions);
                     $chunkIndex++;
                 }
 
@@ -90,7 +90,7 @@ class CookieStore implements StoreInterface
             }
         }
 
-        setcookie($cookieName, $value, $cookieOptions);
+        setcookie($key, $value, $cookieOptions);
     }
 
     /**
@@ -108,7 +108,7 @@ class CookieStore implements StoreInterface
     ) {
         Validate::string($key, 'key');
 
-        $cookieName = $this->getCookieName($key);
+        $key = $this->getCookieName($key);
         $chunks = $this->isCookieChunked($key);
         $value = '';
 
@@ -118,7 +118,7 @@ class CookieStore implements StoreInterface
 
         if ($chunks !== 0) {
             for ($chunk = 1; $chunk <= $chunks; $chunk++) {
-                $chunkData = $_COOKIE[join(self::KEY_SEPARATOR, [ $cookieName, $chunk])] ?? null;
+                $chunkData = $_COOKIE[join(self::KEY_SEPARATOR, [ $key, $chunk])] ?? null;
 
                 if ($chunkData === null) {
                     return $default;
@@ -129,7 +129,7 @@ class CookieStore implements StoreInterface
         }
 
         if ($chunks === 0) {
-            $value = $_COOKIE[$cookieName] ?? null;
+            $value = $_COOKIE[$key] ?? null;
         }
 
         if ($value !== null && mb_strlen($value) !== 0) {
@@ -165,19 +165,17 @@ class CookieStore implements StoreInterface
     /**
      * Removes a persisted value identified by $key.
      *
-     * @param string $key Cookie to delete.
+     * @param string $key    Cookie to delete.
+     * @param bool   $prefix Whether the cookie name should have the $cookiePrefix applied.
      */
     public function delete(
         string $key,
-        bool $applyPrefix = true
+        bool $prefix = true
     ): void {
         Validate::string($key, 'key');
 
-        if ($applyPrefix) {
-            $key = $this->getCookieName($key);
-        }
-
-        $chunks = $this->isCookieChunked($key, $applyPrefix);
+        $key = $this->getCookieName($key, $prefix);
+        $chunks = $this->isCookieChunked($key);
 
         if ($chunks === null) {
             return;
@@ -203,11 +201,19 @@ class CookieStore implements StoreInterface
      * Constructs a cookie name.
      *
      * @param string $key Cookie name to prefix and return.
+     * @param bool   $prefix Whether the cookie name should have the $cookiePrefix applied.
      */
     public function getCookieName(
-        string $key
+        string $key,
+        bool $prefix = true
     ): string {
-        return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, trim($key));
+        $key = trim($key);
+
+        if ($prefix) {
+            return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, trim($key));
+        }
+
+        return $key;
     }
 
     /**
@@ -216,14 +222,9 @@ class CookieStore implements StoreInterface
      * @param string $cookieName Cookie name to lookup.
      */
     private function isCookieChunked(
-        string $key,
-        bool $applyPrefix = true
+        string $key
     ): ?int {
         Validate::string($key, 'key');
-
-        if ($applyPrefix) {
-            $key = $this->getCookieName($key);
-        }
 
         if (isset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])])) {
             return (int) $_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])];
