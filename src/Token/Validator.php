@@ -107,7 +107,7 @@ final class Validator
                 throw \Auth0\SDK\Exception\InvalidTokenException::missingAzpClaim();
             }
 
-            if (! array_key_exists($azp, $expects)) {
+            if (! in_array($azp, $expects)) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedAzpClaim(implode(', ', $expects), $azp);
             }
         }
