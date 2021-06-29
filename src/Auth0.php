@@ -257,7 +257,7 @@ final class Auth0
      * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
     public function exchange(
-        ?string $redirectUri = null,
+        ?string $redirectUri = null
     ): bool {
         $code = $this->getRequestParameter('code');
         $state = $this->getRequestParameter('state');
