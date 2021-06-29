@@ -272,44 +272,46 @@ $auth->login();
 Some options names have changed for clarity. It would be best to reference the `SdkConfiguration` constructor comments for an up-to-date list, as there may be new additions with later releases. At the time of this guide's writing, these options are available:
 
 ```text
-string|null                   $domain               Required. Auth0 domain for your tenant.
-string|null                   $clientId             Required. Client ID, found in the Auth0 Application settings.
-string|null                   $redirectUri          Required. Authentication callback URI, as defined in your Auth0 Application settings.
-string|null                   $clientSecret         Optional. Client Secret, found in the Auth0 Application settings.
-array<string>|null            $audience             Optional. One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
-array<string>|null            $organization         Optional. One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
-bool                          $usePkce              Optional. Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests.
-array<string>                 $scope                Optional. One or more scopes to request for Tokens.
-string                        $responseMode         Optional. Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
-string                        $responseType         Optional. Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow.
-string                        $tokenAlgorithm       Optional. Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
-string|null                   $tokenJwksUri         Optional. URI to the JWKS when verifying RS256 tokens.
-int|null                      $tokenMaxAge          Optional. The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
-int                           $tokenLeeway          Optional. Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
-CacheItemPoolInterface|null   $tokenCache           Optional. A PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS).
-int                           $tokenCacheTtl        Optional. How long (in seconds) to keep a JWKS cached.
-ClientInterface|null          $httpClient           Optional. A PSR-18 compatible HTTP client to use for API requests.
-RequestFactoryInterface|null  $httpRequestFactory   Optional. A PSR-17 compatible request factory to generate HTTP requests.
-ResponseFactoryInterface|null $httpResponseFactory  Optional. A PSR-17 compatible response factory to generate HTTP responses.
-StreamFactoryInterface|null   $httpStreamFactory    Optional. A PSR-17 compatible stream factory to create request body streams.
-bool                          $httpTelemetry        Optional. Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
-StoreInterface|null           $sessionStorage       Optional. Defaults to use PHP native sessions. A StoreInterface-compatible class for storing Token state.
-string|null                   $cookieSecret         Optional. The secret is used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback.
-string|null                   $cookieDomain         Optional. Defaults to the value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains, the domain must be prefixed with a dot like '.example.com'.
-int                           $cookieExpires        Optional. Defaults to 0. How long, in seconds, before cookies expire. If set to 0, the cookie will expire at the end of the session (when the browser closes).
-string                        $cookiePath           Optional. Defaults to '/'. Specifies the path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
-bool                          $cookieSecure         Optional. Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
-bool                          $persistUser          Optional. Defaults to true. If true, the user data will persist in session storage.
-bool                          $persistIdToken       Optional. Defaults to true. If true, the Id Token will persist in session storage.
-bool                          $persistAccessToken   Optional. Defaults to true. If true, the Access Token will persist in session storage.
-bool                          $persistRefreshToken  Optional. Defaults to true. If true, the Refresh Token will persist in session storage.
-StoreInterface|null           $transientStorage     Optional. Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as a nonce.
-bool                          $queryUserInfo        Optional. Defaults to false. If true, query the /userinfo endpoint during an authorization code exchange.
-string|null                   $managementToken      Optional. An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
-CacheItemPoolInterface|null   $managementTokenCache Optional. A PSR-6 compatible cache adapter for storing management access tokens.
+string|null                    $domain                Required. Auth0 domain for your tenant.
+string|null                    $clientId              Required. Client ID, found in the Auth0 Application settings.
+string|null                    $redirectUri           Authentication callback URI, as defined in your Auth0 Application settings.
+string|null                    $clientSecret          Client Secret, found in the Auth0 Application settings.
+array<string>|null             $audience              One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
+array<string>|null             $organization          One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
+bool                           $usePkce               Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests.
+array<string>                  $scope                 One or more scopes to request for Tokens.
+string                         $responseMode          Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
+string                         $responseType          Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow.
+string                         $tokenAlgorithm        Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
+string|null                    $tokenJwksUri          URI to the JWKS when verifying RS256 tokens.
+int|null                       $tokenMaxAge           The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
+int                            $tokenLeeway           Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
+CacheItemPoolInterface|null    $tokenCache            A PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS).
+int                            $tokenCacheTtl         How long (in seconds) to keep a JWKS cached.
+ClientInterface|null           $httpClient            A PSR-18 compatible HTTP client to use for API requests.
+RequestFactoryInterface|null   $httpRequestFactory    A PSR-17 compatible request factory to generate HTTP requests.
+ResponseFactoryInterface|null  $httpResponseFactory   A PSR-17 compatible response factory to generate HTTP responses.
+StreamFactoryInterface|null    $httpStreamFactory     A PSR-17 compatible stream factory to create request body streams.
+bool                           $httpTelemetry         Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
+StoreInterface|null            $sessionStorage        Defaults to use PHP native sessions. A StoreInterface-compatible class for storing Token state.
+string|null                    $cookieSecret          The secret is used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback.
+string|null                    $cookieDomain          Defaults to the value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains, the domain must be prefixed with a dot like '.example.com'.
+int                            $cookieExpires         Defaults to 0. How long, in seconds, before cookies expire. If set to 0, the cookie will expire at the end of the session (when the browser closes).
+string                         $cookiePath            Defaults to '/'. Specifies the path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
+bool                           $cookieSecure          Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
+bool                           $persistUser           Defaults to true. If true, the user data will persist in session storage.
+bool                           $persistIdToken        Defaults to true. If true, the Id Token will persist in session storage.
+bool                           $persistAccessToken    Defaults to true. If true, the Access Token will persist in session storage.
+bool                           $persistRefreshToken   Defaults to true. If true, the Refresh Token will persist in session storage.
+StoreInterface|null            $transientStorage      Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as a nonce.
+bool                           $queryUserInfo         Defaults to false. If true, query the /userinfo endpoint during an authorization code exchange.
+string|null                    $managementToken       An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
+CacheItemPoolInterface|null    $managementTokenCache  A PSR-6 compatible cache adapter for storing management access tokens.
+ListenerProviderInterface|null $eventListenerProvider A PSR-14 compatible event listener for hooking into SDK events.
 ```
 
 ↗ [Learn more about PSR-6 caches.](https://www.php-fig.org/psr/psr-6/)<br />
+↗ [Learn more about PSR-14 Event Dispatchers.](https://www.php-fig.org/psr/psr-14/)<br />
 ↗ [Learn more about PSR-17 HTTP Factories,](https://www.php-fig.org/psr/psr-17/) which are used to create [PSR-7 HTTP messages.](https://www.php-fig.org/psr/psr-7/)<br />
 ↗ [Learn more about the PSR-18 HTTP Client standard.](https://www.php-fig.org/psr/psr-18/)<br />
 ↗ [Find PSR-6 cache libraries on Packagist.](https://packagist.org/search/?query=PSR-6&type=library&tags=psr%206)<br />
