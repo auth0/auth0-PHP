@@ -1,6 +1,6 @@
 # Auth0 PHP SDK
 
-[![Build Status](https://img.shields.io/circleci/project/github/auth0/auth0-PHP/master.svg)](https://circleci.com/gh/auth0/auth0-PHP)
+[![Build Status](https://img.shields.io/circleci/project/github/auth0/auth0-PHP/main.svg)](https://circleci.com/gh/auth0/auth0-PHP)
 [![Code Coverage](https://codecov.io/gh/auth0/auth0-PHP/branch/master/graph/badge.svg)](https://codecov.io/gh/auth0/auth0-PHP)
 [![Latest Stable Version](https://img.shields.io/packagist/v/auth0/auth0-PHP?label=stable)](https://packagist.org/packages/auth0/auth0-PHP)
 [![Supported PHP Versions](https://img.shields.io/packagist/php-v/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-PHP)
