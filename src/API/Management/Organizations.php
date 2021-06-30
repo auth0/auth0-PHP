@@ -1,598 +1,586 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-use GuzzleHttp\Exception\RequestException;
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
+use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Organizations
  * Handles requests to the Organizations endpoints of the v2 Management API.
  *
- * @package Auth0\SDK\API\Management
+ * @link https://auth0.com/docs/api/management/v2#!/Organizations
  */
-class Organizations extends GenericResource
+final class Organizations extends ManagementEndpoint
 {
-
     /**
      * Create an organization.
-     * Required scope: "create:organizations"
+     * Required scope: `create:organizations`
      *
-     * @param string                   $name        The name of the Organization. Cannot be changed later.
-     * @param string                   $displayName The displayed name of the Organization.
-     * @param null|array<string,mixed> $branding    An array containing branding customizations for the organization.
-     * @param null|array<string,mixed> $metadata    Optional. Additional metadata to store about the organization.
-     * @param array<string,mixed>      $params      Optional. Additional parameters to send with the API request.
+     * @param string              $name        The name of the Organization. Cannot be changed later.
+     * @param string              $displayName The displayed name of the Organization.
+     * @param array<mixed>|null   $branding    Optional. An array containing branding customizations for the organization.
+     * @param array<mixed>|null   $metadata    Optional. Additional metadata to store about the organization.
+     * @param array<mixed>|null   $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function create(
         string $name,
         string $displayName,
         ?array $branding = null,
         ?array $metadata = null,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($name, 'name');
-        $this->checkEmptyOrInvalidString($displayName, 'displayName');
+        ?array $body = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($name, 'name');
+        Validate::string($displayName, 'displayName');
 
-        $payload = (object) array_filter([
-            'name'         => $name,
+        $body = Shortcut::mergeArrays([
+            'name' => $name,
             'display_name' => $displayName,
-            'branding'     => $branding ? (object) $branding : null,
-            'metadata'     => $metadata ? (object) $metadata : null,
-        ] + $params);
+            'branding' => Shortcut::nullifyEmptyArrayAsObject($branding),
+            'metadata' => Shortcut::nullifyEmptyArrayAsObject($metadata),
+        ], $body);
 
-        return $this->apiClient->method('post')
+        return $this->getHttpClient()->method('post')
             ->addPath('organizations')
-            ->withBody(json_encode($payload))
+            ->withBody((object) $body)
+            ->withOptions($options)
             ->call();
     }
 
     /**
-     * Update an organization.
-     * Required scope: "update:organizations"
+     * List available organizations.
+     * Required scope: `read:organizations`
      *
-     * @param string                   $organization Organization (by ID) to update.
-     * @param string                   $displayName  The displayed name of the Organization.
-     * @param null|array<string,mixed> $branding     An array containing branding customizations for the organization.
-     * @param null|array<string,mixed> $metadata     Optional. Additional metadata to store about the organization.
-     * @param array<string,mixed>      $params       Optional. Additional parameters to send with the API request.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function update(
-        string $organization,
-        string $displayName,
-        ?array $branding = null,
-        ?array $metadata = null,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($displayName, 'displayName');
-
-        $payload = (object) array_filter([
-            'display_name' => $displayName,
-            'branding'     => $branding ? (object) $branding : null,
-            'metadata'     => $metadata ? (object) $metadata : null,
-        ] + $params);
-
-        return $this->apiClient->method('patch')
-            ->addPath('organizations', $organization)
-            ->withBody(json_encode($payload))
-            ->call();
-    }
-
-    /**
-     * Delete an organization.
-     * Required scope: "delete:organizations"
-     *
-     * @param string $organization Organization (by ID) to delete.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function delete(
-        string $organization
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-
-        return $this->apiClient->method('delete')
-            ->addPath('organizations', $organization)
-            ->call();
-    }
-
-    /**
-     * List all organizations.
-     * Required scope: "read:organizations"
-     *
-     * @param array<string,mixed> $params Optional. Options to include with the request, such as pagination or filtering parameters.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getAll(
-        array $params = []
-    )
-    {
-        return $this->apiClient->method('get')
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        return $this->getHttpClient()->method('get')
             ->addPath('organizations')
-            ->withDictParams($this->normalizeRequest($params))
+            ->withOptions($options)
             ->call();
     }
 
     /**
-     * Get details about an organization, queried by it's ID.
-     * Required scope: "read:organizations"
+     * Get a specific organization.
+     * Required scope: `read:organizations`
      *
-     * @param string $organization Organization (by ID) to retrieve details for.
+     * @param string              $id      Organization (by ID) to retrieve details for.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function get(
-        string $organization
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
 
-        return $this->apiClient->method('get')
-            ->addPath('organizations', $organization)
+        return $this->getHttpClient()->method('get')
+            ->addPath('organizations', $id)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Get details about an organization, queried by it's `name`.
-     * Required scope: "read:organizations"
+     * Required scope: `read:organizations`
      *
-     * @param string $organizationName Organization (by name parameter provided during creation) to retrieve details for.
+     * @param string              $name    Organization (by name parameter provided during creation) to retrieve details for.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getByName(
-        string $organizationName
-    )
-    {
-        $this->checkEmptyOrInvalidString($organizationName, 'organizationName');
+        string $name,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($name, 'name');
 
-        return $this->apiClient->method('get')
-            ->addPath('organizations', 'name', $organizationName)
+        return $this->getHttpClient()->method('get')
+            ->addPath('organizations', 'name', $name)
+            ->withOptions($options)
             ->call();
     }
 
     /**
-     * List the enabled connections associated with an organization.
-     * Required scope: "read:organization_connections"
+     * Update an organization.
+     * Required scope: `update:organizations`
      *
-     * @param string              $organization Organization (by ID) to list connections of.
-     * @param array<string,mixed> $params       Optional. Additional options to include with the request, such as pagination or filtering parameters.
+     * @param string               $id          Organization (by ID) to update.
+     * @param string               $displayName The displayed name of the Organization.
+     * @param array<mixed>|null    $branding    Optional. An array containing branding customizations for the organization.
+     * @param array<mixed>|null    $metadata    Optional. Additional metadata to store about the organization.
+     * @param array<mixed>|null    $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null  $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
-    public function getEnabledConnections(
-        string $organization,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
+    public function update(
+        string $id,
+        string $displayName,
+        ?array $branding = null,
+        ?array $metadata = null,
+        ?array $body = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($displayName, 'displayName');
 
-        return $this->apiClient->method('get')
-            ->addPath('organizations', $organization, 'enabled_connections')
-            ->withDictParams($this->normalizeRequest($params))
+        $body = Shortcut::mergeArrays([
+            'display_name' => $displayName,
+            'branding' => Shortcut::nullifyEmptyArrayAsObject($branding),
+            'metadata' => Shortcut::nullifyEmptyArrayAsObject($metadata),
+        ], $body);
+
+        return $this->getHttpClient()->method('patch')
+            ->addPath('organizations', $id)
+            ->withBody((object) $body)
+            ->withOptions($options)
             ->call();
     }
 
     /**
-     * Get a connection (by ID) associated with an organization.
-     * Required scope: "read:organization_connections"
+     * Delete an organization.
+     * Required scope: `delete:organizations`
      *
-     * @param string $organization Organization (by ID) that the connection is associated with.
-     * @param string $connection   Connection (by ID) to retrieve details for.
+     * @param string              $id      Organization (by ID) to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
-    public function getEnabledConnection(
-        string $organization,
-        string $connection
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($connection, 'connection');
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
 
-        return $this->apiClient->method('get')
-            ->addPath('organizations', $organization, 'enabled_connections', $connection)
+        return $this->getHttpClient()->method('delete')
+            ->addPath('organizations', $id)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Add a connection to an organization.
-     * Required scope: "create:organization_connections"
+     * Required scope: `create:organization_connections`
      *
-     * @param string              $organization Organization (by ID) to add a connection to.
-     * @param string              $connection   Connection (by ID) to add to organization.
-     * @param array<string,mixed> $params       Optional. Additional parameters to send with the API request.
+     * @param string              $id           Organization (by ID) to add a connection to.
+     * @param string              $connectionId Connection (by ID) to add to organization.
+     * @param array<mixed>        $body         Additional body content to send with the API request. See @link for supported options.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addEnabledConnection(
-        string $organization,
-        string $connection,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($connection, 'connection');
+        string $id,
+        string $connectionId,
+        array $body,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($connectionId, 'connectionId');
 
-        $payload = (object) array_filter([
-            'connection_id' => $connection
-        ] + $params);
+        $body = Shortcut::mergeArrays([
+            'connection_id' => $connectionId,
+        ], $body);
 
-        return $this->apiClient->method('post')
-            ->addPath('organizations', $organization, 'enabled_connections')
-            ->withBody(json_encode($payload))
+        return $this->getHttpClient()->method('post')
+            ->addPath('organizations', $id, 'enabled_connections')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * List the enabled connections associated with an organization.
+     * Required scope: `read:organization_connections`
+     *
+     * @param string              $id      Organization (by ID) to list connections of.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     */
+    public function getEnabledConnections(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+
+        return $this->getHttpClient()->method('get')
+            ->addPath('organizations', $id, 'enabled_connections')
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Get a connection (by ID) associated with an organization.
+     * Required scope: `read:organization_connections`
+     *
+     * @param string              $id           Organization (by ID) that the connection is associated with.
+     * @param string              $connectionId Connection (by ID) to retrieve details for.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     */
+    public function getEnabledConnection(
+        string $id,
+        string $connectionId,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($connectionId, 'connectionId');
+
+        return $this->getHttpClient()->method('get')
+            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Update a connection to an organization.
-     * Required scope: "update:organization_connections"
+     * Required scope: `update:organization_connections`
      *
-     * @param string              $organization Organization (by ID) to add a connection to.
-     * @param string              $connection   Connection (by ID) to add to organization.
-     * @param array<string,mixed> $params       Optional. Additional parameters to send with the API request.
+     * @param string              $id           Organization (by ID) to add a connection to.
+     * @param string              $connectionId Connection (by ID) to add to organization.
+     * @param array<mixed>        $body         Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function updateEnabledConnection(
-        string $organization,
-        string $connection,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($connection, 'connection');
+        string $id,
+        string $connectionId,
+        array $body,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($connectionId, 'connectionId');
 
-        return $this->apiClient->method('patch')
-            ->addPath('organizations', $organization, 'enabled_connections', $connection)
-            ->withBody(json_encode( (object) $params))
+        return $this->getHttpClient()->method('patch')
+            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
+            ->withBody((object) $body)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Remove a connection from an organization.
-     * Required scope: "delete:organization_connections"
+     * Required scope: `delete:organization_connections`
      *
-     * @param string $organization Organization (by ID) to remove connection from.
-     * @param string $connection   Connection (by ID) to remove from organization.
+     * @param string              $id           Organization (by ID) to remove connection from.
+     * @param string              $connectionId Connection (by ID) to remove from organization.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeEnabledConnection(
-        string $organization,
-        string $connection
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($connection, 'connection');
+        string $id,
+        string $connectionId,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($connectionId, 'connectionId');
 
-        return $this->apiClient->method('delete')
-            ->addPath('organizations', $organization, 'enabled_connections', $connection)
-            ->call();
-    }
-
-    /**
-     * List the members (users) belonging to an organization
-     * Required scope: "read:organization_members"
-     *
-     * @param string              $organization Organization (by ID) to list members of.
-     * @param array<string,mixed> $params       Optional. Additional options to include with the request, such as pagination or filtering parameters.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function getMembers(
-        string $organization,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-
-        return $this->apiClient->method('get')
-            ->addPath('organizations', $organization, 'members')
-            ->withDictParams($this->normalizeRequest($params))
+        return $this->getHttpClient()->method('delete')
+            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Add one or more users to an organization as members.
-     * Required scope: "update:organization_members"
+     * Required scope: `update:organization_members`
      *
-     * @param string $organization Organization (by ID) to add new members to.
-     * @param array  $users        One or more users (by ID) to add from the organization.
+     * @param string              $id      Organization (by ID) to add new members to.
+     * @param array<string>       $members One or more users (by ID) to add from the organization.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addMembers(
-        string $organization,
-        array $users
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidArray($users, 'users');
+        string $id,
+        array $members,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::array($members, 'members');
 
         $payload = [
-            'members' => $users
+            'members' => $members,
         ];
 
-        return $this->apiClient->method('post')
-            ->addPath('organizations', $organization, 'members')
-            ->withBody(json_encode($payload))
+        return $this->getHttpClient()->method('post')
+            ->addPath('organizations', $id, 'members')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * List the members (users) belonging to an organization
+     * Required scope: `read:organization_members`
+     *
+     * @param string              $id      Organization (by ID) to list members of.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     */
+    public function getMembers(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+
+        return $this->getHttpClient()->method('get')
+            ->addPath('organizations', $id, 'members')
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Remove one or more members (users) from an organization.
-     * Required scope: "delete:organization_members"
+     * Required scope: `delete:organization_members`
      *
-     * @param string $organization Organization (by ID) users belong to.
-     * @param array  $users        One or more users (by ID) to remove from the organization.
+     * @param string              $id      Organization (by ID) users belong to.
+     * @param array<string>       $members One or more users (by ID) to remove from the organization.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeMembers(
-        string $organization,
-        array $users
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidArray($users, 'users');
+        string $id,
+        array $members,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::array($members, 'members');
 
         $payload = [
-            'members' => $users
+            'members' => $members,
         ];
 
-        return $this->apiClient->method('delete')
-            ->addPath('organizations', $organization, 'members')
-            ->withBody(json_encode($payload))
-            ->call();
-    }
-
-    /**
-     * List the roles a member (user) in an organization currently has.
-     * Required scope: "read:organization_member_roles"
-     *
-     * @param string              $organization Organization (by ID) user belongs to.
-     * @param string              $user         User (by ID) to add role to.
-     * @param array<string,mixed> $params       Optional. Additional options to include with the request, such as pagination or filtering parameters.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function getMemberRoles(
-        string $organization,
-        string $user,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($user, 'user');
-
-        return $this->apiClient->method('get')
-            ->addPath('organizations', $organization, 'members', $user, 'roles')
-            ->withDictParams($this->normalizeRequest($params))
+        return $this->getHttpClient()->method('delete')
+            ->addPath('organizations', $id, 'members')
+            ->withBody($payload)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Add one or more roles to a member (user) in an organization.
-     * Required scope: "create:organization_member_roles"
+     * Required scope: `create:organization_member_roles`
      *
-     * @param string        $organization Organization (by ID) user belongs to.
-     * @param string        $user         User (by ID) to add roles to.
-     * @param array<string> $roles        One or more roles (by ID) to add to the user.
+     * @param string              $id      Organization (by ID) user belongs to.
+     * @param string              $userId  User (by ID) to add roles to.
+     * @param array<string>       $roles   One or more roles (by ID) to add to the user.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function addMemberRoles(
-        string $organization,
-        string $user,
-        array $roles
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($user, 'user');
-        $this->checkEmptyOrInvalidArray($roles, 'roles');
+        string $id,
+        string $userId,
+        array $roles,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($userId, 'userId');
+        Validate::array($roles, 'roles');
 
         $payload = [
-            'roles' => $roles
+            'roles' => $roles,
         ];
 
-        return $this->apiClient->method('post')
-            ->addPath('organizations', $organization, 'members', $user, 'roles')
-            ->withBody(json_encode($payload))
+        return $this->getHttpClient()->method('post')
+            ->addPath('organizations', $id, 'members', $userId, 'roles')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * List the roles a member (user) in an organization currently has.
+     * Required scope: `read:organization_member_roles`
+     *
+     * @param string              $id      Organization (by ID) user belongs to.
+     * @param string              $userId  User (by ID) to add role to.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     */
+    public function getMemberRoles(
+        string $id,
+        string $userId,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($userId, 'userId');
+
+        return $this->getHttpClient()->method('get')
+            ->addPath('organizations', $id, 'members', $userId, 'roles')
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Remove one or more roles from a member (user) in an organization.
-     * Required scope: "delete:organization_member_roles"
+     * Required scope: `delete:organization_member_roles`
      *
-     * @param string        $organization Organization (by ID) user belongs to.
-     * @param string        $user         User (by ID) to remove roles from.
-     * @param array<string> $roles        One or more roles (by ID) to remove from the user.
+     * @param string              $id      Organization (by ID) user belongs to.
+     * @param string              $userId  User (by ID) to remove roles from.
+     * @param array<string>       $roles   One or more roles (by ID) to remove from the user.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function removeMemberRoles(
-        string $organization,
-        string $user,
-        array $roles
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($user, 'user');
-        $this->checkEmptyOrInvalidArray($roles, 'roles');
+        string $id,
+        string $userId,
+        array $roles,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($userId, 'userId');
+        Validate::array($roles, 'roles');
 
         $payload = [
-            'roles' => $roles
+            'roles' => $roles,
         ];
 
-        return $this->apiClient->method('delete')
-            ->addPath('organizations', $organization, 'members', $user, 'roles')
-            ->withBody(json_encode($payload))
-            ->call();
-    }
-
-    /**
-     * List invitations for an organization
-     * Required scope: "read:organization_invitations"
-     *
-     * @param string              $organization Organization (by ID) to list invitations for.
-     * @param array<string,mixed> $params       Optional. Options to include with the request, such as pagination or filtering parameters.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function getInvitations(
-        string $organization,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-
-        return $this->apiClient->method('get')
-            ->addPath('organizations', $organization, 'invitations')
-            ->withDictParams($this->normalizeRequest($params))
-            ->call();
-    }
-
-    /**
-     * Get an invitation (by ID) for an organization
-     * Required scope: "read:organization_invitations"
-     *
-     * @param string $organization Organization (by ID) to request.
-     * @param string $invitation   Invitation (by ID) to request.
-     *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
-     */
-    public function getInvitation(
-        string $organization,
-        string $invitation
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($invitation, 'invitation');
-
-        return $this->apiClient->method('get')
-            ->addPath('organizations', $organization, 'invitations', $invitation)
+        return $this->getHttpClient()->method('delete')
+            ->addPath('organizations', $id, 'members', $userId, 'roles')
+            ->withBody($payload)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Create an invitation for an organization
-     * Required scope: "create:organization_invitations"
+     * Required scope: `create:organization_invitations`
      *
-     * @param string              $organization Organization (by ID) to create the invitation for.
-     * @param string              $clientId     Client (by ID) to create the invitation for. This Client must be associated with the Organization.
-     * @param array<string,mixed> $inviter      An array containing information about the inviter. Requires a 'name' key minimally.
-     *                                          - 'name' Required. A name to identify who is sending the invitation.
-     * @param array<string,mixed> $invitee      An array containing information about the invitee. Requires an 'email' key.
-     *                                          - 'email' Required. An email address where the invitation should be sent.
-     * @param array<string,mixed> $params       Optional. Options to include with the request, such as pagination or filtering parameters.
+     * @param string        $id       Organization (by ID) to create the invitation for.
+     * @param string        $clientId Client (by ID) to create the invitation for. This Client must be associated with the Organization.
+     * @param array<string> $inviter  An array containing information about the inviter. Requires a 'name' key minimally.
+     *                                - 'name' Required. A name to identify who is sending the invitation.
+     * @param array<string> $invitee  An array containing information about the invitee. Requires an 'email' key.
+     *                                - 'email' Required. An email address where the invitation should be sent.
+     * @param array<mixed>|null       $body     Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null     $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function createInvitation(
-        string $organization,
+        string $id,
         string $clientId,
         array $inviter,
         array $invitee,
-        array $params = []
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($clientId, 'clientId');
-        $this->checkEmptyOrInvalidArray($inviter, 'inviter');
-        $this->checkEmptyOrInvalidArray($invitee, 'invitee');
+        ?array $body = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($clientId, 'clientId');
+        Validate::array($inviter, 'inviter');
+        Validate::array($invitee, 'invitee');
 
         if (! isset($inviter['name'])) {
-            throw new EmptyOrInvalidParameterException('inviter');
+            throw \Auth0\SDK\Exception\ArgumentException::missing('inviter.name');
         }
 
         if (! isset($invitee['email'])) {
-            throw new EmptyOrInvalidParameterException('invitee');
+            throw \Auth0\SDK\Exception\ArgumentException::missing('invitee.email');
         }
 
-        $payload = (object) array_filter([
+        $body = Shortcut::mergeArrays([
             'client_id' => $clientId,
-            'inviter'   => (object) $inviter,
-            'invitee'   => (object) $invitee,
-        ] + $params);
+            'inviter' => (object) $inviter,
+            'invitee' => (object) $invitee,
+        ], $body);
 
-        return $this->apiClient->method('post')
-            ->addPath('organizations', $organization, 'invitations')
-            ->withBody(json_encode($payload))
+        return $this->getHttpClient()->method('post')
+            ->addPath('organizations', $id, 'invitations')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * List invitations for an organization
+     * Required scope: `read:organization_invitations`
+     *
+     * @param string              $id      Organization (by ID) to list invitations for.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     */
+    public function getInvitations(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+
+        return $this->getHttpClient()->method('get')
+            ->addPath('organizations', $id, 'invitations')
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Get an invitation (by ID) for an organization
+     * Required scope: `read:organization_invitations`
+     *
+     * @param string              $id           Organization (by ID) to request.
+     * @param string              $invitationId Invitation (by ID) to request.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     */
+    public function getInvitation(
+        string $id,
+        string $invitationId,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($invitationId, 'invitationId');
+
+        return $this->getHttpClient()->method('get')
+            ->addPath('organizations', $id, 'invitations', $invitationId)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Delete an invitation (by ID) for an organization
-     * Required scope: "delete:organization_invitations"
+     * Required scope: `delete:organization_invitations`
      *
-     * @param string $organization Organization (by ID) to request.
-     * @param string $invitation   Invitation (by ID) to request.
+     * @param string              $id           Organization (by ID) to request.
+     * @param string              $invitationId Invitation (by ID) to request.
+     * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws RequestException When API request fails. Reason for failure provided in exception message.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function deleteInvitation(
-        string $organization,
-        string $invitation
-    )
-    {
-        $this->checkEmptyOrInvalidString($organization, 'organization');
-        $this->checkEmptyOrInvalidString($invitation, 'invitation');
+        string $id,
+        string $invitationId,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::string($invitationId, 'invitation');
 
-        return $this->apiClient->method('delete')
-            ->addPath('organizations', $organization, 'invitations', $invitation)
+        return $this->getHttpClient()->method('delete')
+            ->addPath('organizations', $id, 'invitations', $invitationId)
+            ->withOptions($options)
             ->call();
     }
 }

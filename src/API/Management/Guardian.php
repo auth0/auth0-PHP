@@ -1,60 +1,83 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-/**
- * Class Guardian
- *
- * @package Auth0\SDK\API\Management
- */
-class Guardian extends GenericResource
-{
+use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
+use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class Guardian.
+ * Handles requests to the Guardian endpoint of the v2 Management API.
+ *
+ * @link https://auth0.com/docs/api/management/v2#!/Guardian
+ */
+final class Guardian extends ManagementEndpoint
+{
     /**
      * Retrieve all multi-factor authentication configurations.
-     * Required scope: "read:guardian_factors"
+     * Required scope: `read:guardian_factors`
      *
-     * @return mixed
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Guardian/get_factors
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Guardian/get_factors
      */
-    public function getFactors()
-    {
-        return $this->apiClient->method('get')
+    public function getFactors(
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        return $this->getHttpClient()->method('get')
             ->addPath('guardian', 'factors')
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Retrieve an enrollment (including its status and type).
-     * Required scope: "read:guardian_enrollments"
+     * Required scope: `read:guardian_enrollments`
      *
-     * @param string $id ID of the enrollment to be retrieved.
+     * @param string              $id      Enrollment (by it's ID) to query.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Guardian/get_enrollments_by_id
+     * @link https://auth0.com/docs/api/management/v2#!/Guardian/get_enrollments_by_id
      */
-    public function getEnrollment(string $id)
-    {
-        return $this->apiClient->method('get')
+    public function getEnrollment(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+
+        return $this->getHttpClient()->method('get')
             ->addPath('guardian', 'enrollments', $id)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Delete an enrollment to allow the user to enroll with multi-factor authentication again.
-     * Required scope: "delete:guardian_enrollments"
+     * Required scope: `delete:guardian_enrollments`
      *
-     * @param string $id ID of the enrollment to be deleted.
+     * @param string              $id      Enrollment (by it's ID) to be deleted.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Guardian/delete_enrollments_by_id
+     * @link https://auth0.com/docs/api/management/v2#!/Guardian/delete_enrollments_by_id
      */
-    public function deleteEnrollment(string $id)
-    {
-        return $this->apiClient->method('delete')
+    public function deleteEnrollment(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+
+        return $this->getHttpClient()->method('delete')
             ->addPath('guardian', 'enrollments', $id)
+            ->withOptions($options)
             ->call();
     }
 }

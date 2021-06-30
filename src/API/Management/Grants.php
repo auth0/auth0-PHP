@@ -1,138 +1,142 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Grants
+ * Class Grants.
+ * Handles requests to the Grants endpoint of the v2 Management API.
  *
- * @package Auth0\SDK\API\Management
+ * @link https://auth0.com/docs/api/management/v2#!/Grants
  */
-class Grants extends GenericResource
+final class Grants extends ManagementEndpoint
 {
     /**
-     * Get all Grants with pagination.
-     * Required scope: "read:grants"
+     * Retrieve the grants associated with your account.
+     * Required scope: `read:grants`
      *
-     * @param integer      $page     Page number to return, zero-based.
-     * @param null|integer $per_page Number of results per page, null to return all.
-     * @param array        $params   Additional URL parameters to send.
+     * @param array<string,int|string|null>|null $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
-    public function getAll($page = 0, $per_page = null, array $params = [])
-    {
-        if (! empty($page)) {
-            $params['page'] = abs(intval($page));
-        }
-
-        if (! empty($per_page)) {
-            $params['per_page'] = abs(intval($per_page));
-        }
-
-        return $this->apiClient->method('get')
+    public function getAll(
+        ?array $parameters = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        return $this->getHttpClient()->method('get')
             ->addPath('grants')
-            ->withDictParams($params)
+            ->withParams($parameters ?? [])
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Get Grants by Client ID with pagination.
-     * Required scope: "read:grants"
+     * Required scope: `read:grants`
      *
-     * @param string       $client_id Client ID to filter Grants.
-     * @param integer      $page      Page number to return, zero-based.
-     * @param null|integer $per_page  Number of results per page, null to return all.
+     * @param string                             $clientId   Client ID to filter Grants.
+     * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws CoreException If $client_id is empty or not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
-    public function getByClientId($client_id, $page = 0, $per_page = null)
-    {
-        if (empty($client_id) || ! is_string($client_id)) {
-            throw new CoreException('Empty or invalid "client_id" parameter.');
-        }
+    public function getAllByClientId(
+        string $clientId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($clientId, 'clientId');
 
-        return $this->getAll($page, $per_page, ['client_id' => $client_id]);
+        $parameters = Shortcut::mergeArrays([
+            'client_id' => $clientId,
+        ], $parameters);
+
+        return $this->getAll($parameters, $options);
     }
 
     /**
      * Get Grants by Audience with pagination.
-     * Required scope: "read:grants"
+     * Required scope: `read:grants`
      *
-     * @param string       $audience Audience to filter Grants.
-     * @param integer      $page     Page number to return, zero-based.
-     * @param null|integer $per_page Number of results per page, null to return all.
+     * @param string                             $audience   Audience to filter Grants.
+     * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws CoreException If $audience is empty or not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
-    public function getByAudience($audience, $page = null, $per_page = null)
-    {
-        if (empty($audience) || ! is_string($audience)) {
-            throw new CoreException('Empty or invalid "audience" parameter.');
-        }
+    public function getAllByAudience(
+        string $audience,
+        ?array $parameters = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($audience, 'audience');
 
-        return $this->getAll($page, $per_page, ['audience' => $audience]);
+        $parameters = Shortcut::mergeArrays([
+            'audience' => $audience,
+        ], $parameters ?? []);
+
+        return $this->getAll($parameters, $options);
     }
 
     /**
      * Get Grants by User ID with pagination.
-     * Required scope: "read:grants"
+     * Required scope: `read:grants`
      *
-     * @param string       $user_id  User ID to filter Grants.
-     * @param integer      $page     Page number to return, zero-based.
-     * @param null|integer $per_page Number of results per page, null to return all.
+     * @param string                             $userId     User ID to filter Grants.
+     * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws CoreException If $user_id is empty or not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
-    public function getByUserId($user_id, $page = 0, $per_page = null)
-    {
-        if (empty($user_id) || ! is_string($user_id)) {
-            throw new CoreException('Empty or invalid "user_id" parameter.');
-        }
+    public function getAllByUserId(
+        string $userId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($userId, 'userId');
 
-        return $this->getAll($page, $per_page, ['user_id' => $user_id]);
+        $parameters = Shortcut::mergeArrays([
+            'user_id' => $userId,
+        ], $parameters);
+
+        return $this->getAll($parameters, $options);
     }
 
     /**
      * Delete a grant by Grant ID or User ID.
-     * Required scope: "delete:grants"
+     * Required scope: `delete:grants`
      *
-     * @param string $id Grant ID to delete a single Grant or User ID to delete all Grants for a User.
+     * @param string              $id      Grant ID to delete a single Grant or User ID to delete all Grants for a User.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws CoreException If $id is empty or not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/delete_grants_by_id
      */
-    public function delete($id)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Empty or invalid "id" parameter.');
-        }
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
 
-        return $this->apiClient->method('delete')
+        return $this->getHttpClient()->method('delete')
             ->addPath('grants', $id)
+            ->withOptions($options)
             ->call();
     }
 }

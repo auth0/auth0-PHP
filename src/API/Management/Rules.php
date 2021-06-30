@@ -1,177 +1,146 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\CoreException;
+use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Rules.
  * Handles requests to the Rules endpoint of the v2 Management API.
  *
- * @package Auth0\SDK\API\Management
+ * @link https://auth0.com/docs/api/management/v2#!/Rules
  */
-class Rules extends GenericResource
+final class Rules extends ManagementEndpoint
 {
     /**
+     * Create a new Rule.
+     * Required scope: `create:rules`
+     *
+     * @param string              $name    Name of this rule.
+     * @param string              $script  Code to be executed when this rule runs.
+     * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/post_rules
+     * @link https://auth0.com/docs/rules/current#create-rules-with-the-management-api
+     */
+    public function create(
+        string $name,
+        string $script,
+        ?array $body = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        $body = Shortcut::mergeArrays([
+            'name' => $name,
+            'script' => $script,
+        ], $body);
+
+        return $this->getHttpClient()->method('post')
+            ->addPath('rules')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
      * Get all Rules, by page if desired.
-     * Required scope: "read:rules"
+     * Required scope: `read:rules`
      *
-     * @param null|boolean      $enabled        Retrieves rules that match the value, otherwise all rules are retrieved.
-     * @param null|string|array $fields         Fields to include or exclude from the result.
-     * @param null|boolean      $include_fields True to include $fields, false to exclude $fields.
-     * @param null|integer      $page           Page number to get, zero-based.
-     * @param null|integer      $per_page       Number of results to get, null to return the default number.
+     * @param array<int|string|null>|null $parameters Optional. Query parameters to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Rules/get_rules
      */
-    public function getAll($enabled = null, $fields = null, $include_fields = null, $page = null, $per_page = null)
-    {
-        $params = [];
-
-        // Only return enabled Rules.
-        if ($enabled !== null) {
-            $params['enabled'] = (bool) $enabled;
-        }
-
-        // Fields to include or exclude from results.
-        if (! empty($fields)) {
-            $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
-            if (null !== $include_fields) {
-                $params['include_fields'] = $include_fields;
-            }
-        }
-
-        // Pagination parameters.
-        if (null !== $page) {
-            $params['page'] = abs( (int) $page);
-        }
-
-        if (null !== $per_page) {
-            $params['per_page'] = abs( (int) $per_page);
-        }
-
-        return $this->apiClient->method('get')
+    public function getAll(
+        ?array $parameters = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        return $this->getHttpClient()->method('get')
             ->addPath('rules')
-            ->withDictParams($params)
+            ->withParams($parameters ?? [])
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Get a single rule by ID.
-     * Required scope: "read:rules"
+     * Required scope: `read:rules`
      *
-     * @param string            $id             Rule ID to get.
-     * @param null|string|array $fields         Fields to include or exclude from the result.
-     * @param null|boolean      $include_fields True to include $fields, false to exclude $fields.
+     * @param string              $id      Rule ID to get.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws CoreException Thrown when $id is empty or not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Rules/get_rules_by_id
      */
-    public function get($id, $fields = null, $include_fields = null)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
+    public function get(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
 
-        $params = [];
-
-        // Fields to include or exclude from results.
-        if (! empty($fields)) {
-            $params['fields'] = is_array($fields) ? implode(',', $fields) : $fields;
-            if (null !== $include_fields) {
-                $params['include_fields'] = $include_fields;
-            }
-        }
-
-        return $this->apiClient->method('get')
+        return $this->getHttpClient()->method('get')
             ->addPath('rules', $id)
-            ->withDictParams($params)
-            ->call();
-    }
-
-    /**
-     * Delete a rule by ID.
-     * Required scope: "delete:rules"
-     *
-     * @param string $id Rule ID to delete.
-     *
-     * @return mixed
-     *
-     * @throws CoreException Thrown when $id is empty or not a string.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Rules/delete_rules_by_id
-     */
-    public function delete($id)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
-
-        return $this->apiClient->method('delete')
-            ->addPath('rules', $id)
-            ->call();
-    }
-
-    /**
-     * Create a new Rule.
-     * Required scope: "create:rules"
-     *
-     * @param array $data Dictionary array of keys and values to create a Rule.
-     *
-     * @return mixed
-     *
-     * @throws CoreException Thrown when required "script" or "name" fields are missing or empty.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Rules/post_rules
-     * @link https://auth0.com/docs/rules/current#create-rules-with-the-management-api
-     */
-    public function create(array $data)
-    {
-        if (empty($data['name'])) {
-            throw new CoreException('Missing required "name" field.');
-        }
-
-        if (empty($data['script'])) {
-            throw new CoreException('Missing required "script" field.');
-        }
-
-        return $this->apiClient->method('post')
-            ->addPath('rules')
-            ->withBody(json_encode($data))
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Update a Rule by ID.
-     * Required scope: "update:rules"
+     * Required scope: `update:rules`
      *
-     * @param string $id   Rule ID to delete.
-     * @param array  $data Rule data to update.
+     * @param string              $id      Rule ID to delete.
+     * @param array<mixed>        $body    Rule data to update.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @throws CoreException Thrown when $id is empty or not a string or if $data is empty.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/patch_rules_by_id
      */
-    public function update($id, array $data)
-    {
-        if (empty($id) || ! is_string($id)) {
-            throw new CoreException('Invalid "id" parameter.');
-        }
+    public function update(
+        string $id,
+        array $body,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::array($body, 'body');
 
-        return $this->apiClient->method('patch')
+        return $this->getHttpClient()->method('patch')
             ->addPath('rules', $id)
-            ->withBody(json_encode($data))
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    /**
+     * Delete a rule by ID.
+     * Required scope: `delete:rules`
+     *
+     * @param string              $id      Rule ID to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Rules/delete_rules_by_id
+     */
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+
+        return $this->getHttpClient()->method('delete')
+            ->addPath('rules', $id)
+            ->withOptions($options)
             ->call();
     }
 }

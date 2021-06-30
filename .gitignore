@@ -9,3 +9,6 @@ vendor
 .phpcs.xml
 phpcs.xml
 .phpunit.result.cache
+.DS_Store
+infection.log
+infection.mutators.md

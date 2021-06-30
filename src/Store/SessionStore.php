@@ -1,53 +1,45 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Utility\Validate;
+
 /**
  * Class SessionStore
  * This class provides a layer to persist data using PHP Sessions.
- *
- * NOTE: If you are using this storage method for the transient_store option in the Auth0 class along with a
- * response_mode of form_post, the session cookie MUST be set to SameSite=None and Secure using
- * session_set_cookie_params() or another method. This combination will be enforced by browsers in early 2020.
- *
- * @package Auth0\SDK\Store
  */
-class SessionStore implements StoreInterface
+final class SessionStore implements StoreInterface
 {
     /**
-     * Default session base name.
+     * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    const BASE_NAME = 'auth0_';
+    private SdkConfiguration $configuration;
 
     /**
      * Session base name, configurable on instantiation.
-     *
-     * @var string
      */
-    protected $session_base_name;
+    private string $sessionPrefix;
 
     /**
      * SessionStore constructor.
      *
-     * @param string $base_name Session base name.
+     * @param SdkConfiguration $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string           $sessionPrefix   Optional. A string to prefix session keys with.
      */
-    public function __construct($base_name = self::BASE_NAME)
-    {
-        $this->session_base_name = (string) $base_name;
-    }
+    public function __construct(
+        SdkConfiguration &$configuration,
+        string $sessionPrefix = 'auth0'
+    ) {
+        Validate::string($sessionPrefix, 'sessionPrefix');
 
-    /**
-     * This basic implementation of BaseAuth0 SDK uses
-     * PHP Sessions to store volatile data.
-     *
-     * @return void
-     */
-    private function initSession() : void
-    {
-        if (! session_id()) {
-            session_start();
-        }
+        $this->configuration = & $configuration;
+        $this->sessionPrefix = trim($sessionPrefix);
+
+        $this->start();
     }
 
     /**
@@ -55,14 +47,14 @@ class SessionStore implements StoreInterface
      *
      * @param string $key   Session key to set.
      * @param mixed  $value Value to use.
-     *
-     * @return void
      */
-    public function set(string $key, $value) : void
-    {
-        $this->initSession();
-        $key_name            = $this->getSessionKeyName($key);
-        $_SESSION[$key_name] = $value;
+    public function set(
+        string $key,
+        $value
+    ): void {
+        Validate::string($key, 'key');
+
+        $_SESSION[$this->getSessionName($key)] = $value;
     }
 
     /**
@@ -74,15 +66,37 @@ class SessionStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get(string $key, $default = null)
-    {
-        $this->initSession();
-        $key_name = $this->getSessionKeyName($key);
+    public function get(
+        string $key,
+        $default = null
+    ) {
+        Validate::string($key, 'key');
 
-        if (isset($_SESSION[$key_name])) {
-            return $_SESSION[$key_name];
-        } else {
-            return $default;
+        $keyName = $this->getSessionName($key);
+
+        if (isset($_SESSION[$keyName])) {
+            return $_SESSION[$keyName];
+        }
+
+        return $default;
+    }
+
+    /**
+     * Removes all persisted values.
+     */
+    public function deleteAll(): void
+    {
+        $session = $_SESSION;
+        $prefix = $this->sessionPrefix . '_';
+
+        while (current($session)) {
+            $sessionKey = key($session);
+
+            if (is_string($sessionKey) && mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
+                unset($_SESSION[$sessionKey]);
+            }
+
+            next($session);
         }
     }
 
@@ -90,30 +104,46 @@ class SessionStore implements StoreInterface
      * Removes a persisted value identified by $key.
      *
      * @param string $key Session key to delete.
-     *
-     * @return void
      */
-    public function delete(string $key) : void
-    {
-        $this->initSession();
-        $key_name = $this->getSessionKeyName($key);
-        unset($_SESSION[$key_name]);
+    public function delete(
+        string $key
+    ): void {
+        Validate::string($key, 'key');
+
+        unset($_SESSION[$this->getSessionName($key)]);
     }
 
     /**
      * Constructs a session key name.
      *
      * @param string $key Session key name to prefix and return.
-     *
-     * @return string
      */
-    public function getSessionKeyName(string $key) : string
-    {
-        $key_name = $key;
-        if (! empty( $this->session_base_name )) {
-            $key_name = $this->session_base_name.'_'.$key_name;
-        }
+    public function getSessionName(
+        string $key
+    ): string {
+        return $this->sessionPrefix . '_' . trim($key);
+    }
 
-        return $key_name;
+    /**
+     * This basic implementation of BaseAuth0 SDK uses PHP Sessions to store volatile data.
+     */
+    private function start(): void
+    {
+        $sessionId = session_id();
+
+        if ($sessionId === '' || $sessionId === false) {
+            session_set_cookie_params([
+                'lifetime' => $this->configuration->getCookieExpires(),
+                'domain' => $this->configuration->getCookieDomain(),
+                'path' => $this->configuration->getCookiePath(),
+                'secure' => $this->configuration->getCookieSecure(),
+                'httponly' => true,
+                'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
+            ]);
+
+            session_register_shutdown();
+
+            session_start();
+        }
     }
 }

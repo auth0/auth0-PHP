@@ -4,13 +4,27 @@ commands:
   prepare:
     steps:
       - checkout
-      - run: sudo composer self-update
+      - run:
+          name: Perform composer self-update
+          command: sudo composer self-update
       - restore_cache:
           keys:
             - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
             - composer-v1-{{ .Environment.CIRCLE_JOB }}
-      - run: composer install -n --prefer-dist
-      - run: composer update --prefer-dist --no-interaction
+      - run:
+          name: Enable code coverage
+          command: |
+            sudo pecl install pcov
+            sudo docker-php-ext-enable pcov
+            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            sudo docker-php-ext-install posix
+            sudo docker-php-ext-install pcntl
+      - run:
+          name: Install composer dependencies
+          command: composer install -n --prefer-dist
+      - run:
+          name: Update composer dependencies
+          command: composer update --prefer-dist --no-interaction
       - persist_to_workspace:
           root: .
           paths:
@@ -20,48 +34,66 @@ commands:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
             - vendor
-  run-static-analysis:
+
+  run-phpinsights:
     steps:
-      - run: composer static-analysis
-  run-unit-tests:
+      - run:
+          name: Run PHP Insights code quality analysis
+          command: php ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
+
+  run-phpstan:
     steps:
-      - run: composer test-unit-ci
-      - store_artifacts:
-          path: build/coverage.xml
-  run-integration-tests:
+      - run:
+          name: Run PHPStan static code analysis
+          command: php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M
+
+  run-psalm:
     steps:
-      - run: composer test-integration-ci
-      - store_artifacts:
-          path: build/coverage.xml
+      - run:
+          name: Run Psalm static code analysis
+          command: php ./vendor/bin/psalm --threads=4
+
+  run-pest:
+    steps:
+      - run:
+          name: Run Pest unit tests
+          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
+
+  run-infection:
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Infection mutation tests
+          command: php ./vendor/bin/infection --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
 
 jobs:
-  php_7_3:
-    docker:
-      - image: circleci/php:7.3
-    steps:
-      - prepare
-      - run-static-analysis
-      - run-unit-tests
   php_7_4:
     docker:
       - image: circleci/php:7.4
     steps:
       - prepare
-      - run-static-analysis
-      - run-unit-tests
+      - run-phpinsights
+      - run-phpstan
+      - run-psalm
+      - run-pest
+      - run-infection
+
   php_8_0:
     docker:
       - image: circleci/php:8.0
     steps:
       - prepare
-      - run-static-analysis
-      - run-unit-tests
-  php_7_integration_tests:
-    docker:
-      - image: circleci/php:7.3
-    steps:
-      - prepare
-      - run-integration-tests
+      - run-phpinsights
+      - run-phpstan
+      - run-psalm
+      - run-pest
+      - run-infection
+
   snyk:
     docker:
       - image: snyk/snyk-cli:composer
@@ -78,18 +110,14 @@ jobs:
           when: always
 
 workflows:
-  build-and-test:
+  test-php-versions:
     jobs:
-      - php_7_3
       - php_7_4
       - php_8_0
-  integration-tests:
+
+  vulnerability-check:
     jobs:
-      - php_7_integration_tests:
-          filters:
-            branches:
-              only:
-                - master
+      - php_7_4
       - snyk:
           filters:
             branches:
@@ -97,4 +125,4 @@ workflows:
                 - master
           context: snyk-env
           requires:
-            - php_7_integration_tests
+            - php_7_4

@@ -1,142 +1,148 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
+use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class LogStreams.
- * Access to the v2 Management API Log Streams endpoint.
+ * Handles requests to the Log Streams endpoint of the v2 Management API.
  *
- * @package Auth0\SDK\API\Management
+ * @link https://auth0.com/docs/api/management/v2#!/Log_Streams
  */
-class LogStreams extends GenericResource
+final class LogStreams extends ManagementEndpoint
 {
+    /**
+     * Create a new Log Stream.
+     * Required scope: `create:log_streams`
+     *
+     * @param string              $type    The type of log stream being created.
+     * @param array<string>       $sink    The type of log stream determines the properties required in the sink payload; see the linked documentation.
+     * @param string|null         $name    Optional. The name of the log stream.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/post_log_streams
+     */
+    public function create(
+        string $type,
+        array $sink,
+        ?string $name = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($type, 'type');
+        Validate::array($sink, 'sink');
 
-    private const LOG_STREAMS_PATH = 'log-streams';
+        $payload = [
+            'type' => $type,
+            'sink' => (object) $sink,
+        ];
+
+        if ($name !== null) {
+            $payload['name'] = $name;
+        }
+
+        return $this->getHttpClient()->method('post')
+            ->addPath('log-streams')
+            ->withBody((object) $payload)
+            ->withOptions($options)
+            ->call();
+    }
 
     /**
      * Get all Log Streams.
-     * Required scope: "read:log_streams"
+     * Required scope: `read:log_streams`
      *
-     * @return mixed
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Exception Thrown by Guzzle for API errors.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/get_log_streams
      */
-    public function getAll()
-    {
-        return $this->apiClient->method('get')
-            ->addPath(self::LOG_STREAMS_PATH)
+    public function getAll(
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        return $this->getHttpClient()->method('get')
+            ->addPath('log-streams')
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Get a single Log Stream.
-     * Required scope: "read:log_streams"
+     * Required scope: `read:log_streams`
      *
-     * @param string $log_stream_id Log Stream ID to get.
+     * @param string              $id      Log Stream ID to query.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws \Exception Thrown by Guzzle for API errors.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/get_log_streams_by_id
      */
-    public function get($log_stream_id)
-    {
-        $this->checkEmptyOrInvalidString($log_stream_id, 'log_stream_id');
+    public function get(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
 
-        return $this->apiClient->method('get')
-            ->addPath(self::LOG_STREAMS_PATH, $log_stream_id)
-            ->call();
-    }
-
-    /**
-     * Create a new Log Stream.
-     * Required scope: "create:log_streams"
-     *
-     * @param array $data Log Stream data to create:
-     *                    "name" if not specified, a name of the Log Stream will be assigned by the Log Stream endpoint.
-     *                    "type" field is required.
-     *                    "sink" field is required. It's value and requirements depends upon the type of Log Stream to create; see the linked documentation below.
-     *
-     * @return mixed
-     *
-     * @throws EmptyOrInvalidParameterException Thrown if any required parameters are empty or invalid.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/post_log_streams
-     */
-    public function create(array $data)
-    {
-        if (empty($data)) {
-            throw new EmptyOrInvalidParameterException('Missing required "data" parameter.');
-        }
-
-        if (empty($data['type'])) {
-            throw new EmptyOrInvalidParameterException('Missing required "type" field.');
-        }
-
-        if (empty($data['sink'])) {
-            throw new EmptyOrInvalidParameterException('Missing required "sink" field.');
-        }
-
-        return $this->apiClient->method('post')
-            ->addPath(self::LOG_STREAMS_PATH)
-            ->withBody(json_encode($data))
+        return $this->getHttpClient()->method('get')
+            ->addPath('log-streams', $id)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Updates an existing Log Stream.
-     * Required scope: "update:log_streams"
+     * Required scope: `update:log_streams`
      *
-     * @param string $log_stream_id the ID of the Log Stream to update.
-     * @param array  $data          Log Stream data to update. Only certain fields are update-able; see the documentation linked below.
+     * @param string              $id      ID of the Log Stream to update.
+     * @param array<mixed>        $body    Log Stream data to update. Only certain fields are update-able; see the linked documentation.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws EmptyOrInvalidParameterException Thrown if the log_stream_id parameter is empty.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/patch_log_streams_by_id
      */
-    public function update($log_stream_id, array $data)
-    {
-        if (empty($log_stream_id)) {
-            throw new EmptyOrInvalidParameterException('Missing required "log_stream_id" field');
-        }
+    public function update(
+        string $id,
+        array $body,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
+        Validate::array($body, 'body');
 
-        return $this->apiClient->method('patch')
-            ->addPath(self::LOG_STREAMS_PATH, $log_stream_id)
-            ->withBody(json_encode($data))
+        return $this->getHttpClient()->method('patch')
+            ->addPath('log-streams', $id)
+            ->withBody((object) $body)
+            ->withOptions($options)
             ->call();
     }
 
     /**
      * Deletes a Log Stream.
-     * Required scope: "delete:log_streams"
+     * Required scope: `delete:log_streams`
      *
-     * @param string $log_stream_id the ID of the Log Stream to delete.
+     * @param string              $id      ID of the Log Stream to delete.
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @return mixed
-     *
-     * @throws EmptyOrInvalidParameterException Thrown if the log_stream_id parameter is empty.
-     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/delete_log_streams_by_id
      */
-    public function delete($log_stream_id)
-    {
-        if (empty($log_stream_id)) {
-            throw new EmptyOrInvalidParameterException('Missing required "log_stream_id" field');
-        }
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($id, 'id');
 
-        return $this->apiClient->method('delete')
-            ->addPath(self::LOG_STREAMS_PATH, $log_stream_id)
+        return $this->getHttpClient()->method('delete')
+            ->addPath('log-streams', $id)
+            ->withOptions($options)
             ->call();
     }
-
 }

@@ -1,69 +1,125 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Auth0\SDK\API\Management;
 
-class Emails extends GenericResource
+use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Validate;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * Class Emails.
+ * Handles requests to the Emails endpoint of the v2 Management API.
+ *
+ * @link https://auth0.com/docs/api/management/v2#!/Emails
+ */
+final class Emails extends ManagementEndpoint
 {
     /**
+     * Create the email provider.
+     * Required scope: `create:email_provider`
      *
-     * @param  null|string|array $fields
-     * @param  null|string|array $include_fields
-     * @return mixed
+     * @param string              $name        Name of the email provider to use.
+     * @param array<string>       $credentials Credentials required to use the provider. See @link for supported options.
+     * @param array<mixed>|null   $body        Optional. Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/post_provider
      */
-    public function getEmailProvider($fields = null, $include_fields = null)
-    {
-        $request = $this->apiClient->method('get')
-        ->addPath('emails', 'provider');
+    public function createProvider(
+        string $name,
+        array $credentials,
+        ?array $body = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($name, 'name');
+        Validate::array($credentials, 'credentials');
 
-        if ($fields !== null) {
-            if (is_array($fields)) {
-                $fields = implode(',', $fields);
-            }
+        $body = Shortcut::mergeArrays([
+            'name' => $name,
+            'credentials' => (object) $credentials,
+        ], $body);
 
-            $request->withParam('fields', $fields);
-        }
-
-        if ($include_fields !== null) {
-            $request->withParam('include_fields', $include_fields);
-        }
-
-        return $request->call();
+        return $this->getHttpClient()->method('post')
+            ->addPath('emails', 'provider')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 
     /**
+     * Retrieve email provider details.
+     * Required scope: `read:email_provider`
      *
-     * @param  array $data
-     * @return mixed
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/get_provider
      */
-    public function configureEmailProvider($data)
-    {
-        return $this->apiClient->method('post')
-        ->addPath('emails', 'provider')
-        ->withBody(json_encode($data))
-        ->call();
+    public function getProvider(
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        return $this->getHttpClient()->method('get')
+            ->addPath('emails', 'provider')
+            ->withOptions($options)
+            ->call();
     }
 
     /**
+     * Update the email provider.
+     * Required scope: `update:email_provider`
      *
-     * @param  array $data
-     * @return mixed
+     * @param string              $name        Name of the email provider to use.
+     * @param array<string>       $credentials Credentials required to use the provider. See @link for supported options.
+     * @param array<mixed>|null   $body        Additional body content to pass with the API request. See @link for supported options.
+     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/patch_provider
      */
-    public function updateEmailProvider($data)
-    {
-        return $this->apiClient->method('patch')
-        ->addPath('emails', 'provider')
-        ->withBody(json_encode($data))
-        ->call();
+    public function updateProvider(
+        string $name,
+        array $credentials,
+        ?array $body = null,
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        Validate::string($name, 'name');
+        Validate::array($credentials, 'credentials');
+
+        $body = Shortcut::mergeArrays([
+            'name' => $name,
+            'credentials' => (object) $credentials,
+        ], $body);
+
+        return $this->getHttpClient()->method('patch')
+            ->addPath('emails', 'provider')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 
     /**
+     * Delete the email provider.
+     * Required scope: `delete:email_provider`
      *
-     * @return mixed
+     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Emails/delete_provider
      */
-    public function deleteEmailProvider()
-    {
-        return $this->apiClient->method('delete')
-        ->addPath('emails', 'provider')
-        ->call();
+    public function deleteProvider(
+        ?RequestOptions $options = null
+    ): ResponseInterface {
+        return $this->getHttpClient()->method('delete')
+            ->addPath('emails', 'provider')
+            ->withOptions($options)
+            ->call();
     }
 }

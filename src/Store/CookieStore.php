@@ -1,91 +1,56 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Auth0\SDK\Store;
 
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Utility\Validate;
+
 /**
  * Class CookieStore.
  * This class provides a layer to persist transient auth data using cookies.
- *
- * @package Auth0\SDK\Store
  */
 class CookieStore implements StoreInterface
 {
+    public const KEY_HASHING_ALGO = 'sha256';
+    public const KEY_CHUNKING_THRESHOLD = 4096;
+    public const KEY_SEPARATOR = '_';
+    public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
+
     /**
-     * Default cookie base name.
+     * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    const BASE_NAME = 'auth0_';
+    private SdkConfiguration $configuration;
 
     /**
      * Cookie base name.
-     * Use config key 'base_name' to set this during instantiation.
-     * Default is self::BASE_NAME.
-     *
-     * @var string
+     * Use 'cookiePrefix' argument to set this during instantiation.
      */
-    protected $baseName;
+    private string $cookiePrefix;
 
     /**
-     * Cookie expiration length, in seconds.
-     * This will be added to current time or $this->now to set cookie expiration time.
-     * Use config key 'expiration' to set this during instantiation.
-     * Default is 600.
-     *
-     * @var integer
+     * Number of bytes to deduct/buffer from KEY_CHUNKING_THRESHOLD before chunking begins.
      */
-    protected $expiration;
-
-    /**
-     * SameSite attribute for all cookies set with class instance.
-     * Must be one of None, Strict, Lax (default is no SameSite attribute).
-     * Use config key 'samesite' to set this during instantiation.
-     * Default is no SameSite attribute set.
-     *
-     * @var null|string
-     */
-    protected $sameSite;
-
-    /**
-     * Time to use as "now" in expiration calculations.
-     * Used primarily for testing.
-     * Use config key 'now' to set this during instantiation.
-     * Default is current server time.
-     *
-     * @var null|integer
-     */
-    protected $now;
-
-    /**
-     * Support legacy browsers for SameSite=None.
-     * This will set/get/delete a fallback cookie with no SameSite attribute if $this->sameSite is None.
-     * Use config key 'legacy_samesite_none' to set this during instantiation.
-     * Default is true.
-     *
-     * @var boolean
-     */
-    protected $legacySameSiteNone;
+    private int $chunkingThreshold;
 
     /**
      * CookieStore constructor.
      *
-     * @param array $options Cookie options. See class properties above for keys and types allowed.
+     * @param SdkConfiguration $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string           $cookiePrefix    Optional. A string to prefix stored cookie keys with.
      */
-    public function __construct(array $options = [])
-    {
-        $this->baseName   = $options['base_name'] ?? self::BASE_NAME;
-        $this->expiration = $options['expiration'] ?? 600;
+    public function __construct(
+        SdkConfiguration &$configuration,
+        string $cookiePrefix = 'auth0'
+    ) {
+        Validate::string($cookiePrefix, 'cookiePrefix');
 
-        if (! empty($options['samesite']) && is_string($options['samesite'])) {
-            $sameSite = ucfirst($options['samesite']);
+        $this->configuration = & $configuration;
+        $this->cookiePrefix = $cookiePrefix;
 
-            if (in_array($sameSite, ['None', 'Strict', 'Lax'])) {
-                $this->sameSite = $sameSite;
-            }
-        }
-
-        $this->now = $options['now'] ?? null;
-
-        $this->legacySameSiteNone = $options['legacy_samesite_none'] ?? true;
+        $this->chunkingThreshold = self::KEY_CHUNKING_THRESHOLD - strlen(hash(self::KEY_HASHING_ALGO, 'threshold'));
     }
 
     /**
@@ -93,26 +58,39 @@ class CookieStore implements StoreInterface
      *
      * @param string $key   Cookie to set.
      * @param mixed  $value Value to use.
-     *
-     * @return void
      */
-    public function set(string $key, $value) : void
-    {
-        $key_name           = $this->getCookieName($key);
-        $_COOKIE[$key_name] = $value;
+    public function set(
+        string $key,
+        $value
+    ): void {
+        Validate::string($key, 'key');
 
-        if ($this->sameSite) {
-            // Core setcookie() does not handle SameSite before PHP 7.3.
-            $this->setCookieHeader($key_name, $value, $this->getExpTimecode());
-        } else {
-            $this->setCookie($key_name, $value, $this->getExpTimecode());
+        $key = $this->getCookieName($key);
+        $cookieOptions = $this->getCookieOptions();
+
+        $value = $this->encrypt($value);
+
+        $_COOKIE[$key] = $value;
+
+        if (strlen($value) >= $this->chunkingThreshold) {
+            $chunks = str_split($value, $this->chunkingThreshold);
+
+            // @phpstan-ignore-next-line
+            if ($chunks !== false) {
+                $chunkIndex = 1;
+
+                setcookie(join(self::KEY_SEPARATOR, [ $key, '0']), (string) count($chunks), $cookieOptions);
+
+                foreach ($chunks as $chunk) {
+                    setcookie(join(self::KEY_SEPARATOR, [ $key, $chunkIndex]), $chunk, $cookieOptions);
+                    $chunkIndex++;
+                }
+
+                return;
+            }
         }
 
-        // If we're using SameSite=None, set a fallback cookie with no SameSite attribute.
-        if ($this->legacySameSiteNone && 'None' === $this->sameSite) {
-            $_COOKIE['_'.$key_name] = $value;
-            $this->setCookie('_'.$key_name, $value, $this->getExpTimecode());
-        }
+        setcookie($key, $value, $cookieOptions);
     }
 
     /**
@@ -124,135 +102,248 @@ class CookieStore implements StoreInterface
      *
      * @return mixed
      */
-    public function get(string $key, $default = null)
-    {
-        $key_name = $this->getCookieName($key);
-        $value    = $default;
+    public function get(
+        string $key,
+        $default = null
+    ) {
+        Validate::string($key, 'key');
 
-        // If handling legacy browsers, check for fallback value.
-        if ($this->legacySameSiteNone) {
-            $value = $_COOKIE['_'.$key_name] ?? $value;
+        $key = $this->getCookieName($key);
+        $chunks = $this->isCookieChunked($key);
+        $value = '';
+
+        if ($chunks === null) {
+            return $default;
         }
 
-        return $_COOKIE[$key_name] ?? $value;
+        if ($chunks !== 0) {
+            for ($chunk = 1; $chunk <= $chunks; $chunk++) {
+                $chunkData = $_COOKIE[join(self::KEY_SEPARATOR, [ $key, $chunk])] ?? null;
+
+                if ($chunkData === null) {
+                    return $default;
+                }
+
+                $value .= (string) $chunkData;
+            }
+        }
+
+        if ($chunks === 0) {
+            $value = $_COOKIE[$key] ?? null;
+        }
+
+        if ($value !== null && mb_strlen($value) !== 0) {
+            $data = $this->decrypt($value);
+
+            if ($data !== null) {
+                return $data;
+            }
+        }
+
+        return $default;
+    }
+
+    /**
+     * Removes all persisted values.
+     */
+    public function deleteAll(): void
+    {
+        $cookies = $_COOKIE;
+        $prefix = $this->cookiePrefix . '_';
+
+        while (current($cookies)) {
+            $cookieName = key($cookies);
+
+            if (is_string($cookieName) && mb_substr($cookieName, 0, strlen($prefix)) === $prefix) {
+                $this->delete($cookieName, false);
+            }
+
+            next($cookies);
+        }
     }
 
     /**
      * Removes a persisted value identified by $key.
      *
-     * @param string $key Cookie to delete.
-     *
-     * @return void
+     * @param string $key    Cookie to delete.
+     * @param bool   $prefix Whether the cookie name should have the $cookiePrefix applied.
      */
-    public function delete(string $key) : void
-    {
-        $key_name = $this->getCookieName($key);
-        unset($_COOKIE[$key_name]);
-        $this->setCookie( $key_name, '', 0 );
+    public function delete(
+        string $key,
+        bool $prefix = true
+    ): void {
+        Validate::string($key, 'key');
 
-        // If we set a legacy fallback value, remove that as well.
-        if ($this->legacySameSiteNone) {
-            unset($_COOKIE['_'.$key_name]);
-            $this->setCookie( '_'.$key_name, '', 0 );
-        }
-    }
+        $key = $this->getCookieName($key, $prefix);
+        $chunks = $this->isCookieChunked($key);
 
-    /**
-     * Build the header to use when setting SameSite cookies.
-     *
-     * @param string  $name   Cookie name.
-     * @param string  $value  Cookie value.
-     * @param integer $expire Cookie expiration timecode.
-     *
-     * @return string
-     *
-     * @see https://github.com/php/php-src/blob/master/ext/standard/head.c#L77
-     */
-    protected function getSameSiteCookieHeader(string $name, string $value, int $expire) : string
-    {
-        $date = new \Datetime();
-        $date->setTimestamp($expire)
-            ->setTimezone(new \DateTimeZone('GMT'));
-
-        $illegalChars    = ",; \t\r\n\013\014";
-        $illegalCharsMsg = ",; \\t\\r\\n\\013\\014";
-
-        if (strpbrk($name, $illegalChars) != null) {
-            trigger_error("Cookie names cannot contain any of the following '".$illegalCharsMsg."'", E_USER_WARNING);
-            return '';
+        if ($chunks === null) {
+            return;
         }
 
-        if (strpbrk($value, $illegalChars) != null) {
-            trigger_error("Cookie values cannot contain any of the following '".$illegalCharsMsg."'", E_USER_WARNING);
-            return '';
+        $cookieOptions = $this->getCookieOptions(-1000);
+
+        unset($_COOKIE[$key]);
+        setcookie($key, '', $cookieOptions);
+
+        if ($chunks !== 0) {
+            unset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])]);
+            setcookie(join(self::KEY_SEPARATOR, [ $key, '0']), '', $cookieOptions);
+
+            for ($chunk = 1; $chunk <= $chunks; $chunk++) {
+                unset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, $chunk])]);
+                setcookie(join(self::KEY_SEPARATOR, [ $key, $chunk]), '', $cookieOptions);
+            }
         }
-
-        return sprintf(
-            'Set-Cookie: %s=%s; path=/; expires=%s; HttpOnly; SameSite=%s%s',
-            $name,
-            $value,
-            $date->format($date::COOKIE),
-            $this->sameSite,
-            'None' === $this->sameSite ? '; Secure' : ''
-        );
-    }
-
-    /**
-     * Get cookie expiration timecode to use.
-     *
-     * @return integer
-     */
-    protected function getExpTimecode() : int
-    {
-        return ($this->now ?? time()) + $this->expiration;
-    }
-
-    /**
-     * Wrapper around PHP core setcookie() function to assist with testing.
-     *
-     * @param string  $name   Complete cookie name to set.
-     * @param string  $value  Value of the cookie to set.
-     * @param integer $expire Expiration time in Unix timecode format.
-     *
-     * @return boolean
-     *
-     * @codeCoverageIgnore
-     */
-    protected function setCookie(string $name, string $value, int $expire) : bool
-    {
-        return setcookie($name, $value, $expire, '/', '', false, true);
-    }
-
-    /**
-     * Wrapper around PHP core header() function to assist with testing.
-     *
-     * @param string  $name   Complete cookie name to set.
-     * @param string  $value  Value of the cookie to set.
-     * @param integer $expire Expiration time in Unix timecode format.
-     *
-     * @return void
-     *
-     * @codeCoverageIgnore
-     */
-    protected function setCookieHeader(string $name, string $value, int $expire) : void
-    {
-        header($this->getSameSiteCookieHeader($name, $value, $expire), false);
     }
 
     /**
      * Constructs a cookie name.
      *
      * @param string $key Cookie name to prefix and return.
-     *
-     * @return string
+     * @param bool   $prefix Whether the cookie name should have the $cookiePrefix applied.
      */
-    public function getCookieName(string $key) : string
-    {
-        $key_name = $key;
-        if (! empty( $this->baseName )) {
-            $key_name = $this->baseName.'_'.$key_name;
+    public function getCookieName(
+        string $key,
+        bool $prefix = true
+    ): string {
+        $key = trim($key);
+
+        if ($prefix) {
+            return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, trim($key));
         }
 
-        return $key_name;
+        return $key;
+    }
+
+    /**
+     * Determine the chunkiness of a cookie. Returns the number of chunks, or 0 if unchunked. If the cookie wasn't found, returns null.
+     *
+     * @param string $key Cookie name to lookup.
+     */
+    private function isCookieChunked(
+        string $key
+    ): ?int {
+        Validate::string($key, 'key');
+
+        if (isset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])])) {
+            return (int) $_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])];
+        }
+
+        if (isset($_COOKIE[$key])) {
+            return 0;
+        }
+
+        return null;
+    }
+
+    /**
+     * Encrypt data for safe storage format for a cookie.
+     *
+     * @param mixed $data Data to encrypt.
+     */
+    private function encrypt(
+        $data
+    ): string {
+        $secret = $this->configuration->getCookieSecret();
+        $ivLen = openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
+
+        if ($secret === null) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
+        }
+
+        if ($ivLen === false) {
+            return '';
+        }
+
+        $iv = openssl_random_pseudo_bytes($ivLen);
+
+        // @phpstan-ignore-next-line
+        if ($iv === false) {
+            return '';
+        }
+
+        $encrypted = openssl_encrypt(serialize($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+        return base64_encode(json_encode(serialize(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]), JSON_THROW_ON_ERROR));
+    }
+
+    /**
+     * Decrypt data from a stored cookie string.
+     *
+     * @param string $data String representing an encrypted data structure.
+     *
+     * @return mixed
+     */
+    private function decrypt(
+        string $data
+    ) {
+        Validate::string($data, 'data');
+
+        $secret = $this->configuration->getCookieSecret();
+
+        if ($secret === null) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
+        }
+
+        $data = base64_decode($data, true);
+
+        if ($data === false) {
+            return null;
+        }
+
+        $data = json_decode($data, true);
+
+        if ($data === null) {
+            return null;
+        }
+
+        $data = unserialize($data);
+        $iv = base64_decode($data['iv'], true);
+        $tag = base64_decode($data['tag'], true);
+
+        if ($iv === false || $tag === false) {
+            return null;
+        }
+
+        $data = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+
+        if ($data === false) {
+            return null;
+        }
+
+        return unserialize($data);
+    }
+
+    /**
+     * Build options array for use with setcookie()
+     *
+     * @param int|null $expires
+     *
+     * @return array<mixed>
+     */
+    private function getCookieOptions(
+        ?int $expires = null
+    ): array {
+        $expires = $expires ?? $this->configuration->getCookieExpires();
+
+        if ($expires !== 0) {
+            $expires = time() + $expires;
+        }
+
+        $options = [
+            'expires' => $expires,
+            'path' => $this->configuration->getCookiePath(),
+            'secure' => $this->configuration->getCookieSecure(),
+            'httponly' => true,
+            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
+        ];
+
+        $domain = $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'] ?? null;
+
+        if ($domain !== null) {
+            $options['domain'] = $domain;
+        }
+
+        return $options;
     }
 }
