@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [7.9.1](https://github.com/auth0/auth0-PHP/tree/7.9.0) (2021-07-06)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...7.9.1)
+
+**Fixed**
+
+- Replace deprated/removed GuzzleHttp\Psr7\build_query [\#500](https://github.com/auth0/auth0-PHP/pull/500) ([bartvanraaij](https://github.com/bartvanraaij))
+
 ## [7.9.0](https://github.com/auth0/auth0-PHP/tree/7.9.0) (2021-05-03)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.8.0...7.9.0)
