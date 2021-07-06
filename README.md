@@ -516,8 +516,8 @@ In some cases, your application may need to support validating tokens' `org_id` 
   - [Management API](https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php)
   - [Troubleshooting](https://auth0.com/docs/libraries/auth0-php/troubleshoot-auth0-php-library)
 - Quickstarts
-  - [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-web-app/tree/8.x))
-  - [Backend API Authorization](https://auth0.com/docs/quickstart/backend/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-api-samples/tree/8.x))
+  - [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/php-beta/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-web-app/tree/8.x))
+  - [Backend API Authorization](https://auth0.com/docs/quickstart/backend/php-beta/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-api-samples/tree/8.x))
 
 ## Contributing
 
