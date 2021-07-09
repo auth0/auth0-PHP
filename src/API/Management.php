@@ -12,6 +12,29 @@ use Auth0\SDK\Utility\HttpResponsePaginator;
 
 /**
  * Class Management
+ *
+ * @method \Auth0\SDK\API\Management\Blacklists blacklists()
+ * @method \Auth0\SDK\API\Management\Clients clients()
+ * @method \Auth0\SDK\API\Management\ClientGrants clientGrants()
+ * @method \Auth0\SDK\API\Management\Connections connections()
+ * @method \Auth0\SDK\API\Management\DeviceCredentials deviceCredentials()
+ * @method \Auth0\SDK\API\Management\Emails emails()
+ * @method \Auth0\SDK\API\Management\EmailTemplates emailTemplates()
+ * @method \Auth0\SDK\API\Management\Grants grants()
+ * @method \Auth0\SDK\API\Management\Guardian guardian()
+ * @method \Auth0\SDK\API\Management\Jobs jobs()
+ * @method \Auth0\SDK\API\Management\Logs logs()
+ * @method \Auth0\SDK\API\Management\LogStreams logStreams()
+ * @method \Auth0\SDK\API\Management\Organizations organizations()
+ * @method \Auth0\SDK\API\Management\Roles roles()
+ * @method \Auth0\SDK\API\Management\Rules rules()
+ * @method \Auth0\SDK\API\Management\ResourceServers resourceServers()
+ * @method \Auth0\SDK\API\Management\Stats stats()
+ * @method \Auth0\SDK\API\Management\Tenants tenants()
+ * @method \Auth0\SDK\API\Management\Tickets tickets()
+ * @method \Auth0\SDK\API\Management\UserBlocks userBlocks()
+ * @method \Auth0\SDK\API\Management\Users users()
+ * @method \Auth0\SDK\API\Management\UsersByEmail usersByEmail()
  */
 final class Management
 {
