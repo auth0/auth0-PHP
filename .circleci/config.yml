@@ -34,6 +34,7 @@ commands:
           paths:
             - composer.*
             - .snyk
+            - .fossa.yml
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
