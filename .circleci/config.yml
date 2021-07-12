@@ -33,7 +33,6 @@ commands:
           root: .
           paths:
             - composer.*
-            - vendor
             - .snyk
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
@@ -73,7 +72,10 @@ commands:
       - persist_to_workspace:
           root: .
           paths:
+            - src
+            - infection.json.dist
             - build
+            - vendor
 
   run-infection:
     steps:
