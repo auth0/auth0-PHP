@@ -97,7 +97,7 @@ jobs:
 
   infection:
     docker:
-      - image: circleci/php:8.0
+      - image: circleci/php:7.4
     steps:
       - prepare
       - run-pest
@@ -112,7 +112,7 @@ jobs:
       - run: snyk test
       - run:
           command: |
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]
+            if [[ "${CIRCLE_BRANCH}" == "main" ]]
             then
             snyk monitor --org=auth0-sdks
             fi
@@ -123,26 +123,16 @@ workflows:
     jobs:
       - php_7_4
       - php_8_0
-
-  run-snyk:
-    jobs:
-      - php_7_4
       - snyk:
           filters:
             branches:
               only:
-                - master
+                - main
           context: snyk-env
-          requires:
-            - php_7_4
-
-  run-infection:
-    jobs:
-      - php_7_4
+          requires: [php_7_4]
       - infection:
           filters:
             branches:
               only:
-                - master
-          requires:
-            - php_7_4
+                - main
+          requires: [php_7_4]
