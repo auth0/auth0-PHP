@@ -109,6 +109,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: composer install -n --prefer-dist
       - run-infection
 
 workflows:
