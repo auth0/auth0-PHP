@@ -75,9 +75,12 @@ commands:
           command: php ./vendor/bin/infection --skip-initial-tests --threads=4 --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
 
 jobs:
-  php_7_4:
+  run-unit-tests:
+    parameters:
+      php:
+        type: string
     docker:
-      - image: circleci/php:7.4
+      - image: circleci/php:<< parameters.php >>
     steps:
       - prepare
       - run-phpinsights
@@ -85,25 +88,7 @@ jobs:
       - run-psalm
       - run-pest
 
-  php_8_0:
-    docker:
-      - image: circleci/php:8.0
-    steps:
-      - prepare
-      - run-phpinsights
-      - run-phpstan
-      - run-psalm
-      - run-pest
-
-  infection:
-    docker:
-      - image: circleci/php:7.4
-    steps:
-      - prepare
-      - run-pest
-      - run-infection
-
-  snyk:
+  run-security-tests:
     docker:
       - image: snyk/snyk-cli:composer
     steps:
@@ -118,21 +103,33 @@ jobs:
             fi
           when: always
 
+  run-mutation-tests:
+    docker:
+      - image: circleci/php:7.4
+    steps:
+      - attach_workspace:
+          at: .
+      - run-infection
+
 workflows:
   run-tests:
     jobs:
-      - php_7_4
-      - php_8_0
-      - snyk:
+      - run-unit-tests:
+          name: php-7.4
+          php: 7.4
+      - run-unit-tests:
+          name: php-8.0
+          php: 8.0
+      - run-security-tests:
           filters:
             branches:
               only:
                 - main
           context: snyk-env
-          requires: [php_7_4]
-      - infection:
+          requires: [php-8.0]
+      - run-mutation-tests:
           filters:
             branches:
               only:
                 - main
-          requires: [php_7_4]
+          requires: [php-7.4]
