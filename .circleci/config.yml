@@ -142,7 +142,7 @@ jobs:
             chmod +x codecov
       - run:
           name: Upload coverage reports to Codecov
-          command: ./codecov -t ${CODECOV_TOKEN} -s ./build/coverage/coverage-xml
+          command: ./codecov -t ${CODECOV_TOKEN} -f ./build/coverage/junit.xml
 
 workflows:
   run-tests:
