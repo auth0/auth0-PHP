@@ -84,7 +84,6 @@ jobs:
       - run-phpstan
       - run-psalm
       - run-pest
-      - run-infection
 
   php_8_0:
     docker:
@@ -94,6 +93,13 @@ jobs:
       - run-phpinsights
       - run-phpstan
       - run-psalm
+      - run-pest
+
+  infection:
+    docker:
+      - image: circleci/php:8.0
+    steps:
+      - prepare
       - run-pest
       - run-infection
 
@@ -113,12 +119,12 @@ jobs:
           when: always
 
 workflows:
-  test-php-versions:
+  run-tests:
     jobs:
       - php_7_4
       - php_8_0
 
-  vulnerability-check:
+  run-snyk:
     jobs:
       - php_7_4
       - snyk:
@@ -127,5 +133,16 @@ workflows:
               only:
                 - master
           context: snyk-env
+          requires:
+            - php_7_4
+
+  run-infection:
+    jobs:
+      - php_7_4
+      - infection:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - php_7_4
