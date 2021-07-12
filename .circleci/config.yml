@@ -107,19 +107,17 @@ jobs:
     docker:
       - image: circleci/php:7.4
     steps:
-      - attach_workspace:
-          at: .
-      - run: composer install -n --prefer-dist
+      - prepare
       - run-infection
 
 workflows:
   run-tests:
     jobs:
       - run-unit-tests:
-          name: php-7.4
+          name: run-pest-7.4
           php: "7.4"
       - run-unit-tests:
-          name: php-8.0
+          name: run-pest-8.0
           php: "8.0"
       - run-security-tests:
           filters:
@@ -127,10 +125,10 @@ workflows:
               only:
                 - main
           context: snyk-env
-          requires: [php-8.0]
+          requires: [run-pest-8.0]
       - run-mutation-tests:
           filters:
             branches:
               only:
                 - main
-          requires: [php-7.4]
+          requires: [run-pest-7.4]
