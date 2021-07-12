@@ -127,9 +127,12 @@ jobs:
       - run-infection
 
   update-codecov:
+    docker:
+      - image: circleci/php:7.4
     steps:
       - attach_workspace:
           at: .
+      - restore-cache
       - codecov/upload:
           file: build/coverage/coverage-xml
 
