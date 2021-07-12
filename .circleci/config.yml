@@ -68,7 +68,7 @@ commands:
     steps:
       - run:
           name: Run unit tests (Pest)
-          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
+          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=build/coverage/coverage.xml --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
       - persist_to_workspace:
           root: .
           paths:
@@ -123,7 +123,7 @@ jobs:
       - restore-cache
       - run-infection
 
-  update-codecov:
+  run-codecov-uploader:
     docker:
       - image: circleci/php:7.4
     steps:
@@ -131,7 +131,7 @@ jobs:
           at: .
       - restore-cache
       - run:
-          name: Download and validate Codecov script
+          name: Download and validate Codecov uploader
           command: |
             curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
             curl -Os https://uploader.codecov.io/latest/linux/codecov
@@ -142,7 +142,7 @@ jobs:
             chmod +x codecov
       - run:
           name: Upload coverage reports to Codecov
-          command: ./codecov -t ${CODECOV_TOKEN} -f ./build/coverage/junit.xml
+          command: ./codecov -t ${CODECOV_TOKEN} -f ./build/coverage/coverage.xml
 
 workflows:
   run-tests:
@@ -159,14 +159,14 @@ workflows:
               only:
                 - main
           context: snyk-env
-          requires: [run-pest-8.0]
+          requires: [run-pest-7.4]
       - run-mutation-tests:
           filters:
             branches:
               only:
                 - main
           requires: [run-pest-7.4]
-      - update-codecov:
+      - run-codecov-uploader:
           filters:
             branches:
               only:
