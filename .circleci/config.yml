@@ -33,6 +33,8 @@ commands:
           root: .
           paths:
             - composer.*
+            - vendor
+            - build
             - .snyk
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
@@ -62,7 +64,7 @@ commands:
     steps:
       - run:
           name: Run static code analysis (Psalm)
-          command: php ./vendor/bin/psalm --threads=8
+          command: php ./vendor/bin/psalm --threads=$(nproc)
 
   run-pest:
     steps:
@@ -80,7 +82,7 @@ commands:
           at: .
       - run:
           name: Run mutation tests (Infection)
-          command: php ./vendor/bin/infection --skip-initial-tests --threads=8 --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
+          command: php ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
 
 jobs:
   run-unit-tests:
