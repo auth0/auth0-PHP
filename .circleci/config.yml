@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@1.2.3
+
 commands:
   prepare:
     steps:
@@ -123,6 +126,13 @@ jobs:
       - restore-cache
       - run-infection
 
+  update-codecov:
+    steps:
+      - attach_workspace:
+          at: .
+      - codecov/upload:
+          file: build/coverage/coverage-xml
+
 workflows:
   run-tests:
     jobs:
@@ -140,6 +150,12 @@ workflows:
           context: snyk-env
           requires: [run-pest-8.0]
       - run-mutation-tests:
+          filters:
+            branches:
+              only:
+                - main
+          requires: [run-pest-7.4]
+      - update-codecov:
           filters:
             branches:
               only:
