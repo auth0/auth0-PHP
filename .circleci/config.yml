@@ -116,10 +116,10 @@ workflows:
     jobs:
       - run-unit-tests:
           name: php-7.4
-          php: 7.4
+          php: "7.4"
       - run-unit-tests:
           name: php-8.0
-          php: 8.0
+          php: "8.0"
       - run-security-tests:
           filters:
             branches:
