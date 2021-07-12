@@ -189,3 +189,9 @@ workflows:
               only:
                 - main
           requires: [run-pest-7.4]
+      - run-fossa-uploader:
+          filters:
+            branches:
+              only:
+                - main
+          requires: [run-pest-7.4]
