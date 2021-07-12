@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  codecov: codecov/codecov@1.2.3
-
 commands:
   prepare:
     steps:
@@ -133,8 +130,18 @@ jobs:
       - attach_workspace:
           at: .
       - restore-cache
-      - codecov/upload:
-          file: build/coverage/coverage-xml
+      - run:
+          name: Download and validate Codecov script
+          command: |
+            curl -fLso codecov https://codecov.io/bash;
+            VERSION=$(grep -o 'VERSION=\"[0-9\.]*\"' codecov | cut -d'"' -f2);
+            for i in 1 256 512
+            do
+              shasum -a $i -c --ignore-missing <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM")
+            done
+      - run:
+          name: Upload coverage reports to Codecov
+          command: bash ./codecov
 
 workflows:
   run-tests:
