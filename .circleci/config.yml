@@ -34,7 +34,6 @@ commands:
           paths:
             - composer.*
             - vendor
-            - build
             - .snyk
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
@@ -78,8 +77,6 @@ commands:
 
   run-infection:
     steps:
-      - attach_workspace:
-          at: .
       - run:
           name: Run mutation tests (Infection)
           command: php ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
@@ -117,6 +114,8 @@ jobs:
     docker:
       - image: circleci/php:7.4
     steps:
+      - attach_workspace:
+          at: .
       - restore-cache
       - run-infection
 
