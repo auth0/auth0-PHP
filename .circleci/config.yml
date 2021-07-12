@@ -19,7 +19,6 @@ commands:
             sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
             sudo docker-php-ext-install posix
             sudo docker-php-ext-install pcntl
-            sudo docker-php-ext-install mbstring
       - run:
           name: Install composer dependencies
           command: composer install -n --prefer-dist
