@@ -73,7 +73,9 @@ commands:
           root: .
           paths:
             - src
+            - tests
             - infection.json.dist
+            - phpunit.xml.dist
             - build
             - vendor
 
