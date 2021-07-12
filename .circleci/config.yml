@@ -15,7 +15,7 @@ commands:
           name: Enable code coverage
           command: |
             sudo apt update
-            sudo apt install oniguruma-dev
+            sudo apt install oniguruma
             sudo pecl install pcov
             sudo docker-php-ext-enable pcov
             sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
