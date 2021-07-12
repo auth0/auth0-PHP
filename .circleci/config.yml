@@ -123,6 +123,23 @@ jobs:
       - restore-cache
       - run-infection
 
+  run-fossa-uploader:
+    docker:
+      - image: circleci/php:7.4
+    steps:
+      - attach_workspace:
+          at: .
+      - restore-cache
+      - run:
+          name: Download FOSSA uploader
+          command: |
+            curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash
+      - run:
+          name: Upload reports to FOSSA
+          command: |
+            fossa init
+            fossa analyze
+
   run-codecov-uploader:
     docker:
       - image: circleci/php:7.4
@@ -167,6 +184,12 @@ workflows:
                 - main
           requires: [run-pest-7.4]
       - run-codecov-uploader:
+          filters:
+            branches:
+              only:
+                - main
+          requires: [run-pest-7.4]
+      - run-fossa-uploader:
           filters:
             branches:
               only:
