@@ -137,8 +137,7 @@ jobs:
       - run:
           name: Upload reports to FOSSA
           command: |
-            fossa init -t auth0-PHP
-            fossa analyze -t auth0-PHP
+            fossa analyze
 
   run-codecov-uploader:
     docker:

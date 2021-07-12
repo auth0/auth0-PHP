@@ -5,10 +5,10 @@ version: 2
 cli:
   server: https://app.fossa.com
   fetcher: custom
-  project: https://github.com/auth0/auth0-PHP.git
+  project: git@github.com:auth0/auth0-PHP.git
 analyze:
   modules:
-  - name: auth0/auth0-php
-    type: composer
-    target: composer.json
-    path: .
+    - name: auth0/auth0-php
+      type: composer
+      target: composer.json
+      path: .
