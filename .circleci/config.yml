@@ -140,11 +140,9 @@ jobs:
             gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
             shasum -a 256 -c codecov.SHA256SUM
             chmod +x codecov
-            ls ./build/coverage/coverage-xml
-            ln -s ./build/coverage/coverage-xml ./coverage.xml
       - run:
           name: Upload coverage reports to Codecov
-          command: ./codecov -t ${CODECOV_TOKEN}
+          command: ./codecov -t ${CODECOV_TOKEN} -s ./build/coverage/coverage-xml
 
 workflows:
   run-tests:
