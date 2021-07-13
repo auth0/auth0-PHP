@@ -21,7 +21,7 @@ commands:
             sudo docker-php-ext-install mbstring
       - run:
           name: Install composer dependencies
-          command: composer install -n --prefer-dist
+          command: composer install --no-interaction --prefer-dist
       - run:
           name: Update composer dependencies
           command: composer update --prefer-dist --no-interaction
@@ -128,9 +128,13 @@ jobs:
     docker:
       - image: circleci/php:7.4
     steps:
-      - attach_workspace:
-          at: .
-      - restore-cache
+      - checkout
+      - run:
+          name: Perform composer self-update
+          command: sudo composer self-update
+      - run:
+          name: Install composer dependencies
+          command: composer install --no-interaction --prefer-dist --no-dev
       - run:
           name: Download FOSSA uploader
           command: |
@@ -194,4 +198,3 @@ workflows:
             branches:
               only:
                 - main
-          requires: [run-pest-7.4]
