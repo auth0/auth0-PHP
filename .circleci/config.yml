@@ -34,7 +34,6 @@ commands:
           paths:
             - composer.*
             - .snyk
-            - .fossa.yml
       - save_cache:
           key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
           paths:
@@ -124,26 +123,6 @@ jobs:
       - restore-cache
       - run-infection
 
-  run-fossa-uploader:
-    docker:
-      - image: circleci/php:7.4
-    steps:
-      - checkout
-      - run:
-          name: Perform composer self-update
-          command: sudo composer self-update
-      - run:
-          name: Install composer dependencies
-          command: composer install --no-interaction --prefer-dist --no-dev
-      - run:
-          name: Download FOSSA uploader
-          command: |
-            curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash
-      - run:
-          name: Upload reports to FOSSA
-          command: |
-            fossa analyze --branch << pipeline.git.branch >> --revision << pipeline.git.revision >>
-
   run-codecov-uploader:
     docker:
       - image: circleci/php:7.4
@@ -193,8 +172,3 @@ workflows:
               only:
                 - main
           requires: [run-pest-7.4]
-      - run-fossa-uploader:
-          filters:
-            branches:
-              only:
-                - main

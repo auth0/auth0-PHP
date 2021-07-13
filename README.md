@@ -5,7 +5,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/auth0/auth0-PHP?label=stable)](https://packagist.org/packages/auth0/auth0-PHP)
 [![Supported PHP Versions](https://img.shields.io/packagist/php-v/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-PHP)
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-PHP)
-[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B4989%2Fgit%40github.com%3Aauth0%2Fauth0-PHP.git.svg?type=shield)](https://app.fossa.com/projects/custom%2B4989%2Fgit%40github.com%3Aauth0%2Fauth0-PHP.git?ref=badge_shield)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP.svg?type=shield)](https://app.fossa.com/reports/4ef17265-c913-439b-8573-70bfc40d974d)
 
 The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessing Auth0's Authentication and Management API endpoints using modern PHP releases. Auth0 enables you to quickly integrate authentication and authorization into your applications so that you can focus on your core business. [Learn more.](https://auth0.com/why-auth0)
 
@@ -557,4 +557,4 @@ Auth0 helps you to:
 
 The Auth0 PHP SDK is open source software licensed under [the MIT license](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE.txt) file for more info.
 
-[![FOSSA Status](https://app.fossa.com/api/projects/custom%2B4989%2Fgit%40github.com%3Aauth0%2Fauth0-PHP.git.svg?type=large)](https://app.fossa.com/projects/custom%2B4989%2Fgit%40github.com%3Aauth0%2Fauth0-PHP.git?ref=badge_large)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP.svg?type=large)](https://app.fossa.com/reports/4ef17265-c913-439b-8573-70bfc40d974d)
