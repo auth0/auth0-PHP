@@ -70,8 +70,8 @@ class Tickets extends GenericResource
      * @param null|integer $ttl                    Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
      * @param null|string  $client_id              If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
      * @param null|string  $organization_id        If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
-     * @param null|string  $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
-     * @param null|string  $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
+     * @param null|bool    $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
+     * @param null|bool    $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
      *
      * @return mixed
      */
@@ -99,8 +99,8 @@ class Tickets extends GenericResource
      * @param null|integer $ttl                    Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
      * @param null|string  $client_id              If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
      * @param null|string  $organization_id        If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
-     * @param null|string  $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
-     * @param null|string  $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
+     * @param null|bool    $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
+     * @param null|bool    $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
      *
      * @return mixed
      */
@@ -129,8 +129,8 @@ class Tickets extends GenericResource
      * @param null|integer $ttl                    Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
      * @param null|string  $client_id              If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
      * @param null|string  $organization_id        If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
-     * @param null|string  $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
-     * @param null|string  $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
+     * @param null|bool    $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
+     * @param null|bool    $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
      *
      * @return mixed
      */
@@ -181,11 +181,11 @@ class Tickets extends GenericResource
             $body['organization_id'] = $organization_id;
         }
 
-        if ($mark_email_as_verified) {
+        if ($mark_email_as_verified && is_bool($mark_email_as_verified)) {
             $body['mark_email_as_verified'] = $mark_email_as_verified;
         }
 
-        if ($organization_id) {
+        if ($includeEmailInRedirect && is_bool($mark_email_as_verified)) {
             $body['includeEmailInRedirect'] = $includeEmailInRedirect;
         }
 
