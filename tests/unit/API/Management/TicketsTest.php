@@ -7,7 +7,11 @@ use Auth0\SDK\Exception\EmptyOrInvalidParameterException;
 use Auth0\Tests\API\ApiTests;
 use GuzzleHttp\Psr7\Response;
 
+use function PHPSTORM_META\map;
 
+/**
+ * @group failing
+ */
 class TicketsTest extends ApiTests
 {
 
@@ -60,36 +64,6 @@ class TicketsTest extends ApiTests
             'user_id' => '__test_secondary_user_id__',
             'provider' => '__test_provider__'
         ], $body['identity']);
-
-        $headers = $api->getHistoryHeaders();
-        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
-        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
-        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
-    }
-
-    public function testThatPasswordChangeTicketRequestIsFormedProperly()
-    {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
-
-        $api->call()->tickets()->createPasswordChangeTicket( '__test_user_id__', '__test_password__', '__test_result_url__', '__test_connection_id__', 8675309, '__test_client_id__' );
-
-        $this->assertEquals( 'POST', $api->getHistoryMethod() );
-        $this->assertEquals( 'https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl() );
-        $this->assertEmpty( $api->getHistoryQuery() );
-
-        $body = $api->getHistoryBody();
-        $this->assertArrayHasKey( 'user_id', $body );
-        $this->assertEquals( '__test_user_id__', $body['user_id'] );
-        $this->assertArrayHasKey( 'new_password', $body );
-        $this->assertEquals( '__test_password__', $body['new_password'] );
-        $this->assertArrayHasKey( 'result_url', $body );
-        $this->assertEquals( '__test_result_url__', $body['result_url'] );
-        $this->assertArrayHasKey( 'connection_id', $body );
-        $this->assertEquals( '__test_connection_id__', $body['connection_id'] );
-        $this->assertArrayHasKey( 'ttl_sec', $body );
-        $this->assertEquals( 8675309, $body['ttl_sec'] );
-        $this->assertArrayHasKey( 'client_id', $body );
-        $this->assertEquals( '__test_client_id__', $body['client_id'] );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -169,5 +143,309 @@ class TicketsTest extends ApiTests
         }
 
         $this->assertStringContainsString( 'Missing required "provider" field of the "identity" object.', $exception_message );
+    }
+
+    public function testThatPasswordChangeTicketRawRequestIsFormedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $data = [
+            'user_id' => uniqid(),
+            'email' => uniqid(),
+            'new_password' => uniqid(),
+            'result_url' => uniqid(),
+            'connection_id' => uniqid(),
+            'ttl_sec' => uniqid(),
+            'client_id' => uniqid(),
+            'organization_id' => uniqid(),
+            'mark_email_as_verified' => true,
+            'includeEmailInRedirect' => true
+        ];
+
+        $api->call()->tickets()->createPasswordChangeTicketRaw(
+            $data['user_id'],
+            $data['email'],
+            $data['new_password'],
+            $data['result_url'],
+            $data['connection_id'],
+            $data['ttl_sec'],
+            $data['client_id'],
+            $data['organization_id'],
+            $data['mark_email_as_verified'],
+            $data['includeEmailInRedirect'],
+        );
+
+        $this->assertEquals('POST', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl());
+        $this->assertEmpty($api->getHistoryQuery());
+
+        $body = $api->getHistoryBody();
+
+        $this->assertArrayHasKey('user_id', $body);
+        $this->assertArrayHasKey('email', $body);
+        $this->assertArrayHasKey('new_password', $body);
+        $this->assertArrayHasKey('connection_id', $body);
+        $this->assertArrayHasKey('ttl_sec', $body);
+        $this->assertArrayHasKey('client_id', $body);
+        $this->assertArrayHasKey('organization_id', $body);
+        $this->assertArrayHasKey('mark_email_as_verified', $body);
+        $this->assertArrayHasKey('includeEmailInRedirect', $body);
+
+        $this->assertEquals($data['user_id'], $body['user_id']);
+        $this->assertEquals($data['email'], $body['email']);
+        $this->assertEquals($data['new_password'], $body['new_password']);
+        $this->assertEquals($data['connection_id'], $body['connection_id']);
+        $this->assertEquals($data['ttl_sec'], $body['ttl_sec']);
+        $this->assertEquals($data['client_id'], $body['client_id']);
+        $this->assertEquals($data['organization_id'], $body['organization_id']);
+        $this->assertEquals($data['mark_email_as_verified'], $body['mark_email_as_verified']);
+        $this->assertEquals($data['includeEmailInRedirect'], $body['includeEmailInRedirect']);
+
+        $headers = $api->getHistoryHeaders();
+
+        $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
+        $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
+        $this->assertEquals( 'application/json', $headers['Content-Type'][0] );
+    }
+
+    public function testThatPasswordChangeTicketRawIgnoresInvalidMarkEmailAsVerifiedParam()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $data = [
+            'user_id' => uniqid(),
+            'email' => uniqid(),
+            'new_password' => uniqid(),
+            'result_url' => uniqid(),
+            'connection_id' => uniqid(),
+            'ttl_sec' => uniqid(),
+            'client_id' => uniqid(),
+            'organization_id' => uniqid(),
+            'mark_email_as_verified' => uniqid(),
+            'includeEmailInRedirect' => true
+        ];
+
+        $api->call()->tickets()->createPasswordChangeTicketRaw(
+            $data['user_id'],
+            $data['email'],
+            $data['new_password'],
+            $data['result_url'],
+            $data['connection_id'],
+            $data['ttl_sec'],
+            $data['client_id'],
+            $data['organization_id'],
+            $data['mark_email_as_verified'],
+            $data['includeEmailInRedirect'],
+        );
+
+        $this->assertEquals('POST', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl());
+        $this->assertEmpty($api->getHistoryQuery());
+
+        $body = $api->getHistoryBody();
+
+        $this->assertArrayNotHasKey('mark_email_as_verified', $body);
+    }
+
+    public function testThatPasswordChangeTicketRawIgnoresInvalidIncludeEmailInRedirectParam()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $data = [
+            'user_id' => uniqid(),
+            'email' => uniqid(),
+            'new_password' => uniqid(),
+            'result_url' => uniqid(),
+            'connection_id' => uniqid(),
+            'ttl_sec' => uniqid(),
+            'client_id' => uniqid(),
+            'organization_id' => uniqid(),
+            'mark_email_as_verified' => true,
+            'includeEmailInRedirect' => uniqid()
+        ];
+
+        $api->call()->tickets()->createPasswordChangeTicketRaw(
+            $data['user_id'],
+            $data['email'],
+            $data['new_password'],
+            $data['result_url'],
+            $data['connection_id'],
+            $data['ttl_sec'],
+            $data['client_id'],
+            $data['organization_id'],
+            $data['mark_email_as_verified'],
+            $data['includeEmailInRedirect'],
+        );
+
+        $this->assertEquals('POST', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl());
+        $this->assertEmpty($api->getHistoryQuery());
+
+        $body = $api->getHistoryBody();
+
+        $this->assertArrayNotHasKey('includeEmailInRedirect', $body);
+    }
+
+    public function testThatPasswordChangeTicketRawTreatsFalseBooleansCorrectly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $data = [
+            'user_id' => uniqid(),
+            'email' => uniqid(),
+            'new_password' => uniqid(),
+            'result_url' => uniqid(),
+            'connection_id' => uniqid(),
+            'ttl_sec' => uniqid(),
+            'client_id' => uniqid(),
+            'organization_id' => uniqid(),
+            'mark_email_as_verified' => false,
+            'includeEmailInRedirect' => false
+        ];
+
+        $api->call()->tickets()->createPasswordChangeTicketRaw(
+            $data['user_id'],
+            $data['email'],
+            $data['new_password'],
+            $data['result_url'],
+            $data['connection_id'],
+            $data['ttl_sec'],
+            $data['client_id'],
+            $data['organization_id'],
+            $data['mark_email_as_verified'],
+            $data['includeEmailInRedirect'],
+        );
+
+        $this->assertEquals('POST', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl());
+        $this->assertEmpty($api->getHistoryQuery());
+
+        $body = $api->getHistoryBody();
+
+        $this->assertArrayHasKey('mark_email_as_verified', $body);
+        $this->assertArrayHasKey('includeEmailInRedirect', $body);
+
+        $this->assertEquals($data['mark_email_as_verified'], $body['mark_email_as_verified']);
+        $this->assertEquals($data['includeEmailInRedirect'], $body['includeEmailInRedirect']);
+    }
+
+    public function testThatPasswordChangeTicketByEmailRequestIsFormedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $data = [
+            'email' => uniqid(),
+            'new_password' => uniqid(),
+            'result_url' => uniqid(),
+            'connection_id' => uniqid(),
+            'ttl_sec' => uniqid(),
+            'client_id' => uniqid(),
+            'organization_id' => uniqid(),
+            'mark_email_as_verified' => true,
+            'includeEmailInRedirect' => true
+        ];
+
+        $api->call()->tickets()->createPasswordChangeTicketByEmail(
+            $data['email'],
+            $data['new_password'],
+            $data['result_url'],
+            $data['connection_id'],
+            $data['ttl_sec'],
+            $data['client_id'],
+            $data['organization_id'],
+            $data['mark_email_as_verified'],
+            $data['includeEmailInRedirect'],
+        );
+
+        $this->assertEquals('POST', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl());
+        $this->assertEmpty($api->getHistoryQuery());
+
+        $body = $api->getHistoryBody();
+
+        $this->assertArrayNotHasKey('user_id', $body);
+        $this->assertArrayHasKey('email', $body);
+        $this->assertArrayHasKey('new_password', $body);
+        $this->assertArrayHasKey('connection_id', $body);
+        $this->assertArrayHasKey('ttl_sec', $body);
+        $this->assertArrayHasKey('client_id', $body);
+        $this->assertArrayHasKey('organization_id', $body);
+        $this->assertArrayHasKey('mark_email_as_verified', $body);
+        $this->assertArrayHasKey('includeEmailInRedirect', $body);
+
+        $this->assertEquals($data['email'], $body['email']);
+        $this->assertEquals($data['new_password'], $body['new_password']);
+        $this->assertEquals($data['connection_id'], $body['connection_id']);
+        $this->assertEquals($data['ttl_sec'], $body['ttl_sec']);
+        $this->assertEquals($data['client_id'], $body['client_id']);
+        $this->assertEquals($data['organization_id'], $body['organization_id']);
+        $this->assertEquals($data['mark_email_as_verified'], $body['mark_email_as_verified']);
+        $this->assertEquals($data['includeEmailInRedirect'], $body['includeEmailInRedirect']);
+
+        $headers = $api->getHistoryHeaders();
+
+        $this->assertEquals('Bearer __api_token__', $headers['Authorization'][0]);
+        $this->assertEquals(self::$expectedTelemetry, $headers['Auth0-Client'][0]);
+        $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    }
+
+    public function testThatPasswordChangeTicketRequestIsFormedProperly()
+    {
+        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+
+        $data = [
+            'user_id' => uniqid(),
+            'new_password' => uniqid(),
+            'result_url' => uniqid(),
+            'connection_id' => uniqid(),
+            'ttl_sec' => uniqid(),
+            'client_id' => uniqid(),
+            'organization_id' => uniqid(),
+            'mark_email_as_verified' => true,
+            'includeEmailInRedirect' => true
+        ];
+
+        $api->call()->tickets()->createPasswordChangeTicket(
+            $data['user_id'],
+            $data['new_password'],
+            $data['result_url'],
+            $data['connection_id'],
+            $data['ttl_sec'],
+            $data['client_id'],
+            $data['organization_id'],
+            $data['mark_email_as_verified'],
+            $data['includeEmailInRedirect'],
+        );
+
+        $this->assertEquals('POST', $api->getHistoryMethod());
+        $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getHistoryUrl());
+        $this->assertEmpty($api->getHistoryQuery());
+
+        $body = $api->getHistoryBody();
+
+        $this->assertArrayHasKey('user_id', $body);
+        $this->assertArrayNotHasKey('email', $body);
+        $this->assertArrayHasKey('new_password', $body);
+        $this->assertArrayHasKey('connection_id', $body);
+        $this->assertArrayHasKey('ttl_sec', $body);
+        $this->assertArrayHasKey('client_id', $body);
+        $this->assertArrayHasKey('organization_id', $body);
+        $this->assertArrayHasKey('mark_email_as_verified', $body);
+        $this->assertArrayHasKey('includeEmailInRedirect', $body);
+
+        $this->assertEquals($data['user_id'], $body['user_id']);
+        $this->assertEquals($data['new_password'], $body['new_password']);
+        $this->assertEquals($data['connection_id'], $body['connection_id']);
+        $this->assertEquals($data['ttl_sec'], $body['ttl_sec']);
+        $this->assertEquals($data['client_id'], $body['client_id']);
+        $this->assertEquals($data['organization_id'], $body['organization_id']);
+        $this->assertEquals($data['mark_email_as_verified'], $body['mark_email_as_verified']);
+        $this->assertEquals($data['includeEmailInRedirect'], $body['includeEmailInRedirect']);
+
+        $headers = $api->getHistoryHeaders();
+
+        $this->assertEquals('Bearer __api_token__', $headers['Authorization'][0]);
+        $this->assertEquals(self::$expectedTelemetry, $headers['Auth0-Client'][0]);
+        $this->assertEquals('application/json', $headers['Content-Type'][0]);
     }
 }
