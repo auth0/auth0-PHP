@@ -63,13 +63,15 @@ class Tickets extends GenericResource
 
     /**
      *
-     * @param null|string  $user_id         User for whom the ticket should be created. Conflicts with: $connection_id
-     * @param null|string  $new_password    New password to assign to the user.
-     * @param null|string  $result_url      URL the user will be redirected to in the classic Universal Login experience once the ticket is used.
-     * @param null|string  $connection_id   Connection to use, allowing user to be specified using $email, rather than $user_id. Requires $email. Conflicts with $user_id.
-     * @param null|integer $ttl             Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
-     * @param null|string  $client_id       If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
-     * @param null|string  $organization_id If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
+     * @param null|string  $user_id                User for whom the ticket should be created. Conflicts with: $connection_id
+     * @param null|string  $new_password           New password to assign to the user.
+     * @param null|string  $result_url             URL the user will be redirected to in the classic Universal Login experience once the ticket is used.
+     * @param null|string  $connection_id          Connection to use, allowing user to be specified using $email, rather than $user_id. Requires $email. Conflicts with $user_id.
+     * @param null|integer $ttl                    Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
+     * @param null|string  $client_id              If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
+     * @param null|string  $organization_id        If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
+     * @param null|boolean $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
+     * @param null|boolean $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
      *
      * @return mixed
      */
@@ -80,21 +82,25 @@ class Tickets extends GenericResource
         $connection_id = null,
         $ttl = null,
         $client_id = null,
-        $organization_id = null
+        $organization_id = null,
+        $mark_email_as_verified = null,
+        $includeEmailInRedirect = null
     )
     {
-        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id, $ttl, $client_id, $organization_id);
+        return $this->createPasswordChangeTicketRaw($user_id, null, $new_password, $result_url, $connection_id, $ttl, $client_id, $organization_id, $mark_email_as_verified, $includeEmailInRedirect);
     }
 
     /**
      *
-     * @param null|string  $email           Email address of the user for whom the ticket should be created. Requires $connection_id.
-     * @param null|string  $new_password    New password to assign to the user.
-     * @param null|string  $result_url      URL the user will be redirected to in the classic Universal Login experience once the ticket is used.
-     * @param null|string  $connection_id   Connection to use, allowing user to be specified using $email, rather than $user_id. Requires $email. Conflicts with $user_id.
-     * @param null|integer $ttl             Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
-     * @param null|string  $client_id       If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
-     * @param null|string  $organization_id If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
+     * @param null|string  $email                  Email address of the user for whom the ticket should be created. Requires $connection_id.
+     * @param null|string  $new_password           New password to assign to the user.
+     * @param null|string  $result_url             URL the user will be redirected to in the classic Universal Login experience once the ticket is used.
+     * @param null|string  $connection_id          Connection to use, allowing user to be specified using $email, rather than $user_id. Requires $email. Conflicts with $user_id.
+     * @param null|integer $ttl                    Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
+     * @param null|string  $client_id              If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
+     * @param null|string  $organization_id        If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
+     * @param null|boolean $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
+     * @param null|boolean $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
      *
      * @return mixed
      */
@@ -105,22 +111,26 @@ class Tickets extends GenericResource
         $connection_id = null,
         $ttl = null,
         $client_id = null,
-        $organization_id = null
+        $organization_id = null,
+        $mark_email_as_verified = null,
+        $includeEmailInRedirect = null
     )
     {
-        return $this->createPasswordChangeTicketRaw(null, $email, $new_password, $result_url, $connection_id, $ttl, $client_id, $organization_id);
+        return $this->createPasswordChangeTicketRaw(null, $email, $new_password, $result_url, $connection_id, $ttl, $client_id, $organization_id, $mark_email_as_verified, $includeEmailInRedirect);
     }
 
     /**
      *
-     * @param null|string  $user_id         User for whom the ticket should be created. Conflicts with: $connection_id, $email
-     * @param null|string  $email           Email address of the user for whom the ticket should be created. Requires $connection_id. Conflicts with $user_id.
-     * @param null|string  $new_password    New password to assign to the user.
-     * @param null|string  $result_url      URL the user will be redirected to in the classic Universal Login experience once the ticket is used.
-     * @param null|string  $connection_id   Connection to use, allowing user to be specified using $email, rather than $user_id. Requires $email. Conflicts with $user_id.
-     * @param null|integer $ttl             Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
-     * @param null|string  $client_id       If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
-     * @param null|string  $organization_id If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
+     * @param null|string  $user_id                User for whom the ticket should be created. Conflicts with: $connection_id, $email
+     * @param null|string  $email                  Email address of the user for whom the ticket should be created. Requires $connection_id. Conflicts with $user_id.
+     * @param null|string  $new_password           New password to assign to the user.
+     * @param null|string  $result_url             URL the user will be redirected to in the classic Universal Login experience once the ticket is used.
+     * @param null|string  $connection_id          Connection to use, allowing user to be specified using $email, rather than $user_id. Requires $email. Conflicts with $user_id.
+     * @param null|integer $ttl                    Number of seconds this ticket will be valid before expiring. Defaults to 432000 seconds (5 days.)
+     * @param null|string  $client_id              If provided for tenants using New Universal Login experience, the user will be prompted to redirect to the default login route of the corresponding application once the ticket is used.
+     * @param null|string  $organization_id        If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
+     * @param null|boolean $mark_email_as_verified Whether to set the email_verified attribute to true (true) or whether it should not be updated (false).
+     * @param null|boolean $includeEmailInRedirect Whether to include the email address as part of the returnUrl in the reset_email (true), or not (false).
      *
      * @return mixed
      */
@@ -132,41 +142,51 @@ class Tickets extends GenericResource
         $connection_id = null,
         $ttl = null,
         $client_id = null,
-        $organization_id = null
+        $organization_id = null,
+        $mark_email_as_verified = null,
+        $includeEmailInRedirect = null
     )
     {
         $body = [];
 
-        if ($user_id) {
+        if ($user_id !== null) {
             $body['user_id'] = $user_id;
         }
 
-        if ($email) {
+        if ($email !== null) {
             $body['email'] = $email;
         }
 
-        if ($new_password) {
+        if ($new_password !== null) {
             $body['new_password'] = $new_password;
         }
 
-        if ($result_url) {
+        if ($result_url !== null) {
             $body['result_url'] = $result_url;
         }
 
-        if ($connection_id) {
+        if ($connection_id !== null) {
             $body['connection_id'] = $connection_id;
         }
 
-        if ($ttl) {
+        if ($ttl !== null) {
             $body['ttl_sec'] = $ttl;
         }
 
-        if ($client_id) {
+        if ($client_id !== null) {
             $body['client_id'] = $client_id;
         }
 
-        if ($organization_id) {
+        if ($organization_id !== null) {
             $body['organization_id'] = $organization_id;
+        }
+
+        if ($mark_email_as_verified !== null && is_bool($mark_email_as_verified)) {
+            $body['mark_email_as_verified'] = $mark_email_as_verified;
+        }
+
+        if ($includeEmailInRedirect !== null && is_bool($includeEmailInRedirect)) {
+            $body['includeEmailInRedirect'] = $includeEmailInRedirect;
         }
 
         return $this->apiClient->method('post')
