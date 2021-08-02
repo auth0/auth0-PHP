@@ -1,0 +1,14 @@
+name: Suggest a Feature
+description: Suggest an idea or a feature for this project.
+labels: [triage]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to help us improve this project!
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: What should be added?
+      description: How do you think this feature will improve the developer experience?
+    validations:
+      required: true

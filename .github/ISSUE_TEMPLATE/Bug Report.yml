@@ -1,0 +1,67 @@
+name: Report a Bug
+description: Found a bug or issue? Let us know with a bug report.
+labels: [triage]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to help us improve this project!
+  - type: dropdown
+    id: sdk
+    attributes:
+      label: SDK Version
+      description: What version of our SDK are you running? (`composer show | grep auth0/auth0-php`)
+      options:
+        - 8.0.0-BETA1
+        - 7.9.1
+        - 7.9.0
+        - 7.8.0
+        - 7.7.0
+        - 7.6.2
+        - 7.6.1
+        - 7.6.0
+        - 7.5.0
+        - 7.4.0
+        - Other (specify in 'additional context')
+    validations:
+      required: true
+  - type: dropdown
+    id: php
+    attributes:
+      label: PHP Version
+      description: What version of PHP are you running? (`php -v`)
+      options:
+        - PHP 8.0
+        - PHP 7.4
+        - PHP 7.3
+        - Other (specify in 'additional context')
+    validations:
+      required: true
+  - type: dropdown
+    id: composer
+    attributes:
+      label: Composer Version
+      description: What version of Composer are you running? (`composer -v`)
+      options:
+        - 2.x
+        - 1.x
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: bug-reproduction
+    attributes:
+      label: How can we reproduce this issue?
+      description: Detail the steps taken to reproduce this error, and whether this can be reproduced consistently or if it is intermittent.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
