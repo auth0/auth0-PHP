@@ -134,15 +134,6 @@ commands:
       - run:
           name: Run unit tests (Pest)
           command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=<< parameters.clover >>/coverage.xml --coverage-xml=<< parameters.clover >>/coverage-xml --log-junit=<< parameters.clover >>/junit.xml
-      - persist_to_workspace:
-          root: .
-          paths:
-            - src
-            - tests
-            - infection.json.dist
-            - phpunit.xml.dist
-            - build
-            - vendor
 
   run-infection:
     parameters:
