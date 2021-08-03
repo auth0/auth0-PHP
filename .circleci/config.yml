@@ -11,7 +11,7 @@ commands:
           name: Setup Environment
           command: |
             apk update
-            apk add gcc make autoconf musl-dev oniguruma-dev node
+            apk add gcc make autoconf musl-dev oniguruma-dev npm
             pecl install pcov
             docker-php-ext-enable pcov
             docker-php-ext-install posix
