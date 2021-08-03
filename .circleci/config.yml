@@ -2,9 +2,6 @@ version: 2.1
 
 commands:
   prepare:
-    parameters:
-      composer:
-        type: string
     steps:
       - checkout
       - run:
