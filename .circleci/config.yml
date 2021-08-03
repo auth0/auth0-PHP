@@ -15,6 +15,7 @@ commands:
           name: DEBUG
           command: |
             pecl config-show
+            php-config --extension-dir
             ls /usr/local/lib/php/extensions
 
       - run:
