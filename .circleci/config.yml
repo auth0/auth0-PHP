@@ -22,8 +22,7 @@ commands:
       - restore-cache
       - run:
           name: Install Dependencies
-          command: composer install --no-interaction --prefer-dist --ignore-platform-reqs
-
+          command: composer install --no-interaction --prefer-dist
       - save-cache
 
   save-cache:
