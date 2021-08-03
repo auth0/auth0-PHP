@@ -93,19 +93,18 @@ jobs:
       - run-psalm
       - run-pest
       - run-snyk
-      - run-infection
       - when:
           condition:
             and:
               - equal: [true, << parameters.run_snyk >>]
-          jobs:
+          steps:
             - run-snyk
       - when:
           condition:
             and:
               - equal: [main, <<pipeline.git.branch >>]
               - equal: [true, << parameters.run_infection >>]
-          jobs:
+          steps:
             - run-infection
 
 workflows:
