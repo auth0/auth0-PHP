@@ -12,7 +12,7 @@ commands:
       - run:
           name: Configure environment
           command: |
-            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev git
+            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev git rsync
 
       - checkout
 
@@ -20,9 +20,8 @@ commands:
           name: Preparing environment
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
-            echo $PHP_EXT_DIR
-            echo ${PHP_EXT_DIR}
             mkdir php-ext-cache
+            ls ${PHP_EXT_DIR}
 
       - restore_cache:
           keys:
@@ -65,8 +64,7 @@ commands:
       - run:
           name: Caching PHP extensions
           command: |
-            rm -rf php-ext-cache/*
-            cp -R ${PHP_EXT_DIR}/* php-ext-cache/
+            rsync -avu --delete ${PHP_EXT_DIR}/ php-ext-cache
 
       - save_cache:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}
