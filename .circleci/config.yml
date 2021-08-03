@@ -19,8 +19,6 @@ commands:
       - run:
           name: Preparing environment
           command: |
-            PROJECT_ROOT=$(pwd)
-            PHP_EXT_DIR=$(php-config --extension-dir)
             mkdir ${PROJECT_ROOT}/php-ext-cache
             ls ${PHP_EXT_DIR}
 
@@ -31,25 +29,33 @@ commands:
       - run:
           name: Restore PHP extensions
           command: |
-            PROJECT_ROOT=$(pwd)
             PHP_EXT_DIR=$(php-config --extension-dir)
-            find ${PROJECT_ROOT}/php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
-            ls $PHP_EXT_DIR
+            find php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
 
-      # - run:
-      #     name: Configure environment
-      #     command: >
-      #       pecl install pcov
-      #       docker-php-ext-enable pcov
-      #       docker-php-ext-install posix pcntl mbstring
-      #       npm install -g snyk
+            if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
+                pecl install pcov
+            fi
 
-      # - run:
-      #     name: Install mongodb pecl extensions if mongodb.so is not there
-      #     command: >
-      #       if [ ! -f /usr/local/lib/php/extensions/no-debug-non-zts-20160303/mongodb.so ]; then
-      #           sudo pecl install mongodb ;
-      #       fi
+            if [ ! -f ${PHP_EXT_DIR}/posix.so ]; then
+                docker-php-ext-install posix
+            fi
+
+            if [ ! -f ${PHP_EXT_DIR}/pcntl.so ]; then
+                docker-php-ext-install pcntl
+            fi
+
+            if [ ! -f ${PHP_EXT_DIR}/mbstring.so ]; then
+                docker-php-ext-install mbstring
+            fi
+
+            ls ${PHP_EXT_DIR}
+
+      - run:
+          name: Install PHP extensions
+          command: >
+            if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
+                sudo pecl install mongodb ;
+            fi
 
       - run:
           name: Install Composer
@@ -81,9 +87,8 @@ commands:
       - run:
           name: Caching PHP extensions
           command: |
-            PROJECT_ROOT=$(pwd)
             PHP_EXT_DIR=$(php-config --extension-dir)
-            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '${PROJECT_ROOT}/php-ext-cache/' ';'
+            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' 'php-ext-cache/' ';'
             ls php-ext-cache
 
       - save_cache:
