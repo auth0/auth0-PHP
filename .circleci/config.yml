@@ -2,49 +2,118 @@ version: 2.1
 
 commands:
   prepare:
+    parameters:
+      php:
+        type: string
+      composer:
+        type: string
+      cache:
+        type: integer
+
     steps:
-      - checkout
       - run:
-          name: Perform composer self-update
-          command: sudo composer self-update
-      - restore-cache
-      - run:
-          name: Enable code coverage
+          name: Configure environment
           command: |
-            sudo apt update
-            sudo apt install libonig-dev
-            sudo pecl install pcov
-            sudo docker-php-ext-enable pcov
-            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-            sudo docker-php-ext-install posix
-            sudo docker-php-ext-install pcntl
-            sudo docker-php-ext-install mbstring
-      - run:
-          name: Install composer dependencies
-          command: composer install --no-interaction --prefer-dist
-      - run:
-          name: Update composer dependencies
-          command: composer update --prefer-dist --no-interaction
-      - save-cache
+            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev gnupg
 
-  save-cache:
-    steps:
-      - persist_to_workspace:
-          root: .
-          paths:
-            - composer.*
-            - .snyk
-      - save_cache:
-          key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
-          paths:
-            - vendor
+      - checkout
 
-  restore-cache:
-    steps:
+      - run:
+          name: Prepare environment
+          command: |
+            mkdir -p /root/project/php-ext-cache
+            mkdir -p /root/project/npm-cache
+            mkdir -p /usr/local/lib/node_modules
+
       - restore_cache:
           keys:
-            - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
-            - composer-v1-{{ .Environment.CIRCLE_JOB }}
+            - PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
+
+      - run:
+          name: Configure environment
+          command: |
+            PHP_EXT_DIR=$(php-config --extension-dir)
+            NPM_MODULES=$(npm root -g)
+
+            find /root/project/php-ext-cache/ -name '*.so' -exec cp -prv '{}' ${PHP_EXT_DIR}/ ';'
+            cp -a /root/project/npm-cache/. ${NPM_MODULES}
+
+            if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
+                pecl install pcov
+            fi
+
+            if [ ! -f ${PHP_EXT_DIR}/posix.so ]; then
+                docker-php-ext-install posix
+            fi
+
+            if [ ! -f ${PHP_EXT_DIR}/pcntl.so ]; then
+                docker-php-ext-install pcntl
+            fi
+
+            if [ ! -f ${PHP_EXT_DIR}/mbstring.so ]; then
+                docker-php-ext-install mbstring
+            fi
+
+            docker-php-ext-enable pcov posix pcntl mbstring
+
+      - run:
+          name: Install dependencies
+          command: |
+            if [ `npm list -g | grep -c snyk` -eq 0 ]; then
+              npm install -g snyk
+            fi
+
+            if [ ! -f codecov ]; then
+              curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
+              curl -Os https://uploader.codecov.io/latest/linux/codecov
+              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+              gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+              sha256sum -c codecov.SHA256SUM
+              chmod +x codecov
+            fi
+
+            if [ ! -f composer.phar ]; then
+              EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+              php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+              ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+              if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
+              then
+                  >&2 echo 'ERROR: Invalid installer checksum'
+                  rm composer-setup.php
+                  exit 1
+              fi
+
+              php composer-setup.php --quiet
+              RESULT=$?
+              rm composer-setup.php
+            fi
+
+            if [ ! -f vendor ]; then
+              php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
+            else
+              php composer.phar update --no-interaction --prefer-dist
+            fi
+
+      - run:
+          name: Cache extensions
+          command: |
+            PHP_EXT_DIR=$(php-config --extension-dir)
+            NPM_MODULES=$(npm root -g)
+
+            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '/root/project/php-ext-cache/' ';'
+            cp -a ${NPM_MODULES}/. /root/project/npm-cache
+
+      - save_cache:
+          key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
+          paths:
+            - vendor
+            - php-ext-cache
+            - npm-cache
+            - composer.lock
+            - composer.phar
+            - codecov
 
   run-phpinsights:
     steps:
@@ -65,110 +134,109 @@ commands:
           command: php ./vendor/bin/psalm --threads=$(nproc)
 
   run-pest:
+    parameters:
+      clover:
+        type: string
     steps:
       - run:
           name: Run unit tests (Pest)
-          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=build/coverage/coverage.xml --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
-      - persist_to_workspace:
-          root: .
-          paths:
-            - src
-            - tests
-            - infection.json.dist
-            - phpunit.xml.dist
-            - build
-            - vendor
+          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=<< parameters.clover >>/coverage.xml --coverage-xml=<< parameters.clover >>/coverage-xml --log-junit=<< parameters.clover >>/junit.xml
 
   run-infection:
+    parameters:
+      clover:
+        type: string
     steps:
       - run:
           name: Run mutation tests (Infection)
-          command: php ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
+          command: php ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=<< parameters.clover >> --no-progress --min-msi=48 --min-covered-msi=70
+
+  run-snyk:
+    steps:
+      - run:
+          name: Run vulnerabilities tests (Snyk)
+          command: snyk test --org=auth0-sdks --project-name=auth0-PHP
+
+  run-codecov:
+    parameters:
+      clover:
+        type: string
+    steps:
+      - run:
+          name: Upload coverage to Codecov
+          command: ./codecov -t ${CODECOV_TOKEN} -f ./<< parameters.clover >>/coverage.xml
 
 jobs:
-  run-unit-tests:
+  run-tests:
     parameters:
       php:
         type: string
+      composer:
+        type: string
+        default: ""
+      codecov:
+        type: boolean
+        default: false
+      snyk:
+        type: boolean
+        default: false
+      infection:
+        type: boolean
+        default: false
+      clover:
+        type: string
+        default: "build/coverage"
     docker:
-      - image: circleci/php:<< parameters.php >>
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare
+      - prepare:
+          php: << parameters.php >>
+          composer: << parameters.composer >>
+          cache: 5
       - run-phpinsights
       - run-phpstan
       - run-psalm
-      - run-pest
-
-  run-security-tests:
-    docker:
-      - image: snyk/snyk-cli:composer
-    steps:
-      - attach_workspace:
-          at: .
-      - run: snyk test
-      - run:
-          command: |
-            if [[ "${CIRCLE_BRANCH}" == "main" ]]
-            then
-            snyk monitor --org=auth0-sdks
-            fi
-          when: always
-
-  run-mutation-tests:
-    docker:
-      - image: circleci/php:7.4
-    steps:
-      - attach_workspace:
-          at: .
-      - restore-cache
-      - run-infection
-
-  run-codecov-uploader:
-    docker:
-      - image: circleci/php:7.4
-    steps:
-      - attach_workspace:
-          at: .
-      - restore-cache
-      - run:
-          name: Download and validate Codecov uploader
-          command: |
-            curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-            gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-            shasum -a 256 -c codecov.SHA256SUM
-            chmod +x codecov
-      - run:
-          name: Upload coverage reports to Codecov
-          command: ./codecov -t ${CODECOV_TOKEN} -f ./build/coverage/coverage.xml
+      - run-pest:
+          clover: << parameters.clover >>
+      - when:
+          condition:
+            and:
+              - equal: [main, <<pipeline.git.branch >>]
+              - equal: [true, << parameters.snyk >>]
+          steps:
+            - run-snyk
+      - when:
+          condition:
+            and:
+              - equal: [main, <<pipeline.git.branch >>]
+              - equal: [true, << parameters.infection >>]
+          steps:
+            - run-infection:
+                clover: << parameters.clover >>
+      - when:
+          condition:
+            and:
+              - equal: [main, <<pipeline.git.branch >>]
+              - equal: [true, << parameters.codecov >>]
+          steps:
+            - run-codecov:
+                clover: << parameters.clover >>
 
 workflows:
   run-tests:
     jobs:
-      - run-unit-tests:
-          name: run-pest-7.4
-          php: "7.4"
-      - run-unit-tests:
-          name: run-pest-8.0
-          php: "8.0"
-      - run-security-tests:
-          filters:
-            branches:
-              only:
-                - main
-          context: snyk-env
-          requires: [run-pest-7.4]
-      - run-mutation-tests:
-          filters:
-            branches:
-              only:
-                - main
-          requires: [run-pest-7.4]
-      - run-codecov-uploader:
-          filters:
-            branches:
-              only:
-                - main
-          requires: [run-pest-7.4]
+      - run-tests:
+          name: run-tests-7.4
+          php: "7.4.22"
+          snyk: true
+          infection: true
+          codecov: true
+          context:
+            - snyk-env
+      - run-tests:
+          name: run-tests-8.0
+          php: "8.0.9"
+      # - run-tests:
+      #     name: run-tests-8.1
+      #     php: "8.1.0beta1"
+      #     composer: "--ignore-platform-reqs"
