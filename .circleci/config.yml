@@ -78,7 +78,7 @@ commands:
       - run:
           name: Caching PHP extensions
           command: |
-            cp -a $PHP_EXT_DIR/*.so php-ext-cache/.
+            cp -a $PHP_EXT_DIR/*.so php-ext-cache/
             ls php-ext-cache
 
       - save_cache:
