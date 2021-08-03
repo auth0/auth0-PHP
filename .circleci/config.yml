@@ -72,7 +72,6 @@ commands:
               curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
               gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
               sha256sum -c codecov.SHA256SUM
-              chmod +x codecov
             fi
 
             if [ ! -f composer.phar ]; then
@@ -167,9 +166,8 @@ commands:
       - run:
           name: Upload coverage to Codecov
           command: |
-            pwd
-            ls -lha /root/project
-            /root/project/codecov -t ${CODECOV_TOKEN} -f /root/project/<< parameters.clover >>/coverage.xml
+            chmod +x codecov
+            ./codecov -t ${CODECOV_TOKEN} -f ./<< parameters.clover >>/coverage.xml
 
 jobs:
   run-tests:
