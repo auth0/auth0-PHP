@@ -81,7 +81,9 @@ commands:
       - run:
           name: Install Snyk CLI
           command: |
-            npm install -g snyk
+            if [ `npm list -g | grep -c snyk` -eq 0 ]; then
+              npm install -g snyk
+            fi
 
       - run:
           name: Caching PHP extensions
@@ -207,14 +209,14 @@ workflows:
     jobs:
       - run-tests:
           name: run-tests-7.4
-          php: "7.4"
+          php: "7.4.0"
           snyk: true
           infection: true
           context:
             - snyk-env
       - run-tests:
           name: run-tests-8.0
-          php: "8.0"
+          php: "8.0.0"
       # - run-tests:
       #     name: run-tests-8.1
       #     php: "8.1.0beta1"
