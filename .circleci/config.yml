@@ -31,7 +31,7 @@ commands:
           name: Restore PHP extensions
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
-            find /root/project/php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
+            find /root/project/php-ext-cache/ -name '*.so' -exec cp -prv '{}' ${PHP_EXT_DIR}/ ';'
 
             ls /root/project/php-ext-cache
             ls ${PHP_EXT_DIR}
