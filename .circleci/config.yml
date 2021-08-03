@@ -2,6 +2,9 @@ version: 2.1
 
 commands:
   prepare:
+    parameters:
+      composer:
+        type: string
     steps:
       - checkout
       - run:
@@ -45,10 +48,13 @@ commands:
           command: php ./vendor/bin/psalm --threads=$(nproc)
 
   run-pest:
+    parameters:
+      clover:
+        type: string
     steps:
       - run:
           name: Run unit tests (Pest)
-          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=build/coverage/coverage.xml --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/junit.xml
+          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=<< parameters.clover >>/coverage.xml --coverage-xml=<< parameters.clover >>/coverage-xml --log-junit=<< parameters.clover >>/junit.xml
       - persist_to_workspace:
           root: .
           paths:
@@ -59,17 +65,20 @@ commands:
             - build
             - vendor
 
+  run-infection:
+    parameters:
+      clover:
+        type: string
+    steps:
+      - run:
+          name: Run mutation tests (Infection)
+          command: php ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=<< parameters.clover >> --no-progress --min-msi=48 --min-covered-msi=70
+
   run-snyk:
     steps:
       - run:
           name: Run vulnerabilities tests (Snyk)
           command: snyk test --org=auth0-sdks --project-name=auth0-PHP
-
-  run-infection:
-    steps:
-      - run:
-          name: Run mutation tests (Infection)
-          command: php ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
 
 jobs:
   run-tests:
@@ -85,14 +94,19 @@ jobs:
       infection:
         type: boolean
         default: false
+      clover:
+        type: string
+        default: "build/coverage"
     docker:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare
+      - prepare:
+        composer: << parameters.composer >>
       - run-phpinsights
       - run-phpstan
       - run-psalm
-      - run-pest
+      - run-pest:
+        clover: << parameters.clover >>
       - run-snyk
       - when:
           condition:
@@ -106,7 +120,8 @@ jobs:
               - equal: [main, <<pipeline.git.branch >>]
               - equal: [true, << parameters.infection >>]
           steps:
-            - run-infection
+            - run-infection:
+              clover: << parameters.clover >>
 
 workflows:
   run-tests:
