@@ -86,12 +86,12 @@ commands:
           command: php ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=build/coverage --no-progress --min-msi=48 --min-covered-msi=70
 
 jobs:
-  run-unit-tests:
+  run-tests:
     parameters:
       php:
         type: string
     docker:
-      - image: circleci/php:<< parameters.php >>
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
       - prepare
       - run-phpinsights
@@ -116,59 +116,35 @@ jobs:
 
   run-mutation-tests:
     docker:
-      - image: circleci/php:7.4
+      - image: php:7.4-alpine
     steps:
       - attach_workspace:
           at: .
       - restore-cache
       - run-infection
 
-  run-codecov-uploader:
-    docker:
-      - image: circleci/php:7.4
-    steps:
-      - attach_workspace:
-          at: .
-      - restore-cache
-      - run:
-          name: Download and validate Codecov uploader
-          command: |
-            curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-            gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-            shasum -a 256 -c codecov.SHA256SUM
-            chmod +x codecov
-      - run:
-          name: Upload coverage reports to Codecov
-          command: ./codecov -t ${CODECOV_TOKEN} -f ./build/coverage/coverage.xml
-
 workflows:
   run-tests:
     jobs:
-      - run-unit-tests:
-          name: run-pest-7.4
+      - run-tests:
+          name: run-tests-7.4
           php: "7.4"
-      - run-unit-tests:
-          name: run-pest-8.0
+      - run-tests:
+          name: run-tests-8.0
           php: "8.0"
+      - run-tests:
+          name: run-tests-8.1
+          php: "8.1.0beta1"
       - run-security-tests:
           filters:
             branches:
               only:
                 - main
           context: snyk-env
-          requires: [run-pest-7.4]
+          requires: [run-tests-7.4]
       - run-mutation-tests:
           filters:
             branches:
               only:
                 - main
-          requires: [run-pest-7.4]
-      - run-codecov-uploader:
-          filters:
-            branches:
-              only:
-                - main
-          requires: [run-pest-7.4]
+          requires: [run-tests-7.4]
