@@ -186,7 +186,6 @@ jobs:
       - run-psalm
       - run-pest:
           clover: << parameters.clover >>
-      - run-snyk
       - when:
           condition:
             and:
