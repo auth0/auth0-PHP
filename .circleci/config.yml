@@ -6,7 +6,7 @@ commands:
       - checkout
       - run:
           name: Perform composer self-update
-          command: sudo composer self-update
+          command: composer self-update
       - restore-cache
       - run:
           name: Enable code coverage
