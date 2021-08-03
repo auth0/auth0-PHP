@@ -22,6 +22,7 @@ commands:
           name: Preparing environment
           command: |
             mkdir /root/project/php-ext-cache
+            mkdir /root/project/npm-cache
 
       - restore_cache:
           keys:
@@ -51,6 +52,30 @@ commands:
 
             docker-php-ext-enable pcov posix pcntl mbstring
 
+      # - run:
+      #     name: Restore NPM modules
+      #     command: |
+      #       NPM_GLOBAL_DIR=$(npm root -g)
+      #       find /root/project/npm-cache/ -name '*.so' -exec cp -prv '{}' ${NPM_GLOBAL_DIR}/ ';'
+
+      #       if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
+      #           pecl install pcov
+      #       fi
+
+      #       if [ ! -f ${PHP_EXT_DIR}/posix.so ]; then
+      #           docker-php-ext-install posix
+      #       fi
+
+      #       if [ ! -f ${PHP_EXT_DIR}/pcntl.so ]; then
+      #           docker-php-ext-install pcntl
+      #       fi
+
+      #       if [ ! -f ${PHP_EXT_DIR}/mbstring.so ]; then
+      #           docker-php-ext-install mbstring
+      #       fi
+
+      #       docker-php-ext-enable pcov posix pcntl mbstring
+
       - run:
           name: Install Composer
           command: |
@@ -73,6 +98,7 @@ commands:
           name: Install Snyk CLI
           command: |
             which npm
+            ls $(npm root -g)
             npm install -g snyk
 
       - run:
@@ -86,6 +112,7 @@ commands:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
           paths:
             - vendor
+            - composer.lock
             - composer.phar
             - php-ext-cache
 
