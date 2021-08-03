@@ -28,7 +28,6 @@ commands:
             apk add gcc make autoconf musl-dev oniguruma-dev
             pecl install pcov
             docker-php-ext-enable pcov
-            rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
             docker-php-ext-install posix
             docker-php-ext-install pcntl
             docker-php-ext-install mbstring
