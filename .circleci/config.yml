@@ -59,7 +59,11 @@ commands:
       - run:
           name: Install dependencies
           command: |
-            npm install -g snyk
+            if [ `npm list -g | grep -c snyk` -eq 0 ]; then
+              npm install -g snyk
+            fi
+
+            npm update -g
 
             if [ ! -f codecov ]; then
               curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
@@ -164,7 +168,7 @@ commands:
           name: Upload coverage to Codecov
           command: |
             pwd
-            ls /root/project
+            ls -lha /root/project
             /root/project/codecov -t ${CODECOV_TOKEN} -f /root/project/<< parameters.clover >>/coverage.xml
 
 jobs:
