@@ -12,30 +12,25 @@ commands:
       - checkout
 
       - run:
-          name: DEBUG
-          command: |
-            PHP_EXT_DIR=$(php-config --extension-dir)
-            echo ${PHP_EXT_DIR}
-
-      - run:
           name: Preparing environment
           command: |
-            mkdir php-cache
+            PHP_EXT_DIR=$(php-config --extension-dir)
+            mkdir php-ext-cache
 
       - restore_cache:
           keys:
-            - << parameters.php >>-{{ checksum "composer.json" }}
+            - PHP<< parameters.php >>-{{ checksum "composer.json" }}
 
       - run:
           name: Configure environment
           command: |
             apk update
             apk add npm gcc autoconf make musl-dev oniguruma-dev
-            npm install -g snyk
+            npm install snyk
 
       - run:
           name: Restore PHP extensions
-          command: cp -R php-cache/. /usr/local/lib/php/extensions/
+          command: cp -R php-cache/. ${PHP_EXT_DIR}/
 
       # - run:
       #     name: Configure environment
@@ -67,13 +62,15 @@ commands:
           name: Caching PHP extensions
           command: |
             rm -rf php-cache/
-            cp -R /usr/local/lib/php/extensions/* php-cache/
+            cp -R ${PHP_EXT_DIR}/* php-cache/
 
       - save_cache:
-          key: << parameters.php >>-{{ checksum "composer.json" }}
+          key: PHP<< parameters.php >>-{{ checksum "composer.json" }}
           paths:
+            - node_modules
+            - vendor
             - composer.phar
-            - php-cache
+            - php-ext-cache
 
   run-phpinsights:
     steps:
