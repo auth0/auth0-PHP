@@ -14,7 +14,7 @@ commands:
       - run:
           name: Configure environment
           command: |
-            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev
+            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev gpg
 
       - checkout
 
@@ -150,18 +150,6 @@ commands:
         type: string
     steps:
       - run:
-          name: Install Codecov
-          command: |
-            if [ ! -f codecov ]; then
-              curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
-              curl -Os https://uploader.codecov.io/latest/linux/codecov
-              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-              gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-              shasum -a 256 -c codecov.SHA256SUM
-              chmod +x codecov
-            fi
-      - run:
           name: Upload coverage to Codecov
           command: ./codecov -t ${CODECOV_TOKEN} -f ./<< parameters.clover >>/coverage.xml
 
@@ -191,7 +179,7 @@ jobs:
       - prepare:
           php: << parameters.php >>
           composer: << parameters.composer >>
-          cache: 3
+          cache: 4
       - run-phpinsights
       - run-phpstan
       - run-psalm
