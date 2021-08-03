@@ -164,6 +164,7 @@ commands:
           name: Upload coverage to Codecov
           command: |
             pwd
+            ls /root/project
             /root/project/codecov -t ${CODECOV_TOKEN} -f /root/project/<< parameters.clover >>/coverage.xml
 
 jobs:
@@ -209,17 +210,17 @@ jobs:
           condition:
             and:
               - equal: [main, <<pipeline.git.branch >>]
-              - equal: [true, << parameters.infection >>]
+              - equal: [true, << parameters.codecov >>]
           steps:
-            - run-infection:
+            - run-codecov:
                 clover: << parameters.clover >>
       - when:
           condition:
             and:
               - equal: [main, <<pipeline.git.branch >>]
-              - equal: [true, << parameters.codecov >>]
+              - equal: [true, << parameters.infection >>]
           steps:
-            - run-codecov:
+            - run-infection:
                 clover: << parameters.clover >>
 
 workflows:
