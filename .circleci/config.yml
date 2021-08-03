@@ -24,8 +24,7 @@ commands:
       - run:
           name: Configure environment
           command: |
-            apk update
-            apk add npm gcc autoconf make musl-dev oniguruma-dev
+            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev
             npm install snyk
 
       - run:
@@ -61,7 +60,7 @@ commands:
       - run:
           name: Caching PHP extensions
           command: |
-            rm -rf php-ext-cache/
+            rm -rf php-ext-cache/*
             cp -R ${PHP_EXT_DIR}/* php-ext-cache/
 
       - save_cache:
