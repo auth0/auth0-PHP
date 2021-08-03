@@ -8,7 +8,7 @@ commands:
       composer:
         type: string
       cache:
-        type: string
+        type: integer
 
     steps:
       - run:
