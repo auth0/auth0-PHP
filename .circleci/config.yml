@@ -2,6 +2,9 @@ version: 2.1
 
 commands:
   prepare:
+    parameters:
+      composer:
+        type: string
     steps:
       - checkout
       - run:
@@ -78,6 +81,7 @@ jobs:
         type: string
       composer:
         type: string
+        default: ""
       snyk:
         type: boolean
         default: false
@@ -113,13 +117,11 @@ workflows:
       - run-tests:
           name: run-tests-7.4
           php: "7.4"
-          composer: ""
           snyk: true
           infection: true
       - run-tests:
           name: run-tests-8.0
           php: "8.0"
-          composer: ""
       - run-tests:
           when: never
           name: run-tests-8.1
