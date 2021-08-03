@@ -14,13 +14,12 @@ commands:
       - run:
           name: DEBUG
           command: |
-            pecl config-show
-            php-config --extension-dir
-            ls /usr/local/lib/php/extensions
+            PHP_EXT_DIR=$(php-config --extension-dir)
+            echo ${PHP_EXT_DIR}
 
       - run:
           name: Preparing environment
-          command: >
+          command: |
             mkdir php-cache
 
       - restore_cache:
@@ -29,7 +28,7 @@ commands:
 
       - run:
           name: Configure environment
-          command: >
+          command: |
             apk update
             apk add npm gcc autoconf make musl-dev oniguruma-dev
             npm install -g snyk
@@ -55,18 +54,18 @@ commands:
 
       - run:
           name: Install Composer
-          command: >
+          command: |
             wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
 
       - run:
           name: Install Composer dependencies
-          command: >
+          command: |
             php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
             php composer.phar update --no-interaction --prefer-dist << parameters.composer >>
 
       - run:
           name: Caching PHP extensions
-          command: >
+          command: |
             rm -rf php-cache/
             cp -R /usr/local/lib/php/extensions/* php-cache/
 
