@@ -8,43 +8,23 @@ commands:
           name: Setup Environment
           command: |
             apk update
-            apk add gcc make autoconf musl-dev oniguruma-dev
+            apk add gcc make autoconf musl-dev oniguruma-dev node
             pecl install pcov
             docker-php-ext-enable pcov
             docker-php-ext-install posix
             docker-php-ext-install pcntl
             docker-php-ext-install mbstring
+            npm install -g snyk
       - run:
           name: Install Composer
           command: |
             wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
             mv composer.phar /usr/local/bin/composer
-      - restore-cache
       - run:
           name: Install Dependencies
           command: |
             composer install --no-interaction --prefer-dist << parameters.composer >>
             composer update --prefer-dist --no-interaction
-      - save-cache
-
-  save-cache:
-    steps:
-      - persist_to_workspace:
-          root: .
-          paths:
-            - composer.*
-            - .snyk
-      - save_cache:
-          key: << parameters.cache >>
-          paths:
-            - vendor
-
-  restore-cache:
-    steps:
-      - restore_cache:
-          keys:
-            - << parameters.cache >>
-            - << parameters.cache >>
 
   run-phpinsights:
     steps:
@@ -79,6 +59,12 @@ commands:
             - build
             - vendor
 
+  run-snyk:
+    steps:
+      - run:
+          name: Run vulnerabilities tests (Snyk)
+          command: snyk test --org=auth0-sdks --project-name=auth0-PHP
+
   run-infection:
     steps:
       - run:
@@ -90,6 +76,14 @@ jobs:
     parameters:
       php:
         type: string
+      composer:
+        type: string
+      run_snyk:
+        type: boolean
+        default: false
+      run_infection:
+        type: boolean
+        default: false
     docker:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
@@ -98,30 +92,21 @@ jobs:
       - run-phpstan
       - run-psalm
       - run-pest
-
-  run-security-tests:
-    docker:
-      - image: snyk/snyk-cli:composer
-    steps:
-      - attach_workspace:
-          at: .
-      - run: snyk test
-      - run:
-          command: |
-            if [[ "${CIRCLE_BRANCH}" == "main" ]]
-            then
-            snyk monitor --org=auth0-sdks
-            fi
-          when: always
-
-  run-mutation-tests:
-    docker:
-      - image: php:7.4-alpine
-    steps:
-      - attach_workspace:
-          at: .
-      - restore-cache
+      - run-snyk
       - run-infection
+      - when:
+          condition:
+            and:
+              - equal: [true, << parameters.run_snyk >>]
+          jobs:
+            - run-snyk
+      - when:
+          condition:
+            and:
+              - equal: [main, <<pipeline.git.branch >>]
+              - equal: [true, << parameters.run_infection >>]
+          jobs:
+            - run-infection
 
 workflows:
   run-tests:
@@ -130,29 +115,13 @@ workflows:
           name: run-tests-7.4
           php: "7.4"
           composer: ""
-          cache: php74_{{ checksum "composer.json" }}
+          use_snyk: true
       - run-tests:
           name: run-tests-8.0
           php: "8.0"
           composer: ""
-          cache: php80_{{ checksum "composer.json" }}
       - run-tests:
+          when: never
           name: run-tests-8.1
           php: "8.1.0beta1"
           composer: "--ignore-platform-reqs"
-          cache: php81_{{ checksum "composer.json" }}
-      - run-security-tests:
-          filters:
-            branches:
-              only:
-                - main
-          context: snyk-env
-          cache: php74_{{ checksum "composer.json" }}
-          requires: [run-tests-7.4]
-      - run-mutation-tests:
-          filters:
-            branches:
-              only:
-                - main
-          cache: php74_{{ checksum "composer.json" }}
-          requires: [run-tests-7.4]
