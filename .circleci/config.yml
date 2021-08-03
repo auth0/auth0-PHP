@@ -11,7 +11,7 @@ commands:
           name: Configure environment
           command: |
             apk update
-            apk add npm gcc autoconf
+            apk add npm gcc autoconf oniguruma-dev
             pecl install pcov
             docker-php-ext-enable pcov
             docker-php-ext-install posix
