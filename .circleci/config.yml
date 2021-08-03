@@ -23,7 +23,7 @@ commands:
       - run:
           name: Install Dependencies
           command: |
-            composer install --no-interaction --prefer-dist --ignore-platform-reqs
+            composer install --no-interaction --prefer-dist << parameters.composer >>
             composer update --prefer-dist --no-interaction
       - save-cache
 
@@ -35,7 +35,7 @@ commands:
             - composer.*
             - .snyk
       - save_cache:
-          key: composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
+          key: << parameters.cache >>
           paths:
             - vendor
 
@@ -43,8 +43,8 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - composer-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "composer.json" }}
-            - composer-v1-{{ .Environment.CIRCLE_JOB }}
+            - << parameters.cache >>
+            - << parameters.cache >>
 
   run-phpinsights:
     steps:
@@ -129,22 +129,30 @@ workflows:
       - run-tests:
           name: run-tests-7.4
           php: "7.4"
+          composer: ""
+          cache: php74_{{ checksum "composer.json" }}
       - run-tests:
           name: run-tests-8.0
           php: "8.0"
+          composer: ""
+          cache: php80_{{ checksum "composer.json" }}
       - run-tests:
           name: run-tests-8.1
           php: "8.1.0beta1"
+          composer: "--ignore-platform-reqs"
+          cache: php81_{{ checksum "composer.json" }}
       - run-security-tests:
           filters:
             branches:
               only:
                 - main
           context: snyk-env
+          cache: php74_{{ checksum "composer.json" }}
           requires: [run-tests-7.4]
       - run-mutation-tests:
           filters:
             branches:
               only:
                 - main
+          cache: php74_{{ checksum "composer.json" }}
           requires: [run-tests-7.4]
