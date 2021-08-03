@@ -182,7 +182,7 @@ jobs:
       - prepare:
           php: << parameters.php >>
           composer: << parameters.composer >>
-          cache: 1
+          cache: 2
       - run-phpinsights
       - run-phpstan
       - run-psalm
