@@ -9,12 +9,20 @@ commands:
         type: string
 
     steps:
+      - run:
+          name: Configure environment
+          command: |
+            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev git
+            npm install snyk
+
       - checkout
 
       - run:
           name: Preparing environment
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
+            echo $PHP_EXT_DIR
+            echo ${PHP_EXT_DIR}
             mkdir php-ext-cache
 
       - restore_cache:
@@ -22,14 +30,9 @@ commands:
             - PHP<< parameters.php >>-{{ checksum "composer.json" }}
 
       - run:
-          name: Configure environment
-          command: |
-            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev
-            npm install snyk
-
-      - run:
           name: Restore PHP extensions
-          command: cp -R php-ext-cache/. ${PHP_EXT_DIR}/
+          command: |
+            cp -R php-ext-cache/. ${PHP_EXT_DIR}/
 
       # - run:
       #     name: Configure environment
