@@ -8,7 +8,7 @@ commands:
     steps:
       - checkout
       - run:
-          name: Setup Environment
+          name: Configure environment
           command: |
             apk update
             apk add gcc make autoconf musl-dev oniguruma-dev npm
@@ -24,7 +24,7 @@ commands:
             wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
             mv composer.phar /usr/local/bin/composer
       - run:
-          name: Install Dependencies
+          name: Install dependencies
           command: |
             composer install --no-interaction --prefer-dist << parameters.composer >>
             composer update --prefer-dist --no-interaction
@@ -77,6 +77,9 @@ commands:
   run-snyk:
     steps:
       - run:
+          name: TESTING
+          command: echo ${SNYK_TOKEN}
+      - run:
           name: Run vulnerabilities tests (Snyk)
           command: snyk test --org=auth0-sdks --project-name=auth0-PHP
 
@@ -111,7 +114,7 @@ jobs:
       - when:
           condition:
             and:
-              - equal: [main, <<pipeline.git.branch >>]
+              # - equal: [main, <<pipeline.git.branch >>]
               - equal: [true, << parameters.snyk >>]
           steps:
             - run-snyk
