@@ -14,7 +14,7 @@ commands:
       - run:
           name: Configure environment
           command: |
-            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev gpg
+            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev gnupg
 
       - checkout
 
