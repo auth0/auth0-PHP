@@ -12,7 +12,7 @@ commands:
       - run:
           name: Configure environment
           command: |
-            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev git
+            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev
 
       - checkout
 
@@ -21,8 +21,7 @@ commands:
           command: |
             PROJECT_ROOT=$(pwd)
             PHP_EXT_DIR=$(php-config --extension-dir)
-            mkdir php-ext-cache
-            echo ${PROJECT_ROOT}
+            mkdir ${PROJECT_ROOT}/php-ext-cache
             ls ${PHP_EXT_DIR}
 
       - restore_cache:
@@ -32,6 +31,8 @@ commands:
       - run:
           name: Restore PHP extensions
           command: |
+            PROJECT_ROOT=$(pwd)
+            PHP_EXT_DIR=$(php-config --extension-dir)
             find ${PROJECT_ROOT}/php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
             ls $PHP_EXT_DIR
 
@@ -80,7 +81,9 @@ commands:
       - run:
           name: Caching PHP extensions
           command: |
-            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '${PROJECT_ROOT}php-ext-cache/' ';'
+            PROJECT_ROOT=$(pwd)
+            PHP_EXT_DIR=$(php-config --extension-dir)
+            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '${PROJECT_ROOT}/php-ext-cache/' ';'
             ls php-ext-cache
 
       - save_cache:
