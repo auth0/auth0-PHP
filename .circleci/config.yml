@@ -17,7 +17,7 @@ commands:
       - run:
           name: Install Composer
           command: |
-            systemctl start docker
+            rc-service docker start
             docker cp composer:/usr/bin/composer /usr/bin/composer
       - restore-cache
       - run:
