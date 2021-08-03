@@ -222,7 +222,8 @@ jobs:
               - equal: [main, <<pipeline.git.branch >>]
               - equal: [true, << parameters.codecov >>]
           steps:
-            - run-codecov
+            - run-codecov:
+                clover: << parameters.clover >>
 
 workflows:
   run-tests:
