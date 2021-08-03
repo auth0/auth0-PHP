@@ -103,10 +103,11 @@ commands:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
           paths:
             - vendor
-            - composer.lock
-            - composer.phar
             - php-ext-cache
             - npm-cache
+            - composer.lock
+            - composer.phar
+            - codecov
 
   run-phpinsights:
     steps:
@@ -156,17 +157,19 @@ commands:
         type: string
     steps:
       - run:
-          name: Download and validate Codecov uploader
+          name: Install Codecov
           command: |
-            curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-            gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-            shasum -a 256 -c codecov.SHA256SUM
-            chmod +x codecov
+            if [ ! -f codecov ]; then
+              curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
+              curl -Os https://uploader.codecov.io/latest/linux/codecov
+              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+              gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+              shasum -a 256 -c codecov.SHA256SUM
+              chmod +x codecov
+            fi
       - run:
-          name: Upload coverage reports to Codecov
+          name: Upload coverage to Codecov
           command: ./codecov -t ${CODECOV_TOKEN} -f ./<< parameters.clover >>/coverage.xml
 
 jobs:
@@ -195,7 +198,7 @@ jobs:
       - prepare:
           php: << parameters.php >>
           composer: << parameters.composer >>
-          cache: 2
+          cache: 3
       - run-phpinsights
       - run-phpstan
       - run-psalm
