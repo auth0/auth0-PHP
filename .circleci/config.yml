@@ -29,7 +29,7 @@ commands:
           name: Restore PHP extensions
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
-            find php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
+            find php-ext-cache/ -name '*.so' -exec cp -prvn '{}' '${PHP_EXT_DIR}/' ';'
 
             ls ${PHP_EXT_DIR}
 
@@ -83,13 +83,14 @@ commands:
           name: Caching PHP extensions
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
-            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' 'php-ext-cache/' ';'
+            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prvn '{}' 'php-ext-cache/' ';'
             ls php-ext-cache
 
       - save_cache:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}
           paths:
             - node_modules
+            - package.json
             - vendor
             - composer.phar
             - php-ext-cache
