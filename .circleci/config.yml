@@ -59,21 +59,34 @@ commands:
       - run:
           name: Install dependencies
           command: |
-            if [ ! -f composer.phar ]; then
-              wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php --
+            EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
+            then
+                >&2 echo 'ERROR: Invalid installer checksum'
+                rm composer-setup.php
+                exit 1
             fi
+
+            php composer-setup.php --quiet
+            RESULT=$?
+            rm composer-setup.php
 
             if [ `npm list -g | grep -c snyk` -eq 0 ]; then
               npm install -g snyk
             fi
 
-            curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-            gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-            sha256sum -c codecov.SHA256SUM
-            chmod +x codecov
+            if [ ! -f codecov ]; then
+              curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
+              curl -Os https://uploader.codecov.io/latest/linux/codecov
+              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+              gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+              sha256sum -c codecov.SHA256SUM
+              chmod +x codecov
+            fi
 
             if [ ! -f vendor ]; then
               php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
