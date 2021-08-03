@@ -52,29 +52,12 @@ commands:
 
             docker-php-ext-enable pcov posix pcntl mbstring
 
-      # - run:
-      #     name: Restore NPM modules
-      #     command: |
-      #       NPM_GLOBAL_DIR=$(npm root -g)
-      #       find /root/project/npm-cache/ -name '*.so' -exec cp -prv '{}' ${NPM_GLOBAL_DIR}/ ';'
-
-      #       if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
-      #           pecl install pcov
-      #       fi
-
-      #       if [ ! -f ${PHP_EXT_DIR}/posix.so ]; then
-      #           docker-php-ext-install posix
-      #       fi
-
-      #       if [ ! -f ${PHP_EXT_DIR}/pcntl.so ]; then
-      #           docker-php-ext-install pcntl
-      #       fi
-
-      #       if [ ! -f ${PHP_EXT_DIR}/mbstring.so ]; then
-      #           docker-php-ext-install mbstring
-      #       fi
-
-      #       docker-php-ext-enable pcov posix pcntl mbstring
+      - run:
+          name: Restore NPM modules
+          command: |
+            NPM_MODULES=$(npm root -g)
+            find /root/project/npm-cache/ -name '*.so' -exec cp -prv '{}' ${NPM_MODULES}/ ';'
+            ls ${NPM_MODULES}
 
       - run:
           name: Install Composer
@@ -97,9 +80,9 @@ commands:
       - run:
           name: Install Snyk CLI
           command: |
-            which npm
-            ls $(npm root -g)
+            NPM_MODULES=$(npm root -g)
             npm install -g snyk
+            ls $(npm root -g)
 
       - run:
           name: Caching PHP extensions
@@ -108,6 +91,13 @@ commands:
             find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '/root/project/php-ext-cache/' ';'
             ls /root/project/php-ext-cache
 
+      - run:
+          name: Caching NPM modules
+          command: |
+            NPM_MODULES=$(npm root -g)
+            find ${NPM_MODULES}/ -name '*.so' -exec cp -prv '{}' '/root/project/npm-cache/' ';'
+            ls /root/project/npm-cache
+
       - save_cache:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
           paths:
@@ -115,6 +105,7 @@ commands:
             - composer.lock
             - composer.phar
             - php-ext-cache
+            - npm-cache
 
   run-phpinsights:
     steps:
@@ -190,7 +181,7 @@ jobs:
       - prepare:
           php: << parameters.php >>
           composer: << parameters.composer >>
-          cache: 1
+          cache: 2
       - run-phpinsights
       - run-phpstan
       - run-psalm
