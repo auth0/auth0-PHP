@@ -30,7 +30,7 @@ commands:
             - PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
 
       - run:
-          name: Restore extensions
+          name: Configure environment
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
             NPM_MODULES=$(npm root -g)
@@ -73,7 +73,7 @@ commands:
               curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
               curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
               gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-              shasum -a 256 -c codecov.SHA256SUM
+              sha256sum codecov
               chmod +x codecov
             fi
 
