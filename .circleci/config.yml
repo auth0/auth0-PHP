@@ -150,6 +150,25 @@ commands:
           name: Run vulnerabilities tests (Snyk)
           command: snyk test --org=auth0-sdks --project-name=auth0-PHP
 
+  run-codecov:
+    parameters:
+      clover:
+        type: string
+    steps:
+      - run:
+          name: Download and validate Codecov uploader
+          command: |
+            curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+            gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+            shasum -a 256 -c codecov.SHA256SUM
+            chmod +x codecov
+      - run:
+          name: Upload coverage reports to Codecov
+          command: ./codecov -t ${CODECOV_TOKEN} -f ./<< parameters.clover >>/coverage.xml
+
 jobs:
   run-tests:
     parameters:
@@ -158,6 +177,9 @@ jobs:
       composer:
         type: string
         default: ""
+      codecov:
+        type: boolean
+        default: false
       snyk:
         type: boolean
         default: false
@@ -194,6 +216,13 @@ jobs:
           steps:
             - run-infection:
                 clover: << parameters.clover >>
+      - when:
+          condition:
+            and:
+              - equal: [main, <<pipeline.git.branch >>]
+              - equal: [true, << parameters.codecov >>]
+          steps:
+            - run-codecov
 
 workflows:
   run-tests:
@@ -203,6 +232,7 @@ workflows:
           php: "7.4.22"
           snyk: true
           infection: true
+          codecov: true
           context:
             - snyk-env
       - run-tests:
