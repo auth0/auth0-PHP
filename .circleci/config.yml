@@ -67,15 +67,13 @@ commands:
               npm install -g snyk
             fi
 
-            if [ ! -f codecov ]; then
-              curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
-              curl -Os https://uploader.codecov.io/latest/linux/codecov
-              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-              curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-              gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-              sha256sum codecov
-              chmod +x codecov
-            fi
+            curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+            gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+            sha256sum codecov --check --status
+            chmod +x codecov
 
             if [ ! -f vendor ]; then
               php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
