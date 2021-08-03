@@ -135,8 +135,7 @@ workflows:
       - run-tests:
           name: run-tests-8.0
           php: "8.0"
-      - run-tests:
-          when: never
-          name: run-tests-8.1
-          php: "8.1.0beta1"
-          composer: "--ignore-platform-reqs"
+      # - run-tests:
+      #     name: run-tests-8.1
+      #     php: "8.1.0beta1"
+      #     composer: "--ignore-platform-reqs"
