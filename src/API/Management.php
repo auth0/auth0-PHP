@@ -133,56 +133,56 @@ final class Management
      */
     public function getHttpClient(): HttpClient
     {
-        if ($this->httpClient === null) {
-            // Retrieve any configured management token.
-            $managementToken = $this->configuration->getManagementToken();
-
-            // PSR-6 cache to use for management access token caching.
-            $cache = $this->configuration->getManagementTokenCache();
-
-            // If no token was provided, try to get one from cache.
-            if ($managementToken === null) {
-                if ($cache !== null) {
-                    $item = $cache->getItem('managementAccessToken');
-                    if ($item->isHit()) {
-                        $managementToken = $item->get();
-                    }
-                }
-            }
-
-            // If no token was provided or available from cache, try to get one.
-            if ($managementToken === null) {
-                $auth = new Authentication($this->configuration);
-                $response = $auth->clientCredentials(['audience' => $this->configuration->buildDomainUri() . '/api/v2/']);
-
-                if (HttpResponse::wasSuccessful($response)) {
-                    $response = HttpResponse::decodeContent($response);
-
-                    if (isset($response['access_token'])) {
-                        $managementToken = $response['access_token'];
-
-                        // If cache is available, store the token.
-                        if ($cache !== null) {
-                            $cachedKey = $cache->getItem('managementAccessToken');
-                            $cachedKey->set($managementToken);
-                            $cachedKey->expiresAfter((int) ($response['expires_in'] ?? 3600));
-
-                            $cache->save($cachedKey);
-                        }
-                    }
-                }
-            }
-
-            // No management token could be acquired.
-            if ($managementToken === null) {
-                throw \Auth0\SDK\Exception\ConfigurationException::requiresManagementToken();
-            }
-
-            // Build the API client using the management token.
-            $this->httpClient = new HttpClient($this->configuration, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
+        if ($this->httpClient !== null) {
+            return $this->httpClient;
         }
 
-        return $this->httpClient;
+        // Retrieve any configured management token.
+        $managementToken = $this->configuration->getManagementToken();
+
+        // PSR-6 cache to use for management access token caching.
+        $cache = $this->configuration->getManagementTokenCache();
+
+        // If no token was provided, try to get one from cache.
+        if ($managementToken === null) {
+            if ($cache !== null) {
+                $item = $cache->getItem('managementAccessToken');
+                if ($item->isHit()) {
+                    $managementToken = $item->get();
+                }
+            }
+        }
+
+        // If no token was provided or available from cache, try to get one.
+        if ($managementToken === null) {
+            $auth = new Authentication($this->configuration);
+            $response = $auth->clientCredentials(['audience' => $this->configuration->buildDomainUri() . '/api/v2/']);
+
+            if (HttpResponse::wasSuccessful($response)) {
+                $response = HttpResponse::decodeContent($response);
+
+                if (isset($response['access_token'])) {
+                    $managementToken = $response['access_token'];
+
+                    // If cache is available, store the token.
+                    if ($cache !== null) {
+                        $cachedKey = $cache->getItem('managementAccessToken');
+                        $cachedKey->set($managementToken);
+                        $cachedKey->expiresAfter((int) ($response['expires_in'] ?? 3600));
+
+                        $cache->save($cachedKey);
+                    }
+                }
+            }
+        }
+
+        // No management token could be acquired.
+        if ($managementToken === null) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresManagementToken();
+        }
+
+        // Build the API client using the management token.
+        return $this->httpClient = new HttpClient($this->configuration, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
     }
 
     /**

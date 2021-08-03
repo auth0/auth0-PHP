@@ -54,12 +54,11 @@ final class Authentication
      */
     public function getHttpClient(): HttpClient
     {
-        if ($this->httpClient === null) {
-            // Build the HTTP client.
-            $this->httpClient = new HttpClient($this->configuration);
+        if ($this->httpClient !== null) {
+            return $this->httpClient;
         }
 
-        return $this->httpClient;
+        return $this->httpClient = new HttpClient($this->configuration);
     }
 
     /**
