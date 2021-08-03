@@ -13,7 +13,6 @@ commands:
           name: Configure environment
           command: |
             apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev git
-            npm install snyk
 
       - checkout
 
@@ -52,13 +51,16 @@ commands:
       - run:
           name: Install Composer
           command: |
-            wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
+            if [ ! -f composer.phar ]; then
+              wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
+            fi
 
       - run:
-          name: Install Composer dependencies
+          name: Install dependencies
           command: |
             php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
             php composer.phar update --no-interaction --prefer-dist << parameters.composer >>
+            npm install snyk
 
       - run:
           name: Caching PHP extensions
