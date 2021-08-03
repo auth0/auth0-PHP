@@ -25,7 +25,7 @@ commands:
 
       - restore_cache:
           keys:
-            - PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >
+            - PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
 
       - run:
           name: Restore PHP extensions
@@ -90,7 +90,7 @@ commands:
             ls /root/project/php-ext-cache
 
       - save_cache:
-          key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >
+          key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
           paths:
             - node_modules
             - package.json
