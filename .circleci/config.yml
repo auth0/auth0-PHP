@@ -11,14 +11,14 @@ commands:
       - run:
           name: Enable code coverage
           command: |
-            sudo apt update
-            sudo apt install libonig-dev
-            sudo pecl install pcov
-            sudo docker-php-ext-enable pcov
-            sudo rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-            sudo docker-php-ext-install posix
-            sudo docker-php-ext-install pcntl
-            sudo docker-php-ext-install mbstring
+            apk update
+            apk add oniguruma-dev php-dev gcc musl-dev make
+            pecl install pcov
+            docker-php-ext-enable pcov
+            rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            docker-php-ext-install posix
+            docker-php-ext-install pcntl
+            docker-php-ext-install mbstring
       - run:
           name: Install composer dependencies
           command: composer install --no-interaction --prefer-dist
