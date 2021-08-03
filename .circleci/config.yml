@@ -25,7 +25,7 @@ commands:
           name: Setup Environment
           command: |
             apk update
-            apk add oniguruma-dev gcc musl-dev make
+            apk add gcc make autoconf musl-dev oniguruma-dev
             pecl install pcov
             docker-php-ext-enable pcov
             rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
