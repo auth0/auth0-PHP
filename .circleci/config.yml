@@ -81,9 +81,7 @@ commands:
       - run:
           name: Install Snyk CLI
           command: |
-            NPM_MODULES=$(npm root -g)
             npm install -g snyk
-            ls $(npm root -g)
 
       - run:
           name: Caching PHP extensions
