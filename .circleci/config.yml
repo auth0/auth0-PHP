@@ -3,28 +3,77 @@ version: 2.1
 commands:
   prepare:
     parameters:
+      php:
+        type: string
       composer:
         type: string
+
     steps:
       - checkout
+
+      - run:
+          name: DEBUG
+          command: >
+            pecl config-show
+            ls /usr/local/lib/php/extensions
+
+      - run:
+          name: Preparing environment
+          command: >
+            mkdir php-cache
+
+      - restore_cache:
+          keys:
+            - << parameters.php >>-{{ checksum "composer.json" }}
+
       - run:
           name: Configure environment
-          command: |
+          command: >
             apk update
             apk add npm gcc autoconf make musl-dev oniguruma-dev
-            pecl install pcov
-            docker-php-ext-enable pcov
-            docker-php-ext-install posix pcntl mbstring
             npm install -g snyk
+
+      - run:
+          name: Restore PHP extensions
+          command: cp -R php-cache/. /usr/local/lib/php/extensions/
+
+      # - run:
+      #     name: Configure environment
+      #     command: >
+      #       pecl install pcov
+      #       docker-php-ext-enable pcov
+      #       docker-php-ext-install posix pcntl mbstring
+      #       npm install -g snyk
+
+      # - run:
+      #     name: Install mongodb pecl extensions if mongodb.so is not there
+      #     command: >
+      #       if [ ! -f /usr/local/lib/php/extensions/no-debug-non-zts-20160303/mongodb.so ]; then
+      #           sudo pecl install mongodb ;
+      #       fi
+
       - run:
           name: Install Composer
-          command: |
+          command: >
             wget https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer -O - -q | php -- --quiet
-            mv composer.phar /usr/local/bin/composer
+
       - run:
-          name: Install dependencies
-          command: |
-            composer install --no-interaction --prefer-dist << parameters.composer >>
+          name: Install Composer dependencies
+          command: >
+            php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
+            php composer.phar update --no-interaction --prefer-dist << parameters.composer >>
+
+      - run:
+          name: Caching PHP extensions
+          command: >
+            rm -rf php-cache/
+            cp -R /usr/local/lib/php/extensions/* php-cache/
+
+      - save_cache:
+          key: << parameters.php >>-{{ checksum "composer.json" }}
+          paths:
+            - composer.phar
+            - php-cache
 
   run-phpinsights:
     steps:
@@ -98,6 +147,7 @@ jobs:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
       - prepare:
+          php: << parameters.php >>
           composer: << parameters.composer >>
       - run-phpinsights
       - run-phpstan
