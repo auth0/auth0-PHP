@@ -5,8 +5,21 @@ commands:
     steps:
       - checkout
       - run:
-          name: Perform composer self-update
-          command: composer self-update
+          name: Install Composer
+          command: |
+            EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
+            then
+                >&2 echo 'ERROR: Invalid Composer checksum'
+                rm composer-setup.php
+                exit 1
+            fi
+            php composer-setup.php --quiet
+            RESULT=$?
+            rm composer-setup.php
+            exit $RESULT
       - restore-cache
       - run:
           name: Enable code coverage
@@ -20,11 +33,10 @@ commands:
             docker-php-ext-install pcntl
             docker-php-ext-install mbstring
       - run:
-          name: Install composer dependencies
-          command: composer install --no-interaction --prefer-dist
-      - run:
-          name: Update composer dependencies
-          command: composer update --prefer-dist --no-interaction
+          name: Install Dependencies
+          command: |
+            composer install --no-interaction --prefer-dist
+            composer update --prefer-dist --no-interaction
       - save-cache
 
   save-cache:
