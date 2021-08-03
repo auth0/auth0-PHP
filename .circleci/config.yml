@@ -59,21 +59,6 @@ commands:
       - run:
           name: Install dependencies
           command: |
-            EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
-            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
-
-            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
-            then
-                >&2 echo 'ERROR: Invalid installer checksum'
-                rm composer-setup.php
-                exit 1
-            fi
-
-            php composer-setup.php --quiet
-            RESULT=$?
-            rm composer-setup.php
-
             if [ `npm list -g | grep -c snyk` -eq 0 ]; then
               npm install -g snyk
             fi
@@ -86,6 +71,23 @@ commands:
               gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
               sha256sum -c codecov.SHA256SUM
               chmod +x codecov
+            fi
+
+            if [ ! -f composer.phar ]; then
+              EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+              php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+              ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+              if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
+              then
+                  >&2 echo 'ERROR: Invalid installer checksum'
+                  rm composer-setup.php
+                  exit 1
+              fi
+
+              php composer-setup.php --quiet
+              RESULT=$?
+              rm composer-setup.php
             fi
 
             if [ ! -f vendor ]; then
@@ -190,7 +192,7 @@ jobs:
       - prepare:
           php: << parameters.php >>
           composer: << parameters.composer >>
-          cache: 4
+          cache: 5
       - run-phpinsights
       - run-phpstan
       - run-psalm
