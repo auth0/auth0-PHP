@@ -33,12 +33,8 @@ commands:
             PHP_EXT_DIR=$(php-config --extension-dir)
             find /root/project/php-ext-cache/ -name '*.so' -exec cp -prv '{}' ${PHP_EXT_DIR}/ ';'
 
-            ls /root/project/php-ext-cache
-            ls ${PHP_EXT_DIR}
-
             if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
                 pecl install pcov
-                docker-php-ext-enable pcov
             fi
 
             if [ ! -f ${PHP_EXT_DIR}/posix.so ]; then
@@ -53,7 +49,7 @@ commands:
                 docker-php-ext-install mbstring
             fi
 
-            ls ${PHP_EXT_DIR}
+            docker-php-ext-enable pcov posix pcntl mbstring
 
       - run:
           name: Install Composer
@@ -76,6 +72,7 @@ commands:
       - run:
           name: Install Snyk CLI
           command: |
+            which npm
             npm install -g snyk
 
       - run:
