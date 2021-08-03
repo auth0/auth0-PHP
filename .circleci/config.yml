@@ -76,11 +76,7 @@ commands:
       - run:
           name: Install Snyk CLI
           command: |
-            if [ ! -f node_modules ]; then
-              npm install snyk
-            else
-              echo "Restored from cache; skipped."
-            fi
+            npm install -g snyk
 
       - run:
           name: Caching PHP extensions
@@ -92,8 +88,6 @@ commands:
       - save_cache:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
           paths:
-            - node_modules
-            - package.json
             - vendor
             - composer.phar
             - php-ext-cache
