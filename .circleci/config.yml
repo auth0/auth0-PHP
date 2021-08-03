@@ -11,12 +11,10 @@ commands:
           name: Configure environment
           command: |
             apk update
-            apk add npm gcc autoconf oniguruma-dev
+            apk add npm gcc autoconf make
             pecl install pcov
             docker-php-ext-enable pcov
-            docker-php-ext-install posix
-            docker-php-ext-install pcntl
-            docker-php-ext-install mbstring
+            docker-php-ext-install posix pcntl mbstring
             npm install -g snyk
       - run:
           name: Install Composer
