@@ -21,8 +21,9 @@ commands:
       - run:
           name: Preparing environment
           command: |
-            mkdir /root/project/php-ext-cache
-            mkdir /root/project/npm-cache
+            mkdir -p /root/project/php-ext-cache
+            mkdir -p /root/project/npm-cache
+            mkdir -p /usr/local/lib/node_modules
 
       - restore_cache:
           keys:
