@@ -8,16 +8,16 @@ commands:
           name: Setup Environment
           command: |
             apk update
-            apk add gcc make autoconf musl-dev oniguruma-dev docker-cli
+            apk add openrc gcc make autoconf musl-dev oniguruma-dev docker-cli
             pecl install pcov
             docker-php-ext-enable pcov
             docker-php-ext-install posix
             docker-php-ext-install pcntl
             docker-php-ext-install mbstring
+            rc-update add docker boot
       - run:
           name: Install Composer
           command: |
-            rc-service docker start
             docker cp composer:/usr/bin/composer /usr/bin/composer
       - restore-cache
       - run:
