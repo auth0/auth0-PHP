@@ -162,7 +162,7 @@ commands:
     steps:
       - run:
           name: Upload coverage to Codecov
-          command: ./codecov -t ${CODECOV_TOKEN} -f ./<< parameters.clover >>/coverage.xml
+          command: codecov -t ${CODECOV_TOKEN} -f ./<< parameters.clover >>/coverage.xml
 
 jobs:
   run-tests:
