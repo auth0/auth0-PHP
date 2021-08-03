@@ -13,7 +13,7 @@ commands:
 
       - run:
           name: DEBUG
-          command: >
+          command: |
             pecl config-show
             ls /usr/local/lib/php/extensions
 
