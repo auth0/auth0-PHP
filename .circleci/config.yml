@@ -5,32 +5,20 @@ commands:
     steps:
       - checkout
       - run:
-          name: Install Composer
-          command: |
-            EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
-            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
-            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
-            then
-                >&2 echo 'ERROR: Invalid Composer checksum'
-                rm composer-setup.php
-                exit 1
-            fi
-            php composer-setup.php --quiet
-            RESULT=$?
-            rm composer-setup.php
-            exit $RESULT
-      - restore-cache
-      - run:
           name: Setup Environment
           command: |
             apk update
-            apk add gcc make autoconf musl-dev oniguruma-dev
+            apk add gcc make autoconf musl-dev oniguruma-dev docker-cli
             pecl install pcov
             docker-php-ext-enable pcov
             docker-php-ext-install posix
             docker-php-ext-install pcntl
             docker-php-ext-install mbstring
+      - run:
+          name: Install Composer
+          command: |
+            docker cp composer:/usr/bin/composer /usr/bin/composer
+      - restore-cache
       - run:
           name: Install Dependencies
           command: |
