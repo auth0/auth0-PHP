@@ -57,7 +57,7 @@ commands:
           name: Restore NPM modules
           command: |
             NPM_MODULES=$(npm root -g)
-            find /root/project/npm-cache/ -name '*.so' -exec cp -prv '{}' ${NPM_MODULES}/ ';'
+            cp -a /root/project/npm-cache/. ${NPM_MODULES}
             ls ${NPM_MODULES}
 
       - run:
@@ -96,7 +96,7 @@ commands:
           name: Cache NPM modules
           command: |
             NPM_MODULES=$(npm root -g)
-            find ${NPM_MODULES}/ -name '*.so' -exec cp -prv '{}' '/root/project/npm-cache/' ';'
+            cp -a ${NPM_MODULES}/. /root/project/npm-cache
             ls /root/project/npm-cache
 
       - save_cache:
