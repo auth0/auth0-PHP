@@ -22,6 +22,7 @@ commands:
             PROJECT_ROOT=$(pwd)
             PHP_EXT_DIR=$(php-config --extension-dir)
             mkdir php-ext-cache
+            echo ${PROJECT_ROOT}
             ls ${PHP_EXT_DIR}
 
       - restore_cache:
