@@ -19,8 +19,7 @@ commands:
       - run:
           name: Preparing environment
           command: |
-            mkdir ${PROJECT_ROOT}/php-ext-cache
-            ls ${PHP_EXT_DIR}
+            mkdir php-ext-cache
 
       - restore_cache:
           keys:
@@ -52,13 +51,6 @@ commands:
             fi
 
             ls ${PHP_EXT_DIR}
-
-      - run:
-          name: Install PHP extensions
-          command: >
-            if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
-                pecl install mongodb ;
-            fi
 
       - run:
           name: Install Composer
