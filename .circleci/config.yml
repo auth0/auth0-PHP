@@ -12,7 +12,7 @@ commands:
       - run:
           name: Configure environment
           command: |
-            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev git rsync
+            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev git
 
       - checkout
 
@@ -30,7 +30,7 @@ commands:
       - run:
           name: Restore PHP extensions
           command: |
-            rsync -avu php-ext-cache/ ${PHP_EXT_DIR}
+            cp -a php-ext-cache/. ${PHP_EXT_DIR}/
 
       # - run:
       #     name: Configure environment
@@ -59,14 +59,25 @@ commands:
       - run:
           name: Install dependencies
           command: |
-            php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
-            php composer.phar update --no-interaction --prefer-dist << parameters.composer >>
-            npm install snyk
+            if [ ! -f vendor ]; then
+              php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
+            else
+              php composer.phar update --no-interaction --prefer-dist
+            fi
+
+      - run:
+          name: Install Snyk CLI
+          command: |
+            if [ ! -f node_modules ]; then
+              npm install snyk
+            else
+              echo "Restored from cache; skipped."
+            fi
 
       - run:
           name: Caching PHP extensions
           command: |
-            rsync -avu --delete ${PHP_EXT_DIR}/ php-ext-cache
+            cp -a ${PHP_EXT_DIR}/. php-ext-cache/.
 
       - save_cache:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}
