@@ -101,16 +101,17 @@ jobs:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
       - prepare:
-        composer: << parameters.composer >>
+          composer: << parameters.composer >>
       - run-phpinsights
       - run-phpstan
       - run-psalm
       - run-pest:
-        clover: << parameters.clover >>
+          clover: << parameters.clover >>
       - run-snyk
       - when:
           condition:
             and:
+              - equal: [main, <<pipeline.git.branch >>]
               - equal: [true, << parameters.snyk >>]
           steps:
             - run-snyk
@@ -121,7 +122,7 @@ jobs:
               - equal: [true, << parameters.infection >>]
           steps:
             - run-infection:
-              clover: << parameters.clover >>
+                clover: << parameters.clover >>
 
 workflows:
   run-tests:
