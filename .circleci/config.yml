@@ -19,9 +19,10 @@ commands:
       - run:
           name: Preparing environment
           command: |
+            PROJECT_ROOT=$(pwd)
             PHP_EXT_DIR=$(php-config --extension-dir)
             mkdir php-ext-cache
-            ls $PHP_EXT_DIR
+            ls ${PHP_EXT_DIR}
 
       - restore_cache:
           keys:
@@ -30,7 +31,7 @@ commands:
       - run:
           name: Restore PHP extensions
           command: |
-            cp -a php-ext-cache/*.so $PHP_EXT_DIR/
+            find ${PROJECT_ROOT}/php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
             ls $PHP_EXT_DIR
 
       # - run:
@@ -78,7 +79,7 @@ commands:
       - run:
           name: Caching PHP extensions
           command: |
-            cp -a $PHP_EXT_DIR/*.so php-ext-cache/
+            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '${PROJECT_ROOT}php-ext-cache/' ';'
             ls php-ext-cache
 
       - save_cache:
