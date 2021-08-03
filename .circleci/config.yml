@@ -19,7 +19,7 @@ commands:
       - checkout
 
       - run:
-          name: Preparing environment
+          name: Prepare environment
           command: |
             mkdir -p /root/project/php-ext-cache
             mkdir -p /root/project/npm-cache
@@ -86,14 +86,14 @@ commands:
             fi
 
       - run:
-          name: Caching PHP extensions
+          name: Cache PHP extensions
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
             find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '/root/project/php-ext-cache/' ';'
             ls /root/project/php-ext-cache
 
       - run:
-          name: Caching NPM modules
+          name: Cache NPM modules
           command: |
             NPM_MODULES=$(npm root -g)
             find ${NPM_MODULES}/ -name '*.so' -exec cp -prv '{}' '/root/project/npm-cache/' ';'
