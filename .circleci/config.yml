@@ -30,7 +30,7 @@ commands:
 
       - run:
           name: Restore PHP extensions
-          command: cp -R php-cache/. ${PHP_EXT_DIR}/
+          command: cp -R php-ext-cache/. ${PHP_EXT_DIR}/
 
       # - run:
       #     name: Configure environment
@@ -61,8 +61,8 @@ commands:
       - run:
           name: Caching PHP extensions
           command: |
-            rm -rf php-cache/
-            cp -R ${PHP_EXT_DIR}/* php-cache/
+            rm -rf php-ext-cache/
+            cp -R ${PHP_EXT_DIR}/* php-ext-cache/
 
       - save_cache:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}
