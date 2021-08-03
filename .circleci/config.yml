@@ -72,7 +72,7 @@ commands:
             curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
             curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
             gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-            echo "$(cat codecov.SHA256SUM) codecov" | sha256sum --check --status
+            echo "$(cat codecov.SHA256SUM) codecov" | sha256sum --c --s
             chmod +x codecov
 
             if [ ! -f vendor ]; then
