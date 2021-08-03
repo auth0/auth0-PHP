@@ -19,7 +19,7 @@ commands:
       - run:
           name: Preparing environment
           command: |
-            mkdir php-ext-cache
+            mkdir /root/project/php-ext-cache
 
       - restore_cache:
           keys:
@@ -29,9 +29,9 @@ commands:
           name: Restore PHP extensions
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
-            find php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
+            find /root/project/php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
 
-            ls php-ext-cache
+            ls /root/project/php-ext-cache
             ls ${PHP_EXT_DIR}
 
             if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
@@ -84,8 +84,8 @@ commands:
           name: Caching PHP extensions
           command: |
             PHP_EXT_DIR=$(php-config --extension-dir)
-            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' 'php-ext-cache/' ';'
-            ls php-ext-cache
+            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '/root/project/php-ext-cache/' ';'
+            ls /root/project/php-ext-cache
 
       - save_cache:
           key: PHP<< parameters.php >>-{{ checksum "composer.json" }}
