@@ -32,8 +32,11 @@ commands:
             PHP_EXT_DIR=$(php-config --extension-dir)
             find php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
 
+            ls ${PHP_EXT_DIR}
+
             if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
                 pecl install pcov
+                docker-php-ext-enable pcov
             fi
 
             if [ ! -f ${PHP_EXT_DIR}/posix.so ]; then
@@ -54,7 +57,7 @@ commands:
           name: Install PHP extensions
           command: >
             if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
-                sudo pecl install mongodb ;
+                pecl install mongodb ;
             fi
 
       - run:
