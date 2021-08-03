@@ -1,6 +1,14 @@
 # CHANGELOG
 
-## [7.9.1](https://github.com/auth0/auth0-PHP/tree/7.9.0) (2021-07-06)
+## [7.9.2](https://github.com/auth0/auth0-PHP/tree/7.9.2) (2021-08-03)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.1...7.9.2)
+
+**Fixed**
+
+- Add missing API2 POST /tickets/password-change params [\#523](https://github.com/auth0/auth0-PHP/pull/523) ([evansims](https://github.com/evansims))
+
+## [7.9.1](https://github.com/auth0/auth0-PHP/tree/7.9.1) (2021-07-06)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...7.9.1)
 
