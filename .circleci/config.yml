@@ -30,7 +30,8 @@ commands:
       - run:
           name: Restore PHP extensions
           command: |
-            cp -a php-ext-cache/. $PHP_EXT_DIR/
+            cp -a php-ext-cache/*.so $PHP_EXT_DIR/
+            ls $PHP_EXT_DIR
 
       # - run:
       #     name: Configure environment
@@ -77,7 +78,7 @@ commands:
       - run:
           name: Caching PHP extensions
           command: |
-            cp -a $PHP_EXT_DIR/. php-ext-cache/.
+            cp -a $PHP_EXT_DIR/*.so php-ext-cache/.
             ls php-ext-cache
 
       - save_cache:
