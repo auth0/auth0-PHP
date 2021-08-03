@@ -7,6 +7,8 @@ commands:
         type: string
       composer:
         type: string
+      cache:
+        type: string
 
     steps:
       - run:
@@ -23,7 +25,7 @@ commands:
 
       - restore_cache:
           keys:
-            - PHP<< parameters.php >>-{{ checksum "composer.json" }}
+            - PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >
 
       - run:
           name: Restore PHP extensions
@@ -88,7 +90,7 @@ commands:
             ls /root/project/php-ext-cache
 
       - save_cache:
-          key: PHP<< parameters.php >>-{{ checksum "composer.json" }}
+          key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >
           paths:
             - node_modules
             - package.json
@@ -170,6 +172,7 @@ jobs:
       - prepare:
           php: << parameters.php >>
           composer: << parameters.composer >>
+          cache: 1
       - run-phpinsights
       - run-phpstan
       - run-psalm
