@@ -182,7 +182,7 @@ jobs:
       - prepare:
           php: << parameters.php >>
           composer: << parameters.composer >>
-          cache: 2
+          cache: 1
       - run-phpinsights
       - run-phpstan
       - run-psalm
@@ -209,14 +209,14 @@ workflows:
     jobs:
       - run-tests:
           name: run-tests-7.4
-          php: "7.4.0"
+          php: "7.4.22"
           snyk: true
           infection: true
           context:
             - snyk-env
       - run-tests:
           name: run-tests-8.0
-          php: "8.0.0"
+          php: "8.0.9"
       # - run-tests:
       #     name: run-tests-8.1
       #     php: "8.1.0beta1"
