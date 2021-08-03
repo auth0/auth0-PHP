@@ -31,6 +31,7 @@ commands:
             PHP_EXT_DIR=$(php-config --extension-dir)
             find php-ext-cache/ -name '*.so' -exec cp -prv '{}' '${PHP_EXT_DIR}/' ';'
 
+            ls php-ext-cache
             ls ${PHP_EXT_DIR}
 
             if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
