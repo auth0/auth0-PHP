@@ -59,9 +59,7 @@ commands:
       - run:
           name: Install dependencies
           command: |
-            if [ `npm list -g | grep -c snyk` -eq 0 ]; then
-              npm install -g snyk
-            fi
+            npm install -g snyk
 
             if [ ! -f codecov ]; then
               curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
