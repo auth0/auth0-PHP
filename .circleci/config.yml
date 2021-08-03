@@ -61,17 +61,16 @@ commands:
           command: |
             if [ `npm list -g | grep -c snyk` -eq 0 ]; then
               npm install -g snyk
+            else
+              npm update -g
             fi
-
-            npm update -g
 
             if [ ! -f composer.phar ]; then
               EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
               php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
               ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
 
-              if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]
-              then
+              if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
                   >&2 echo 'ERROR: Invalid installer checksum'
                   rm composer-setup.php
                   exit 1
