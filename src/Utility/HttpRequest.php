@@ -25,7 +25,6 @@ final class HttpRequest
     public const MAX_REQUEST_RETRY_JITTER = 250;
     public const MAX_REQUEST_RETRY_DELAY = 500;
     public const MIN_REQUEST_RETRY_DELAY = 100;
-    private const MICROSECONDS = 1000;
 
     /**
      * Shared configuration data.
@@ -341,10 +340,10 @@ final class HttpRequest
                      * ✔ Never less than MIN_REQUEST_RETRY_DELAY (100ms)
                      * ✔ Never more than MAX_REQUEST_RETRY_DELAY (500ms)
                      */
-                    $wait = intval(self::MICROSECONDS * pow(2, $attempt)); // Exponential delay with each subsequent request attempt.
-                    $wait = mt_rand(0, $wait + self::MAX_REQUEST_RETRY_JITTER * self::MICROSECONDS); // Add jitter to the delay window.
-                    $wait = min(self::MAX_REQUEST_RETRY_DELAY * self::MICROSECONDS, $wait); // Cap delay at MAX_REQUEST_RETRY_DELAY.
-                    $wait = max(self::MIN_REQUEST_RETRY_DELAY * self::MICROSECONDS, $wait); // Ensure delay is no less than MIN_REQUEST_RETRY_DELAY.
+                    $wait = intval(1000 * pow(2, $attempt)); // Exponential delay with each subsequent request attempt.
+                    $wait = mt_rand(0, $wait + self::MAX_REQUEST_RETRY_JITTER * 1000); // Add jitter to the delay window.
+                    $wait = min(self::MAX_REQUEST_RETRY_DELAY * 1000, $wait); // Cap delay at MAX_REQUEST_RETRY_DELAY.
+                    $wait = max(self::MIN_REQUEST_RETRY_DELAY * 1000, $wait); // Ensure delay is no less than MIN_REQUEST_RETRY_DELAY.
 
                     // Do not apply delay if running inside unit tests.
                     if (! defined('AUTH0_TESTS_DIR')) {
