@@ -90,8 +90,6 @@ test('an expontential backoff and jitter are being applied', function(): void {
     // We triggered usleep() 4 times.
     $this->assertEquals(4, count($requestDelays));
 
-    var_dump($requestDelays);
-
     // Assert that exponential backoff is happening.
     $this->assertGreaterThanOrEqual($requestDelays[0], $requestDelays[1]);
     $this->assertGreaterThanOrEqual($requestDelays[1], $requestDelays[2]);
