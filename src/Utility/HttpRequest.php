@@ -330,7 +330,7 @@ final class HttpRequest
                 $retries = min(self::MAX_REQUEST_RETRIES, $httpRetries);
 
                 if ($attempt < $retries) {
-                    $wait = self::MICROSECONDS * pow(2, $attempt); // Exponential delay with each subsequent request attempt.
+                    $wait = intval(self::MICROSECONDS * pow(2, $attempt)); // Exponential delay with each subsequent request attempt.
                     $wait = mt_rand($wait, $wait + self::MAX_REQUEST_RETRY_JITTER * self::MICROSECONDS); // Add jitter to the delay window.
                     $wait = min(500 * self::MICROSECONDS, $wait); // Cap delay at 0.5 second.
 
