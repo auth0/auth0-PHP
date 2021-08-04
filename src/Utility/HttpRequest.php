@@ -22,7 +22,8 @@ use Psr\Http\Message\StreamInterface;
 final class HttpRequest
 {
     public const MAX_REQUEST_RETRIES = 10;
-    public const RETRY_JITTER_MS = 250;
+    public const MAX_REQUEST_RETRY_JITTER = 250;
+    private const MICROSECONDS = 1000;
 
     /**
      * Shared configuration data.
@@ -329,9 +330,9 @@ final class HttpRequest
                 $retries = min(self::MAX_REQUEST_RETRIES, $httpRetries);
 
                 if ($attempt < $retries) {
-                    $wait = 1000 * pow(2, $attempt); // Exponential delay with each subsequent request attempt.
-                    $wait = min(1000000, $wait); // Cap delay at 1 second.
-                    $wait = mt_rand($wait, $wait + self::RETRY_JITTER_MS * 1000); // Add jitter to the delay window.
+                    $wait = self::MICROSECONDS * pow(2, $attempt); // Exponential delay with each subsequent request attempt.
+                    $wait = mt_rand($wait, $wait + self::MAX_REQUEST_RETRY_JITTER * self::MICROSECONDS); // Add jitter to the delay window.
+                    $wait = min(500 * self::MICROSECONDS, $wait); // Cap delay at 0.5 second.
 
                     // Briefly wait before attempting again.
                     usleep($wait);
