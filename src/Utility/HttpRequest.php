@@ -251,7 +251,7 @@ final class HttpRequest
         $uri = $domain . $this->basePath . $this->getUrl();
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();
-        $httpRetries = $this->configuration->getHttpMaxRetries();
+        $configuredRetries = $this->configuration->getHttpMaxRetries();
         $httpRequest = $httpRequestFactory->createRequest($this->method, $uri);
         $headers = $this->headers;
         $mockedResponse = null;
@@ -327,11 +327,11 @@ final class HttpRequest
             $this->lastResponse = $httpResponse;
 
             // If the API responds with a 429, try reissuing the request up to 3 times before returning the last response.
-            if ($httpResponse->getStatusCode() === 429 && $httpRetries >= 0) {
+            if ($httpResponse->getStatusCode() === 429 && $configuredRetries >= 0) {
                 $attempt = $this->getRequestCount();
-                $retries = min(self::MAX_REQUEST_RETRIES, $httpRetries);
+                $maxRetries = min(self::MAX_REQUEST_RETRIES, $configuredRetries);
 
-                if ($attempt < $retries) {
+                if ($attempt < $maxRetries) {
                     /**
                      * Use an exponential back-off with the formula:
                      * max(floor, min(cap, random_between(0, jitter + (1000 * 2 ** attempt))))
