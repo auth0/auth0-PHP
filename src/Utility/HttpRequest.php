@@ -326,7 +326,7 @@ final class HttpRequest
             $this->lastResponse = $httpResponse;
 
             // If the API responds with a 429, try reissuing the request up to 3 times before returning the last response.
-            if ($httpResponse->getStatusCode() === 429 && $configuredRetries >= 0) {
+            if ($httpResponse->getStatusCode() === 429 && $configuredRetries > 0) {
                 $attempt = $this->getRequestCount();
                 $maxRetries = min(self::MAX_REQUEST_RETRIES, $configuredRetries);
 
