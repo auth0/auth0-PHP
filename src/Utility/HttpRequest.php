@@ -357,8 +357,8 @@ final class HttpRequest
                      */
                     $wait = intval(100 * pow(2, $attempt - 1)); // Exponential delay with each subsequent request attempt.
                     $wait = mt_rand($wait, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
-                    $wait = min(self::MAX_REQUEST_RETRY_DELAY, $wait); // Ensure delay is never more than MAX_REQUEST_RETRY_DELAY.
-                    $wait = max(self::MIN_REQUEST_RETRY_DELAY, $wait); // Ensure delay is no less than MIN_REQUEST_RETRY_DELAY.
+                    $wait = min(self::MAX_REQUEST_RETRY_DELAY, $wait); // Ensure delay is less than MAX_REQUEST_RETRY_DELAY.
+                    $wait = max(self::MIN_REQUEST_RETRY_DELAY, $wait); // Ensure delay is more than MIN_REQUEST_RETRY_DELAY.
 
                     // Briefly wait before attempting again.
                     $this->sleep($wait);
