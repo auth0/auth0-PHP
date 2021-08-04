@@ -18,6 +18,7 @@ class HttpResponseGenerator
     ): ResponseInterface {
         $response = Mockery::mock(ResponseInterface::class);
         $response->shouldReceive('getStatusCode')->andReturn($statusCode);
+        $response->shouldReceive('getHeaders')->andReturn([]);
         $response->shouldReceive('getBody')->andReturn($body);
 
         return $response;
