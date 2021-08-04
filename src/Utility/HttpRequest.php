@@ -333,7 +333,7 @@ final class HttpRequest
                 if ($attempt < $maxRetries) {
                     /**
                      * Use an exponential back-off with the formula:
-                     * max(floor, min(cap, random_between(0, jitter + (1000 * 2 ** attempt))))
+                     * max(MIN_REQUEST_RETRY_DELAY, min(MAX_REQUEST_RETRY_DELAY, random_between(0, MAX_REQUEST_RETRY_JITTER + (1000 * 2 ** attempt))))
                      *
                      * ✔ Each attempt increases base delay by (1000 * 2 ** attempt)
                      * ✔ Randomizes jitter, adding up to MAX_REQUEST_RETRY_JITTER (250ms)
