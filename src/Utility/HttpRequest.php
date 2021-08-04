@@ -22,7 +22,7 @@ use Psr\Http\Message\StreamInterface;
 final class HttpRequest
 {
     public const MAX_REQUEST_RETRIES = 10;
-    public const MAX_REQUEST_RETRY_JITTER = 250;
+    public const MAX_REQUEST_RETRY_JITTER = 100;
     public const MAX_REQUEST_RETRY_DELAY = 500;
     public const MIN_REQUEST_RETRY_DELAY = 100;
 
@@ -92,6 +92,11 @@ final class HttpRequest
     private int $count = 0;
 
     /**
+     * The milliseconds slept between each request retry.
+     */
+    private array $waits = [];
+
+    /**
      * Stored instance of last send request.
      */
     private ?RequestInterface $lastRequest = null;
@@ -156,6 +161,16 @@ final class HttpRequest
     public function getRequestCount(): int
     {
         return $this->count;
+    }
+
+    /**
+     * The milliseconds slept between request retries.
+     *
+     * @return array<int>
+     */
+    public function getRequestDelays(): array
+    {
+        return $this->waits;
     }
 
     /**
@@ -333,23 +348,20 @@ final class HttpRequest
                 if ($attempt < $maxRetries) {
                     /**
                      * Use an exponential back-off with the formula:
-                     * max(MIN_REQUEST_RETRY_DELAY, min(MAX_REQUEST_RETRY_DELAY, random_between(0, MAX_REQUEST_RETRY_JITTER + (1000 * 2 ** attempt))))
+                     * max(MIN_REQUEST_RETRY_DELAY, min(MAX_REQUEST_RETRY_DELAY, (100ms * (2 ** attempt - 1)) + random_between(0, MAX_REQUEST_RETRY_JITTER)))
                      *
-                     * ✔ Each attempt increases base delay by (1000 * 2 ** attempt)
+                     * ✔ Each attempt increases base delay by (100ms * (2 ** attempt - 1))
                      * ✔ Randomizes jitter, adding up to MAX_REQUEST_RETRY_JITTER (250ms)
                      * ✔ Never less than MIN_REQUEST_RETRY_DELAY (100ms)
                      * ✔ Never more than MAX_REQUEST_RETRY_DELAY (500ms)
                      */
-                    $wait = intval(1000 * pow(2, $attempt)); // Exponential delay with each subsequent request attempt.
-                    $wait = mt_rand(0, $wait + self::MAX_REQUEST_RETRY_JITTER * 1000); // Add jitter to the delay window.
-                    $wait = min(self::MAX_REQUEST_RETRY_DELAY * 1000, $wait); // Cap delay at MAX_REQUEST_RETRY_DELAY.
-                    $wait = max(self::MIN_REQUEST_RETRY_DELAY * 1000, $wait); // Ensure delay is no less than MIN_REQUEST_RETRY_DELAY.
+                    $wait = intval(100 * pow(2, $attempt - 1)); // Exponential delay with each subsequent request attempt.
+                    $wait = mt_rand($wait, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
+                    $wait = min(self::MAX_REQUEST_RETRY_DELAY, $wait); // Ensure delay is never more than MAX_REQUEST_RETRY_DELAY.
+                    $wait = max(self::MIN_REQUEST_RETRY_DELAY, $wait); // Ensure delay is no less than MIN_REQUEST_RETRY_DELAY.
 
-                    // Do not apply delay if running inside unit tests.
-                    if (! defined('AUTH0_TESTS_DIR')) {
-                        // Briefly wait before attempting again.
-                        usleep($wait);
-                    }
+                    // Briefly wait before attempting again.
+                    $this->sleep($wait);
 
                     // Make subsequent attempt.
                     $httpResponse = $this->call();
@@ -535,5 +547,24 @@ final class HttpRequest
         }
 
         return $value;
+    }
+
+    /**
+     * Issue a usleep() for $milliseconds, and log the delay.
+     *
+     * @param int $milliseconds How long, in milliseconds, to trigger a usleep() for.
+     */
+    private function sleep(
+        int $milliseconds
+    ): self {
+        $this->waits[] = $milliseconds;
+
+        // Don't actually trigger a sleep if we're running tests.
+        if (! defined('AUTH0_TESTS_DIR')) {
+            // usleep() uses microseconds, so * 1000 for the correct conversion.
+            usleep($milliseconds * 1000);
+        }
+
+        return $this;
     }
 }
