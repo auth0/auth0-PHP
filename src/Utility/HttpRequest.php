@@ -21,6 +21,9 @@ use Psr\Http\Message\StreamInterface;
  */
 final class HttpRequest
 {
+    public const MAX_REQUEST_RETRIES = 10;
+    public const RETRY_JITTER_MS = 250;
+
     /**
      * Shared configuration data.
      */
@@ -82,6 +85,11 @@ final class HttpRequest
     private string $body = '';
 
     /**
+     * The number of requests this instance has made.
+     */
+    private int $count = 0;
+
+    /**
      * Stored instance of last send request.
      */
     private ?RequestInterface $lastRequest = null;
@@ -138,6 +146,14 @@ final class HttpRequest
     public function getLastResponse(): ?ResponseInterface
     {
         return $this->lastResponse;
+    }
+
+    /**
+     * Return the number of requests made from this instance.
+     */
+    public function getRequestCount(): int
+    {
+        return $this->count;
     }
 
     /**
@@ -232,6 +248,7 @@ final class HttpRequest
         $uri = $domain . $this->basePath . $this->getUrl();
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();
+        $httpRetries = $this->configuration->getHttpMaxRetries();
         $httpRequest = $httpRequestFactory->createRequest($this->method, $uri);
         $headers = $this->headers;
         $mockedResponse = null;
@@ -286,6 +303,8 @@ final class HttpRequest
         $this->lastRequest = $httpRequest;
 
         try {
+            ++$this->count;
+
             if ($mockedResponse && $mockedResponse->exception instanceof \Exception) { // @phpstan-ignore-line
                 throw $mockedResponse->exception; // @phpstan-ignore-line
             }
@@ -303,6 +322,24 @@ final class HttpRequest
 
             // Store the last response so it can be potentially reviewed later for error troubleshooting, testing, etc.
             $this->lastResponse = $httpResponse;
+
+            // If the API responds with a 429, try reissuing the request up to 3 times before returning the last response.
+            if ($httpResponse->getStatusCode() === 429 && $httpRetries >= 0) {
+                $attempt = $this->getRequestCount();
+                $retries = min(self::MAX_REQUEST_RETRIES, $httpRetries);
+
+                if ($attempt < $retries) {
+                    $wait = 1000 * pow(2, $attempt); // Exponential delay with each subsequent request attempt.
+                    $wait = min(1000000, $wait); // Cap delay at 1 second.
+                    $wait = mt_rand($wait, $wait + self::RETRY_JITTER_MS * 1000); // Add jitter to the delay window.
+
+                    // Briefly wait before attempting again.
+                    usleep($wait);
+
+                    // Make another attempt.
+                    $httpResponse = $this->call();
+                }
+            }
 
             // Return the response.
             return $httpResponse;
