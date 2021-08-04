@@ -93,6 +93,8 @@ final class HttpRequest
 
     /**
      * The milliseconds slept between each request retry.
+     *
+     * @var array<int>
      */
     private array $waits = [];
 
