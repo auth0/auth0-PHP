@@ -21,6 +21,11 @@ use Psr\Http\Message\StreamInterface;
  */
 final class HttpRequest
 {
+    public const MAX_REQUEST_RETRIES = 10;
+    public const MAX_REQUEST_RETRY_JITTER = 100;
+    public const MAX_REQUEST_RETRY_DELAY = 1000;
+    public const MIN_REQUEST_RETRY_DELAY = 100;
+
     /**
      * Shared configuration data.
      */
@@ -82,6 +87,18 @@ final class HttpRequest
     private string $body = '';
 
     /**
+     * The number of requests this instance has made.
+     */
+    private int $count = 0;
+
+    /**
+     * The milliseconds slept between each request retry.
+     *
+     * @var array<int>
+     */
+    private array $waits = [0];
+
+    /**
      * Stored instance of last send request.
      */
     private ?RequestInterface $lastRequest = null;
@@ -138,6 +155,24 @@ final class HttpRequest
     public function getLastResponse(): ?ResponseInterface
     {
         return $this->lastResponse;
+    }
+
+    /**
+     * Return the number of requests made from this instance.
+     */
+    public function getRequestCount(): int
+    {
+        return $this->count;
+    }
+
+    /**
+     * The milliseconds slept between request retries.
+     *
+     * @return array<int>
+     */
+    public function getRequestDelays(): array
+    {
+        return $this->waits;
     }
 
     /**
@@ -232,6 +267,7 @@ final class HttpRequest
         $uri = $domain . $this->basePath . $this->getUrl();
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();
+        $configuredRetries = $this->configuration->getHttpMaxRetries();
         $httpRequest = $httpRequestFactory->createRequest($this->method, $uri);
         $headers = $this->headers;
         $mockedResponse = null;
@@ -286,6 +322,8 @@ final class HttpRequest
         $this->lastRequest = $httpRequest;
 
         try {
+            ++$this->count;
+
             if ($mockedResponse && $mockedResponse->exception instanceof \Exception) { // @phpstan-ignore-line
                 throw $mockedResponse->exception; // @phpstan-ignore-line
             }
@@ -303,6 +341,34 @@ final class HttpRequest
 
             // Store the last response so it can be potentially reviewed later for error troubleshooting, testing, etc.
             $this->lastResponse = $httpResponse;
+
+            // If the API responds with a 429, try reissuing the request up to 3 times before returning the last response.
+            if ($httpResponse->getStatusCode() === 429 && $configuredRetries > 0) {
+                $attempt = $this->getRequestCount();
+                $maxRetries = min(self::MAX_REQUEST_RETRIES, $configuredRetries);
+
+                if ($attempt < $maxRetries) {
+                    /**
+                     * Use an exponential back-off with the formula:
+                     * max(MIN_REQUEST_RETRY_DELAY, min(MAX_REQUEST_RETRY_DELAY, (100ms * (2 ** attempt - 1)) + random_between(0, MAX_REQUEST_RETRY_JITTER)))
+                     *
+                     * ✔ Each attempt increases base delay by (100ms * (2 ** attempt - 1))
+                     * ✔ Randomizes jitter, adding up to MAX_REQUEST_RETRY_JITTER (250ms)
+                     * ✔ Never less than MIN_REQUEST_RETRY_DELAY (100ms)
+                     * ✔ Never more than MAX_REQUEST_RETRY_DELAY (500ms)
+                     */
+                    $wait = intval(100 * pow(2, $attempt - 1)); // Exponential delay with each subsequent request attempt.
+                    $wait = mt_rand($wait + 1, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
+                    $wait = min(self::MAX_REQUEST_RETRY_DELAY, $wait); // Ensure delay is less than MAX_REQUEST_RETRY_DELAY.
+                    $wait = max(self::MIN_REQUEST_RETRY_DELAY, $wait); // Ensure delay is more than MIN_REQUEST_RETRY_DELAY.
+
+                    // Briefly wait before attempting again.
+                    $this->sleep($wait);
+
+                    // Make subsequent attempt.
+                    $httpResponse = $this->call();
+                }
+            }
 
             // Return the response.
             return $httpResponse;
@@ -483,5 +549,24 @@ final class HttpRequest
         }
 
         return $value;
+    }
+
+    /**
+     * Issue a usleep() for $milliseconds, and log the delay.
+     *
+     * @param int $milliseconds How long, in milliseconds, to trigger a usleep() for.
+     */
+    private function sleep(
+        int $milliseconds
+    ): self {
+        $this->waits[] = $milliseconds;
+
+        // Don't actually trigger a sleep if we're running tests.
+        if (! defined('AUTH0_TESTS_DIR')) {
+            // usleep() uses microseconds, so * 1000 for the correct conversion.
+            usleep($milliseconds * 1000);
+        }
+
+        return $this;
     }
 }

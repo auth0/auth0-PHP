@@ -34,6 +34,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setDomain(?string $domain = null)
  * @method SdkConfiguration setEventListenerProvider(?ListenerProviderInterface $eventListenerProvider = null)
  * @method SdkConfiguration setHttpClient(?ClientInterface $httpClient = null)
+ * @method SdkConfiguration setHttpMaxRetries(int $httpMaxRetires = 3)
  * @method SdkConfiguration setHttpRequestFactory(?RequestFactoryInterface $httpRequestFactory = null)
  * @method SdkConfiguration setHttpResponseFactory(?ResponseFactoryInterface $httpResponseFactory = null)
  * @method SdkConfiguration setHttpStreamFactory(?StreamFactoryInterface $httpStreamFactory = null)
@@ -71,6 +72,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method string getDomain()
  * @method ListenerProviderInterface|null getEventListenerProvider()
  * @method ClientInterface|null getHttpClient()
+ * @method int getHttpMaxRetries()
  * @method RequestFactoryInterface|null getHttpRequestFactory()
  * @method ResponseFactoryInterface|null getHttpResponseFactory()
  * @method StreamFactoryInterface|null getHttpStreamFactory()
@@ -108,6 +110,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool hasDomain()
  * @method bool hasEventListenerProvider()
  * @method bool hasHttpClient()
+ * @method bool hasHttpMaxRetries()
  * @method bool hasHttpRequestFactory()
  * @method bool hasHttpResponseFactory()
  * @method bool hasHttpStreamFactory()
@@ -167,6 +170,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param CacheItemPoolInterface|null    $tokenCache            Optional. A PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS).
      * @param int                            $tokenCacheTtl         Optional. How long (in seconds) to keep a JWKS cached.
      * @param ClientInterface|null           $httpClient            Optional. A PSR-18 compatible HTTP client to use for API requests.
+     * @param int                            $httpMaxRetries        Optional. When a rate-limit (429 status code) response is returned from the Auth0 API, automatically retry the request up to this many times.
      * @param RequestFactoryInterface|null   $httpRequestFactory    Optional. A PSR-17 compatible request factory to generate HTTP requests.
      * @param ResponseFactoryInterface|null  $httpResponseFactory   Optional. A PSR-17 compatible response factory to generate HTTP responses.
      * @param StreamFactoryInterface|null    $httpStreamFactory     Optional. A PSR-17 compatible stream factory to create request body streams.
@@ -206,6 +210,7 @@ final class SdkConfiguration implements ConfigurableContract
         ?CacheItemPoolInterface $tokenCache = null,
         int $tokenCacheTtl = 60,
         ?ClientInterface $httpClient = null,
+        int $httpMaxRetries = 3,
         ?RequestFactoryInterface $httpRequestFactory = null,
         ?ResponseFactoryInterface $httpResponseFactory = null,
         ?StreamFactoryInterface $httpStreamFactory = null,
