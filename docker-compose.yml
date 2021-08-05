@@ -11,6 +11,6 @@ services:
              composer validate &&
              composer install &&
              php ./vendor/bin/phpinsights -v --no-interaction &&
-             php ./vendor/bin/phpstan analyse --ansi --debug --memory-limit 512M &&
-             php ./vendor/bin/psalm --no-cache &&
+             php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M &&
+             php ./vendor/bin/psalm &&
              php ./vendor/bin/pest --stop-on-failure"
