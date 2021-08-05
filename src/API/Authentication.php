@@ -16,9 +16,9 @@ use Psr\Http\Message\ResponseInterface;
 final class Authentication
 {
     /**
-     * HttpClient instance.
+     * Instance of Auth0\SDK\API\Utility\HttpClient.
      */
-    private HttpClient $httpClient;
+    private ?HttpClient $httpClient = null;
 
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
@@ -47,9 +47,6 @@ final class Authentication
 
         // Store the configuration internally.
         $this->configuration = & $configuration;
-
-        // Build the HTTP client.
-        $this->httpClient = new HttpClient($this->configuration);
     }
 
     /**
@@ -57,7 +54,11 @@ final class Authentication
      */
     public function getHttpClient(): HttpClient
     {
-        return $this->httpClient;
+        if ($this->httpClient !== null) {
+            return $this->httpClient;
+        }
+
+        return $this->httpClient = new HttpClient($this->configuration);
     }
 
     /**
@@ -223,7 +224,7 @@ final class Authentication
             'client_secret' => $this->configuration->getClientSecret(),
         ], $body);
 
-        return $this->httpClient
+        return $this->getHttpClient()
             ->method('post')
             ->addPath('passwordless', 'start')
             ->withBody($body)
@@ -305,7 +306,7 @@ final class Authentication
     ): ResponseInterface {
         Validate::string($accessToken, 'accessToken');
 
-        return $this->httpClient
+        return $this->getHttpClient()
             ->method('post')
             ->addPath('userinfo')
             ->withHeader('Authorization', 'Bearer ' . trim($accessToken))
@@ -341,7 +342,7 @@ final class Authentication
             'client_secret' => $this->configuration->getClientSecret(),
         ], $params);
 
-        return $this->httpClient
+        return $this->getHttpClient()
             ->method('post')
             ->addPath('oauth', 'token')
             ->withHeaders($headers ?? [])
@@ -530,7 +531,7 @@ final class Authentication
             'connection' => trim($connection),
         ], $body);
 
-        return $this->httpClient
+        return $this->getHttpClient()
             ->method('post')
             ->addPath('dbconnections', 'signup')
             ->withBody($body)
@@ -567,7 +568,7 @@ final class Authentication
             'connection' => trim($connection),
         ], $body);
 
-        return $this->httpClient
+        return $this->getHttpClient()
             ->method('post')
             ->addPath('dbconnections', 'change_password')
             ->withBody($body)
