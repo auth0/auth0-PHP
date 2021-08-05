@@ -23,7 +23,7 @@ final class HttpRequest
 {
     public const MAX_REQUEST_RETRIES = 10;
     public const MAX_REQUEST_RETRY_JITTER = 100;
-    public const MAX_REQUEST_RETRY_DELAY = 500;
+    public const MAX_REQUEST_RETRY_DELAY = 1000;
     public const MIN_REQUEST_RETRY_DELAY = 100;
 
     /**
@@ -96,7 +96,7 @@ final class HttpRequest
      *
      * @var array<int>
      */
-    private array $waits = [];
+    private array $waits = [0];
 
     /**
      * Stored instance of last send request.
@@ -358,7 +358,7 @@ final class HttpRequest
                      * ✔ Never more than MAX_REQUEST_RETRY_DELAY (500ms)
                      */
                     $wait = intval(100 * pow(2, $attempt - 1)); // Exponential delay with each subsequent request attempt.
-                    $wait = mt_rand($wait, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
+                    $wait = mt_rand($wait + 1, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
                     $wait = min(self::MAX_REQUEST_RETRY_DELAY, $wait); // Ensure delay is less than MAX_REQUEST_RETRY_DELAY.
                     $wait = max(self::MIN_REQUEST_RETRY_DELAY, $wait); // Ensure delay is more than MIN_REQUEST_RETRY_DELAY.
 
