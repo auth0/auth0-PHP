@@ -43,11 +43,21 @@ trait ConfigurableMixin
         string $functionName,
         array $arguments
     ) {
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'get' && count($arguments) === 0) {
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'get' && count($arguments) <= 1) {
             $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
-                return $this->configuredState[$propertyName]->value;
+                $value = $this->configuredState[$propertyName]->value;
+
+                if (count($arguments) === 1 && $arguments[0] !== null && $this->configuredState[$propertyName]->allowsNull && $value === null) {
+                    if ($arguments[0] instanceof \Throwable) {
+                        throw $arguments[0];
+                    }
+
+                    throw \Auth0\SDK\Exception\ConfigurationException::required($propertyName);
+                }
+
+                return $value;
             }
 
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
