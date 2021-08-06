@@ -52,6 +52,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setResponseType(string $responseType = 'code')
  * @method SdkConfiguration setScope(?array $scope = null)
  * @method SdkConfiguration setSessionStorage(?StoreInterface $sessionStorage = null)
+ * @method SdkConfiguration setStrategy(string $strategy = 'webapp')
  * @method SdkConfiguration setTokenAlgorithm(string $tokenAlgorithm = 'RS256')
  * @method SdkConfiguration setTokenCache(?CacheItemPoolInterface $cache = null)
  * @method SdkConfiguration setTokenCacheTtl(int $tokenCacheTtl = 60)
@@ -90,6 +91,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method string getResponseType()
  * @method array<string> getScope()
  * @method StoreInterface|null getSessionStorage(?\Throwable $exceptionIfNull = null)
+ * @method string getStrategy()
  * @method string getTokenAlgorithm()
  * @method CacheItemPoolInterface|null getTokenCache(?\Throwable $exceptionIfNull = null)
  * @method int getTokenCacheTtl()
@@ -128,6 +130,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool hasResponseType()
  * @method bool hasScope()
  * @method bool hasSessionStorage()
+ * @method bool hasStrategy()
  * @method bool hasTokenAlgorithm()
  * @method bool hasTokenCache()
  * @method bool hasTokenCacheTtl()
@@ -153,6 +156,7 @@ final class SdkConfiguration implements ConfigurableContract
      * SdkConfiguration Constructor
      *
      * @param array<mixed>|null              $configuration         An key-value array matching this constructor's arguments. Overrides any other passed arguments with the same key name.
+     * @param string|null                    $strategy              Defaults to 'webapp'. Should be assigned either 'api', 'management', or 'webapp' to specify the type of application the SDK is being applied to. Determines what configuration options will be required at initialization.
      * @param string|null                    $domain                Auth0 domain for your tenant.
      * @param string|null                    $clientId              Client ID, found in the Auth0 Application settings.
      * @param string|null                    $redirectUri           Authentication callback URI, as defined in your Auth0 Application settings.
@@ -190,9 +194,12 @@ final class SdkConfiguration implements ConfigurableContract
      * @param string|null                    $managementToken       An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
      * @param CacheItemPoolInterface|null    $managementTokenCache  A PSR-6 compatible cache adapter for storing generated management access tokens.
      * @param ListenerProviderInterface|null $eventListenerProvider A PSR-14 compatible event listener provider, for interfacing with events triggered by the SDK.
+     *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a valid `$strategy` is not specified.
      */
     public function __construct(
         ?array $configuration = null,
+        ?string $strategy = 'webapp',
         ?string $domain = null,
         ?string $clientId = null,
         ?string $redirectUri = null,
@@ -232,7 +239,12 @@ final class SdkConfiguration implements ConfigurableContract
         ?ListenerProviderInterface $eventListenerProvider = null
     ) {
         $this->setState(func_get_args());
-        $this->setupConfiguration();
+
+        $this->setupStateCookies();
+        $this->setupStateFactories();
+        $this->setupStateStorage();
+
+        $this->validateState();
     }
 
     /**
@@ -306,20 +318,34 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * Setup SDK defaults based on the configured state.
+     * Setup SDK cookie state.
+     */
+    private function setupStateCookies(): void
+    {
+        if (! $this->hasCookieDomain()) {
+            $domain = $_SERVER['HTTP_HOST'] ?? $this->getRedirectUri();
+
+            if ($domain !== null) {
+                $parsed = parse_url($domain, PHP_URL_HOST);
+
+                if (is_string($parsed)) {
+                    $domain = $parsed;
+                }
+
+                if ($domain) {
+                    $this->setCookieDomain($domain);
+                }
+            }
+        }
+    }
+
+    /**
+     * Setup SDK factories.
      *
      * @throws NotFoundException When a PSR-18 or PSR-17 are not configured, and cannot be discovered.
      */
-    private function setupConfiguration(): void
+    private function setupStateFactories(): void
     {
-        if (! $this->getSessionStorage() instanceof StoreInterface) {
-            $this->setSessionStorage(new CookieStore($this));
-        }
-
-        if (! $this->getTransientStorage() instanceof StoreInterface) {
-            $this->setTransientStorage(new CookieStore($this));
-        }
-
         // If a PSR-18 compatible client wasn't provided, try to discover one.
         if (! $this->getHttpClient() instanceof ClientInterface) {
             try {
@@ -355,21 +381,19 @@ final class SdkConfiguration implements ConfigurableContract
                 throw \Auth0\SDK\Exception\ConfigurationException::missingPsr17Library();
             }
         }
+    }
 
-        if (! $this->hasCookieDomain()) {
-            $domain = $_SERVER['HTTP_HOST'] ?? $this->getRedirectUri();
+    /**
+     * Setup SDK storage state.
+     */
+    private function setupStateStorage(): void
+    {
+        if (! $this->getSessionStorage() instanceof StoreInterface) {
+            $this->setSessionStorage(new CookieStore($this));
+        }
 
-            if ($domain !== null) {
-                $parsed = parse_url($domain, PHP_URL_HOST);
-
-                if (is_string($parsed)) {
-                    $domain = $parsed;
-                }
-
-                if ($domain) {
-                    $this->setCookieDomain($domain);
-                }
-            }
+        if (! $this->getTransientStorage() instanceof StoreInterface) {
+            $this->setTransientStorage(new CookieStore($this));
         }
     }
 
@@ -389,6 +413,18 @@ final class SdkConfiguration implements ConfigurableContract
     ) {
         if ($propertyValue === null) {
             return $propertyValue;
+        }
+
+        if ($propertyName === 'strategy') {
+            if (is_string($propertyValue) && mb_strlen($propertyValue) !== 0) {
+                $propertyValue = mb_strtolower($propertyValue);
+
+                if (in_array($propertyValue, ['api', 'management', 'webapp', 'none'], true)) {
+                    return $propertyValue;
+                }
+            }
+
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
         }
 
         if ($propertyName === 'domain') {
@@ -440,5 +476,74 @@ final class SdkConfiguration implements ConfigurableContract
         string $parameter
     ): void {
         throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($parameter);
+    }
+
+    /**
+     * Setup SDK validators based on strategy type.
+     */
+    private function validateState(
+        ?string $strategy = null
+    ): void {
+        $strategy = $strategy ?? $this->getStrategy();
+
+        if ($strategy === 'api') {
+            $this->validateStateApi();
+        }
+
+        if ($strategy === 'management') {
+            $this->validateStateManagement();
+        }
+
+        if ($strategy === 'webapp') {
+            $this->validateStateWebApp();
+        }
+    }
+
+    /**
+     * Run validations for an API-only usage configuration.
+     */
+    private function validateStateApi(): void
+    {
+        if (! $this->hasDomain()) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresDomain();
+        }
+
+        if (! $this->hasAudience()) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresAudience();
+        }
+    }
+
+    /**
+     * Run validations for a Management-only usage configuration.
+     */
+    private function validateStateManagement(): void
+    {
+        if (! $this->hasManagementToken()) {
+            if (! $this->hasClientId()) {
+                throw \Auth0\SDK\Exception\ConfigurationException::requiresClientId();
+            }
+
+            if (! $this->hasClientSecret()) {
+                throw \Auth0\SDK\Exception\ConfigurationException::requiresClientSecret();
+            }
+        }
+    }
+
+    /**
+     * Run validations for a general webapp usage configuration.
+     */
+    private function validateStateWebApp(): void
+    {
+        if (! $this->hasDomain()) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresDomain();
+        }
+
+        if (! $this->hasClientId()) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresClientId();
+        }
+
+        if ($this->getTokenAlgorithm() === 'HS256' && ! $this->hasClientSecret()) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresClientSecret();
+        }
     }
 }

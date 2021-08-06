@@ -10,7 +10,10 @@ namespace Auth0\SDK\Exception;
 final class ConfigurationException extends \Exception implements Auth0Exception
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
+    public const MSG_STRATEGY_REQUIRED = 'The Auth0 SDK requires a `strategy` to be configured';
+
     public const MSG_VALUE_REQUIRED = '`%s` is not configured';
+
     public const MSG_SET_IMMUTABLE = 'Changes cannot be applied to a locked configuration';
     public const MSG_SET_MISSING = 'Attempted to assign a value to undefined property "%s"';
     public const MSG_SET_INCOMPATIBLE = 'Parameter "%s" must be of type %s, %s used';
@@ -19,13 +22,14 @@ final class ConfigurationException extends \Exception implements Auth0Exception
 
     public const MSG_VALIDATION_FAILED = 'Validation of "%s" was unsuccessful';
 
-    public const MSG_REQUIRES_COOKIE_SECRET = 'Cookie Secret must be configured for this type of request';
-    public const MSG_REQUIRES_CLIENT_ID = 'Client ID must be configured for this type of request';
-    public const MSG_REQUIRES_CLIENT_SECRET = 'Client Secret must be configured for this type of request';
-    public const MSG_REQUIRES_DOMAIN = 'Client Domain must be configured for this type of request';
-    public const MSG_REQUIRES_MANAGEMENT_KEY = 'Management API token must be configured for this type of request';
-    public const MSG_REQUIRES_REDIRECT_URI = 'Client Redirect URI must be configured for this type of request';
-    public const MSG_REQUIRES_RETURN_URI = 'Client Return URI must be configured for this type of request';
+    public const MSG_REQUIRES_AUDIENCE = '`audience` must be configured';
+    public const MSG_REQUIRES_COOKIE_SECRET = '`cookieSecret` must be configured';
+    public const MSG_REQUIRES_CLIENT_ID = '`clientId` must be configured';
+    public const MSG_REQUIRES_CLIENT_SECRET = '`clientSecret` must be configured';
+    public const MSG_REQUIRES_DOMAIN = '`domain` must be configured';
+    public const MSG_REQUIRES_MANAGEMENT_KEY = '`managementToken` must be configured';
+    public const MSG_REQUIRES_REDIRECT_URI = '`redirectUri` must be configured';
+    public const MSG_REQUIRES_RETURN_URI = '`returnUri` must be configured';
 
     public const MSG_INVALID_TOKEN_ALGORITHM = 'Invalid token algorithm; must be "HS256" or "RS256"';
 
@@ -38,10 +42,22 @@ final class ConfigurationException extends \Exception implements Auth0Exception
         return new self(self::MSG_CONFIGURATION_REQUIRED, 0, $previous);
     }
 
+    public static function requiresStrategy(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_STRATEGY_REQUIRED, 0, $previous);
+    }
+
     public static function requiresDomain(
         ?\Throwable $previous = null
     ): self {
         return new self(self::MSG_REQUIRES_DOMAIN, 0, $previous);
+    }
+
+    public static function requiresAudience(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_REQUIRES_AUDIENCE, 0, $previous);
     }
 
     public static function requiresCookieSecret(
