@@ -5,10 +5,15 @@ declare(strict_types=1);
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Http\Discovery\Psr18ClientDiscovery;
+use Http\Discovery\Strategy\MockClientStrategy;
 
 uses()->group('authentication');
 
 beforeEach(function(): void {
+    // Allow mock HttpClient to be auto-discovered for use in testing.
+    Psr18ClientDiscovery::prependStrategy(MockClientStrategy::class);
+
     $this->configuration = new SdkConfiguration([
         'domain' => 'https://test-domain.auth0.com',
         'cookieSecret' => uniqid(),
@@ -27,6 +32,16 @@ test('__construct() fails without a configuration', function(): void {
     $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_CONFIGURATION_REQUIRED);
 
     new Authentication(null);
+});
+
+test('__construct() accepts a configuration as an array', function(): void {
+    $auth = new Authentication([
+        'strategy' => 'api',
+        'domain' => uniqid(),
+        'audience' => [uniqid()]
+    ]);
+
+    $this->assertInstanceOf(Authentication::class, $auth);
 });
 
 test('__construct() successfully loads an inherited configuration', function(): void {
@@ -127,4 +142,114 @@ test('getLogoutLink() is properly formatted', function(): void {
 
     $this->assertStringContainsString('returnTo=' . rawurlencode($exampleReturnTo), $uri);
     $this->assertStringContainsString('ex=' . rawurlencode($exampleParam), $uri);
+});
+
+test('passwordlessStart() throws a ConfigurationException if client secret is not configured', function(): void {
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
+
+    $this->sdk->authentication()->passwordlessStart();
+});
+
+test('passwordlessStart() throws a ConfigurationException if client id is not configured', function(): void {
+    $this->configuration->setClientId(null);
+
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
+
+    $this->sdk->authentication()->passwordlessStart();
+});
+
+test('passwordlessStart() is properly formatted', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $this->sdk->authentication()->passwordlessStart();
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/passwordless/start', $requestUri->getPath());
+    $this->assertArrayHasKey('client_id', $requestBody);
+    $this->assertArrayHasKey('client_secret', $requestBody);
+    $this->assertEquals($this->configuration->getClientId(), $requestBody['client_id']);
+    $this->assertEquals($this->configuration->getClientSecret(), $requestBody['client_secret']);
+});
+
+test('emailPasswordlessStart() throws an ArgumentException if `email` is empty', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+
+    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'email'));
+
+    $this->sdk->authentication()->emailPasswordlessStart('', '');
+});
+
+test('emailPasswordlessStart() throws an ArgumentException if `email` is not a valid email address', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+
+    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'email'));
+
+    $this->sdk->authentication()->emailPasswordlessStart(uniqid(), '');
+});
+
+test('emailPasswordlessStart() throws an ArgumentException if `type` is empty', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+
+    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'type'));
+
+    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', '');
+});
+
+test('emailPasswordlessStart() is properly formatted', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow   ', 'code');
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/passwordless/start', $requestUri->getPath());
+    $this->assertArrayHasKey('client_id', $requestBody);
+    $this->assertArrayHasKey('client_secret', $requestBody);
+    $this->assertArrayHasKey('connection', $requestBody);
+    $this->assertArrayHasKey('email', $requestBody);
+    $this->assertArrayHasKey('send', $requestBody);
+    $this->assertEquals($this->configuration->getClientId(), $requestBody['client_id']);
+    $this->assertEquals($this->configuration->getClientSecret(), $requestBody['client_secret']);
+    $this->assertEquals('email', $requestBody['connection']);
+    $this->assertEquals('someone@somewhere.somehow', $requestBody['email']);
+    $this->assertEquals('code', $requestBody['send']);
+});
+
+test('smsPasswordlessStart() throws an ArgumentException if `phoneNumber` is empty', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+
+    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'phoneNumber'));
+
+    $this->sdk->authentication()->smsPasswordlessStart('');
+});
+
+test('smsPasswordlessStart() is properly formatted', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $this->sdk->authentication()->smsPasswordlessStart('   8675309');
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/passwordless/start', $requestUri->getPath());
+    $this->assertArrayHasKey('client_id', $requestBody);
+    $this->assertArrayHasKey('client_secret', $requestBody);
+    $this->assertArrayHasKey('connection', $requestBody);
+    $this->assertArrayHasKey('phone_number', $requestBody);
+    $this->assertEquals($this->configuration->getClientId(), $requestBody['client_id']);
+    $this->assertEquals($this->configuration->getClientSecret(), $requestBody['client_secret']);
+    $this->assertEquals('sms', $requestBody['connection']);
+    $this->assertEquals('8675309', $requestBody['phone_number']);
 });

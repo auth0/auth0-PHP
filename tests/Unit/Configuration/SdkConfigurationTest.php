@@ -191,6 +191,102 @@ test('successfully resets values', function(): void
     $this->assertTrue($sdk->getUsePkce());
 });
 
+test('a `webapp` strategy is used by default', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+    ]);
+
+    $this->assertEquals('webapp', $sdk->getStrategy());
+});
+
+test('a `webapp` strategy requires a domain', function(): void
+{
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
+
+    $sdk = new SdkConfiguration([
+        'strategy' => 'webapp',
+    ]);
+});
+
+test('a `webapp` strategy requires a client id', function(): void
+{
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
+
+    $sdk = new SdkConfiguration([
+        'strategy' => 'webapp',
+        'domain' => uniqid()
+    ]);
+});
+
+test('a `webapp` strategy requires a client secret when HS256 is used', function(): void
+{
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
+
+    $sdk = new SdkConfiguration([
+        'strategy' => 'webapp',
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+        'tokenAlgorithm' => 'HS256'
+    ]);
+});
+
+test('a `api` strategy requires a domain', function(): void
+{
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
+
+    $sdk = new SdkConfiguration([
+        'strategy' => 'api',
+    ]);
+});
+
+test('a `api` strategy requires an audience', function(): void
+{
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_AUDIENCE);
+
+    $sdk = new SdkConfiguration([
+        'strategy' => 'api',
+        'domain' => uniqid()
+    ]);
+});
+
+test('a `management` strategy requires a client id if a management token is not provided', function(): void
+{
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
+
+    $sdk = new SdkConfiguration([
+        'strategy' => 'management'
+    ]);
+});
+
+test('a `management` strategy requires a client secret if a management token is not provided', function(): void
+{
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
+
+    $sdk = new SdkConfiguration([
+        'strategy' => 'management',
+        'clientId' => uniqid()
+    ]);
+});
+
+test('a `management` strategy does not require a client id or secret if a management token is provided', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'strategy' => 'management',
+        'managementToken' => uniqid()
+    ]);
+
+    $this->assertInstanceOf(SdkConfiguration::class, $sdk);
+});
+
 test('formatDomain() returns a properly formatted uri', function(): void
 {
     $domain = uniqid();
