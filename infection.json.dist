@@ -8,7 +8,7 @@
         "text": "infection.log",
         "perMutator": "infection.mutators.md",
         "badge": {
-            "branch": "master"
+            "branch": "main"
         }
     },
     "mutators": {
