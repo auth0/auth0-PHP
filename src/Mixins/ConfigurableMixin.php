@@ -6,7 +6,6 @@ namespace Auth0\SDK\Mixins;
 
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Utility\Shortcut;
-use ReflectionException;
 
 trait ConfigurableMixin
 {
@@ -170,7 +169,7 @@ trait ConfigurableMixin
      *
      * @param mixed $args One or more of arguments from a class __constructor().
      *
-     * @throws ReflectionException When the class or method does not exist.
+     * @throws \ReflectionException When the class or method does not exist.
      * @throws ConfigurationException When the configuration is locked, or an invalid property type is used.
      */
     private function setState(
