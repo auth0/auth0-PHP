@@ -60,6 +60,8 @@ final class Management
      *
      * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When an invalidation `configuration` is provided.
+     *
      * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(
@@ -130,6 +132,8 @@ final class Management
 
     /**
      * Return the HttpClient instance being used for management API requests.
+     *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a Management Token is not able to be obtained.
      */
     public function getHttpClient(): HttpClient
     {
@@ -154,9 +158,8 @@ final class Management
         }
 
         // If no token was provided or available from cache, try to get one.
-        if ($managementToken === null) {
-            $auth = new Authentication($this->configuration);
-            $response = $auth->clientCredentials(['audience' => $this->configuration->buildDomainUri() . '/api/v2/']);
+        if ($managementToken === null && $this->configuration->hasClientSecret()) {
+            $response = (new Authentication($this->configuration))->clientCredentials(['audience' => $this->configuration->formatDomain() . '/api/v2/']);
 
             if (HttpResponse::wasSuccessful($response)) {
                 $response = HttpResponse::decodeContent($response);

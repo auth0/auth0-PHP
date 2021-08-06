@@ -263,7 +263,7 @@ final class HttpRequest
      */
     public function call(): ResponseInterface
     {
-        $domain = $this->configuration->buildDomainUri();
+        $domain = $this->configuration->formatDomain();
         $uri = $domain . $this->basePath . $this->getUrl();
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();
@@ -316,7 +316,7 @@ final class HttpRequest
         }
 
         // Dispatch event to listeners of Auth0\SDK\EventHttpRequestBuilt.
-        $this->configuration->getEventDispatcher()->dispatch(new HttpRequestBuilt($httpRequest));
+        $this->configuration->eventDispatcher()->dispatch(new HttpRequestBuilt($httpRequest));
 
         // Store the request so it can be potentially reviewed later for error troubleshooting, testing, etc.
         $this->lastRequest = $httpRequest;
@@ -337,7 +337,7 @@ final class HttpRequest
             }
 
             // Dispatch event to listeners of Auth0\SDK\HttpResponseReceived.
-            $this->configuration->getEventDispatcher()->dispatch(new HttpResponseReceived($httpResponse, $httpRequest));
+            $this->configuration->eventDispatcher()->dispatch(new HttpResponseReceived($httpResponse, $httpRequest));
 
             // Store the last response so it can be potentially reviewed later for error troubleshooting, testing, etc.
             $this->lastResponse = $httpResponse;
