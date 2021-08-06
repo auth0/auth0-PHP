@@ -109,19 +109,19 @@ commands:
     steps:
       - run:
           name: Run code quality analysis (PHP Insights)
-          command: php ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
+          command: php --memory-limit=2G ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
 
   run-phpstan:
     steps:
       - run:
           name: Run static code analysis (PHPStan)
-          command: php ./vendor/bin/phpstan analyse --ansi --memory-limit 2GB
+          command: php -d memory_limit=2G ./vendor/bin/phpstan analyse --ansi
 
   run-psalm:
     steps:
       - run:
           name: Run static code analysis (Psalm)
-          command: php ./vendor/bin/psalm --threads=$(nproc)
+          command: php -d memory_limit=2G ./vendor/bin/psalm --threads=$(nproc)
 
   run-pest:
     parameters:
@@ -130,7 +130,7 @@ commands:
     steps:
       - run:
           name: Run unit tests (Pest)
-          command: php ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=<< parameters.clover >>/coverage.xml --coverage-xml=<< parameters.clover >>/coverage-xml --log-junit=<< parameters.clover >>/junit.xml
+          command: php -d memory_limit=2G ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=<< parameters.clover >>/coverage.xml --coverage-xml=<< parameters.clover >>/coverage-xml --log-junit=<< parameters.clover >>/junit.xml
 
   run-infection:
     parameters:
@@ -139,7 +139,7 @@ commands:
     steps:
       - run:
           name: Run mutation tests (Infection)
-          command: php -d memory_limit=2GB ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=<< parameters.clover >> --no-progress --only-covered --min-msi=48 --min-covered-msi=70
+          command: php -d memory_limit=2G ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=<< parameters.clover >> --no-progress --only-covered --min-msi=48 --min-covered-msi=70
 
   run-snyk:
     steps:
