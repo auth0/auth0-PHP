@@ -10,8 +10,7 @@ namespace Auth0\SDK\Exception;
 final class ConfigurationException extends \Exception implements Auth0Exception
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
-    public const MSG_MISSING_MANAGEMENT_KEY = 'A Management API token was not configured';
-    public const MSG_MISSING_COOKIE_SECRET = 'Missing or invalid `cookieSecret` configuration';
+    public const MSG_VALUE_REQUIRED = '`%s` is not configured';
     public const MSG_SET_IMMUTABLE = 'Changes cannot be applied to a locked configuration';
     public const MSG_SET_MISSING = 'Attempted to assign a value to undefined property "%s"';
     public const MSG_SET_INCOMPATIBLE = 'Parameter "%s" must be of type %s, %s used';
@@ -19,9 +18,15 @@ final class ConfigurationException extends \Exception implements Auth0Exception
     public const MSG_GET_MISSING = 'Attempted to retrieve the value of an undefined property "%s"';
 
     public const MSG_VALIDATION_FAILED = 'Validation of "%s" was unsuccessful';
-    public const MSG_MISSING_DOMAIN = 'Missing or invalid `domain` configuration';
-    public const MSG_MISSING_CLIENT_ID = 'Missing or invalid `clientId` configuration';
-    public const MSG_MISSING_REDIRECT_URI = 'Missing or invalid `redirectUri` configuration';
+
+    public const MSG_REQUIRES_COOKIE_SECRET = 'Cookie Secret must be configured for this type of request';
+    public const MSG_REQUIRES_CLIENT_ID = 'Client ID must be configured for this type of request';
+    public const MSG_REQUIRES_CLIENT_SECRET = 'Client Secret must be configured for this type of request';
+    public const MSG_REQUIRES_DOMAIN = 'Client Domain must be configured for this type of request';
+    public const MSG_REQUIRES_MANAGEMENT_KEY = 'Management API token must be configured for this type of request';
+    public const MSG_REQUIRES_REDIRECT_URI = 'Client Redirect URI must be configured for this type of request';
+    public const MSG_REQUIRES_RETURN_URI = 'Client Return URI must be configured for this type of request';
+
     public const MSG_INVALID_TOKEN_ALGORITHM = 'Invalid token algorithm; must be "HS256" or "RS256"';
 
     public const MSG_NO_PSR18_LIBRARY = 'No compatible PSR-18 library was configured, and one could not be auto-discovered.';
@@ -33,16 +38,53 @@ final class ConfigurationException extends \Exception implements Auth0Exception
         return new self(self::MSG_CONFIGURATION_REQUIRED, 0, $previous);
     }
 
-    public static function requiresManagementToken(
+    public static function requiresDomain(
         ?\Throwable $previous = null
     ): self {
-        return new self(self::MSG_MISSING_MANAGEMENT_KEY, 0, $previous);
+        return new self(self::MSG_REQUIRES_DOMAIN, 0, $previous);
     }
 
     public static function requiresCookieSecret(
         ?\Throwable $previous = null
     ): self {
-        return new self(self::MSG_MISSING_COOKIE_SECRET, 0, $previous);
+        return new self(self::MSG_REQUIRES_COOKIE_SECRET, 0, $previous);
+    }
+
+    public static function requiresClientId(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_REQUIRES_CLIENT_ID, 0, $previous);
+    }
+
+    public static function requiresClientSecret(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_REQUIRES_CLIENT_SECRET, 0, $previous);
+    }
+
+    public static function requiresManagementToken(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_REQUIRES_MANAGEMENT_KEY, 0, $previous);
+    }
+
+    public static function requiresRedirectUri(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_REQUIRES_REDIRECT_URI, 0, $previous);
+    }
+
+    public static function requiresReturnUri(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_REQUIRES_RETURN_URI, 0, $previous);
+    }
+
+    public static function required(
+        string $propertyName,
+        ?\Throwable $previous = null
+    ): self {
+        return new self(sprintf(self::MSG_VALUE_REQUIRED, $propertyName), 0, $previous);
     }
 
     public static function setImmutable(
@@ -87,22 +129,6 @@ final class ConfigurationException extends \Exception implements Auth0Exception
         string $propertyName,
         ?\Throwable $previous = null
     ): self {
-        if ($propertyName === 'domain') {
-            return new self(self::MSG_MISSING_DOMAIN, 0, $previous);
-        }
-
-        if ($propertyName === 'clientId') {
-            return new self(self::MSG_MISSING_CLIENT_ID, 0, $previous);
-        }
-
-        if ($propertyName === 'cookieSecret') {
-            return new self(self::MSG_MISSING_COOKIE_SECRET, 0, $previous);
-        }
-
-        if ($propertyName === 'redirectUri') {
-            return new self(self::MSG_MISSING_REDIRECT_URI, 0, $previous);
-        }
-
         return new self(sprintf(self::MSG_VALIDATION_FAILED, $propertyName), 0, $previous);
     }
 
