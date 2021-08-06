@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -41,7 +42,8 @@ final class Tenants extends ManagementEndpoint
      * @param array<mixed>        $body    Updated settings to send to the API. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `body` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Tenants/patch_settings
      */
@@ -49,6 +51,8 @@ final class Tenants extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
+        Validate::array($body, 'body');
+
         return $this->getHttpClient()->method('patch')
             ->addPath('tenants', 'settings')
             ->withBody((object) $body)

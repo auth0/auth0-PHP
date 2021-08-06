@@ -51,9 +51,9 @@ test('getLoginLink() is properly formatted', function(): void {
     $this->assertStringContainsString('client_id=' . rawurlencode($this->configuration->getClientId()), $uri);
     $this->assertStringContainsString('response_type=' . rawurlencode($this->configuration->getResponseType()), $uri);
     $this->assertStringContainsString('redirect_uri=' . rawurlencode($this->configuration->getRedirectUri()), $uri);
-    $this->assertStringContainsString('audience=' . rawurlencode($this->configuration->buildDefaultAudience()), $uri);
-    $this->assertStringContainsString('scope=' . rawurlencode($this->configuration->buildScopeString()), $uri);
-    $this->assertStringContainsString('organization=' . rawurlencode($this->configuration->buildDefaultOrganization()), $uri);
+    $this->assertStringContainsString('audience=' . rawurlencode($this->configuration->defaultAudience()), $uri);
+    $this->assertStringContainsString('scope=' . rawurlencode($this->configuration->formatScope()), $uri);
+    $this->assertStringContainsString('organization=' . rawurlencode($this->configuration->defaultOrganization()), $uri);
 
     $exampleScope = uniqid();
     $uri = $class->getLoginLink(uniqid(), null, [

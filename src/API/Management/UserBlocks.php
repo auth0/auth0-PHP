@@ -23,13 +23,14 @@ final class UserBlocks extends ManagementEndpoint
      * @param string              $id      User ID to query for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function get(
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('user-blocks', $id)
@@ -44,13 +45,14 @@ final class UserBlocks extends ManagementEndpoint
      * @param string              $id      The user_id of the user to update.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function delete(
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('user-blocks', $id)
@@ -65,13 +67,14 @@ final class UserBlocks extends ManagementEndpoint
      * @param string              $identifier Should be any of a username, phone number, or email.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `identifier` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function getByIdentifier(
         string $identifier,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($identifier, 'identifier');
+        $identifier = Validate::string($identifier, 'identifier');
 
         return $this->getHttpClient()->method('get')
             ->addPath('user-blocks')
@@ -87,13 +90,14 @@ final class UserBlocks extends ManagementEndpoint
      * @param string              $identifier Should be any of a username, phone number, or email.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `identifier` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function deleteByIdentifier(
         string $identifier,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($identifier, 'identifier');
+        $identifier = Validate::string($identifier, 'identifier');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('user-blocks')

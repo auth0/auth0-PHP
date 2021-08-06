@@ -6,7 +6,6 @@ namespace Auth0\SDK\Mixins;
 
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Utility\Shortcut;
-use ReflectionException;
 
 trait ConfigurableMixin
 {
@@ -43,11 +42,21 @@ trait ConfigurableMixin
         string $functionName,
         array $arguments
     ) {
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'get' && count($arguments) === 0) {
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'get' && count($arguments) <= 1) {
             $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
-                return $this->configuredState[$propertyName]->value;
+                $value = $this->configuredState[$propertyName]->value;
+
+                if (count($arguments) === 1 && $arguments[0] !== null && $this->configuredState[$propertyName]->allowsNull && $value === null) {
+                    if ($arguments[0] instanceof \Throwable) {
+                        throw $arguments[0];
+                    }
+
+                    throw \Auth0\SDK\Exception\ConfigurationException::required($propertyName);
+                }
+
+                return $value;
             }
 
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
@@ -160,7 +169,7 @@ trait ConfigurableMixin
      *
      * @param mixed $args One or more of arguments from a class __constructor().
      *
-     * @throws ReflectionException When the class or method does not exist.
+     * @throws \ReflectionException When the class or method does not exist.
      * @throws ConfigurationException When the configuration is locked, or an invalid property type is used.
      */
     private function setState(

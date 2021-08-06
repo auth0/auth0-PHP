@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
 use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
@@ -52,6 +53,9 @@ final class Stats extends ManagementEndpoint
         ?string $to = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
+        $from = Shortcut::trimNull($from);
+        $to = Shortcut::trimNull($to);
+
         $client = $this->getHttpClient()->method('get')
             ->addPath('stats', 'daily');
 

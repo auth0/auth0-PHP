@@ -28,6 +28,7 @@ final class Organizations extends ManagementEndpoint
      * @param array<mixed>|null   $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `name` or `displayName` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function create(
@@ -38,8 +39,8 @@ final class Organizations extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($name, 'name');
-        Validate::string($displayName, 'displayName');
+        $name = Validate::string($name, 'name');
+        $displayName = Validate::string($displayName, 'displayName');
 
         $body = Shortcut::mergeArrays([
             'name' => $name,
@@ -79,13 +80,14 @@ final class Organizations extends ManagementEndpoint
      * @param string              $id      Organization (by ID) to retrieve details for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function get(
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id)
@@ -100,13 +102,14 @@ final class Organizations extends ManagementEndpoint
      * @param string              $name    Organization (by name parameter provided during creation) to retrieve details for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `name` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getByName(
         string $name,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($name, 'name');
+        $name = Validate::string($name, 'name');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', 'name', $name)
@@ -125,6 +128,7 @@ final class Organizations extends ManagementEndpoint
      * @param array<mixed>|null    $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null  $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `displayName` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function update(
@@ -135,8 +139,8 @@ final class Organizations extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($displayName, 'displayName');
+        $id = Validate::string($id, 'id');
+        $displayName = Validate::string($displayName, 'displayName');
 
         $body = Shortcut::mergeArrays([
             'display_name' => $displayName,
@@ -158,13 +162,14 @@ final class Organizations extends ManagementEndpoint
      * @param string              $id      Organization (by ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function delete(
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id)
@@ -181,7 +186,8 @@ final class Organizations extends ManagementEndpoint
      * @param array<mixed>        $body         Additional body content to send with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function addEnabledConnection(
         string $id,
@@ -189,8 +195,8 @@ final class Organizations extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($connectionId, 'connectionId');
+        $id = Validate::string($id, 'id');
+        $connectionId = Validate::string($connectionId, 'connectionId');
 
         $body = Shortcut::mergeArrays([
             'connection_id' => $connectionId,
@@ -210,13 +216,14 @@ final class Organizations extends ManagementEndpoint
      * @param string              $id      Organization (by ID) to list connections of.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function getEnabledConnections(
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'enabled_connections')
@@ -232,15 +239,16 @@ final class Organizations extends ManagementEndpoint
      * @param string              $connectionId Connection (by ID) to retrieve details for.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function getEnabledConnection(
         string $id,
         string $connectionId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($connectionId, 'connectionId');
+        $id = Validate::string($id, 'id');
+        $connectionId = Validate::string($connectionId, 'connectionId');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
@@ -257,7 +265,8 @@ final class Organizations extends ManagementEndpoint
      * @param array<mixed>        $body         Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function updateEnabledConnection(
         string $id,
@@ -265,8 +274,8 @@ final class Organizations extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($connectionId, 'connectionId');
+        $id = Validate::string($id, 'id');
+        $connectionId = Validate::string($connectionId, 'connectionId');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
@@ -283,15 +292,16 @@ final class Organizations extends ManagementEndpoint
      * @param string              $connectionId Connection (by ID) to remove from organization.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function removeEnabledConnection(
         string $id,
         string $connectionId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($connectionId, 'connectionId');
+        $id = Validate::string($id, 'id');
+        $connectionId = Validate::string($connectionId, 'connectionId');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id, 'enabled_connections', $connectionId)
@@ -307,14 +317,15 @@ final class Organizations extends ManagementEndpoint
      * @param array<string>       $members One or more users (by ID) to add from the organization.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `members` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function addMembers(
         string $id,
         array $members,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
         Validate::array($members, 'members');
 
         $payload = [
@@ -335,13 +346,14 @@ final class Organizations extends ManagementEndpoint
      * @param string              $id      Organization (by ID) to list members of.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function getMembers(
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'members')
@@ -357,14 +369,15 @@ final class Organizations extends ManagementEndpoint
      * @param array<string>       $members One or more users (by ID) to remove from the organization.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `members` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function removeMembers(
         string $id,
         array $members,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
         Validate::array($members, 'members');
 
         $payload = [
@@ -387,7 +400,8 @@ final class Organizations extends ManagementEndpoint
      * @param array<string>       $roles   One or more roles (by ID) to add to the user.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id`, `userId`, or `roles` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function addMemberRoles(
         string $id,
@@ -395,8 +409,8 @@ final class Organizations extends ManagementEndpoint
         array $roles,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($userId, 'userId');
+        $id = Validate::string($id, 'id');
+        $userId = Validate::string($userId, 'userId');
         Validate::array($roles, 'roles');
 
         $payload = [
@@ -418,15 +432,16 @@ final class Organizations extends ManagementEndpoint
      * @param string              $userId  User (by ID) to add role to.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `userId` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function getMemberRoles(
         string $id,
         string $userId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($userId, 'userId');
+        $id = Validate::string($id, 'id');
+        $userId = Validate::string($userId, 'userId');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'members', $userId, 'roles')
@@ -443,7 +458,8 @@ final class Organizations extends ManagementEndpoint
      * @param array<string>       $roles   One or more roles (by ID) to remove from the user.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id`, `userId`, or `roles` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function removeMemberRoles(
         string $id,
@@ -451,8 +467,8 @@ final class Organizations extends ManagementEndpoint
         array $roles,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($userId, 'userId');
+        $id = Validate::string($id, 'id');
+        $userId = Validate::string($userId, 'userId');
         Validate::array($roles, 'roles');
 
         $payload = [
@@ -479,7 +495,8 @@ final class Organizations extends ManagementEndpoint
      * @param array<mixed>|null       $body     Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null     $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id`, `clientId`, `inviter`, or `invitee` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function createInvitation(
         string $id,
@@ -489,8 +506,8 @@ final class Organizations extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($clientId, 'clientId');
+        $id = Validate::string($id, 'id');
+        $clientId = Validate::string($clientId, 'clientId');
         Validate::array($inviter, 'inviter');
         Validate::array($invitee, 'invitee');
 
@@ -522,13 +539,14 @@ final class Organizations extends ManagementEndpoint
      * @param string              $id      Organization (by ID) to list invitations for.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function getInvitations(
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'invitations')
@@ -544,15 +562,16 @@ final class Organizations extends ManagementEndpoint
      * @param string              $invitationId Invitation (by ID) to request.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `invitationId` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function getInvitation(
         string $id,
         string $invitationId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($invitationId, 'invitationId');
+        $id = Validate::string($id, 'id');
+        $invitationId = Validate::string($invitationId, 'invitationId');
 
         return $this->getHttpClient()->method('get')
             ->addPath('organizations', $id, 'invitations', $invitationId)
@@ -568,15 +587,16 @@ final class Organizations extends ManagementEndpoint
      * @param string              $invitationId Invitation (by ID) to request.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `invitationId` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function deleteInvitation(
         string $id,
         string $invitationId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::string($invitationId, 'invitation');
+        $id = Validate::string($id, 'id');
+        $invitationId = Validate::string($invitationId, 'invitation');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('organizations', $id, 'invitations', $invitationId)

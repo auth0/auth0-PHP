@@ -47,7 +47,8 @@ final class Grants extends ManagementEndpoint
      * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `clientId` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
@@ -56,7 +57,7 @@ final class Grants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($clientId, 'clientId');
+        $clientId = Validate::string($clientId, 'clientId');
 
         $parameters = Shortcut::mergeArrays([
             'client_id' => $clientId,
@@ -73,7 +74,8 @@ final class Grants extends ManagementEndpoint
      * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `audience` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
      */
@@ -82,7 +84,7 @@ final class Grants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($audience, 'audience');
+        $audience = Validate::string($audience, 'audience');
 
         $parameters = Shortcut::mergeArrays([
             'audience' => $audience,
@@ -99,6 +101,7 @@ final class Grants extends ManagementEndpoint
      * @param array<string,int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null                $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `userId` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/get_grants
@@ -108,7 +111,7 @@ final class Grants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($userId, 'userId');
+        $userId = Validate::string($userId, 'userId');
 
         $parameters = Shortcut::mergeArrays([
             'user_id' => $userId,
@@ -124,6 +127,7 @@ final class Grants extends ManagementEndpoint
      * @param string              $id      Grant ID to delete a single Grant or User ID to delete all Grants for a User.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Grants/delete_grants_by_id
@@ -132,7 +136,7 @@ final class Grants extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('grants', $id)

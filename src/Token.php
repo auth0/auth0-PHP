@@ -97,7 +97,7 @@ final class Token
         $tokenCache = $tokenCache ?? $this->configuration->getTokenCache() ?? null;
 
         if ($tokenJwksUri === null) {
-            $tokenJwksUri = $this->configuration->buildDomainUri() . '/.well-known/jwks.json';
+            $tokenJwksUri = $this->configuration->formatDomain() . '/.well-known/jwks.json';
         }
 
         $this->parser->verify(
@@ -114,8 +114,8 @@ final class Token
     /**
      * Validate the claims of the token.
      *
-     * @param string             $tokenIssuer       The value expected for the 'iss' claim.
-     * @param array<string>      $tokenAudience     An array of allowed values for the 'aud' claim. Successful if ANY match.
+     * @param string|null        $tokenIssuer       Optional. The value expected for the 'iss' claim.
+     * @param array<string>|null $tokenAudience     Optional. An array of allowed values for the 'aud' claim. Successful if ANY match.
      * @param array<string>|null $tokenOrganization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
      * @param string|null        $tokenNonce        Optional. The value expected for the 'nonce' claim.
      * @param int|null           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
@@ -140,9 +140,13 @@ final class Token
         $tokenMaxAge = $tokenMaxAge ?? $this->configuration->getTokenMaxAge() ?? null;
         $tokenLeeway = $tokenLeeway ?? $this->configuration->getTokenLeeway() ?? 60;
 
-        // If 'aud' claim check isn't defined, fallback to client id.
+        // If 'aud' claim check isn't defined, fallback to client id, if configured.
         if ($tokenAudience === null || count($tokenAudience) === 0) {
-            $tokenAudience = [ $this->configuration->getClientId() ];
+            $tokenAudience = [];
+
+            if ($this->configuration->hasClientId()) {
+                $tokenAudience[] = (string) $this->configuration->getClientId();
+            }
         }
 
         $validator = $this->parser->validate();

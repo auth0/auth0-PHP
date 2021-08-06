@@ -6,24 +6,6 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 
 uses()->group('configuration');
 
-test('__construct() throws an error when domain is not configured', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_MISSING_DOMAIN);
-
-    new SdkConfiguration();
-});
-
-test('__construct() throws an error when clientId is not configured', function(): void {
-    $domain = uniqid();
-
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_MISSING_CLIENT_ID);
-
-    new SdkConfiguration([
-        'domain' => $domain,
-    ]);
-});
-
 test('__construct() accepts a configuration array', function(): void {
     $domain = uniqid();
     $cookieSecret = uniqid();
@@ -90,7 +72,7 @@ test('__construct() throws an exception if domain is an empty string', function(
     $redirectUri = uniqid();
 
     $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_MISSING_DOMAIN);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
 
     $sdk = new SdkConfiguration([
         'domain' => '',
@@ -209,7 +191,7 @@ test('successfully resets values', function(): void
     $this->assertTrue($sdk->getUsePkce());
 });
 
-test('buildDomainUri() returns a properly formatted uri', function(): void
+test('formatDomain() returns a properly formatted uri', function(): void
 {
     $domain = uniqid();
 
@@ -220,10 +202,10 @@ test('buildDomainUri() returns a properly formatted uri', function(): void
         'redirectUri' => uniqid(),
     ]);
 
-    $this->assertEquals('https://' . $domain, $sdk->buildDomainUri());
+    $this->assertEquals('https://' . $domain, $sdk->formatDomain());
 });
 
-test('buildScopeString() returns an empty string when there are no scopes defined', function(): void
+test('formatScope() returns an empty string when there are no scopes defined', function(): void
 {
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
@@ -233,10 +215,10 @@ test('buildScopeString() returns an empty string when there are no scopes define
         'scope' => [],
     ]);
 
-    $this->assertEquals('', $sdk->buildScopeString());
+    $this->assertEquals('', $sdk->formatScope());
 });
 
-test('buildScopeString() successfully converts the array to a string', function(): void
+test('scope() successfully converts the array to a string', function(): void
 {
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
@@ -246,10 +228,10 @@ test('buildScopeString() successfully converts the array to a string', function(
         'scope' => ['one', 'two', 'three'],
     ]);
 
-    $this->assertEquals('one two three', $sdk->buildScopeString());
+    $this->assertEquals('one two three', $sdk->formatScope());
 });
 
-test('buildDefaultOrganization() successfully returns the first organization', function(): void
+test('defaultOrganization() successfully returns the first organization', function(): void
 {
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
@@ -259,10 +241,10 @@ test('buildDefaultOrganization() successfully returns the first organization', f
         'organization' => ['org1', 'org2', 'org3'],
     ]);
 
-    $this->assertEquals('org1', $sdk->buildDefaultOrganization());
+    $this->assertEquals('org1', $sdk->defaultOrganization());
 });
 
-test('buildDefaultAudience() successfully returns the first audience', function(): void
+test('defaultAudience() successfully returns the first audience', function(): void
 {
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
@@ -272,5 +254,5 @@ test('buildDefaultAudience() successfully returns the first audience', function(
         'audience' => ['aud1', 'aud2', 'aud3'],
     ]);
 
-    $this->assertEquals('aud1', $sdk->buildDefaultAudience());
+    $this->assertEquals('aud1', $sdk->defaultAudience());
 });

@@ -26,7 +26,8 @@ final class Emails extends ManagementEndpoint
      * @param array<mixed>|null   $body        Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `name` or `credentials` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Emails/post_provider
      */
@@ -36,7 +37,7 @@ final class Emails extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($name, 'name');
+        $name = Validate::string($name, 'name');
         Validate::array($credentials, 'credentials');
 
         $body = Shortcut::mergeArrays([
@@ -79,6 +80,7 @@ final class Emails extends ManagementEndpoint
      * @param array<mixed>|null   $body        Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `name` or `credentials` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Emails/patch_provider
@@ -89,7 +91,7 @@ final class Emails extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($name, 'name');
+        $name = Validate::string($name, 'name');
         Validate::array($credentials, 'credentials');
 
         $body = Shortcut::mergeArrays([

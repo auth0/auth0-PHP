@@ -49,10 +49,6 @@ final class Auth0
      * Auth0 Constructor.
      *
      * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     *
-     * @throws \Auth0\SDK\Exception\ConfigurationException When `domain` or `clientId` are not provided.
-     * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenAlgorithm` is provided but the value is not supported.
-     * @throws \Auth0\SDK\Exception\ConfigurationException When `tokenMaxAge` or `tokenLeeway` are provided but the value is not numeric.
      */
     public function __construct(
         $configuration
@@ -111,6 +107,9 @@ final class Auth0
      * @param string|null                 $redirectUrl Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
      * @param array<int|string|null>|null $params Additional parameters to include with the request.
      *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a Client ID is not configured.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `redirectUri` is not specified, and supplied SdkConfiguration does not have a default redirectUri configured.
+     *
      * @link https://auth0.com/docs/api/authentication#login
      */
     public function login(
@@ -144,6 +143,9 @@ final class Auth0
      * @param string|null                 $redirectUrl Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
      * @param array<int|string|null>|null $params Additional parameters to include with the request.
      *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a Client ID is not configured.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `redirectUri` is not specified, and supplied SdkConfiguration does not have a default redirectUri configured.
+     *
      * @link https://auth0.com/docs/universal-login/new-experience
      * @link https://auth0.com/docs/api/authentication#login
      */
@@ -163,6 +165,9 @@ final class Auth0
      *
      * @param string|null                 $returnUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
      * @param array<int|string|null>|null $params    Optional. Additional parameters to include with the request.
+     *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a Client ID is not configured.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `returnUri` is not specified, and supplied SdkConfiguration does not have a default redirectUri configured.
      *
      * @link https://auth0.com/docs/api/authentication#logout
      */
@@ -202,7 +207,7 @@ final class Auth0
      * @param int|null           $tokenLeeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
      * @param int|null           $tokenNow          Optional. Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When token validation fails. See the exception message for further details.
      */
     public function decode(
         string $token,
@@ -249,9 +254,8 @@ final class Auth0
      *
      * @param string|null $redirectUri  Optional. Redirect URI sent with authorize request. Defaults to the SDK's configured redirectUri.
      *
-     * @throws \Auth0\SDK\Exception\StateException If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException If there is already an active session.
-     * @throws \Auth0\SDK\Exception\StateException If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
@@ -342,9 +346,12 @@ final class Auth0
      *
      * @param array<int|string|null>|null $params Optional. Additional parameters to include with the request.
      *
-     * @throws \Auth0\SDK\Exception\StateException If the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly.
+     * @throws \Auth0\SDK\Exception\StateException         If the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a Client ID is not configured.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a Client Secret is not configured.
+     * @throws \Auth0\SDK\Exception\NetworkException       When the API request fails due to a network error.
      *
-     * @link   https://auth0.com/docs/tokens/refresh-token/current
+     * @link https://auth0.com/docs/tokens/refresh-token/current
      */
     public function renew(
         ?array $params = null
@@ -403,8 +410,9 @@ final class Auth0
     /**
      * Get ID token from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getIdToken(): ?string
     {
@@ -420,8 +428,9 @@ final class Auth0
      *
      * @return array<string,array|int|string>|null
      *
-     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getUser(): ?array
     {
@@ -435,8 +444,9 @@ final class Auth0
     /**
      * Get access token from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getAccessToken(): ?string
     {
@@ -450,8 +460,9 @@ final class Auth0
     /**
      * Get refresh token from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getRefreshToken(): ?string
     {
@@ -467,8 +478,9 @@ final class Auth0
      *
      * @return array<string>
      *
-     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getAccessTokenScope(): ?array
     {
@@ -482,8 +494,9 @@ final class Auth0
     /**
      * Get token expiration from persisted session or from a code exchange
      *
-     * @throws \Auth0\SDK\Exception\StateException (see self::exchange()).
-     * @throws \Auth0\SDK\Exception\Auth0Exception (see self::exchange()).
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
+     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getAccessTokenExpiration(): ?int
     {
@@ -498,8 +511,6 @@ final class Auth0
      * Sets, validates, and persists the ID token.
      *
      * @param string $idToken Id token returned from the code exchange.
-     *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When an invalid token is passed.
      */
     public function setIdToken(
         string $idToken
@@ -582,7 +593,7 @@ final class Auth0
     }
 
     /**
-     * Sets and persists the access token expiration unix timestmap.
+     * Sets and persists the access token expiration unix timestamp.
      *
      * @param int $accessTokenExpiration Unix timestamp representing the expiration time on the access token.
      */

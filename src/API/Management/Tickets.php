@@ -25,7 +25,8 @@ final class Tickets extends ManagementEndpoint
      * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `userId` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification
      */
@@ -34,7 +35,7 @@ final class Tickets extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($userId, 'userId');
+        $userId = Validate::string($userId, 'userId');
 
         $body = Shortcut::mergeArrays([
             'user_id' => $userId,
@@ -54,12 +55,15 @@ final class Tickets extends ManagementEndpoint
      * @param array<mixed>        $body    Body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `body` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function createPasswordChange(
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
+        Validate::array($body, 'body');
+
         return $this->getHttpClient()->method('post')
             ->addPath('tickets', 'password-change')
             ->withBody((object) $body)

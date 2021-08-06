@@ -31,7 +31,8 @@ final class EmailTemplates extends ManagementEndpoint
      * @param array<string>|null  $additional Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `template`, `body`, `from`, `subject`, or `syntax` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates
      */
@@ -45,11 +46,11 @@ final class EmailTemplates extends ManagementEndpoint
         ?array $additional = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($template, 'template');
-        Validate::string($body, 'body');
-        Validate::string($from, 'from');
-        Validate::string($subject, 'subject');
-        Validate::string($syntax, 'syntax');
+        $template = Validate::string($template, 'template');
+        $body = Validate::string($body, 'body');
+        $from = Validate::string($from, 'from');
+        $subject = Validate::string($subject, 'subject');
+        $syntax = Validate::string($syntax, 'syntax');
 
         $body = Shortcut::mergeArrays([
             'template' => $template,
@@ -75,7 +76,8 @@ final class EmailTemplates extends ManagementEndpoint
      * @param string              $templateName The email template name. See the @link for a list of templates available.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `templateName` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName
      */
@@ -83,7 +85,7 @@ final class EmailTemplates extends ManagementEndpoint
         string $templateName,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($templateName, 'templateName');
+        $templateName = Validate::string($templateName, 'templateName');
 
         return $this->getHttpClient()->method('get')
             ->addPath('email-templates', $templateName)
@@ -101,7 +103,8 @@ final class EmailTemplates extends ManagementEndpoint
      * @param array<mixed>        $body         Replace existing template with this data.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `templateName` or `body` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
      */
@@ -110,7 +113,7 @@ final class EmailTemplates extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($templateName, 'templateName');
+        $templateName = Validate::string($templateName, 'templateName');
         Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('put')
@@ -130,6 +133,7 @@ final class EmailTemplates extends ManagementEndpoint
      * @param array<mixed>        $body         Update existing template fields with this data.
      * @param RequestOptions|null $options      Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `templateName` or `body` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
@@ -139,7 +143,7 @@ final class EmailTemplates extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($templateName, 'templateName');
+        $templateName = Validate::string($templateName, 'templateName');
         Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('patch')

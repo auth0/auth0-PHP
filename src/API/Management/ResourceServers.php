@@ -25,7 +25,8 @@ final class ResourceServers extends ManagementEndpoint
      * @param array<mixed> $body     Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null    $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `identifier` or `body` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/post_resource_servers
      */
@@ -34,7 +35,7 @@ final class ResourceServers extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($identifier, 'identifier');
+        $identifier = Validate::string($identifier, 'identifier');
         Validate::array($body, 'body');
 
         $payload = Shortcut::mergeArrays([
@@ -74,7 +75,8 @@ final class ResourceServers extends ManagementEndpoint
      * @param string              $id      Resource Server ID or identifier to get.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers_by_id
      */
@@ -82,7 +84,7 @@ final class ResourceServers extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('resource-servers', $id)
@@ -98,6 +100,7 @@ final class ResourceServers extends ManagementEndpoint
      * @param array<mixed>        $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `body` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/patch_resource_servers_by_id
@@ -107,7 +110,7 @@ final class ResourceServers extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
         Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('patch')
@@ -124,6 +127,7 @@ final class ResourceServers extends ManagementEndpoint
      * @param string              $id      Resource Server ID or identifier to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers/delete_resource_servers_by_id
@@ -132,7 +136,7 @@ final class ResourceServers extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('resource-servers', $id)

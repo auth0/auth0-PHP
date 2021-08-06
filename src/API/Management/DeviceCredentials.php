@@ -27,7 +27,8 @@ final class DeviceCredentials extends ManagementEndpoint
      * @param array<mixed>|null   $body       Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `deviceName`, `type`, `value`, or `deviceId` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/post_device_credentials
      */
@@ -39,10 +40,10 @@ final class DeviceCredentials extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($deviceName, 'deviceName');
-        Validate::string($type, 'type');
-        Validate::string($value, 'value');
-        Validate::string($deviceId, 'deviceId');
+        $deviceName = Validate::string($deviceName, 'deviceName');
+        $type = Validate::string($type, 'type');
+        $value = Validate::string($value, 'value');
+        $deviceId = Validate::string($deviceId, 'deviceId');
 
         $body = Shortcut::mergeArrays([
             'device_name' => $deviceName,
@@ -67,7 +68,8 @@ final class DeviceCredentials extends ManagementEndpoint
      * @param string|null         $type     Optional. Type of credentials to retrieve. Must be `public_key`, `refresh_token` or `rotating_refresh_token`. The property will default to `refresh_token` when paging is requested
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `userId` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials
      */
@@ -77,7 +79,9 @@ final class DeviceCredentials extends ManagementEndpoint
         ?string $type = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($userId, 'userId');
+        $userId = Validate::string($userId, 'userId');
+        $clientId = Shortcut::trimNull($clientId);
+        $type = Shortcut::trimNull($type);
 
         $payload = [
             'user_id' => $userId,
@@ -105,7 +109,8 @@ final class DeviceCredentials extends ManagementEndpoint
      * @param string              $id      ID of the device credential to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials/delete_device_credentials_by_id
      */
@@ -113,7 +118,7 @@ final class DeviceCredentials extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('device-credentials', $id)
