@@ -97,6 +97,32 @@ final class Shortcut
             return [];
         }
 
-        return array_filter($array, static fn ($value) => $value !== null);
+        return array_map(static function ($value) {
+            if (is_string($value)) {
+                return Shortcut::trimNull($value);
+            }
+
+            return $value;
+        }, array_filter($array, static fn ($value) => $value !== null));
+    }
+
+    /**
+     * Throw an error if all the provided values are null. Otherwise, return the first non-null value.
+     *
+     * @param \Throwable $exception An exception to throw if all values are null.
+     * @param mixed      $values    One or more values to check.
+     *
+     * @return mixed
+     *
+     * @throws \Throwable If all $values are null.
+     */
+    public static function first(
+        \Throwable $exception,
+        ...$values
+    ) {
+        $values = Validate::any($exception, ...$values);
+
+        // At least one non-null value; return the first provided to the argument.
+        return reset($values);
     }
 }

@@ -40,15 +40,19 @@ final class Validate
      * @param string $variable     The variable to check.
      * @param string $variableName The variable name.
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException If $var is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException If $variable is empty or is not a string.
      */
     public static function string(
         string $variable,
         string $variableName
-    ): void {
-        if (mb_strlen(trim($variable)) === 0) {
+    ): string {
+        $variable = trim($variable);
+
+        if (mb_strlen($variable) === 0) {
             throw \Auth0\SDK\Exception\ArgumentException::missing($variableName);
         }
+
+        return $variable;
     }
 
     /**
@@ -57,15 +61,19 @@ final class Validate
      * @param string $email        The email to check.
      * @param string $variableName The variable name.
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException If $var is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException If $variable is empty or is not a string.
      */
     public static function email(
         string $email,
         string $variableName
-    ): void {
+    ): string {
+        $email = trim($email);
+
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             throw \Auth0\SDK\Exception\ArgumentException::missing($variableName);
         }
+
+        return $email;
     }
 
     /**
@@ -74,7 +82,7 @@ final class Validate
      * @param array<mixed> $variable     The variable to check.
      * @param string       $variableName The variable name.
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException If $var is empty or is not a string.
+     * @throws \Auth0\SDK\Exception\ArgumentException If $variable is empty or is not a string.
      */
     public static function array(
         array $variable,
@@ -83,5 +91,30 @@ final class Validate
         if (count($variable) === 0) {
             throw \Auth0\SDK\Exception\ArgumentException::missing($variableName);
         }
+    }
+
+    /**
+     * Throw an error if all the provided values are null.
+     *
+     * @param \Throwable $exception An exception to throw if all values are null.
+     * @param mixed      $values    One or more values to check.
+     *
+     * @return mixed
+     *
+     * @throws \Throwable If all $values are null.
+     */
+    public static function any(
+        \Throwable $exception,
+        ...$values
+    ) {
+        $values = Shortcut::filterArray($values);
+
+        // All values were null, throw an exception.
+        if (count($values) === 0) {
+            throw $exception;
+        }
+
+        // Return all non-null values.
+        return $values;
     }
 }
