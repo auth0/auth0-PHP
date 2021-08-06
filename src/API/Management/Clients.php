@@ -25,7 +25,8 @@ final class Clients extends ManagementEndpoint
      * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `name` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/post_clients
      */
@@ -34,7 +35,7 @@ final class Clients extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($name, 'name');
+        $name = Validate::string($name, 'name');
 
         $body = Shortcut::mergeArrays([
             'name' => $name,
@@ -80,7 +81,8 @@ final class Clients extends ManagementEndpoint
      * @param string              $id      Client (by it's ID) to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/get_clients_by_id
      */
@@ -88,7 +90,7 @@ final class Clients extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('clients', $id)
@@ -106,7 +108,8 @@ final class Clients extends ManagementEndpoint
      * @param array<mixed>|null   $body    Optional. Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/patch_clients_by_id
      */
@@ -115,7 +118,7 @@ final class Clients extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('clients', $id)
@@ -131,7 +134,8 @@ final class Clients extends ManagementEndpoint
      * @param string              $id      Client (by it's ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Clients/delete_clients_by_id
      */
@@ -139,7 +143,7 @@ final class Clients extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('clients', $id)

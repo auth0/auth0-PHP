@@ -26,7 +26,8 @@ final class ClientGrants extends ManagementEndpoint
      * @param array<string>|null  $scope    Optional. Scopes allowed for this client grant.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `clientId` or `audience` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/post_client_grants
      */
@@ -36,8 +37,8 @@ final class ClientGrants extends ManagementEndpoint
         ?array $scope = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($clientId, 'clientId');
-        Validate::string($audience, 'audience');
+        $clientId = Validate::string($clientId, 'clientId');
+        $audience = Validate::string($audience, 'audience');
 
         return $this->getHttpClient()->method('post')
             ->addPath('client-grants')
@@ -82,7 +83,8 @@ final class ClientGrants extends ManagementEndpoint
      * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `audience` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
@@ -91,7 +93,7 @@ final class ClientGrants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($audience, 'audience');
+        $audience = Validate::string($audience, 'audience');
 
         $parameters = Shortcut::mergeArrays([
             'audience' => $audience,
@@ -108,7 +110,8 @@ final class ClientGrants extends ManagementEndpoint
      * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
      * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `clientId` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
      */
@@ -117,7 +120,7 @@ final class ClientGrants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($clientId, 'clientId');
+        $clientId = Validate::string($clientId, 'clientId');
 
         $parameters = Shortcut::mergeArrays([
             'client_id' => $clientId,
@@ -134,7 +137,8 @@ final class ClientGrants extends ManagementEndpoint
      * @param array<string>|null  $scope   Optional. Array of scopes to update; will replace existing scopes, not merge.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `grantId` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/patch_client_grants_by_id
      */
@@ -143,7 +147,7 @@ final class ClientGrants extends ManagementEndpoint
         ?array $scope = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($grantId, 'grantId');
+        $grantId = Validate::string($grantId, 'grantId');
 
         return $this->getHttpClient()->method('patch')
             ->addPath('client-grants', $grantId)
@@ -163,7 +167,8 @@ final class ClientGrants extends ManagementEndpoint
      * @param string              $grantId Grant (by it's ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `grantId` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
      */
@@ -171,7 +176,7 @@ final class ClientGrants extends ManagementEndpoint
         string $grantId,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($grantId, 'grantId');
+        $grantId = Validate::string($grantId, 'grantId');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('client-grants', $grantId)

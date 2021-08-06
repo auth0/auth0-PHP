@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Shortcut;
 use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
@@ -25,7 +26,8 @@ final class LogStreams extends ManagementEndpoint
      * @param string|null         $name    Optional. The name of the log stream.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `type` or `sink` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/post_log_streams
      */
@@ -35,8 +37,9 @@ final class LogStreams extends ManagementEndpoint
         ?string $name = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($type, 'type');
+        $type = Validate::string($type, 'type');
         Validate::array($sink, 'sink');
+        $name = Shortcut::trimNull($name);
 
         $payload = [
             'type' => $type,
@@ -80,7 +83,8 @@ final class LogStreams extends ManagementEndpoint
      * @param string              $id      Log Stream ID to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/get_log_streams_by_id
      */
@@ -88,7 +92,7 @@ final class LogStreams extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('log-streams', $id)
@@ -104,6 +108,7 @@ final class LogStreams extends ManagementEndpoint
      * @param array<mixed>        $body    Log Stream data to update. Only certain fields are update-able; see the linked documentation.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/patch_log_streams_by_id
@@ -113,7 +118,7 @@ final class LogStreams extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
         Validate::array($body, 'body');
 
         return $this->getHttpClient()->method('patch')
@@ -130,7 +135,8 @@ final class LogStreams extends ManagementEndpoint
      * @param string              $id      ID of the Log Stream to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Log_Streams/delete_log_streams_by_id
      */
@@ -138,7 +144,7 @@ final class LogStreams extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('log-streams', $id)

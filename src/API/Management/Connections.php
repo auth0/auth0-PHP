@@ -26,7 +26,8 @@ final class Connections extends ManagementEndpoint
      * @param array<string>|null  $body     Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `name` or `strategy` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/post_connections
      */
@@ -36,8 +37,8 @@ final class Connections extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($name, 'name');
-        Validate::string($strategy, 'strategy');
+        $name = Validate::string($name, 'name');
+        $strategy = Validate::string($strategy, 'strategy');
 
         $body = Shortcut::mergeArrays([
             'name' => $name,
@@ -80,7 +81,8 @@ final class Connections extends ManagementEndpoint
      * @param string              $id      Connection (by it's ID) to query.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/get_connections_by_id
      */
@@ -88,7 +90,7 @@ final class Connections extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('connections', $id)
@@ -104,7 +106,8 @@ final class Connections extends ManagementEndpoint
      * @param array<mixed>|null   $body    Additional body content to pass with the API request. See @link for supported options.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/patch_connections_by_id
      */
@@ -113,7 +116,7 @@ final class Connections extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         $body = $body ?? [];
 
@@ -131,7 +134,8 @@ final class Connections extends ManagementEndpoint
      * @param string              $id      Connection (by it's ID) to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_connections_by_id
      */
@@ -139,7 +143,7 @@ final class Connections extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('connections', $id)
@@ -155,7 +159,8 @@ final class Connections extends ManagementEndpoint
      * @param string              $email   Email of the user to delete.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `email` are provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Connections/delete_users_by_email
      */
@@ -164,8 +169,8 @@ final class Connections extends ManagementEndpoint
         string $email,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
-        Validate::email($email, 'email');
+        $id = Validate::string($id, 'id');
+        $email = Validate::email($email, 'email');
 
         return $this->getHttpClient()->method('delete')
             ->addPath('connections', $id, 'users')

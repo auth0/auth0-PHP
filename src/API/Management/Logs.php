@@ -45,6 +45,7 @@ final class Logs extends ManagementEndpoint
      * @param string              $id      Log entry ID to get.
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Logs/get_logs_by_id
@@ -53,7 +54,7 @@ final class Logs extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::string($id, 'id');
+        $id = Validate::string($id, 'id');
 
         return $this->getHttpClient()->method('get')
             ->addPath('logs', $id)

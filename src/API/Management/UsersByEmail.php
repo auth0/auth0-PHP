@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
+use Auth0\SDK\Utility\Validate;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -22,12 +23,15 @@ final class UsersByEmail extends ManagementEndpoint
      * @param string              $email   Email address to search for (case-sensitive).
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `email` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      */
     public function get(
         string $email,
         ?RequestOptions $options = null
     ): ResponseInterface {
+        $email = Validate::email($email, 'email');
+
         return $this->getHttpClient()->method('get')
             ->addPath('users-by-email')
             ->withParam('email', $email)
