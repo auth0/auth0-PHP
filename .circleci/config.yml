@@ -139,7 +139,7 @@ commands:
     steps:
       - run:
           name: Run mutation tests (Infection)
-          command: php ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=<< parameters.clover >> --no-progress --min-msi=48 --min-covered-msi=70
+          command: php -d memory_limit=512MB ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=<< parameters.clover >> --no-progress --only-covered --min-msi=48 --min-covered-msi=70
 
   run-snyk:
     steps:
