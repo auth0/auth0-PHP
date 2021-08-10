@@ -186,9 +186,14 @@ final class Auth0
     public function clear(): self
     {
         $sessionStorage = $this->configuration->getSessionStorage();
+        $transientStorage = $this->configuration->getTransientStorage();
 
         if ($sessionStorage !== null) {
             $sessionStorage->deleteAll();
+        }
+
+        if ($transientStorage !== null) {
+            $transientStorage->deleteAll();
         }
 
         $this->state->reset();
