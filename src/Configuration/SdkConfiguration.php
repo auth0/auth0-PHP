@@ -389,11 +389,11 @@ final class SdkConfiguration implements ConfigurableContract
     private function setupStateStorage(): void
     {
         if (! $this->getSessionStorage() instanceof StoreInterface) {
-            $this->setSessionStorage(new CookieStore($this));
+            $this->setSessionStorage(new CookieStore($this, 'auth0_session'));
         }
 
         if (! $this->getTransientStorage() instanceof StoreInterface) {
-            $this->setTransientStorage(new CookieStore($this));
+            $this->setTransientStorage(new CookieStore($this, 'auth0_transient'));
         }
     }
 

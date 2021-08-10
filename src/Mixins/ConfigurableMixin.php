@@ -17,13 +17,6 @@ trait ConfigurableMixin
     private array $configuredState = [];
 
     /**
-     * Tracks any configured validator functions to be called during validate().
-     *
-     * @var array<string>
-     */
-    private array $configuredValidations = [];
-
-    /**
      * When true, changes can no longer be applied to the configuration.
      */
     private bool $configurationImmutable = false;
@@ -117,32 +110,6 @@ trait ConfigurableMixin
     public function lock(): self
     {
         $this->configurationImmutable = true;
-        return $this;
-    }
-
-    /**
-     * Invoke any configured validation functions to determine if the configuration is valid.
-     *
-     * @throws ConfigurationException When the configuration fails to pass a validation check.
-     */
-    public function validate(): self
-    {
-        foreach ($this->configuredValidations as $condition) {
-            if (mb_strlen($condition) > 4 && (mb_substr($condition, 0, 3) === 'get' || mb_substr($condition, 0, 3) === 'has')) {
-                $propertyName = lcfirst(mb_substr($condition, 3));
-
-                if (isset($this->configuredState[$propertyName])) {
-                    if (call_user_func([$this, $condition]) === null) {
-                        if (method_exists($this, 'onValidationException')) {
-                            $this->onValidationException($propertyName);
-                        }
-
-                        throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
-                    }
-                }
-            }
-        }
-
         return $this;
     }
 
@@ -244,18 +211,6 @@ trait ConfigurableMixin
             }
         }
 
-        return $this;
-    }
-
-    /**
-     * Define validation functions to use for validate().
-     *
-     * @param array<string> $validations A list of function names to invoke upon validation. These should return a bool, or throw an error if they fail to pass.
-     */
-    private function setValidations(
-        array $validations = []
-    ): self {
-        $this->configuredValidations = $validations;
         return $this;
     }
 
