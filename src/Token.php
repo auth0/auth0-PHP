@@ -134,19 +134,15 @@ final class Token
         ?int $tokenNow = null
     ): self {
         $tokenIssuer = $tokenIssuer ?? 'https://' . $this->configuration->getDomain() . '/';
-        $tokenAudience = $tokenAudience ?? $this->configuration->getAudience() ?? null;
+        $tokenAudience = $tokenAudience ?? $this->configuration->getAudience() ?? [];
         $tokenOrganization = $tokenOrganization ?? $this->configuration->getOrganization() ?? null;
         $tokenNonce = $tokenNonce ?? null;
         $tokenMaxAge = $tokenMaxAge ?? $this->configuration->getTokenMaxAge() ?? null;
         $tokenLeeway = $tokenLeeway ?? $this->configuration->getTokenLeeway() ?? 60;
 
         // If 'aud' claim check isn't defined, fallback to client id, if configured.
-        if ($tokenAudience === null || count($tokenAudience) === 0) {
-            $tokenAudience = [];
-
-            if ($this->configuration->hasClientId()) {
-                $tokenAudience[] = (string) $this->configuration->getClientId();
-            }
+        if (count($tokenAudience) === 0 && $this->configuration->hasClientId()) {
+            $tokenAudience[] = (string) $this->configuration->getClientId();
         }
 
         $validator = $this->parser->validate();

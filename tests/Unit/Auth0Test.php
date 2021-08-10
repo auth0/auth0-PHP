@@ -75,8 +75,8 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier', '__test_code_verifier__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
         $this->expectException(\Auth0\SDK\Exception\StateException::class);
         $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_MISSING_NONCE);
@@ -94,8 +94,8 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier',  null);
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier',  null);
 
         $this->expectException(\Auth0\SDK\Exception\StateException::class);
         $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_MISSING_CODE_VERIFIER);
@@ -124,9 +124,9 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('nonce',  '__test_nonce__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier',  '__test_code_verifier__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
         $this->assertTrue($auth0->exchange());
         $this->assertArrayHasKey('sub', $auth0->getUser());
@@ -153,8 +153,8 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier',  '__test_code_verifier__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
         $this->assertTrue($auth0->exchange());
         $this->assertArrayHasKey('sub', $auth0->getUser());
@@ -180,9 +180,9 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('nonce',  '__test_nonce__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier',  '__test_code_verifier__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
         $this->assertTrue($auth0->exchange());
         $this->assertEquals(['sub' => '__test_sub__'], $auth0->getUser());
@@ -209,8 +209,8 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('nonce',  '__test_nonce__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
 
         $this->assertTrue($auth0->exchange());
         $this->assertEquals(['sub' => '__test_sub__'], $auth0->getUser());
@@ -239,9 +239,9 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('nonce',  '__test_nonce__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier',  '__test_code_verifier__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
         $this->assertTrue($auth0->exchange());
         $this->assertEquals('__test_sub__', $auth0->getUser()['sub']);
@@ -266,8 +266,8 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier',  '__test_code_verifier__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
         $this->assertTrue($auth0->exchange());
 
@@ -295,8 +295,8 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier',  '__test_code_verifier__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
         $this->assertTrue($auth0->exchange());
 
@@ -327,9 +327,9 @@ class Auth0Test extends TestCase
         $_GET['code'] = uniqid();
         $_GET['state'] = '__test_state__';
 
-        $auth0->configuration()->getSessionStorage()->set('state', '__test_state__');
-        $auth0->configuration()->getSessionStorage()->set('nonce',  '__test_nonce__');
-        $auth0->configuration()->getSessionStorage()->set('code_verifier',  '__test_code_verifier__');
+        $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+        $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+        $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
         $this->assertTrue($auth0->exchange());
 
@@ -537,7 +537,7 @@ class Auth0Test extends TestCase
             'tokenAlgorithm' => 'HS256',
         ]);
 
-        $auth0->configuration()->getSessionStorage()->set('nonce',  '__test_nonce__');
+        $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
 
         $auth0->setIdToken($token);
 

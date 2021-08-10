@@ -48,7 +48,7 @@ class CookieStore implements StoreInterface
         Validate::string($cookiePrefix, 'cookiePrefix');
 
         $this->configuration = & $configuration;
-        $this->cookiePrefix = $cookiePrefix;
+        $this->cookiePrefix = trim($cookiePrefix);
 
         $this->chunkingThreshold = self::KEY_CHUNKING_THRESHOLD - strlen(hash(self::KEY_HASHING_ALGO, 'threshold'));
     }
@@ -210,7 +210,7 @@ class CookieStore implements StoreInterface
         $key = trim($key);
 
         if ($prefix) {
-            return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, trim($key));
+            return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, $key);
         }
 
         return $key;
