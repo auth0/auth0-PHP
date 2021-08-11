@@ -12,6 +12,10 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class HttpClient
 {
+    public const CONTEXT_GENERIC_CLIENT = 1;
+    public const CONTEXT_AUTHENTICATION_CLIENT = 2;
+    public const CONTEXT_MANAGEMENT_CLIENT = 3;
+
     /**
      * Instance of most recent HttpRequest
      */
@@ -42,21 +46,28 @@ final class HttpClient
     private array $mockedResponses = [];
 
     /**
+     * The context in which this client was created, for defining special behaviors.
+     */
+    private int $context = self::CONTEXT_AUTHENTICATION_CLIENT;
+
+    /**
      * HttpClient constructor.
      *
      * @param SdkConfiguration  $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param int               $context         Required. The context the client is being created under, either CONTEXT_GENERIC_CLIENT, CONTEXT_AUTHENTICATION_CLIENT, or CONTEXT_MANAGEMENT_CLIENT.
      * @param string            $basePath        Optional. The base URI path from which additional pathing and parameters should be appended.
      * @param array<int|string> $headers         Optional. Additional headers to send with the HTTP request.
      */
     public function __construct(
         SdkConfiguration &$configuration,
+        int $context = self::CONTEXT_AUTHENTICATION_CLIENT,
         string $basePath = '/',
         array $headers = []
     ) {
         $this->configuration = & $configuration;
-
         $this->basePath = $basePath;
         $this->headers = $headers;
+        $this->context = $context;
     }
 
     /**
@@ -68,7 +79,7 @@ final class HttpClient
         string $method
     ): HttpRequest {
         $method = mb_strtolower($method);
-        $builder = new HttpRequest($this->configuration, $method, $this->basePath, $this->headers, null, $this->mockedResponses);
+        $builder = new HttpRequest($this->configuration, $this->context, $method, $this->basePath, $this->headers, null, $this->mockedResponses);
 
         if (in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
             $builder->withHeader('Content-Type', 'application/json');

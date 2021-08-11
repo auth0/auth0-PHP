@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Tests\Unit\Utility;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use PHPUnit\Framework\TestCase;
 
@@ -30,7 +31,7 @@ class HttpRequestTest extends TestCase
             'redirectUri' => uniqid(),
         ]);
 
-        return new HttpRequest($config, $method, $basePath);
+        return new HttpRequest($config, HttpClient::CONTEXT_GENERIC_CLIENT, $method, $basePath);
     }
 
     /**

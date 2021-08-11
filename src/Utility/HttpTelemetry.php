@@ -98,11 +98,13 @@ final class HttpTelemetry
             self::setCorePackage();
         }
 
-        return Shortcut::filterArray([
-            'name' => self::$packageName,
-            'version' => self::$packageVersion,
-            'env' => self::$environment,
-        ]);
+        return Toolkit::filter([
+            [
+                'name' => self::$packageName,
+                'version' => self::$packageVersion,
+                'env' => self::$environment,
+            ],
+        ])->array()->trim()[0];
     }
 
     /**

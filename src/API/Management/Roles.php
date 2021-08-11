@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -35,15 +34,21 @@ final class Roles extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $name = Validate::string($name, 'name');
+        [$name] = Toolkit::filter([$name])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        $body = Shortcut::mergeArrays([
-            'name' => $name,
-        ], $body);
+        Toolkit::assert([
+            [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
+        ])->isString();
 
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('roles')
-            ->withBody((object) $body)
+            ->withBody(
+                (object) Toolkit::merge([
+                    'name' => $name,
+                ], $body)
+            )
             ->withOptions($options)
             ->call();
     }
@@ -63,9 +68,12 @@ final class Roles extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->getHttpClient()->method('get')
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('roles')
-            ->withParams($parameters ?? [])
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }
@@ -86,9 +94,14 @@ final class Roles extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('roles', $id)
             ->withOptions($options)
             ->call();
@@ -112,10 +125,19 @@ final class Roles extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
-        Validate::array($body, 'body');
+        [$id] = Toolkit::filter([$id])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        return $this->getHttpClient()->method('patch')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('patch')
             ->addPath('roles', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -138,9 +160,14 @@ final class Roles extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('delete')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('roles', $id)
             ->withOptions($options)
             ->call();
@@ -164,20 +191,23 @@ final class Roles extends ManagementEndpoint
         array $permissions,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
-        Validate::permissions($permissions);
+        [$id] = Toolkit::filter([$id])->string()->trim();
+        [$permissions] = Toolkit::filter([$permissions])->array()->trim();
 
-        $payload = [
-            'permissions' => [],
-        ];
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
 
-        foreach ($permissions as $permission) {
-            $payload['permissions'][] = (object) $permission;
-        }
+        Toolkit::assert([
+            [$permissions, \Auth0\SDK\Exception\ArgumentException::missing('permissions')],
+        ])->isPermissions();
 
-        return $this->getHttpClient()->method('post')
+        [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
+
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('roles', $id, 'permissions')
-            ->withBody((object) $payload)
+            ->withBody($permissions)
             ->withOptions($options)
             ->call();
     }
@@ -198,9 +228,14 @@ final class Roles extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('roles', $id, 'permissions')
             ->withOptions($options)
             ->call();
@@ -224,20 +259,23 @@ final class Roles extends ManagementEndpoint
         array $permissions,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
-        Validate::permissions($permissions);
+        [$id] = Toolkit::filter([$id])->string()->trim();
+        [$permissions] = Toolkit::filter([$permissions])->array()->trim();
 
-        $payload = [
-            'permissions' => [],
-        ];
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
 
-        foreach ($permissions as $permission) {
-            $payload['permissions'][] = (object) $permission;
-        }
+        Toolkit::assert([
+            [$permissions, \Auth0\SDK\Exception\ArgumentException::missing('permissions')],
+        ])->isPermissions();
 
-        return $this->getHttpClient()->method('delete')
+        [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('roles', $id, 'permissions')
-            ->withBody((object) $payload)
+            ->withBody($permissions)
             ->withOptions($options)
             ->call();
     }
@@ -260,10 +298,19 @@ final class Roles extends ManagementEndpoint
         array $users,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
-        Validate::array($users, 'users');
+        [$id] = Toolkit::filter([$id])->string()->trim();
+        [$users] = Toolkit::filter([$users])->array()->trim();
 
-        return $this->getHttpClient()->method('post')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$users, \Auth0\SDK\Exception\ArgumentException::missing('users')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('roles', $id, 'users')
             ->withBody(
                 (object) [
@@ -292,9 +339,14 @@ final class Roles extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('roles', $id, 'users')
             ->withOptions($options)
             ->call();

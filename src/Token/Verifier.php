@@ -6,6 +6,7 @@ namespace Auth0\SDK\Token;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
+use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
 use Psr\Cache\CacheItemPoolInterface;
@@ -192,7 +193,7 @@ final class Verifier
             }
         }
 
-        $keys = (new HttpRequest($this->configuration, 'get', $path, [], $scheme . '://' . $host))->call();
+        $keys = (new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', $path, [], $scheme . '://' . $host))->call();
 
         if (HttpResponse::wasSuccessful($keys)) {
             try {

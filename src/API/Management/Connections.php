@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -37,17 +36,23 @@ final class Connections extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $name = Validate::string($name, 'name');
-        $strategy = Validate::string($strategy, 'strategy');
+        [$name, $strategy] = Toolkit::filter([$name, $strategy])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        $body = Shortcut::mergeArrays([
-            'name' => $name,
-            'strategy' => $strategy,
-        ], $body);
+        Toolkit::assert([
+            [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
+            [$strategy, \Auth0\SDK\Exception\ArgumentException::missing('strategy')],
+        ])->isString();
 
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('connections')
-            ->withBody((object) $body)
+            ->withBody(
+                (object) Toolkit::merge([
+                    'name' => $name,
+                    'strategy' => $strategy,
+                ], $body)
+            )
             ->withOptions($options)
             ->call();
     }
@@ -67,9 +72,12 @@ final class Connections extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->getHttpClient()->method('get')
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('connections')
-            ->withParams($parameters ?? [])
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }
@@ -90,9 +98,14 @@ final class Connections extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('connections', $id)
             ->withOptions($options)
             ->call();
@@ -116,11 +129,15 @@ final class Connections extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        $body = $body ?? [];
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
 
-        return $this->getHttpClient()->method('patch')
+        return $this->getHttpClient()
+            ->method('patch')
             ->addPath('connections', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -143,9 +160,14 @@ final class Connections extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('delete')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('connections', $id)
             ->withOptions($options)
             ->call();
@@ -169,10 +191,18 @@ final class Connections extends ManagementEndpoint
         string $email,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
-        $email = Validate::email($email, 'email');
+        [$id, $email] = Toolkit::filter([$id, $email])->string()->trim();
 
-        return $this->getHttpClient()->method('delete')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$email, \Auth0\SDK\Exception\ArgumentException::missing('email')],
+        ])->isEmail();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('connections', $id, 'users')
             ->withParam('email', $email)
             ->withOptions($options)

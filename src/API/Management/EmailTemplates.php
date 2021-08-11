@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -46,24 +45,30 @@ final class EmailTemplates extends ManagementEndpoint
         ?array $additional = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $template = Validate::string($template, 'template');
-        $body = Validate::string($body, 'body');
-        $from = Validate::string($from, 'from');
-        $subject = Validate::string($subject, 'subject');
-        $syntax = Validate::string($syntax, 'syntax');
+        [$template, $body, $from, $subject, $syntax] = Toolkit::filter([$template, $body, $from, $subject, $syntax])->string()->trim();
+        [$additional] = Toolkit::filter([$additional])->array()->trim();
 
-        $body = Shortcut::mergeArrays([
-            'template' => $template,
-            'body' => $body,
-            'from' => $from,
-            'subject' => $subject,
-            'syntax' => $syntax,
-            'enabled' => $enabled,
-        ], $additional);
+        Toolkit::assert([
+            [$template, \Auth0\SDK\Exception\ArgumentException::missing('template')],
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+            [$from, \Auth0\SDK\Exception\ArgumentException::missing('from')],
+            [$subject, \Auth0\SDK\Exception\ArgumentException::missing('subject')],
+            [$syntax, \Auth0\SDK\Exception\ArgumentException::missing('syntax')],
+        ])->isString();
 
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('email-templates')
-            ->withBody((object) $body)
+            ->withBody(
+                (object) Toolkit::merge([
+                    'template' => $template,
+                    'body' => $body,
+                    'from' => $from,
+                    'subject' => $subject,
+                    'syntax' => $syntax,
+                    'enabled' => $enabled,
+                ], $additional)
+            )
             ->withOptions($options)
             ->call();
     }
@@ -85,9 +90,14 @@ final class EmailTemplates extends ManagementEndpoint
         string $templateName,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $templateName = Validate::string($templateName, 'templateName');
+        [$templateName] = Toolkit::filter([$templateName])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$templateName, \Auth0\SDK\Exception\ArgumentException::missing('templateName')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('email-templates', $templateName)
             ->withOptions($options)
             ->call();
@@ -113,10 +123,19 @@ final class EmailTemplates extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $templateName = Validate::string($templateName, 'templateName');
-        Validate::array($body, 'body');
+        [$templateName] = Toolkit::filter([$templateName])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        return $this->getHttpClient()->method('put')
+        Toolkit::assert([
+            [$templateName, \Auth0\SDK\Exception\ArgumentException::missing('templateName')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('put')
             ->addPath('email-templates', $templateName)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -143,10 +162,19 @@ final class EmailTemplates extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $templateName = Validate::string($templateName, 'templateName');
-        Validate::array($body, 'body');
+        [$templateName] = Toolkit::filter([$templateName])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        return $this->getHttpClient()->method('patch')
+        Toolkit::assert([
+            [$templateName, \Auth0\SDK\Exception\ArgumentException::missing('templateName')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('patch')
             ->addPath('email-templates', $templateName)
             ->withBody((object) $body)
             ->withOptions($options)

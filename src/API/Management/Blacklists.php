@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -35,19 +34,23 @@ final class Blacklists extends ManagementEndpoint
         ?string $aud = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $jti = Validate::string($jti, 'jti');
-        $aud = Shortcut::trimNull($aud);
+        [$jti, $aud] = Toolkit::filter([$jti, $aud])->string()->trim();
 
-        $request = [ 'jti' => $jti ];
+        Toolkit::assert([
+            [$jti, \Auth0\SDK\Exception\ArgumentException::missing('jti')],
+        ])->isString();
 
-        if ($aud !== null) {
-            Validate::string($aud, 'aud');
-            $request['aud'] = $aud;
-        }
-
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('blacklists', 'tokens')
-            ->withBody((object) $request)
+            ->withBody(
+                (object) Toolkit::filter([
+                    [
+                        'jti' => $jti,
+                        'aud' => $aud,
+                    ],
+                ])->array()->trim()[0]
+            )
             ->withOptions($options)
             ->call();
     }
@@ -67,15 +70,13 @@ final class Blacklists extends ManagementEndpoint
         ?string $aud = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $aud = Shortcut::trimNull($aud);
+        [$aud] = Toolkit::filter([$aud])->string()->trim();
 
-        $client = $this->getHttpClient()->method('get')
-            ->addPath('blacklists', 'tokens');
-
-        if ($aud !== null) {
-            $client->withParam('aud', $aud);
-        }
-
-        return $client->withOptions($options)->call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('blacklists', 'tokens')
+            ->withParam('aud', $aud)
+            ->withOptions($options)
+            ->call();
     }
 }

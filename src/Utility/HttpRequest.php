@@ -116,9 +116,15 @@ final class HttpRequest
     private ?array $mockedResponses = null;
 
     /**
+     * The context in which this client was created, for defining special behaviors.
+     */
+    private int $context = HttpClient::CONTEXT_AUTHENTICATION_CLIENT;
+
+    /**
      * HttpRequest constructor.
      *
      * @param SdkConfiguration   $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param int                $context         Required. The context the client is being created under, either HttpClient::CONTEXT_GENERIC_CLIENT, HttpClient::CONTEXT_AUTHENTICATION_CLIENT or HttpClient::CONTEXT_MANAGEMENT_CLIENT.
      * @param string             $method          Required. Type of HTTP request method to use, e.g. 'GET' or 'POST'.
      * @param string             $basePath        Optional. The base URI path from which additional pathing and parameters should be appended.
      * @param array<int|string>  $headers         Optional. Additional headers to send with the HTTP request.
@@ -127,6 +133,7 @@ final class HttpRequest
      */
     public function __construct(
         SdkConfiguration &$configuration,
+        int $context,
         string $method,
         string $basePath = '/',
         array $headers = [],
@@ -134,6 +141,7 @@ final class HttpRequest
         ?array &$mockedResponses = null
     ) {
         $this->configuration = & $configuration;
+        $this->context = $context;
         $this->method = mb_strtoupper($method);
         $this->basePath = $basePath;
         $this->headers = $headers;
@@ -181,9 +189,14 @@ final class HttpRequest
      * @param string ...$params String paths to append to the request.
      */
     public function addPath(
-        string ...$params
+        ?string ...$params
     ): self {
-        $this->path = array_merge($this->path, $params);
+        [$params] = Toolkit::filter([$params])->array()->trim();
+
+        if (count($params) !== 0) {
+            $this->path = array_merge($this->path, $params);
+        }
+
         return $this;
     }
 
@@ -214,28 +227,34 @@ final class HttpRequest
     /**
      * Add a file to be sent with the request.
      *
-     * @param string $field     Field name in the multipart request.
-     * @param string $file_path Path to the file to send.
+     * @param string      $field     Field name in the multipart request.
+     * @param string|null $file_path Path to the file to send.
      */
     public function addFile(
         string $field,
-        string $file_path
+        ?string $file_path
     ): self {
-        $this->files[$field] = $file_path;
+        if ($file_path !== null) {
+            $this->files[$field] = $file_path;
+        }
+
         return $this;
     }
 
     /**
      * Add a form value to be sent with the request.
      *
-     * @param string          $key Form parameter key.
-     * @param bool|int|string $value Form parameter value.
+     * @param string               $key Form parameter key.
+     * @param bool|int|string|null $value Form parameter value.
      */
     public function withFormParam(
         string $key,
         $value
     ): self {
-        $this->formParams[$key] = $this->prepareBoolParam($value);
+        if ($value !== null) {
+            $this->formParams[$key] = $this->prepareBoolParam($value);
+        }
+
         return $this;
     }
 
@@ -343,7 +362,7 @@ final class HttpRequest
             $this->lastResponse = $httpResponse;
 
             // If the API responds with a 429, try reissuing the request up to 3 times before returning the last response.
-            if ($httpResponse->getStatusCode() === 429 && $configuredRetries > 0) {
+            if ($httpResponse->getStatusCode() === 429 && $configuredRetries > 0 && $this->context === HttpClient::CONTEXT_MANAGEMENT_CLIENT) {
                 $attempt = $this->getRequestCount();
                 $maxRetries = min(self::MAX_REQUEST_RETRIES, $configuredRetries);
 
@@ -430,13 +449,17 @@ final class HttpRequest
     /**
      * Add a URL parameter to the request.
      *
-     * @param string          $key   URL parameter key.
-     * @param bool|int|string $value URL parameter value.
+     * @param string               $key   URL parameter key.
+     * @param bool|int|string|null $value URL parameter value.
      */
     public function withParam(
         string $key,
         $value
     ): self {
+        if ($value === null) {
+            return $this;
+        }
+
         $this->params[$key] = $this->prepareBoolParam($value);
         return $this;
     }

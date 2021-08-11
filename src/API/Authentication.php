@@ -6,8 +6,7 @@ namespace Auth0\SDK\API;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpClient;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -60,7 +59,7 @@ final class Authentication
             return $this->httpClient;
         }
 
-        return $this->httpClient = new HttpClient($this->configuration);
+        return $this->httpClient = new HttpClient($this->configuration, HttpClient::CONTEXT_AUTHENTICATION_CLIENT);
     }
 
     /**
@@ -77,23 +76,19 @@ final class Authentication
         ?string $clientId = null,
         ?string $connection = null
     ): string {
-        $clientId = Shortcut::first(
-            \Auth0\SDK\Exception\ConfigurationException::requiresClientId(),
-            $clientId,
-            $this->configuration->getClientId()
-        );
-        $connection = Shortcut::trimNull($connection);
-        $params = [];
+        [$clientId, $connection] = Toolkit::filter([$clientId, $connection])->string()->trim();
 
-        if ($connection !== null) {
-            $params['connection'] = $connection;
-        }
+        [$clientId] = Toolkit::filter([
+            [$clientId, $this->configuration->getClientId()],
+        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
 
         return sprintf(
             '%s/samlp/%s?%s',
             $this->configuration->formatDomain(),
             $clientId,
-            http_build_query($params, '', '&', PHP_QUERY_RFC3986)
+            http_build_query(Toolkit::filter([
+                ['connection' => $connection],
+            ])->array()->trim()[0], '', '&', PHP_QUERY_RFC3986)
         );
     }
 
@@ -109,11 +104,11 @@ final class Authentication
     public function getSamlpMetadataLink(
         ?string $clientId = null
     ): string {
-        $clientId = Shortcut::first(
-            \Auth0\SDK\Exception\ConfigurationException::requiresClientId(),
-            $clientId,
-            $this->configuration->getClientId()
-        );
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
+
+        [$clientId] = Toolkit::filter([
+            [$clientId, $this->configuration->getClientId()],
+        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
 
         return sprintf(
             '%s/samlp/metadata/%s',
@@ -136,17 +131,18 @@ final class Authentication
         ?string $clientId = null,
         ?array $params = null
     ): string {
-        $clientId = Shortcut::first(
-            \Auth0\SDK\Exception\ConfigurationException::requiresClientId(),
-            $clientId,
-            $this->configuration->getClientId()
-        );
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
+        [$params] = Toolkit::filter([$params])->array()->trim();
+
+        [$clientId] = Toolkit::filter([
+            [$clientId, $this->configuration->getClientId()],
+        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
 
         return sprintf(
             '%s/wsfed/%s?%s',
             $this->configuration->formatDomain(),
             $clientId,
-            http_build_query($params ?? [], '', '&', PHP_QUERY_RFC3986)
+            http_build_query($params, '', '&', PHP_QUERY_RFC3986)
         );
     }
 
@@ -181,38 +177,38 @@ final class Authentication
         ?string $redirectUri = null,
         ?array $params = null
     ): string {
-        Validate::string($state, 'state');
+        [$state, $redirectUri] = Toolkit::filter([$state, $redirectUri])->string()->trim();
+        [$params] = Toolkit::filter([$params])->array()->trim();
 
-        $redirectUri = Shortcut::first(
-            \Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri(),
-            $redirectUri,
-            isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null,
-            $this->configuration->getRedirectUri()
-        );
+        Toolkit::assert([
+            [$state, \Auth0\SDK\Exception\ArgumentException::missing('state')],
+        ])->isString();
 
-        $params = Shortcut::mergeArrays(Shortcut::filterArray([
-            'state' => $state,
-            'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-            'audience' => $this->configuration->defaultAudience(),
-            'organization' => $this->configuration->defaultOrganization(),
-            'redirect_uri' => $redirectUri,
-            'scope' => $this->configuration->formatScope(),
-            'response_mode' => $this->configuration->getResponseMode(),
-            'response_type' => $this->configuration->getResponseType(),
-        ]), $params);
+        [$redirectUri] = Toolkit::filter([
+            [$redirectUri, isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null, $this->configuration->getRedirectUri()],
+        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
 
         return sprintf(
             '%s/authorize?%s',
             $this->configuration->formatDomain(),
-            http_build_query($params, '', '&', PHP_QUERY_RFC3986)
+            http_build_query(Toolkit::merge([
+                'state' => $state,
+                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'audience' => $this->configuration->defaultAudience(),
+                'organization' => $this->configuration->defaultOrganization(),
+                'redirect_uri' => $redirectUri,
+                'scope' => $this->configuration->formatScope(),
+                'response_mode' => $this->configuration->getResponseMode(),
+                'response_type' => $this->configuration->getResponseType(),
+            ], $params), '', '&', PHP_QUERY_RFC3986)
         );
     }
 
     /**
      * Builds and returns a logout URL to terminate an SSO session.
      *
-     * @param string|null                 $returnUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
-     * @param array<int|string|null>|null $params    Optional. Additional parameters to include with the request.
+     * @param string|null                 $returnTo Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
+     * @param array<int|string|null>|null $params   Optional. Additional parameters to include with the request.
      *
      * @throws \Auth0\SDK\Exception\ConfigurationException When a Client ID is not configured.
      * @throws \Auth0\SDK\Exception\ConfigurationException When a $returnUri is not configured.
@@ -220,27 +216,23 @@ final class Authentication
      * @link https://auth0.com/docs/api/authentication#logout
      */
     public function getLogoutLink(
-        ?string $returnUri = null,
+        ?string $returnTo = null,
         ?array $params = null
     ): string {
-        $clientId = $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
+        [$returnTo] = Toolkit::filter([$returnTo])->string()->trim();
+        [$params] = Toolkit::filter([$params])->array()->trim();
 
-        $returnUri = Shortcut::first(
-            \Auth0\SDK\Exception\ConfigurationException::requiresReturnUri(),
-            $returnUri,
-            isset($params['returnTo']) ? (string) $params['returnTo'] : null,
-            $this->configuration->getRedirectUri()
-        );
-
-        $payload = Shortcut::mergeArrays([
-            'returnTo' => $returnUri,
-            'client_id' => $clientId,
-        ], $params);
+        [$returnTo] = Toolkit::filter([
+            [$returnTo, isset($params['returnTo']) ? (string) $params['returnTo'] : null, $this->configuration->getRedirectUri()],
+        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
 
         return sprintf(
             '%s/v2/logout?%s',
             $this->configuration->formatDomain(),
-            http_build_query($payload, '', '&', PHP_QUERY_RFC3986)
+            http_build_query(Toolkit::merge([
+                'returnTo' => $returnTo,
+                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+            ], $params), '', '&', PHP_QUERY_RFC3986)
         );
     }
 
@@ -260,16 +252,16 @@ final class Authentication
         ?array $body = null,
         ?array $headers = null
     ): ResponseInterface {
-        $body = Shortcut::mergeArrays([
-            'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-            'client_secret' => $this->configuration->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
-        ], $body);
+        [$body, $headers] = Toolkit::filter([$body, $headers])->array()->trim();
 
         return $this->getHttpClient()
             ->method('post')
             ->addPath('passwordless', 'start')
-            ->withBody($body)
-            ->withHeaders($headers ?? [])
+            ->withBody(Toolkit::merge([
+                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_secret' => $this->configuration->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
+            ], $body))
+            ->withHeaders($headers)
             ->call();
     }
 
@@ -294,17 +286,25 @@ final class Authentication
         ?array $params = null,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::email($email, 'email');
-        Validate::string($type, 'type');
+        [$email, $type] = Toolkit::filter([$email, $type])->string()->trim();
+        [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
 
-        $body = Shortcut::filterArray([
-            'email' => trim($email),
-            'connection' => 'email',
-            'send' => trim($type),
-            'authParams' => $params ?? [],
-        ]);
+        Toolkit::assert([
+            [$email, \Auth0\SDK\Exception\ArgumentException::missing('email')],
+        ])->isEmail();
 
-        return $this->passwordlessStart($body, $headers ?? []);
+        Toolkit::assert([
+            [$type, \Auth0\SDK\Exception\ArgumentException::missing('type')],
+        ])->isString();
+
+        return $this->passwordlessStart(Toolkit::filter([
+            [
+                'email' => $email,
+                'connection' => 'email',
+                'send' => $type,
+                'authParams' => $params,
+            ],
+        ])->array()->trim()[0], $headers);
     }
 
     /**
@@ -324,14 +324,19 @@ final class Authentication
         string $phoneNumber,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::string($phoneNumber, 'phoneNumber');
+        [$phoneNumber] = Toolkit::filter([$phoneNumber])->string()->trim();
+        [$headers] = Toolkit::filter([$headers])->array()->trim();
 
-        $body = Shortcut::filterArray([
-            'phone_number' => trim($phoneNumber),
-            'connection' => 'sms',
-        ]);
+        Toolkit::assert([
+            [$phoneNumber, \Auth0\SDK\Exception\ArgumentException::missing('phoneNumber')],
+        ])->isString();
 
-        return $this->passwordlessStart($body, $headers ?? []);
+        return $this->passwordlessStart(Toolkit::filter([
+            [
+                'phone_number' => $phoneNumber,
+                'connection' => 'sms',
+            ],
+        ])->array()->trim()[0], $headers);
     }
 
     /**
@@ -347,12 +352,16 @@ final class Authentication
     public function userInfo(
         string $accessToken
     ): ResponseInterface {
-        Validate::string($accessToken, 'accessToken');
+        [$accessToken] = Toolkit::filter([$accessToken])->string()->trim();
+
+        Toolkit::assert([
+            [$accessToken, \Auth0\SDK\Exception\ArgumentException::missing('accessToken')],
+        ])->isString();
 
         return $this->getHttpClient()
             ->method('post')
             ->addPath('userinfo')
-            ->withHeader('Authorization', 'Bearer ' . trim($accessToken))
+            ->withHeader('Authorization', 'Bearer ' . ($accessToken ?? ''))
             ->call();
     }
 
@@ -375,19 +384,22 @@ final class Authentication
         ?array $params = null,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::string($grantType, 'grantType');
+        [$grantType] = Toolkit::filter([$grantType])->string()->trim();
+        [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
 
-        $params = Shortcut::mergeArrays([
-            'grant_type' => trim($grantType),
-            'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-            'client_secret' => $this->configuration->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
-        ], $params);
+        Toolkit::assert([
+            [$grantType, \Auth0\SDK\Exception\ArgumentException::missing('grantType')],
+        ])->isString();
 
         return $this->getHttpClient()
             ->method('post')
             ->addPath('oauth', 'token')
-            ->withHeaders($headers ?? [])
-            ->withFormParams($params)
+            ->withHeaders($headers)
+            ->withFormParams(Toolkit::merge([
+                'grant_type' => $grantType,
+                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_secret' => $this->configuration->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
+            ], $params))
             ->call();
     }
 
@@ -409,19 +421,23 @@ final class Authentication
         ?string $redirectUri = null,
         ?string $codeVerifier = null
     ): ResponseInterface {
-        Validate::string($code, 'code');
+        [$code, $redirectUri, $codeVerifier] = Toolkit::filter([$code, $redirectUri, $codeVerifier])->string()->trim();
 
-        $redirectUri = Shortcut::first(
-            \Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri(),
-            $redirectUri,
-            $this->configuration->getRedirectUri()
-        );
+        Toolkit::assert([
+            [$code, \Auth0\SDK\Exception\ArgumentException::missing('code')],
+        ])->isString();
 
-        return $this->oauthToken('authorization_code', Shortcut::filterArray([
-            'redirect_uri' => $redirectUri,
-            'code' => trim($code),
-            'code_verifier' => Shortcut::trimNull($codeVerifier),
-        ]));
+        [$redirectUri] = Toolkit::filter([
+            [$redirectUri, $this->configuration->getRedirectUri()],
+        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
+
+        return $this->oauthToken('authorization_code', Toolkit::filter([
+            [
+                'redirect_uri' => $redirectUri,
+                'code' => $code,
+                'code_verifier' => $codeVerifier,
+            ],
+        ])->array()->trim()[0]);
     }
 
     /**
@@ -445,17 +461,20 @@ final class Authentication
         ?array $params = null,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::string($username, 'username');
-        Validate::string($password, 'password');
-        Validate::string($realm, 'realm');
+        [$username, $password, $realm] = Toolkit::filter([$username, $password, $realm])->string()->trim();
+        [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
 
-        $params = Shortcut::mergeArrays([
-            'username' => trim($username),
-            'password' => trim($password),
-            'realm' => trim($realm),
-        ], $params);
+        Toolkit::assert([
+            [$username, \Auth0\SDK\Exception\ArgumentException::missing('username')],
+            [$password, \Auth0\SDK\Exception\ArgumentException::missing('password')],
+            [$realm, \Auth0\SDK\Exception\ArgumentException::missing('realm')],
+        ])->isString();
 
-        return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', $params, $headers ?? []);
+        return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', Toolkit::merge([
+            'username' => $username,
+            'password' => $password,
+            'realm' => $realm,
+        ], $params), $headers);
     }
 
     /**
@@ -479,15 +498,18 @@ final class Authentication
         ?array $params = null,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::string($username, 'username');
-        Validate::string($password, 'password');
+        [$username, $password] = Toolkit::filter([$username, $password])->string()->trim();
+        [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
 
-        $params = Shortcut::mergeArrays([
-            'username' => trim($username),
-            'password' => trim($password),
-        ], $params);
+        Toolkit::assert([
+            [$username, \Auth0\SDK\Exception\ArgumentException::missing('username')],
+            [$password, \Auth0\SDK\Exception\ArgumentException::missing('password')],
+        ])->isString();
 
-        return $this->oauthToken('password', $params, $headers ?? []);
+        return $this->oauthToken('password', Toolkit::merge([
+            'username' => $username,
+            'password' => $password,
+        ], $params), $headers);
     }
 
     /**
@@ -506,11 +528,11 @@ final class Authentication
         ?array $params = null,
         ?array $headers = null
     ): ResponseInterface {
-        $params = Shortcut::mergeArrays([
-            'audience' => $this->configuration->defaultAudience(),
-        ], $params);
+        [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
 
-        return $this->oauthToken('client_credentials', $params, $headers ?? []);
+        return $this->oauthToken('client_credentials', Toolkit::merge([
+            'audience' => $this->configuration->defaultAudience(),
+        ], $params), $headers);
     }
 
     /**
@@ -532,13 +554,16 @@ final class Authentication
         ?array $params = null,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::string($refreshToken, 'refreshToken');
+        [$refreshToken] = Toolkit::filter([$refreshToken])->string()->trim();
+        [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
 
-        $params = Shortcut::mergeArrays([
-            'refresh_token' => trim($refreshToken),
-        ], $params);
+        Toolkit::assert([
+            [$refreshToken, \Auth0\SDK\Exception\ArgumentException::missing('refreshToken')],
+        ])->isString();
 
-        return $this->oauthToken('refresh_token', $params, $headers ?? []);
+        return $this->oauthToken('refresh_token', Toolkit::merge([
+            'refresh_token' => $refreshToken,
+        ], $params), $headers);
     }
 
     /**
@@ -564,22 +589,25 @@ final class Authentication
         ?array $body = null,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::string($email, 'email');
-        Validate::string($password, 'password');
-        Validate::string($connection, 'connection');
+        [$email, $password, $connection] = Toolkit::filter([$email, $password, $connection])->string()->trim();
+        [$body, $headers] = Toolkit::filter([$body, $headers])->array()->trim();
 
-        $body = Shortcut::mergeArrays([
-            'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-            'email' => trim($email),
-            'password' => trim($password),
-            'connection' => trim($connection),
-        ], $body);
+        Toolkit::assert([
+            [$email, \Auth0\SDK\Exception\ArgumentException::missing('email')],
+            [$password, \Auth0\SDK\Exception\ArgumentException::missing('password')],
+            [$connection, \Auth0\SDK\Exception\ArgumentException::missing('connection')],
+        ])->isString();
 
         return $this->getHttpClient()
             ->method('post')
             ->addPath('dbconnections', 'signup')
-            ->withBody($body)
-            ->withHeaders($headers ?? [])
+            ->withBody(Toolkit::merge([
+                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'email' => $email,
+                'password' => $password,
+                'connection' => $connection,
+            ], $body))
+            ->withHeaders($headers)
             ->call();
     }
 
@@ -604,20 +632,23 @@ final class Authentication
         ?array $body = null,
         ?array $headers = null
     ): ResponseInterface {
-        Validate::string($email, 'email');
-        Validate::string($connection, 'connection');
+        [$email, $connection] = Toolkit::filter([$email, $connection])->string()->trim();
+        [$body, $headers] = Toolkit::filter([$body, $headers])->array()->trim();
 
-        $body = Shortcut::mergeArrays([
-            'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-            'email' => trim($email),
-            'connection' => trim($connection),
-        ], $body);
+        Toolkit::assert([
+            [$email, \Auth0\SDK\Exception\ArgumentException::missing('email')],
+            [$connection, \Auth0\SDK\Exception\ArgumentException::missing('connection')],
+        ])->isString();
 
         return $this->getHttpClient()
             ->method('post')
             ->addPath('dbconnections', 'change_password')
-            ->withBody($body)
-            ->withHeaders($headers ?? [])
+            ->withBody(Toolkit::merge([
+                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'email' => $email,
+                'connection' => $connection,
+            ], $body))
+            ->withHeaders($headers)
             ->call();
     }
 }

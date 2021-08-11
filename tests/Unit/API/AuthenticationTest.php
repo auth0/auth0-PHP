@@ -253,3 +253,223 @@ test('smsPasswordlessStart() is properly formatted', function(): void {
     $this->assertEquals('sms', $requestBody['connection']);
     $this->assertEquals('8675309', $requestBody['phone_number']);
 });
+
+test('userInfo() is properly formatted', function(): void {
+    $accessToken = uniqid();
+
+    $this->sdk->authentication()->userInfo($accessToken);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+    $requestHeaders = $request->getHeaders();
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/userinfo', $requestUri->getPath());
+    $this->assertArrayHasKey('Authorization', $requestHeaders);
+    $this->assertEquals('Bearer ' . $accessToken, $requestHeaders['Authorization'][0]);
+});
+
+test('oauthToken() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $this->sdk->authentication()->oauthToken('authorization_code');
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody =  explode('&', $request->getBody()->__toString());
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/oauth/token', $requestUri->getPath());
+
+    $this->assertContains('grant_type=authorization_code', $requestBody);
+    $this->assertContains('client_id=__test_client_id__', $requestBody);
+    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
+});
+
+test('codeExchange() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+    $code = uniqid();
+    $redirect = uniqid();
+    $verifier = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $this->sdk->authentication()->codeExchange($code, $redirect, $verifier);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody =  explode('&', $request->getBody()->__toString());
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/oauth/token', $requestUri->getPath());
+
+    $this->assertContains('grant_type=authorization_code', $requestBody);
+    $this->assertContains('client_id=__test_client_id__', $requestBody);
+    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
+    $this->assertContains('code=' . $code, $requestBody);
+    $this->assertContains('redirect_uri=' . $redirect, $requestBody);
+    $this->assertContains('code_verifier=' . $verifier, $requestBody);
+});
+
+test('login() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+
+    $username = uniqid();
+    $password = uniqid();
+    $realm = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $this->sdk->authentication()->login($username, $password, $realm);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody =  explode('&', $request->getBody()->__toString());
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/oauth/token', $requestUri->getPath());
+
+    $this->assertContains('grant_type=' . urlencode('http://auth0.com/oauth/grant-type/password-realm'), $requestBody);
+    $this->assertContains('client_id=__test_client_id__', $requestBody);
+    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
+    $this->assertContains('username=' . $username, $requestBody);
+    $this->assertContains('password=' . $password, $requestBody);
+    $this->assertContains('realm=' . $realm, $requestBody);
+});
+
+test('loginWithDefaultDirectory() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+
+    $username = uniqid();
+    $password = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $this->sdk->authentication()->loginWithDefaultDirectory($username, $password);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody =  explode('&', $request->getBody()->__toString());
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/oauth/token', $requestUri->getPath());
+
+    $this->assertContains('grant_type=password', $requestBody);
+    $this->assertContains('client_id=__test_client_id__', $requestBody);
+    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
+    $this->assertContains('username=' . $username, $requestBody);
+    $this->assertContains('password=' . $password, $requestBody);
+});
+
+test('clientCredentials() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $this->sdk->authentication()->clientCredentials(['testing' => 123], ['header_testing' => 123]);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody =  explode('&', $request->getBody()->__toString());
+    $requestHeaders = $request->getHeaders();
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/oauth/token', $requestUri->getPath());
+
+    $this->assertContains('grant_type=client_credentials', $requestBody);
+    $this->assertContains('client_id=__test_client_id__', $requestBody);
+    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
+    $this->assertContains('audience=aud1', $requestBody);
+    $this->assertContains('testing=123', $requestBody);
+
+    $this->assertArrayHasKey('header_testing', $requestHeaders);
+    $this->assertEquals(123, $requestHeaders['header_testing'][0]);
+});
+
+test('refreshToken() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+    $refreshToken = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $this->sdk->authentication()->refreshToken($refreshToken, ['testing' => 123], ['header_testing' => 123]);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody =  explode('&', $request->getBody()->__toString());
+    $requestHeaders = $request->getHeaders();
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/oauth/token', $requestUri->getPath());
+
+    $this->assertContains('grant_type=refresh_token', $requestBody);
+    $this->assertContains('client_id=__test_client_id__', $requestBody);
+    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
+    $this->assertContains('refresh_token=' . $refreshToken, $requestBody);
+    $this->assertContains('testing=123', $requestBody);
+
+    $this->assertArrayHasKey('header_testing', $requestHeaders);
+    $this->assertEquals(123, $requestHeaders['header_testing'][0]);
+});
+
+test('dbConnectionsSignup() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+
+    $email = 'someone@somewhere.somehow   ';
+    $password = uniqid();
+    $connection = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $this->sdk->authentication()->dbConnectionsSignup($email, $password, $connection, ['testing' => 123], ['header_testing' => 123]);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+    $requestHeaders = $request->getHeaders();
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/dbconnections/signup', $requestUri->getPath());
+
+    $this->assertArrayHasKey('client_id', $requestBody);
+    $this->assertArrayHasKey('email', $requestBody);
+    $this->assertArrayHasKey('password', $requestBody);
+    $this->assertArrayHasKey('connection', $requestBody);
+    $this->assertArrayHasKey('testing', $requestBody);
+
+    $this->assertEquals('__test_client_id__', $requestBody['client_id']);
+    $this->assertEquals(trim($email), $requestBody['email']);
+    $this->assertEquals($password, $requestBody['password']);
+    $this->assertEquals($connection, $requestBody['connection']);
+    $this->assertEquals(123, $requestBody['testing']);
+
+    $this->assertArrayHasKey('header_testing', $requestHeaders);
+    $this->assertEquals(123, $requestHeaders['header_testing'][0]);
+});
+
+test('dbConnectionsChangePassword() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+
+    $email = '    someone@somewhere.somehow';
+    $connection = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $this->sdk->authentication()->dbConnectionsChangePassword($email, $connection, ['testing' => 123], ['header_testing' => 123]);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+    $requestHeaders = $request->getHeaders();
+
+    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
+    $this->assertEquals('/dbconnections/change_password', $requestUri->getPath());
+
+    $this->assertArrayHasKey('client_id', $requestBody);
+    $this->assertArrayHasKey('email', $requestBody);
+    $this->assertArrayHasKey('connection', $requestBody);
+    $this->assertArrayHasKey('testing', $requestBody);
+
+    $this->assertEquals('__test_client_id__', $requestBody['client_id']);
+    $this->assertEquals(trim($email), $requestBody['email']);
+    $this->assertEquals($connection, $requestBody['connection']);
+    $this->assertEquals(123, $requestBody['testing']);
+
+    $this->assertArrayHasKey('header_testing', $requestHeaders);
+    $this->assertEquals(123, $requestHeaders['header_testing'][0]);
+});

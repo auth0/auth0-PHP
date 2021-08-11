@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -32,9 +31,12 @@ final class Grants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->getHttpClient()->method('get')
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('grants')
-            ->withParams($parameters ?? [])
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }
@@ -57,13 +59,16 @@ final class Grants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $clientId = Validate::string($clientId, 'clientId');
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        $parameters = Shortcut::mergeArrays([
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+        ])->isString();
+
+        return $this->getAll(Toolkit::merge([
             'client_id' => $clientId,
-        ], $parameters);
-
-        return $this->getAll($parameters, $options);
+        ], $parameters), $options);
     }
 
     /**
@@ -84,13 +89,16 @@ final class Grants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $audience = Validate::string($audience, 'audience');
+        [$audience] = Toolkit::filter([$audience])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        $parameters = Shortcut::mergeArrays([
+        Toolkit::assert([
+            [$audience, \Auth0\SDK\Exception\ArgumentException::missing('audience')],
+        ])->isString();
+
+        return $this->getAll(Toolkit::merge([
             'audience' => $audience,
-        ], $parameters ?? []);
-
-        return $this->getAll($parameters, $options);
+        ], $parameters), $options);
     }
 
     /**
@@ -111,13 +119,16 @@ final class Grants extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $userId = Validate::string($userId, 'userId');
+        [$userId] = Toolkit::filter([$userId])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        $parameters = Shortcut::mergeArrays([
+        Toolkit::assert([
+            [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
+        ])->isString();
+
+        return $this->getAll(Toolkit::merge([
             'user_id' => $userId,
-        ], $parameters);
-
-        return $this->getAll($parameters, $options);
+        ], $parameters), $options);
     }
 
     /**
@@ -136,9 +147,14 @@ final class Grants extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('delete')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('grants', $id)
             ->withOptions($options)
             ->call();

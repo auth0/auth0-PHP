@@ -23,7 +23,7 @@ beforeEach(function(): void {
         'redirectUri' => uniqid()
     ]);
 
-    $this->client = new HttpClient($this->config);
+    $this->client = new HttpClient($this->config, HttpClient::CONTEXT_MANAGEMENT_CLIENT);
 
     $this->httpResponse200 = HttpResponseGenerator::create('{"status": "ok"}', 200);
     $this->httpResponse429 = HttpResponseGenerator::create('{"error": "too_many_requests", "error_description": "Rate limit exceeded"}', 429);

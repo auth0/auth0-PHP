@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -35,15 +34,21 @@ final class Tickets extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $userId = Validate::string($userId, 'userId');
+        [$userId] = Toolkit::filter([$userId])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        $body = Shortcut::mergeArrays([
-            'user_id' => $userId,
-        ], $body);
+        Toolkit::assert([
+            [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
+        ])->isString();
 
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('tickets', 'email-verification')
-            ->withBody((object) $body)
+            ->withBody(
+                (object) Toolkit::merge([
+                    'user_id' => $userId,
+                ], $body)
+            )
             ->withOptions($options)
             ->call();
     }
@@ -62,9 +67,14 @@ final class Tickets extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::array($body, 'body');
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        return $this->getHttpClient()->method('post')
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('tickets', 'password-change')
             ->withBody((object) $body)
             ->withOptions($options)
