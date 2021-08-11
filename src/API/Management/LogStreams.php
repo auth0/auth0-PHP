@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -37,22 +36,29 @@ final class LogStreams extends ManagementEndpoint
         ?string $name = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $type = Validate::string($type, 'type');
-        Validate::array($sink, 'sink');
-        $name = Shortcut::trimNull($name);
+        [$type, $name] = Toolkit::filter([$type, $name])->string()->trim();
+        [$sink] = Toolkit::filter([$sink])->array()->trim();
 
-        $payload = [
-            'type' => $type,
-            'sink' => (object) $sink,
-        ];
+        Toolkit::assert([
+            [$type, \Auth0\SDK\Exception\ArgumentException::missing('type')],
+        ])->isString();
 
-        if ($name !== null) {
-            $payload['name'] = $name;
-        }
+        Toolkit::assert([
+            [$sink, \Auth0\SDK\Exception\ArgumentException::missing('sink')],
+        ])->isArray();
 
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('log-streams')
-            ->withBody((object) $payload)
+            ->withBody(
+                (object) Toolkit::filter([
+                    [
+                        'type' => $type,
+                        'sink' => (object) $sink,
+                        'name' => $name,
+                    ],
+                ])->array()->trim()[0]
+            )
             ->withOptions($options)
             ->call();
     }
@@ -70,7 +76,8 @@ final class LogStreams extends ManagementEndpoint
     public function getAll(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->getHttpClient()->method('get')
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('log-streams')
             ->withOptions($options)
             ->call();
@@ -92,9 +99,14 @@ final class LogStreams extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('log-streams', $id)
             ->withOptions($options)
             ->call();
@@ -118,10 +130,19 @@ final class LogStreams extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
-        Validate::array($body, 'body');
+        [$id] = Toolkit::filter([$id])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        return $this->getHttpClient()->method('patch')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('patch')
             ->addPath('log-streams', $id)
             ->withBody((object) $body)
             ->withOptions($options)
@@ -144,9 +165,14 @@ final class LogStreams extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('delete')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('log-streams', $id)
             ->withOptions($options)
             ->call();

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Mixins;
 
 use Auth0\SDK\Exception\ConfigurationException;
-use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Toolkit;
 
 trait ConfigurableMixin
 {
@@ -69,7 +69,7 @@ trait ConfigurableMixin
                     $arguments[0] = [ $arguments[0] ];
                 }
 
-                $arguments = Shortcut::filterArray($arguments);
+                [$arguments] = Toolkit::filter([$arguments])->array()->trim();
 
                 if (count($arguments) !== 0) {
                     if (is_array($this->configuredState[$propertyName]->value)) {

@@ -6,7 +6,7 @@ namespace Auth0\SDK\Store;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 
 /**
  * Class CookieStore.
@@ -38,17 +38,21 @@ class CookieStore implements StoreInterface
     /**
      * CookieStore constructor.
      *
-     * @param SdkConfiguration $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param string           $cookiePrefix    Optional. A string to prefix stored cookie keys with.
+     * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string           $cookiePrefix    A string to prefix stored cookie keys with.
      */
     public function __construct(
         SdkConfiguration &$configuration,
         string $cookiePrefix = 'auth0'
     ) {
-        Validate::string($cookiePrefix, 'cookiePrefix');
+        [$cookiePrefix] = Toolkit::filter([$cookiePrefix])->string()->trim();
+
+        Toolkit::assert([
+            [$cookiePrefix, \Auth0\SDK\Exception\ArgumentException::missing('cookiePrefix')],
+        ])->isString();
 
         $this->configuration = & $configuration;
-        $this->cookiePrefix = trim($cookiePrefix);
+        $this->cookiePrefix = $cookiePrefix ?? 'auth0';
 
         $this->chunkingThreshold = self::KEY_CHUNKING_THRESHOLD - strlen(hash(self::KEY_HASHING_ALGO, 'threshold'));
     }
@@ -63,8 +67,6 @@ class CookieStore implements StoreInterface
         string $key,
         $value
     ): void {
-        Validate::string($key, 'key');
-
         $key = $this->getCookieName($key);
         $cookieOptions = $this->getCookieOptions();
 
@@ -106,8 +108,6 @@ class CookieStore implements StoreInterface
         string $key,
         $default = null
     ) {
-        Validate::string($key, 'key');
-
         $key = $this->getCookieName($key);
         $chunks = $this->isCookieChunked($key);
         $value = '';
@@ -172,8 +172,6 @@ class CookieStore implements StoreInterface
         string $key,
         bool $prefix = true
     ): void {
-        Validate::string($key, 'key');
-
         $key = $this->getCookieName($key, $prefix);
         $chunks = $this->isCookieChunked($key);
 
@@ -207,13 +205,17 @@ class CookieStore implements StoreInterface
         string $key,
         bool $prefix = true
     ): string {
-        $key = trim($key);
+        [$key] = Toolkit::filter([$key])->string()->trim();
+
+        Toolkit::assert([
+            [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
+        ])->isString();
 
         if ($prefix) {
-            return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, $key);
+            return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, $key ?? '');
         }
 
-        return $key;
+        return $key ?? '';
     }
 
     /**
@@ -224,7 +226,11 @@ class CookieStore implements StoreInterface
     private function isCookieChunked(
         string $key
     ): ?int {
-        Validate::string($key, 'key');
+        [$key] = Toolkit::filter([$key])->string()->trim();
+
+        Toolkit::assert([
+            [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
+        ])->isString();
 
         if (isset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])])) {
             return (int) $_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])];
@@ -277,7 +283,11 @@ class CookieStore implements StoreInterface
     private function decrypt(
         string $data
     ) {
-        Validate::string($data, 'data');
+        [$data] = Toolkit::filter([$data])->string()->trim();
+
+        Toolkit::assert([
+            [$data, \Auth0\SDK\Exception\ArgumentException::missing('data')],
+        ])->isString();
 
         $secret = $this->configuration->getCookieSecret();
 
@@ -285,7 +295,7 @@ class CookieStore implements StoreInterface
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        $data = base64_decode($data, true);
+        $data = base64_decode($data ?? '', true);
 
         if ($data === false) {
             return null;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -30,9 +30,14 @@ final class UserBlocks extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('user-blocks', $id)
             ->withOptions($options)
             ->call();
@@ -52,9 +57,14 @@ final class UserBlocks extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('delete')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('user-blocks', $id)
             ->withOptions($options)
             ->call();
@@ -74,9 +84,14 @@ final class UserBlocks extends ManagementEndpoint
         string $identifier,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $identifier = Validate::string($identifier, 'identifier');
+        [$identifier] = Toolkit::filter([$identifier])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('user-blocks')
             ->withParam('identifier', $identifier)
             ->withOptions($options)
@@ -97,9 +112,14 @@ final class UserBlocks extends ManagementEndpoint
         string $identifier,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $identifier = Validate::string($identifier, 'identifier');
+        [$identifier] = Toolkit::filter([$identifier])->string()->trim();
 
-        return $this->getHttpClient()->method('delete')
+        Toolkit::assert([
+            [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('user-blocks')
             ->withParam('identifier', $identifier)
             ->withOptions($options)

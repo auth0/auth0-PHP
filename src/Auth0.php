@@ -10,7 +10,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Configuration\SdkState;
 use Auth0\SDK\Utility\HttpResponse;
 use Auth0\SDK\Utility\PKCE;
-use Auth0\SDK\Utility\Shortcut;
+use Auth0\SDK\Utility\Toolkit;
 use Auth0\SDK\Utility\TransientStoreHandler;
 
 /**
@@ -153,11 +153,9 @@ final class Auth0
         ?string $redirectUrl = null,
         ?array $params = null
     ): string {
-        $params = Shortcut::mergeArrays([
+        return $this->login($redirectUrl, Toolkit::merge([
             'screen_hint' => 'signup',
-        ], $params);
-
-        return $this->login($redirectUrl, $params);
+        ], $params));
     }
 
     /**

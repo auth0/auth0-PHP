@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -39,21 +38,21 @@ final class Jobs extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $filePath = Validate::string($filePath, 'filePath');
-        $connectionId = Validate::string($connectionId, 'connectionId');
+        [$filePath, $connectionId] = Toolkit::filter([$filePath, $connectionId])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        $request = $this->getHttpClient()->method('post')
+        Toolkit::assert([
+            [$filePath, \Auth0\SDK\Exception\ArgumentException::missing('filePath')],
+            [$connectionId, \Auth0\SDK\Exception\ArgumentException::missing('connectionId')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('jobs', 'users-imports')
             ->addFile('users', $filePath)
-            ->withFormParam('connection_id', $connectionId);
-
-        if ($parameters !== null && count($parameters) !== 0) {
-            foreach ($parameters as $key => $value) {
-                $request->withFormParam($key, $value);
-            }
-        }
-
-        return $request->withOptions($options)
+            ->withFormParam('connection_id', $connectionId)
+            ->withFormParams($parameters)
+            ->withOptions($options)
             ->call();
     }
 
@@ -72,9 +71,14 @@ final class Jobs extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::array($body, 'body');
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        return $this->getHttpClient()->method('post')
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('jobs', 'users-exports')
             ->withBody((object) $body)
             ->withOptions($options)
@@ -99,15 +103,21 @@ final class Jobs extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $userId = Validate::string($userId, 'userId');
+        [$userId] = Toolkit::filter([$userId])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        $body = Shortcut::mergeArrays([
-            'user_id' => $userId,
-        ], $body);
+        Toolkit::assert([
+            [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
+        ])->isString();
 
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('jobs', 'verification-email')
-            ->withBody((object) $body)
+            ->withBody(
+                (object) Toolkit::merge([
+                    'user_id' => $userId,
+                ], $body)
+            )
             ->withOptions($options)
             ->call();
     }
@@ -130,9 +140,14 @@ final class Jobs extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('jobs', $id)
             ->withOptions($options)
             ->call();
@@ -156,9 +171,14 @@ final class Jobs extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('jobs', $id, 'errors')
             ->withOptions($options)
             ->call();

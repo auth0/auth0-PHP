@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -29,7 +29,8 @@ final class Tenants extends ManagementEndpoint
     public function get(
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->getHttpClient()->method('get')
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('tenants', 'settings')
             ->withOptions($options)
             ->call();
@@ -51,9 +52,14 @@ final class Tenants extends ManagementEndpoint
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        Validate::array($body, 'body');
+        [$body] = Toolkit::filter([$body])->string()->trim();
 
-        return $this->getHttpClient()->method('patch')
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('patch')
             ->addPath('tenants', 'settings')
             ->withBody((object) $body)
             ->withOptions($options)

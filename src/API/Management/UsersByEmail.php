@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -30,9 +30,14 @@ final class UsersByEmail extends ManagementEndpoint
         string $email,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $email = Validate::email($email, 'email');
+        [$email] = Toolkit::filter([$email])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$email, \Auth0\SDK\Exception\ArgumentException::missing('email')],
+        ])->isEmail();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('users-by-email')
             ->withParam('email', $email)
             ->withOptions($options)

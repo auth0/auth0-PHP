@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -31,9 +31,12 @@ final class Logs extends ManagementEndpoint
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        return $this->getHttpClient()->method('get')
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('logs')
-            ->withParams($parameters ?? [])
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }
@@ -54,9 +57,14 @@ final class Logs extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('get')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('logs', $id)
             ->withOptions($options)
             ->call();

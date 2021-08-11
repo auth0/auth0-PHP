@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Shortcut;
-use Auth0\SDK\Utility\Validate;
+use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -40,21 +39,27 @@ final class DeviceCredentials extends ManagementEndpoint
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $deviceName = Validate::string($deviceName, 'deviceName');
-        $type = Validate::string($type, 'type');
-        $value = Validate::string($value, 'value');
-        $deviceId = Validate::string($deviceId, 'deviceId');
+        [$deviceName, $type, $value, $deviceId] = Toolkit::filter([$deviceName, $type, $value, $deviceId])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        $body = Shortcut::mergeArrays([
-            'device_name' => $deviceName,
-            'type' => $type,
-            'value' => $value,
-            'device_id' => $deviceId,
-        ], $body);
+        Toolkit::assert([
+            [$deviceName, \Auth0\SDK\Exception\ArgumentException::missing('deviceName')],
+            [$type, \Auth0\SDK\Exception\ArgumentException::missing('type')],
+            [$value, \Auth0\SDK\Exception\ArgumentException::missing('value')],
+            [$deviceId, \Auth0\SDK\Exception\ArgumentException::missing('deviceId')],
+        ])->isString();
 
-        return $this->getHttpClient()->method('post')
+        return $this->getHttpClient()
+            ->method('post')
             ->addPath('device-credentials')
-            ->withBody((object) $body)
+            ->withBody(
+                (object) Toolkit::merge([
+                    'device_name' => $deviceName,
+                    'type' => $type,
+                    'value' => $value,
+                    'device_id' => $deviceId,
+                ], $body)
+            )
             ->withOptions($options)
             ->call();
     }
@@ -79,25 +84,24 @@ final class DeviceCredentials extends ManagementEndpoint
         ?string $type = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $userId = Validate::string($userId, 'userId');
-        $clientId = Shortcut::trimNull($clientId);
-        $type = Shortcut::trimNull($type);
+        [$userId, $clientId, $type] = Toolkit::filter([$userId, $clientId, $type])->string()->trim();
 
-        $payload = [
-            'user_id' => $userId,
-        ];
+        Toolkit::assert([
+            [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+            [$type, \Auth0\SDK\Exception\ArgumentException::missing('type')],
+        ])->isString();
 
-        if ($clientId !== null) {
-            $payload['client_id'] = $clientId;
-        }
-
-        if ($type !== null) {
-            $payload['type'] = $type;
-        }
-
-        return $this->getHttpClient()->method('get')
+        return $this->getHttpClient()
+            ->method('get')
             ->addPath('device-credentials')
-            ->withParams($payload)
+            ->withParams(Toolkit::filter([
+                [
+                    'user_id' => $userId,
+                    'client_id' => $clientId,
+                    'type' => $type,
+                ],
+            ])->array()->trim()[0])
             ->withOptions($options)
             ->call();
     }
@@ -118,9 +122,14 @@ final class DeviceCredentials extends ManagementEndpoint
         string $id,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        $id = Validate::string($id, 'id');
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        return $this->getHttpClient()->method('delete')
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')
             ->addPath('device-credentials', $id)
             ->withOptions($options)
             ->call();
