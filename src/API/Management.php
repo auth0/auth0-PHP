@@ -88,6 +88,8 @@ final class Management
      * @param array<mixed> $arguments    Any arguments being passed to the magic function.
      *
      * @return mixed|void
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an unknown method is called.
      */
     public function __call(
         string $functionName,
@@ -127,16 +129,19 @@ final class Management
             return $this->instances[$functionName];
         }
 
-        return;
+        throw \Auth0\SDK\Exception\ArgumentException::unknownMethod($functionName);
     }
 
     /**
      * Return the HttpClient instance being used for management API requests.
      *
+     * @param Authentication|null $authentication Optional. An Instance of Authentication for use during client credential exchange. One will be created, when necessary, if not provided.
+     *
      * @throws \Auth0\SDK\Exception\ConfigurationException When a Management Token is not able to be obtained.
      */
-    public function getHttpClient(): HttpClient
-    {
+    public function getHttpClient(
+        ?Authentication $authentication = null
+    ): HttpClient {
         if ($this->httpClient !== null) {
             return $this->httpClient;
         }
@@ -159,7 +164,8 @@ final class Management
 
         // If no token was provided or available from cache, try to get one.
         if ($managementToken === null && $this->configuration->hasClientSecret()) {
-            $response = (new Authentication($this->configuration))->clientCredentials(['audience' => $this->configuration->formatDomain() . '/api/v2/']);
+            $authentication = $authentication ?? new Authentication($this->configuration);
+            $response = $authentication->clientCredentials(['audience' => $this->configuration->formatDomain() . '/api/v2/']);
 
             if (HttpResponse::wasSuccessful($response)) {
                 $response = HttpResponse::decodeContent($response);
@@ -185,7 +191,7 @@ final class Management
         }
 
         // Build the API client using the management token.
-        return $this->httpClient = new HttpClient($this->configuration, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
+        return $this->httpClient = new HttpClient($this->configuration, HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
     }
 
     /**
