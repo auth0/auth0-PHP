@@ -912,7 +912,7 @@ class OrganizationsTest extends TestCase
         $api = new MockManagementApi();
 
         $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitation'));
+        $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitationId'));
 
         $api->mock()->organizations()->deleteInvitation('test-organization', '');
     }
