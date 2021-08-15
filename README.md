@@ -255,7 +255,7 @@ $session = $auth0->getCredentials();
 // Is this end-user already signed in?
 if ($session === null) {
     // They are not. Redirect the end user to the login page.
-    header('Location: ', $auth0->login());
+    header('Location: ' . $auth0->login());
     exit;
 }
 ```
@@ -273,7 +273,7 @@ $session = $auth0->getCredentials();
 
 if ($session) {
     // Clear the end-user's session, and redirect them to the Auth0 /logout endpoint.
-    header('Location: ', $auth0->logout());
+    header('Location: ' . $auth0->logout());
     exit;
 }
 ```
@@ -295,7 +295,7 @@ $session = $auth0->getCredentials();
 // Is this end-user already signed in?
 if ($session === null) {
     // They are not. Redirect the end user to the login page.
-    header('Location: ', $auth0->login());
+    header('Location: ' . $auth0->login());
     exit;
 }
 
@@ -309,7 +309,7 @@ if ($session->accessTokenExpired) {
         $auth0->clear();
 
         // Prompt to login again.
-        header('Location: ', $auth0->login());
+        header('Location: ' . $auth0->login());
         exit;
     }
 }
@@ -461,7 +461,7 @@ $session = $auth0->getCredentials();
 // Is this end-user already signed in?
 if ($session === null) {
   // They are not. Redirect the end user to the login page.
-  header('Location: ', $auth0->login());
+  header('Location: ' . $auth0->login());
   exit;
 }
 ```
@@ -498,7 +498,7 @@ if ($invite = $auth0->getInvitationParameters()) {
   }
 
   // Redirect to Universal Login using the emailed invitation code and Organization Id
-  header('Location: ', $auth0->login(null, [
+  header('Location: ' . $auth0->login(null, [
     'invitation' => $invite->invitation,
     'organization' => $invite->organization,
   ]));
