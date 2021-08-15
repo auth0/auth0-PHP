@@ -57,7 +57,7 @@ To get started, you'll need to create a [free Auth0 account](https://auth0.com/s
 The supported method of SDK installation is through [Composer](https://getcomposer.org/). From your terminal shell, `cd` into your project directory and issue the following command:
 
 ```bash
-$ composer require auth0/auth0-php:8.0.0-BETA1
+$ composer require auth0/auth0-php:8.0.0-BETA2
 ```
 
 You can find guidance on installing Composer [here](https://getcomposer.org/doc/00-intro.md).
