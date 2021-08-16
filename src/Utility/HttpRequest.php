@@ -371,10 +371,11 @@ final class HttpRequest
                      * Use an exponential back-off with the formula:
                      * max(MIN_REQUEST_RETRY_DELAY, min(MAX_REQUEST_RETRY_DELAY, (100ms * (2 ** attempt - 1)) + random_between(0, MAX_REQUEST_RETRY_JITTER)))
                      *
-                     * ✔ Each attempt increases base delay by (100ms * (2 ** attempt - 1))
-                     * ✔ Randomizes jitter, adding up to MAX_REQUEST_RETRY_JITTER (250ms)
-                     * ✔ Never less than MIN_REQUEST_RETRY_DELAY (100ms)
-                     * ✔ Never more than MAX_REQUEST_RETRY_DELAY (500ms)
+                     * Each retry attempt:
+                     * ✔ Increases base delay by (100ms * (2 ** attempt - 1))
+                     * ✔ Introduces jitter to the base delay; increases delay between 1ms to MAX_REQUEST_RETRY_JITTER (100ms)
+                     * ✔ Is never less than MIN_REQUEST_RETRY_DELAY (100ms)
+                     * ✔ Is never more than MAX_REQUEST_RETRY_DELAY (1s)
                      */
                     $wait = intval(100 * pow(2, $attempt - 1)); // Exponential delay with each subsequent request attempt.
                     $wait = mt_rand($wait + 1, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
