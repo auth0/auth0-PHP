@@ -69,6 +69,9 @@ test('create() issues valid requests', function(): void {
     $this->assertEquals($value, $body['value']);
     $this->assertEquals($deviceId, $body['device_id']);
     $this->assertEquals($additional, $body['additional']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['device_name' => $deviceName, 'type' => $type, 'value' => $value, 'device_id' => $deviceId, 'additional' => $additional]), $body);
 });
 
 test('get() issues valid requests', function(): void {

@@ -20,7 +20,7 @@ final class Organizations extends ManagementEndpoint
      * Create an organization.
      * Required scope: `create:organizations`
      *
-     * @param string              $name        The name of the Organization. Cannot be changed later.
+     * @param string              $name        The name of the Organization.
      * @param string              $displayName The displayed name of the Organization.
      * @param array<mixed>|null   $branding    Optional. An array containing branding customizations for the organization.
      * @param array<mixed>|null   $metadata    Optional. Additional metadata to store about the organization.
@@ -139,6 +139,7 @@ final class Organizations extends ManagementEndpoint
      * Required scope: `update:organizations`
      *
      * @param string               $id          Organization (by ID) to update.
+     * @param string               $name        The name of the Organization.
      * @param string               $displayName The displayed name of the Organization.
      * @param array<mixed>|null    $branding    Optional. An array containing branding customizations for the organization.
      * @param array<mixed>|null    $metadata    Optional. Additional metadata to store about the organization.
@@ -150,13 +151,14 @@ final class Organizations extends ManagementEndpoint
      */
     public function update(
         string $id,
+        string $name,
         string $displayName,
         ?array $branding = null,
         ?array $metadata = null,
         ?array $body = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        [$id, $displayName] = Toolkit::filter([$id, $displayName])->string()->trim();
+        [$id, $name, $displayName] = Toolkit::filter([$id, $name, $displayName])->string()->trim();
         [$branding, $metadata, $body] = Toolkit::filter([$branding, $metadata, $body])->array()->trim();
         [$branding, $metadata] = Toolkit::filter([$branding, $metadata])->array()->object();
 
@@ -170,6 +172,7 @@ final class Organizations extends ManagementEndpoint
             ->addPath('organizations', $id)
             ->withBody(
                 (object) Toolkit::merge([
+                    'name' => $name,
                     'display_name' => $displayName,
                     'branding' => $branding,
                     'metadata' => $metadata,

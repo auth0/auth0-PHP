@@ -437,9 +437,7 @@ final class HttpRequest
         $body,
         bool $jsonEncode = true
     ): self {
-        if (is_object($body)) {
-            $body = json_encode($body, JSON_FORCE_OBJECT | JSON_THROW_ON_ERROR);
-        } elseif (is_array($body) || is_string($body) && $jsonEncode === true) {
+        if (is_array($body) || is_object($body) || is_string($body) && $jsonEncode === true) {
             $body = json_encode($body, JSON_THROW_ON_ERROR);
         }
 

@@ -73,6 +73,9 @@ class UsersTest extends TestCase
         $this->assertArrayHasKey('user_metadata', $body);
         $this->assertArrayHasKey('__test_meta_key__', $body['user_metadata']);
         $this->assertEquals($mockup->query['user_metadata']['__test_meta_key__'], $body['user_metadata']['__test_meta_key__']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode($mockup->query), $body);
     }
 
     /**
@@ -104,6 +107,9 @@ class UsersTest extends TestCase
         $this->assertEquals($mockup->query['email'], $body['email']);
         $this->assertArrayHasKey('password', $body);
         $this->assertEquals($mockup->query['password'], $body['password']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(array_merge(['connection' => $mockup->connection], $mockup->query)), $body);
     }
 
     /**
@@ -153,6 +159,9 @@ class UsersTest extends TestCase
         $this->assertEquals($mockup->query['connection_id'], $body['connection_id']);
         $this->assertArrayHasKey('user_id', $body);
         $this->assertEquals($mockup->query['user_id'], $body['user_id']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode($mockup->query), $body);
     }
 
     /**
@@ -237,6 +246,9 @@ class UsersTest extends TestCase
         $this->assertCount(2, $body['roles']);
         $this->assertEquals($mockup->roles[0], $body['roles'][0]);
         $this->assertEquals($mockup->roles[1], $body['roles'][1]);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals('{"roles":' . json_encode($mockup->roles) . '}', $body);
     }
 
     /**
@@ -266,6 +278,9 @@ class UsersTest extends TestCase
         $this->assertCount(2, $body['roles']);
         $this->assertEquals($mockup->roles[0], $body['roles'][0]);
         $this->assertEquals($mockup->roles[1], $body['roles'][1]);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals('{"roles":' . json_encode($mockup->roles) . '}', $body);
     }
 
     /**
@@ -327,6 +342,9 @@ class UsersTest extends TestCase
         $this->assertEquals($mockup->permissions[0]['permission_name'], $body['permissions'][0]['permission_name']);
         $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
         $this->assertEquals($mockup->permissions[0]['resource_server_identifier'], $body['permissions'][0]['resource_server_identifier']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals('{"permissions":' . json_encode($mockup->permissions) . '}', $body);
     }
 
     /**
@@ -360,6 +378,9 @@ class UsersTest extends TestCase
         $this->assertEquals($mockup->permissions[0]['permission_name'], $body['permissions'][0]['permission_name']);
         $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
         $this->assertEquals($mockup->permissions[0]['resource_server_identifier'], $body['permissions'][0]['resource_server_identifier']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals('{"permissions":' . json_encode($mockup->permissions) . '}', $body);
     }
 
     /**

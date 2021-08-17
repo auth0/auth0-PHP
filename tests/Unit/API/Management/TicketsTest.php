@@ -11,17 +11,17 @@ class TicketsTest extends TestCase
 {
     public function testCreateEmailVerification(): void
     {
+        $mock = (object) [
+            'userId' => uniqid(),
+            'identity' => [
+                'user_id' => '__test_secondary_user_id__',
+                'provider' => '__test_provider__',
+            ],
+        ];
+
         $api = new MockManagementApi();
 
-        $api->mock()->tickets()->createEmailVerification(
-            '__test_user_id__',
-            [
-                'identity' => [
-                    'user_id' => '__test_secondary_user_id__',
-                    'provider' => '__test_provider__',
-                ],
-            ]
-        );
+        $api->mock()->tickets()->createEmailVerification($mock->userId, ['identity' => $mock->identity]);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/tickets/email-verification', $api->getRequestUrl());
@@ -29,34 +29,31 @@ class TicketsTest extends TestCase
 
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('user_id', $body);
-        $this->assertEquals('__test_user_id__', $body['user_id']);
+        $this->assertEquals($mock->userId, $body['user_id']);
         $this->assertArrayHasKey('identity', $body);
-        $this->assertEquals(
-            [
-                'user_id' => '__test_secondary_user_id__',
-                'provider' => '__test_provider__',
-            ],
-            $body['identity']
-        );
+        $this->assertEquals($mock->identity, $body['identity']);
 
         $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['user_id' => $mock->userId, 'identity' => $mock->identity]), $body);
     }
 
     public function testCreatePasswordChange(): void
     {
+        $mock = [
+            'user_id' => uniqid(),
+            'new_password' => uniqid(),
+            'result_url' => uniqid(),
+            'connection_id' => uniqid(),
+            'ttl_sec' => uniqid(),
+            'client_id' => uniqid(),
+        ];
+
         $api = new MockManagementApi();
 
-        $api->mock()->tickets()->createPasswordChange(
-            [
-                'user_id' => '__test_user_id__',
-                'new_password' => '__test_password__',
-                'result_url' => '__test_result_url__',
-                'connection_id' => '__test_connection_id__',
-                'ttl_sec' => 8675309,
-                'client_id' => '__test_client_id__',
-            ]
-        );
+        $api->mock()->tickets()->createPasswordChange($mock);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/tickets/password-change', $api->getRequestUrl());
@@ -64,19 +61,22 @@ class TicketsTest extends TestCase
 
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('user_id', $body);
-        $this->assertEquals('__test_user_id__', $body['user_id']);
+        $this->assertEquals($mock['user_id'], $body['user_id']);
         $this->assertArrayHasKey('new_password', $body);
-        $this->assertEquals('__test_password__', $body['new_password']);
+        $this->assertEquals($mock['new_password'], $body['new_password']);
         $this->assertArrayHasKey('result_url', $body);
-        $this->assertEquals('__test_result_url__', $body['result_url']);
+        $this->assertEquals($mock['result_url'], $body['result_url']);
         $this->assertArrayHasKey('connection_id', $body);
-        $this->assertEquals('__test_connection_id__', $body['connection_id']);
+        $this->assertEquals($mock['connection_id'], $body['connection_id']);
         $this->assertArrayHasKey('ttl_sec', $body);
-        $this->assertEquals(8675309, $body['ttl_sec']);
+        $this->assertEquals($mock['ttl_sec'], $body['ttl_sec']);
         $this->assertArrayHasKey('client_id', $body);
-        $this->assertEquals('__test_client_id__', $body['client_id']);
+        $this->assertEquals($mock['client_id'], $body['client_id']);
 
         $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode($mock), $body);
     }
 }

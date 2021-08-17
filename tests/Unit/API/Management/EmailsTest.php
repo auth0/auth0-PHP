@@ -38,10 +38,19 @@ test('createProvider() issues valid requests', function(): void {
     $endpoint = $this->sdk->mock()->emails();
 
     $name = uniqid();
-    $credentials = uniqid();
-    $additional = uniqid();
+    $credentials = [
+        'api_user' => uniqid(),
+        'region' => uniqid(),
+        'smtp_host' => uniqid(),
+        'smtp_port' => uniqid(),
+        'smtp_user' => uniqid()
+    ];
+    $additional = [
+        'test1' => uniqid(),
+        'test2' => uniqid(),
+    ];
 
-    $endpoint->createProvider($name, [$credentials], ['additional' => $additional]);
+    $endpoint->createProvider($name, $credentials, ['additional' => $additional]);
 
     $this->assertEquals('POST', $this->sdk->getRequestMethod());
     $this->assertEquals('https://api.test.local/api/v2/emails/provider', $this->sdk->getRequestUrl());
@@ -50,10 +59,13 @@ test('createProvider() issues valid requests', function(): void {
     $this->assertArrayHasKey('name', $body);
     $this->assertArrayHasKey('credentials', $body);
     $this->assertArrayHasKey('additional', $body);
-    $this->assertCount(1, $body['credentials']);
+    $this->assertCount(5, $body['credentials']);
     $this->assertEquals($name, $body['name']);
-    $this->assertEquals($credentials, $body['credentials'][0]);
+    $this->assertEquals($credentials, $body['credentials']);
     $this->assertEquals($additional, $body['additional']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]), $body);
 });
 
 test('getProvider() issues valid requests', function(): void {
@@ -69,10 +81,19 @@ test('updateProvider() issues valid requests', function(): void {
     $endpoint = $this->sdk->mock()->emails();
 
     $name = uniqid();
-    $credentials = uniqid();
-    $additional = uniqid();
+    $credentials = [
+        'api_user' => uniqid(),
+        'region' => uniqid(),
+        'smtp_host' => uniqid(),
+        'smtp_port' => uniqid(),
+        'smtp_user' => uniqid()
+    ];
+    $additional = [
+        'test1' => uniqid(),
+        'test2' => uniqid(),
+    ];
 
-    $endpoint->updateProvider($name, [$credentials], ['additional' => $additional]);
+    $endpoint->updateProvider($name, $credentials, ['additional' => $additional]);
 
     $this->assertEquals('PATCH', $this->sdk->getRequestMethod());
     $this->assertEquals('https://api.test.local/api/v2/emails/provider', $this->sdk->getRequestUrl());
@@ -81,10 +102,13 @@ test('updateProvider() issues valid requests', function(): void {
     $this->assertArrayHasKey('name', $body);
     $this->assertArrayHasKey('credentials', $body);
     $this->assertArrayHasKey('additional', $body);
-    $this->assertCount(1, $body['credentials']);
+    $this->assertCount(5, $body['credentials']);
     $this->assertEquals($name, $body['name']);
-    $this->assertEquals($credentials, $body['credentials'][0]);
+    $this->assertEquals($credentials, $body['credentials']);
     $this->assertEquals($additional, $body['additional']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]), $body);
 });
 
 test('delete() issues valid requests', function(): void {

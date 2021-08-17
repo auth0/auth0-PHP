@@ -37,6 +37,9 @@ test('create() issues valid requests', function(): void {
     $this->assertEquals($aud, $body['aud']);
     $this->assertArrayHasKey('jti', $body);
     $this->assertEquals($jti, $body['jti']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['jti' => $jti, 'aud' => $aud]), $body);
 });
 
 test('get() issues valid requests', function(): void {
