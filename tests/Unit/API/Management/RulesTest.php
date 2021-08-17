@@ -93,6 +93,9 @@ class RulesTest extends TestCase
 
         $this->assertArrayHasKey('test_parameter', $body);
         $this->assertEquals($mockup->query['test_parameter'], $body['test_parameter']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(array_merge(['name' => $mockup->name, 'script' => $mockup->script], $mockup->query)), $body);
     }
 
     /**
@@ -118,5 +121,8 @@ class RulesTest extends TestCase
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('test_parameter', $body);
         $this->assertEquals($mockup->query['test_parameter'], $body['test_parameter']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode($mockup->query), $body);
     }
 }

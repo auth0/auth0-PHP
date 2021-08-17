@@ -56,17 +56,27 @@ class ClientsTest extends TestCase
      */
     public function testCreate(): void
     {
+        $mock = (object) [
+            'name' => uniqid(),
+            'body'=> [
+                'app_type' => uniqid()
+            ]
+        ];
+
         $api = new MockManagementApi();
-        $api->mock()->clients()->create('__test_name__', ['app_type' => '__test_app_type__']);
+        $api->mock()->clients()->create($mock->name, $mock->body);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/clients', $api->getRequestUrl());
 
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
-        $this->assertEquals('__test_name__', $body['name']);
+        $this->assertEquals($mock->name, $body['name']);
         $this->assertArrayHasKey('app_type', $body);
-        $this->assertEquals('__test_app_type__', $body['app_type']);
+        $this->assertEquals($mock->body['app_type'], $body['app_type']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(array_merge(['name' => $mock->name], $mock->body)), $body);
     }
 
     /**

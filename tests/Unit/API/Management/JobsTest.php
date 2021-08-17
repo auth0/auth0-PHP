@@ -103,16 +103,16 @@ class JobsTest extends TestCase
      */
     public function testExportUsers(): void
     {
+        $mock = [
+            'connection_id' => uniqid(),
+            'limit' => uniqid(),
+            'format' => 'json',
+            'fields' => [['name' => uniqid()]],
+        ];
+
         $api = new MockManagementApi();
 
-        $api->mock()->jobs()->createExportUsers(
-            [
-                'connection_id' => '__test_conn_id__',
-                'limit' => 5,
-                'format' => 'json',
-                'fields' => [['name' => 'user_id']],
-            ]
-        );
+        $api->mock()->jobs()->createExportUsers($mock);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/jobs/users-exports', $api->getRequestUrl());
@@ -121,16 +121,19 @@ class JobsTest extends TestCase
         $request_body = $api->getRequestBody();
 
         $this->assertNotEmpty($request_body['connection_id']);
-        $this->assertEquals('__test_conn_id__', $request_body['connection_id']);
+        $this->assertEquals($mock['connection_id'], $request_body['connection_id']);
 
         $this->assertNotEmpty($request_body['limit']);
-        $this->assertEquals('5', $request_body['limit']);
+        $this->assertEquals($mock['limit'], $request_body['limit']);
 
         $this->assertNotEmpty($request_body['format']);
         $this->assertEquals('json', $request_body['format']);
 
         $this->assertNotEmpty($request_body['fields']);
-        $this->assertEquals([['name' => 'user_id']], $request_body['fields']);
+        $this->assertEquals([['name' => $mock['fields'][0]['name']]], $request_body['fields']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode((object) $mock), $body);
     }
 
     /**
@@ -138,18 +141,20 @@ class JobsTest extends TestCase
      */
     public function testSendVerificationEmail(): void
     {
-        $api = new MockManagementApi();
-
-        $api->mock()->jobs()->createSendVerificationEmail(
-            '__test_user_id__',
-            [
+        $mock = (object) [
+            'userId' => uniqid(),
+            'body' =>             [
                 'client_id' => '__test_client_id__',
                 'identity' => [
                     'user_id' => '__test_secondary_user_id__',
                     'provider' => '__test_provider__',
                 ],
             ]
-        );
+        ];
+
+        $api = new MockManagementApi();
+
+        $api->mock()->jobs()->createSendVerificationEmail($mock->userId, $mock->body);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/jobs/verification-email', $api->getRequestUrl());
@@ -157,19 +162,16 @@ class JobsTest extends TestCase
 
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('user_id', $body);
-        $this->assertEquals('__test_user_id__', $body['user_id']);
+        $this->assertEquals($mock->userId, $body['user_id']);
         $this->assertArrayHasKey('client_id', $body);
-        $this->assertEquals('__test_client_id__', $body['client_id']);
+        $this->assertEquals($mock->body['client_id'], $body['client_id']);
         $this->assertArrayHasKey('identity', $body);
-        $this->assertEquals(
-            [
-                'user_id' => '__test_secondary_user_id__',
-                'provider' => '__test_provider__',
-            ],
-            $body['identity']
-        );
+        $this->assertEquals($mock->body['identity'], $body['identity']);
 
         $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(array_merge(['user_id' => $mock->userId], $mock->body)), $body);
     }
 }

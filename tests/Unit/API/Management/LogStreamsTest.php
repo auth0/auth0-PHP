@@ -31,18 +31,20 @@ class LogStreamsTest extends TestCase
 
     public function testThatCreateLogStreamRequestIsFormedCorrectly(): void
     {
+        $mock = (object) [
+            'type' => uniqid(),
+            'sink' => [
+                'httpEndpoint' => uniqid(),
+                'httpContentFormat' => uniqid(),
+                'httpContentType' => uniqid(),
+                'httpAuthorization' => uniqid(),
+            ],
+            'name' => uniqid(),
+        ];
+
         $api = new MockManagementApi();
 
-        $api->mock()->logStreams()->create(
-            'http',
-            [
-                'httpEndpoint' => 'https://me.org',
-                'httpContentFormat' => 'JSONLINES',
-                'httpContentType' => 'application/json',
-                'httpAuthorization' => 'abc123',
-            ],
-            'Test Stream'
-        );
+        $api->mock()->logStreams()->create($mock->type, $mock->sink, $mock->name);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/log-streams', $api->getRequestUrl());
@@ -52,34 +54,41 @@ class LogStreamsTest extends TestCase
 
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
-        $this->assertEquals('Test Stream', $body['name']);
+        $this->assertEquals($mock->name, $body['name']);
         $this->assertArrayHasKey('type', $body);
-        $this->assertEquals('http', $body['type']);
+        $this->assertEquals($mock->type, $body['type']);
         $this->assertArrayHasKey('sink', $body);
-        $this->assertEquals('https://me.org', $body['sink']['httpEndpoint']);
-        $this->assertEquals('JSONLINES', $body['sink']['httpContentFormat']);
-        $this->assertEquals('application/json', $body['sink']['httpContentType']);
-        $this->assertEquals('abc123', $body['sink']['httpAuthorization']);
+        $this->assertEquals($mock->sink, $body['sink']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode($mock), $body);
     }
 
     public function testUpdate(): void
     {
+        $mock = (object) [
+            'id' => uniqid(),
+            'body' => [
+                'name' => uniqid()
+            ]
+        ];
+
         $api = new MockManagementApi();
 
-        $api->mock()->logStreams()->update(
-            '123',
-            ['name' => 'Test Name']
-        );
+        $api->mock()->logStreams()->update($mock->id, $mock->body);
 
         $this->assertEquals('PATCH', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/log-streams/123', $api->getRequestUrl());
+        $this->assertEquals('https://api.test.local/api/v2/log-streams/' . $mock->id, $api->getRequestUrl());
 
         $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
-        $this->assertEquals('Test Name', $body['name']);
+        $this->assertEquals($mock->body['name'], $body['name']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode($mock->body), $body);
     }
 
     public function testDelete(): void

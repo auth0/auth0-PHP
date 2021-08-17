@@ -76,6 +76,9 @@ test('create() issues valid requests', function(): void {
     $this->assertEquals($subject, $body['subject']);
     $this->assertEquals($syntax, $body['syntax']);
     $this->assertEquals(true, $body['enabled']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['template' => $template, 'body' => $payload, 'from' => $from, 'subject' => $subject, 'syntax' => $syntax, 'enabled' => true]), $body);
 });
 
 test('get() issues valid requests', function(): void {
@@ -103,6 +106,9 @@ test('update() issues valid requests', function(): void {
     $body = $this->sdk->getRequestBody();
     $this->assertArrayHasKey('test', $body);
     $this->assertEquals($payload, $body['test']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['test' => $payload]), $body);
 });
 
 test('patch() issues valid requests', function(): void {
@@ -119,4 +125,7 @@ test('patch() issues valid requests', function(): void {
     $body = $this->sdk->getRequestBody();
     $this->assertArrayHasKey('test', $body);
     $this->assertEquals($payload, $body['test']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['test' => $payload]), $body);
 });

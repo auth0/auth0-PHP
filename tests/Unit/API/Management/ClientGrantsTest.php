@@ -53,6 +53,9 @@ test('create() issues valid requests', function(): void {
     $this->assertEquals($clientId, $body['client_id']);
     $this->assertEquals($audience, $body['audience']);
     $this->assertContains($scope, $body['scope']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['client_id' => $clientId, 'audience' => $audience, 'scope' => [$scope]]), $body);
 });
 
 test('getAll() issues valid requests', function(): void {
@@ -139,6 +142,9 @@ test('update() issues valid requests', function(): void {
     $body = $this->sdk->getRequestBody();
     $this->assertArrayHasKey('scope', $body);
     $this->assertContains($scope, $body['scope']);
+
+    $body = $this->sdk->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['scope' => [$scope]]), $body);
 });
 
 test('delete() issues valid requests', function(): void {

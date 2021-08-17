@@ -22,18 +22,25 @@ class OrganizationsTest extends TestCase
      */
     public function testThatCreateOrganizationRequestIsFormedCorrectly(): void
     {
+        $mock = (object) [
+            'id' => uniqid(),
+            'name' => uniqid(),
+            'branding' => [
+                'logo_url' => uniqid(),
+            ],
+            'metadata' => [
+                'test' => uniqid()
+            ],
+            'body' => [
+                'additional' => [
+                    'testing' => uniqid()
+                ]
+            ]
+        ];
+
         $api = new MockManagementApi();
 
-        $api->mock()->organizations()->create(
-            'test-organization',
-            'Test Organization',
-            [
-                'logo_url' => 'https://test.com/test.png',
-            ],
-            [
-                'meta' => 'data',
-            ]
-        );
+        $api->mock()->organizations()->create($mock->id, $mock->name, $mock->branding, $mock->metadata, $mock->body);
 
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/organizations', $api->getRequestUrl());
@@ -44,18 +51,21 @@ class OrganizationsTest extends TestCase
         $body = $api->getRequestBody();
 
         $this->assertArrayHasKey('name', $body);
-        $this->assertEquals('test-organization', $body['name']);
+        $this->assertEquals($mock->id, $body['name']);
 
         $this->assertArrayHasKey('display_name', $body);
-        $this->assertEquals('Test Organization', $body['display_name']);
+        $this->assertEquals($mock->name, $body['display_name']);
 
         $this->assertArrayHasKey('branding', $body);
         $this->assertArrayHasKey('logo_url', $body['branding']);
-        $this->assertEquals('https://test.com/test.png', $body['branding']['logo_url']);
+        $this->assertEquals($mock->branding['logo_url'], $body['branding']['logo_url']);
 
         $this->assertArrayHasKey('metadata', $body);
-        $this->assertArrayHasKey('meta', $body['metadata']);
-        $this->assertEquals('data', $body['metadata']['meta']);
+        $this->assertArrayHasKey('test', $body['metadata']);
+        $this->assertEquals($mock->metadata['test'], $body['metadata']['test']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(array_merge(['name' => $mock->id, 'display_name' => $mock->name, 'branding' => $mock->branding, 'metadata' => $mock->metadata], $mock->body)), $body);
     }
 
     /**
@@ -89,37 +99,51 @@ class OrganizationsTest extends TestCase
      */
     public function testThatUpdateOrganizationRequestIsFormedCorrectly(): void
     {
+        $mock = (object) [
+            'id' => uniqid(),
+            'name' => uniqid(),
+            'displayName' => uniqid(),
+            'branding' => [
+                'logo_url' => uniqid(),
+            ],
+            'metadata' => [
+                'test' => uniqid()
+            ],
+            'body' => [
+                'additional' => [
+                    'testing' => uniqid()
+                ]
+            ]
+        ];
+
         $api = new MockManagementApi();
 
-        $api->mock()->organizations()->update(
-            'test-organization',
-            'Test Organization',
-            [
-                'logo_url' => 'https://test.com/test.png',
-            ],
-            [
-                'meta' => 'data',
-            ]
-        );
+        $api->mock()->organizations()->update($mock->id, $mock->name, $mock->displayName, $mock->branding, $mock->metadata, $mock->body);
 
         $this->assertEquals('PATCH', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/organizations/test-organization', $api->getRequestUrl());
+        $this->assertEquals('https://api.test.local/api/v2/organizations/' . $mock->id, $api->getRequestUrl());
 
         $headers = $api->getRequestHeaders();
         $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
         $body = $api->getRequestBody();
 
+        $this->assertArrayHasKey('name', $body);
+        $this->assertEquals($mock->name, $body['name']);
+
         $this->assertArrayHasKey('display_name', $body);
-        $this->assertEquals('Test Organization', $body['display_name']);
+        $this->assertEquals($mock->displayName, $body['display_name']);
 
         $this->assertArrayHasKey('branding', $body);
         $this->assertArrayHasKey('logo_url', $body['branding']);
-        $this->assertEquals('https://test.com/test.png', $body['branding']['logo_url']);
+        $this->assertEquals($mock->branding['logo_url'], $body['branding']['logo_url']);
 
         $this->assertArrayHasKey('metadata', $body);
-        $this->assertArrayHasKey('meta', $body['metadata']);
-        $this->assertEquals('data', $body['metadata']['meta']);
+        $this->assertArrayHasKey('test', $body['metadata']);
+        $this->assertEquals($mock->metadata['test'], $body['metadata']['test']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(array_merge(['name' => $mock->name, 'display_name' => $mock->displayName, 'branding' => $mock->branding, 'metadata' => $mock->metadata], $mock->body)), $body);
     }
 
     /**
@@ -132,7 +156,7 @@ class OrganizationsTest extends TestCase
         $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
         $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
-        $api->mock()->organizations()->update('', '');
+        $api->mock()->organizations()->update('', '', '');
     }
 
     /**
@@ -145,7 +169,7 @@ class OrganizationsTest extends TestCase
         $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
         $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'displayName'));
 
-        $api->mock()->organizations()->update('test-organization', '');
+        $api->mock()->organizations()->update('test-organization', '', '');
     }
 
     /**
@@ -174,7 +198,7 @@ class OrganizationsTest extends TestCase
         $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
         $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
-        $api->mock()->organizations()->update('', '');
+        $api->mock()->organizations()->delete('');
     }
 
     /**
@@ -322,6 +346,9 @@ class OrganizationsTest extends TestCase
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('connection_id', $body);
         $this->assertEquals('test-connection', $body['connection_id']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['connection_id' => 'test-connection', 'assign_membership_on_login' => true]), $body);
     }
 
     /**
@@ -368,6 +395,9 @@ class OrganizationsTest extends TestCase
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('assign_membership_on_login', $body);
         $this->assertTrue($body['assign_membership_on_login']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['assign_membership_on_login' => true]), $body);
     }
 
     /**
@@ -479,6 +509,9 @@ class OrganizationsTest extends TestCase
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('members', $body);
         $this->assertContains('test-user', $body['members']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['members' => ['test-user']]), $body);
     }
 
     /**
@@ -522,6 +555,9 @@ class OrganizationsTest extends TestCase
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('members', $body);
         $this->assertContains('test-user', $body['members']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['members' => ['test-user']]), $body);
     }
 
     /**
@@ -607,6 +643,9 @@ class OrganizationsTest extends TestCase
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('roles', $body);
         $this->assertContains('test-role', $body['roles']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['roles' => ['test-role']]), $body);
     }
 
     /**
@@ -663,6 +702,9 @@ class OrganizationsTest extends TestCase
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('roles', $body);
         $this->assertContains('test-role', $body['roles']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['roles' => ['test-role']]), $body);
     }
 
     /**
@@ -798,6 +840,9 @@ class OrganizationsTest extends TestCase
         $this->assertArrayHasKey('invitee', $body);
         $this->assertArrayHasKey('email', $body['invitee']);
         $this->assertEquals('email@test.com', $body['invitee']['email']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['client_id' => 'test-client', 'inviter' => ['name' => 'Test Sender'], 'invitee' => ['email' => 'email@test.com']]), $body);
     }
 
     /**

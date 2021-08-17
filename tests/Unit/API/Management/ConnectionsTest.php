@@ -78,20 +78,28 @@ class ConnectionsTest extends TestCase
      */
     public function testCreate(): void
     {
-        $name = 'TestConnection01';
-        $strategy = 'test-strategy-01';
-        $query = [ 'testing' => 'test '];
+        $mock = (object) [
+            'name' => uniqid(),
+            'strategy' => uniqid(),
+            'body' => [
+                'test1' => uniqid(),
+                'test2' => uniqid()
+            ]
+        ];
 
         $api = new MockManagementApi();
-        $api->mock()->connections()->create($name, $strategy, $query);
+        $api->mock()->connections()->create($mock->name, $mock->strategy, $mock->body);
 
         $request_body = $api->getRequestBody();
 
-        $this->assertEquals($name, $request_body['name']);
-        $this->assertEquals($strategy, $request_body['strategy']);
+        $this->assertEquals($mock->name, $request_body['name']);
+        $this->assertEquals($mock->strategy, $request_body['strategy']);
         $this->assertEquals('POST', $api->getRequestMethod());
         $this->assertEquals('https://api.test.local/api/v2/connections', $api->getRequestUrl());
         $this->assertEmpty($api->getRequestQuery());
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(array_merge(['name' => $mock->name, 'strategy' => $mock->strategy], $mock->body)), $body);
     }
 
     /**

@@ -45,6 +45,9 @@ class RolesTest extends TestCase
         $this->assertEquals($id, $body['name']);
         $this->assertArrayHasKey('description', $body);
         $this->assertEquals('__test_description__', $body['description']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['name' => $id, 'description' => '__test_description__']), $body);
     }
 
     /**
@@ -91,6 +94,9 @@ class RolesTest extends TestCase
         $body = $api->getRequestBody();
         $this->assertArrayHasKey('name', $body);
         $this->assertEquals('__test_new_name__', $body['name']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['name' => '__test_new_name__']), $body);
     }
 
     /**
@@ -193,5 +199,8 @@ class RolesTest extends TestCase
         $this->assertCount(2, $body['users']);
         $this->assertContains('strategy|1234567890', $body['users']);
         $this->assertContains('strategy|0987654321', $body['users']);
+
+        $body = $api->getRequestBodyAsString();
+        $this->assertEquals(json_encode(['users' => ['strategy|1234567890', 'strategy|0987654321']]), $body);
     }
 }
