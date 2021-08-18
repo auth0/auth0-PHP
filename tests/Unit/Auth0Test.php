@@ -721,6 +721,11 @@ class Auth0Test extends TestCase
             ): void {
             }
 
+            public function defer(
+                bool $deferring
+            ): void {
+            }
+
             public function purge(): void
             {
             }

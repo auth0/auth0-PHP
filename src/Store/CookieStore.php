@@ -71,6 +71,22 @@ final class CookieStore implements StoreInterface
     }
 
     /**
+     * Returns the current namespace identifier.
+     */
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * Returns the current threshold for chunk size calculations.
+     */
+    public function getThreshold(): int
+    {
+        return $this->threshold;
+    }
+
+    /**
      * Defer saving state changes to destination to improve performance during blocks of changes.
      *
      * @param bool $deferring Whether to defer persisting the storage state.
@@ -89,14 +105,14 @@ final class CookieStore implements StoreInterface
      * Setup our storage state by pulling from persistence source.
      *
      * @param array<mixed> $state Skip loading any persistent source state and inject a custom state.
+     *
+     * @return array<mixed>
      */
     public function getState(
         ?array $state = null
-    ): self
-    {
-        if ($state) {
-            $this->store = $state;
-            return $this;
+    ): array {
+        if ($state !== null) {
+            return $this->store = $state;
         }
 
         $data = '';
@@ -109,13 +125,15 @@ final class CookieStore implements StoreInterface
                 break;
             }
 
-            $data .= (string) $_COOKIE[$cookieName];
+            if (is_string($_COOKIE[$cookieName])) {
+                $data .= $_COOKIE[$cookieName];
+            }
+
             $index++;
         }
 
         if (mb_strlen($data) === 0) {
-            $this->store = [];
-            return $this;
+            return $this->store = [];
         }
 
         $data = $this->decrypt($data);
@@ -125,7 +143,7 @@ final class CookieStore implements StoreInterface
             $this->setState();
         }
 
-        return $this;
+        return $this->store;
     }
 
     /**
@@ -138,7 +156,7 @@ final class CookieStore implements StoreInterface
         $existing = [];
         $using = [];
 
-        foreach ($_COOKIE as $cookieName => $cookieValue) {
+        foreach ($_COOKIE as $cookieName => $_) {
             $cookieBeginsWith = $this->namespace . self::KEY_SEPARATOR;
 
             if (strlen($cookieName) >= strlen($cookieBeginsWith) &&
@@ -155,6 +173,7 @@ final class CookieStore implements StoreInterface
             if ($chunks !== false) {
                 foreach ($chunks as $index => $chunk) {
                     $cookieName = join(self::KEY_SEPARATOR, [$this->namespace, $index]);
+                    $_COOKIE[$cookieName] = $chunk;
                     setcookie($cookieName, $chunk, $setOptions);
                     $using[] = $cookieName;
                 }
@@ -165,6 +184,7 @@ final class CookieStore implements StoreInterface
 
         foreach ($orphaned as $cookieName) {
             setcookie($cookieName, '', $deleteOptions);
+            unset($_COOKIE[$cookieName]);
         }
 
         return $this;
@@ -186,7 +206,7 @@ final class CookieStore implements StoreInterface
             [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
         ])->isString();
 
-        $this->store[$key] = $value;
+        $this->store[$key ?? ''] = $value;
 
         if ($this->deferring === false) {
             $this->setState();
@@ -229,7 +249,7 @@ final class CookieStore implements StoreInterface
             [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
         ])->isString();
 
-        unset($this->store[$key]);
+        unset($this->store[$key ?? '']);
 
         if ($this->deferring === false) {
             $this->setState();

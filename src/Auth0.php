@@ -385,10 +385,6 @@ final class Auth0
             throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingAccessToken();
         }
 
-        if ($this->configuration()->hasSessionStorage()) {
-            $this->configuration()->getSessionStorage()->deferStateSave = true;
-        }
-
         $this->setAccessToken($response['access_token']);
 
         if (isset($response['id_token'])) {
