@@ -699,7 +699,7 @@ class Auth0Test extends TestCase
              */
             public function get(
                 string $key,
-                ?string $default = null
+                $default = null
             ) {
                 $response = '__test_custom_store__' . $key . '__';
 
@@ -721,7 +721,7 @@ class Auth0Test extends TestCase
             ): void {
             }
 
-            public function deleteAll(): void
+            public function purge(): void
             {
             }
         };

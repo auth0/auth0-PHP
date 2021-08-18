@@ -29,18 +29,18 @@
   ],
   "require": {
     "php": "^7.4 || ^8.0",
-    "ext-json": "*",
-    "ext-openssl": "*",
     "ext-filter": "*",
+    "ext-json": "*",
     "ext-mbstring": "*",
+    "ext-openssl": "*",
     "php-http/discovery": "^1.0",
     "php-http/httplug": "^2.2",
     "php-http/multipart-stream-builder": "^1.1",
     "psr/cache": "^1.0 || ^2.0 || ^3.0",
     "psr/event-dispatcher": "^1.0",
     "psr/http-client-implementation": "^1.0",
-    "psr/http-message-implementation": "^1.0",
-    "psr/http-factory-implementation": "^1.0"
+    "psr/http-factory-implementation": "^1.0",
+    "psr/http-message-implementation": "^1.0"
   },
   "require-dev": {
     "symfony/cache": "^4.4 || ^5.2",

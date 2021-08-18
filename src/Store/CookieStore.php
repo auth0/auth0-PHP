@@ -12,10 +12,10 @@ use Auth0\SDK\Utility\Toolkit;
  * Class CookieStore.
  * This class provides a layer to persist transient auth data using cookies.
  */
-class CookieStore implements StoreInterface
+final class CookieStore implements StoreInterface
 {
     public const KEY_HASHING_ALGO = 'sha256';
-    public const KEY_CHUNKING_THRESHOLD = 4096;
+    public const KEY_CHUNKING_THRESHOLD = 3072;
     public const KEY_SEPARATOR = '_';
     public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
 
@@ -26,35 +26,148 @@ class CookieStore implements StoreInterface
 
     /**
      * Cookie base name.
-     * Use 'cookiePrefix' argument to set this during instantiation.
+     * Use 'namespace' argument to set this during instantiation.
      */
-    private string $cookiePrefix;
+    private string $namespace;
 
     /**
-     * Number of bytes to deduct/buffer from KEY_CHUNKING_THRESHOLD before chunking begins.
+     * The threshold (in bytes) in which chunking/splitting occurs.
      */
-    private int $chunkingThreshold;
+    private int $threshold;
+
+    /**
+     * Internal cache of the storage state.
+     *
+     * @var array<mixed>
+     */
+    private array $store = [];
+
+    /**
+     * When true, CookieStore will not setState() itself. You will need manually call the method to persist state to storage.
+     */
+    private bool $deferring = false;
 
     /**
      * CookieStore constructor.
      *
      * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param string           $cookiePrefix    A string to prefix stored cookie keys with.
+     * @param string           $namespace       A string in which to store cookies under on devices.
      */
     public function __construct(
         SdkConfiguration &$configuration,
-        string $cookiePrefix = 'auth0'
+        string $namespace = 'auth0'
     ) {
-        [$cookiePrefix] = Toolkit::filter([$cookiePrefix])->string()->trim();
+        [$namespace] = Toolkit::filter([$namespace])->string()->trim();
 
         Toolkit::assert([
-            [$cookiePrefix, \Auth0\SDK\Exception\ArgumentException::missing('cookiePrefix')],
+            [$namespace, \Auth0\SDK\Exception\ArgumentException::missing('namespace')],
         ])->isString();
 
         $this->configuration = & $configuration;
-        $this->cookiePrefix = $cookiePrefix ?? 'auth0';
+        $this->namespace = hash(self::KEY_HASHING_ALGO, $namespace ?? 'auth0');
+        $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
 
-        $this->chunkingThreshold = self::KEY_CHUNKING_THRESHOLD - strlen(hash(self::KEY_HASHING_ALGO, 'threshold'));
+        $this->getState();
+    }
+
+    /**
+     * Defer saving state changes to destination to improve performance during blocks of changes.
+     *
+     * @param bool $deferring Whether to defer persisting the storage state.
+     */
+    public function defer(
+        bool $deferring
+    ): void {
+        if ($this->deferring === true && $deferring === false) {
+            $this->setState();
+        }
+
+        $this->deferring = $deferring;
+    }
+
+    /**
+     * Setup our storage state by pulling from persistence source.
+     *
+     * @param array<mixed> $state Skip loading any persistent source state and inject a custom state.
+     */
+    public function getState(
+        ?array $state = null
+    ): self
+    {
+        if ($state) {
+            $this->store = $state;
+            return $this;
+        }
+
+        $data = '';
+        $index = 0;
+
+        while (true) {
+            $cookieName = join(self::KEY_SEPARATOR, [ $this->namespace, $index]);
+
+            if (! isset($_COOKIE[$cookieName])) {
+                break;
+            }
+
+            $data .= (string) $_COOKIE[$cookieName];
+            $index++;
+        }
+
+        if (mb_strlen($data) === 0) {
+            $this->store = [];
+            return $this;
+        }
+
+        $data = $this->decrypt($data);
+        $this->store = $data ?? [];
+
+        if ($data === null) {
+            $this->setState();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Push our storage state to the source for persistence.
+     */
+    public function setState(): self
+    {
+        $setOptions = $this->getCookieOptions();
+        $deleteOptions = $this->getCookieOptions(-1000);
+        $existing = [];
+        $using = [];
+
+        foreach ($_COOKIE as $cookieName => $cookieValue) {
+            $cookieBeginsWith = $this->namespace . self::KEY_SEPARATOR;
+
+            if (strlen($cookieName) >= strlen($cookieBeginsWith) &&
+                mb_substr($cookieName, 0, strlen($cookieBeginsWith)) === $cookieBeginsWith) {
+                $existing[] = $cookieName;
+            }
+        }
+
+        if (count($this->store) !== 0) {
+            $encrypted = $this->encrypt($this->store);
+            $chunks = str_split($encrypted, $this->threshold);
+
+            // @phpstan-ignore-next-line
+            if ($chunks !== false) {
+                foreach ($chunks as $index => $chunk) {
+                    $cookieName = join(self::KEY_SEPARATOR, [$this->namespace, $index]);
+                    setcookie($cookieName, $chunk, $setOptions);
+                    $using[] = $cookieName;
+                }
+            }
+        }
+
+        $orphaned = array_diff($existing, $using);
+
+        foreach ($orphaned as $cookieName) {
+            setcookie($cookieName, '', $deleteOptions);
+        }
+
+        return $this;
     }
 
     /**
@@ -67,32 +180,17 @@ class CookieStore implements StoreInterface
         string $key,
         $value
     ): void {
-        $key = $this->getCookieName($key);
-        $cookieOptions = $this->getCookieOptions();
+        [$key] = Toolkit::filter([$key])->string()->trim();
 
-        $value = $this->encrypt($value);
+        Toolkit::assert([
+            [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
+        ])->isString();
 
-        $_COOKIE[$key] = $value;
+        $this->store[$key] = $value;
 
-        if (strlen($value) >= $this->chunkingThreshold) {
-            $chunks = str_split($value, $this->chunkingThreshold);
-
-            // @phpstan-ignore-next-line
-            if ($chunks !== false) {
-                $chunkIndex = 1;
-
-                setcookie(join(self::KEY_SEPARATOR, [ $key, '0']), (string) count($chunks), $cookieOptions);
-
-                foreach ($chunks as $chunk) {
-                    setcookie(join(self::KEY_SEPARATOR, [ $key, $chunkIndex]), $chunk, $cookieOptions);
-                    $chunkIndex++;
-                }
-
-                return;
-            }
+        if ($this->deferring === false) {
+            $this->setState();
         }
-
-        setcookie($key, $value, $cookieOptions);
     }
 
     /**
@@ -108,148 +206,55 @@ class CookieStore implements StoreInterface
         string $key,
         $default = null
     ) {
-        $key = $this->getCookieName($key);
-        $chunks = $this->isCookieChunked($key);
-        $value = '';
+        [$key] = Toolkit::filter([$key])->string()->trim();
 
-        if ($chunks === null) {
-            return $default;
-        }
+        Toolkit::assert([
+            [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
+        ])->isString();
 
-        if ($chunks !== 0) {
-            for ($chunk = 1; $chunk <= $chunks; $chunk++) {
-                $chunkData = $_COOKIE[join(self::KEY_SEPARATOR, [ $key, $chunk])] ?? null;
-
-                if ($chunkData === null) {
-                    return $default;
-                }
-
-                $value .= (string) $chunkData;
-            }
-        }
-
-        if ($chunks === 0) {
-            $value = $_COOKIE[$key] ?? null;
-        }
-
-        if ($value !== null && mb_strlen($value) !== 0) {
-            $data = $this->decrypt($value);
-
-            if ($data !== null) {
-                return $data;
-            }
-        }
-
-        return $default;
-    }
-
-    /**
-     * Removes all persisted values.
-     */
-    public function deleteAll(): void
-    {
-        $cookies = $_COOKIE;
-        $prefix = $this->cookiePrefix . '_';
-
-        while (current($cookies)) {
-            $cookieName = key($cookies);
-
-            if (is_string($cookieName) && mb_substr($cookieName, 0, strlen($prefix)) === $prefix) {
-                $this->delete($cookieName, false);
-            }
-
-            next($cookies);
-        }
+        return $this->store[$key] ?? $default;
     }
 
     /**
      * Removes a persisted value identified by $key.
      *
-     * @param string $key    Cookie to delete.
-     * @param bool   $prefix Whether the cookie name should have the $cookiePrefix applied.
+     * @param string $key Cookie to delete.
      */
     public function delete(
-        string $key,
-        bool $prefix = true
-    ): void {
-        $key = $this->getCookieName($key, $prefix);
-        $chunks = $this->isCookieChunked($key);
-
-        if ($chunks === null) {
-            return;
-        }
-
-        $cookieOptions = $this->getCookieOptions(-1000);
-
-        unset($_COOKIE[$key]);
-        setcookie($key, '', $cookieOptions);
-
-        if ($chunks !== 0) {
-            unset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])]);
-            setcookie(join(self::KEY_SEPARATOR, [ $key, '0']), '', $cookieOptions);
-
-            for ($chunk = 1; $chunk <= $chunks; $chunk++) {
-                unset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, $chunk])]);
-                setcookie(join(self::KEY_SEPARATOR, [ $key, $chunk]), '', $cookieOptions);
-            }
-        }
-    }
-
-    /**
-     * Constructs a cookie name.
-     *
-     * @param string $key Cookie name to prefix and return.
-     * @param bool   $prefix Whether the cookie name should have the $cookiePrefix applied.
-     */
-    public function getCookieName(
-        string $key,
-        bool $prefix = true
-    ): string {
-        [$key] = Toolkit::filter([$key])->string()->trim();
-
-        Toolkit::assert([
-            [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
-        ])->isString();
-
-        if ($prefix) {
-            return $this->cookiePrefix . '_' . hash(self::KEY_HASHING_ALGO, $key ?? '');
-        }
-
-        return $key ?? '';
-    }
-
-    /**
-     * Determine the chunkiness of a cookie. Returns the number of chunks, or 0 if unchunked. If the cookie wasn't found, returns null.
-     *
-     * @param string $key Cookie name to lookup.
-     */
-    private function isCookieChunked(
         string $key
-    ): ?int {
+    ): void {
         [$key] = Toolkit::filter([$key])->string()->trim();
 
         Toolkit::assert([
             [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
         ])->isString();
 
-        if (isset($_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])])) {
-            return (int) $_COOKIE[join(self::KEY_SEPARATOR, [ $key, '0'])];
-        }
+        unset($this->store[$key]);
 
-        if (isset($_COOKIE[$key])) {
-            return 0;
+        if ($this->deferring === false) {
+            $this->setState();
         }
+    }
 
-        return null;
+    /**
+     * Removes all persisted values.
+     */
+    public function purge(): void
+    {
+        $this->store = [];
+
+        if ($this->deferring === false) {
+            $this->setState();
+        }
     }
 
     /**
      * Encrypt data for safe storage format for a cookie.
      *
-     * @param mixed $data Data to encrypt.
+     * @param array<mixed> $data Data to encrypt.
      */
     private function encrypt(
-        $data
+        array $data
     ): string {
         $secret = $this->configuration->getCookieSecret();
         $ivLen = openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
@@ -278,7 +283,7 @@ class CookieStore implements StoreInterface
      *
      * @param string $data String representing an encrypted data structure.
      *
-     * @return mixed
+     * @return array<mixed>|null
      */
     private function decrypt(
         string $data
