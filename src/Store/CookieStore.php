@@ -328,11 +328,16 @@ final class CookieStore implements StoreInterface
 
         $data = json_decode($data, true);
 
-        if ($data === null) {
+        if (! is_string($data)) {
             return null;
         }
 
         $data = unserialize($data);
+
+        if (! isset($data['iv']) || ! isset($data['tag']) || ! is_string($data['iv']) || ! is_string($data['tag'])) {
+            return null;
+        }
+
         $iv = base64_decode($data['iv'], true);
         $tag = base64_decode($data['tag'], true);
 
