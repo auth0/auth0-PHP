@@ -283,16 +283,20 @@ final class CookieStore implements StoreInterface
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
+        // @codeCoverageIgnoreStart
         if ($ivLen === false) {
             return '';
         }
+        // @codeCoverageIgnoreEnd
 
         $iv = openssl_random_pseudo_bytes($ivLen);
 
+        // @codeCoverageIgnoreStart
         // @phpstan-ignore-next-line
         if ($iv === false) {
             return '';
         }
+        // @codeCoverageIgnoreEnd
 
         $encrypted = openssl_encrypt(serialize($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
         return base64_encode(json_encode(serialize(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]), JSON_THROW_ON_ERROR));

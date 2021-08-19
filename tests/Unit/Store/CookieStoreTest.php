@@ -212,3 +212,19 @@ test('decrypt() returns null if a malformed cryptographic manifest is encoded', 
 
     $this->assertEmpty($this->store->getState());
 });
+
+test('decrypt() returns null if a malformed data payload is encoded', function(): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+
+    $ivLength = openssl_cipher_iv_length(CookieStore::VAL_CRYPTO_ALGO);
+    $iv = openssl_random_pseudo_bytes($ivLength);
+    $payload = json_encode(serialize([
+        'tag' => base64_encode((string) uniqid()),
+        'iv' => base64_encode($iv),
+        'data' => 'not encrypted :eyes:'
+    ]), JSON_THROW_ON_ERROR);
+
+    $_COOKIE[$cookieNamespace] = base64_encode($payload);
+
+    $this->assertEmpty($this->store->getState());
+});
