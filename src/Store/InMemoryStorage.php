@@ -11,17 +11,24 @@ use Auth0\SDK\Contract\StoreInterface;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-class InMemoryStorage implements StoreInterface
+final class InMemoryStorage implements StoreInterface
 {
+    /**
+     * @var array<string, mixed>
+     */
     private array $data = [];
 
-    public function set(string $key, $value): void
-    {
+    public function set(
+        string $key,
+        $value
+    ): void {
         $this->data[$key] = $value;
     }
 
-    public function get(string $key, ?string $default = null)
-    {
+    public function get(
+        string $key,
+        ?string $default = null
+    ) {
         if (\array_key_exists($key, $this->data)) {
             return $this->data[$key];
         }
@@ -29,8 +36,9 @@ class InMemoryStorage implements StoreInterface
         return $default;
     }
 
-    public function delete(string $key): void
-    {
+    public function delete(
+        string $key
+    ): void {
         unset($this->data[$key]);
     }
 
