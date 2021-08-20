@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Unit\Store;
 
-use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Store\InMemoryStorage;
 use PHPUnit\Framework\TestCase;
 
 /**
- *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
 class InMemoryTest extends TestCase
