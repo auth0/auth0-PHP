@@ -44,7 +44,7 @@ final class Token
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
-        SdkConfiguration &$configuration,
+        SdkConfiguration $configuration,
         string $jwt,
         int $type = self::TYPE_ID_TOKEN
     ) {
@@ -52,7 +52,7 @@ final class Token
         $this->type = $type;
 
         // Store the configuration internally.
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
 
         // Begin parsing the token.
         $this->parse($jwt);

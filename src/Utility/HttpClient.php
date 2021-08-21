@@ -59,12 +59,12 @@ final class HttpClient
      * @param array<int|string> $headers         Optional. Additional headers to send with the HTTP request.
      */
     public function __construct(
-        SdkConfiguration &$configuration,
+        SdkConfiguration $configuration,
         int $context = self::CONTEXT_AUTHENTICATION_CLIENT,
         string $basePath = '/',
         array $headers = []
     ) {
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
         $this->basePath = $basePath;
         $this->headers = $headers;
         $this->context = $context;

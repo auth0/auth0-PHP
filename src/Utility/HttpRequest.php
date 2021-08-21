@@ -132,7 +132,7 @@ final class HttpRequest
      * @param array<object>|null $mockedResponses Optional. Only intended for unit testing purposes.
      */
     public function __construct(
-        SdkConfiguration &$configuration,
+        SdkConfiguration $configuration,
         int $context,
         string $method,
         string $basePath = '/',
@@ -140,7 +140,7 @@ final class HttpRequest
         ?string $domain = null,
         ?array &$mockedResponses = null
     ) {
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
         $this->context = $context;
         $this->method = mb_strtoupper($method);
         $this->basePath = $basePath;

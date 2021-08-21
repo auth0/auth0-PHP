@@ -54,8 +54,8 @@ final class CookieStore implements StoreInterface
      * @param string           $namespace       A string in which to store cookies under on devices.
      */
     public function __construct(
-        SdkConfiguration &$configuration,
-        string $namespace = 'auth0'
+        SdkConfiguration $configuration,
+        string $cookiePrefix = 'auth0'
     ) {
         [$namespace] = Toolkit::filter([$namespace])->string()->trim();
 
@@ -63,7 +63,7 @@ final class CookieStore implements StoreInterface
             [$namespace, \Auth0\SDK\Exception\ArgumentException::missing('namespace')],
         ])->isString();
 
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
         $this->namespace = hash(self::KEY_HASHING_ALGO, $namespace ?? 'auth0');
         $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
 

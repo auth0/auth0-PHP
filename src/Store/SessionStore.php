@@ -31,7 +31,7 @@ final class SessionStore implements StoreInterface
      * @param string           $sessionPrefix A string to prefix session keys with.
      */
     public function __construct(
-        SdkConfiguration &$configuration,
+        SdkConfiguration $configuration,
         string $sessionPrefix = 'auth0'
     ) {
         [$sessionPrefix] = Toolkit::filter([$sessionPrefix])->string()->trim();
@@ -40,7 +40,7 @@ final class SessionStore implements StoreInterface
             [$sessionPrefix, \Auth0\SDK\Exception\ArgumentException::missing('sessionPrefix')],
         ])->isString();
 
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
         $this->sessionPrefix = $sessionPrefix ?? 'auth0';
 
         $this->start();
