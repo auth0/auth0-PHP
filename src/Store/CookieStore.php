@@ -75,6 +75,7 @@ class CookieStore implements StoreInterface
         $_COOKIE[$key] = $value;
 
         if (strlen($value) >= $this->chunkingThreshold) {
+            // @phpstan-ignore-next-line
             $chunks = str_split($value, $this->chunkingThreshold);
 
             // @phpstan-ignore-next-line
