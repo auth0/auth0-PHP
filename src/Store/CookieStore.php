@@ -119,7 +119,7 @@ final class CookieStore implements StoreInterface
         $index = 0;
 
         while (true) {
-            $cookieName = join(self::KEY_SEPARATOR, [ $this->namespace, $index]);
+            $cookieName = $this->namespace . self::KEY_SEPARATOR . $index;
 
             if (! isset($_COOKIE[$cookieName])) {
                 break;
@@ -172,7 +172,7 @@ final class CookieStore implements StoreInterface
             // @phpstan-ignore-next-line
             if ($chunks !== false) {
                 foreach ($chunks as $index => $chunk) {
-                    $cookieName = join(self::KEY_SEPARATOR, [$this->namespace, $index]);
+                    $cookieName = $this->namespace . self::KEY_SEPARATOR . $index;
                     $_COOKIE[$cookieName] = $chunk;
                     setcookie($cookieName, $chunk, $setOptions);
                     $using[] = $cookieName;
