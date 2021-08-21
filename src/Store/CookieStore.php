@@ -42,7 +42,7 @@ class CookieStore implements StoreInterface
      * @param string           $cookiePrefix    A string to prefix stored cookie keys with.
      */
     public function __construct(
-        SdkConfiguration &$configuration,
+        SdkConfiguration $configuration,
         string $cookiePrefix = 'auth0'
     ) {
         [$cookiePrefix] = Toolkit::filter([$cookiePrefix])->string()->trim();
@@ -51,7 +51,7 @@ class CookieStore implements StoreInterface
             [$cookiePrefix, \Auth0\SDK\Exception\ArgumentException::missing('cookiePrefix')],
         ])->isString();
 
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
         $this->cookiePrefix = $cookiePrefix ?? 'auth0';
 
         $this->chunkingThreshold = self::KEY_CHUNKING_THRESHOLD - strlen(hash(self::KEY_HASHING_ALGO, 'threshold'));
