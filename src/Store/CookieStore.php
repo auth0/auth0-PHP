@@ -55,7 +55,7 @@ final class CookieStore implements StoreInterface
      */
     public function __construct(
         SdkConfiguration $configuration,
-        string $cookiePrefix = 'auth0'
+        string $namespace = 'auth0'
     ) {
         [$namespace] = Toolkit::filter([$namespace])->string()->trim();
 
@@ -167,6 +167,8 @@ final class CookieStore implements StoreInterface
 
         if (count($this->store) !== 0) {
             $encrypted = $this->encrypt($this->store);
+
+            // @phpstan-ignore-next-line
             $chunks = str_split($encrypted, $this->threshold);
 
             // @phpstan-ignore-next-line
