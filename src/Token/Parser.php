@@ -59,9 +59,9 @@ final class Parser
      */
     public function __construct(
         string $jwt,
-        SdkConfiguration &$configuration
+        SdkConfiguration $configuration
     ) {
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
         $this->parse($jwt);
     }
 

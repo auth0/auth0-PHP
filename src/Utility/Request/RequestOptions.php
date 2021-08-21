@@ -29,8 +29,8 @@ final class RequestOptions
         ?FilteredRequest $fields = null,
         ?PaginatedRequest $pagination = null
     ) {
-        $this->fields = & $fields;
-        $this->pagination = & $pagination;
+        $this->fields = $fields;
+        $this->pagination = $pagination;
     }
 
     /**
@@ -39,9 +39,9 @@ final class RequestOptions
      * @param FilteredRequest|null $fields Request fields be included or excluded from the API response using a FilteredRequest object.
      */
     public function setFields(
-        ?FilteredRequest &$fields
+        ?FilteredRequest $fields
     ): self {
-        $this->fields = & $fields;
+        $this->fields = $fields;
         return $this;
     }
 
@@ -59,9 +59,9 @@ final class RequestOptions
      * @param PaginatedRequest|null $pagination Request paged results using a PaginatedRequest object.
      */
     public function setPagination(
-        ?PaginatedRequest &$pagination
+        ?PaginatedRequest $pagination
     ): self {
-        $this->pagination = & $pagination;
+        $this->pagination = $pagination;
         return $this;
     }
 

@@ -47,7 +47,7 @@ final class Authentication
         }
 
         // Store the configuration internally.
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
     }
 
     /**

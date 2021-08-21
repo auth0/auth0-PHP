@@ -25,9 +25,9 @@ final class EventDispatcher implements EventDispatcherInterface
      * @param SdkConfiguration   $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      */
     public function __construct(
-        SdkConfiguration &$configuration
+        SdkConfiguration $configuration
     ) {
-        $this->configuration = & $configuration;
+        $this->configuration = $configuration;
     }
 
     public function getListenerProvider(): ?ListenerProviderInterface
