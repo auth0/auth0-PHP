@@ -96,6 +96,7 @@ final class Management
         array $arguments
     ) {
         $classes = [
+            'actions' => 'Actions',
             'blacklists' => 'Blacklists',
             'clients' => 'Clients',
             'clientGrants' => 'ClientGrants',
