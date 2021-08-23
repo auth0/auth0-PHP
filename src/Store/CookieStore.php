@@ -64,7 +64,8 @@ final class CookieStore implements StoreInterface
         ])->isString();
 
         $this->configuration = $configuration;
-        $this->namespace = hash(self::KEY_HASHING_ALGO, $namespace ?? 'auth0');
+        // @phpstan-ignore-next-line
+        $this->namespace = hash(self::KEY_HASHING_ALGO, $namespace);
         $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
 
         $this->getState();
