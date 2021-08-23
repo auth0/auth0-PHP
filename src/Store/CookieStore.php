@@ -326,6 +326,10 @@ final class CookieStore implements StoreInterface
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
+        if (! is_string($data)) {
+            return null;
+        }
+
         $data = json_decode($data, true);
 
         if (! is_string($data)) {
