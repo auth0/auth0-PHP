@@ -192,23 +192,23 @@ test('decrypt() throws an exception if a cookie secret is not configured', funct
 
 test('decrypt() returns null if malformed JSON is encoded', function(): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
-    $_COOKIE[$cookieNamespace] = base64_encode('nonsense');
+    $_COOKIE[$cookieNamespace] = 'nonsense';
 
     $this->assertEmpty($this->store->getState());
 });
 
 test('decrypt() returns null if a malformed cryptographic manifest is encoded', function(): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
-    $_COOKIE[$cookieNamespace] = base64_encode(json_encode(serialize([
+    $_COOKIE[$cookieNamespace] = json_encode(serialize([
         'tag' => uniqid()
-    ])));
+    ]));
 
     $this->assertEmpty($this->store->getState());
 
-    $_COOKIE[$cookieNamespace] = base64_encode(json_encode(serialize([
+    $_COOKIE[$cookieNamespace] = json_encode(serialize([
         'iv' => 'hi 👋 malformed cryptographic manifest here',
         'tag' => (string) uniqid()
-    ])));
+    ]));
 
     $this->assertEmpty($this->store->getState());
 });
@@ -224,7 +224,7 @@ test('decrypt() returns null if a malformed data payload is encoded', function()
         'data' => 'not encrypted :eyes:'
     ]), JSON_THROW_ON_ERROR);
 
-    $_COOKIE[$cookieNamespace] = base64_encode($payload);
+    $_COOKIE[$cookieNamespace] = $payload;
 
     $this->assertEmpty($this->store->getState());
 });

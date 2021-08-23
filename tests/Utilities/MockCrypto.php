@@ -31,6 +31,6 @@ class MockCrypto
             return '';
         }
 
-        return base64_encode($encrypted);
+        return $encrypted;
     }
 }
