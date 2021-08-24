@@ -19,4 +19,4 @@ uses()
             $this->paginatedRequest
         );
     })
-    ->in('Unit\API\Management');
+    ->in('Unit' . DIRECTORY_SEPARATOR   . 'API' . DIRECTORY_SEPARATOR . 'Management');
