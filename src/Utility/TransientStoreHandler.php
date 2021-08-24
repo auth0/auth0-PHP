@@ -113,6 +113,8 @@ final class TransientStoreHandler
      * Generate a random nonce value.
      *
      * @param int $length Length of the generated value, in bytes.
+     *
+     * @codeCoverageIgnore
      */
     private function getNonce(
         int $length = 16

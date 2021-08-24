@@ -43,7 +43,6 @@
     "psr/http-factory-implementation": "^1.0"
   },
   "require-dev": {
-    "symfony/cache": "^4.4 || ^5.2",
     "ergebnis/phpstan-rules": "^0.15",
     "firebase/php-jwt": "^5.0",
     "infection/infection": "^0.23",
@@ -51,9 +50,11 @@
     "nunomaduro/phpinsights": "^2.0",
     "nyholm/psr7": "^1.4",
     "pestphp/pest": "^1.0",
+    "pestphp/pest-plugin-parallel": "^0.2.0",
     "php-http/mock-client": "^1.4",
     "phpstan/phpstan": "^0.12",
     "phpstan/phpstan-strict-rules": "^0.12",
+    "symfony/cache": "^4.4 || ^5.2",
     "thecodingmachine/phpstan-strict-rules": "^0.12",
     "vimeo/psalm": "^4.7"
   },

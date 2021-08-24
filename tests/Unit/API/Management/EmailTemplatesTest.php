@@ -2,68 +2,67 @@
 
 declare(strict_types=1);
 
-use Auth0\SDK\Utility\Request\FilteredRequest;
-use Auth0\SDK\Utility\Request\PaginatedRequest;
-use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\Tests\Utilities\MockManagementApi;
-
-uses()->group('management', 'emailtemplates');
+uses()->group('management', 'management.email_templates');
 
 beforeEach(function(): void {
-    $this->sdk = new MockManagementApi();
-
-    $this->filteredRequest = new FilteredRequest();
-    $this->paginatedRequest = new PaginatedRequest();
-    $this->requestOptions = new RequestOptions(
-        $this->filteredRequest,
-        $this->paginatedRequest
-    );
+    $this->endpoint = $this->api->mock()->emailTemplates();
 });
 
-test('create() throws an error when missing required variables', function(): void {
-    $endpoint = $this->sdk->mock()->emailTemplates();
-
+test('create() throws an error when missing `template`', function(): void {
     $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'template'));
 
-    $endpoint->create('', '', '', '', '', false);
+    $this->endpoint->create('', '', '', '', '', false);
+});
+
+
+test('create() throws an error when missing `body`', function(): void {
 
     $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
-    $endpoint->create(uniqid(), '', '', '' , '', false);
+    $this->endpoint->create(uniqid(), '', '', '' , '', false);
+});
+
+
+test('create() throws an error when missing `from`', function(): void {
 
     $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'from'));
 
-    $endpoint->create(uniqid(), uniqid(), '', '' , '', false);
+    $this->endpoint->create(uniqid(), uniqid(), '', '' , '', false);
+});
+
+
+test('create() throws an error when missing `subject`', function(): void {
 
     $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'subject'));
 
-    $endpoint->create(uniqid(), uniqid(), uniqid(), '', '', false);
+    $this->endpoint->create(uniqid(), uniqid(), uniqid(), '', '', false);
+});
 
+
+test('create() throws an error when missing `syntax`', function(): void {
     $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'syntax'));
 
-    $endpoint->create(uniqid(), uniqid(), uniqid(), uniqid(), '', false);
+    $this->endpoint->create(uniqid(), uniqid(), uniqid(), uniqid(), '', false);
 });
 
 test('create() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->emailTemplates();
-
     $template = uniqid();
     $payload = uniqid();
     $from = uniqid();
     $subject = uniqid();
     $syntax = uniqid();
 
-    $endpoint->create($template, $payload, $from, $subject, $syntax, true);
+    $this->endpoint->create($template, $payload, $from, $subject, $syntax, true);
 
-    $this->assertEquals('POST', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/email-templates', $this->sdk->getRequestUrl());
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/email-templates', $this->api->getRequestUrl());
 
-    $body = $this->sdk->getRequestBody();
+    $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('template', $body);
     $this->assertArrayHasKey('body', $body);
     $this->assertArrayHasKey('from', $body);
@@ -77,55 +76,49 @@ test('create() issues valid requests', function(): void {
     $this->assertEquals($syntax, $body['syntax']);
     $this->assertEquals(true, $body['enabled']);
 
-    $body = $this->sdk->getRequestBodyAsString();
+    $body = $this->api->getRequestBodyAsString();
     $this->assertEquals(json_encode(['template' => $template, 'body' => $payload, 'from' => $from, 'subject' => $subject, 'syntax' => $syntax, 'enabled' => true]), $body);
 });
 
 test('get() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->emailTemplates();
-
     $templateName = uniqid();
 
-    $endpoint->get($templateName);
+    $this->endpoint->get($templateName);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/email-templates/' . $templateName, $this->sdk->getRequestUrl());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/email-templates/' . $templateName, $this->api->getRequestUrl());
 });
 
 test('update() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->emailTemplates();
-
     $templateName = uniqid();
     $payload = uniqid();
 
-    $endpoint->update($templateName, ['test' => $payload]);
+    $this->endpoint->update($templateName, ['test' => $payload]);
 
-    $this->assertEquals('PUT', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/email-templates/' . $templateName, $this->sdk->getRequestUrl());
+    $this->assertEquals('PUT', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/email-templates/' . $templateName, $this->api->getRequestUrl());
 
-    $body = $this->sdk->getRequestBody();
+    $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('test', $body);
     $this->assertEquals($payload, $body['test']);
 
-    $body = $this->sdk->getRequestBodyAsString();
+    $body = $this->api->getRequestBodyAsString();
     $this->assertEquals(json_encode(['test' => $payload]), $body);
 });
 
 test('patch() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->emailTemplates();
-
     $templateName = uniqid();
     $payload = uniqid();
 
-    $endpoint->patch($templateName, ['test' => $payload]);
+    $this->endpoint->patch($templateName, ['test' => $payload]);
 
-    $this->assertEquals('PATCH', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/email-templates/' . $templateName, $this->sdk->getRequestUrl());
+    $this->assertEquals('PATCH', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/email-templates/' . $templateName, $this->api->getRequestUrl());
 
-    $body = $this->sdk->getRequestBody();
+    $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('test', $body);
     $this->assertEquals($payload, $body['test']);
 
-    $body = $this->sdk->getRequestBodyAsString();
+    $body = $this->api->getRequestBodyAsString();
     $this->assertEquals(json_encode(['test' => $payload]), $body);
 });

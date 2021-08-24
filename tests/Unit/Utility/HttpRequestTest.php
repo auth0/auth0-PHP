@@ -2,166 +2,186 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Utility;
-
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
-use PHPUnit\Framework\TestCase;
+use Auth0\Tests\Utilities\HttpResponseGenerator;
+use Psr\Http\Client\ClientExceptionInterface;
 
-/**
- * Class HttpRequestTest
- * Tests the Auth0\SDK\Utility\HttpRequest class.
- */
-class HttpRequestTest extends TestCase
-{
-    /**
-     * Retrieve a mock RequestBuilder instance.
-     *
-     * @param mixed|null $basePath basePath to pass to RequestBuilder.
-     */
-    private static function getUrlBuilder(
-        string $basePath = '/',
-        string $method = 'get'
-    ): HttpRequest {
-        $config = new SdkConfiguration([
-            'domain' => 'api.local.test',
-            'cookieSecret' => uniqid(),
-            'clientId' => uniqid(),
-            'redirectUri' => uniqid(),
-        ]);
+uses()->group('utility', 'networking', 'httpRequest');
 
-        return new HttpRequest($config, HttpClient::CONTEXT_GENERIC_CLIENT, $method, $basePath);
+beforeEach(function(): void {
+    $this->configuration = new SdkConfiguration([
+        'strategy' => 'none',
+        'domain' => 'api.local.test',
+    ]);
+});
+
+it('builds url pathes correctly', function(HttpRequest $client): void {
+    $this->assertEquals('', $client->getUrl());
+    $this->assertEquals('path1', $client->addPath('path1')->getUrl());
+    $this->assertEquals('path1/path2/3', $client->addPath('path2', '3')->getUrl());
+})->with(['mocked client' => [
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+it('adds field filtering params when configured', function(HttpRequest $client): void {
+    $this->assertEquals('?' . http_build_query(['fields' => implode(',', ['a', 'b', 123]), 'include_fields' => 'true'], '', '&', PHP_QUERY_RFC3986), $client->getParams());
+})->with(['mocked client' => [
+    function(): HttpRequest {
+        $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
+        $client->withFields(new \Auth0\SDK\Utility\Request\FilteredRequest(['a', 'b', 123], true));
+        return $client;
     }
+]]);
 
-    /**
-     * Test addPath().
-     */
-    public function testUrl(): void
-    {
-        $builder = self::getUrlBuilder('/api');
-
-        $this->assertEquals('', $builder->getUrl());
-
-        $builder->addPath('path1');
-
-        $this->assertEquals('path1', $builder->getUrl());
-
-        $builder->addPath('path2', '3');
-
-        $this->assertEquals('path1/path2/3', $builder->getUrl());
+it('adds classic pagination params when configured', function(HttpRequest $client): void {
+    $this->assertEquals('?' . http_build_query(['page' => 5, 'per_page' => 10, 'include_totals' => 'true'], '', '&', PHP_QUERY_RFC3986), $client->getParams());
+})->with(['mocked client' => [
+    function(): HttpRequest {
+        $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
+        $client->withPagination(new \Auth0\SDK\Utility\Request\PaginatedRequest(5, 10, true));
+        return $client;
     }
+]]);
 
-    /**
-     * Test that a single url param si added.
-     */
-    public function testThatASingleUrlParamIsAdded(): void
-    {
-        $builder = self::getUrlBuilder()->withParam('param1', 'value1');
-
-        $this->assertEquals('?param1=value1', $builder->getParams());
+it('adds checkpoints pagination params when configured', function(HttpRequest $client): void {
+    $this->assertEquals('?' . http_build_query(['from' => 123456, 'take' => 25], '', '&', PHP_QUERY_RFC3986), $client->getParams());
+})->with(['mocked client' => [
+    function(): HttpRequest {
+        $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
+        $client->withPagination(new \Auth0\SDK\Utility\Request\PaginatedRequest(null, 25, null, '123456'));
+        return $client;
     }
+]]);
 
-    /**
-     * Test that empty string params are not added.
-     */
-    public function testThatEmptyStringParamsAreNotAdded(): void
-    {
-        $builder = self::getUrlBuilder()->withParam('param1', '');
+test('withParam() adds a parameter to the URL', function(string $parameter, string $value, HttpRequest $client): void {
+    $this->assertEquals('?' . $parameter . '=' . $value, $client->withParam($parameter, $value)->getParams());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => (string) uniqid(),
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
 
-        $this->assertEmpty($builder->getParams());
+test('withParam() adds multiple parameters to the URL', function(array $parameters, array $values, HttpRequest $client): void {
+    $expectedParameterStrings = [
+        '?' . $parameters[0] . '=' . $values[0],
+        '&' . $parameters[1] . '=true',
+        '&' . $parameters[2] . '=123',
+    ];
+
+    $this->assertEquals($expectedParameterStrings[0], $client->withParam($parameters[0], $values[0])->getParams());
+    $this->assertEquals($expectedParameterStrings[0] . $expectedParameterStrings[1], $client->withParam($parameters[1], $values[1])->getParams());
+    $this->assertEquals($expectedParameterStrings[0] . $expectedParameterStrings[1] . $expectedParameterStrings[2], $client->withParam($parameters[2], $values[2])->getParams());
+})->with(['mocked client and data' => [
+    fn() => [(string) uniqid(), (string) uniqid(), (string) uniqid()],
+    fn() => [(string) uniqid(), true, 123],
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withParam() adds a parameter to the URL with a `true` value', function(string $parameter, bool $value, HttpRequest $client): void {
+    $this->assertEquals('?' . $parameter . '=true', $client->withParam($parameter, $value)->getParams());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => true,
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withParam() adds a parameter to the URL with a `false` value', function(string $parameter, bool $value, HttpRequest $client): void {
+    $this->assertEquals('?' . $parameter . '=false', $client->withParam($parameter, $value)->getParams());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => false,
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withParam() adds a parameter to the URL with an int value', function(string $parameter, int $value, HttpRequest $client): void {
+    $this->assertEquals('?' . $parameter . '=' . $value, $client->withParam($parameter, $value)->getParams());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => random_int(0, PHP_INT_MAX),
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withParam() skips adding parameters with empty values', function(string $parameter, string $value, HttpRequest $client): void {
+    $this->assertEquals('', $client->withParam($parameter, $value)->getParams());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => '',
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withParam() skips adding parameters with null values', function(string $parameter, ?string $value, HttpRequest $client): void {
+    $this->assertEquals('', $client->withParam($parameter, $value)->getParams());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => null,
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withParam() replaces a parameter in the URL', function(string $parameter, string $value, string $replacementValue, HttpRequest $client): void {
+    $this->assertEquals('?' . $parameter . '=' . $replacementValue, $client->withParam($parameter, $value)->withParam($parameter, $replacementValue)->getParams());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => (string) uniqid(),
+    fn() => (string) uniqid(),
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withFormParam() adds a form parameter to the request body with a `true` value', function(string $parameter, bool $value, HttpRequest $client): void {
+    $client->withFormParam($parameter, $value);
+    $client->call();
+
+    $this->assertEquals($parameter . '=true', $client->getLastRequest()->getBody()->__toString());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => true,
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withFormParam() adds a form parameter to the request body with a `false` value', function(string $parameter, bool $value, HttpRequest $client): void {
+    $client->withFormParam($parameter, $value);
+    $client->call();
+
+    $this->assertEquals($parameter . '=false', $client->getLastRequest()->getBody()->__toString());
+})->with(['mocked client and data' => [
+    fn() => (string) uniqid(),
+    fn() => false,
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+test('withParams() adds multiple parameters to the URL', function(array $parameters, array $values, HttpRequest $client): void {
+    $expectedParameterStrings = [
+        '?' . $parameters[0] . '=' . $values[0],
+        '&' . $parameters[1] . '=true',
+        '&' . $parameters[2] . '=123',
+    ];
+
+    $this->assertEquals($expectedParameterStrings[0] . $expectedParameterStrings[1] . $expectedParameterStrings[2], $client->withParams([
+        $parameters[0] => $values[0],
+        $parameters[1] => $values[1],
+        $parameters[2] => $values[2],
+    ])->getParams());
+})->with(['mocked client and data' => [
+    fn() => [(string) uniqid(), (string) uniqid(), (string) uniqid()],
+    fn() => [(string) uniqid(), true, 123],
+    fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
+]]);
+
+it('throws a NetworkException when the underlying client raises a ClientExceptionInterface', function(HttpRequest $client): void {
+    $this->expectException(\Auth0\SDK\Exception\NetworkException::class);
+
+    $client->call();
+})->with(['mocked client' => [
+    function(): HttpRequest {
+        $responses = [
+            (object) [
+                'exception' => new class () extends \Exception implements ClientExceptionInterface {},
+                'response' => HttpResponseGenerator::create('', 500)
+
+            ]
+        ];
+
+        return new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid(), [], null, $responses);
     }
-
-    /**
-     * Test that null params are not added.
-     */
-    public function testThatNullParamsAreNotAdded(): void
-    {
-        $builder = self::getUrlBuilder()->withParam('param1', null);
-
-        $this->assertEmpty($builder->getParams());
-    }
-
-    /**
-     * Test that true params are added.
-     */
-    public function testThatTrueParamsAreAdded(): void
-    {
-        $builder = self::getUrlBuilder()->withParam('param1', true);
-
-        $this->assertEquals('?param1=true', $builder->getParams());
-    }
-
-    /**
-     * Test that false params are added.
-     */
-    public function testThatFalseParamsAreAdded(): void
-    {
-        $builder = self::getUrlBuilder()->withParam('param1', false);
-
-        $this->assertEquals('?param1=false', $builder->getParams());
-    }
-
-    /**
-     * Test that boolean form params are added.
-     */
-    public function testThatBooleanFormParamsAreAdded(): void
-    {
-        $httpRequest = self::getUrlBuilder('/', 'post')->withFormParam('test', 'true');
-        $httpRequest->call();
-
-        $this->assertEquals('test=true', $httpRequest->getLastRequest()->getBody()->__toString());
-
-        $httpRequest = self::getUrlBuilder('/', 'post')->withFormParam('test', 'false');
-        $httpRequest->call();
-
-        $this->assertEquals('test=false', $httpRequest->getLastRequest()->getBody()->__toString());
-    }
-
-    /**
-     * Test that 0 int params are added.
-     */
-    public function testThatZeroParamsAreAdded(): void
-    {
-        $builder = self::getUrlBuilder()->withParam('param1', 0);
-
-        $this->assertEquals('?param1=0', $builder->getParams());
-    }
-
-    /**
-     * Test that multiple url params are added.
-     */
-    public function testThatMultipleUrlParamsAreAdded(): void
-    {
-        $builder = self::getUrlBuilder();
-        $builder->withParam('param1', 'value1');
-        $builder->withParam('param2', null);
-        $builder->withParam('param3', 'value3');
-
-        $this->assertEquals('?param1=value1&param3=value3', $builder->getParams());
-    }
-
-    /**
-     * Test that single url param values are replaced..
-     */
-    public function testThatASingleUrlParamValueIsReplaced(): void
-    {
-        $builder = self::getUrlBuilder();
-        $builder->withParam('param1', 'value1');
-        $builder->withParam('param1', 'value3');
-
-        $this->assertEquals('?param1=value3', $builder->getParams());
-    }
-
-    /**
-     * Test that withParams() generates a query string correctly.
-     */
-    public function testParams(): void
-    {
-        $builder = self::getUrlBuilder('/api');
-
-        // Adding a parameter dictionary should be reflected in the RequestBuilder object.
-        $builder->withParams(['param4' => 'value4', 'param2' => 'value5']);
-        $this->assertEquals('?param4=value4&param2=value5', $builder->getParams());
-    }
-}
+]]);

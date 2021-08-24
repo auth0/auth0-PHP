@@ -7,15 +7,10 @@ use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
-use Http\Discovery\Psr18ClientDiscovery;
-use Http\Discovery\Strategy\MockClientStrategy;
 
 uses()->group('utility', 'networking');
 
 beforeEach(function(): void {
-    // Allow mock HttpClient to be auto-discovered for use in testing.
-    Psr18ClientDiscovery::prependStrategy(MockClientStrategy::class);
-
     $this->config = new SdkConfiguration([
         'domain' => 'api.local.test',
         'cookieSecret' => uniqid(),
@@ -65,7 +60,7 @@ test('a 429 response is not retried more than the hard cap', function(): void {
     $this->assertEquals(10, $requestCount);
 });
 
-test('an expontential backoff and jitter are being applied', function(): void {
+test('an exponential back-off and jitter are being applied', function(): void {
     $this->config->setHttpMaxRetries(10);
     $baseWaits = [0];
     $baseWaitSum = 0;

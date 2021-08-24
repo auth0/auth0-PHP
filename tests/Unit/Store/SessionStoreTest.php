@@ -2,86 +2,71 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Store;
-
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Store\SessionStore;
-use PHPUnit\Framework\TestCase;
 
-/**
- * Class SessionStoreTest.
- * Tests the SessionStore class.
- */
-class SessionStoreTest extends TestCase
-{
-    /**
-     * Session key for test values.
-     */
-    protected const TEST_KEY = 'never_compromise_on_identity';
+uses()->group('storage', 'storage.session');
 
-    /**
-     * Session value to test.
-     */
-    protected const TEST_VALUE = '__Auth0__';
+beforeEach(function(): void {
+    $_SESSION = [];
 
-    /**
-     * Run after each test in this suite.
-     */
-    public function tearDown(): void
-    {
-        $_SESSION = [];
-    }
+    $this->configuration = new SdkConfiguration([
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+        'cookieSecret' => uniqid(),
+        'clientSecret' => uniqid(),
+        'redirectUri' => uniqid(),
+    ]);
 
-    /**
-     * Run before each test in this suite.
-     */
-    public function setUp(): void
-    {
-        $this->configuration = new SdkConfiguration([
-            'domain' => uniqid(),
-            'clientId' => uniqid(),
-            'cookieSecret' => uniqid(),
-            'clientSecret' => uniqid(),
-            'redirectUri' => uniqid(),
-        ]);
+    $this->namespace = uniqid();
 
-        $this->store = new SessionStore($this->configuration, 'test');
-    }
+    $this->store = new SessionStore($this->configuration, $this->namespace);
+});
 
-    /**
-     * Test that SessionStore::set stores the correct value.
-     */
-    public function testSet(): void
-    {
-        // Make sure this key does not exist yet so we can test that it was set.
-        $_SESSION = [];
+test('set() assigns values as expected', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+    $this->assertEquals($value, $_SESSION[$this->namespace . '_' . $key]);
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-        // Suppressing "headers already sent" warning related to cookies.
-        $this->store->set(self::TEST_KEY, self::TEST_VALUE);
+test('get() retrieves values as expected', function(string $key, string $value): void {
+    $_SESSION[$this->namespace . '_' . $key] = $value;
+    $this->assertEquals($value, $this->store->get($key, 'foobar'));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-        $this->assertEquals(self::TEST_VALUE, $_SESSION['test_' . self::TEST_KEY]);
-    }
+test('get() retrieves a default value as expected', function(string $key): void {
+    $this->assertEquals('foobar', $this->store->get($key, 'foobar'));
+})->with(['mocked key' => [
+    fn() => uniqid(),
+]]);
 
-    /**
-     * Test that SessionStore::get stores the correct value.
-     */
-    public function testGet(): void
-    {
-        $_SESSION['test_' . self::TEST_KEY] = self::TEST_VALUE;
-        $this->assertEquals(self::TEST_VALUE, $this->store->get(self::TEST_KEY));
-    }
+test('delete() clears values as expected', function(string $key, string $value): void {
+    $_SESSION[$this->namespace . '_' . $key] = $value;
+    $this->assertTrue(isset($_SESSION[$this->namespace . '_' . $key]));
 
-    /**
-     * Test that SessionStore::delete trashes the stored value.
-     */
-    public function testDelete(): void
-    {
-        $_SESSION['test_' . self::TEST_KEY] = self::TEST_VALUE;
-        $this->assertTrue(isset($_SESSION['test_' . self::TEST_KEY]));
+    $this->store->delete($key);
 
-        $this->store->delete(self::TEST_KEY);
+    $this->assertNull($this->store->get($key));
+    $this->assertFalse(isset($_SESSION[$this->namespace . '_' . $key]));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-        $this->assertNull($this->store->get(self::TEST_KEY));
-        $this->assertFalse(isset($_SESSION['test_' . self::TEST_KEY]));
-    }
-}
+test('deleteAll() clears values as expected', function(string $key, string $value): void {
+    $_SESSION[$this->namespace . '_' . $key] = $value;
+    $this->assertTrue(isset($_SESSION[$this->namespace . '_' . $key]));
+
+    $this->store->deleteAll();
+
+    $this->assertNull($this->store->get($key));
+    $this->assertFalse(isset($_SESSION[$this->namespace . '_' . $key]));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);

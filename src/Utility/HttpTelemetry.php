@@ -50,10 +50,12 @@ final class HttpTelemetry
     {
         $phpVersion = phpversion();
 
+        // @codeCoverageIgnoreStart
         // phpversion() can potentially return false in unusual circumstances; set PHP version to an empty string in those cases.
         if ($phpVersion === false) {
             $phpVersion = '';
         }
+        // @codeCoverageIgnoreEnd
 
         self::setPackage('auth0-php', Auth0::VERSION);
         self::setEnvProperty('php', $phpVersion);
