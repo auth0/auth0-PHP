@@ -69,7 +69,7 @@ trait ConfigurableMixin
                     $arguments[0] = [ $arguments[0] ];
                 }
 
-                [$arguments] = Toolkit::filter([$arguments])->array()->trim();
+                $arguments = array_filter(Toolkit::filter($arguments)->array()->trim(), static function ($val) { return ($val !== null && count($val) !== 0); });
 
                 if (count($arguments) !== 0) {
                     if (is_array($this->configuredState[$propertyName]->value)) {
@@ -77,15 +77,11 @@ trait ConfigurableMixin
                         return $this;
                     }
 
-                    if ($this->configuredState[$propertyName]->value === null) {
-                        $this->changeState($propertyName, $arguments[0]);
-                        return $this;
-                    }
-
                     $this->changeState($propertyName, $arguments[0]);
+                    return $this;
                 }
 
-                return $this->configuredState[$propertyName]->value;
+                return $this;
             }
 
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
@@ -101,7 +97,7 @@ trait ConfigurableMixin
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
         }
 
-        return;
+        throw \Auth0\SDK\Exception\ArgumentException::unknownMethod($functionName);
     }
 
     /**
@@ -148,7 +144,7 @@ trait ConfigurableMixin
         // TODO: Replace get_class() w/ ::class when 7.x support is dropped.
 
         // phpcs:ignore
-        $constructor = new \ReflectionMethod(get_class($this) . '::__construct');
+        $constructor = new \ReflectionMethod(get_class($this), '__construct');
         $parameters = $constructor->getParameters();
         $arguments = $args[0];
         $usingArgumentsArray = false;
@@ -227,7 +223,13 @@ trait ConfigurableMixin
         $propertyValue
     ): void {
         $propertyType = gettype($propertyValue);
-        $expectedType = $this->configuredState[$propertyName]->type;
+
+        $normalizedPropertyTypes = [
+            'boolean' => 'bool',
+            'integer' => 'int'
+        ];
+
+        $propertyType = $normalizedPropertyTypes[$propertyType] ?? $propertyType;
 
         if ($this->configurationImmutable) {
             throw \Auth0\SDK\Exception\ConfigurationException::setImmutable();
@@ -237,18 +239,20 @@ trait ConfigurableMixin
             throw \Auth0\SDK\Exception\ConfigurationException::setMissing($propertyName);
         }
 
-        if ($propertyType !== $expectedType) {
-            if (! ($propertyType === 'boolean' && $expectedType === 'bool') &&
-                ! ($propertyType === 'integer' && $expectedType === 'int')) {
-                if ($propertyValue === null && ! $this->configuredState[$propertyName]->allowsNull) {
-                    throw \Auth0\SDK\Exception\ConfigurationException::setIncompatible($propertyName, $expectedType, $propertyType);
+        $allowedTypes = [$this->configuredState[$propertyName]->type];
+        $expectedType = $this->configuredState[$propertyName]->type;
+
+        if ($this->configuredState[$propertyName]->allowsNull) {
+            $allowedTypes[] = 'NULL';
+        }
+
+        if (! in_array($propertyType, $allowedTypes)) {
+            if (! $propertyValue instanceof $expectedType) {
+                if ($this->configuredState[$propertyName]->allowsNull) {
+                    throw \Auth0\SDK\Exception\ConfigurationException::setIncompatibleNullable($propertyName, $expectedType, $propertyType);
                 }
 
-                if ($propertyValue !== null && $this->configuredState[$propertyName]->allowsNull) {
-                    if (! is_object($propertyValue) || ! ($propertyValue instanceof $expectedType)) {
-                        throw \Auth0\SDK\Exception\ConfigurationException::setIncompatibleNullable($propertyName, $expectedType, $propertyType);
-                    }
-                }
+                throw \Auth0\SDK\Exception\ConfigurationException::setIncompatible($propertyName, $expectedType, $propertyType);
             }
         }
 
