@@ -152,6 +152,35 @@ final class Auth0
     }
 
     /**
+     * If invitation parameters are present in the request, handle extraction and return a URL for redirection to Universal Login to accept. Returns null if no invitation parameters were found.
+     *
+     * @param string|null                 $redirectUrl Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
+     * @param array<int|string|null>|null $params Additional parameters to include with the request.
+     *
+     * @throws \Auth0\SDK\Exception\ConfigurationException When a Client ID is not configured.
+     * @throws \Auth0\SDK\Exception\ConfigurationException When `redirectUri` is not specified, and supplied SdkConfiguration does not have a default redirectUri configured.
+     *
+     * @link https://auth0.com/docs/universal-login/new-experience
+     * @link https://auth0.com/docs/api/authentication#login
+     */
+    public function handleInvitation(
+        ?string $redirectUrl = null,
+        ?array $params = null
+    ): ?string
+    {
+        $invite = $this->getInvitationParameters();
+
+        if ($invite !== null) {
+            return $this->login($redirectUrl, Toolkit::merge([
+                'invitation' => (string) $invite->invitation,
+                'organization' => (string) $invite->organization,
+            ], $params));
+        }
+
+        return null;
+    }
+
+    /**
      * Delete any persistent data and clear out all stored properties, and return the URI to Auth0 /logout endpoint for redirection.
      *
      * @param string|null                 $returnUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
@@ -173,8 +202,12 @@ final class Auth0
 
     /**
      * Delete any persistent data and clear out all stored properties.
+     *
+     * @oaram bool $transient When true, data in transient storage is also cleared.
      */
-    public function clear(): self
+    public function clear(
+        bool $transient = true
+    ): self
     {
         $sessionStorage = $this->configuration()->getSessionStorage();
         $transientStorage = $this->configuration()->getTransientStorage();
@@ -183,7 +216,7 @@ final class Auth0
             $sessionStorage->deleteAll();
         }
 
-        if ($transientStorage !== null) {
+        if ($transientStorage !== null && $transient === true) {
             $transientStorage->deleteAll();
         }
 
@@ -268,6 +301,8 @@ final class Auth0
             return false;
         }
 
+        $this->clear(false);
+
         if ($state === null || ! $this->getTransientStore()->verify('state', $state)) {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::invalidState();
@@ -279,10 +314,6 @@ final class Auth0
             if ($codeVerifier === null) {
                 throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
             }
-        }
-
-        if ($this->getState()->hasUser()) {
-            $this->clear();
         }
 
         $response = $this->authentication()->codeExchange($code, $redirectUri, $codeVerifier);
@@ -609,18 +640,20 @@ final class Auth0
      * Get the specified parameter from POST or GET, depending on configured response mode.
      *
      * @param string $parameterName Name of the parameter to pull from the request.
+     * @param int $filter Defaults to FILTER_SANITIZE_STRING. The type of PHP filter_var() filter to apply.
      */
     public function getRequestParameter(
-        string $parameterName
+        string $parameterName,
+        int $filter = FILTER_SANITIZE_STRING
     ): ?string {
         $responseMode = $this->configuration()->getResponseMode();
 
         if ($responseMode === 'query' && isset($_GET[$parameterName])) {
-            return filter_var($_GET[$parameterName], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
+            return filter_var($_GET[$parameterName], $filter, FILTER_NULL_ON_FAILURE);
         }
 
         if ($responseMode === 'form_post' && isset($_POST[$parameterName])) {
-            return filter_var($_POST[$parameterName], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
+            return filter_var($_POST[$parameterName], $filter, FILTER_NULL_ON_FAILURE);
         }
 
         return null;
@@ -644,23 +677,6 @@ final class Auth0
         }
 
         return null;
-    }
-
-    /**
-     * If invitation parameters are present in the request, handle extraction and automatically redirect to Universal Login.
-     */
-    public function handleInvitation(): self
-    {
-        $invite = $this->getInvitationParameters();
-
-        if ($invite !== null) {
-            $this->login(null, [
-                'invitation' => (string) $invite->invitation,
-                'organization' => (string) $invite->organization,
-            ]);
-        }
-
-        return $this;
     }
 
     /**
