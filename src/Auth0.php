@@ -28,12 +28,12 @@ final class Auth0
     /**
      * Instance of SdkState, for shared state across classes.
      */
-    private SdkState $state;
+    private ?SdkState $state = null;
 
     /**
      * Instance of TransientStoreHandler for storing ephemeral data.
      */
-    private TransientStoreHandler $transient;
+    private ?TransientStoreHandler $transient = null;
 
     /**
      * Authentication Client.
@@ -60,13 +60,6 @@ final class Auth0
 
         // Store the configuration internally.
         $this->configuration = $configuration;
-
-        // Create a transient storage handler using the configured transientStorage medium.
-        $this->transient = new TransientStoreHandler($configuration->getTransientStorage());
-
-        // Setup active state using session data when available.
-        // Otherwise, instantiate a new session.
-        $this->restoreState();
     }
 
     /**
@@ -117,21 +110,21 @@ final class Auth0
         ?array $params = null
     ): string {
         $params = $params ?? [];
-        $state = $params['state'] ?? $this->transient->issue('state');
-        $params['nonce'] = $params['nonce'] ?? $this->transient->issue('nonce');
-        $params['max_age'] = $params['max_age'] ?? $this->configuration->getTokenMaxAge();
+        $state = $params['state'] ?? $this->getTransientStore()->issue('state');
+        $params['nonce'] = $params['nonce'] ?? $this->getTransientStore()->issue('nonce');
+        $params['max_age'] = $params['max_age'] ?? $this->configuration()->getTokenMaxAge();
 
         unset($params['state']);
 
-        if ($this->configuration->getUsePkce()) {
+        if ($this->configuration()->getUsePkce()) {
             $codeVerifier = PKCE::generateCodeVerifier(128);
             $params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
             $params['code_challenge_method'] = 'S256';
-            $this->transient->store('code_verifier', $codeVerifier);
+            $this->getTransientStore()->store('code_verifier', $codeVerifier);
         }
 
         if ($params['max_age'] !== null) {
-            $this->transient->store('max_age', (string) $params['max_age']);
+            $this->getTransientStore()->store('max_age', (string) $params['max_age']);
         }
 
         return $this->authentication()->getLoginLink((string) $state, $redirectUrl, $params);
@@ -191,7 +184,7 @@ final class Auth0
             $this->configuration->getTransientStorage()->purge();
         }
 
-        $this->state->reset();
+        $this->getState()->reset();
 
         return $this;
     }
@@ -224,7 +217,7 @@ final class Auth0
         // Verify token signature.
         $token->verify();
 
-        $tokenMaxAge = $tokenMaxAge ?? $this->transient->getOnce('max_age') ?? null;
+        $tokenMaxAge = $tokenMaxAge ?? $this->getTransientStore()->getOnce('max_age') ?? null;
 
         // If pulling from transient storage, $tokenMaxAge might be a string.
         if ($tokenMaxAge !== null) {
@@ -236,15 +229,15 @@ final class Auth0
             null,
             $tokenAudience,
             $tokenOrganization,
-            $tokenNonce ?? $this->transient->getOnce('nonce') ?? null,
+            $tokenNonce ?? $this->getTransientStore()->getOnce('nonce') ?? null,
             $tokenMaxAge ?? null,
             $tokenLeeway,
             $tokenNow
         );
 
         // Ensure transient-stored values are cleared, even if overriding values were passed to the  method.
-        $this->transient->delete('max_age');
-        $this->transient->delete('nonce');
+        $this->getTransientStore()->delete('max_age');
+        $this->getTransientStore()->delete('nonce');
 
         return $token;
     }
@@ -274,14 +267,14 @@ final class Auth0
             return false;
         }
 
-        if ($state === null || ! $this->transient->verify('state', $state)) {
+        if ($state === null || ! $this->getTransientStore()->verify('state', $state)) {
             $this->deferStateSaving(false);
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::invalidState();
         }
 
-        if ($this->configuration->getUsePkce()) {
-            $codeVerifier = $this->transient->getOnce('code_verifier');
+        if ($this->configuration()->getUsePkce()) {
+            $codeVerifier = $this->getTransientStore()->getOnce('code_verifier');
 
             if ($codeVerifier === null) {
                 $this->deferStateSaving(false);
@@ -290,7 +283,7 @@ final class Auth0
             }
         }
 
-        if ($this->state->hasUser()) {
+        if ($this->getState()->hasUser()) {
             $this->clear();
         }
 
@@ -321,7 +314,7 @@ final class Auth0
         }
 
         if (isset($response['id_token'])) {
-            if (! $this->transient->isset('nonce')) {
+            if (! $this->getTransientStore()->isset('nonce')) {
                 $this->deferStateSaving(false);
                 $this->clear();
                 throw \Auth0\SDK\Exception\StateException::missingNonce();
@@ -336,7 +329,7 @@ final class Auth0
             $this->setAccessTokenExpiration($expiresIn);
         }
 
-        if ($user === null || $this->configuration->getQueryUserInfo() === true) {
+        if ($user === null || $this->configuration()->getQueryUserInfo() === true) {
             $response = $this->authentication()->userInfo($response['access_token']);
 
             if (HttpResponse::wasSuccessful($response)) {
@@ -367,8 +360,7 @@ final class Auth0
         ?array $params = null
     ): self {
         $this->deferStateSaving();
-
-        $refreshToken = $this->state->getRefreshToken();
+        $refreshToken = $this->getState()->getRefreshToken();
 
         if ($refreshToken === null) {
             $this->deferStateSaving(false);
@@ -401,18 +393,18 @@ final class Auth0
      */
     public function getCredentials(): ?object
     {
-        $user = $this->state->getUser();
+        $user = $this->getState()->getUser();
 
         if ($user === null) {
             return null;
         }
 
-        $idToken = $this->state->getIdToken();
-        $accessToken = $this->state->getAccessToken();
-        $accessTokenScope = $this->state->getAccessTokenScope();
-        $accessTokenExpiration = (int) $this->state->getAccessTokenExpiration();
+        $idToken = $this->getState()->getIdToken();
+        $accessToken = $this->getState()->getAccessToken();
+        $accessTokenScope = $this->getState()->getAccessTokenScope();
+        $accessTokenExpiration = (int) $this->getState()->getAccessTokenExpiration();
         $accessTokenExpired = time() >= $accessTokenExpiration;
-        $refreshToken = $this->state->getRefreshToken();
+        $refreshToken = $this->getState()->getRefreshToken();
 
         return (object) [
             'user' => $user,
@@ -434,11 +426,11 @@ final class Auth0
      */
     public function getIdToken(): ?string
     {
-        if (! $this->state->hasIdToken()) {
+        if (! $this->getState()->hasIdToken()) {
             $this->exchange();
         }
 
-        return $this->state->getIdToken();
+        return $this->getState()->getIdToken();
     }
 
     /**
@@ -452,11 +444,11 @@ final class Auth0
      */
     public function getUser(): ?array
     {
-        if (! $this->state->hasUser()) {
+        if (! $this->getState()->hasUser()) {
             $this->exchange();
         }
 
-        return $this->state->getUser();
+        return $this->getState()->getUser();
     }
 
     /**
@@ -468,11 +460,11 @@ final class Auth0
      */
     public function getAccessToken(): ?string
     {
-        if (! $this->state->hasAccessToken()) {
+        if (! $this->getState()->hasAccessToken()) {
             $this->exchange();
         }
 
-        return $this->state->getAccessToken();
+        return $this->getState()->getAccessToken();
     }
 
     /**
@@ -484,11 +476,11 @@ final class Auth0
      */
     public function getRefreshToken(): ?string
     {
-        if (! $this->state->hasRefreshToken()) {
+        if (! $this->getState()->hasRefreshToken()) {
             $this->exchange();
         }
 
-        return $this->state->getRefreshToken();
+        return $this->getState()->getRefreshToken();
     }
 
     /**
@@ -502,11 +494,11 @@ final class Auth0
      */
     public function getAccessTokenScope(): ?array
     {
-        if (! $this->state->hasAccessTokenScope()) {
+        if (! $this->getState()->hasAccessTokenScope()) {
             $this->exchange();
         }
 
-        return $this->state->getAccessTokenScope();
+        return $this->getState()->getAccessTokenScope();
     }
 
     /**
@@ -518,11 +510,11 @@ final class Auth0
      */
     public function getAccessTokenExpiration(): ?int
     {
-        if (! $this->state->hasAccessTokenExpiration()) {
+        if (! $this->getState()->hasAccessTokenExpiration()) {
             $this->exchange();
         }
 
-        return $this->state->getAccessTokenExpiration();
+        return $this->getState()->getAccessTokenExpiration();
     }
 
     /**
@@ -533,10 +525,10 @@ final class Auth0
     public function setIdToken(
         string $idToken
     ): self {
-        $this->state->setIdToken($idToken);
+        $this->getState()->setIdToken($idToken);
 
-        if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistIdToken()) {
-            $this->configuration->getSessionStorage()->set('idToken', $idToken);
+        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistIdToken()) {
+            $this->configuration()->getSessionStorage()->set('idToken', $idToken);
         }
 
         return $this;
@@ -550,10 +542,10 @@ final class Auth0
     public function setUser(
         array $user
     ): self {
-        $this->state->setUser($user);
+        $this->getState()->setUser($user);
 
-        if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistUser()) {
-            $this->configuration->getSessionStorage()->set('user', $user);
+        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistUser()) {
+            $this->configuration()->getSessionStorage()->set('user', $user);
         }
 
         return $this;
@@ -567,10 +559,10 @@ final class Auth0
     public function setAccessToken(
         string $accessToken
     ): self {
-        $this->state->setAccessToken($accessToken);
+        $this->getState()->setAccessToken($accessToken);
 
-        if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistAccessToken()) {
-            $this->configuration->getSessionStorage()->set('accessToken', $accessToken);
+        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
+            $this->configuration()->getSessionStorage()->set('accessToken', $accessToken);
         }
 
         return $this;
@@ -584,10 +576,10 @@ final class Auth0
     public function setRefreshToken(
         string $refreshToken
     ): self {
-        $this->state->setRefreshToken($refreshToken);
+        $this->getState()->setRefreshToken($refreshToken);
 
-        if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistRefreshToken()) {
-            $this->configuration->getSessionStorage()->set('refreshToken', $refreshToken);
+        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistRefreshToken()) {
+            $this->configuration()->getSessionStorage()->set('refreshToken', $refreshToken);
         }
 
         return $this;
@@ -601,10 +593,10 @@ final class Auth0
     public function setAccessTokenScope(
         array $accessTokenScope
     ): self {
-        $this->state->setAccessTokenScope($accessTokenScope);
+        $this->getState()->setAccessTokenScope($accessTokenScope);
 
-        if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistAccessToken()) {
-            $this->configuration->getSessionStorage()->set('accessTokenScope', $accessTokenScope);
+        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
+            $this->configuration()->getSessionStorage()->set('accessTokenScope', $accessTokenScope);
         }
 
         return $this;
@@ -618,10 +610,10 @@ final class Auth0
     public function setAccessTokenExpiration(
         int $accessTokenExpiration
     ): self {
-        $this->state->setAccessTokenExpiration($accessTokenExpiration);
+        $this->getState()->setAccessTokenExpiration($accessTokenExpiration);
 
-        if ($this->configuration->hasSessionStorage() && $this->configuration->getPersistAccessToken()) {
-            $this->configuration->getSessionStorage()->set('accessTokenExpiration', $accessTokenExpiration);
+        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
+            $this->configuration()->getSessionStorage()->set('accessTokenExpiration', $accessTokenExpiration);
         }
 
         return $this;
@@ -635,7 +627,7 @@ final class Auth0
     public function getRequestParameter(
         string $parameterName
     ): ?string {
-        $responseMode = $this->configuration->getResponseMode();
+        $responseMode = $this->configuration()->getResponseMode();
 
         if ($responseMode === 'query' && isset($_GET[$parameterName])) {
             return filter_var($_GET[$parameterName], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
@@ -686,40 +678,50 @@ final class Auth0
     }
 
     /**
+     * Create a transient storage handler using the configured transientStorage medium.
+     */
+    private function getTransientStore(): TransientStoreHandler
+    {
+        return $this->transient = new TransientStoreHandler($this->configuration()->getTransientStorage());
+    }
+
+    /**
      * Retrieve state from session storage and configure SDK state.
      */
-    private function restoreState(): self
+    private function getState(): SdkState
     {
-        $state = [];
+        if ($this->state === null) {
+            $state = [];
 
-        if ($this->configuration->hasSessionStorage()) {
-            if ($this->configuration->getPersistUser()) {
-                $state['user'] = $this->configuration->getSessionStorage()->get('user');
-            }
+            if ($this->configuration()->hasSessionStorage()) {
+                if ($this->configuration()->getPersistUser()) {
+                    $state['user'] = $this->configuration()->getSessionStorage()->get('user');
+                }
 
-            if ($this->configuration->getPersistIdToken()) {
-                $state['idToken'] = $this->configuration->getSessionStorage()->get('idToken');
-            }
+                if ($this->configuration()->getPersistIdToken()) {
+                    $state['idToken'] = $this->configuration()->getSessionStorage()->get('idToken');
+                }
 
-            if ($this->configuration->getPersistAccessToken()) {
-                $state['accessToken'] = $this->configuration->getSessionStorage()->get('accessToken');
-                $state['accessTokenScope'] = $this->configuration->getSessionStorage()->get('accessTokenScope');
+                if ($this->configuration()->getPersistAccessToken()) {
+                    $state['accessToken'] = $this->configuration()->getSessionStorage()->get('accessToken');
+                    $state['accessTokenScope'] = $this->configuration()->getSessionStorage()->get('accessTokenScope');
 
-                $expires = $this->configuration->getSessionStorage()->get('accessTokenExpiration');
+                    $expires = $this->configuration()->getSessionStorage()->get('accessTokenExpiration');
 
-                if ($expires !== null) {
-                    $state['accessTokenExpiration'] = (int) $expires;
+                    if ($expires !== null) {
+                        $state['accessTokenExpiration'] = (int) $expires;
+                    }
+                }
+
+                if ($this->configuration()->getPersistRefreshToken()) {
+                    $state['refreshToken'] = $this->configuration()->getSessionStorage()->get('refreshToken');
                 }
             }
 
-            if ($this->configuration->getPersistRefreshToken()) {
-                $state['refreshToken'] = $this->configuration->getSessionStorage()->get('refreshToken');
-            }
+            $this->state = new SdkState($state);
         }
 
-        $this->state = new SdkState($state);
-
-        return $this;
+        return $this->state;
     }
 
     /**
