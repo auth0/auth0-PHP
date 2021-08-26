@@ -69,7 +69,12 @@ trait ConfigurableMixin
                     $arguments[0] = [ $arguments[0] ];
                 }
 
-                $arguments = array_filter(Toolkit::filter($arguments)->array()->trim(), static function ($val) { return ($val !== null && count($val) !== 0); });
+                $arguments = array_filter(
+                    Toolkit::filter($arguments)->array()->trim(),
+                    static function ($val): bool {
+                        return $val !== null && count($val) !== 0;
+                    }
+                );
 
                 if (count($arguments) !== 0) {
                     if (is_array($this->configuredState[$propertyName]->value)) {
@@ -226,7 +231,7 @@ trait ConfigurableMixin
 
         $normalizedPropertyTypes = [
             'boolean' => 'bool',
-            'integer' => 'int'
+            'integer' => 'int',
         ];
 
         $propertyType = $normalizedPropertyTypes[$propertyType] ?? $propertyType;
@@ -246,7 +251,7 @@ trait ConfigurableMixin
             $allowedTypes[] = 'NULL';
         }
 
-        if (! in_array($propertyType, $allowedTypes)) {
+        if (! in_array($propertyType, $allowedTypes, true)) {
             if (! $propertyValue instanceof $expectedType) {
                 if ($this->configuredState[$propertyName]->allowsNull) {
                     throw \Auth0\SDK\Exception\ConfigurationException::setIncompatibleNullable($propertyName, $expectedType, $propertyType);

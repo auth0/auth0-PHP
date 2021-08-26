@@ -166,8 +166,7 @@ final class Auth0
     public function handleInvitation(
         ?string $redirectUrl = null,
         ?array $params = null
-    ): ?string
-    {
+    ): ?string {
         $invite = $this->getInvitationParameters();
 
         if ($invite !== null) {
@@ -207,8 +206,7 @@ final class Auth0
      */
     public function clear(
         bool $transient = true
-    ): self
-    {
+    ): self {
         $sessionStorage = $this->configuration()->getSessionStorage();
         $transientStorage = $this->configuration()->getTransientStorage();
 
