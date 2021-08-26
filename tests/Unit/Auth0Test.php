@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Store\InMemoryStorage;
 
 uses()->group('auth0');
 
@@ -74,235 +75,21 @@ it('uses the configured session storage handler', function(): void {
     $this->assertEquals(['__test_custom_store__user__'], $auth0->getUser());
 });
 
-test('exchange() returns false if no code is present', function(): void {
+test('authentication() returns an instance of the Authentication class', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-    $this->assertFalse($auth0->exchange());
+    $this->assertInstanceOf(\Auth0\SDK\API\Authentication::class, $auth0->authentication());
 });
 
-test('exchange() returns false if no nonce is stored', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
-
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
-        'tokenAlgorithm' => 'HS256',
-    ]);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-    $httpClient->mockResponse(\Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6"}'));
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
-
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_MISSING_NONCE);
-
-    $auth0->exchange();
-});
-
-test('exchange() throws an exception if no code verified was found', function(): void {
+test('management() returns an instance of the Management class', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  null);
-
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_MISSING_CODE_VERIFIER);
-
-    $auth0->exchange();
+    $this->assertInstanceOf(\Auth0\SDK\API\Management::class, $auth0->management());
 });
 
-test('exchange() succeeds with a valid id token', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
-
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
-        'tokenAlgorithm' => 'HS256',
-    ]);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-
-    $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
-    ]);
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
-
-    $this->assertTrue($auth0->exchange());
-    $this->assertArrayHasKey('sub', $auth0->getUser());
-    $this->assertEquals('__test_sub__', $auth0->getUser()['sub']);
-    $this->assertEquals($token, $auth0->getIdToken());
-    $this->assertEquals('1.2.3', $auth0->getAccessToken());
-    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
-});
-
-test('exchange() succeeds with no id token', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-
-    $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"123"}')
-    ]);
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
-
-    $this->assertTrue($auth0->exchange());
-    $this->assertArrayHasKey('sub', $auth0->getUser());
-    $this->assertEquals('123', $auth0->getUser()['sub']);
-    $this->assertEquals('1.2.3', $auth0->getAccessToken());
-    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
-});
-
-test('exchange() succeeds with pkce disabled', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
-        'usePkce' => false,
-    ]);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-
-    $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
-    ]);
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-
-    $this->assertTrue($auth0->exchange());
-    $this->assertEquals(['sub' => '__test_sub__'], $auth0->getUser());
-    $this->assertEquals('1.2.3', $auth0->getAccessToken());
-    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
-});
-
-test('exchange() skips hitting userinfo endpoint', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
-
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
-        'tokenAlgorithm' => 'HS256',
-    ]);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-
-    $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
-    ]);
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
-
-    $this->assertTrue($auth0->exchange());
-    $this->assertEquals('__test_sub__', $auth0->getUser()['sub']);
-    $this->assertEquals($token, $auth0->getIdToken());
-    $this->assertEquals('1.2.3', $auth0->getAccessToken());
-});
-
-test('renew() throws an exception if there is no refresh token available', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-
-    $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}')
-    ]);
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
-
-    $this->assertTrue($auth0->exchange());
-
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN);
-
-    $auth0->renew();
-});
-
-test('renew() throws an exception if no access token is returned', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-
-    $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}'),
-    ]);
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
-
-    $this->assertTrue($auth0->exchange());
-
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
-
-    $auth0->renew();
-});
-
-test('renew() succeeds under expected and valid conditions', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
-
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
-        'tokenAlgorithm' => 'HS256',
-    ]);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-
-    $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $token . '"}'),
-    ]);
-
-    $_GET['code'] = uniqid();
-    $_GET['state'] = '__test_state__';
-
-    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
-
-    $this->assertTrue($auth0->exchange());
-
-    $auth0->renew(['scope' => 'openid']);
-    $request = $httpClient->getLastRequest()->getLastRequest();
-    parse_str($request->getBody()->__toString(), $requestBody);
-
-    $this->assertEquals('__test_access_token__', $auth0->getAccessToken());
-    $this->assertEquals($token, $auth0->getIdToken());
-
-    $this->assertEquals('openid', $requestBody['scope']);
-    $this->assertEquals('__test_client_secret__', $requestBody['client_secret']);
-    $this->assertEquals('__test_client_id__', $requestBody['client_id']);
-    $this->assertEquals('2.3.4', $requestBody['refresh_token']);
-    $this->assertEquals('https://__test_domain__/oauth/token', $request->getUri()->__toString());
+test('configuration() returns the same instance of the SdkConfiguration class that was provided at instantiation', function(): void {
+    $configuration = new SdkConfiguration($this->configuration);
+    $auth0 = new \Auth0\SDK\Auth0($configuration);
+    $this->assertInstanceOf(\Auth0\SDK\Configuration\SdkConfiguration::class, $auth0->configuration());
+    $this->assertEquals($configuration, $auth0->configuration());
 });
 
 test('getLoginLink() returns expected default value', function(): void {
@@ -419,60 +206,59 @@ test('login() assigns `max_age` from overridden values', function(): void {
     $this->assertContains('max_age=1001', $url_query);
 });
 
-test('getInvitationParameters() returns request parameters when valid', function(): void {
+test('signup() returns a url with a `screen_hint` parameter', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $url = $auth0->signup(uniqid());
+
+    $parsed = parse_url($url, PHP_URL_QUERY);
+    $query = explode('&', $parsed);
+
+    $this->assertContains('screen_hint=signup', $query);
+});
+
+test('handleInvitation() creates a valid login url', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['invitation'] = '__test_invitation__';
     $_GET['organization'] = '__test_organization__';
     $_GET['organization_name'] = '__test_organization_name__';
 
-    $extracted = $auth0->getInvitationParameters();
+    $parsed = parse_url($auth0->handleInvitation());
 
-    $this->assertIsObject($extracted, 'Invitation parameters were not extracted from the $_GET (environment variable seeded with query parameters during a GET request) successfully.');
+    $this->assertEquals('https', $parsed['scheme']);
+    $this->assertEquals('__test_domain__', $parsed['host']);
+    $this->assertEquals('/authorize', $parsed['path']);
 
-    $this->assertObjectHasAttribute('invitation', $extracted);
-    $this->assertObjectHasAttribute('organization', $extracted);
-    $this->assertObjectHasAttribute('organizationName', $extracted);
+    $query = explode('&', $parsed['query']);
 
-    $this->assertEquals($extracted->invitation, '__test_invitation__');
-    $this->assertEquals($extracted->organization, '__test_organization__');
-    $this->assertEquals($extracted->organizationName, '__test_organization_name__');
+    $this->assertContains('scope=openid%20profile%20email', $query);
+    $this->assertContains('response_type=code', $query);
+    $this->assertContains('redirect_uri=__test_redirect_uri__', $query);
+    $this->assertContains('client_id=__test_client_id__', $query);
+    $this->assertContains('invitation=__test_invitation__', $query);
+    $this->assertContains('organization=__test_organization__', $query);
 });
 
-test('getInvitationParameters() does not return invalid request parameters', function(): void {
+test('handleInvitation() returns null if organization invite parameters are not present in query', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+    $this->assertNull($auth0->handleInvitation());
+});
+
+test('logout() returns a a valid logout url', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
-    $_GET['invitation'] = '__test_invitation__';
+    $returnUrl = uniqid();
+    $randomParam = random_int(PHP_INT_MIN, PHP_INT_MAX);
 
-    $this->assertIsNotObject($auth0->getInvitationParameters());
-});
+    $url = $auth0->logout($returnUrl, ['rand' => $randomParam]);
 
-test('setIdToken() properly stores data', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
-        'tokenAlgorithm' => 'HS256',
-    ]);
+    $parsed = parse_url($url, PHP_URL_QUERY);
+    $query = explode('&', $parsed);
 
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-
-    $auth0->setIdToken($token);
-
-    $this->assertEquals($token, $auth0->getIdToken());
-    $this->assertEquals($token, $auth0->configuration()->getSessionStorage()->get('idToken'));
-});
-
-test('setIdToken() uses `tokenLeeway` configuration', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
-        'exp' => time() - 100,
-    ]);
-
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
-        'tokenAlgorithm' => 'HS256',
-        'tokenLeeway' => 120,
-    ]);
-
-    $auth0->setIdToken($token);
-    $this->assertEquals($token, $auth0->getIdToken());
+    $this->assertContains('returnTo=' . $returnUrl, $query);
+    $this->assertContains('client_id=' . $this->configuration['clientId'], $query);
+    $this->assertContains('rand=' . $randomParam, $query);
 });
 
 test('decode() uses the configured cache handler', function(): void {
@@ -518,6 +304,29 @@ test('decode() compares `auth_time` against `tokenMaxAge` configuration', functi
         'tokenMaxAge' => $maxAge,
         'tokenLeeway' => 0,
     ]);
+
+    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISMATCHED_AUTH_TIME_CLAIM, time(), $now - $drift + $maxAge));
+
+    $auth0->decode($token, null, null, null, null, null, $now);
+});
+
+test('decode() converts a string `max_age` value from transient storage into an int', function(): void {
+    $now = time();
+    $maxAge = 10;
+    $drift = 100;
+
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'auth_time' => $now - $drift,
+    ]);
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+        'tokenLeeway' => 0,
+    ]);
+
+    $storage = $auth0->configuration()->getTransientStorage();
+    $storage->set('max_age', '10');
 
     $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISMATCHED_AUTH_TIME_CLAIM, time(), $now - $drift + $maxAge));
@@ -573,4 +382,471 @@ test('decode() throws an exception when `org_id` does not match `organization` c
     $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISMATCHED_ORG_ID_CLAIM, $expectedOrgId, $tokenOrgId));
 
     $auth0->decode($token);
+});
+
+test('exchange() returns false if no code is present', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+    $this->assertFalse($auth0->exchange());
+});
+
+test('exchange() returns false if no nonce is stored', function(): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponse(\Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6"}'));
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_MISSING_NONCE);
+
+    $auth0->exchange();
+});
+
+test('exchange() throws an exception if no code verified was found', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  null);
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_MISSING_CODE_VERIFIER);
+
+    $auth0->exchange();
+});
+
+test('exchange() throws an exception if no state was found', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  null);
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
+
+    $auth0->exchange();
+});
+
+test('exchange() succeeds with a valid id token', function(): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"test:part1 test:part2 test:part3","expires_in":300}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $this->assertTrue($auth0->exchange());
+    $this->assertArrayHasKey('sub', $auth0->getUser());
+    $this->assertEquals('__test_sub__', $auth0->getUser()['sub']);
+    $this->assertEquals($token, $auth0->getIdToken());
+    $this->assertEquals('1.2.3', $auth0->getAccessToken());
+    $this->assertEquals(['test:part1','test:part2','test:part3'], $auth0->getAccessTokenScope());
+    $this->assertGreaterThan(time(), $auth0->getAccessTokenExpiration());
+    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
+});
+
+test('exchange() succeeds with no id token', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"123"}')
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $this->assertTrue($auth0->exchange());
+    $this->assertArrayHasKey('sub', $auth0->getUser());
+    $this->assertEquals('123', $auth0->getUser()['sub']);
+    $this->assertEquals('1.2.3', $auth0->getAccessToken());
+    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
+});
+
+test('exchange() succeeds with PKCE disabled', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'usePkce' => false,
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+
+    $this->assertTrue($auth0->exchange());
+    $this->assertEquals(['sub' => '__test_sub__'], $auth0->getUser());
+    $this->assertEquals('1.2.3', $auth0->getAccessToken());
+    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
+});
+
+test('exchange() skips hitting userinfo endpoint', function(): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '"}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $this->assertTrue($auth0->exchange());
+    $this->assertEquals('__test_sub__', $auth0->getUser()['sub']);
+    $this->assertEquals($token, $auth0->getIdToken());
+    $this->assertEquals('1.2.3', $auth0->getAccessToken());
+});
+
+test('exchange() throws an exception when code exchange fails', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"error": "Something happened.}', 500)
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = uniqid();
+
+    $auth0->configuration()->getTransientStorage()->set('state', $_GET['state']);
+    $auth0->configuration()->getTransientStorage()->set('nonce',  uniqid());
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  uniqid());
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_CODE_EXCHANGE);
+
+    $auth0->exchange();
+});
+
+test('exchange() throws an exception when an access token is not returned from code exchange', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}')
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = uniqid();
+
+    $auth0->configuration()->getTransientStorage()->set('state', $_GET['state']);
+    $auth0->configuration()->getTransientStorage()->set('nonce',  uniqid());
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  uniqid());
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_BAD_ACCESS_TOKEN);
+
+    $auth0->exchange();
+});
+
+test('renew() throws an exception if there is no refresh token available', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3"}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}')
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $this->assertTrue($auth0->exchange());
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN);
+
+    $auth0->renew();
+});
+
+test('renew() throws an exception if no access token is returned', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4"}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $this->assertTrue($auth0->exchange());
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
+
+    $auth0->renew();
+});
+
+test('renew() succeeds under expected and valid conditions', function(): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $token . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $this->assertTrue($auth0->exchange());
+
+    $auth0->renew(['scope' => 'openid']);
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    parse_str($request->getBody()->__toString(), $requestBody);
+
+    $this->assertEquals('__test_access_token__', $auth0->getAccessToken());
+    $this->assertEquals($token, $auth0->getIdToken());
+
+    $this->assertEquals('openid', $requestBody['scope']);
+    $this->assertEquals('__test_client_secret__', $requestBody['client_secret']);
+    $this->assertEquals('__test_client_id__', $requestBody['client_id']);
+    $this->assertEquals('2.3.4', $requestBody['refresh_token']);
+    $this->assertEquals('https://__test_domain__/oauth/token', $request->getUri()->__toString());
+});
+
+test('getCredentials() returns null when a session is not available', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+    $this->assertNull($auth0->getCredentials());
+});
+
+test('getCredentials() returns the expected object structure when a session is available', function(): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"test:part1,test:part2,test:part3","expires_in":300}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $this->assertTrue($auth0->exchange());
+
+    $credentials = $auth0->getCredentials();
+
+    $this->assertIsObject($credentials);
+
+    $this->assertObjectHasAttribute('user', $credentials);
+    $this->assertObjectHasAttribute('idToken', $credentials);
+    $this->assertObjectHasAttribute('accessToken', $credentials);
+    $this->assertObjectHasAttribute('accessTokenScope', $credentials);
+    $this->assertObjectHasAttribute('accessTokenExpiration', $credentials);
+    $this->assertObjectHasAttribute('accessTokenExpired', $credentials);
+    $this->assertObjectHasAttribute('refreshToken', $credentials);
+
+    $this->assertIsArray($credentials->user);
+});
+
+test('getIdToken() performs an exchange if a session is not available', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
+
+    $auth0->getIdToken();
+});
+
+test('getUser() performs an exchange if a session is not available', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
+
+    $auth0->getUser();
+});
+
+test('getRefreshToken() performs an exchange if a session is not available', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
+
+    $auth0->getRefreshToken();
+});
+
+test('getAccessToken() performs an exchange if a session is not available', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
+
+    $auth0->getAccessToken();
+});
+
+test('getAccessTokenScope() performs an exchange if a session is not available', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
+
+    $auth0->getAccessTokenScope();
+});
+
+test('getAccessTokenExpiration() performs an exchange if a session is not available', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+
+    $this->expectException(\Auth0\SDK\Exception\StateException::class);
+    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
+
+    $auth0->getAccessTokenExpiration();
+});
+
+test('setIdToken() properly stores data', function(): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+
+    $auth0->setIdToken($token);
+
+    $this->assertEquals($token, $auth0->getIdToken());
+    $this->assertEquals($token, $auth0->configuration()->getSessionStorage()->get('idToken'));
+});
+
+test('setIdToken() uses `tokenLeeway` configuration', function(): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'exp' => time() - 100,
+    ]);
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+        'tokenLeeway' => 120,
+    ]);
+
+    $auth0->setIdToken($token);
+    $this->assertEquals($token, $auth0->getIdToken());
+});
+
+test('getRequestParameter() retrieves from $_POST when `responseMode` is configured to `form_post`', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + ['responseMode' => 'form_post']);
+
+    $_GET['test'] = uniqid();
+    $_POST['test'] = uniqid();
+
+    $extracted = $auth0->getRequestParameter('test');
+
+    $this->assertEquals($_POST['test'], $extracted);
+    $this->assertNotEquals($_GET['test'], $extracted);
+});
+
+test('getInvitationParameters() returns request parameters when valid', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['invitation'] = '__test_invitation__';
+    $_GET['organization'] = '__test_organization__';
+    $_GET['organization_name'] = '__test_organization_name__';
+
+    $extracted = $auth0->getInvitationParameters();
+
+    $this->assertIsObject($extracted, 'Invitation parameters were not extracted from the $_GET (environment variable seeded with query parameters during a GET request) successfully.');
+
+    $this->assertObjectHasAttribute('invitation', $extracted);
+    $this->assertObjectHasAttribute('organization', $extracted);
+    $this->assertObjectHasAttribute('organizationName', $extracted);
+
+    $this->assertEquals($extracted->invitation, '__test_invitation__');
+    $this->assertEquals($extracted->organization, '__test_organization__');
+    $this->assertEquals($extracted->organizationName, '__test_organization_name__');
+});
+
+test('getInvitationParameters() does not return invalid request parameters', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['invitation'] = '__test_invitation__';
+
+    $this->assertIsNotObject($auth0->getInvitationParameters());
 });

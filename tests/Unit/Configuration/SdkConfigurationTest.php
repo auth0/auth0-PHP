@@ -47,7 +47,7 @@ test('__construct() does not accept invalid types from configuration array', fun
     $randomNumber = mt_rand();
 
     $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_INCOMPATIBLE_NULLABLE, 'domain', 'string', 'integer'));
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_INCOMPATIBLE_NULLABLE, 'domain', 'string', 'int'));
 
     new SdkConfiguration([
         'domain' => $randomNumber,
@@ -107,7 +107,7 @@ test('__construct() throws an exception if an invalid token leeway is specified'
     $redirectUri = uniqid();
 
     $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'tokenLeeway'));
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_INCOMPATIBLE, 'tokenLeeway', 'int', 'string'));
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
@@ -116,23 +116,6 @@ test('__construct() throws an exception if an invalid token leeway is specified'
         'redirectUri' => $redirectUri,
         'tokenLeeway' => 'TEST'
     ]);
-});
-
-test('__construct() converts token leeway passed as a string into an int silently', function(): void {
-    $domain = uniqid();
-    $cookieSecret = uniqid();
-    $clientId = uniqid();
-    $redirectUri = uniqid();
-
-    $sdk = new SdkConfiguration([
-        'domain' => $domain,
-        'cookieSecret' => $cookieSecret,
-        'clientId' => $clientId,
-        'redirectUri' => $redirectUri,
-        'tokenLeeway' => '300'
-    ]);
-
-    $this->assertEquals(300, $sdk->getTokenLeeway());
 });
 
 test('successfully updates values', function(): void
@@ -189,6 +172,29 @@ test('successfully resets values', function(): void
 
     $this->assertEquals(null, $sdk->getDomain());
     $this->assertTrue($sdk->getUsePkce());
+});
+
+test('an invalid strategy throws an exception', function(): void
+{
+    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
+    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'strategy'));
+
+    $sdk = new SdkConfiguration([
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+        'strategy' => uniqid(),
+    ]);
+});
+
+test('a non-existent array value is ignored', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+        'organization' => [],
+    ]);
+
+    $this->assertNull($sdk->getOrganization());
 });
 
 test('a `webapp` strategy is used by default', function(): void
