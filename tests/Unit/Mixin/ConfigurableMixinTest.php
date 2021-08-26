@@ -36,7 +36,7 @@ test('get() throws an exception when a value is missing', function(): void {
 
     $exception = new class() extends \Exception implements \Throwable {};
 
-    $this->expectException($exception::class);
+    $this->expectException(get_class($exception));
 
     $configurable->getExample($exception);
 });
