@@ -38,12 +38,12 @@ class InMemoryTest extends TestCase
         $this->assertNull($store->get('test_set_key'));
     }
 
-    public function testDeleteAll(): void
+    public function testPurge(): void
     {
         $store = new InMemoryStorage();
         $store->set('test_set_key', '__test_set_value__');
 
-        $store->deleteAll();
+        $store->purge();
         $this->assertNull($store->get('test_set_key'));
     }
 }
