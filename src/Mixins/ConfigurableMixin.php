@@ -227,6 +227,14 @@ trait ConfigurableMixin
         string $propertyName,
         $propertyValue
     ): void {
+        if ($this->configurationImmutable) {
+            throw \Auth0\SDK\Exception\ConfigurationException::setImmutable();
+        }
+
+        if (! isset($this->configuredState[$propertyName])) {
+            throw \Auth0\SDK\Exception\ConfigurationException::setMissing($propertyName);
+        }
+
         $propertyType = gettype($propertyValue);
 
         $normalizedPropertyTypes = [
@@ -235,14 +243,6 @@ trait ConfigurableMixin
         ];
 
         $propertyType = $normalizedPropertyTypes[$propertyType] ?? $propertyType;
-
-        if ($this->configurationImmutable) {
-            throw \Auth0\SDK\Exception\ConfigurationException::setImmutable();
-        }
-
-        if (! isset($this->configuredState[$propertyName])) {
-            throw \Auth0\SDK\Exception\ConfigurationException::setMissing($propertyName);
-        }
 
         $allowedTypes = [$this->configuredState[$propertyName]->type];
         $expectedType = $this->configuredState[$propertyName]->type;
