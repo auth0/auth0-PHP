@@ -2,56 +2,36 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
+uses()->group('management', 'management.guardian');
 
-use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
+beforeEach(function(): void {
+    $this->endpoint = $this->api->mock()->guardian();
+});
 
-/**
- * Class GuardianTest.
- */
-class GuardianTest extends TestCase
-{
-    /**
-     * Test that getFactors requests properly.
-     */
-    public function testGuardianGetFactor(): void
-    {
-        $api = new MockManagementApi();
-        $api->mock()->guardian()->getFactors();
+test('getFactors() issues an appropriate request', function(): void {
+    $this->endpoint->getFactors();
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/guardian/factors', $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-    }
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/guardian/factors', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
+});
 
-    /**
-     * Test that getEnrollment requests properly.
-     */
-    public function testGuardianGetEnrollment(): void
-    {
-        $id = uniqid();
+test('getEnrollment() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->guardian()->getEnrollment($id);
+    $this->endpoint->getEnrollment($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-    }
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
+});
 
-    /**
-     * Test that deleteEnrollment requests properly.
-     */
-    public function testGuardianDeleteEnrollment(): void
-    {
-        $id = uniqid();
+test('deleteEnrollment() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->guardian()->deleteEnrollment($id);
+    $this->endpoint->deleteEnrollment($id);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-    }
-}
+    $this->assertEquals('DELETE', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
+});

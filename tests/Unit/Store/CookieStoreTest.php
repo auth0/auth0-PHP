@@ -2,78 +2,75 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Store;
-
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Store\CookieStore;
-use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 
-/**
- * Class CookieStoreTest.
- * Tests the CookieStore class.
- */
-class CookieStoreTest extends TestCase
-{
-    private CookieStore $store;
+uses()->group('storage', 'storage.cookie');
 
-    /**
-     * Run after each test in this suite.
-     */
-    public function tearDown(): void
-    {
-        $_COOKIE = [];
-    }
+beforeEach(function(): void {
+    $_COOKIE = [];
 
-    /**
-     * Run before each test in this suite.
-     */
-    public function setUp(): void
-    {
-        $this->configuration = new SdkConfiguration([
-            'domain' => uniqid(),
-            'clientId' => uniqid(),
-            'cookieSecret' => uniqid(),
-            'clientSecret' => uniqid(),
-            'redirectUri' => uniqid(),
-        ]);
+    $this->configuration = new SdkConfiguration([
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+        'cookieSecret' => uniqid(),
+        'clientSecret' => uniqid(),
+        'redirectUri' => uniqid(),
+    ]);
 
-        $this->store = new CookieStore($this->configuration);
-    }
+    $this->namespace = uniqid();
 
-    /**
-     * Test Set
-     */
-    public function testSet(): void
-    {
-        $cookieCount = count($_COOKIE);
+    $this->store = new CookieStore($this->configuration, $this->namespace);
+});
 
-        $this->store->set('test_set_key', '__test_set_value__');
-        $this->assertEquals($cookieCount + 1, count($_COOKIE));
-        $this->assertEquals('__test_set_value__', $this->store->get('test_set_key'));
-    }
+test('set() assigns values as expected', function(string $key, string $value): void {
+    $cookieCount = count($_COOKIE);
 
-    /**
-     * Test Get
-     */
-    public function testGet(): void
-    {
-        $this->store->set('test_set_key', '__test_set_value__');
-        $this->assertEquals('__test_set_value__', $this->store->get('test_set_key'));
-        $this->assertEquals(null, $this->store->get('missing_key'));
-    }
+    $this->store->set($key, $value);
+    $this->assertEquals($cookieCount + 1, count($_COOKIE));
+    $this->assertEquals($value, $this->store->get($key));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-    /**
-     * Test Delete
-     */
-    public function testDelete(): void
-    {
-        $cookieCount = count($_COOKIE);
+test('get() retrieves values as expected', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+    $this->assertEquals($value, $this->store->get($key, 'foobar'));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-        $this->store->set('test_set_key', '__test_set_value__');
-        $this->assertEquals($cookieCount + 1, count($_COOKIE));
+test('get() retrieves a default value as expected', function(string $key): void {
+    $this->assertEquals('foobar', $this->store->get($key, 'foobar'));
+})->with(['mocked key' => [
+    fn() => uniqid(),
+]]);
 
-        $this->store->delete('test_set_key');
-        $this->assertEquals($cookieCount, count($_COOKIE));
-    }
-}
+test('delete() clears values as expected', function(string $key, string $value): void {
+    $cookieCount = count($_COOKIE);
+
+    $this->store->set($key, $value);
+    $this->assertEquals($cookieCount + 1, count($_COOKIE));
+
+    $this->store->delete($key);
+    $this->assertEquals($cookieCount, count($_COOKIE));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
+
+test('deleteAll() clears values as expected', function(string $key, string $value): void {
+    $cookieCount = count($_COOKIE);
+
+    $this->store->set($key, $value);
+    $this->assertEquals($cookieCount + 1, count($_COOKIE));
+
+    $this->store->deleteAll();
+    $this->assertNull($this->store->get($key));
+    $this->assertEquals($cookieCount, count($_COOKIE));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);

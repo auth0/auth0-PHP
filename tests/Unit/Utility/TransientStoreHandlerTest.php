@@ -2,82 +2,80 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Utility;
-
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Store\SessionStore;
+use Auth0\SDK\Store\InMemoryStorage;
 use Auth0\SDK\Utility\TransientStoreHandler;
-use PHPUnit\Framework\TestCase;
 
-/**
- * Class TransientStoreHandlerTest.
- */
-class TransientStoreHandlerTest extends TestCase
-{
-    public function setUp(): void
-    {
-        $this->configuration = new SdkConfiguration([
-            'domain' => uniqid(),
-            'clientId' => uniqid(),
-            'cookieSecret' => uniqid(),
-            'clientSecret' => uniqid(),
-            'redirectUri' => uniqid(),
-        ]);
+uses()->group('networking', 'utility', 'utility.http_telemetry');
 
-        $this->sessionStore = new SessionStore($this->configuration, 'test_store');
-        $this->transientStore = new TransientStoreHandler($this->sessionStore);
-    }
+beforeEach(function(): void {
+    $this->namespace = uniqid();
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $_SESSION = [];
-    }
+    $this->configuration = new SdkConfiguration([
+        'strategy' => 'none',
+    ]);
 
-    public function testThatTransientIsStored(): void
-    {
-        $this->transientStore->store('test_store_key', '__test_store_value__');
+    $this->store = new InMemoryStorage($this->configuration, $this->namespace);
+    $this->transient = new TransientStoreHandler($this->store);
+});
 
-        $this->assertEquals('__test_store_value__', $_SESSION['test_store_test_store_key']);
-    }
+test('getStore() returns the assigned storage instance', function(): void {
+    $this->assertEquals($this->store, $this->transient->getStore());
+});
 
-    public function testThatTransientIsIssued(): void
-    {
-        $issuedValue = $this->transientStore->issue('test_issue_key');
+test('store() assigns data correctly', function(string $key, string $value): void {
+    $this->transient->store($key, $value);
 
-        $this->assertEquals($issuedValue, $_SESSION['test_store_test_issue_key']);
-        $this->assertGreaterThanOrEqual(16, mb_strlen($issuedValue));
-    }
+    $this->assertEquals($value, $this->store->get($key));
+})->with(['random data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-    public function testThatTransientIsGottenOnce(): void
-    {
-        $this->transientStore->store('test_get_key', '__test_get_value__');
+test('issue() assigns data correctly', function(string $key): void {
+    $value = $this->transient->issue($key);
 
-        $this->assertEquals('__test_get_value__', $this->transientStore->getOnce('test_get_key'));
-        $this->assertNull($this->transientStore->getOnce('test_get_key'));
-        $this->assertArrayNotHasKey('test_store_test_get_key', $_SESSION);
-    }
+    $this->assertEquals($value, $this->store->get($key));
+    $this->assertGreaterThanOrEqual(16, mb_strlen($value));
+})->with(['random key' => [
+    fn() => uniqid(),
+]]);
 
-    public function testThatTransientIsVerified(): void
-    {
-        $this->transientStore->store('test_verify_key', '__test_get_value__');
+test('getOnce() assigns data correctly and is only retrievable once', function(string $key, string $value): void {
+    $this->transient->store($key, $value);
 
-        $this->assertTrue($this->transientStore->verify('test_verify_key', '__test_get_value__'));
-        $this->assertFalse($this->transientStore->verify('test_verify_key', '__test_get_value__'));
-        $this->assertNull($this->transientStore->getOnce('test_verify_key'));
-        $this->assertArrayNotHasKey('test_store_test_verify_key', $_SESSION);
-    }
+    $this->assertEquals($value, $this->store->get($key));
+    $this->assertEquals($value, $this->transient->getOnce($key));
+    $this->assertNull($this->transient->getOnce($key));
+    $this->assertNull($this->store->get($key));
+})->with(['random data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-    public function testThatTransientIssetReturnsCorrectly(): void
-    {
-        $this->assertFalse($this->transientStore->isset('test_verify_key'));
+test('verify() correctly verifies data', function(string $key, string $value): void {
+    $this->transient->store($key, $value);
 
-        $this->transientStore->store('test_verify_key', '__test_get_value__');
+    $this->assertTrue($this->transient->verify($key, $value));
+    $this->assertFalse($this->transient->verify($key, $value));
+    $this->assertNull($this->transient->getOnce($key));
+    $this->assertNull($this->store->get($key));
+})->with(['random data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-        $this->assertTrue($this->transientStore->isset('test_verify_key'));
+test('isset() returns correct state', function(string $key, string $value): void {
+    $this->assertFalse($this->transient->isset($key));
 
-        $this->transientStore->getOnce('test_verify_key');
+    $this->transient->store($key, $value);
 
-        $this->assertFalse($this->transientStore->isset('test_verify_key'));
-    }
-}
+    $this->assertTrue($this->transient->isset($key));
+
+    $this->transient->getOnce($key);
+
+    $this->assertFalse($this->transient->isset($key));
+})->with(['random data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);

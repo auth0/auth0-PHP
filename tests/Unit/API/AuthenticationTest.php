@@ -5,14 +5,10 @@ declare(strict_types=1);
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Http\Discovery\Psr18ClientDiscovery;
-use Http\Discovery\Strategy\MockClientStrategy;
 
 uses()->group('authentication');
 
 beforeEach(function(): void {
-    // Allow mock HttpClient to be auto-discovered for use in testing.
-    Psr18ClientDiscovery::prependStrategy(MockClientStrategy::class);
 
     $this->configuration = new SdkConfiguration([
         'domain' => 'https://test-domain.auth0.com',

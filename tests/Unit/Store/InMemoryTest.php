@@ -2,48 +2,52 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Store;
-
 use Auth0\SDK\Store\InMemoryStorage;
-use PHPUnit\Framework\TestCase;
 
-/**
- * @author Tobias Nyholm <tobias.nyholm@gmail.com>
- */
-class InMemoryTest extends TestCase
-{
-    public function testSetGet(): void
-    {
-        $store = new InMemoryStorage();
-        $store->set('test_set_key', '__test_set_value__');
-        $this->assertSame('__test_set_value__', $store->get('test_set_key'));
-        $this->assertSame(null, $store->get('missing_key'));
-    }
+uses()->group('storage', 'storage.in_memory');
 
-    public function testGetDefault(): void
-    {
-        $store = new InMemoryStorage();
-        $store->set('test_set_key', null);
-        $this->assertSame(null, $store->get('test_set_key', 'foobar'));
-        $this->assertSame('foobar', $store->get('missing_key', 'foobar'));
-        $this->assertSame(null, $store->get('missing_key'));
-    }
+beforeEach(function(): void {
+    $this->store = new InMemoryStorage();
+});
 
-    public function testDelete(): void
-    {
-        $store = new InMemoryStorage();
-        $store->set('test_set_key', '__test_set_value__');
+test('set() assigns values as expected', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+    $this->assertEquals($value, $this->store->get($key));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-        $store->delete('test_set_key');
-        $this->assertNull($store->get('test_set_key'));
-    }
+test('get() retrieves values as expected', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+    $this->assertEquals($value, $this->store->get($key, 'foobar'));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-    public function testDeleteAll(): void
-    {
-        $store = new InMemoryStorage();
-        $store->set('test_set_key', '__test_set_value__');
+test('get() retrieves default values as expected', function(string $key): void {
+    $this->assertEquals('foobar', $this->store->get($key, 'foobar'));
+})->with(['mocked key' => [
+    fn() => uniqid(),
+]]);
 
-        $store->deleteAll();
-        $this->assertNull($store->get('test_set_key'));
-    }
-}
+test('delete() clears values as expected', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+
+    $this->store->delete($key);
+    $this->assertNull($this->store->get($key));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
+
+test('deleteAll() clears values as expected', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+
+    $this->store->deleteAll();
+    $this->assertNull($this->store->get($key));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);

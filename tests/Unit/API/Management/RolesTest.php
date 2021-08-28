@@ -2,205 +2,150 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
+uses()->group('management', 'management.roles');
 
-use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
+beforeEach(function(): void {
+    $this->endpoint = $this->api->mock()->roles();
+});
 
-/**
- * Class RolesMocked.
- */
-class RolesTest extends TestCase
-{
-    /**
-     * Test a basic getAll roles call.
-     */
-    public function testGetAll(): void
-    {
-        $api = new MockManagementApi();
-        $api->mock()->roles()->getAll(['name_filter' => '__test_name_filter__']);
+test('getAll() issues an appropriate request', function(): void {
+    $this->endpoint->getAll(['name_filter' => '__test_name_filter__']);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/roles', $api->getRequestUrl());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/roles', $this->api->getRequestUrl());
 
-        $query = $api->getRequestQuery();
-        $this->assertStringContainsString('name_filter=__test_name_filter__', $query);
-    }
+    $query = $this->api->getRequestQuery();
+    $this->assertStringContainsString('name_filter=__test_name_filter__', $query);
+});
 
-    /**
-     * Test create role is requested properly.
-     */
-    public function testCreate(): void
-    {
-        $id = uniqid();
+test('create() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->create($id, ['description' => '__test_description__']);
+    $this->endpoint->create($id, ['description' => '__test_description__']);
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/roles', $api->getRequestUrl());
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/roles', $this->api->getRequestUrl());
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('name', $body);
-        $this->assertEquals($id, $body['name']);
-        $this->assertArrayHasKey('description', $body);
-        $this->assertEquals('__test_description__', $body['description']);
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('name', $body);
+    $this->assertEquals($id, $body['name']);
+    $this->assertArrayHasKey('description', $body);
+    $this->assertEquals('__test_description__', $body['description']);
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode(['name' => $id, 'description' => '__test_description__']), $body);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['name' => $id, 'description' => '__test_description__']), $body);
+});
 
-    /**
-     * Test a get role call.
-     */
-    public function testGet(): void
-    {
-        $id = uniqid();
+test('get() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->get($id);
+    $this->endpoint->get($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $api->getRequestUrl());
-    }
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $this->api->getRequestUrl());
+});
 
-    /**
-     * Test a delete role call.
-     */
-    public function testDelete(): void
-    {
-        $id = uniqid();
+test('delete() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->delete($id);
+    $this->endpoint->delete($id);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $api->getRequestUrl());
-    }
+    $this->assertEquals('DELETE', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $this->api->getRequestUrl());
+});
 
-    /**
-     * Test an update role call.
-     */
-    public function testUpdate(): void
-    {
-        $id = uniqid();
+test('update() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->update($id, ['name' => '__test_new_name__']);
+    $this->endpoint->update($id, ['name' => '__test_new_name__']);
 
-        $this->assertEquals('PATCH', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $api->getRequestUrl());
+    $this->assertEquals('PATCH', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $this->api->getRequestUrl());
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('name', $body);
-        $this->assertEquals('__test_new_name__', $body['name']);
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('name', $body);
+    $this->assertEquals('__test_new_name__', $body['name']);
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode(['name' => '__test_new_name__']), $body);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['name' => '__test_new_name__']), $body);
+});
 
-    /**
-     * Test a get role permissions call.
-     */
-    public function testGetPermissions(): void
-    {
-        $id = uniqid();
+test('getPermissions() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->getPermissions($id);
+    $this->endpoint->getPermissions($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/roles/' . $id . '/permissions', $api->getRequestUrl());
-    }
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/roles/' . $id . '/permissions', $this->api->getRequestUrl());
+});
 
-    /**
-     * Test an add role permissions call.
-     */
-    public function testAddPermissions(): void
-    {
-        $id = uniqid();
+test('addPermissions() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->addPermissions($id, [
-            [
-                'permission_name' => '__test_permission_name__',
-                'resource_server_identifier' => '__test_server_id__',
-            ],
-        ]);
+    $this->endpoint->addPermissions($id, [
+        [
+            'permission_name' => '__test_permission_name__',
+            'resource_server_identifier' => '__test_server_id__',
+        ],
+    ]);
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/roles/' . $id . '/permissions', $api->getRequestUrl());
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id . '/permissions', $this->api->getRequestUrl());
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('permissions', $body);
-        $this->assertCount(1, $body['permissions']);
-        $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
-        $this->assertEquals('__test_permission_name__', $body['permissions'][0]['permission_name']);
-        $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
-        $this->assertEquals('__test_server_id__', $body['permissions'][0]['resource_server_identifier']);
-    }
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('permissions', $body);
+    $this->assertCount(1, $body['permissions']);
+    $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
+    $this->assertEquals('__test_permission_name__', $body['permissions'][0]['permission_name']);
+    $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
+    $this->assertEquals('__test_server_id__', $body['permissions'][0]['resource_server_identifier']);
+});
 
-    /**
-     * Test a delete role permissions call.
-     */
-    public function testRemovePermissions(): void
-    {
-        $id = uniqid();
+test('removePermissions() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->removePermissions($id, [
-            [
-                'permission_name' => '__test_permission_name__',
-                'resource_server_identifier' => '__test_server_id__',
-            ],
-        ]);
+    $this->endpoint->removePermissions($id, [
+        [
+            'permission_name' => '__test_permission_name__',
+            'resource_server_identifier' => '__test_server_id__',
+        ],
+    ]);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/roles/' . $id . '/permissions', $api->getRequestUrl());
+    $this->assertEquals('DELETE', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id . '/permissions', $this->api->getRequestUrl());
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('permissions', $body);
-        $this->assertCount(1, $body['permissions']);
-        $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
-        $this->assertEquals('__test_permission_name__', $body['permissions'][0]['permission_name']);
-        $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
-        $this->assertEquals('__test_server_id__', $body['permissions'][0]['resource_server_identifier']);
-    }
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('permissions', $body);
+    $this->assertCount(1, $body['permissions']);
+    $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
+    $this->assertEquals('__test_permission_name__', $body['permissions'][0]['permission_name']);
+    $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
+    $this->assertEquals('__test_server_id__', $body['permissions'][0]['resource_server_identifier']);
+});
 
-    /**
-     * Test a paginated get role users call.
-     */
-    public function testGetUsers(): void
-    {
-        $id = uniqid();
+test('getUsers() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->getUsers($id);
+    $this->endpoint->getUsers($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/roles/' . $id . '/users', $api->getRequestUrl());
-    }
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/roles/' . $id . '/users', $this->api->getRequestUrl());
+});
 
-    /**
-     * Test an add role user call.
-     */
-    public function testAddUsers(): void
-    {
-        $id = uniqid();
+test('addUsers() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->roles()->addUsers($id, ['strategy|1234567890', 'strategy|0987654321']);
+    $this->endpoint->addUsers($id, ['strategy|1234567890', 'strategy|0987654321']);
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/roles/' .$id . '/users', $api->getRequestUrl());
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/roles/' .$id . '/users', $this->api->getRequestUrl());
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('users', $body);
-        $this->assertCount(2, $body['users']);
-        $this->assertContains('strategy|1234567890', $body['users']);
-        $this->assertContains('strategy|0987654321', $body['users']);
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('users', $body);
+    $this->assertCount(2, $body['users']);
+    $this->assertContains('strategy|1234567890', $body['users']);
+    $this->assertContains('strategy|0987654321', $body['users']);
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode(['users' => ['strategy|1234567890', 'strategy|0987654321']]), $body);
-    }
-}
+    $body = $this->api->getRequestBodyAsString();
+    $this->assertEquals(json_encode(['users' => ['strategy|1234567890', 'strategy|0987654321']]), $body);
+});

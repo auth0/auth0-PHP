@@ -2,176 +2,136 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
+uses()->group('management', 'management.jobs');
 
-use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
+beforeEach(function(): void {
+    $this->endpoint = $this->api->mock()->jobs();
+});
 
-class JobsTest extends TestCase
-{
-    protected const FORM_DATA_VALUE_KEY_OFFSET = 3;
+test('get() issues an appropriate request', function(): void {
+    $this->endpoint->get('__test_id__');
 
-    /**
-     * Expected telemetry value.
-     */
-    protected static string $testImportUsersJsonPath;
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__', $this->api->getRequestUrl());
+});
 
-    /**
-     * Runs before test suite starts.
-     */
-    public static function setUpBeforeClass(): void
-    {
-        self::$testImportUsersJsonPath = AUTH0_PHP_TEST_JSON_DIR . 'test-import-users-file.json';
-    }
+test('getErrors() issues an appropriate request', function(): void {
+    $this->endpoint->getErrors('__test_id__');
 
-    /**
-     * Test get().
-     */
-    public function testGet(): void
-    {
-        $api = new MockManagementApi();
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__/errors', $this->api->getRequestUrl());
+});
 
-        $api->mock()->jobs()->get('__test_id__');
+test('createImportUsers() issues an appropriate request', function(): void {
+    $importPath = AUTH0_PHP_TEST_JSON_DIR . 'test-import-users-file.json';
+    $keyOffset = 3;
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__', $api->getRequestUrl());
-    }
+    $this->endpoint->createImportUsers(
+        $importPath,
+        '__test_conn_id__',
+        [
+            'upsert' => true,
+            'send_completion_email' => true,
+            'external_id' => '__test_ext_id__',
+        ]
+    );
 
-    /**
-     * Test getErrors().
-     */
-    public function testGetErrors(): void
-    {
-        $api = new MockManagementApi();
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/jobs/users-imports', $this->api->getRequestUrl());
 
-        $api->mock()->jobs()->getErrors('__test_id__');
+    $headers = $this->api->getRequestHeaders();
+    $this->assertStringStartsWith('multipart/form-data', $headers['Content-Type'][0]);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/__test_id__/errors', $api->getRequestUrl());
-    }
+    $form_body = $this->api->getRequestBodyAsString();
+    $form_body_arr = explode("\r\n", $form_body);
 
-    /**
-     * Test importUsers().
-     */
-    public function testImportUsers(): void
-    {
-        $api = new MockManagementApi();
+    // Test that the form data contains our import file content.
+    $import_content = file_get_contents($importPath);
+    $this->assertStringContainsString('name="users"; filename="test-import-users-file.json"', $form_body);
+    $this->assertStringContainsString($import_content, $form_body);
 
-        $api->mock()->jobs()->createImportUsers(
-            self::$testImportUsersJsonPath,
-            '__test_conn_id__',
+    $conn_id_key = array_search('Content-Disposition: form-data; name="connection_id"', $form_body_arr);
+    $this->assertNotEmpty($conn_id_key);
+    $this->assertEquals('__test_conn_id__', $form_body_arr[$conn_id_key + $keyOffset]);
+
+    $upsert_key = array_search('Content-Disposition: form-data; name="upsert"', $form_body_arr);
+    $this->assertNotEmpty($upsert_key);
+    $this->assertEquals('true', $form_body_arr[$upsert_key + $keyOffset]);
+
+    $email_key = array_search('Content-Disposition: form-data; name="send_completion_email"', $form_body_arr);
+    $this->assertNotEmpty($email_key);
+    $this->assertEquals('true', $form_body_arr[$email_key + $keyOffset]);
+
+    $ext_id_key = array_search('Content-Disposition: form-data; name="external_id"', $form_body_arr);
+    $this->assertNotEmpty($ext_id_key);
+    $this->assertEquals('__test_ext_id__', $form_body_arr[$ext_id_key + $keyOffset]);
+});
+
+test('createExportUsers() issues an appropriate request', function(): void {
+    $mock = [
+        'connection_id' => uniqid(),
+        'limit' => uniqid(),
+        'format' => 'json',
+        'fields' => [
             [
-                'upsert' => true,
-                'send_completion_email' => true,
-                'external_id' => '__test_ext_id__',
+                'name' => uniqid()
             ]
-        );
+        ],
+    ];
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/users-imports', $api->getRequestUrl());
+    $this->endpoint->createExportUsers($mock);
 
-        $headers = $api->getRequestHeaders();
-        $this->assertStringStartsWith('multipart/form-data', $headers['Content-Type'][0]);
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/jobs/users-exports', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 
-        $form_body = $api->getRequestBodyAsString();
-        $form_body_arr = explode("\r\n", $form_body);
+    $request_body = $this->api->getRequestBody();
 
-        // Test that the form data contains our import file content.
-        $import_content = file_get_contents(self::$testImportUsersJsonPath);
-        $this->assertStringContainsString('name="users"; filename="test-import-users-file.json"', $form_body);
-        $this->assertStringContainsString($import_content, $form_body);
+    $this->assertNotEmpty($request_body['connection_id']);
+    $this->assertEquals($mock['connection_id'], $request_body['connection_id']);
 
-        $conn_id_key = array_search('Content-Disposition: form-data; name="connection_id"', $form_body_arr);
-        $this->assertNotEmpty($conn_id_key);
-        $this->assertEquals('__test_conn_id__', $form_body_arr[$conn_id_key + self::FORM_DATA_VALUE_KEY_OFFSET]);
+    $this->assertNotEmpty($request_body['limit']);
+    $this->assertEquals($mock['limit'], $request_body['limit']);
 
-        $upsert_key = array_search('Content-Disposition: form-data; name="upsert"', $form_body_arr);
-        $this->assertNotEmpty($upsert_key);
-        $this->assertEquals('true', $form_body_arr[$upsert_key + self::FORM_DATA_VALUE_KEY_OFFSET]);
+    $this->assertNotEmpty($request_body['format']);
+    $this->assertEquals('json', $request_body['format']);
 
-        $email_key = array_search('Content-Disposition: form-data; name="send_completion_email"', $form_body_arr);
-        $this->assertNotEmpty($email_key);
-        $this->assertEquals('true', $form_body_arr[$email_key + self::FORM_DATA_VALUE_KEY_OFFSET]);
+    $this->assertNotEmpty($request_body['fields']);
+    $this->assertEquals([['name' => $mock['fields'][0]['name']]], $request_body['fields']);
 
-        $ext_id_key = array_search('Content-Disposition: form-data; name="external_id"', $form_body_arr);
-        $this->assertNotEmpty($ext_id_key);
-        $this->assertEquals('__test_ext_id__', $form_body_arr[$ext_id_key + self::FORM_DATA_VALUE_KEY_OFFSET]);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    $this->assertEquals(json_encode((object) $mock), $body);
+});
 
-    /**
-     * Test exportUsers().
-     */
-    public function testExportUsers(): void
-    {
-        $mock = [
-            'connection_id' => uniqid(),
-            'limit' => uniqid(),
-            'format' => 'json',
-            'fields' => [['name' => uniqid()]],
-        ];
+test('createSendVerificationEmail() issues an appropriate request', function(): void {
+    $mock = (object) [
+        'userId' => uniqid(),
+        'body' =>             [
+            'client_id' => '__test_client_id__',
+            'identity' => [
+                'user_id' => '__test_secondary_user_id__',
+                'provider' => '__test_provider__',
+            ],
+        ]
+    ];
 
-        $api = new MockManagementApi();
+    $this->endpoint->createSendVerificationEmail($mock->userId, $mock->body);
 
-        $api->mock()->jobs()->createExportUsers($mock);
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/jobs/verification-email', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/users-exports', $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('user_id', $body);
+    $this->assertEquals($mock->userId, $body['user_id']);
+    $this->assertArrayHasKey('client_id', $body);
+    $this->assertEquals($mock->body['client_id'], $body['client_id']);
+    $this->assertArrayHasKey('identity', $body);
+    $this->assertEquals($mock->body['identity'], $body['identity']);
 
-        $request_body = $api->getRequestBody();
+    $headers = $this->api->getRequestHeaders();
+    $this->assertEquals('application/json', $headers['Content-Type'][0]);
 
-        $this->assertNotEmpty($request_body['connection_id']);
-        $this->assertEquals($mock['connection_id'], $request_body['connection_id']);
-
-        $this->assertNotEmpty($request_body['limit']);
-        $this->assertEquals($mock['limit'], $request_body['limit']);
-
-        $this->assertNotEmpty($request_body['format']);
-        $this->assertEquals('json', $request_body['format']);
-
-        $this->assertNotEmpty($request_body['fields']);
-        $this->assertEquals([['name' => $mock['fields'][0]['name']]], $request_body['fields']);
-
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode((object) $mock), $body);
-    }
-
-    /**
-     * Test sendVerificationEmail().
-     */
-    public function testSendVerificationEmail(): void
-    {
-        $mock = (object) [
-            'userId' => uniqid(),
-            'body' =>             [
-                'client_id' => '__test_client_id__',
-                'identity' => [
-                    'user_id' => '__test_secondary_user_id__',
-                    'provider' => '__test_provider__',
-                ],
-            ]
-        ];
-
-        $api = new MockManagementApi();
-
-        $api->mock()->jobs()->createSendVerificationEmail($mock->userId, $mock->body);
-
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/jobs/verification-email', $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('user_id', $body);
-        $this->assertEquals($mock->userId, $body['user_id']);
-        $this->assertArrayHasKey('client_id', $body);
-        $this->assertEquals($mock->body['client_id'], $body['client_id']);
-        $this->assertArrayHasKey('identity', $body);
-        $this->assertEquals($mock->body['identity'], $body['identity']);
-
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode(array_merge(['user_id' => $mock->userId], $mock->body)), $body);
-    }
-}
+    $body = $this->api->getRequestBodyAsString();
+    $this->assertEquals(json_encode(array_merge(['user_id' => $mock->userId], $mock->body)), $body);
+});

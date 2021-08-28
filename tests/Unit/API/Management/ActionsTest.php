@@ -10,33 +10,24 @@ use Auth0\Tests\Utilities\MockManagementApi;
 uses()->group('management', 'actions');
 
 beforeEach(function(): void {
-    $this->sdk = new MockManagementApi();
-
-    $this->filteredRequest = new FilteredRequest();
-    $this->paginatedRequest = new PaginatedRequest();
-    $this->requestOptions = new RequestOptions(
-        $this->filteredRequest,
-        $this->paginatedRequest
-    );
-
-    $this->endpoint = $this->sdk->mock()->actions();
+    $this->endpoint = $this->api->mock()->actions();
 });
 
 test('create() issues valid requests', function(array $body): void {
     $this->endpoint->create($body);
 
-    $this->assertEquals('POST', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/actions', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 
-    $request = $this->sdk->getRequestBody();
+    $request = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $request);
     $this->assertArrayHasKey('supported-triggers', $request);
 
     $this->assertEquals('my-action', $request['name']);
     $this->assertIsArray($request['supported-triggers']);
 
-    $request = $this->sdk->getRequestBodyAsString();
+    $request = $this->api->getRequestBodyAsString();
     $this->assertEquals('{"name":"my-action","supported-triggers":[{"id":"post-login","version":"v2"}],"code":"module.exports = () => {}","dependencies":[{"name":"lodash","version":"1.0.0"}],"runtime":"node12","secrets":[{"name":"mySecret","value":"mySecretValue"}]}', $request);
 })->with(['valid body' => [
     fn() => [
@@ -76,18 +67,18 @@ test('create() throws an error with an empty body', function(array $body): void 
 test('getAll() issues valid requests', function(): void {
     $this->endpoint->getAll();
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/actions', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 });
 
 test('getAll() issues valid requests using parameters', function(array $parameters): void {
     $this->endpoint->getAll($parameters);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions', $this->sdk->getRequestUrl());
-    $this->assertStringContainsString('&triggerId=' . $parameters['triggerId'], $this->sdk->getRequestQuery());
-    $this->assertStringContainsString('&actionName=' . $parameters['actionName'], $this->sdk->getRequestQuery());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions', $this->api->getRequestUrl());
+    $this->assertStringContainsString('&triggerId=' . $parameters['triggerId'], $this->api->getRequestQuery());
+    $this->assertStringContainsString('&actionName=' . $parameters['actionName'], $this->api->getRequestQuery());
 })->with(['valid parameters' => [
     fn() => [
         'triggerId' => uniqid(),
@@ -98,9 +89,9 @@ test('getAll() issues valid requests using parameters', function(array $paramete
 test('get() issues valid requests', function(string $id): void {
     $this->endpoint->get($id);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id, $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id, $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 })->with(['valid id' => [
     fn() => uniqid()
 ]]);
@@ -117,18 +108,18 @@ test('get() throws an error with an empty id', function(string $id): void {
 test('update() issues valid requests', function(string $id, array $body): void {
     $this->endpoint->update($id, $body);
 
-    $this->assertEquals('PATCH', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id, $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('PATCH', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id, $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 
-    $request = $this->sdk->getRequestBody();
+    $request = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $request);
     $this->assertArrayHasKey('supported-triggers', $request);
 
     $this->assertEquals('my-action', $request['name']);
     $this->assertIsArray($request['supported-triggers']);
 
-    $request = $this->sdk->getRequestBodyAsString();
+    $request = $this->api->getRequestBodyAsString();
     $this->assertEquals('{"name":"my-action","supported-triggers":[{"id":"post-login","version":"v2"}],"code":"module.exports = () => {}","dependencies":[{"name":"lodash","version":"1.0.0"}],"runtime":"node12","secrets":[{"name":"mySecret","value":"mySecretValue"}]}', $request);
 })->with(['valid request' => [
     fn() => uniqid(),
@@ -202,8 +193,8 @@ test('update() throws an error with an empty body', function(string $id, array $
 test('delete() issues valid requests', function(string $id, ?bool $force): void {
     $this->endpoint->delete($id, $force);
 
-    $this->assertEquals('DELETE', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions/' . $id, $this->sdk->getRequestUrl());
+    $this->assertEquals('DELETE', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions/' . $id, $this->api->getRequestUrl());
 })->with(['valid id' => [
     fn() => uniqid(),
     fn() => null
@@ -212,9 +203,9 @@ test('delete() issues valid requests', function(string $id, ?bool $force): void 
 test('delete() issues valid requests when using optional ?force parameter', function(string $id, ?bool $force): void {
     $this->endpoint->delete($id, $force);
 
-    $this->assertEquals('DELETE', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions/' . $id, $this->sdk->getRequestUrl());
-    $this->assertStringContainsString('&force=false', $this->sdk->getRequestQuery());
+    $this->assertEquals('DELETE', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions/' . $id, $this->api->getRequestUrl());
+    $this->assertStringContainsString('&force=false', $this->api->getRequestQuery());
 })->with(['valid id and force=false' => [
     fn() => uniqid(),
     fn() => false
@@ -233,9 +224,9 @@ test('delete() throws an error with an empty id', function(string $id, ?bool $fo
 test('deploy() issues valid requests', function(string $id): void {
     $this->endpoint->deploy($id);
 
-    $this->assertEquals('POST', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/' . $id . '/deploy', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/' . $id . '/deploy', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 })->with(['valid id' => [
     fn() => uniqid()
 ]]);
@@ -252,17 +243,17 @@ test('deploy() throws an error with an empty id', function(string $id): void {
 test('test() issues valid requests', function(string $id, array $body): void {
     $this->endpoint->test($id, $body);
 
-    $this->assertEquals('POST', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id . '/test', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id . '/test', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 
-    $request = $this->sdk->getRequestBody();
+    $request = $this->api->getRequestBody();
     $this->assertArrayHasKey('payload', $request);
     $this->assertIsArray($request['payload']);
     $this->assertArrayHasKey('test', $request['payload'][0]);
     $this->assertEquals($body['payload'][0]->test, $request['payload'][0]['test']);
 
-    $request = $this->sdk->getRequestBodyAsString();
+    $request = $this->api->getRequestBodyAsString();
     $this->assertEquals('{"payload":[{"test":"' . $body['payload'][0]->test . '"}]}', $request);
 })->with(['valid request' => [
     fn() => uniqid(),
@@ -304,8 +295,8 @@ test('test() throws an error with an empty body', function(string $id, array $bo
 test('getVersion() issues valid requests', function(string $id, string $actionId): void {
     $this->endpoint->getVersion($id, $actionId);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id, $this->sdk->getRequestUrl());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id, $this->api->getRequestUrl());
 })->with(['valid id' => [
     fn() => uniqid(),
     fn() => uniqid()
@@ -334,8 +325,8 @@ test('getVersion() throws an error with an empty action id', function(string $id
 test('getVersions() issues valid requests', function(string $actionId): void {
     $this->endpoint->getVersions($actionId);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions', $this->sdk->getRequestUrl());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions', $this->api->getRequestUrl());
 })->with(['valid action id' => [
     fn() => uniqid()
 ]]);
@@ -352,9 +343,9 @@ test('getVersions() throws an error with an empty action id', function(string $a
 test('rollbackVersion() issues valid requests', function(string $id, string $actionId): void {
     $this->endpoint->rollbackVersion($id, $actionId);
 
-    $this->assertEquals('POST', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id . '/deploy', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id . '/deploy', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 })->with(['valid request' => [
     fn() => uniqid(),
     fn() => uniqid(),
@@ -383,17 +374,17 @@ test('rollbackVersion() throws an error with an action id', function(string $id,
 test('getTriggers() issues valid requests', function(): void {
     $this->endpoint->getTriggers();
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/triggers', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/triggers', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 });
 
 test('getTriggerBindings() issues valid requests', function(string $triggerId): void {
     $this->endpoint->getTriggerBindings($triggerId);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 })->with(['valid trigger id' => [
     fn() => uniqid(),
 ]]);
@@ -401,17 +392,17 @@ test('getTriggerBindings() issues valid requests', function(string $triggerId): 
 test('updateTriggerBindings() issues valid requests', function(string $triggerId, array $body): void {
     $this->endpoint->updateTriggerBindings($triggerId, $body);
 
-    $this->assertEquals('PATCH', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('PATCH', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 
-    $request = $this->sdk->getRequestBody();
+    $request = $this->api->getRequestBody();
     $this->assertArrayHasKey('bindings', $request);
     $this->assertIsArray($request['bindings']);
     $this->assertArrayHasKey('ref', $request['bindings'][0]);
     $this->assertEquals($body['bindings'][0]->ref->value, $request['bindings'][0]['ref']['value']);
 
-    $request = $this->sdk->getRequestBodyAsString();
+    $request = $this->api->getRequestBodyAsString();
     $this->assertEquals('{"bindings":[{"ref":{"type":"action_name","value":"my-action"},"display_name":"First Action"},{"ref":{"type":"action_id","value":"a6a5a107-d2e3-45a3-8ff6-1218aa4bf8bd"},"display_name":"Second Action"}]}', $request);
 })->with(['valid request' => [
     fn() => uniqid(),
@@ -475,9 +466,9 @@ test('updateTriggerBindings() throws an error with an empty body', function(stri
 test('getExecution() issues valid requests', function(string $id): void {
     $this->endpoint->getExecution($id);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/executions/' . $id, $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/actions/executions/' . $id, $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 })->with(['valid id' => [
     fn() => uniqid()
 ]]);

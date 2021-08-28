@@ -577,6 +577,8 @@ final class HttpRequest
      * Issue a usleep() for $milliseconds, and log the delay.
      *
      * @param int $milliseconds How long, in milliseconds, to trigger a usleep() for.
+     *
+     * @codeCoverageIgnore
      */
     private function sleep(
         int $milliseconds

@@ -8,16 +8,11 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\TokenGenerator;
-use Http\Discovery\Psr18ClientDiscovery;
-use Http\Discovery\Strategy\MockClientStrategy;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('management');
 
 beforeEach(function(): void {
-    // Allow mock HttpClient to be auto-discovered for use in testing.
-    Psr18ClientDiscovery::prependStrategy(MockClientStrategy::class);
-
     $this->configuration = new SdkConfiguration([
         'domain' => 'https://test-domain.auth0.com',
         'cookieSecret' => uniqid(),

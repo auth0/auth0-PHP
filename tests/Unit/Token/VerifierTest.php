@@ -8,6 +8,8 @@ use Auth0\SDK\Token\Verifier;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
+// uses()->group('token', 'token.verifier');
+
 beforeEach(function() {
     $this->configuration = new SdkConfiguration([
         'domain' => uniqid(),

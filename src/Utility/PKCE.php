@@ -30,11 +30,13 @@ final class PKCE
         while (($len = mb_strlen($string)) < $length) {
             $size = $length - $len;
 
+            // @codeCoverageIgnoreStart
             try {
                 $bytes = random_bytes($size);
             } catch (\Exception $exception) {
                 $bytes = (string) openssl_random_pseudo_bytes($size);
             }
+            // @codeCoverageIgnoreEnd
 
             $string .= mb_substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
         }

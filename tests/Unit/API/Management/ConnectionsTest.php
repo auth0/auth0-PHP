@@ -2,122 +2,87 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
+uses()->group('management', 'management.connections');
 
-use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
+beforeEach(function(): void {
+    $this->endpoint = $this->api->mock()->connections();
+});
 
-/**
- * Class ConnectionsTest.
- */
-class ConnectionsTest extends TestCase
-{
-    /**
-     * Test a getAll() request.
-     */
-    public function testGetAll(): void
-    {
-        $strategy = 'test-strategy-01';
+test('getAll() issues an appropriate request', function(): void {
+    $strategy = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->connections()->getAll([ 'strategy' => $strategy ]);
+    $this->endpoint->getAll([ 'strategy' => $strategy ]);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringContainsString('https://api.test.local/api/v2/connections', $api->getRequestUrl());
-        $this->assertStringContainsString('&strategy=' . $strategy, $api->getRequestQuery());
-    }
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertStringContainsString('https://api.test.local/api/v2/connections', $this->api->getRequestUrl());
+    $this->assertStringContainsString('&strategy=' . $strategy, $this->api->getRequestQuery());
+});
 
-    /**
-     * Test a get() request.
-     */
-    public function testGet(): void
-    {
-        $id = 'con_testConnection10';
+test('get() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->connections()->get($id);
+    $this->endpoint->get($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-    }
+    $this->assertEquals('GET', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
+});
 
-    /**
-     * Test a basic delete connection request.
-     */
-    public function testDelete(): void
-    {
-        $id = 'con_testConnection10';
+test('delete() issues an appropriate request', function(): void {
+    $id = 'con_testConnection10';
 
-        $api = new MockManagementApi();
-        $api->mock()->connections()->delete($id);
+    $this->endpoint->delete($id);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-    }
+    $this->assertEquals('DELETE', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
+});
 
-    /**
-     * Test a delete user for connection request.
-     */
-    public function testDeleteUser(): void
-    {
-        $id = 'con_testConnection10';
-        $email = 'con_testConnection10@auth0.com';
+test('deleteUser() issues an appropriate request', function(): void {
+    $id = 'con_testConnection10';
+    $email = 'con_testConnection10@auth0.com';
 
-        $api = new MockManagementApi();
-        $api->mock()->connections()->deleteUser($id, $email);
+    $this->endpoint->deleteUser($id, $email);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertStringContainsString('https://api.test.local/api/v2/connections/' . $id . '/users', $api->getRequestUrl());
-        $this->assertEquals('email=' . rawurlencode($email), $api->getRequestQuery(null));
-    }
+    $this->assertEquals('DELETE', $this->api->getRequestMethod());
+    $this->assertStringContainsString('https://api.test.local/api/v2/connections/' . $id . '/users', $this->api->getRequestUrl());
+    $this->assertEquals('email=' . rawurlencode($email), $this->api->getRequestQuery(null));
+});
 
-    /**
-     * Test a basic connection create call.
-     */
-    public function testCreate(): void
-    {
-        $mock = (object) [
-            'name' => uniqid(),
-            'strategy' => uniqid(),
-            'body' => [
-                'test1' => uniqid(),
-                'test2' => uniqid()
-            ]
-        ];
+test('create() issues an appropriate request', function(): void {
+    $mock = (object) [
+        'name' => uniqid(),
+        'strategy' => uniqid(),
+        'body' => [
+            'test1' => uniqid(),
+            'test2' => uniqid()
+        ]
+    ];
 
-        $api = new MockManagementApi();
-        $api->mock()->connections()->create($mock->name, $mock->strategy, $mock->body);
+    $this->endpoint->create($mock->name, $mock->strategy, $mock->body);
 
-        $request_body = $api->getRequestBody();
+    $request_body = $this->api->getRequestBody();
 
-        $this->assertEquals($mock->name, $request_body['name']);
-        $this->assertEquals($mock->strategy, $request_body['strategy']);
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/connections', $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
+    $this->assertEquals($mock->name, $request_body['name']);
+    $this->assertEquals($mock->strategy, $request_body['strategy']);
+    $this->assertEquals('POST', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/connections', $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode(array_merge(['name' => $mock->name, 'strategy' => $mock->strategy], $mock->body)), $body);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    $this->assertEquals(json_encode(array_merge(['name' => $mock->name, 'strategy' => $mock->strategy], $mock->body)), $body);
+});
 
-    /**
-     * Test a basic update request.
-     */
-    public function testUpdate(): void
-    {
-        $id = 'con_testConnection10';
-        $update_data = ['metadata' => ['meta1' => 'value1']];
+test('update() issues an appropriate request', function(): void {
+    $id = 'con_testConnection10';
+    $update_data = ['metadata' => ['meta1' => 'value1']];
 
-        $api = new MockManagementApi();
-        $api->mock()->connections()->update($id, $update_data);
+    $this->endpoint->update($id, $update_data);
 
-        $request_body = $api->getRequestBody();
+    $request_body = $this->api->getRequestBody();
 
-        $this->assertEquals($update_data, $request_body);
-        $this->assertEquals('PATCH', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-    }
-}
+    $this->assertEquals($update_data, $request_body);
+    $this->assertEquals('PATCH', $this->api->getRequestMethod());
+    $this->assertEquals('https://api.test.local/api/v2/connections/' . $id, $this->api->getRequestUrl());
+    $this->assertEmpty($this->api->getRequestQuery());
+});

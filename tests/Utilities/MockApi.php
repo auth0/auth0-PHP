@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Auth0\Tests\Utilities;
 
 use Auth0\SDK\Utility\HttpClient;
-use Http\Discovery\Psr18ClientDiscovery;
-use Http\Discovery\Strategy\MockClientStrategy;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -28,9 +26,6 @@ abstract class MockApi
     public function __construct(
         ?array $responses = []
     ) {
-        // Allow mock HttpClient to be auto-discovered for use in testing.
-        Psr18ClientDiscovery::prependStrategy(MockClientStrategy::class);
-
         // Create an instance of the intended API.
         $this->setClient();
 
