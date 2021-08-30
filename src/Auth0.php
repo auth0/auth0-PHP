@@ -176,14 +176,20 @@ final class Auth0
      */
     public function clear(): self
     {
+        // Delete all data in the session storage medium.
         if ($this->configuration()->hasSessionStorage()) {
             $this->configuration->getSessionStorage()->purge();
         }
 
+        // Delete all data in the transient storage medium.
         if ($this->configuration()->hasTransientStorage()) {
             $this->configuration->getTransientStorage()->purge();
         }
 
+        // If state saving had been deferred, disable it and force a update to persistent storage.
+        $this->deferStateSaving(false);
+
+        // Reset the internal state.
         $this->getState()->reset();
 
         return $this;
@@ -268,7 +274,6 @@ final class Auth0
         }
 
         if ($state === null || ! $this->getTransientStore()->verify('state', $state)) {
-            $this->deferStateSaving(false);
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::invalidState();
         }
@@ -277,7 +282,6 @@ final class Auth0
             $codeVerifier = $this->getTransientStore()->getOnce('code_verifier');
 
             if ($codeVerifier === null) {
-                $this->deferStateSaving(false);
                 $this->clear();
                 throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
             }
@@ -290,7 +294,6 @@ final class Auth0
         $response = $this->authentication()->codeExchange($code, $redirectUri, $codeVerifier);
 
         if (! HttpResponse::wasSuccessful($response)) {
-            $this->deferStateSaving(false);
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::failedCodeExchange();
         }
@@ -298,7 +301,6 @@ final class Auth0
         $response = HttpResponse::decodeContent($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
-            $this->deferStateSaving(false);
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::badAccessToken();
         }
@@ -315,7 +317,6 @@ final class Auth0
 
         if (isset($response['id_token'])) {
             if (! $this->getTransientStore()->isset('nonce')) {
-                $this->deferStateSaving(false);
                 $this->clear();
                 throw \Auth0\SDK\Exception\StateException::missingNonce();
             }
@@ -363,7 +364,6 @@ final class Auth0
         $refreshToken = $this->getState()->getRefreshToken();
 
         if ($refreshToken === null) {
-            $this->deferStateSaving(false);
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingRefreshToken();
         }
@@ -372,7 +372,6 @@ final class Auth0
         $response = HttpResponse::decodeContent($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
-            $this->deferStateSaving(false);
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingAccessToken();
         }

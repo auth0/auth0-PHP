@@ -64,8 +64,7 @@ final class CookieStore implements StoreInterface
         ])->isString();
 
         $this->configuration = $configuration;
-        // @phpstan-ignore-next-line
-        $this->namespace = hash(self::KEY_HASHING_ALGO, $namespace);
+        $this->namespace = hash(self::KEY_HASHING_ALGO, (string) $namespace);
         $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
 
         $this->getState();
@@ -95,10 +94,13 @@ final class CookieStore implements StoreInterface
     public function defer(
         bool $deferring
     ): void {
+        // If we were deferring state saving and we've been asked to cancel that deference
         if ($this->deferring === true && $deferring === false) {
+            // Immediately push the state to the host device.
             $this->setState();
         }
 
+        // Update our deference state.
         $this->deferring = $deferring;
     }
 
@@ -112,6 +114,7 @@ final class CookieStore implements StoreInterface
     public function getState(
         ?array $state = null
     ): array {
+        // Overwrite our internal state with one passed (presumably during unit tests.)
         if ($state !== null) {
             return $this->store = $state;
         }
@@ -119,27 +122,37 @@ final class CookieStore implements StoreInterface
         $data = '';
         $index = 0;
 
+        // Iterate over cookies on the host device and pull those belonging to us.
         while (true) {
+            // Look for the next cookie with an index suffix indicating chunking; starts at 0.
             $cookieName = $this->namespace . self::KEY_SEPARATOR . $index;
 
+            // No cookies remain to be combined; exit the loop.
             if (! isset($_COOKIE[$cookieName])) {
                 break;
             }
 
+            // A chunked cookie was found; affix it's value to $data for decryption.
             if (is_string($_COOKIE[$cookieName])) {
                 $data .= $_COOKIE[$cookieName];
             }
 
+            // Increment the index for next loop and look for another chunk.
             $index++;
         }
 
+        // If no cookies were found, set an empty state and continue.
         if (mb_strlen($data) === 0) {
             return $this->store = [];
         }
 
+        // Decrypt the combined values of the chunked cookies.
         $data = $this->decrypt($data);
+
+        // If cookies were undecryptable, default to an empty state.
         $this->store = $data ?? [];
 
+        // If cookies were undecryptable, push the updated empty state to the browser.
         if ($data === null) {
             $this->setState();
         }
@@ -157,6 +170,7 @@ final class CookieStore implements StoreInterface
         $existing = [];
         $using = [];
 
+        // Iterate through the host device cookies and collect a list of ones that belong to us.
         foreach ($_COOKIE as $cookieName => $_) {
             $cookieBeginsWith = $this->namespace . self::KEY_SEPARATOR;
 
@@ -166,27 +180,45 @@ final class CookieStore implements StoreInterface
             }
         }
 
+        // Check if we have anything in memory to encrypt and store on the host device.
         if (count($this->store) !== 0) {
+            // Return an encrypted string representing our memory state.
             $encrypted = $this->encrypt($this->store);
 
+            // Cookies have a finite size limit. If ours is too large, "chunk" it (split it into multiple cookies.)
             // @phpstan-ignore-next-line
             $chunks = str_split($encrypted, $this->threshold);
 
             // @phpstan-ignore-next-line
             if ($chunks !== false) {
+                // Store each "chunk" as a separate cookie on the host device.
                 foreach ($chunks as $index => $chunk) {
+                    // Add a '_X' index suffix to each chunked cookie; we'll use this to iterate over all when we rejoin the cookie for decryption.
                     $cookieName = $this->namespace . self::KEY_SEPARATOR . $index;
+
+                    // Update PHP's internal _COOKIE global with the chunked cookie.
                     $_COOKIE[$cookieName] = $chunk;
+
+                    // Push the updated cookie to the host device for persistence.
                     setcookie($cookieName, $chunk, $setOptions);
+
+                    // Keep track of the cookie names in use., _1, _2, _3, and so on.
                     $using[] = $cookieName;
                 }
             }
         }
 
+        // Compare cookies already present on the device with those we're now using, and delete ones no longer in use.
+        // For example, if a user was signed in previously, they may have had 3 or 4 chunked cookies (_1, _2, _3, _4)
+        // Suppose they then signed out; they'd be using none of those cookies. _1, _2, _3 and _4 would be orphaned.
+        // We must delete these extraneous cookies, or it will corrupt decryption attempts next time getState() is invoked.
         $orphaned = array_diff($existing, $using);
 
         foreach ($orphaned as $cookieName) {
+            // Push the cookie deletion command to the host device.
             setcookie($cookieName, '', $deleteOptions);
+
+            // Clear PHP's internal COOKIE global of the orphaned cookie.
             unset($_COOKIE[$cookieName]);
         }
 
@@ -209,7 +241,7 @@ final class CookieStore implements StoreInterface
             [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
         ])->isString();
 
-        $this->store[$key ?? ''] = $value;
+        $this->store[(string) $key] = $value;
 
         if ($this->deferring === false) {
             $this->setState();
@@ -252,7 +284,7 @@ final class CookieStore implements StoreInterface
             [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
         ])->isString();
 
-        unset($this->store[$key ?? '']);
+        unset($this->store[(string) $key]);
 
         if ($this->deferring === false) {
             $this->setState();
@@ -301,7 +333,10 @@ final class CookieStore implements StoreInterface
         }
         // @codeCoverageIgnoreEnd
 
+        // Encrypt the serialized PHP array.
         $encrypted = openssl_encrypt(serialize($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+
+        // Return a JSON encoded object containing the crypto tag and iv, and the encrypted data.
         return json_encode(serialize(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]), JSON_THROW_ON_ERROR);
     }
 
@@ -327,11 +362,7 @@ final class CookieStore implements StoreInterface
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        if (! is_string($data)) {
-            return null;
-        }
-
-        $data = json_decode($data, true);
+        $data = json_decode((string) $data, true);
 
         if (! is_string($data)) {
             return null;
