@@ -46,9 +46,12 @@ return [
         ],
         \SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff::class => [
             'exclude' => [
+                'src/API/Management.php',
                 'src/Configuration/SdkConfiguration.php',
                 'src/Configuration/SdkState.php',
-                'src/API/Management.php',
+                'src/Store/SessionStore.php',
+                'src/Store/InMemoryStorage.php',
+                'src/Store/Psr6Store.php',
             ],
         ],
         \SlevomatCodingStandard\Sniffs\Classes\ModernClassNameReferenceSniff::class => [

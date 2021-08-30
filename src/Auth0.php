@@ -207,17 +207,20 @@ final class Auth0
     public function clear(
         bool $transient = true
     ): self {
-        $sessionStorage = $this->configuration()->getSessionStorage();
-        $transientStorage = $this->configuration()->getTransientStorage();
-
-        if ($sessionStorage !== null) {
-            $sessionStorage->deleteAll();
+        // Delete all data in the session storage medium.
+        if ($this->configuration()->hasSessionStorage()) {
+            $this->configuration->getSessionStorage()->purge();
         }
 
-        if ($transientStorage !== null && $transient === true) {
-            $transientStorage->deleteAll();
+        // Delete all data in the transient storage medium.
+        if ($this->configuration()->hasTransientStorage() && $transient === true) {
+            $this->configuration->getTransientStorage()->purge();
         }
 
+        // If state saving had been deferred, disable it and force a update to persistent storage.
+        $this->deferStateSaving(false);
+
+        // Reset the internal state.
         $this->getState()->reset();
 
         return $this;
@@ -290,6 +293,8 @@ final class Auth0
     public function exchange(
         ?string $redirectUri = null
     ): bool {
+        $this->deferStateSaving();
+
         $code = $this->getRequestParameter('code');
         $state = $this->getRequestParameter('state');
         $codeVerifier = null;
@@ -310,6 +315,7 @@ final class Auth0
             $codeVerifier = $this->getTransientStore()->getOnce('code_verifier');
 
             if ($codeVerifier === null) {
+                $this->clear();
                 throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
             }
         }
@@ -362,6 +368,8 @@ final class Auth0
         }
 
         $this->setUser($user ?? []);
+        $this->deferStateSaving(false);
+
         return true;
     }
 
@@ -381,9 +389,11 @@ final class Auth0
     public function renew(
         ?array $params = null
     ): self {
+        $this->deferStateSaving();
         $refreshToken = $this->getState()->getRefreshToken();
 
         if ($refreshToken === null) {
+            $this->clear();
             throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingRefreshToken();
         }
 
@@ -391,6 +401,7 @@ final class Auth0
         $response = HttpResponse::decodeContent($response);
 
         if (! isset($response['access_token']) || ! $response['access_token']) {
+            $this->clear();
             throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingAccessToken();
         }
 
@@ -399,6 +410,8 @@ final class Auth0
         if (isset($response['id_token'])) {
             $this->setIdToken($response['id_token']);
         }
+
+        $this->deferStateSaving(false);
 
         return $this;
     }
@@ -722,5 +735,25 @@ final class Auth0
         }
 
         return $this->state;
+    }
+
+    /**
+     * Defer saving transient or session states to destination medium.
+     * Improves performance during large blocks of changes.
+     *
+     * @param bool $deferring Whether to defer persisting the storage state.
+     */
+    private function deferStateSaving(
+        bool $deferring = true
+    ): self {
+        if ($this->configuration()->hasSessionStorage()) {
+            $this->configuration()->getSessionStorage()->defer($deferring);
+        }
+
+        if ($this->configuration()->hasTransientStorage()) {
+            $this->configuration()->getTransientStorage()->defer($deferring);
+        }
+
+        return $this;
     }
 }

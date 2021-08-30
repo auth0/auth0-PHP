@@ -52,6 +52,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setResponseType(string $responseType = 'code')
  * @method SdkConfiguration setScope(?array $scope = null)
  * @method SdkConfiguration setSessionStorage(?StoreInterface $sessionStorage = null)
+ * @method SdkConfiguration setSessionStorageId(string $sessionStorageId = 'auth0_session')
  * @method SdkConfiguration setStrategy(string $strategy = 'webapp')
  * @method SdkConfiguration setTokenAlgorithm(string $tokenAlgorithm = 'RS256')
  * @method SdkConfiguration setTokenCache(?CacheItemPoolInterface $cache = null)
@@ -60,6 +61,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setTokenLeeway(int $tokenLeeway = 60)
  * @method SdkConfiguration setTokenMaxAge(?int $tokenMaxAge = null)
  * @method SdkConfiguration setTransientStorage(?StoreInterface $transientStorage = null)
+ * @method SdkConfiguration setTransientStorageId(string $transientStorageId = 'auth0_transient')
  * @method SdkConfiguration setUsePkce(bool $usePkce)
  *
  * @method array<string>|null getAudience(?\Throwable $exceptionIfNull = null)
@@ -91,6 +93,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method string getResponseType()
  * @method array<string> getScope()
  * @method StoreInterface|null getSessionStorage(?\Throwable $exceptionIfNull = null)
+ * @method string getSessionStorageId()
  * @method string getStrategy()
  * @method string getTokenAlgorithm()
  * @method CacheItemPoolInterface|null getTokenCache(?\Throwable $exceptionIfNull = null)
@@ -99,6 +102,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method int|null getTokenLeeway(?\Throwable $exceptionIfNull = null)
  * @method int|null getTokenMaxAge(?\Throwable $exceptionIfNull = null)
  * @method StoreInterface|null getTransientStorage(?\Throwable $exceptionIfNull = null)
+ * @method string getTransientStorageId()
  * @method bool getUsePkce()
  *
  * @method bool hasAudience()
@@ -130,6 +134,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool hasResponseType()
  * @method bool hasScope()
  * @method bool hasSessionStorage()
+ * @method bool hasSessionStorageId()
  * @method bool hasStrategy()
  * @method bool hasTokenAlgorithm()
  * @method bool hasTokenCache()
@@ -137,6 +142,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool hasTokenLeeway()
  * @method bool hasTokenMaxAge()
  * @method bool hasTransientStorage()
+ * @method bool hasTransientStorageId()
  * @method bool hasUsePkce()
  *
  * @method bool pushScope($scope)
@@ -180,6 +186,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param StreamFactoryInterface|null    $httpStreamFactory     A PSR-17 compatible stream factory to create request body streams.
      * @param bool                           $httpTelemetry         Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
      * @param StoreInterface|null            $sessionStorage        Defaults to use cookies. A StoreInterface-compatible class for storing Token state.
+     * @param string                         $sessionStorageId      Defaults to 'auth0_session'. The namespace to prefix session items under.
      * @param string|null                    $cookieSecret          The secret used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback.
      * @param string|null                    $cookieDomain          Defaults to value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
      * @param int                            $cookieExpires         Defaults to 0. How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
@@ -190,6 +197,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param bool                           $persistAccessToken    Defaults to true. If true, the Access Token will persist in session storage.
      * @param bool                           $persistRefreshToken   Defaults to true. If true, the Refresh Token will persist in session storage.
      * @param StoreInterface|null            $transientStorage      Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as nonces.
+     * @param string                         $transientStorageId    Defaults to 'auth0_transient'. The namespace to prefix transient items under.
      * @param bool                           $queryUserInfo         Defaults to false. If true, query the /userinfo endpoint during an authorization code exchange.
      * @param string|null                    $managementToken       An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
      * @param CacheItemPoolInterface|null    $managementTokenCache  A PSR-6 compatible cache adapter for storing generated management access tokens.
@@ -223,6 +231,7 @@ final class SdkConfiguration implements ConfigurableContract
         ?StreamFactoryInterface $httpStreamFactory = null,
         bool $httpTelemetry = true,
         ?StoreInterface $sessionStorage = null,
+        string $sessionStorageId = 'auth0_session',
         ?string $cookieSecret = null,
         ?string $cookieDomain = null,
         int $cookieExpires = 0,
@@ -233,6 +242,7 @@ final class SdkConfiguration implements ConfigurableContract
         bool $persistAccessToken = true,
         bool $persistRefreshToken = true,
         ?StoreInterface $transientStorage = null,
+        string $transientStorageId = 'auth0_transient',
         bool $queryUserInfo = false,
         ?string $managementToken = null,
         ?CacheItemPoolInterface $managementTokenCache = null,
@@ -391,11 +401,11 @@ final class SdkConfiguration implements ConfigurableContract
     private function setupStateStorage(): void
     {
         if (! $this->getSessionStorage() instanceof StoreInterface) {
-            $this->setSessionStorage(new CookieStore($this, 'auth0_session'));
+            $this->setSessionStorage(new CookieStore($this, $this->getSessionStorageId()));
         }
 
         if (! $this->getTransientStorage() instanceof StoreInterface) {
-            $this->setTransientStorage(new CookieStore($this, 'auth0_transient'));
+            $this->setTransientStorage(new CookieStore($this, $this->getTransientStorageId()));
         }
     }
 

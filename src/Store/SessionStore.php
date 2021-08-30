@@ -47,6 +47,19 @@ final class SessionStore implements StoreInterface
     }
 
     /**
+     * This has no effect when using sessions as the storage medium.
+     *
+     * @param bool $deferring Whether to defer persisting the storage state.
+     *
+     * @phpstan-ignore-next-line
+     */
+    public function defer(
+        bool $deferring
+    ): void {
+        return;
+    }
+
+    /**
      * Persists $value on $_SESSION, identified by $key.
      *
      * @param string $key   Session key to set.
@@ -84,7 +97,7 @@ final class SessionStore implements StoreInterface
     /**
      * Removes all persisted values.
      */
-    public function deleteAll(): void
+    public function purge(): void
     {
         $session = $_SESSION;
         $prefix = $this->sessionPrefix . '_';
