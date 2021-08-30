@@ -39,6 +39,8 @@ final class TransientStoreHandler
      * Defer saving state changes to destination to improve performance during blocks of changes.
      *
      * @param bool $deferring Whether to defer persisting the storage state.
+     *
+     * @codeCoverageIgnore
      */
     public function defer(
         bool $deferring

@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-declare(strict_types=1);
-
 use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Store\MemoryStore;
 use Auth0\SDK\Store\Psr6Store;

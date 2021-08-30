@@ -56,10 +56,10 @@ final class Toolkit
      * @param \Closure $callback The function to pass each item through.
      */
     public static function each(
-        iterable $items,
+        iterable &$items,
         \Closure $callback
     ): void {
-        foreach ($items as $key => $item) {
+        foreach ($items as $key => &$item) {
             if ($callback($item, $key) === false) {
                 break;
             }
@@ -136,7 +136,7 @@ final class Toolkit
         $result = self::filter($values)->array()->trim();
 
         // All values were null, throw an exception.
-        if (count($result) === 0) {
+        if (count($result) === 0 || count($result) === 1 && is_array($result[0]) && count($result[0]) === 0) {
             if ($exception !== null) {
                 throw $exception;
             }
