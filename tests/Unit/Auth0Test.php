@@ -34,14 +34,14 @@ it('uses the configured session storage handler', function(): void {
         /**
          * Example of an empty store.
          *
-         * @param string      $key     An example key.
-         * @param string|null $default An example default value.
+         * @param string $key     An example key.
+         * @param mixed  $default An example default value.
          *
          * @return mixed
          */
         public function get(
             string $key,
-            ?string $default = null
+            $default = null
         ) {
             $response = '__test_custom_store__' . $key . '__';
 
@@ -63,7 +63,13 @@ it('uses the configured session storage handler', function(): void {
         ): void {
         }
 
-        public function deleteAll(): void
+        public function purge(): void
+        {
+        }
+
+        public function defer(
+            bool $deferring = false
+        ): void
         {
         }
     };

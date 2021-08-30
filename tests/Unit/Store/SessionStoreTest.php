@@ -58,11 +58,11 @@ test('delete() clears values as expected', function(string $key, string $value):
     fn() => uniqid(),
 ]]);
 
-test('deleteAll() clears values as expected', function(string $key, string $value): void {
+test('purge() clears values as expected', function(string $key, string $value): void {
     $_SESSION[$this->namespace . '_' . $key] = $value;
     $this->assertTrue(isset($_SESSION[$this->namespace . '_' . $key]));
 
-    $this->store->deleteAll();
+    $this->store->purge();
 
     $this->assertNull($this->store->get($key));
     $this->assertFalse(isset($_SESSION[$this->namespace . '_' . $key]));

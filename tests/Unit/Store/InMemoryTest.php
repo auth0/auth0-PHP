@@ -42,10 +42,10 @@ test('delete() clears values as expected', function(string $key, string $value):
     fn() => uniqid(),
 ]]);
 
-test('deleteAll() clears values as expected', function(string $key, string $value): void {
+test('purge() clears values as expected', function(string $key, string $value): void {
     $this->store->set($key, $value);
 
-    $this->store->deleteAll();
+    $this->store->purge();
     $this->assertNull($this->store->get($key));
 })->with(['mocked data' => [
     fn() => uniqid(),
