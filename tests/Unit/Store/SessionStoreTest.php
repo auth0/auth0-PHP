@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * Class SessionStoreTest.
  * Tests the SessionStore class.
  */
-class SessionStoreTest extends TestCase
+final class SessionStoreTest extends TestCase
 {
     /**
      * Session key for test values.

@@ -16,38 +16,76 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 final class Psr6Store implements StoreInterface
 {
-    private const PUBLIC_STORAGE_KEY = 'storage_key';
+    /**
+     * The storage key to store data under.
+     */
+    private string $storageKey;
+
+    /**
+     * An instance of StoreInterface to use for 'public' storage.
+     */
     private StoreInterface $publicStore;
+
+    /**
+     * An instance of CacheItemPoolInterface to use for 'private' storage.
+     */
     private CacheItemPoolInterface $privateStore;
 
+    /**
+     * Psr6Store constructor.
+     *
+     * @param StoreInterface         $publicStore  An instance of StoreInterface to use for 'public' storage.
+     * @param CacheItemPoolInterface $privateStore An instance of CacheItemPoolInterface to use for 'private' storage.
+     * @param string                 $storageKey   A string representing the key/namespace under which to store values.
+     */
     public function __construct(
         StoreInterface $publicStore,
-        CacheItemPoolInterface $privateStore
+        CacheItemPoolInterface $privateStore,
+        string $storageKey = 'storage_key'
     ) {
         $this->publicStore = $publicStore;
         $this->privateStore = $privateStore;
+        $this->storageKey = $storageKey;
     }
 
+    /**
+     * Persists $value on $_SESSION, identified by $key.
+     *
+     * @param string $key   Session key to set.
+     * @param mixed  $value Value to use.
+     */
     public function set(
         string $key,
         $value
     ): void {
         $item = $this->privateStore->getItem($this->getCacheKey());
         $data = $item->get();
+
         if (! is_array($data)) {
             $data = [];
         }
+
         $data[$key] = $value;
         $item->set($data);
         $this->privateStore->saveDeferred($item);
     }
 
+    /**
+     * Gets persisted values identified by $key.
+     * If the value is not set, returns $default.
+     *
+     * @param string $key     Session key to set.
+     * @param mixed  $default Default to return if nothing was found.
+     *
+     * @return mixed
+     */
     public function get(
         string $key,
-        ?string $default = null
+        $default = null
     ) {
         $item = $this->privateStore->getItem($this->getCacheKey());
         $data = $item->get();
+
         if (! is_array($data)) {
             $data = [];
         }
@@ -59,11 +97,17 @@ final class Psr6Store implements StoreInterface
         return $default;
     }
 
+    /**
+     * Removes a value identified by $key.
+     *
+     * @param string $key Session key to delete.
+     */
     public function delete(
         string $key
     ): void {
         $item = $this->privateStore->getItem($this->getCacheKey());
         $data = $item->get();
+
         if (! is_array($data)) {
             $data = [];
         }
@@ -73,12 +117,31 @@ final class Psr6Store implements StoreInterface
         $this->privateStore->saveDeferred($item);
     }
 
-    public function deleteAll(): void
+    /**
+     * Removes all values.
+     */
+    public function purge(): void
     {
         $this->privateStore->deleteItem($this->getCacheKey());
-        $this->publicStore->delete(self::PUBLIC_STORAGE_KEY);
+        $this->publicStore->delete($this->storageKey);
     }
 
+    /**
+     * This has no effect when using PSR-6 as the storage medium.
+     *
+     * @param bool $deferring Whether to defer persisting the storage state.
+     *
+     * @phpstan-ignore-next-line
+     */
+    public function defer(
+        bool $deferring
+    ): void {
+        return;
+    }
+
+    /**
+     * Generate a cryptographically-secure random string.
+     */
     private function generateKey(): string
     {
         try {
@@ -90,14 +153,18 @@ final class Psr6Store implements StoreInterface
         return bin2hex($randomBytes);
     }
 
+    /**
+     * Generate a cryptographically-secure random string.
+     */
     private function getCacheKey(): string
     {
-        $key = $this->publicStore->get(self::PUBLIC_STORAGE_KEY);
+        $key = $this->publicStore->get($this->storageKey);
+
         if (! is_string($key)) {
             $key = $this->generateKey();
-            $this->publicStore->set(self::PUBLIC_STORAGE_KEY, $key);
+            $this->publicStore->set($this->storageKey, $key);
         }
 
-        return 'auth0_'.$key;
+        return 'auth0_' . $key;
     }
 }

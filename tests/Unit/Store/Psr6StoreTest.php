@@ -41,7 +41,7 @@ class Psr6StoreTest extends TestCase
     {
         $public = $this->getMockBuilder(StoreInterface::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['set', 'get', 'delete', 'deleteAll'])
+            ->onlyMethods(['set', 'get', 'delete', 'purge', 'defer'])
             ->getMock();
         $public->expects($this->atLeastOnce())->method('get')->with(self::PUBLIC_STORAGE_KEY)->willReturn('foobar');
         // Make sure we don't create a new key
@@ -93,14 +93,14 @@ class Psr6StoreTest extends TestCase
         $this->assertNull($store->get('test_set_key'));
     }
 
-    public function testDeleteAll(): void
+    public function testPurge(): void
     {
         $public = new InMemoryStorage();
         $private = new ArrayAdapter();
         $store = new Psr6Store($public, $private);
         $store->set('test_set_key', '__test_set_value__');
 
-        $store->deleteAll();
+        $store->purge();
         $this->assertNull($store->get('test_set_key'));
     }
 }

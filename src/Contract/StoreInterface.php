@@ -23,14 +23,14 @@ interface StoreInterface
     /**
      * Get a value from the store by a given key.
      *
-     * @param string      $key     Key to get.
-     * @param string|null $default Return value if key not found.
+     * @param string $key     Key to get.
+     * @param mixed  $default Return value if key not found.
      *
      * @return mixed
      */
     public function get(
         string $key,
-        ?string $default = null
+        $default = null
     );
 
     /**
@@ -45,5 +45,12 @@ interface StoreInterface
     /**
      * Remove all stored values
      */
-    public function deleteAll(): void;
+    public function purge(): void;
+
+    /**
+     * Defer saving state changes to destination to improve performance during blocks of changes.
+     */
+    public function defer(
+        bool $deferring
+    ): void;
 }

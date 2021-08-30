@@ -27,7 +27,7 @@ final class InMemoryStorage implements StoreInterface
 
     public function get(
         string $key,
-        ?string $default = null
+        $default = null
     ) {
         if (\array_key_exists($key, $this->data)) {
             return $this->data[$key];
@@ -42,8 +42,13 @@ final class InMemoryStorage implements StoreInterface
         unset($this->data[$key]);
     }
 
-    public function deleteAll(): void
+    public function purge(): void
     {
         $this->data = [];
+    }
+
+    public function defer(
+        bool $deferring = true
+    ): void {
     }
 }
