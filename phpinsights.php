@@ -50,7 +50,7 @@ return [
                 'src/Configuration/SdkConfiguration.php',
                 'src/Configuration/SdkState.php',
                 'src/Store/SessionStore.php',
-                'src/Store/InMemoryStorage.php',
+                'src/Store/MemoryStore.php',
                 'src/Store/Psr6Store.php',
             ],
         ],

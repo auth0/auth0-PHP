@@ -7,7 +7,7 @@ use Auth0\SDK\Store\CookieStore;
 use Auth0\Tests\Utilities\MockCrypto;
 use Auth0\Tests\Utilities\MockDataset;
 
-uses()->group('session', 'cookies');
+uses()->group('storage', 'storage.cookies');
 
 beforeEach(function(): void {
     $this->namespace = uniqid();

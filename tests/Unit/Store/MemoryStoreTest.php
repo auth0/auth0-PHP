@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Auth0\SDK\Store\InMemoryStorage;
+use Auth0\SDK\Store\MemoryStore;
 
-uses()->group('storage', 'storage.in_memory');
+uses()->group('storage', 'storage.memory');
 
 beforeEach(function(): void {
-    $this->store = new InMemoryStorage();
+    $this->store = new MemoryStore();
 });
 
 test('set() assigns values as expected', function(string $key, string $value): void {

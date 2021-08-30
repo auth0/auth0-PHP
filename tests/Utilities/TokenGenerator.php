@@ -169,7 +169,7 @@ class TokenGeneratorResponse extends \stdClass
     public ?array $keys;
     public string $token;
     public string $payload;
-    public $signature;
+    public string $signature;
     public array $headers;
     public array $claims;
     public string $jwks;

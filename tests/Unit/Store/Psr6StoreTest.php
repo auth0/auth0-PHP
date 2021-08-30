@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Tests\Unit\Store;
 
 use Auth0\SDK\Contract\StoreInterface;
-use Auth0\SDK\Store\InMemoryStorage;
+use Auth0\SDK\Store\MemoryStore;
 use Auth0\SDK\Store\Psr6Store;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
@@ -21,7 +21,7 @@ class Psr6StoreTest extends TestCase
 
     public function testSetGet(): void
     {
-        $public = new InMemoryStorage();
+        $public = new MemoryStore();
         $private = new ArrayAdapter();
         $store = new Psr6Store($public, $private);
         $store->set('test_set_key', '__test_set_value__');
@@ -73,7 +73,7 @@ class Psr6StoreTest extends TestCase
 
     public function testGetDefault(): void
     {
-        $public = new InMemoryStorage();
+        $public = new MemoryStore();
         $private = new ArrayAdapter();
         $store = new Psr6Store($public, $private);
         $store->set('test_set_key', null);
@@ -84,7 +84,7 @@ class Psr6StoreTest extends TestCase
 
     public function testDelete(): void
     {
-        $public = new InMemoryStorage();
+        $public = new MemoryStore();
         $private = new ArrayAdapter();
         $store = new Psr6Store($public, $private);
         $store->set('test_set_key', '__test_set_value__');
@@ -95,7 +95,7 @@ class Psr6StoreTest extends TestCase
 
     public function testPurge(): void
     {
-        $public = new InMemoryStorage();
+        $public = new MemoryStore();
         $private = new ArrayAdapter();
         $store = new Psr6Store($public, $private);
         $store->set('test_set_key', '__test_set_value__');

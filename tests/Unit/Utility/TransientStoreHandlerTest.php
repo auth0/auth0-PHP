@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Store\InMemoryStorage;
+use Auth0\SDK\Store\MemoryStore;
 use Auth0\SDK\Utility\TransientStoreHandler;
 
 uses()->group('networking', 'utility', 'utility.http_telemetry');
@@ -15,7 +15,7 @@ beforeEach(function(): void {
         'strategy' => 'none',
     ]);
 
-    $this->store = new InMemoryStorage($this->configuration, $this->namespace);
+    $this->store = new MemoryStore($this->configuration, $this->namespace);
     $this->transient = new TransientStoreHandler($this->store);
 });
 
