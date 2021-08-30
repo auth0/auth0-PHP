@@ -51,6 +51,7 @@ return [
                 'src/Configuration/SdkState.php',
                 'src/Store/SessionStore.php',
                 'src/Store/InMemoryStorage.php',
+                'src/Store/Psr6Store.php',
             ],
         ],
         \SlevomatCodingStandard\Sniffs\Classes\ModernClassNameReferenceSniff::class => [
