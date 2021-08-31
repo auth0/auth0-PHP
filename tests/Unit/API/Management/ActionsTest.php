@@ -93,38 +93,47 @@ test('getAll() issues valid requests using parameters', function(string $trigger
 test('get() issues valid requests', function(string $id): void {
     $this->endpoint->get($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id, $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions/'  . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid id' => [
     fn() => uniqid()
 ]]);
 
-test('get() throws an error with an empty id', function(string $id): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
-    $this->endpoint->get($id);
-})->with(['empty id' => [
-    fn() => ''
-]]);
+test('get() throws an error with an empty id', function(): void {
+    $this->endpoint->get('');
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('update() issues valid requests', function(string $id, array $body): void {
     $this->endpoint->update($id, $body);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id, $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions/' . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
 
-    $request = $this->api->getRequestBody();
-    $this->assertArrayHasKey('name', $request);
-    $this->assertArrayHasKey('supported-triggers', $request);
+    expect($this->api->getRequestBody())
+        ->toHaveKey('name')
+        ->toHaveKey('supported-triggers')
+        ->toHaveKey('code')
+        ->toHaveKey('dependencies')
+        ->toHaveKey('runtime')
+        ->toHaveKey('secrets')
+        ->name
+            ->toEqual('my-action')
+        ->dependencies
+            ->toBeArray()
+            ->sequence(
+                fn ($value, $key) => $value->toHaveKey('version', 1)
+            )
+        ->secrets
+            ->toBeArray()
+            ->sequence(
+                fn ($value, $key) => $value->toHaveKey('name', 'mySecret')->toHaveKey('value', 'mySecretValue')
+            );
 
-    $this->assertEquals('my-action', $request['name']);
-    $this->assertIsArray($request['supported-triggers']);
-
-    $request = $this->api->getRequestBodyAsString();
-    $this->assertEquals('{"name":"my-action","supported-triggers":[{"id":"post-login","version":"v2"}],"code":"module.exports = () => {}","dependencies":[{"name":"lodash","version":"1.0.0"}],"runtime":"node12","secrets":[{"name":"mySecret","value":"mySecretValue"}]}', $request);
+    expect($this->api->getRequestBodyAsString())
+        ->toEqual(json_encode($body))
+        ->json();
 })->with(['valid request' => [
     fn() => uniqid(),
     fn() => [
@@ -139,7 +148,7 @@ test('update() issues valid requests', function(string $id, array $body): void {
         'dependencies' => [
             (object) [
                 'name' => 'lodash',
-                'version' => '1.0.0'
+                'version' => 1
             ],
         ],
         'runtime' => 'node12',
@@ -152,47 +161,13 @@ test('update() issues valid requests', function(string $id, array $body): void {
     ]
 ]]);
 
-test('update() throws an error with an empty id', function(string $id, array $body): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+test('update() throws an error with an empty id', function(): void {
+    $this->endpoint->update('', ['testing' => true]);
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
-    $this->endpoint->update($id, $body);
-})->with(['invalid request' => [
-    fn() => '',
-    fn() => [
-        'name' => 'my-action',
-        'supported-triggers' => [
-            (object) [
-                'id' => 'post-login',
-                'version' => 'v2'
-            ],
-        ],
-        'code' => 'module.exports = () => {}',
-        'dependencies' => [
-            (object) [
-                'name' => 'lodash',
-                'version' => '1.0.0'
-            ],
-        ],
-        'runtime' => 'node12',
-        'secrets' => [
-            (object) [
-                'name' => 'mySecret',
-                'value' => 'mySecretValue'
-            ]
-        ]
-    ]
-]]);
-
-test('update() throws an error with an empty body', function(string $id, array $body): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
-
-    $this->endpoint->update($id, $body);
-})->with(['invalid request' => [
-    fn() => uniqid(),
-    fn() => []
-]]);
+test('update() throws an error with an empty body', function(): void {
+    $this->endpoint->update(uniqid(), []);
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('delete() issues valid requests', function(string $id, ?bool $force): void {
     $this->endpoint->delete($id, $force);
