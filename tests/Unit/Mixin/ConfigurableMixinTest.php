@@ -16,11 +16,8 @@ test('get() throws a ConfigurationException exception when a value is missing', 
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALUE_REQUIRED, 'example'));
-
     $configurable->getExample('123');
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALUE_REQUIRED, 'example'));
 
 test('get() throws an exception when a value is missing', function(): void {
     $configurable = new class() {
@@ -54,11 +51,8 @@ test('get() throws a ConfigurationException exception when a property is not def
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
-
     $configurable->getMissing();
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
 
 test('get() returns a default value', function(): void {
     $configurable = new class() {
@@ -103,11 +97,8 @@ test('set() throws an exception when a property does not exist', function(): voi
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_MISSING, 'missing'));
-
     $configurable->setMissing(456);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_MISSING, 'missing'));
 
 test('set() throws an exception when a non-nullable property is assigned a null value', function(): void {
     $configurable = new class() {
@@ -121,10 +112,8 @@ test('set() throws an exception when a non-nullable property is assigned a null 
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-
     $configurable->setExample(null);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class);
 
 test('set() throws an exception when a property is assigned an invalid value type', function(): void {
     $configurable = new class() {
@@ -138,10 +127,8 @@ test('set() throws an exception when a property is assigned an invalid value typ
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-
     $configurable->setExample(123);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class);
 
 test('set() throws an exception when a nullable property is assigned an invalid value type', function(): void {
     $configurable = new class() {
@@ -155,10 +142,8 @@ test('set() throws an exception when a nullable property is assigned an invalid 
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-
     $configurable->setExample(123);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class);
 
 test('set() calls an onStateChange callback method on the parent class', function(): void {
     $configurable = new class() {
@@ -179,12 +164,10 @@ test('set() calls an onStateChange callback method on the parent class', functio
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-
     $configurable->setExample(123);
 
     expect($this->getExample())->toEqual('success');
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class);
 
 test('push() adds to an array property value that has a nullable default value', function(): void {
     $configurable = new class() {
@@ -248,11 +231,8 @@ test('push() throws a ConfigurationException exception when a property is not de
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
-
     $configurable->pushMissing([123]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
 
 test('has() returns false if a value was not defined', function(): void {
     $configurable = new class() {
@@ -281,11 +261,8 @@ test('has() throws a ConfigurationException exception when a property is not def
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
-
     $configurable->hasMissing();
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
 
 test('calling a non-existent method throws an ArgumentException', function(): void {
     $configurable = new class() {
@@ -299,11 +276,8 @@ test('calling a non-existent method throws an ArgumentException', function(): vo
         }
     };
 
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_UNKNOWN_METHOD, 'somethingSomething'));
-
     $configurable->somethingSomething();
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_UNKNOWN_METHOD, 'somethingSomething'));
 
 test('lock() causes a configuration to become immutable', function(): void {
     $configurable = new class() {
@@ -319,11 +293,8 @@ test('lock() causes a configuration to become immutable', function(): void {
 
     $configurable->lock();
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_IMMUTABLE);
-
     $configurable->setExample(true);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_SET_IMMUTABLE);
 
 test('reset() resets property values as expected', function(): void {
     $configurable = new class() {
@@ -357,11 +328,8 @@ test('reset() is not possible once lock() is used', function(): void {
 
     $configurable->lock();
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_IMMUTABLE);
-
     $configurable->reset();
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_SET_IMMUTABLE);
 
 test('setState() will use a supplied configuration array, and values supplied this way overwrite passed arguments', function(): void {
     $class = new class() {

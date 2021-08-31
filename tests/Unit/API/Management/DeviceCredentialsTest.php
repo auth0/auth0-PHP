@@ -9,33 +9,20 @@ beforeEach(function(): void {
 });
 
 test('create() throws an error when missing deviceName', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'deviceName'));
-
     $this->endpoint->create('', '', '', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'deviceName'));
 
 test('create() throws an error when missing type', function(): void {
-
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'type'));
-
     $this->endpoint->create(uniqid(), '', '', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'type'));
 
 test('create() throws an error when missing value', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'value'));
-
     $this->endpoint->create(uniqid(), uniqid(), '', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'value'));
 
 test('create() throws an error when missing deviceId', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'deviceId'));
-
     $this->endpoint->create(uniqid(), uniqid(), uniqid(), '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'deviceId'));
 
 test('create() issues valid requests', function(): void {
     $deviceName = uniqid();

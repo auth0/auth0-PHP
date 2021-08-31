@@ -54,18 +54,12 @@ test('create() issues an appropriate request', function(): void {
 });
 
 test('create() throws an exception when an invalid `name` argument is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
-
     $this->endpoint->create('', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
 
 test('create() throws an exception when an invalid `displayName` argument is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'displayName'));
-
     $this->endpoint->create('test-organization', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'displayName'));
 
 test('update() issues an appropriate request', function(): void {
     $mock = (object) [
@@ -114,18 +108,12 @@ test('update() issues an appropriate request', function(): void {
 });
 
 test('update() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->update('', '', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('update() throws an exception when an invalid `displayName` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'displayName'));
-
     $this->endpoint->update('test-organization', '', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'displayName'));
 
 test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete('test-organization');
@@ -138,11 +126,8 @@ test('delete() issues an appropriate request', function(): void {
 });
 
 test('delete() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->delete('');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll();
@@ -159,11 +144,8 @@ test('get() issues an appropriate request', function(): void {
 });
 
 test('get() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->get('');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('getByName() issues an appropriate request', function(): void {
     $this->endpoint->getByName('test-organization');
@@ -173,11 +155,8 @@ test('getByName() issues an appropriate request', function(): void {
 });
 
 test('getByName() throws an exception when an invalid `name` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
-
     $this->endpoint->getByName('');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
 
 test('getEnabledConnections() issues an appropriate request', function(): void {
     $this->endpoint->getEnabledConnections('test-organization');
@@ -187,11 +166,8 @@ test('getEnabledConnections() issues an appropriate request', function(): void {
 });
 
 test('getEnabledConnections() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->getEnabledConnections('');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('getEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->getEnabledConnection('test-organization', 'test-connection');
@@ -201,18 +177,12 @@ test('getEnabledConnection() issues an appropriate request', function(): void {
 });
 
 test('getEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->getEnabledConnection('', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('getEnabledConnection() throws an exception when an invalid `connectionId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
-
     $this->endpoint->getEnabledConnection('test-organization', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
 
 test('addEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->addEnabledConnection('test-organization', 'test-connection', ['assign_membership_on_login' => true]);
@@ -229,18 +199,12 @@ test('addEnabledConnection() issues an appropriate request', function(): void {
 });
 
 test('addEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->addEnabledConnection('', '', ['assign_membership_on_login' => true]);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('addEnabledConnection() throws an exception when an invalid `connectionId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
-
     $this->endpoint->addEnabledConnection('test-organization', '', ['assign_membership_on_login' => true]);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
 
 test('updateEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->updateEnabledConnection('test-organization', 'test-connection', ['assign_membership_on_login' => true]);
@@ -260,18 +224,12 @@ test('updateEnabledConnection() issues an appropriate request', function(): void
 });
 
 test('updateEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->updateEnabledConnection('', '', ['assign_membership_on_login' => true]);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('updateEnabledConnection() throws an exception when an invalid `connectionId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
-
     $this->endpoint->updateEnabledConnection('test-organization', '', ['assign_membership_on_login' => true]);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
 
 test('removeEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->removeEnabledConnection('test-organization', 'test-connection');
@@ -281,18 +239,12 @@ test('removeEnabledConnection() issues an appropriate request', function(): void
 });
 
 test('removeEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->removeEnabledConnection('', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('removeEnabledConnection() throws an exception when an invalid `connectionId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
-
     $this->endpoint->removeEnabledConnection('test-organization', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'connectionId'));
 
 test('getMembers() issues an appropriate request', function(): void {
     $this->endpoint->getMembers('test-organization');
@@ -302,11 +254,8 @@ test('getMembers() issues an appropriate request', function(): void {
 });
 
 test('getMembers() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->getMembers('');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('addMembers() issues an appropriate request', function(): void {
     $this->endpoint->addMembers('test-organization', ['test-user']);
@@ -326,18 +275,12 @@ test('addMembers() issues an appropriate request', function(): void {
 });
 
 test('addMembers() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->addMembers('', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('addMembers() throws an exception when an invalid `members` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'members'));
-
     $this->endpoint->addMembers('test-organization', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'members'));
 
 test('removeMembers() issues an appropriate request', function(): void {
     $this->endpoint->removeMembers('test-organization', ['test-user']);
@@ -354,18 +297,12 @@ test('removeMembers() issues an appropriate request', function(): void {
 });
 
 test('removeMembers() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->removeMembers('', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('removeMembers() throws an exception when an invalid `members` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'members'));
-
     $this->endpoint->removeMembers('test-organization', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'members'));
 
 test('getMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->getMemberRoles('test-organization', 'test-user');
@@ -375,18 +312,12 @@ test('getMemberRoles() issues an appropriate request', function(): void {
 });
 
 test('getMemberRoles() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->getMemberRoles('', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('getMemberRoles() throws an exception when an invalid `userId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
-
     $this->endpoint->getMemberRoles('test-organization', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
 
 test('addMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->addMemberRoles('test-organization', 'test-user', ['test-role']);
@@ -406,25 +337,16 @@ test('addMemberRoles() issues an appropriate request', function(): void {
 });
 
 test('addMemberRoles() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->addMemberRoles('', '', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('addMemberRoles() throws an exception when an invalid `userId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
-
     $this->endpoint->addMemberRoles('test-organization', '', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
 
 test('addMemberRoles() throws an exception when an invalid `roles` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'roles'));
-
     $this->endpoint->addMemberRoles('test-organization', 'test-rule', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'roles'));
 
 test('removeMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->removeMemberRoles('test-organization', 'test-user', ['test-role']);
@@ -441,25 +363,16 @@ test('removeMemberRoles() issues an appropriate request', function(): void {
 });
 
 test('removeMemberRoles() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->removeMemberRoles('', '', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('removeMemberRoles() throws an exception when an invalid `userId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
-
     $this->endpoint->removeMemberRoles('test-organization', '', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'userId'));
 
 test('removeMemberRoles() throws an exception when an invalid `roles` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'roles'));
-
     $this->endpoint->removeMemberRoles('test-organization', 'test-rule', []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'roles'));
 
 test('getInvitations() issues an appropriate request', function(): void {
     $this->endpoint->getInvitations('test-organization');
@@ -469,11 +382,8 @@ test('getInvitations() issues an appropriate request', function(): void {
 });
 
 test('getInvitations() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->getInvitations('');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('getInvitation() issues an appropriate request', function(): void {
     $this->endpoint->getInvitation('test-organization', 'test-invitation');
@@ -483,18 +393,12 @@ test('getInvitation() issues an appropriate request', function(): void {
 });
 
 test('getInvitation() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->getInvitation('', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('getInvitation() throws an exception when an invalid `invitationId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitationId'));
-
     $this->endpoint->getInvitation('test-organization', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitationId'));
 
 test('createInvitation() issues an appropriate request', function(): void {
     $this->endpoint->createInvitation(
@@ -525,46 +429,28 @@ test('createInvitation() issues an appropriate request', function(): void {
 });
 
 test('createInvitation() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->createInvitation('', '', [], []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('createInvitation() throws an exception when an invalid `clientId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'clientId'));
-
     $this->endpoint->createInvitation('test-organization', '', [], []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'clientId'));
 
 test('createInvitation() throws an exception when an invalid `inviter` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'inviter'));
-
     $this->endpoint->createInvitation('test-organization', 'test-client', [], []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'inviter'));
 
 test('createInvitation() throws an exception when an invalid `invitee` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitee'));
-
     $this->endpoint->createInvitation('test-organization', 'test-client', ['test' => 'test'], []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitee'));
 
 test('createInvitation() throws an exception when an invalid `inviter.name` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'inviter.name'));
-
     $this->endpoint->createInvitation('test-organization', 'test-client', ['test' => 'test'], ['test' => 'test']);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'inviter.name'));
 
 test('createInvitation() throws an exception when an invalid `invitee.email` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitee.email'));
-
     $this->endpoint->createInvitation('test-organization', 'test-client', ['name' => 'Test Sender'], ['test' => 'test']);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitee.email'));
 
 test('deleteInvitation() issues an appropriate request', function(): void {
     $this->endpoint->deleteInvitation('test-organization', 'test-invitation');
@@ -574,15 +460,9 @@ test('deleteInvitation() issues an appropriate request', function(): void {
 });
 
 test('deleteInvitation() throws an exception when an invalid `id` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
-
     $this->endpoint->deleteInvitation('', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('deleteInvitation() throws an exception when an invalid `invitationId` is used', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitationId'));
-
     $this->endpoint->deleteInvitation('test-organization', '');
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitationId'));

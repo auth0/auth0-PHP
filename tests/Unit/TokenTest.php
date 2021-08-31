@@ -124,9 +124,6 @@ test('verify() overrides globally configured algorithm', function(
 ): void {
     $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
 
-    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_UNEXPECTED_SIGNING_ALGORITHM, 'RS256', 'HS256'));
-
     $token->verify('RS256');
 })->with(['mocked data' => [
     function(): SdkConfiguration {
@@ -134,7 +131,7 @@ test('verify() overrides globally configured algorithm', function(
         return $this->configuration;
     },
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256)
-]]);
+]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_UNEXPECTED_SIGNING_ALGORITHM, 'RS256', 'HS256'));
 
 test('validate() returns a fluent interface', function(
     SdkConfiguration $configuration,
@@ -162,9 +159,6 @@ test('validate() overrides globally configured algorithm', function(
 ): void {
     $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
 
-    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISMATCHED_AUD_CLAIM, $claims['aud'], '__test_client_id__'));
-
     $token->validate(null, [ $claims['aud'] ]);
 })->with(['mocked data' => [
     function(): SdkConfiguration {
@@ -175,7 +169,7 @@ test('validate() overrides globally configured algorithm', function(
     },
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256),
     fn() => ['aud' => uniqid()]
-]]);
+]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
 test('toArray() returns an array', function(
     SdkConfiguration $configuration,

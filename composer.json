@@ -1,89 +1,89 @@
 {
-    "name": "auth0/auth0-php",
-    "description": "Auth0 PHP SDK. Straight-forward and tested methods for accessing Auth0 Authentication and Management API endpoints.",
-    "type": "library",
-    "keywords": [
-        "auth0",
-        "authentication",
-        "authorization",
-        "login",
-        "auth",
-        "jwt",
-        "json web token",
-        "jwk",
-        "json web key",
-        "oauth",
-        "openid",
-        "secure",
-        "protect",
-        "api"
-    ],
-    "homepage": "https://github.com/auth0/auth0-PHP",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Auth0",
-            "email": "support@auth0.com",
-            "homepage": "https://auth0.com/"
-        }
-    ],
-    "require": {
-        "php": "^7.4 || ^8.0",
-        "ext-filter": "*",
-        "ext-json": "*",
-        "ext-mbstring": "*",
-        "ext-openssl": "*",
-        "php-http/discovery": "^1.0",
-        "php-http/httplug": "^2.2",
-        "php-http/multipart-stream-builder": "^1.1",
-        "psr/cache": "^1.0 || ^2.0 || ^3.0",
-        "psr/event-dispatcher": "^1.0",
-        "psr/http-client-implementation": "^1.0",
-        "psr/http-factory-implementation": "^1.0",
-        "psr/http-message-implementation": "^1.0"
-    },
-    "require-dev": {
-        "ergebnis/phpstan-rules": "^0.15",
-        "firebase/php-jwt": "^5.0",
-        "infection/infection": "^0.23",
-        "mockery/mockery": "^1.4",
-        "nunomaduro/phpinsights": "^2.0",
-        "nyholm/psr7": "^1.4",
-        "pestphp/pest": "^1.0",
-        "pestphp/pest-plugin-parallel": "^0.2.0",
-        "php-http/mock-client": "^1.4",
-        "phpstan/phpstan": "^0.12",
-        "phpstan/phpstan-strict-rules": "^0.12",
-        "symfony/cache": "^4.4 || ^5.2",
-        "thecodingmachine/phpstan-strict-rules": "^0.12",
-        "vimeo/psalm": "^4.7"
-    },
-    "autoload": {
-        "psr-4": {
-            "Auth0\\SDK\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Auth0\\Tests\\": "tests/"
-        }
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "sort-packages": true
-    },
-    "scripts": {
-        "tests:docker": "docker compose run --rm tests",
-        "tests": [
-            "@tests:phpinsights",
-            "@tests:phpstan",
-            "@tests:psalm",
-            "@tests:pest"
-        ],
-        "tests:phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
-        "tests:phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
-        "tests:psalm": "@php ./vendor/bin/psalm",
-        "tests:pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
-        "tests:infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest"
+  "name": "auth0/auth0-php",
+  "description": "Auth0 PHP SDK. Straight-forward and tested methods for accessing Auth0 Authentication and Management API endpoints.",
+  "type": "library",
+  "keywords": [
+    "auth0",
+    "authentication",
+    "authorization",
+    "login",
+    "auth",
+    "jwt",
+    "json web token",
+    "jwk",
+    "json web key",
+    "oauth",
+    "openid",
+    "secure",
+    "protect",
+    "api"
+  ],
+  "homepage": "https://github.com/auth0/auth0-PHP",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Auth0",
+      "email": "support@auth0.com",
+      "homepage": "https://auth0.com/"
     }
+  ],
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "ext-filter": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-openssl": "*",
+    "php-http/discovery": "^1.0",
+    "php-http/httplug": "^2.2",
+    "php-http/multipart-stream-builder": "^1.1",
+    "psr/cache": "^1.0 || ^2.0 || ^3.0",
+    "psr/event-dispatcher": "^1.0",
+    "psr/http-client-implementation": "^1.0",
+    "psr/http-factory-implementation": "^1.0",
+    "psr/http-message-implementation": "^1.0"
+  },
+  "require-dev": {
+    "ergebnis/phpstan-rules": "^0.15",
+    "firebase/php-jwt": "^5.0",
+    "infection/infection": "^0.23",
+    "mockery/mockery": "^1.4",
+    "nunomaduro/phpinsights": "^2.0",
+    "nyholm/psr7": "^1.4",
+    "pestphp/pest": "^1.0",
+    "pestphp/pest-plugin-parallel": "^0.2.0",
+    "php-http/mock-client": "^1.4",
+    "phpstan/phpstan": "^0.12",
+    "phpstan/phpstan-strict-rules": "^0.12",
+    "symfony/cache": "^4.4 || ^5.2",
+    "thecodingmachine/phpstan-strict-rules": "^0.12",
+    "vimeo/psalm": "^4.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "Auth0\\SDK\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Auth0\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "scripts": {
+    "tests:docker": "docker compose run --rm tests",
+    "tests": [
+      "@tests:phpinsights",
+      "@tests:phpstan",
+      "@tests:psalm",
+      "@tests:pest"
+    ],
+    "tests:phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
+    "tests:phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
+    "tests:psalm": "@php ./vendor/bin/psalm",
+    "tests:pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
+    "tests:infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest"
+  }
 }

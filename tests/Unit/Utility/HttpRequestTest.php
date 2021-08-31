@@ -169,8 +169,6 @@ test('withParams() adds multiple parameters to the URL', function(array $paramet
 ]]);
 
 it('throws a NetworkException when the underlying client raises a ClientExceptionInterface', function(HttpRequest $client): void {
-    $this->expectException(\Auth0\SDK\Exception\NetworkException::class);
-
     $client->call();
 })->with(['mocked client' => [
     function(): HttpRequest {
@@ -184,4 +182,4 @@ it('throws a NetworkException when the underlying client raises a ClientExceptio
 
         return new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid(), [], null, $responses);
     }
-]]);
+]])->throws(\Auth0\SDK\Exception\NetworkException::class);

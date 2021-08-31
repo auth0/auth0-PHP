@@ -24,13 +24,10 @@ it('throws an exception with malformed token separators', function(
 ): void {
     $jwt = uniqid() . uniqid();
 
-    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SEPARATORS);
-
     $token = new Parser($jwt, $configuration);
 })->with(['mocked configured' => [
     fn() => $this->configuration
-]]);
+]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SEPARATORS);
 
 it('accepts and successfully parses a valid RS256 ID Token', function(
     SdkConfiguration $configuration,

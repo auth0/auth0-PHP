@@ -55,8 +55,5 @@ test('getResponsePaginator() returns an HttpResponsePaginator instance', functio
 });
 
 test('getResponsePaginator() throws an exception when a request has not been made', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\PaginatorException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
-
     expect($this->endpoint->getResponsePaginator())->toBeInstanceOf(HttpResponsePaginator::class);
-});
+})->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);

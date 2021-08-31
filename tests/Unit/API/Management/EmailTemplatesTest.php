@@ -9,46 +9,28 @@ beforeEach(function(): void {
 });
 
 test('create() throws an error when missing `template`', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'template'));
-
     $this->endpoint->create('', '', '', '', '', false);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'template'));
 
 
 test('create() throws an error when missing `body`', function(): void {
-
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
-
     $this->endpoint->create(uniqid(), '', '', '' , '', false);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 
 test('create() throws an error when missing `from`', function(): void {
-
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'from'));
-
     $this->endpoint->create(uniqid(), uniqid(), '', '' , '', false);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'from'));
 
 
 test('create() throws an error when missing `subject`', function(): void {
-
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'subject'));
-
     $this->endpoint->create(uniqid(), uniqid(), uniqid(), '', '', false);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'subject'));
 
 
 test('create() throws an error when missing `syntax`', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'syntax'));
-
     $this->endpoint->create(uniqid(), uniqid(), uniqid(), uniqid(), '', false);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'syntax'));
 
 test('create() issues valid requests', function(): void {
     $template = uniqid();

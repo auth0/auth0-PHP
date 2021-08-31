@@ -8,17 +8,13 @@ beforeEach(function(): void {
     $this->endpoint = $this->api->mock()->emails();
 });
 
-test('createProvider() throws an error when missing required arguments', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
-
+test('createProvider() throws an error when missing `name`', function(): void {
     $this->endpoint->createProvider('', []);
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
 
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'credentials'));
-
+test('createProvider() throws an error when missing `credentials`', function(): void {
     $this->endpoint->createProvider(uniqid(), []);
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'credentials'));
 
 test('createProvider() issues valid requests', function(): void {
     $name = uniqid();

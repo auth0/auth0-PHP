@@ -28,20 +28,13 @@ beforeEach(function(): void {
 });
 
 test('__construct() fails without a configuration', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_CONFIGURATION_REQUIRED);
-
     new Management(null);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_CONFIGURATION_REQUIRED);
 
 test('getHttpClient() fails without a managementToken, if client id and secret are not configured', function(): void {
     $this->configuration->setManagementToken(null);
-
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_MANAGEMENT_KEY);
-
     $this->sdk->management()->blacklists();
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_MANAGEMENT_KEY);
 
 test('blacklists() returns an instance of Auth0\SDK\API\Management\Blacklists', function(): void {
     $class = $this->sdk->management()->blacklists();
@@ -176,11 +169,8 @@ test('usersByEmail() returns an instance of Auth0\SDK\API\Management\UsersByEmai
 });
 
 test('Magic method throws an exception when an invalid class is requested', function(): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_UNKNOWN_METHOD, 'example'));
-
     $class = $this->sdk->management()->example();
-});
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_UNKNOWN_METHOD, 'example'));
 
 test('Caching of management tokens works.', function(): void {
     $managementToken = uniqid();

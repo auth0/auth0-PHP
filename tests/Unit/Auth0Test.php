@@ -306,12 +306,8 @@ test('decode() uses the configured cache handler', function(): void {
     $this->assertArrayHasKey('__test_kid__', $cachedJwks);
     expect($cachedJwks)->toEqual($mockJwks);
 
-    // Ignore that we can't verify using this mock cert, just that it was attempted.
-    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    $this->expectExceptionMessage('Cannot verify signature');
-
     $auth0->decode((new \Auth0\Tests\Utilities\TokenGenerator())->withRs256([], null, ['kid' => '__test_kid__']));
-});
+})->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE);
 
 test('decode() compares `auth_time` against `tokenMaxAge` configuration', function(): void {
     $now = time();
@@ -328,11 +324,8 @@ test('decode() compares `auth_time` against `tokenMaxAge` configuration', functi
         'tokenLeeway' => 0,
     ]);
 
-    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISMATCHED_AUTH_TIME_CLAIM, time(), $now - $drift + $maxAge));
-
     $auth0->decode($token, null, null, null, null, null, $now);
-});
+})->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
 test('decode() converts a string `max_age` value from transient storage into an int', function(): void {
     $now = time();
@@ -351,11 +344,8 @@ test('decode() converts a string `max_age` value from transient storage into an 
     $storage = $auth0->configuration()->getTransientStorage();
     $storage->set('max_age', '10');
 
-    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISMATCHED_AUTH_TIME_CLAIM, time(), $now - $drift + $maxAge));
-
     $auth0->decode($token, null, null, null, null, null, $now);
-});
+})->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
 test('decode() compares `org_id` against `organization` configuration', function(): void {
     $orgId = 'org8675309';
@@ -382,11 +372,8 @@ test('decode() throws an exception when `org_id` claim does not exist, but an `o
         'organization' => ['org8675309'],
     ]);
 
-    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_ORG_ID_CLAIM);
-
     $auth0->decode($token);
-});
+})->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_ORG_ID_CLAIM);
 
 test('decode() throws an exception when `org_id` does not match `organization` configuration', function(): void {
     $expectedOrgId = uniqid();
@@ -401,11 +388,8 @@ test('decode() throws an exception when `org_id` does not match `organization` c
         'organization' => [$expectedOrgId],
     ]);
 
-    $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_MISMATCHED_ORG_ID_CLAIM, $expectedOrgId, $tokenOrgId));
-
     $auth0->decode($token);
-});
+})->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
 test('exchange() returns false if no code is present', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
@@ -428,11 +412,8 @@ test('exchange() returns false if no nonce is stored', function(): void {
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_MISSING_NONCE);
-
     $auth0->exchange();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_MISSING_NONCE);
 
 test('exchange() throws an exception if no code verified was found', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
@@ -443,11 +424,8 @@ test('exchange() throws an exception if no code verified was found', function():
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  null);
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_MISSING_CODE_VERIFIER);
-
     $auth0->exchange();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_MISSING_CODE_VERIFIER);
 
 test('exchange() throws an exception if no state was found', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
@@ -456,11 +434,8 @@ test('exchange() throws an exception if no state was found', function(): void {
 
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  null);
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
     $auth0->exchange();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('exchange() succeeds with a valid id token', function(): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
@@ -583,11 +558,8 @@ test('exchange() throws an exception when code exchange fails', function(): void
     $auth0->configuration()->getTransientStorage()->set('nonce',  uniqid());
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  uniqid());
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_CODE_EXCHANGE);
-
     $auth0->exchange();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_FAILED_CODE_EXCHANGE);
 
 test('exchange() throws an exception when an access token is not returned from code exchange', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
@@ -605,11 +577,8 @@ test('exchange() throws an exception when an access token is not returned from c
     $auth0->configuration()->getTransientStorage()->set('nonce',  uniqid());
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  uniqid());
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_BAD_ACCESS_TOKEN);
-
     $auth0->exchange();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_BAD_ACCESS_TOKEN);
 
 test('renew() throws an exception if there is no refresh token available', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
@@ -629,11 +598,8 @@ test('renew() throws an exception if there is no refresh token available', funct
 
     expect($auth0->exchange())->toBeTrue();
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN);
-
     $auth0->renew();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN);
 
 test('renew() throws an exception if no access token is returned', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
@@ -654,11 +620,8 @@ test('renew() throws an exception if no access token is returned', function(): v
 
     expect($auth0->exchange())->toBeTrue();
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
-
     $auth0->renew();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
 
 test('renew() succeeds under expected and valid conditions', function(): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
@@ -745,66 +708,48 @@ test('getIdToken() performs an exchange if a session is not available', function
 
     $_GET['code'] = uniqid();
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
     $auth0->getIdToken();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('getUser() performs an exchange if a session is not available', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = uniqid();
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
     $auth0->getUser();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('getRefreshToken() performs an exchange if a session is not available', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = uniqid();
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
     $auth0->getRefreshToken();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('getAccessToken() performs an exchange if a session is not available', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = uniqid();
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
     $auth0->getAccessToken();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('getAccessTokenScope() performs an exchange if a session is not available', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = uniqid();
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
     $auth0->getAccessTokenScope();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('getAccessTokenExpiration() performs an exchange if a session is not available', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = uniqid();
 
-    $this->expectException(\Auth0\SDK\Exception\StateException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
     $auth0->getAccessTokenExpiration();
-});
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('setIdToken() properly stores data', function(): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
