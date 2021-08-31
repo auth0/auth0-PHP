@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Auth0\SDK\Utility\PKCE;
 
-uses()->group('pkce', 'utility', 'utility.pkce');
+uses()->group('utility', 'utility.pkce');
 
 test('generateCodeVerifier() throws an exception when an invalid length is used', function(): void {
     $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);

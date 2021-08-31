@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-uses()->group('management', 'management.tenants');
+uses()->group('management', 'management.user_blocks');
 
 beforeEach(function(): void {
     $this->endpoint = $this->api->mock()->userBlocks();

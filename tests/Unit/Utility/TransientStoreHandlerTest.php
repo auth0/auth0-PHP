@@ -6,7 +6,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Store\MemoryStore;
 use Auth0\SDK\Utility\TransientStoreHandler;
 
-uses()->group('networking', 'utility', 'utility.http_telemetry');
+uses()->group('utility', 'utility.transient_store_handler');
 
 beforeEach(function(): void {
     $this->namespace = uniqid();

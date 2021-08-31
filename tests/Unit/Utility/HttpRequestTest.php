@@ -8,7 +8,7 @@ use Auth0\SDK\Utility\HttpRequest;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Psr\Http\Client\ClientExceptionInterface;
 
-uses()->group('utility', 'networking', 'httpRequest');
+uses()->group('utility', 'utility.http_request', 'networking');
 
 beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([

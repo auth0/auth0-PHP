@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-uses()->group('configuration', 'traits', 'mixins');
+uses()->group('mixin', 'mixin.configurable');
 
 test('get() throws a ConfigurationException exception when a value is missing', function(): void {
     $configurable = new class() {

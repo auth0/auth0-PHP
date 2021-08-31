@@ -7,7 +7,7 @@ use Auth0\SDK\Utility\Request\RequestOptions;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\MockManagementApi;
 
-uses()->group('network')->group('pagination');
+uses()->group('utility', 'utility.http_response_paginator', 'networking');
 
 beforeEach(function(): void {
     $this->usePagination = new RequestOptions(null, new PaginatedRequest(0, 1, true));

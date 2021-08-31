@@ -7,7 +7,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
-uses()->group('utility', 'psr14', 'events');
+uses()->group('event', 'event.http_request_built');
 
 it('handles RequestInterface properly', function(): void {
     $request1 = new class() implements RequestInterface {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Utility\HttpTelemetry;
 
-uses()->group('networking', 'utility', 'utility.http_telemetry');
+uses()->group('utility', 'utility.http_telemetry', 'networking');
 
 beforeEach(function(): void {
     HttpTelemetry::reset();

@@ -2,12 +2,7 @@
 
 declare(strict_types=1);
 
-use Auth0\SDK\Utility\Request\FilteredRequest;
-use Auth0\SDK\Utility\Request\PaginatedRequest;
-use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\Tests\Utilities\MockManagementApi;
-
-uses()->group('management', 'actions');
+uses()->group('management', 'management.actions');
 
 beforeEach(function(): void {
     $this->endpoint = $this->api->mock()->actions();
@@ -16,19 +11,33 @@ beforeEach(function(): void {
 test('create() issues valid requests', function(array $body): void {
     $this->endpoint->create($body);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 
-    $request = $this->api->getRequestBody();
-    $this->assertArrayHasKey('name', $request);
-    $this->assertArrayHasKey('supported-triggers', $request);
+    expect($this->api->getRequestBody())
+        ->toHaveKey('name')
+        ->toHaveKey('supported-triggers')
+        ->toHaveKey('code')
+        ->toHaveKey('dependencies')
+        ->toHaveKey('runtime')
+        ->toHaveKey('secrets')
+        ->name
+            ->toEqual('my-action')
+        ->dependencies
+            ->toBeArray()
+            ->sequence(
+                fn ($value, $key) => $value->toHaveKey('version', 1)
+            )
+        ->secrets
+            ->toBeArray()
+            ->sequence(
+                fn ($value, $key) => $value->toHaveKey('name', 'mySecret')->toHaveKey('value', 'mySecretValue')
+            );
 
-    $this->assertEquals('my-action', $request['name']);
-    $this->assertIsArray($request['supported-triggers']);
-
-    $request = $this->api->getRequestBodyAsString();
-    $this->assertEquals('{"name":"my-action","supported-triggers":[{"id":"post-login","version":"v2"}],"code":"module.exports = () => {}","dependencies":[{"name":"lodash","version":"1.0.0"}],"runtime":"node12","secrets":[{"name":"mySecret","value":"mySecretValue"}]}', $request);
+    expect($this->api->getRequestBodyAsString())
+        ->toEqual(json_encode($body))
+        ->json();
 })->with(['valid body' => [
     fn() => [
         'name' => 'my-action',
@@ -42,7 +51,7 @@ test('create() issues valid requests', function(array $body): void {
         'dependencies' => [
             (object) [
                 'name' => 'lodash',
-                'version' => '1.0.0'
+                'version' => 1
             ],
         ],
         'runtime' => 'node12',
@@ -55,35 +64,30 @@ test('create() issues valid requests', function(array $body): void {
     ]
 ]]);
 
-test('create() throws an error with an empty body', function(array $body): void {
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
-
-    $this->endpoint->create($body);
-})->with(['empty body' => [
-    fn() => []
-]]);
+test('create() throws an error with an empty body', function(): void {
+    $this->endpoint->create([]);
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('getAll() issues valid requests', function(): void {
     $this->endpoint->getAll();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
-test('getAll() issues valid requests using parameters', function(array $parameters): void {
-    $this->endpoint->getAll($parameters);
+test('getAll() issues valid requests using parameters', function(string $triggerId, string $actionName): void {
+    $this->endpoint->getAll(['triggerId' => $triggerId, 'actionName' => $actionName]);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions', $this->api->getRequestUrl());
-    $this->assertStringContainsString('&triggerId=' . $parameters['triggerId'], $this->api->getRequestQuery());
-    $this->assertStringContainsString('&actionName=' . $parameters['actionName'], $this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/actions?');
+
+    expect($this->api->getRequestQuery())
+        ->toContain('&triggerId=' . $triggerId)
+        ->toContain('&actionName=' . $actionName);
 })->with(['valid parameters' => [
-    fn() => [
-        'triggerId' => uniqid(),
-        'actionName' => uniqid()
-    ]
+    fn() => uniqid(),
+    fn() => uniqid()
 ]]);
 
 test('get() issues valid requests', function(string $id): void {

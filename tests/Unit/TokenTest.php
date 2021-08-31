@@ -8,7 +8,7 @@ use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-// uses()->group('token');
+uses()->group('token');
 
 beforeEach(function() {
     $this->cache = new ArrayAdapter();

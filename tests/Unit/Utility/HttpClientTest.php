@@ -8,7 +8,7 @@ use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 
-uses()->group('utility', 'networking');
+uses()->group('utility', 'utility.http_client', 'networking');
 
 beforeEach(function(): void {
     $this->config = new SdkConfiguration([
