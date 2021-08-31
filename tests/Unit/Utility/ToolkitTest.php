@@ -59,7 +59,7 @@ test('merge() merges two or more arrays and ignores items with null values', fun
 });
 
 test('every() returns true if no value is false', function(): void {
-    $items = ['a' => 'Testing', 'b' => 123, 'c' => uniqid()];
+    $items = ['Testing', 123, uniqid()];
 
     $result = Toolkit::every(null, ...$items);
 
@@ -67,13 +67,13 @@ test('every() returns true if no value is false', function(): void {
 });
 
 test('every() throws an error if any value is null', function(): void {
-    $items = ['a' => 'Testing', 'b' => 123, 'c' => null];
+    $items = ['Testing', 123, null];
 
     Toolkit::every(new \Exception('foobar'), ...$items);
 })->throws(\Exception::class, 'foobar');
 
 test('every() returns false if any value is null when no exception is provided', function(): void {
-    $items = ['a' => 'Testing', 'b' => 123, 'c' => null];
+    $items = ['Testing', 123, null];
 
     $result = Toolkit::every(null, ...$items);
 
@@ -81,8 +81,8 @@ test('every() returns false if any value is null when no exception is provided',
 });
 
 test('some() does not throw an error if some values are null, and removes keys with null values in the response', function(): void {
-    $items = ['a' => 'Testing', 'b' => 123, 'c' => null];
-    $expected = ['a' => 'Testing', 'b' => 123];
+    $items = ['Testing', 123, null];
+    $expected = ['Testing', 123];
 
     $result = Toolkit::some(new \Exception('foobar'), ...$items);
 
@@ -90,7 +90,7 @@ test('some() does not throw an error if some values are null, and removes keys w
 });
 
 test('some() returns false if all values are null when no exception is provided', function(): void {
-    $items = ['a' => null, 'b' => null, 'c' => null];
+    $items = [null, null, null];
 
     $result = Toolkit::some(null, ...$items);
 
@@ -98,7 +98,7 @@ test('some() returns false if all values are null when no exception is provided'
 });
 
 test('some() throws an error if all values are null', function(): void {
-    $items = ['a' => null, 'b' => null, 'c' => null];
+    $items = [null, null, null];
 
     Toolkit::some(new \Exception('foobar'), ...$items);
 })->throws(\Exception::class, 'foobar');
