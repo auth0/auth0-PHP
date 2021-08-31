@@ -58,6 +58,16 @@ test('verify() throws an error when token alg claim is not supported', function(
     new Verifier($this->configuration, '', '', ['alg' => uniqid()]);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
+test('verify() throws an exception signature is incorrect', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
+    $headers = TokenGenerator::decodePart($headers);
+    $cache = new ArrayAdapter();
+    $item = $cache->getItem($jwksCacheKey);
+    $item->set(['__test_kid__' => ['x5c' => [$keyPair['cert']]]]);
+    $cache->save($item);
+
+    new Verifier($this->configuration, $payload, uniqid(), $headers, Token::ALGO_RS256, $jwksUri, null, null, $cache);
+})->with('tokenRs256')->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE);
+
 // RS256-specific tests:
 
 test('[RS256] verify() throws an error when token kid claim is missing', function(): void {
@@ -71,6 +81,60 @@ test('[RS256] getKeySet() throws an error when jwks uri is not configured', func
 test('[RS256] getKeySet() throws an error when jwks uri is not reachable', function($jwksUri): void {
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => uniqid()], null, $jwksUri);
 })->with('jwksUri')->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
+
+test('[RS256] getKeySet() throws an error when jwks uri is not a valid url', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
+    new Verifier($this->configuration, $payload, $signature, TokenGenerator::decodePart($headers, true), Token::ALGO_RS256, ':', null, null);
+})->with('tokenRs256')->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
+
+test('[RS256] getKeySet() makes a network request to fetch JWKS and caches the result', function($jwksUri, $jwksCacheKey): void {
+    $cache = new ArrayAdapter();
+
+    $httpResponses = [
+        (object) ['response' => \Auth0\Tests\Utilities\HttpResponseGenerator::create(json_encode([
+            'keys' => [
+                (object) [
+                    'alg' => 'RS256',
+                    'kty' => 'RSA',
+                    'use' => 'sig',
+                    'n' => uniqid(),
+                    'e' => uniqid(),
+                    'kid' => uniqid(),
+                    'x5t' => uniqid(),
+                    'x5c' => [
+                        uniqid()
+                    ]
+                ]
+            ]
+        ])), 'callback' => null, 'exception' => null],
+    ];
+
+    new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => '__test_kid__'], null, $jwksUri, null, null, $cache, $httpResponses);
+})->with('jwksUri')->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE_MISSING_KID);
+
+test('[RS256] getKeySet() throws an exception if an incompatible signing algorithm is returned from the JWKS payload', function($jwksUri, $jwksCacheKey): void {
+    $differentKeyPair = TokenGenerator::generateDsaKeyPair();
+
+    $httpResponses = [
+        (object) ['response' => \Auth0\Tests\Utilities\HttpResponseGenerator::create(json_encode([
+            'keys' => [
+                (object) [
+                    'alg' => 'RS256',
+                    'kty' => 'RSA',
+                    'use' => 'sig',
+                    'n' => uniqid(),
+                    'e' => uniqid(),
+                    'kid' => '__test_kid_1234__',
+                    'x5t' => uniqid(),
+                    'x5c' => [
+                        str_replace(['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\n"], '', $differentKeyPair['cert'])
+                    ]
+                ]
+            ]
+        ])), 'callback' => null, 'exception' => null],
+    ];
+
+    new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => '__test_kid_1234__'], null, $jwksUri, null, null, null, $httpResponses);
+})->with('jwksUri')->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE_INCOMPATIBLE_ALGORITHM);
 
 test('[RS256] getKeySet() does not make a network request when there are matching cached results', function($jwksUri, $jwksCacheKey): void {
     $cache = new ArrayAdapter();

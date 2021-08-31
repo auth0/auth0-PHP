@@ -35,17 +35,72 @@ it('accepts and successfully parses a valid RS256 ID Token', function(
 ): void {
     $token = new Parser($jwt->token, $configuration);
 
-    expect($token)->toBeObject();
-    expect($token->getClaims())->toBeArray();
-    // $this->assertEquals($jwt->claims['aud'] ?? null, $token->getAudience()[0] ?? null);
-    // $this->assertEquals($jwt->claims['azp'] ?? null, $token->getAuthorizedParty());
-    // $this->assertEquals($jwt->claims['auth_time'] ?? null, $token->getAuthTime());
-    // $this->assertEquals($jwt->claims['exp'] ?? null, $token->getExpiration());
-    // $this->assertEquals($jwt->claims['iat'] ?? null, $token->getIssued());
-    // $this->assertEquals($jwt->claims['iss'] ?? null, $token->getIssuer());
-    // $this->assertEquals($jwt->claims['nonce'] ?? null, $token->getNonce());
-    // $this->assertEquals($jwt->claims['org_id'] ?? null, $token->getOrganization());
-    // $this->assertEquals($jwt->claims['sub'] ?? null, $token->getSubject());
+    expect($token)
+        ->toBeObject()
+        ->getClaims()
+            ->toBeArray()
+            ->toHaveKey('aud', $jwt->claims['aud'])
+            ->toHaveKey('azp', $jwt->claims['azp'])
+            ->toHaveKey('auth_time', $jwt->claims['auth_time'])
+            ->toHaveKey('exp', $jwt->claims['exp'])
+            ->toHaveKey('iat', $jwt->claims['iat'])
+            ->toHaveKey('iss', $jwt->claims['iss'])
+            ->toHaveKey('nonce', $jwt->claims['nonce'])
+            ->toHaveKey('org_id', $jwt->claims['org_id'])
+            ->toHaveKey('sub', $jwt->claims['sub']);
+})->with(['mocked rs256 id token' => [
+    function() {
+        $this->configuration->setOrganization(['org123']);
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_RS256, ['org_id' => 'org123'])
+]]);
+
+it('defaults to a `jwt` `typ` header if none was present', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Parser($jwt->token, $configuration);
+
+    expect($token)
+        ->toBeObject()
+        ->getHeader('typ')
+            ->toEqual('JWT');
+})->with(['mocked rs256 id token' => [
+    fn() => $this->configuration,
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_RS256, [], ['typ' => null])
+]]);
+
+test('hasClaim() returns expected values', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Parser($jwt->token, $configuration);
+    expect($token->hasClaim('aud'))->toBeTrue();
+    expect($token->hasClaim('xyz'))->toBeFalse();
+})->with(['mocked rs256 id token' => [
+    fn() => $this->configuration,
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_RS256)
+]]);
+
+test('hasHeader() returns expected values', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Parser($jwt->token, $configuration);
+    expect($token->hasHeader('typ'))->toBeTrue();
+    expect($token->hasHeader('xyz'))->toBeFalse();
+})->with(['mocked rs256 id token' => [
+    fn() => $this->configuration,
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_RS256)
+]]);
+
+test('getRaw() returns a raw token string', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Parser($jwt->token, $configuration);
+    expect($token->getRaw())->toEqual($jwt->token);
 })->with(['mocked rs256 id token' => [
     fn() => $this->configuration,
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_RS256)

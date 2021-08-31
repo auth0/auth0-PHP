@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Utilities;
 
-use DomainException;
 use Firebase\JWT\JWT;
-use stdClass;
 
 /**
  * Class TokenGenerator.
@@ -55,6 +53,27 @@ class TokenGenerator
         $privateKeyResource = openssl_pkey_new([
             'digest_alg' => 'sha256',
             'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ]);
+
+        openssl_pkey_export($privateKeyResource, $privateKey);
+        $publicKey = openssl_pkey_get_details($privateKeyResource);
+
+        $resCsr = openssl_csr_new([], $privateKeyResource);
+        $resCert = openssl_csr_sign($resCsr, null, $privateKeyResource, 30);
+        openssl_x509_export($resCert, $x509);
+
+        return [
+            'private' => $privateKey,
+            'public' => $publicKey['key'],
+            'cert' => $x509,
+        ];
+    }
+
+    public static function generateDsaKeyPair(): array
+    {
+        $privateKeyResource = openssl_pkey_new([
+            'digest_alg' => 'sha256',
+            'private_key_type' => OPENSSL_KEYTYPE_DSA,
         ]);
 
         openssl_pkey_export($privateKeyResource, $privateKey);

@@ -64,16 +64,24 @@ final class Verifier
     private SdkConfiguration $configuration;
 
     /**
+     * Mocked responses for HTTP requests; only used in unit tests.
+     *
+     * array<object>
+     */
+    private ?array $mockedHttpResponses = null;
+
+    /**
      * Constructor for the Token Verifier class.
      *
-     * @param string                      $payload      A string representing the headers and claims portions of a JWT.
-     * @param string                      $signature    A string representing the signature portion of a JWT.
-     * @param array<int|string>           $headers      An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
-     * @param string|null                 $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
-     * @param string|null                 $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null                 $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null                    $cacheExpires Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheItemPoolInterface|null $cache        Optional. A PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
+     * @param string                      $payload             A string representing the headers and claims portions of a JWT.
+     * @param string                      $signature           A string representing the signature portion of a JWT.
+     * @param array<int|string>           $headers             An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
+     * @param string|null                 $algorithm           Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
+     * @param string|null                 $jwksUri             Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param string|null                 $clientSecret        Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param int|null                    $cacheExpires        Optional. Time in seconds to keep JWKS records cached.
+     * @param CacheItemPoolInterface|null $cache               Optional. A PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
+     * @param array<object>|null          $mockedHttpResponses Optional. Only intended for unit testing purposes.
      */
     public function __construct(
         SdkConfiguration $configuration,
@@ -84,7 +92,8 @@ final class Verifier
         ?string $jwksUri = null,
         ?string $clientSecret = null,
         ?int $cacheExpires = null,
-        ?CacheItemPoolInterface $cache = null
+        ?CacheItemPoolInterface $cache = null,
+        ?array &$mockedHttpResponses = null
     ) {
         $this->configuration = $configuration;
         $this->payload = $payload;
@@ -95,6 +104,7 @@ final class Verifier
         $this->clientSecret = $clientSecret;
         $this->cacheExpires = $cacheExpires;
         $this->cache = $cache;
+        $this->mockedHttpResponses = & $mockedHttpResponses;
 
         $this->verify();
     }
@@ -173,7 +183,7 @@ final class Verifier
         $jwksCacheKey = hash('sha256', $this->jwksUri);
         $jwksUri = parse_url($this->jwksUri);
 
-        if (! is_array($jwksUri)) {
+        if ($jwksCacheKey === false || ! is_array($jwksUri)) {
             return [];
         }
 
@@ -193,7 +203,7 @@ final class Verifier
             }
         }
 
-        $keys = (new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', $path, [], $scheme . '://' . $host))->call();
+        $keys = (new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', $path, [], $scheme . '://' . $host, $this->mockedHttpResponses))->call();
 
         if (HttpResponse::wasSuccessful($keys)) {
             try {
@@ -260,6 +270,8 @@ final class Verifier
      * Free key resource in PHP <8.0.
      *
      * @param mixed $key An instance of OpenSSLAsymmetricKey (PHP 8.0+) or 'resource' (PHP <8.0).
+     *
+     * @codeCoverageIgnore
      */
     private function freeKey(
         $key
