@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Store\MemoryStore;
 
 uses()->group('auth0');
 
