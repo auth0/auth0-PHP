@@ -45,6 +45,7 @@
   "require-dev": {
     "ergebnis/phpstan-rules": "^0.15",
     "firebase/php-jwt": "^5.0",
+    "hyperf/event": "^2.2",
     "infection/infection": "^0.23",
     "mockery/mockery": "^1.4",
     "nunomaduro/phpinsights": "^2.0",
