@@ -6,6 +6,7 @@ use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Utility\HttpRequest;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -166,6 +167,14 @@ test('usersByEmail() returns an instance of Auth0\SDK\API\Management\UsersByEmai
     $class = $this->sdk->management()->usersByEmail();
 
     expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\UsersByEmail::class);
+});
+
+test('getLastRequest() returns an HttpRequest or null', function(): void {
+    expect($this->sdk->management()->getLastRequest())->toBeNull();
+
+    $this->sdk->management()->users()->getAll();
+
+    expect($this->sdk->management()->getLastRequest())->toBeInstanceOf(HttpRequest::class);
 });
 
 test('Magic method throws an exception when an invalid class is requested', function(): void {

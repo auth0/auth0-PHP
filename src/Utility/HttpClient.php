@@ -92,6 +92,8 @@ final class HttpClient
 
     /**
      * Inject a series of Psr\Http\Message\ResponseInterface objects into created HttpRequest clients.
+     *
+     * @codeCoverageIgnore
      */
     public function mockResponse(
         ResponseInterface $response,
@@ -111,6 +113,8 @@ final class HttpClient
      * Inject a series of Psr\Http\Message\ResponseInterface objects into created HttpRequest clients.
      *
      * @param array<ResponseInterface|array> $responses An array of ResponseInterface objects, or an array of arrays containing ResponseInterfaces with callbacks.
+     *
+     * @codeCoverageIgnore
      */
     public function mockResponses(
         array $responses
