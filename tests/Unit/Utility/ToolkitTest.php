@@ -6,10 +6,6 @@ use Auth0\SDK\Utility\Toolkit;
 
 uses()->group('utility', 'utility.toolkit');
 
-// beforeEach(function(): void {
-//     $this->toolkit = Toolkit
-// });
-
 test('assert() returns an instance of \Auth0\SDK\Utility\Toolkit\Assert', function(): void {
     expect(Toolkit::assert([1,2,3]))->toBeInstanceOf(\Auth0\SDK\Utility\Toolkit\Assert::class);
 });
