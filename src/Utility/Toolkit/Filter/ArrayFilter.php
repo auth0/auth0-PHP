@@ -116,7 +116,7 @@ final class ArrayFilter
             $values = Toolkit::some($exception, $subject);
 
             if ($values !== false) {
-                $results[] = array_slice(current($values), 0)[0];
+                $results[] = array_slice($values, 0)[0];
                 continue;
             }
         }

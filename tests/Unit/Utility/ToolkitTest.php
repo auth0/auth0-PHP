@@ -61,7 +61,7 @@ test('merge() merges two or more arrays and ignores items with null values', fun
 test('every() returns true if no value is false', function(): void {
     $items = ['Testing', 123, uniqid()];
 
-    $result = Toolkit::every(null, ...$items);
+    $result = Toolkit::every(null, $items);
 
     expect($result)->toBeTrue();
 });
@@ -69,13 +69,13 @@ test('every() returns true if no value is false', function(): void {
 test('every() throws an error if any value is null', function(): void {
     $items = ['Testing', 123, null];
 
-    Toolkit::every(new \Exception('foobar'), ...$items);
+    Toolkit::every(new \Exception('foobar'), $items);
 })->throws(\Exception::class, 'foobar');
 
 test('every() returns false if any value is null when no exception is provided', function(): void {
     $items = ['Testing', 123, null];
 
-    $result = Toolkit::every(null, ...$items);
+    $result = Toolkit::every(null, $items);
 
     expect($result)->toBeFalse();
 });
@@ -84,7 +84,7 @@ test('some() does not throw an error if some values are null, and removes keys w
     $items = ['Testing', 123, null];
     $expected = ['Testing', 123];
 
-    $result = Toolkit::some(new \Exception('foobar'), ...$items);
+    $result = Toolkit::some(new \Exception('foobar'), $items);
 
     expect($result)->toEqual($expected);
 });
@@ -92,7 +92,7 @@ test('some() does not throw an error if some values are null, and removes keys w
 test('some() returns false if all values are null when no exception is provided', function(): void {
     $items = [null, null, null];
 
-    $result = Toolkit::some(null, ...$items);
+    $result = Toolkit::some(null, $items);
 
     expect($result)->toBeFalse();
 });
@@ -100,5 +100,5 @@ test('some() returns false if all values are null when no exception is provided'
 test('some() throws an error if all values are null', function(): void {
     $items = [null, null, null];
 
-    Toolkit::some(new \Exception('foobar'), ...$items);
+    Toolkit::some(new \Exception('foobar'), $items);
 })->throws(\Exception::class, 'foobar');
