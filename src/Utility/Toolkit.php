@@ -103,8 +103,6 @@ final class Toolkit
         ?\Throwable $exception = null,
         ...$values
     ): bool {
-        $values = array_values($values);
-
         foreach ($values as $value) {
             if ($value === null) {
                 if ($exception !== null) {
@@ -133,10 +131,10 @@ final class Toolkit
         ...$values
     ) {
         // Trim the array of null values.
-        $result = self::filter($values)->array()->trim();
+        [$trimmed] = self::filter([$values])->array()->trim();
 
         // All values were null, throw an exception.
-        if (count($result) === 0 || count($result) === 1 && is_array($result[0]) && count($result[0]) === 0) {
+        if (count($trimmed) === 0) {
             if ($exception !== null) {
                 throw $exception;
             }
@@ -145,6 +143,6 @@ final class Toolkit
         }
 
         // Return all non-null values.
-        return $result;
+        return $trimmed;
     }
 }

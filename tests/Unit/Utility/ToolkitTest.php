@@ -84,7 +84,7 @@ test('some() does not throw an error if some values are null, and removes keys w
     $items = ['a' => 'Testing', 'b' => 123, 'c' => null];
     $expected = ['a' => 'Testing', 'b' => 123];
 
-    [$result] = Toolkit::some(new \Exception('foobar'), $items);
+    $result = Toolkit::some(new \Exception('foobar'), ...$items);
 
     expect($result)->toEqual($expected);
 });
@@ -92,7 +92,7 @@ test('some() does not throw an error if some values are null, and removes keys w
 test('some() returns false if all values are null when no exception is provided', function(): void {
     $items = ['a' => null, 'b' => null, 'c' => null];
 
-    $result = Toolkit::some(null, $items);
+    $result = Toolkit::some(null, ...$items);
 
     expect($result)->toBeFalse();
 });
@@ -100,5 +100,5 @@ test('some() returns false if all values are null when no exception is provided'
 test('some() throws an error if all values are null', function(): void {
     $items = ['a' => null, 'b' => null, 'c' => null];
 
-    Toolkit::some(new \Exception('foobar'), $items);
+    Toolkit::some(new \Exception('foobar'), ...$items);
 })->throws(\Exception::class, 'foobar');
