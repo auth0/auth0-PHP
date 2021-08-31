@@ -25,7 +25,7 @@ it('does not persist user data when configured so', function(): void {
     $auth0->setUser(['sub' => '__test_user__']);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + ['persistUser' => false]);
-    $this->assertNull($auth0->getUser());
+    expect($auth0->getUser())->toBeNull();
 });
 
 
@@ -78,110 +78,122 @@ it('uses the configured session storage handler', function(): void {
     $auth0->setUser(['sub' => '__test_user__']);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + ['sessionStorage' => $storeMock]);
-    $this->assertEquals(['__test_custom_store__user__'], $auth0->getUser());
+    expect($auth0->getUser())->toEqual(['__test_custom_store__user__']);
 });
 
 test('authentication() returns an instance of the Authentication class', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-    $this->assertInstanceOf(\Auth0\SDK\API\Authentication::class, $auth0->authentication());
+    expect($auth0->authentication())->toBeInstanceOf(\Auth0\SDK\API\Authentication::class);
 });
 
 test('management() returns an instance of the Management class', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-    $this->assertInstanceOf(\Auth0\SDK\API\Management::class, $auth0->management());
+    expect($auth0->management())->toBeInstanceOf(\Auth0\SDK\API\Management::class);
 });
 
 test('configuration() returns the same instance of the SdkConfiguration class that was provided at instantiation', function(): void {
     $configuration = new SdkConfiguration($this->configuration);
     $auth0 = new \Auth0\SDK\Auth0($configuration);
-    $this->assertInstanceOf(\Auth0\SDK\Configuration\SdkConfiguration::class, $auth0->configuration());
-    $this->assertEquals($configuration, $auth0->configuration());
+
+    expect($auth0->configuration())
+        ->toBeInstanceOf(\Auth0\SDK\Configuration\SdkConfiguration::class)
+        ->toEqual($configuration);
 });
 
 test('getLoginLink() returns expected default value', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
-    $parsed_url = parse_url($auth0->authentication()->getLoginLink(uniqid()));
+    $url = parse_url($auth0->authentication()->getLoginLink(uniqid()));
 
-    $this->assertEquals('https', $parsed_url['scheme']);
-    $this->assertEquals('__test_domain__', $parsed_url['host']);
-    $this->assertEquals('/authorize', $parsed_url['path']);
-
-    $url_query = explode('&', $parsed_url['query']);
-
-    $this->assertContains('scope=openid%20profile%20email', $url_query);
-    $this->assertContains('response_type=code', $url_query);
-    $this->assertContains('redirect_uri=__test_redirect_uri__', $url_query);
-    $this->assertContains('client_id=__test_client_id__', $url_query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('scope=openid%20profile%20email')
+            ->toContain('response_type=code')
+            ->toContain('redirect_uri=__test_redirect_uri__')
+            ->toContain('client_id=' . $this->configuration['clientId']);
 });
 
 test('getLoginLink() returns expected value when supplying parameters', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
-    $custom_params = [
-        'connection' => '__test_connection__',
-        'prompt' => 'none',
-        'audience' => '__test_audience__',
-        'state' => '__test_state__',
-        'invitation' => '__test_invitation__',
+    $params = [
+        'connection' => uniqid(),
+        'prompt' => uniqid(),
+        'audience' => uniqid(),
+        'state' => uniqid(),
+        'invitation' => uniqid(),
     ];
 
-    $auth_url = $auth0->authentication()->getLoginLink(uniqid(), null, $custom_params);
-    $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-    $url_query = explode('&', $parsed_url_query);
+    $url = parse_url($auth0->authentication()->getLoginLink(uniqid(), null, $params));
 
-    $this->assertContains('redirect_uri=__test_redirect_uri__', $url_query);
-    $this->assertContains('client_id=__test_client_id__', $url_query);
-    $this->assertContains('connection=__test_connection__', $url_query);
-    $this->assertContains('prompt=none', $url_query);
-    $this->assertContains('audience=__test_audience__', $url_query);
-    $this->assertContains('state=__test_state__', $url_query);
-    $this->assertContains('invitation=__test_invitation__', $url_query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('scope=openid%20profile%20email')
+            ->toContain('response_type=code')
+            ->toContain('prompt=' . $params['prompt'])
+            ->toContain('state=' . $params['state'])
+            ->toContain('invitation=' . $params['invitation'])
+            ->toContain('audience=' . $params['audience'])
+            ->toContain('connection=' . $params['connection'])
+            ->toContain('redirect_uri=__test_redirect_uri__')
+            ->toContain('client_id=' . $this->configuration['clientId']);
 });
 
 test('getLoginLink() returns expected value when overriding defaults', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
-    $override_params = [
-        'scope' => 'openid profile email',
-        'response_type' => 'id_token',
+    $params = [
+        'scope' => uniqid(),
+        'response_type' => uniqid(),
         'response_mode' => 'form_post',
     ];
 
-    $auth_url = $auth0->authentication()->getLoginLink(uniqid(), null, $override_params);
-    $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-    $url_query = explode('&', $parsed_url_query);
+    $url = parse_url($auth0->authentication()->getLoginLink(uniqid(), null, $params));
 
-    $this->assertContains('scope=openid%20profile%20email', $url_query);
-    $this->assertContains('response_type=id_token', $url_query);
-    $this->assertContains('response_mode=form_post', $url_query);
-    $this->assertContains('redirect_uri=__test_redirect_uri__', $url_query);
-    $this->assertContains('client_id=__test_client_id__', $url_query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('scope=' . $params['scope'])
+            ->toContain('response_type=' . $params['response_type'])
+            ->toContain('response_mode=form_post')
+            ->toContain('redirect_uri=__test_redirect_uri__')
+            ->toContain('client_id=' . $this->configuration['clientId']);
 });
 
 test('getLoginLink() assigns a nonce and state', function(): void {
-    $custom_config = $this->configuration;
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
-    $auth0 = new \Auth0\SDK\Auth0($custom_config);
+    $url = parse_url($auth0->authentication()->getLoginLink(uniqid(), null, ['nonce' => uniqid()]));
 
-    $auth_url = $auth0->authentication()->getLoginLink(uniqid(), null, ['nonce' => uniqid()]);
-
-    $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-
-    $this->assertStringContainsString('state=', $auth_url);
-    $this->assertStringContainsString('nonce=', $auth_url);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('state=')
+            ->toContain('nonce=');
 });
 
 test('login() assigns a challenge and challenge method when PKCE is enabled', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
-    $auth_url = $auth0->login(uniqid());
+    $url = parse_url($auth0->login(uniqid()));
 
-    $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-    $url_query = explode('&', $parsed_url_query);
-
-    $this->assertStringContainsString('code_challenge=', $parsed_url_query);
-    $this->assertContains('code_challenge_method=S256', $url_query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('code_challenge=')
+            ->toContain('code_challenge_method=S256');
 });
 
 test('login() assigns `max_age` from default values', function(): void {
@@ -189,12 +201,14 @@ test('login() assigns `max_age` from default values', function(): void {
         'tokenMaxAge' => 1000,
     ]);
 
-    $auth_url = $auth0->login(uniqid());
+    $url = parse_url($auth0->login(uniqid()));
 
-    $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-    $url_query = explode('&', $parsed_url_query);
-
-    $this->assertContains('max_age=1000', $url_query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('max_age=1000');
 });
 
 test('login() assigns `max_age` from overridden values', function(): void {
@@ -202,25 +216,29 @@ test('login() assigns `max_age` from overridden values', function(): void {
         'tokenMaxAge' => 1000,
     ]);
 
-    $auth_url = $auth0->login(uniqid(), [
+    $url = parse_url($auth0->login(uniqid(), [
         'max_age' => 1001,
-    ]);
+    ]));
 
-    $parsed_url_query = parse_url($auth_url, PHP_URL_QUERY);
-    $url_query = explode('&', $parsed_url_query);
-
-    $this->assertContains('max_age=1001', $url_query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('max_age=1001');
 });
 
 test('signup() returns a url with a `screen_hint` parameter', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
-    $url = $auth0->signup(uniqid());
+    $url = parse_url($auth0->signup(uniqid()));
 
-    $parsed = parse_url($url, PHP_URL_QUERY);
-    $query = explode('&', $parsed);
-
-    $this->assertContains('screen_hint=signup', $query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('screen_hint=signup');
 });
 
 test('handleInvitation() creates a valid login url', function(): void {
@@ -230,25 +248,21 @@ test('handleInvitation() creates a valid login url', function(): void {
     $_GET['organization'] = '__test_organization__';
     $_GET['organization_name'] = '__test_organization_name__';
 
-    $parsed = parse_url($auth0->handleInvitation());
+    $url = parse_url($auth0->handleInvitation());
 
-    $this->assertEquals('https', $parsed['scheme']);
-    $this->assertEquals('__test_domain__', $parsed['host']);
-    $this->assertEquals('/authorize', $parsed['path']);
-
-    $query = explode('&', $parsed['query']);
-
-    $this->assertContains('scope=openid%20profile%20email', $query);
-    $this->assertContains('response_type=code', $query);
-    $this->assertContains('redirect_uri=__test_redirect_uri__', $query);
-    $this->assertContains('client_id=__test_client_id__', $query);
-    $this->assertContains('invitation=__test_invitation__', $query);
-    $this->assertContains('organization=__test_organization__', $query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('invitation=__test_invitation__')
+            ->toContain('organization=__test_organization__');
 });
 
 test('handleInvitation() returns null if organization invite parameters are not present in query', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-    $this->assertNull($auth0->handleInvitation());
+
+    expect($auth0->handleInvitation())->toBeNull();
 });
 
 test('logout() returns a a valid logout url', function(): void {
@@ -257,14 +271,18 @@ test('logout() returns a a valid logout url', function(): void {
     $returnUrl = uniqid();
     $randomParam = random_int(PHP_INT_MIN, PHP_INT_MAX);
 
-    $url = $auth0->logout($returnUrl, ['rand' => $randomParam]);
+    $url = parse_url($auth0->logout($returnUrl, [
+        'rand' => $randomParam,
+    ]));
 
-    $parsed = parse_url($url, PHP_URL_QUERY);
-    $query = explode('&', $parsed);
-
-    $this->assertContains('returnTo=' . $returnUrl, $query);
-    $this->assertContains('client_id=' . $this->configuration['clientId'], $query);
-    $this->assertContains('rand=' . $randomParam, $query);
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual('__test_domain__')
+        ->path->toEqual('/v2/logout')
+        ->query
+            ->toContain('returnTo=' . $returnUrl)
+            ->toContain('client_id=' . $this->configuration['clientId'])
+            ->toContain('rand=' . $randomParam);
 });
 
 test('decode() uses the configured cache handler', function(): void {
