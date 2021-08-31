@@ -66,7 +66,7 @@ final class Verifier
     /**
      * Mocked responses for HTTP requests; only used in unit tests.
      *
-     * array<object>
+     * @var array<object>
      */
     private ?array $mockedHttpResponses = null;
 
@@ -183,7 +183,8 @@ final class Verifier
         $jwksCacheKey = hash('sha256', $this->jwksUri);
         $jwksUri = parse_url($this->jwksUri);
 
-        if ($jwksCacheKey === false || ! is_array($jwksUri)) {
+        // @phpstan-ignore-next-line
+        if (! is_string($jwksCacheKey) || ! is_array($jwksUri)) {
             return [];
         }
 
