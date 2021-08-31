@@ -95,12 +95,12 @@ final class Toolkit
      * Throw an $exception or return false if any of the provided values are null.
      *
      * @param \Throwable|null $exception An exception to throw if all values are null.
-     * @param array           $values    One or more values to check.
+     * @param array<mixed>    $values    One or more values to check.
      *
      * @throws \Throwable If there are no non-null values.
      */
     public static function every(
-        ?\Throwable $exception = null,
+        ?\Throwable $exception,
         array $values
     ): bool {
         foreach ($values as $value) {
@@ -120,14 +120,14 @@ final class Toolkit
      * Throw an $exception or return false if all the provided values are null.
      *
      * @param \Throwable|null $exception An exception to throw if all values are null.
-     * @param array           $values    One or more values to check.
+     * @param array<mixed>    $values    One or more values to check.
      *
      * @return array<mixed>|false
      *
      * @throws \Throwable If there are no non-null values.
      */
     public static function some(
-        ?\Throwable $exception = null,
+        ?\Throwable $exception,
         array $values
     ) {
         // Trim the array of null values.

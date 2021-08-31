@@ -113,6 +113,10 @@ final class ArrayFilter
         $results = [];
 
         foreach ($this->subject as $subject) {
+            if (! is_array($subject) || count($subject) === 0) {
+                continue;
+            }
+
             $values = Toolkit::some($exception, $subject);
 
             if ($values !== false) {
