@@ -305,7 +305,7 @@ test('decode() uses the configured cache handler', function(): void {
     $cachedJwks = $pool->getItem($cacheKey)->get();
     $this->assertNotEmpty($cachedJwks);
     $this->assertArrayHasKey('__test_kid__', $cachedJwks);
-    $this->assertEquals($mockJwks, $cachedJwks);
+    expect($cachedJwks)->toEqual($mockJwks);
 
     // Ignore that we can't verify using this mock cert, just that it was attempted.
     $this->expectException(\Auth0\SDK\Exception\InvalidTokenException::class);
@@ -372,7 +372,7 @@ test('decode() compares `org_id` against `organization` configuration', function
 
     $decoded = $auth0->decode($token);
 
-    $this->assertEquals($orgId, $decoded->getOrganization());
+    expect($decoded->getOrganization())->toEqual($orgId);
 });
 
 test('decode() throws an exception when `org_id` claim does not exist, but an `organization` is configured', function(): void {
@@ -410,7 +410,7 @@ test('decode() throws an exception when `org_id` does not match `organization` c
 
 test('exchange() returns false if no code is present', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-    $this->assertFalse($auth0->exchange());
+    expect($auth0->exchange())->toBeFalse();
 });
 
 test('exchange() returns false if no nonce is stored', function(): void {
@@ -484,14 +484,14 @@ test('exchange() succeeds with a valid id token', function(): void {
     $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
-    $this->assertTrue($auth0->exchange());
+    expect($auth0->exchange())->toBeTrue();
     $this->assertArrayHasKey('sub', $auth0->getUser());
-    $this->assertEquals('__test_sub__', $auth0->getUser()['sub']);
-    $this->assertEquals($token, $auth0->getIdToken());
-    $this->assertEquals('1.2.3', $auth0->getAccessToken());
-    $this->assertEquals(['test:part1','test:part2','test:part3'], $auth0->getAccessTokenScope());
-    $this->assertGreaterThan(time(), $auth0->getAccessTokenExpiration());
-    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
+    expect($auth0->getUser()['sub'])->toEqual('__test_sub__');
+    expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+    expect($auth0->getAccessTokenScope())->toEqual(['test:part1','test:part2','test:part3']);
+    expect($auth0->getAccessTokenExpiration())->toBeGreaterThan(time());
+    expect($auth0->getRefreshToken())->toEqual('4.5.6');
 });
 
 test('exchange() succeeds with no id token', function(): void {
@@ -510,11 +510,11 @@ test('exchange() succeeds with no id token', function(): void {
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
-    $this->assertTrue($auth0->exchange());
+    expect($auth0->exchange())->toBeTrue();
     $this->assertArrayHasKey('sub', $auth0->getUser());
-    $this->assertEquals('123', $auth0->getUser()['sub']);
-    $this->assertEquals('1.2.3', $auth0->getAccessToken());
-    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
+    expect($auth0->getUser()['sub'])->toEqual('123');
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+    expect($auth0->getRefreshToken())->toEqual('4.5.6');
 });
 
 test('exchange() succeeds with PKCE disabled', function(): void {
@@ -535,10 +535,10 @@ test('exchange() succeeds with PKCE disabled', function(): void {
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
     $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
 
-    $this->assertTrue($auth0->exchange());
-    $this->assertEquals(['sub' => '__test_sub__'], $auth0->getUser());
-    $this->assertEquals('1.2.3', $auth0->getAccessToken());
-    $this->assertEquals('4.5.6', $auth0->getRefreshToken());
+    expect($auth0->exchange())->toBeTrue();
+    expect($auth0->getUser())->toEqual(['sub' => '__test_sub__']);
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+    expect($auth0->getRefreshToken())->toEqual('4.5.6');
 });
 
 test('exchange() skips hitting userinfo endpoint', function(): void {
@@ -562,10 +562,10 @@ test('exchange() skips hitting userinfo endpoint', function(): void {
     $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
-    $this->assertTrue($auth0->exchange());
-    $this->assertEquals('__test_sub__', $auth0->getUser()['sub']);
-    $this->assertEquals($token, $auth0->getIdToken());
-    $this->assertEquals('1.2.3', $auth0->getAccessToken());
+    expect($auth0->exchange())->toBeTrue();
+    expect($auth0->getUser()['sub'])->toEqual('__test_sub__');
+    expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
 });
 
 test('exchange() throws an exception when code exchange fails', function(): void {
@@ -628,7 +628,7 @@ test('renew() throws an exception if there is no refresh token available', funct
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
-    $this->assertTrue($auth0->exchange());
+    expect($auth0->exchange())->toBeTrue();
 
     $this->expectException(\Auth0\SDK\Exception\StateException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN);
@@ -653,7 +653,7 @@ test('renew() throws an exception if no access token is returned', function(): v
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
-    $this->assertTrue($auth0->exchange());
+    expect($auth0->exchange())->toBeTrue();
 
     $this->expectException(\Auth0\SDK\Exception\StateException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
@@ -682,25 +682,25 @@ test('renew() succeeds under expected and valid conditions', function(): void {
     $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
-    $this->assertTrue($auth0->exchange());
+    expect($auth0->exchange())->toBeTrue();
 
     $auth0->renew(['scope' => 'openid']);
     $request = $httpClient->getLastRequest()->getLastRequest();
     parse_str($request->getBody()->__toString(), $requestBody);
 
-    $this->assertEquals('__test_access_token__', $auth0->getAccessToken());
-    $this->assertEquals($token, $auth0->getIdToken());
+    expect($auth0->getAccessToken())->toEqual('__test_access_token__');
+    expect($auth0->getIdToken())->toEqual($token);
 
-    $this->assertEquals('openid', $requestBody['scope']);
-    $this->assertEquals('__test_client_secret__', $requestBody['client_secret']);
-    $this->assertEquals('__test_client_id__', $requestBody['client_id']);
-    $this->assertEquals('2.3.4', $requestBody['refresh_token']);
-    $this->assertEquals('https://__test_domain__/oauth/token', $request->getUri()->__toString());
+    expect($requestBody['scope'])->toEqual('openid');
+    expect($requestBody['client_secret'])->toEqual('__test_client_secret__');
+    expect($requestBody['client_id'])->toEqual('__test_client_id__');
+    expect($requestBody['refresh_token'])->toEqual('2.3.4');
+    expect($request->getUri()->__toString())->toEqual('https://__test_domain__/oauth/token');
 });
 
 test('getCredentials() returns null when a session is not available', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-    $this->assertNull($auth0->getCredentials());
+    expect($auth0->getCredentials())->toBeNull();
 });
 
 test('getCredentials() returns the expected object structure when a session is available', function(): void {
@@ -724,11 +724,11 @@ test('getCredentials() returns the expected object structure when a session is a
     $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
     $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
 
-    $this->assertTrue($auth0->exchange());
+    expect($auth0->exchange())->toBeTrue();
 
     $credentials = $auth0->getCredentials();
 
-    $this->assertIsObject($credentials);
+    expect($credentials)->toBeObject();
 
     $this->assertObjectHasAttribute('user', $credentials);
     $this->assertObjectHasAttribute('idToken', $credentials);
@@ -738,7 +738,7 @@ test('getCredentials() returns the expected object structure when a session is a
     $this->assertObjectHasAttribute('accessTokenExpired', $credentials);
     $this->assertObjectHasAttribute('refreshToken', $credentials);
 
-    $this->assertIsArray($credentials->user);
+    expect($credentials->user)->toBeArray();
 });
 
 test('getIdToken() performs an exchange if a session is not available', function(): void {
@@ -817,8 +817,8 @@ test('setIdToken() properly stores data', function(): void {
 
     $auth0->setIdToken($token);
 
-    $this->assertEquals($token, $auth0->getIdToken());
-    $this->assertEquals($token, $auth0->configuration()->getSessionStorage()->get('idToken'));
+    expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->configuration()->getSessionStorage()->get('idToken'))->toEqual($token);
 });
 
 test('setIdToken() uses `tokenLeeway` configuration', function(): void {
@@ -832,7 +832,7 @@ test('setIdToken() uses `tokenLeeway` configuration', function(): void {
     ]);
 
     $auth0->setIdToken($token);
-    $this->assertEquals($token, $auth0->getIdToken());
+    expect($auth0->getIdToken())->toEqual($token);
 });
 
 test('getRequestParameter() retrieves from $_POST when `responseMode` is configured to `form_post`', function(): void {
@@ -843,7 +843,7 @@ test('getRequestParameter() retrieves from $_POST when `responseMode` is configu
 
     $extracted = $auth0->getRequestParameter('test');
 
-    $this->assertEquals($_POST['test'], $extracted);
+    expect($extracted)->toEqual($_POST['test']);
     $this->assertNotEquals($_GET['test'], $extracted);
 });
 
@@ -862,9 +862,9 @@ test('getInvitationParameters() returns request parameters when valid', function
     $this->assertObjectHasAttribute('organization', $extracted);
     $this->assertObjectHasAttribute('organizationName', $extracted);
 
-    $this->assertEquals($extracted->invitation, '__test_invitation__');
-    $this->assertEquals($extracted->organization, '__test_organization__');
-    $this->assertEquals($extracted->organizationName, '__test_organization_name__');
+    expect('__test_invitation__')->toEqual($extracted->invitation);
+    expect('__test_organization__')->toEqual($extracted->organization);
+    expect('__test_organization_name__')->toEqual($extracted->organizationName);
 });
 
 test('getInvitationParameters() does not return invalid request parameters', function(): void {

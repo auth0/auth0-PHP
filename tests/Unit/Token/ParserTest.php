@@ -38,8 +38,8 @@ it('accepts and successfully parses a valid RS256 ID Token', function(
 ): void {
     $token = new Parser($jwt->token, $configuration);
 
-    $this->assertIsObject($token);
-    $this->assertIsArray($token->getClaims());
+    expect($token)->toBeObject();
+    expect($token->getClaims())->toBeArray();
     // $this->assertEquals($jwt->claims['aud'] ?? null, $token->getAudience()[0] ?? null);
     // $this->assertEquals($jwt->claims['azp'] ?? null, $token->getAuthorizedParty());
     // $this->assertEquals($jwt->claims['auth_time'] ?? null, $token->getAuthTime());

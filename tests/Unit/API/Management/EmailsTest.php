@@ -36,27 +36,27 @@ test('createProvider() issues valid requests', function(): void {
 
     $this->endpoint->createProvider($name, $credentials, ['additional' => $additional]);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/emails/provider', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
     $this->assertArrayHasKey('credentials', $body);
     $this->assertArrayHasKey('additional', $body);
-    $this->assertCount(5, $body['credentials']);
-    $this->assertEquals($name, $body['name']);
-    $this->assertEquals($credentials, $body['credentials']);
-    $this->assertEquals($additional, $body['additional']);
+    expect($body['credentials'])->toHaveCount(5);
+    expect($body['name'])->toEqual($name);
+    expect($body['credentials'])->toEqual($credentials);
+    expect($body['additional'])->toEqual($additional);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]), $body);
+    expect($body)->toEqual(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]));
 });
 
 test('getProvider() issues valid requests', function(): void {
     $this->endpoint->getProvider();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/emails/provider', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/emails/provider');
 });
 
 test('updateProvider() issues valid requests', function(): void {
@@ -75,25 +75,25 @@ test('updateProvider() issues valid requests', function(): void {
 
     $this->endpoint->updateProvider($name, $credentials, ['additional' => $additional]);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/emails/provider', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
     $this->assertArrayHasKey('credentials', $body);
     $this->assertArrayHasKey('additional', $body);
-    $this->assertCount(5, $body['credentials']);
-    $this->assertEquals($name, $body['name']);
-    $this->assertEquals($credentials, $body['credentials']);
-    $this->assertEquals($additional, $body['additional']);
+    expect($body['credentials'])->toHaveCount(5);
+    expect($body['name'])->toEqual($name);
+    expect($body['credentials'])->toEqual($credentials);
+    expect($body['additional'])->toEqual($additional);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]), $body);
+    expect($body)->toEqual(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]));
 });
 
 test('delete() issues valid requests', function(): void {
     $this->endpoint->deleteProvider();
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/emails/provider', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
 });

@@ -11,8 +11,8 @@ beforeEach(function(): void {
 test('getAll() issues valid requests', function(): void {
     $this->endpoint->getAll();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/logs', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/logs');
 });
 
 test('get() issues valid requests', function(): void {
@@ -20,6 +20,6 @@ test('get() issues valid requests', function(): void {
 
     $this->endpoint->get($logId);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/logs/' . $logId, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/logs/' . $logId);
 });

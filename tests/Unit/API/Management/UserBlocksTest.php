@@ -11,9 +11,9 @@ beforeEach(function(): void {
 test('get() issues an appropriate request', function(string $id): void {
     $this->endpoint->get($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/user-blocks/' . $id, $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/user-blocks/' . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['mocked id' => [
     fn() => uniqid(),
 ]]);
@@ -21,9 +21,9 @@ test('get() issues an appropriate request', function(string $id): void {
 test('delete() issues an appropriate request', function(string $id): void {
     $this->endpoint->delete($id);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/user-blocks/' . $id, $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/user-blocks/' . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['mocked id' => [
     fn() => uniqid(),
 ]]);
@@ -31,9 +31,9 @@ test('delete() issues an appropriate request', function(string $id): void {
 test('getByIdentifier() issues an appropriate request', function(string $identifier): void {
     $this->endpoint->getByIdentifier($identifier);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/user-blocks', $this->api->getRequestUrl());
-    $this->assertStringContainsString('identifier=' . $identifier, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/user-blocks');
+    expect($this->api->getRequestQuery(null))->toContain('identifier=' . $identifier);
 })->with(['mocked identifier' => [
     fn() => uniqid(),
 ]]);
@@ -41,9 +41,9 @@ test('getByIdentifier() issues an appropriate request', function(string $identif
 test('deleteByIdentifier() issues an appropriate request', function(string $identifier): void {
     $this->endpoint->deleteByIdentifier($identifier);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/user-blocks', $this->api->getRequestUrl());
-    $this->assertStringContainsString('identifier=' . $identifier, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/user-blocks');
+    expect($this->api->getRequestQuery(null))->toContain('identifier=' . $identifier);
 })->with(['mocked identifier' => [
     fn() => uniqid(),
 ]]);

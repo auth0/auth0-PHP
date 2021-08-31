@@ -14,18 +14,18 @@ test('create() issues an appropriate request', function(): void {
 
     $this->endpoint->create($jti, $aud);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/blacklists/tokens', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/blacklists/tokens');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('aud', $body);
-    $this->assertEquals($aud, $body['aud']);
+    expect($body['aud'])->toEqual($aud);
     $this->assertArrayHasKey('jti', $body);
-    $this->assertEquals($jti, $body['jti']);
+    expect($body['jti'])->toEqual($jti);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['jti' => $jti, 'aud' => $aud]), $body);
+    expect($body)->toEqual(json_encode(['jti' => $jti, 'aud' => $aud]));
 });
 
 test('get() issues valid requests', function(): void {
@@ -33,8 +33,8 @@ test('get() issues valid requests', function(): void {
 
     $this->endpoint->get($aud);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/blacklists/tokens', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/blacklists/tokens');
 
-    $this->assertEquals('aud=' . $aud, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestQuery(null))->toEqual('aud=' . $aud);
 });

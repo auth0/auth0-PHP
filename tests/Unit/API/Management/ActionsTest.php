@@ -172,8 +172,8 @@ test('update() throws an error with an empty body', function(): void {
 test('delete() issues valid requests', function(string $id, ?bool $force): void {
     $this->endpoint->delete($id, $force);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions/' . $id, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/actions/' . $id);
 })->with(['valid id' => [
     fn() => uniqid(),
     fn() => null
@@ -182,9 +182,9 @@ test('delete() issues valid requests', function(string $id, ?bool $force): void 
 test('delete() issues valid requests when using optional ?force parameter', function(string $id, ?bool $force): void {
     $this->endpoint->delete($id, $force);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/actions/' . $id, $this->api->getRequestUrl());
-    $this->assertStringContainsString('&force=false', $this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/actions/' . $id);
+    expect($this->api->getRequestQuery())->toContain('&force=false');
 })->with(['valid id and force=false' => [
     fn() => uniqid(),
     fn() => false
@@ -203,9 +203,9 @@ test('delete() throws an error with an empty id', function(string $id, ?bool $fo
 test('deploy() issues valid requests', function(string $id): void {
     $this->endpoint->deploy($id);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/' . $id . '/deploy', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/' . $id . '/deploy');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid id' => [
     fn() => uniqid()
 ]]);
@@ -222,18 +222,18 @@ test('deploy() throws an error with an empty id', function(string $id): void {
 test('test() issues valid requests', function(string $id, array $body): void {
     $this->endpoint->test($id, $body);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/actions/' . $id . '/test', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions/' . $id . '/test');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 
     $request = $this->api->getRequestBody();
     $this->assertArrayHasKey('payload', $request);
-    $this->assertIsArray($request['payload']);
+    expect($request['payload'])->toBeArray();
     $this->assertArrayHasKey('test', $request['payload'][0]);
-    $this->assertEquals($body['payload'][0]->test, $request['payload'][0]['test']);
+    expect($request['payload'][0]['test'])->toEqual($body['payload'][0]->test);
 
     $request = $this->api->getRequestBodyAsString();
-    $this->assertEquals('{"payload":[{"test":"' . $body['payload'][0]->test . '"}]}', $request);
+    expect($request)->toEqual('{"payload":[{"test":"' . $body['payload'][0]->test . '"}]}');
 })->with(['valid request' => [
     fn() => uniqid(),
     fn() => [
@@ -274,8 +274,8 @@ test('test() throws an error with an empty body', function(string $id, array $bo
 test('getVersion() issues valid requests', function(string $id, string $actionId): void {
     $this->endpoint->getVersion($id, $actionId);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id);
 })->with(['valid id' => [
     fn() => uniqid(),
     fn() => uniqid()
@@ -304,8 +304,8 @@ test('getVersion() throws an error with an empty action id', function(string $id
 test('getVersions() issues valid requests', function(string $actionId): void {
     $this->endpoint->getVersions($actionId);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions');
 })->with(['valid action id' => [
     fn() => uniqid()
 ]]);
@@ -322,9 +322,9 @@ test('getVersions() throws an error with an empty action id', function(string $a
 test('rollbackVersion() issues valid requests', function(string $id, string $actionId): void {
     $this->endpoint->rollbackVersion($id, $actionId);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id . '/deploy', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id . '/deploy');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid request' => [
     fn() => uniqid(),
     fn() => uniqid(),
@@ -353,17 +353,17 @@ test('rollbackVersion() throws an error with an action id', function(string $id,
 test('getTriggers() issues valid requests', function(): void {
     $this->endpoint->getTriggers();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/triggers', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/triggers');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
 test('getTriggerBindings() issues valid requests', function(string $triggerId): void {
     $this->endpoint->getTriggerBindings($triggerId);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid trigger id' => [
     fn() => uniqid(),
 ]]);
@@ -371,18 +371,18 @@ test('getTriggerBindings() issues valid requests', function(string $triggerId): 
 test('updateTriggerBindings() issues valid requests', function(string $triggerId, array $body): void {
     $this->endpoint->updateTriggerBindings($triggerId, $body);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 
     $request = $this->api->getRequestBody();
     $this->assertArrayHasKey('bindings', $request);
-    $this->assertIsArray($request['bindings']);
+    expect($request['bindings'])->toBeArray();
     $this->assertArrayHasKey('ref', $request['bindings'][0]);
-    $this->assertEquals($body['bindings'][0]->ref->value, $request['bindings'][0]['ref']['value']);
+    expect($request['bindings'][0]['ref']['value'])->toEqual($body['bindings'][0]->ref->value);
 
     $request = $this->api->getRequestBodyAsString();
-    $this->assertEquals('{"bindings":[{"ref":{"type":"action_name","value":"my-action"},"display_name":"First Action"},{"ref":{"type":"action_id","value":"a6a5a107-d2e3-45a3-8ff6-1218aa4bf8bd"},"display_name":"Second Action"}]}', $request);
+    expect($request)->toEqual('{"bindings":[{"ref":{"type":"action_name","value":"my-action"},"display_name":"First Action"},{"ref":{"type":"action_id","value":"a6a5a107-d2e3-45a3-8ff6-1218aa4bf8bd"},"display_name":"Second Action"}]}');
 })->with(['valid request' => [
     fn() => uniqid(),
     fn() => [
@@ -445,9 +445,9 @@ test('updateTriggerBindings() throws an error with an empty body', function(stri
 test('getExecution() issues valid requests', function(string $id): void {
     $this->endpoint->getExecution($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/actions/executions/' . $id, $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/executions/' . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid id' => [
     fn() => uniqid()
 ]]);

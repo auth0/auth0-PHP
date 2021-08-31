@@ -18,15 +18,15 @@ beforeEach(function(): void {
 });
 
 it('builds url pathes correctly', function(HttpRequest $client): void {
-    $this->assertEquals('', $client->getUrl());
-    $this->assertEquals('path1', $client->addPath('path1')->getUrl());
-    $this->assertEquals('path1/path2/3', $client->addPath('path2', '3')->getUrl());
+    expect($client->getUrl())->toEqual('');
+    expect($client->addPath('path1')->getUrl())->toEqual('path1');
+    expect($client->addPath('path2', '3')->getUrl())->toEqual('path1/path2/3');
 })->with(['mocked client' => [
     fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
 ]]);
 
 it('adds field filtering params when configured', function(HttpRequest $client): void {
-    $this->assertEquals('?' . http_build_query(['fields' => implode(',', ['a', 'b', 123]), 'include_fields' => 'true'], '', '&', PHP_QUERY_RFC3986), $client->getParams());
+    expect($client->getParams())->toEqual('?' . http_build_query(['fields' => implode(',', ['a', 'b', 123]), 'include_fields' => 'true'], '', '&', PHP_QUERY_RFC3986));
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
@@ -36,7 +36,7 @@ it('adds field filtering params when configured', function(HttpRequest $client):
 ]]);
 
 it('adds classic pagination params when configured', function(HttpRequest $client): void {
-    $this->assertEquals('?' . http_build_query(['page' => 5, 'per_page' => 10, 'include_totals' => 'true'], '', '&', PHP_QUERY_RFC3986), $client->getParams());
+    expect($client->getParams())->toEqual('?' . http_build_query(['page' => 5, 'per_page' => 10, 'include_totals' => 'true'], '', '&', PHP_QUERY_RFC3986));
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
@@ -46,7 +46,7 @@ it('adds classic pagination params when configured', function(HttpRequest $clien
 ]]);
 
 it('adds checkpoints pagination params when configured', function(HttpRequest $client): void {
-    $this->assertEquals('?' . http_build_query(['from' => 123456, 'take' => 25], '', '&', PHP_QUERY_RFC3986), $client->getParams());
+    expect($client->getParams())->toEqual('?' . http_build_query(['from' => 123456, 'take' => 25], '', '&', PHP_QUERY_RFC3986));
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
@@ -56,7 +56,7 @@ it('adds checkpoints pagination params when configured', function(HttpRequest $c
 ]]);
 
 test('withParam() adds a parameter to the URL', function(string $parameter, string $value, HttpRequest $client): void {
-    $this->assertEquals('?' . $parameter . '=' . $value, $client->withParam($parameter, $value)->getParams());
+    expect($client->withParam($parameter, $value)->getParams())->toEqual('?' . $parameter . '=' . $value);
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => (string) uniqid(),
@@ -70,9 +70,9 @@ test('withParam() adds multiple parameters to the URL', function(array $paramete
         '&' . $parameters[2] . '=123',
     ];
 
-    $this->assertEquals($expectedParameterStrings[0], $client->withParam($parameters[0], $values[0])->getParams());
-    $this->assertEquals($expectedParameterStrings[0] . $expectedParameterStrings[1], $client->withParam($parameters[1], $values[1])->getParams());
-    $this->assertEquals($expectedParameterStrings[0] . $expectedParameterStrings[1] . $expectedParameterStrings[2], $client->withParam($parameters[2], $values[2])->getParams());
+    expect($client->withParam($parameters[0], $values[0])->getParams())->toEqual($expectedParameterStrings[0]);
+    expect($client->withParam($parameters[1], $values[1])->getParams())->toEqual($expectedParameterStrings[0] . $expectedParameterStrings[1]);
+    expect($client->withParam($parameters[2], $values[2])->getParams())->toEqual($expectedParameterStrings[0] . $expectedParameterStrings[1] . $expectedParameterStrings[2]);
 })->with(['mocked client and data' => [
     fn() => [(string) uniqid(), (string) uniqid(), (string) uniqid()],
     fn() => [(string) uniqid(), true, 123],
@@ -80,7 +80,7 @@ test('withParam() adds multiple parameters to the URL', function(array $paramete
 ]]);
 
 test('withParam() adds a parameter to the URL with a `true` value', function(string $parameter, bool $value, HttpRequest $client): void {
-    $this->assertEquals('?' . $parameter . '=true', $client->withParam($parameter, $value)->getParams());
+    expect($client->withParam($parameter, $value)->getParams())->toEqual('?' . $parameter . '=true');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => true,
@@ -88,7 +88,7 @@ test('withParam() adds a parameter to the URL with a `true` value', function(str
 ]]);
 
 test('withParam() adds a parameter to the URL with a `false` value', function(string $parameter, bool $value, HttpRequest $client): void {
-    $this->assertEquals('?' . $parameter . '=false', $client->withParam($parameter, $value)->getParams());
+    expect($client->withParam($parameter, $value)->getParams())->toEqual('?' . $parameter . '=false');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => false,
@@ -96,7 +96,7 @@ test('withParam() adds a parameter to the URL with a `false` value', function(st
 ]]);
 
 test('withParam() adds a parameter to the URL with an int value', function(string $parameter, int $value, HttpRequest $client): void {
-    $this->assertEquals('?' . $parameter . '=' . $value, $client->withParam($parameter, $value)->getParams());
+    expect($client->withParam($parameter, $value)->getParams())->toEqual('?' . $parameter . '=' . $value);
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => random_int(0, PHP_INT_MAX),
@@ -104,7 +104,7 @@ test('withParam() adds a parameter to the URL with an int value', function(strin
 ]]);
 
 test('withParam() skips adding parameters with empty values', function(string $parameter, string $value, HttpRequest $client): void {
-    $this->assertEquals('', $client->withParam($parameter, $value)->getParams());
+    expect($client->withParam($parameter, $value)->getParams())->toEqual('');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => '',
@@ -112,7 +112,7 @@ test('withParam() skips adding parameters with empty values', function(string $p
 ]]);
 
 test('withParam() skips adding parameters with null values', function(string $parameter, ?string $value, HttpRequest $client): void {
-    $this->assertEquals('', $client->withParam($parameter, $value)->getParams());
+    expect($client->withParam($parameter, $value)->getParams())->toEqual('');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => null,
@@ -120,7 +120,7 @@ test('withParam() skips adding parameters with null values', function(string $pa
 ]]);
 
 test('withParam() replaces a parameter in the URL', function(string $parameter, string $value, string $replacementValue, HttpRequest $client): void {
-    $this->assertEquals('?' . $parameter . '=' . $replacementValue, $client->withParam($parameter, $value)->withParam($parameter, $replacementValue)->getParams());
+    expect($client->withParam($parameter, $value)->withParam($parameter, $replacementValue)->getParams())->toEqual('?' . $parameter . '=' . $replacementValue);
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => (string) uniqid(),
@@ -132,7 +132,7 @@ test('withFormParam() adds a form parameter to the request body with a `true` va
     $client->withFormParam($parameter, $value);
     $client->call();
 
-    $this->assertEquals($parameter . '=true', $client->getLastRequest()->getBody()->__toString());
+    expect($client->getLastRequest()->getBody()->__toString())->toEqual($parameter . '=true');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => true,
@@ -143,7 +143,7 @@ test('withFormParam() adds a form parameter to the request body with a `false` v
     $client->withFormParam($parameter, $value);
     $client->call();
 
-    $this->assertEquals($parameter . '=false', $client->getLastRequest()->getBody()->__toString());
+    expect($client->getLastRequest()->getBody()->__toString())->toEqual($parameter . '=false');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => false,

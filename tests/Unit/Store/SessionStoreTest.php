@@ -25,7 +25,7 @@ beforeEach(function(): void {
 
 test('set() assigns values as expected', function(string $key, string $value): void {
     $this->store->set($key, $value);
-    $this->assertEquals($value, $_SESSION[$this->namespace . '_' . $key]);
+    expect($_SESSION[$this->namespace . '_' . $key])->toEqual($value);
 })->with(['mocked data' => [
     fn() => uniqid(),
     fn() => uniqid(),
@@ -33,26 +33,26 @@ test('set() assigns values as expected', function(string $key, string $value): v
 
 test('get() retrieves values as expected', function(string $key, string $value): void {
     $_SESSION[$this->namespace . '_' . $key] = $value;
-    $this->assertEquals($value, $this->store->get($key, 'foobar'));
+    expect($this->store->get($key, 'foobar'))->toEqual($value);
 })->with(['mocked data' => [
     fn() => uniqid(),
     fn() => uniqid(),
 ]]);
 
 test('get() retrieves a default value as expected', function(string $key): void {
-    $this->assertEquals('foobar', $this->store->get($key, 'foobar'));
+    expect($this->store->get($key, 'foobar'))->toEqual('foobar');
 })->with(['mocked key' => [
     fn() => uniqid(),
 ]]);
 
 test('delete() clears values as expected', function(string $key, string $value): void {
     $_SESSION[$this->namespace . '_' . $key] = $value;
-    $this->assertTrue(isset($_SESSION[$this->namespace . '_' . $key]));
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeTrue();
 
     $this->store->delete($key);
 
-    $this->assertNull($this->store->get($key));
-    $this->assertFalse(isset($_SESSION[$this->namespace . '_' . $key]));
+    expect($this->store->get($key))->toBeNull();
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeFalse();
 })->with(['mocked data' => [
     fn() => uniqid(),
     fn() => uniqid(),
@@ -60,12 +60,12 @@ test('delete() clears values as expected', function(string $key, string $value):
 
 test('purge() clears values as expected', function(string $key, string $value): void {
     $_SESSION[$this->namespace . '_' . $key] = $value;
-    $this->assertTrue(isset($_SESSION[$this->namespace . '_' . $key]));
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeTrue();
 
     $this->store->purge();
 
-    $this->assertNull($this->store->get($key));
-    $this->assertFalse(isset($_SESSION[$this->namespace . '_' . $key]));
+    expect($this->store->get($key))->toBeNull();
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeFalse();
 })->with(['mocked data' => [
     fn() => uniqid(),
     fn() => uniqid(),

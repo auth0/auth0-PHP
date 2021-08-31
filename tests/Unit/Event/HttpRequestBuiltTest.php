@@ -35,8 +35,8 @@ it('handles RequestInterface properly', function(): void {
     $request2->test = true;
 
     $event = new HttpRequestBuilt($request1);
-    $this->assertEquals($request1, $event->get());
+    expect($event->get())->toEqual($request1);
 
     $event->set($request2);
-    $this->assertEquals($request2, $event->get());
+    expect($event->get())->toEqual($request2);
 });

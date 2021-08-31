@@ -11,15 +11,15 @@ beforeEach(function(): void {
 test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/log-streams', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/log-streams');
 });
 
 test('get() issues an appropriate request', function(): void {
     $this->endpoint->get('123');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/log-streams/123', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/log-streams/123');
 });
 
 test('create() issues an appropriate request', function(): void {
@@ -36,22 +36,22 @@ test('create() issues an appropriate request', function(): void {
 
     $this->endpoint->create($mock->type, $mock->sink, $mock->name);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/log-streams', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/log-streams');
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
-    $this->assertEquals($mock->name, $body['name']);
+    expect($body['name'])->toEqual($mock->name);
     $this->assertArrayHasKey('type', $body);
-    $this->assertEquals($mock->type, $body['type']);
+    expect($body['type'])->toEqual($mock->type);
     $this->assertArrayHasKey('sink', $body);
-    $this->assertEquals($mock->sink, $body['sink']);
+    expect($body['sink'])->toEqual($mock->sink);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode($mock), $body);
+    expect($body)->toEqual(json_encode($mock));
 });
 
 test('update() issues an appropriate request', function(): void {
@@ -64,26 +64,26 @@ test('update() issues an appropriate request', function(): void {
 
     $this->endpoint->update($mock->id, $mock->body);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/log-streams/' . $mock->id, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/log-streams/' . $mock->id);
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
-    $this->assertEquals($mock->body['name'], $body['name']);
+    expect($body['name'])->toEqual($mock->body['name']);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode($mock->body), $body);
+    expect($body)->toEqual(json_encode($mock->body));
 });
 
 test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete('123');
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/log-streams/123', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/log-streams/123');
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 });

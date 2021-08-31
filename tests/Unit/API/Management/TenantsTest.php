@@ -11,24 +11,24 @@ beforeEach(function(): void {
 test('get() issues an appropriate request', function(): void {
     $this->endpoint->getSettings();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/tenants/settings', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/tenants/settings');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
 test('update() issues an appropriate request', function(array $body): void {
     $this->endpoint->updateSettings($body);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/tenants/settings', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/tenants/settings');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 
     $request = $this->api->getRequestBody();
     $this->assertArrayHasKey('test', $request);
-    $this->assertEquals($body['test'], $request['test']);
+    expect($request['test'])->toEqual($body['test']);
 
     $request = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode($body), $request);
+    expect($request)->toEqual(json_encode($body));
 })->with(['mocked data' => [
     fn() => [ 'test' => uniqid() ],
 ]]);

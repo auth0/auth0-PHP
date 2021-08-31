@@ -17,7 +17,7 @@ test('generateCodeVerifier() generates a value of an expected length', function(
     $code_verifier = PKCE::generateCodeVerifier(43);
 
     $this->assertNotEmpty($code_verifier);
-    $this->assertEquals(43, mb_strlen($code_verifier));
+    expect(mb_strlen($code_verifier))->toEqual(43);
 });
 
 test('generateCodeChallenge() generates an expected value', function(): void {
@@ -26,5 +26,5 @@ test('generateCodeChallenge() generates an expected value', function(): void {
     $code_challenge = PKCE::generateCodeChallenge($codeVerifier);
 
     $this->assertNotEmpty($code_challenge);
-    $this->assertEquals('f3X4JO4FpNodO254hdZAMCYKE4fzFn8ezYlLUr5qjH4', $code_challenge);
+    expect($code_challenge)->toEqual('f3X4JO4FpNodO254hdZAMCYKE4fzFn8ezYlLUr5qjH4');
 });

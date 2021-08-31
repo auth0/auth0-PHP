@@ -11,25 +11,25 @@ beforeEach(function(): void {
 test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll(['client_id' => '__test_client_id__', 'app_type' => '__test_app_type__']);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/clients', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/clients');
 
     $query = $this->api->getRequestQuery();
-    $this->assertStringContainsString('&client_id=__test_client_id__&app_type=__test_app_type__', $query);
+    expect($query)->toContain('&client_id=__test_client_id__&app_type=__test_app_type__');
 });
 
 test('get() issues an appropriate request', function(): void {
     $this->endpoint->get('__test_id__');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/clients/__test_id__', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/clients/__test_id__');
 });
 
 test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete('__test_id__');
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/clients/__test_id__', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients/__test_id__');
 });
 
 test('create() issues an appropriate request', function(): void {
@@ -42,26 +42,26 @@ test('create() issues an appropriate request', function(): void {
 
     $this->endpoint->create($mock->name, $mock->body);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/clients', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
-    $this->assertEquals($mock->name, $body['name']);
+    expect($body['name'])->toEqual($mock->name);
     $this->assertArrayHasKey('app_type', $body);
-    $this->assertEquals($mock->body['app_type'], $body['app_type']);
+    expect($body['app_type'])->toEqual($mock->body['app_type']);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(array_merge(['name' => $mock->name], $mock->body)), $body);
+    expect($body)->toEqual(json_encode(array_merge(['name' => $mock->name], $mock->body)));
 });
 
 test('update() issues an appropriate request', function(): void {
     $this->endpoint->update('__test_id__', ['name' => '__test_new_name__']);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/clients/__test_id__', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients/__test_id__');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
-    $this->assertEquals('__test_new_name__', $body['name']);
+    expect($body['name'])->toEqual('__test_new_name__');
 });

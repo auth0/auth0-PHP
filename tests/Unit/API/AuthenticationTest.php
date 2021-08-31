@@ -37,107 +37,107 @@ test('__construct() accepts a configuration as an array', function(): void {
         'audience' => [uniqid()]
     ]);
 
-    $this->assertInstanceOf(Authentication::class, $auth);
+    expect($auth)->toBeInstanceOf(Authentication::class);
 });
 
 test('__construct() successfully loads an inherited configuration', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getLoginLink(uniqid());
 
-    $this->assertStringContainsString($this->configuration->getDomain(), $uri);
+    expect($uri)->toContain($this->configuration->getDomain());
 });
 
 test('__construct() successfully loads a direct configuration', function(): void {
     $class = new Authentication($this->configuration);
     $uri = $class->getLoginLink(uniqid());
 
-    $this->assertStringContainsString($this->configuration->getDomain(), $uri);
+    expect($uri)->toContain($this->configuration->getDomain());
 });
 
 test('getLoginLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getLoginLink(uniqid());
 
-    $this->assertStringContainsString($this->configuration->getDomain(), $uri);
-    $this->assertStringContainsString('client_id=' . rawurlencode($this->configuration->getClientId()), $uri);
-    $this->assertStringContainsString('response_type=' . rawurlencode($this->configuration->getResponseType()), $uri);
-    $this->assertStringContainsString('redirect_uri=' . rawurlencode($this->configuration->getRedirectUri()), $uri);
-    $this->assertStringContainsString('audience=' . rawurlencode($this->configuration->defaultAudience()), $uri);
-    $this->assertStringContainsString('scope=' . rawurlencode($this->configuration->formatScope()), $uri);
-    $this->assertStringContainsString('organization=' . rawurlencode($this->configuration->defaultOrganization()), $uri);
+    expect($uri)->toContain($this->configuration->getDomain());
+    expect($uri)->toContain('client_id=' . rawurlencode($this->configuration->getClientId()));
+    expect($uri)->toContain('response_type=' . rawurlencode($this->configuration->getResponseType()));
+    expect($uri)->toContain('redirect_uri=' . rawurlencode($this->configuration->getRedirectUri()));
+    expect($uri)->toContain('audience=' . rawurlencode($this->configuration->defaultAudience()));
+    expect($uri)->toContain('scope=' . rawurlencode($this->configuration->formatScope()));
+    expect($uri)->toContain('organization=' . rawurlencode($this->configuration->defaultOrganization()));
 
     $exampleScope = uniqid();
     $uri = $class->getLoginLink(uniqid(), null, [
         'scope' => $exampleScope,
     ]);
 
-    $this->assertStringContainsString('scope=' . rawurlencode($exampleScope), $uri);
+    expect($uri)->toContain('scope=' . rawurlencode($exampleScope));
 });
 
 test('getSamlpLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getSamlpLink();
 
-    $this->assertStringContainsString($this->configuration->getDomain(), $uri);
-    $this->assertStringContainsString('/samlp/' . rawurlencode($this->configuration->getClientId()) . '?', $uri);
+    expect($uri)->toContain($this->configuration->getDomain());
+    expect($uri)->toContain('/samlp/' . rawurlencode($this->configuration->getClientId()) . '?');
 
     $exampleClientId = uniqid();
     $exampleConnection = uniqid();
     $uri = $class->getSamlpLink($exampleClientId, $exampleConnection);
 
-    $this->assertStringContainsString('/samlp/' . rawurlencode($exampleClientId) . '?', $uri);
-    $this->assertStringContainsString('connection=' . rawurlencode($exampleConnection), $uri);
+    expect($uri)->toContain('/samlp/' . rawurlencode($exampleClientId) . '?');
+    expect($uri)->toContain('connection=' . rawurlencode($exampleConnection));
 });
 
 test('getSamlpMetadataLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getSamlpMetadataLink();
 
-    $this->assertStringContainsString($this->configuration->getDomain(), $uri);
-    $this->assertStringContainsString('/samlp/metadata/' . rawurlencode($this->configuration->getClientId()), $uri);
+    expect($uri)->toContain($this->configuration->getDomain());
+    expect($uri)->toContain('/samlp/metadata/' . rawurlencode($this->configuration->getClientId()));
 
     $exampleClientId = uniqid();
     $uri = $class->getSamlpMetadataLink($exampleClientId);
 
-    $this->assertStringContainsString('/samlp/metadata/' . rawurlencode($exampleClientId), $uri);
+    expect($uri)->toContain('/samlp/metadata/' . rawurlencode($exampleClientId));
 });
 
 test('getWsfedLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getWsfedLink();
 
-    $this->assertStringContainsString($this->configuration->getDomain(), $uri);
-    $this->assertStringContainsString('/wsfed/' . rawurlencode($this->configuration->getClientId()) . '?', $uri);
+    expect($uri)->toContain($this->configuration->getDomain());
+    expect($uri)->toContain('/wsfed/' . rawurlencode($this->configuration->getClientId()) . '?');
 
     $exampleClientId = uniqid();
     $exampleParam = uniqid();
     $uri = $class->getWsfedLink($exampleClientId, ['whr' => $exampleParam]);
 
-    $this->assertStringContainsString('/wsfed/' . rawurlencode($exampleClientId) . '?', $uri);
-    $this->assertStringContainsString('whr=' . rawurlencode($exampleParam), $uri);
+    expect($uri)->toContain('/wsfed/' . rawurlencode($exampleClientId) . '?');
+    expect($uri)->toContain('whr=' . rawurlencode($exampleParam));
 });
 
 test('getWsfedMetadataLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getWsfedMetadataLink();
 
-    $this->assertStringContainsString($this->configuration->getDomain(), $uri);
-    $this->assertStringContainsString('/wsfed/FederationMetadata/2007-06/FederationMetadata.xml', $uri);
+    expect($uri)->toContain($this->configuration->getDomain());
+    expect($uri)->toContain('/wsfed/FederationMetadata/2007-06/FederationMetadata.xml');
 });
 
 test('getLogoutLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getLogoutLink();
 
-    $this->assertStringContainsString($this->configuration->getDomain(), $uri);
-    $this->assertStringContainsString('returnTo=' . rawurlencode($this->configuration->getRedirectUri()), $uri);
+    expect($uri)->toContain($this->configuration->getDomain());
+    expect($uri)->toContain('returnTo=' . rawurlencode($this->configuration->getRedirectUri()));
 
     $exampleReturnTo = uniqid();
     $exampleParam = uniqid();
     $uri = $class->getLogoutLink($exampleReturnTo, ['ex' => $exampleParam]);
 
-    $this->assertStringContainsString('returnTo=' . rawurlencode($exampleReturnTo), $uri);
-    $this->assertStringContainsString('ex=' . rawurlencode($exampleParam), $uri);
+    expect($uri)->toContain('returnTo=' . rawurlencode($exampleReturnTo));
+    expect($uri)->toContain('ex=' . rawurlencode($exampleParam));
 });
 
 test('passwordlessStart() throws a ConfigurationException if client secret is not configured', function(): void {
@@ -164,12 +164,12 @@ test('passwordlessStart() is properly formatted', function(): void {
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/passwordless/start', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/passwordless/start');
     $this->assertArrayHasKey('client_id', $requestBody);
     $this->assertArrayHasKey('client_secret', $requestBody);
-    $this->assertEquals($this->configuration->getClientId(), $requestBody['client_id']);
-    $this->assertEquals($this->configuration->getClientSecret(), $requestBody['client_secret']);
+    expect($requestBody['client_id'])->toEqual($this->configuration->getClientId());
+    expect($requestBody['client_secret'])->toEqual($this->configuration->getClientSecret());
 });
 
 test('emailPasswordlessStart() throws an ArgumentException if `email` is empty', function(): void {
@@ -207,18 +207,18 @@ test('emailPasswordlessStart() is properly formatted', function(): void {
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/passwordless/start', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/passwordless/start');
     $this->assertArrayHasKey('client_id', $requestBody);
     $this->assertArrayHasKey('client_secret', $requestBody);
     $this->assertArrayHasKey('connection', $requestBody);
     $this->assertArrayHasKey('email', $requestBody);
     $this->assertArrayHasKey('send', $requestBody);
-    $this->assertEquals($this->configuration->getClientId(), $requestBody['client_id']);
-    $this->assertEquals($this->configuration->getClientSecret(), $requestBody['client_secret']);
-    $this->assertEquals('email', $requestBody['connection']);
-    $this->assertEquals('someone@somewhere.somehow', $requestBody['email']);
-    $this->assertEquals('code', $requestBody['send']);
+    expect($requestBody['client_id'])->toEqual($this->configuration->getClientId());
+    expect($requestBody['client_secret'])->toEqual($this->configuration->getClientSecret());
+    expect($requestBody['connection'])->toEqual('email');
+    expect($requestBody['email'])->toEqual('someone@somewhere.somehow');
+    expect($requestBody['send'])->toEqual('code');
 });
 
 test('smsPasswordlessStart() throws an ArgumentException if `phoneNumber` is empty', function(): void {
@@ -238,16 +238,16 @@ test('smsPasswordlessStart() is properly formatted', function(): void {
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/passwordless/start', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/passwordless/start');
     $this->assertArrayHasKey('client_id', $requestBody);
     $this->assertArrayHasKey('client_secret', $requestBody);
     $this->assertArrayHasKey('connection', $requestBody);
     $this->assertArrayHasKey('phone_number', $requestBody);
-    $this->assertEquals($this->configuration->getClientId(), $requestBody['client_id']);
-    $this->assertEquals($this->configuration->getClientSecret(), $requestBody['client_secret']);
-    $this->assertEquals('sms', $requestBody['connection']);
-    $this->assertEquals('8675309', $requestBody['phone_number']);
+    expect($requestBody['client_id'])->toEqual($this->configuration->getClientId());
+    expect($requestBody['client_secret'])->toEqual($this->configuration->getClientSecret());
+    expect($requestBody['connection'])->toEqual('sms');
+    expect($requestBody['phone_number'])->toEqual('8675309');
 });
 
 test('userInfo() is properly formatted', function(): void {
@@ -260,10 +260,10 @@ test('userInfo() is properly formatted', function(): void {
     $requestBody = json_decode($request->getBody()->__toString(), true);
     $requestHeaders = $request->getHeaders();
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/userinfo', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/userinfo');
     $this->assertArrayHasKey('Authorization', $requestHeaders);
-    $this->assertEquals('Bearer ' . $accessToken, $requestHeaders['Authorization'][0]);
+    expect($requestHeaders['Authorization'][0])->toEqual('Bearer ' . $accessToken);
 });
 
 test('oauthToken() is properly formatted', function(): void {
@@ -276,12 +276,12 @@ test('oauthToken() is properly formatted', function(): void {
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/oauth/token', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/oauth/token');
 
-    $this->assertContains('grant_type=authorization_code', $requestBody);
-    $this->assertContains('client_id=__test_client_id__', $requestBody);
-    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
+    expect($requestBody)->toContain('grant_type=authorization_code');
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->toContain('client_secret=' . $clientSecret);
 });
 
 test('codeExchange() is properly formatted', function(): void {
@@ -297,15 +297,15 @@ test('codeExchange() is properly formatted', function(): void {
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/oauth/token', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/oauth/token');
 
-    $this->assertContains('grant_type=authorization_code', $requestBody);
-    $this->assertContains('client_id=__test_client_id__', $requestBody);
-    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
-    $this->assertContains('code=' . $code, $requestBody);
-    $this->assertContains('redirect_uri=' . $redirect, $requestBody);
-    $this->assertContains('code_verifier=' . $verifier, $requestBody);
+    expect($requestBody)->toContain('grant_type=authorization_code');
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->toContain('client_secret=' . $clientSecret);
+    expect($requestBody)->toContain('code=' . $code);
+    expect($requestBody)->toContain('redirect_uri=' . $redirect);
+    expect($requestBody)->toContain('code_verifier=' . $verifier);
 });
 
 test('login() is properly formatted', function(): void {
@@ -322,15 +322,15 @@ test('login() is properly formatted', function(): void {
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/oauth/token', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/oauth/token');
 
-    $this->assertContains('grant_type=' . urlencode('http://auth0.com/oauth/grant-type/password-realm'), $requestBody);
-    $this->assertContains('client_id=__test_client_id__', $requestBody);
-    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
-    $this->assertContains('username=' . $username, $requestBody);
-    $this->assertContains('password=' . $password, $requestBody);
-    $this->assertContains('realm=' . $realm, $requestBody);
+    expect($requestBody)->toContain('grant_type=' . urlencode('http://auth0.com/oauth/grant-type/password-realm'));
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->toContain('client_secret=' . $clientSecret);
+    expect($requestBody)->toContain('username=' . $username);
+    expect($requestBody)->toContain('password=' . $password);
+    expect($requestBody)->toContain('realm=' . $realm);
 });
 
 test('loginWithDefaultDirectory() is properly formatted', function(): void {
@@ -346,14 +346,14 @@ test('loginWithDefaultDirectory() is properly formatted', function(): void {
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/oauth/token', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/oauth/token');
 
-    $this->assertContains('grant_type=password', $requestBody);
-    $this->assertContains('client_id=__test_client_id__', $requestBody);
-    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
-    $this->assertContains('username=' . $username, $requestBody);
-    $this->assertContains('password=' . $password, $requestBody);
+    expect($requestBody)->toContain('grant_type=password');
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->toContain('client_secret=' . $clientSecret);
+    expect($requestBody)->toContain('username=' . $username);
+    expect($requestBody)->toContain('password=' . $password);
 });
 
 test('clientCredentials() is properly formatted', function(): void {
@@ -367,17 +367,17 @@ test('clientCredentials() is properly formatted', function(): void {
     $requestBody =  explode('&', $request->getBody()->__toString());
     $requestHeaders = $request->getHeaders();
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/oauth/token', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/oauth/token');
 
-    $this->assertContains('grant_type=client_credentials', $requestBody);
-    $this->assertContains('client_id=__test_client_id__', $requestBody);
-    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
-    $this->assertContains('audience=aud1', $requestBody);
-    $this->assertContains('testing=123', $requestBody);
+    expect($requestBody)->toContain('grant_type=client_credentials');
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->toContain('client_secret=' . $clientSecret);
+    expect($requestBody)->toContain('audience=aud1');
+    expect($requestBody)->toContain('testing=123');
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    $this->assertEquals(123, $requestHeaders['header_testing'][0]);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
 test('refreshToken() is properly formatted', function(): void {
@@ -392,17 +392,17 @@ test('refreshToken() is properly formatted', function(): void {
     $requestBody =  explode('&', $request->getBody()->__toString());
     $requestHeaders = $request->getHeaders();
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/oauth/token', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/oauth/token');
 
-    $this->assertContains('grant_type=refresh_token', $requestBody);
-    $this->assertContains('client_id=__test_client_id__', $requestBody);
-    $this->assertContains('client_secret=' . $clientSecret, $requestBody);
-    $this->assertContains('refresh_token=' . $refreshToken, $requestBody);
-    $this->assertContains('testing=123', $requestBody);
+    expect($requestBody)->toContain('grant_type=refresh_token');
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->toContain('client_secret=' . $clientSecret);
+    expect($requestBody)->toContain('refresh_token=' . $refreshToken);
+    expect($requestBody)->toContain('testing=123');
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    $this->assertEquals(123, $requestHeaders['header_testing'][0]);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
 test('dbConnectionsSignup() is properly formatted', function(): void {
@@ -420,8 +420,8 @@ test('dbConnectionsSignup() is properly formatted', function(): void {
     $requestBody = json_decode($request->getBody()->__toString(), true);
     $requestHeaders = $request->getHeaders();
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/dbconnections/signup', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/dbconnections/signup');
 
     $this->assertArrayHasKey('client_id', $requestBody);
     $this->assertArrayHasKey('email', $requestBody);
@@ -429,14 +429,14 @@ test('dbConnectionsSignup() is properly formatted', function(): void {
     $this->assertArrayHasKey('connection', $requestBody);
     $this->assertArrayHasKey('testing', $requestBody);
 
-    $this->assertEquals('__test_client_id__', $requestBody['client_id']);
-    $this->assertEquals(trim($email), $requestBody['email']);
-    $this->assertEquals($password, $requestBody['password']);
-    $this->assertEquals($connection, $requestBody['connection']);
-    $this->assertEquals(123, $requestBody['testing']);
+    expect($requestBody['client_id'])->toEqual('__test_client_id__');
+    expect($requestBody['email'])->toEqual(trim($email));
+    expect($requestBody['password'])->toEqual($password);
+    expect($requestBody['connection'])->toEqual($connection);
+    expect($requestBody['testing'])->toEqual(123);
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    $this->assertEquals(123, $requestHeaders['header_testing'][0]);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
 test('dbConnectionsChangePassword() is properly formatted', function(): void {
@@ -453,19 +453,19 @@ test('dbConnectionsChangePassword() is properly formatted', function(): void {
     $requestBody = json_decode($request->getBody()->__toString(), true);
     $requestHeaders = $request->getHeaders();
 
-    $this->assertEquals($this->configuration->getDomain(), $requestUri->getHost());
-    $this->assertEquals('/dbconnections/change_password', $requestUri->getPath());
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/dbconnections/change_password');
 
     $this->assertArrayHasKey('client_id', $requestBody);
     $this->assertArrayHasKey('email', $requestBody);
     $this->assertArrayHasKey('connection', $requestBody);
     $this->assertArrayHasKey('testing', $requestBody);
 
-    $this->assertEquals('__test_client_id__', $requestBody['client_id']);
-    $this->assertEquals(trim($email), $requestBody['email']);
-    $this->assertEquals($connection, $requestBody['connection']);
-    $this->assertEquals(123, $requestBody['testing']);
+    expect($requestBody['client_id'])->toEqual('__test_client_id__');
+    expect($requestBody['email'])->toEqual(trim($email));
+    expect($requestBody['connection'])->toEqual($connection);
+    expect($requestBody['testing'])->toEqual(123);
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    $this->assertEquals(123, $requestHeaders['header_testing'][0]);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
 });

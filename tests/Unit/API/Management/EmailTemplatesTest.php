@@ -59,8 +59,8 @@ test('create() issues valid requests', function(): void {
 
     $this->endpoint->create($template, $payload, $from, $subject, $syntax, true);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/email-templates', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/email-templates');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('template', $body);
@@ -69,15 +69,15 @@ test('create() issues valid requests', function(): void {
     $this->assertArrayHasKey('subject', $body);
     $this->assertArrayHasKey('syntax', $body);
     $this->assertArrayHasKey('enabled', $body);
-    $this->assertEquals($template, $body['template']);
-    $this->assertEquals($payload, $body['body']);
-    $this->assertEquals($from, $body['from']);
-    $this->assertEquals($subject, $body['subject']);
-    $this->assertEquals($syntax, $body['syntax']);
-    $this->assertEquals(true, $body['enabled']);
+    expect($body['template'])->toEqual($template);
+    expect($body['body'])->toEqual($payload);
+    expect($body['from'])->toEqual($from);
+    expect($body['subject'])->toEqual($subject);
+    expect($body['syntax'])->toEqual($syntax);
+    expect($body['enabled'])->toEqual(true);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['template' => $template, 'body' => $payload, 'from' => $from, 'subject' => $subject, 'syntax' => $syntax, 'enabled' => true]), $body);
+    expect($body)->toEqual(json_encode(['template' => $template, 'body' => $payload, 'from' => $from, 'subject' => $subject, 'syntax' => $syntax, 'enabled' => true]));
 });
 
 test('get() issues valid requests', function(): void {
@@ -85,8 +85,8 @@ test('get() issues valid requests', function(): void {
 
     $this->endpoint->get($templateName);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/email-templates/' . $templateName, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/email-templates/' . $templateName);
 });
 
 test('update() issues valid requests', function(): void {
@@ -95,15 +95,15 @@ test('update() issues valid requests', function(): void {
 
     $this->endpoint->update($templateName, ['test' => $payload]);
 
-    $this->assertEquals('PUT', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/email-templates/' . $templateName, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PUT');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/email-templates/' . $templateName);
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('test', $body);
-    $this->assertEquals($payload, $body['test']);
+    expect($body['test'])->toEqual($payload);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['test' => $payload]), $body);
+    expect($body)->toEqual(json_encode(['test' => $payload]));
 });
 
 test('patch() issues valid requests', function(): void {
@@ -112,13 +112,13 @@ test('patch() issues valid requests', function(): void {
 
     $this->endpoint->patch($templateName, ['test' => $payload]);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/email-templates/' . $templateName, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/email-templates/' . $templateName);
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('test', $body);
-    $this->assertEquals($payload, $body['test']);
+    expect($body['test'])->toEqual($payload);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['test' => $payload]), $body);
+    expect($body)->toEqual(json_encode(['test' => $payload]));
 });

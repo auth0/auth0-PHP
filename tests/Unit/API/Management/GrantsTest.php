@@ -11,9 +11,9 @@ beforeEach(function(): void {
 test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/grants', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
 test('getAllByClientId() issues an appropriate request', function(): void {
@@ -21,9 +21,9 @@ test('getAllByClientId() issues an appropriate request', function(): void {
 
     $this->endpoint->getAllByClientId($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $this->api->getRequestUrl());
-    $this->assertEquals('client_id=' . $id, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestQuery(null))->toEqual('client_id=' . $id);
 });
 
 test('getAllByAudience() issues an appropriate request', function(): void {
@@ -31,9 +31,9 @@ test('getAllByAudience() issues an appropriate request', function(): void {
 
     $this->endpoint->getAllByAudience($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $this->api->getRequestUrl());
-    $this->assertEquals('audience=' . $id, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestQuery(null))->toEqual('audience=' . $id);
 });
 
 test('getAllByUserId() issues an appropriate request', function(): void {
@@ -41,9 +41,9 @@ test('getAllByUserId() issues an appropriate request', function(): void {
 
     $this->endpoint->getAllByUserId($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $this->api->getRequestUrl());
-    $this->assertEquals('user_id=' . $id, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestQuery(null))->toEqual('user_id=' . $id);
 });
 
 test('delete() issues an appropriate request', function(): void {
@@ -51,7 +51,7 @@ test('delete() issues an appropriate request', function(): void {
 
     $this->endpoint->delete($id);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/grants/' . $id, $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/grants/' . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
 });

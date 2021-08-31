@@ -57,12 +57,12 @@ it('handles RequestInterface properly', function(): void {
     $response2->test = true;
 
     $event = new HttpResponseReceived($response1, $request1);
-    $this->assertEquals($response1, $event->get());
+    expect($event->get())->toEqual($response1);
 
-    $this->assertEquals($request1, $event->getRequest());
+    expect($event->getRequest())->toEqual($request1);
     $this->assertNotEquals($request2, $event->getRequest());
 
     $event->set($response2);
-    $this->assertEquals($response2, $event->get());
+    expect($event->get())->toEqual($response2);
     $this->assertNotEquals($response1, $event->get());
 });

@@ -35,11 +35,11 @@ test('a 429 response is not retried if httpMaxRetries is zero', function(): void
         ->addPath('client')
         ->call();
 
-    $this->assertEquals(429, HttpResponse::getStatusCode($response));
+    expect(HttpResponse::getStatusCode($response))->toEqual(429);
 
     $requestCount = $this->client->getLastRequest()->getRequestCount();
 
-    $this->assertEquals(1, $requestCount);
+    expect($requestCount)->toEqual(1);
 });
 
 test('a 429 response is not retried more than the hard cap', function(): void {
@@ -53,11 +53,11 @@ test('a 429 response is not retried more than the hard cap', function(): void {
         ->addPath('client')
         ->call();
 
-    $this->assertEquals(429, HttpResponse::getStatusCode($response));
+    expect(HttpResponse::getStatusCode($response))->toEqual(429);
 
     $requestCount = $this->client->getLastRequest()->getRequestCount();
 
-    $this->assertEquals(10, $requestCount);
+    expect($requestCount)->toEqual(10);
 });
 
 test('an exponential back-off and jitter are being applied', function(): void {
@@ -79,20 +79,20 @@ test('an exponential back-off and jitter are being applied', function(): void {
     $requestCount = $this->client->getLastRequest()->getRequestCount();
     $requestDelays = $this->client->getLastRequest()->getRequestDelays();
 
-    $this->assertEquals(429, HttpResponse::getStatusCode($response));
-    $this->assertEquals(10, $requestCount);
-    $this->assertEquals(10, count($requestDelays));
+    expect(HttpResponse::getStatusCode($response))->toEqual(429);
+    expect($requestCount)->toEqual(10);
+    expect(count($requestDelays))->toEqual(10);
 
     // Assert that exponential backoff is happening.
-    $this->assertGreaterThanOrEqual($requestDelays[0], $requestDelays[1]);
-    $this->assertGreaterThanOrEqual($requestDelays[1], $requestDelays[2]);
-    $this->assertGreaterThanOrEqual($requestDelays[2], $requestDelays[3]);
-    $this->assertGreaterThanOrEqual($requestDelays[3], $requestDelays[4]);
-    $this->assertGreaterThanOrEqual($requestDelays[4], $requestDelays[5]);
-    $this->assertGreaterThanOrEqual($requestDelays[5], $requestDelays[6]);
-    $this->assertGreaterThanOrEqual($requestDelays[6], $requestDelays[7]);
-    $this->assertGreaterThanOrEqual($requestDelays[7], $requestDelays[8]);
-    $this->assertGreaterThanOrEqual($requestDelays[8], $requestDelays[9]);
+    expect($requestDelays[1])->toBeGreaterThanOrEqual($requestDelays[0]);
+    expect($requestDelays[2])->toBeGreaterThanOrEqual($requestDelays[1]);
+    expect($requestDelays[3])->toBeGreaterThanOrEqual($requestDelays[2]);
+    expect($requestDelays[4])->toBeGreaterThanOrEqual($requestDelays[3]);
+    expect($requestDelays[5])->toBeGreaterThanOrEqual($requestDelays[4]);
+    expect($requestDelays[6])->toBeGreaterThanOrEqual($requestDelays[5]);
+    expect($requestDelays[7])->toBeGreaterThanOrEqual($requestDelays[6]);
+    expect($requestDelays[8])->toBeGreaterThanOrEqual($requestDelays[7]);
+    expect($requestDelays[9])->toBeGreaterThanOrEqual($requestDelays[8]);
 
     // Ensure jitter is being applied.
     $this->assertNotEquals($baseWaits[1], $requestDelays[1]);
@@ -106,30 +106,30 @@ test('an exponential back-off and jitter are being applied', function(): void {
     $this->assertNotEquals($baseWaits[9], $requestDelays[9]);
 
     // Ensure subsequent delay is never less than the minimum.
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[1]);
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[2]);
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[3]);
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[4]);
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[5]);
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[6]);
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[7]);
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[8]);
-    $this->assertGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY, $requestDelays[9]);
+    expect($requestDelays[1])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
+    expect($requestDelays[2])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
+    expect($requestDelays[3])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
+    expect($requestDelays[4])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
+    expect($requestDelays[5])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
+    expect($requestDelays[6])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
+    expect($requestDelays[7])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
+    expect($requestDelays[8])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
+    expect($requestDelays[9])->toBeGreaterThanOrEqual(HttpRequest::MIN_REQUEST_RETRY_DELAY);
 
     // Ensure delay is never more than the maximum.
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[0]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[1]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[2]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[3]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[4]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[5]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[6]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[7]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[8]);
-    $this->assertLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY, $requestDelays[9]);
+    expect($requestDelays[0])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[1])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[2])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[3])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[4])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[5])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[6])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[7])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[8])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
+    expect($requestDelays[9])->toBeLessThanOrEqual(HttpRequest::MAX_REQUEST_RETRY_DELAY);
 
     // Ensure total delay sum is never more than 10s.
-    $this->assertLessThanOrEqual(10000, array_sum($requestDelays));
+    expect(array_sum($requestDelays))->toBeLessThanOrEqual(10000);
 });
 
 test('a request is tried 3 times before failing in the event of a 429', function(): void {
@@ -143,11 +143,11 @@ test('a request is tried 3 times before failing in the event of a 429', function
         ->addPath('client')
         ->call();
 
-    $this->assertEquals(429, HttpResponse::getStatusCode($response));
+    expect(HttpResponse::getStatusCode($response))->toEqual(429);
 
     $requestCount = $this->client->getLastRequest()->getRequestCount();
 
-    $this->assertEquals(3, $requestCount);
+    expect($requestCount)->toEqual(3);
 });
 
 test('a request recovers from a 429 response and returns the successful result', function(): void {
@@ -161,9 +161,9 @@ test('a request recovers from a 429 response and returns the successful result',
         ->addPath('client')
         ->call();
 
-    $this->assertEquals(200, HttpResponse::getStatusCode($response));
+    expect(HttpResponse::getStatusCode($response))->toEqual(200);
 
     $requestCount = $this->client->getLastRequest()->getRequestCount();
 
-    $this->assertEquals(2, $requestCount);
+    expect($requestCount)->toEqual(2);
 });

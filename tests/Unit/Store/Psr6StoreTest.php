@@ -20,12 +20,12 @@ beforeEach(function(): void {
 
 test('set() and get() behave as expected', function(string $key, string $value): void {
     $this->store->set($key, $value);
-    $this->assertSame($value, $this->store->get($key));
-    $this->assertSame(null, $this->store->get('missing_key'));
+    expect($this->store->get($key))->toBe($value);
+    expect($this->store->get('missing_key'))->toBe(null);
 
     $this->assertNotNull($randomKey = $this->public->get($this->storageKey));
     $this->public->delete($this->storageKey);
-    $this->assertSame(null, $this->store->get($key));
+    expect($this->store->get($key))->toBe(null);
 
     // Make sure we have a new key
     $this->assertNotSame($randomKey, $this->store->get($key));
@@ -67,8 +67,8 @@ it('stores data in private', function(string $key, string $value): void {
 
     $store = new Psr6Store($public, $private, $this->storageKey);
     $store->set($key, $value);
-    $this->assertSame($value, $store->get($key));
-    $this->assertSame(null, $store->get('missing_key'));
+    expect($store->get($key))->toBe($value);
+    expect($store->get('missing_key'))->toBe(null);
 })->with(['mocked data' => [
     fn() => uniqid(),
     fn() => uniqid(),
@@ -77,20 +77,20 @@ it('stores data in private', function(string $key, string $value): void {
 test('get() retrieves a default value as expected', function(string $key): void {
     $this->store->set($key, null);
 
-    $this->assertSame(null, $this->store->get($key, 'foobar'));
-    $this->assertSame('foobar', $this->store->get('missing_key', 'foobar'));
-    $this->assertSame(null, $this->store->get('missing_key'));
+    expect($this->store->get($key, 'foobar'))->toBe(null);
+    expect($this->store->get('missing_key', 'foobar'))->toBe('foobar');
+    expect($this->store->get('missing_key'))->toBe(null);
 })->with(['mocked key' => [
     fn() => uniqid(),
 ]]);
 
 test('delete() clears values as expected', function(string $key, string $value): void {
     $this->store->delete($key);
-    $this->assertNull($this->store->get($key));
+    expect($this->store->get($key))->toBeNull();
 
     $this->store->set($key, $value);
     $this->store->delete($key);
-    $this->assertNull($this->store->get($key));
+    expect($this->store->get($key))->toBeNull();
 })->with(['mocked data' => [
     fn() => uniqid(),
     fn() => uniqid(),
@@ -100,7 +100,7 @@ test('purge() clears values as expected', function(string $key, string $value): 
     $this->store->set($key, $value);
 
     $this->store->purge();
-    $this->assertNull($this->store->get($key));
+    expect($this->store->get($key))->toBeNull();
 })->with(['mocked data' => [
     fn() => uniqid(),
     fn() => uniqid(),

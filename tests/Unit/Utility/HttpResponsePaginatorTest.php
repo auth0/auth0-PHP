@@ -60,7 +60,7 @@ test('returns a count of 0 when there are no results', function(): void {
 
     $this->paginator = $sdk->getResponsePaginator();
 
-    $this->assertEquals(0, count($this->paginator));
+    expect(count($this->paginator))->toEqual(0);
 });
 
 test('returns a count when there are results', function(): void {
@@ -77,7 +77,7 @@ test('returns a count when there are results', function(): void {
     $sdk->users()->getAll([], $this->usePagination);
     $this->paginator = $sdk->getResponsePaginator();
 
-    $this->assertEquals(2, count($this->paginator));
+    expect(count($this->paginator))->toEqual(2);
 });
 
 test('throws an error when used with a non-GET endpoint', function(): void {
@@ -114,10 +114,10 @@ test('returns loaded results', function(): void {
     $sdk->users()->getAll([], $this->usePagination);
     $this->paginator = $sdk->getResponsePaginator();
 
-    $this->assertEquals(3, count($this->paginator));
+    expect(count($this->paginator))->toEqual(3);
 
     foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('user' . ($index + 1), $result);
+        expect($result)->toEqual('user' . ($index + 1));
     }
 });
 
@@ -142,13 +142,13 @@ test('returns network requests for paginated results', function(): void {
     $sdk->users()->getAll();
     $this->paginator = $sdk->getResponsePaginator();
 
-    $this->assertEquals(4, count($this->paginator));
+    expect(count($this->paginator))->toEqual(4);
 
     foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('user' . ($index + 1), $result);
+        expect($result)->toEqual('user' . ($index + 1));
     }
 
-    $this->assertEquals(1, $this->paginator->countNetworkRequests());
+    expect($this->paginator->countNetworkRequests())->toEqual(1);
 });
 
 test('ignores network errors and exits iteration', function(): void {
@@ -174,11 +174,11 @@ test('ignores network errors and exits iteration', function(): void {
     $this->paginator = $sdk->getResponsePaginator();
 
     foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('user' . ($index + 1), $result);
+        expect($result)->toEqual('user' . ($index + 1));
     }
 
-    $this->assertEquals(200, count($this->paginator));
-    $this->assertEquals(1, $this->paginator->countNetworkRequests());
+    expect(count($this->paginator))->toEqual(200);
+    expect($this->paginator->countNetworkRequests())->toEqual(1);
 });
 
 test('uses checkpoint pagination params when appropriate', function(): void {
@@ -202,10 +202,10 @@ test('uses checkpoint pagination params when appropriate', function(): void {
     $this->paginator = $sdk->getResponsePaginator();
 
     foreach ($this->paginator as $index => $result) {
-        $this->assertEquals('org' . ($index + 1), $result);
+        expect($result)->toEqual('org' . ($index + 1));
     }
 
-    $this->assertEquals(2, $this->paginator->countNetworkRequests());
+    expect($this->paginator->countNetworkRequests())->toEqual(2);
 
     $this->expectException(\Auth0\SDK\Exception\PaginatorException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\PaginatorException::MSG_HTTP_CANNOT_COUNT_CHECKPOINT_PAGINATION);

@@ -11,9 +11,9 @@ beforeEach(function(): void {
 test('get() issues an appropriate request', function(string $email): void {
     $this->endpoint->get($email);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/users-by-email', $this->api->getRequestUrl());
-    $this->assertStringContainsString(http_build_query(['email' => $email], '', '&', PHP_QUERY_RFC1738), $this->api->getRequestQuery(null));
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users-by-email');
+    expect($this->api->getRequestQuery(null))->toContain(http_build_query(['email' => $email], '', '&', PHP_QUERY_RFC1738));
 })->with(['mocked id' => [
     fn() => uniqid() . '@somewhere.somehow',
 ]]);

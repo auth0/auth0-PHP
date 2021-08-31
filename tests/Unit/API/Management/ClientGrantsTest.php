@@ -30,19 +30,19 @@ test('create() issues an appropriate request', function(): void {
 
     $this->endpoint->create($clientId, $audience, [$scope]);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/client-grants', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('client_id', $body);
     $this->assertArrayHasKey('audience', $body);
     $this->assertArrayHasKey('scope', $body);
-    $this->assertEquals($clientId, $body['client_id']);
-    $this->assertEquals($audience, $body['audience']);
-    $this->assertContains($scope, $body['scope']);
+    expect($body['client_id'])->toEqual($clientId);
+    expect($body['audience'])->toEqual($audience);
+    expect($body['scope'])->toContain($scope);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['client_id' => $clientId, 'audience' => $audience, 'scope' => [$scope]]), $body);
+    expect($body)->toEqual(json_encode(['client_id' => $clientId, 'audience' => $audience, 'scope' => [$scope]]));
 });
 
 test('getAll() issues an appropriate request', function(): void {
@@ -50,10 +50,10 @@ test('getAll() issues an appropriate request', function(): void {
 
     $this->endpoint->getAll(['example' => $exampleParam]);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertEquals('example=' . $exampleParam, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestQuery(null))->toEqual('example=' . $exampleParam);
 });
 
 test('getAll() supports field filtering parameters', function(): void {
@@ -63,11 +63,11 @@ test('getAll() supports field filtering parameters', function(): void {
 
     $this->endpoint->getAll(null, $this->requestOptions);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertStringContainsString('&fields=' . rawurlencode($field1 . ',' . $field2), $this->api->getRequestQuery());
-    $this->assertStringContainsString('&include_fields=true', $this->api->getRequestQuery());
+    expect($this->api->getRequestQuery())->toContain('&fields=' . rawurlencode($field1 . ',' . $field2));
+    expect($this->api->getRequestQuery())->toContain('&include_fields=true');
 });
 
 test('getAll() supports standard pagination parameters', function(): void {
@@ -75,12 +75,12 @@ test('getAll() supports standard pagination parameters', function(): void {
 
     $this->endpoint->getAll(null, $this->requestOptions);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertStringContainsString('&page=1', $this->api->getRequestQuery());
-    $this->assertStringContainsString('&per_page=5', $this->api->getRequestQuery());
-    $this->assertStringContainsString('&include_totals=true', $this->api->getRequestQuery());
+    expect($this->api->getRequestQuery())->toContain('&page=1');
+    expect($this->api->getRequestQuery())->toContain('&per_page=5');
+    expect($this->api->getRequestQuery())->toContain('&include_totals=true');
 });
 
 test('getAllByAudience() issues an appropriate request', function(): void {
@@ -88,10 +88,10 @@ test('getAllByAudience() issues an appropriate request', function(): void {
 
     $this->endpoint->getAllByAudience($audience);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertEquals('audience=' . $audience, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestQuery(null))->toEqual('audience=' . $audience);
 });
 
 test('getAllByClientId() issues an appropriate request', function(): void {
@@ -99,10 +99,10 @@ test('getAllByClientId() issues an appropriate request', function(): void {
 
     $this->endpoint->getAllByClientId($clientId);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertEquals('client_id=' . $clientId, $this->api->getRequestQuery(null));
+    expect($this->api->getRequestQuery(null))->toEqual('client_id=' . $clientId);
 });
 
 test('update() issues an appropriate request', function(): void {
@@ -111,15 +111,15 @@ test('update() issues an appropriate request', function(): void {
 
     $this->endpoint->update($grantId, [$scope]);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/client-grants/' . $grantId, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants/' . $grantId);
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('scope', $body);
-    $this->assertContains($scope, $body['scope']);
+    expect($body['scope'])->toContain($scope);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['scope' => [$scope]]), $body);
+    expect($body)->toEqual(json_encode(['scope' => [$scope]]));
 });
 
 test('delete() issues an appropriate request', function(): void {
@@ -127,6 +127,6 @@ test('delete() issues an appropriate request', function(): void {
 
     $this->endpoint->delete($grantId);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/client-grants/' . $grantId, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants/' . $grantId);
 });

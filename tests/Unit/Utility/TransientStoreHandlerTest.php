@@ -20,13 +20,13 @@ beforeEach(function(): void {
 });
 
 test('getStore() returns the assigned storage instance', function(): void {
-    $this->assertEquals($this->store, $this->transient->getStore());
+    expect($this->transient->getStore())->toEqual($this->store);
 });
 
 test('store() assigns data correctly', function(string $key, string $value): void {
     $this->transient->store($key, $value);
 
-    $this->assertEquals($value, $this->store->get($key));
+    expect($this->store->get($key))->toEqual($value);
 })->with(['random data' => [
     fn() => uniqid(),
     fn() => uniqid(),
@@ -35,8 +35,8 @@ test('store() assigns data correctly', function(string $key, string $value): voi
 test('issue() assigns data correctly', function(string $key): void {
     $value = $this->transient->issue($key);
 
-    $this->assertEquals($value, $this->store->get($key));
-    $this->assertGreaterThanOrEqual(16, mb_strlen($value));
+    expect($this->store->get($key))->toEqual($value);
+    expect(mb_strlen($value))->toBeGreaterThanOrEqual(16);
 })->with(['random key' => [
     fn() => uniqid(),
 ]]);
@@ -44,10 +44,10 @@ test('issue() assigns data correctly', function(string $key): void {
 test('getOnce() assigns data correctly and is only retrievable once', function(string $key, string $value): void {
     $this->transient->store($key, $value);
 
-    $this->assertEquals($value, $this->store->get($key));
-    $this->assertEquals($value, $this->transient->getOnce($key));
-    $this->assertNull($this->transient->getOnce($key));
-    $this->assertNull($this->store->get($key));
+    expect($this->store->get($key))->toEqual($value);
+    expect($this->transient->getOnce($key))->toEqual($value);
+    expect($this->transient->getOnce($key))->toBeNull();
+    expect($this->store->get($key))->toBeNull();
 })->with(['random data' => [
     fn() => uniqid(),
     fn() => uniqid(),
@@ -56,25 +56,25 @@ test('getOnce() assigns data correctly and is only retrievable once', function(s
 test('verify() correctly verifies data', function(string $key, string $value): void {
     $this->transient->store($key, $value);
 
-    $this->assertTrue($this->transient->verify($key, $value));
-    $this->assertFalse($this->transient->verify($key, $value));
-    $this->assertNull($this->transient->getOnce($key));
-    $this->assertNull($this->store->get($key));
+    expect($this->transient->verify($key, $value))->toBeTrue();
+    expect($this->transient->verify($key, $value))->toBeFalse();
+    expect($this->transient->getOnce($key))->toBeNull();
+    expect($this->store->get($key))->toBeNull();
 })->with(['random data' => [
     fn() => uniqid(),
     fn() => uniqid(),
 ]]);
 
 test('isset() returns correct state', function(string $key, string $value): void {
-    $this->assertFalse($this->transient->isset($key));
+    expect($this->transient->isset($key))->toBeFalse();
 
     $this->transient->store($key, $value);
 
-    $this->assertTrue($this->transient->isset($key));
+    expect($this->transient->isset($key))->toBeTrue();
 
     $this->transient->getOnce($key);
 
-    $this->assertFalse($this->transient->isset($key));
+    expect($this->transient->isset($key))->toBeFalse();
 })->with(['random data' => [
     fn() => uniqid(),
     fn() => uniqid(),

@@ -19,20 +19,20 @@ test('setCorePackage() is assigned by default', function(): void {
     $this->assertArrayHasKey('env', $header_data);
     $this->assertArrayHasKey('php', $header_data['env']);
 
-    $this->assertEquals('auth0-php', $header_data['name']);
-    $this->assertEquals(Auth0::VERSION, $header_data['version']);
-    $this->assertEquals(phpversion(), $header_data['env']['php']);
+    expect($header_data['name'])->toEqual('auth0-php');
+    expect($header_data['version'])->toEqual(Auth0::VERSION);
+    expect($header_data['env']['php'])->toEqual(phpversion());
 });
 
 test('setCorePackage() restores default data correctly', function(): void {
     HttpTelemetry::setPackage('test_name', '1.2.3');
     $headers = HttpTelemetry::get();
 
-    $this->assertCount(3, $headers);
+    expect($headers)->toHaveCount(3);
     $this->assertArrayHasKey('name', $headers);
-    $this->assertEquals('test_name', $headers['name']);
+    expect($headers['name'])->toEqual('test_name');
     $this->assertArrayHasKey('version', $headers);
-    $this->assertEquals('1.2.3', $headers['version']);
+    expect($headers['version'])->toEqual('1.2.3');
 
     HttpTelemetry::setCorePackage();
     $header_data = HttpTelemetry::get();
@@ -42,20 +42,20 @@ test('setCorePackage() restores default data correctly', function(): void {
     $this->assertArrayHasKey('env', $header_data);
     $this->assertArrayHasKey('php', $header_data['env']);
 
-    $this->assertEquals('auth0-php', $header_data['name']);
-    $this->assertEquals(Auth0::VERSION, $header_data['version']);
-    $this->assertEquals(phpversion(), $header_data['env']['php']);
+    expect($header_data['name'])->toEqual('auth0-php');
+    expect($header_data['version'])->toEqual(Auth0::VERSION);
+    expect($header_data['env']['php'])->toEqual(phpversion());
 });
 
 test('setPackage() assigns data correctly', function(): void {
     HttpTelemetry::setPackage('test_name', '1.2.3');
     $headers = HttpTelemetry::get();
 
-    $this->assertCount(3, $headers);
+    expect($headers)->toHaveCount(3);
     $this->assertArrayHasKey('name', $headers);
-    $this->assertEquals('test_name', $headers['name']);
+    expect($headers['name'])->toEqual('test_name');
     $this->assertArrayHasKey('version', $headers);
-    $this->assertEquals('1.2.3', $headers['version']);
+    expect($headers['version'])->toEqual('1.2.3');
 });
 
 test('setEnvProperty() assigns data correctly', function(): void {
@@ -63,17 +63,17 @@ test('setEnvProperty() assigns data correctly', function(): void {
     $headers = HttpTelemetry::get();
 
     $this->assertArrayHasKey('env', $headers);
-    $this->assertCount(2, $headers['env']);
+    expect($headers['env'])->toHaveCount(2);
     $this->assertArrayHasKey('test_env_name', $headers['env']);
-    $this->assertEquals('2.3.4', $headers['env']['test_env_name']);
+    expect($headers['env']['test_env_name'])->toEqual('2.3.4');
 
     HttpTelemetry::setEnvProperty('test_env_name', '3.4.5');
     $headers = HttpTelemetry::get();
-    $this->assertEquals('3.4.5', $headers['env']['test_env_name']);
+    expect($headers['env']['test_env_name'])->toEqual('3.4.5');
 
     HttpTelemetry::setEnvProperty('test_env_name_2', '4.5.6');
     $headers = HttpTelemetry::get();
-    $this->assertEquals('4.5.6', $headers['env']['test_env_name_2']);
+    expect($headers['env']['test_env_name_2'])->toEqual('4.5.6');
 });
 
 test('setEnvironmentData() assigns data correctly', function(): void {
@@ -83,17 +83,17 @@ test('setEnvironmentData() assigns data correctly', function(): void {
     $headers = HttpTelemetry::get();
 
     $this->assertArrayHasKey('env', $headers);
-    $this->assertCount(1, $headers['env']);
+    expect($headers['env'])->toHaveCount(1);
     $this->assertArrayHasKey('test_env_name', $headers['env']);
-    $this->assertEquals('2.3.4', $headers['env']['test_env_name']);
+    expect($headers['env']['test_env_name'])->toEqual('2.3.4');
 
     HttpTelemetry::setEnvProperty('test_env_name', '3.4.5');
     $headers = HttpTelemetry::get();
-    $this->assertEquals('3.4.5', $headers['env']['test_env_name']);
+    expect($headers['env']['test_env_name'])->toEqual('3.4.5');
 
     HttpTelemetry::setEnvProperty('test_env_name_2', '4.5.6');
     $headers = HttpTelemetry::get();
-    $this->assertEquals('4.5.6', $headers['env']['test_env_name_2']);
+    expect($headers['env']['test_env_name_2'])->toEqual('4.5.6');
 });
 
 test('build() creates the expected header structure', function(): void {
@@ -110,5 +110,5 @@ test('build() creates the expected header structure', function(): void {
     HttpTelemetry::setEnvProperty('test_env_name_3', '6.7.8');
 
     $header_built = base64_decode(HttpTelemetry::build());
-    $this->assertEquals(json_encode($header_data), $header_built);
+    expect($header_built)->toEqual(json_encode($header_data));
 });

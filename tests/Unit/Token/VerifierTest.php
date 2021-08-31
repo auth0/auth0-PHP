@@ -123,7 +123,7 @@ test('[RS256] verify() succeeds when signing key is correct', function($keyPair,
     $item->set(['__test_kid__' => ['x5c' => [$keyPair['cert']]]]);
     $cache->save($item);
 
-    $this->assertIsObject(new Verifier($this->configuration, $payload, $signature, $headers, Token::ALGO_RS256, $jwksUri, null, null, $cache));
+    expect(new Verifier($this->configuration, $payload, $signature, $headers, Token::ALGO_RS256, $jwksUri, null, null, $cache))->toBeObject();
 })->with('tokenRs256');
 
 test('[RS256] verify() throws an error when signing key is wrong', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
@@ -162,5 +162,5 @@ test('[HS256] verify() throws an error when secret is wrong', function($token, $
 
 test('[HS256] verify() succeeds when secret is correct', function($token, $payload, $signature, $headers): void {
     $headers = TokenGenerator::decodePart($headers);
-    $this->assertIsObject(new Verifier($this->configuration, $payload, $signature, $headers, Token::ALGO_HS256, null, '__test_client_secret__'));
+    expect(new Verifier($this->configuration, $payload, $signature, $headers, Token::ALGO_HS256, null, '__test_client_secret__'))->toBeObject();
 })->with('tokenHs256');

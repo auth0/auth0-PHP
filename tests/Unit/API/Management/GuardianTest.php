@@ -11,9 +11,9 @@ beforeEach(function(): void {
 test('getFactors() issues an appropriate request', function(): void {
     $this->endpoint->getFactors();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/guardian/factors', $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/guardian/factors');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
 test('getEnrollment() issues an appropriate request', function(): void {
@@ -21,9 +21,9 @@ test('getEnrollment() issues an appropriate request', function(): void {
 
     $this->endpoint->getEnrollment($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/guardian/enrollments/' . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
 test('deleteEnrollment() issues an appropriate request', function(): void {
@@ -31,7 +31,7 @@ test('deleteEnrollment() issues an appropriate request', function(): void {
 
     $this->endpoint->deleteEnrollment($id);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/guardian/enrollments/' . $id, $this->api->getRequestUrl());
-    $this->assertEmpty($this->api->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/guardian/enrollments/' . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
 });

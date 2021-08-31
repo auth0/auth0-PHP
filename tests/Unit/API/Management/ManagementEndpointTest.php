@@ -25,18 +25,18 @@ beforeEach(function(): void {
 });
 
 test('getHttpClient() returns an HttpClient instance', function(): void {
-    $this->assertInstanceOf(HttpClient::class, $this->endpoint->getHttpClient());
+    expect($this->endpoint->getHttpClient())->toBeInstanceOf(HttpClient::class);
 });
 
 test('getLastRequest() returns null when no requests have been made', function(): void {
-    $this->assertNull($this->endpoint->getLastRequest());
+    expect($this->endpoint->getLastRequest())->toBeNull();
 });
 
 test('getLastRequest() returns an HttpRequest instance', function(): void {
     $client = new Users($this->httpClient);
     $client->getAll();
 
-    $this->assertInstanceOf(HttpRequest::class, $client->getLastRequest());
+    expect($client->getLastRequest())->toBeInstanceOf(HttpRequest::class);
 });
 
 test('getResponsePaginator() returns an HttpResponsePaginator instance', function(): void {
@@ -51,12 +51,12 @@ test('getResponsePaginator() returns an HttpResponsePaginator instance', functio
     $client = new Users($this->httpClient);
     $response = $client->getAll(null, new RequestOptions(null, new PaginatedRequest(0, 5, true)));
 
-    $this->assertInstanceOf(HttpResponsePaginator::class, $client->getResponsePaginator());
+    expect($client->getResponsePaginator())->toBeInstanceOf(HttpResponsePaginator::class);
 });
 
 test('getResponsePaginator() throws an exception when a request has not been made', function(): void {
     $this->expectException(\Auth0\SDK\Exception\PaginatorException::class);
     $this->expectExceptionMessage(\Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
 
-    $this->assertInstanceOf(HttpResponsePaginator::class, $this->endpoint->getResponsePaginator());
+    expect($this->endpoint->getResponsePaginator())->toBeInstanceOf(HttpResponsePaginator::class);
 });

@@ -72,7 +72,7 @@ test('get() returns a default value', function(): void {
         }
     };
 
-    $this->assertEquals(123, $configurable->getExample());
+    expect($configurable->getExample())->toEqual(123);
 });
 
 test('set() assigns a value', function(): void {
@@ -88,7 +88,7 @@ test('set() assigns a value', function(): void {
     };
 
     $configurable->setExample(456);
-    $this->assertEquals(456, $configurable->getExample());
+    expect($configurable->getExample())->toEqual(456);
 });
 
 test('set() throws an exception when a property does not exist', function(): void {
@@ -183,7 +183,7 @@ test('set() calls an onStateChange callback method on the parent class', functio
 
     $configurable->setExample(123);
 
-    $this->assertEquals('success', $this->getExample());
+    expect($this->getExample())->toEqual('success');
 });
 
 test('push() adds to an array property value that has a nullable default value', function(): void {
@@ -198,10 +198,10 @@ test('push() adds to an array property value that has a nullable default value',
         }
     };
 
-    $this->assertNull($configurable->getExample());
+    expect($configurable->getExample())->toBeNull();
 
     $configurable->pushExample('c');
-    $this->assertEquals(['c'], $configurable->getExample());
+    expect($configurable->getExample())->toEqual(['c']);
 });
 
 test('push() adds to an array property value that has a default array value', function(): void {
@@ -217,7 +217,7 @@ test('push() adds to an array property value that has a default array value', fu
     };
 
     $configurable->pushExample('c');
-    $this->assertEquals(['a','b','c'], $configurable->getExample());
+    expect($configurable->getExample())->toEqual(['a','b','c']);
 });
 
 test('push() without a value does not change the target property', function(): void {
@@ -232,8 +232,8 @@ test('push() without a value does not change the target property', function(): v
         }
     };
 
-    $this->assertEquals($configurable, $configurable->pushExample([null]));
-    $this->assertEquals(['a','b'], $configurable->getExample());
+    expect($configurable->pushExample([null]))->toEqual($configurable);
+    expect($configurable->getExample())->toEqual(['a','b']);
 });
 
 test('push() throws a ConfigurationException exception when a property is not defined', function(): void {
@@ -266,7 +266,7 @@ test('has() returns false if a value was not defined', function(): void {
         }
     };
 
-    $this->assertFalse($configurable->hasExample());
+    expect($configurable->hasExample())->toBeFalse();
 });
 
 test('has() throws a ConfigurationException exception when a property is not defined', function(): void {
@@ -338,9 +338,9 @@ test('reset() resets property values as expected', function(): void {
     };
 
     $configurable->setExample(123);
-    $this->assertEquals(123, $configurable->getExample());
+    expect($configurable->getExample())->toEqual(123);
     $configurable->reset();
-    $this->assertNull($configurable->getExample());
+    expect($configurable->getExample())->toBeNull();
 });
 
 test('reset() is not possible once lock() is used', function(): void {
@@ -382,9 +382,9 @@ test('setState() will use a supplied configuration array, and values supplied th
         'example2' => 'test2'
     ], 456, 'xyz', true);
 
-    $this->assertEquals(123, $configurable->getExample());
-    $this->assertEquals('test2', $configurable->getExample2());
-    $this->assertNull($configurable->getExample3());
+    expect($configurable->getExample())->toEqual(123);
+    expect($configurable->getExample2())->toEqual('test2');
+    expect($configurable->getExample3())->toBeNull();
 });
 
 test('setState() applies constructor values correctly', function(): void {
@@ -403,7 +403,7 @@ test('setState() applies constructor values correctly', function(): void {
 
     $configurable = new $class(null, 456, 'xyz', true);
 
-    $this->assertEquals(456, $configurable->getExample());
-    $this->assertEquals('xyz', $configurable->getExample2());
-    $this->assertTrue($configurable->getExample3());
+    expect($configurable->getExample())->toEqual(456);
+    expect($configurable->getExample2())->toEqual('xyz');
+    expect($configurable->getExample3())->toBeTrue();
 });

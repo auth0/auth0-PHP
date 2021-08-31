@@ -11,11 +11,11 @@ beforeEach(function(): void {
 test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll(['name_filter' => '__test_name_filter__']);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/roles', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/roles');
 
     $query = $this->api->getRequestQuery();
-    $this->assertStringContainsString('name_filter=__test_name_filter__', $query);
+    expect($query)->toContain('name_filter=__test_name_filter__');
 });
 
 test('create() issues an appropriate request', function(): void {
@@ -23,17 +23,17 @@ test('create() issues an appropriate request', function(): void {
 
     $this->endpoint->create($id, ['description' => '__test_description__']);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/roles', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
-    $this->assertEquals($id, $body['name']);
+    expect($body['name'])->toEqual($id);
     $this->assertArrayHasKey('description', $body);
-    $this->assertEquals('__test_description__', $body['description']);
+    expect($body['description'])->toEqual('__test_description__');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['name' => $id, 'description' => '__test_description__']), $body);
+    expect($body)->toEqual(json_encode(['name' => $id, 'description' => '__test_description__']));
 });
 
 test('get() issues an appropriate request', function(): void {
@@ -41,8 +41,8 @@ test('get() issues an appropriate request', function(): void {
 
     $this->endpoint->get($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id);
 });
 
 test('delete() issues an appropriate request', function(): void {
@@ -50,8 +50,8 @@ test('delete() issues an appropriate request', function(): void {
 
     $this->endpoint->delete($id);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id);
 });
 
 test('update() issues an appropriate request', function(): void {
@@ -59,15 +59,15 @@ test('update() issues an appropriate request', function(): void {
 
     $this->endpoint->update($id, ['name' => '__test_new_name__']);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id);
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
-    $this->assertEquals('__test_new_name__', $body['name']);
+    expect($body['name'])->toEqual('__test_new_name__');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['name' => '__test_new_name__']), $body);
+    expect($body)->toEqual(json_encode(['name' => '__test_new_name__']));
 });
 
 test('getPermissions() issues an appropriate request', function(): void {
@@ -75,8 +75,8 @@ test('getPermissions() issues an appropriate request', function(): void {
 
     $this->endpoint->getPermissions($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/roles/' . $id . '/permissions', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/roles/' . $id . '/permissions');
 });
 
 test('addPermissions() issues an appropriate request', function(): void {
@@ -89,16 +89,16 @@ test('addPermissions() issues an appropriate request', function(): void {
         ],
     ]);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id . '/permissions', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id . '/permissions');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('permissions', $body);
-    $this->assertCount(1, $body['permissions']);
+    expect($body['permissions'])->toHaveCount(1);
     $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
-    $this->assertEquals('__test_permission_name__', $body['permissions'][0]['permission_name']);
+    expect($body['permissions'][0]['permission_name'])->toEqual('__test_permission_name__');
     $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
-    $this->assertEquals('__test_server_id__', $body['permissions'][0]['resource_server_identifier']);
+    expect($body['permissions'][0]['resource_server_identifier'])->toEqual('__test_server_id__');
 });
 
 test('removePermissions() issues an appropriate request', function(): void {
@@ -111,16 +111,16 @@ test('removePermissions() issues an appropriate request', function(): void {
         ],
     ]);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/roles/' . $id . '/permissions', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id . '/permissions');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('permissions', $body);
-    $this->assertCount(1, $body['permissions']);
+    expect($body['permissions'])->toHaveCount(1);
     $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
-    $this->assertEquals('__test_permission_name__', $body['permissions'][0]['permission_name']);
+    expect($body['permissions'][0]['permission_name'])->toEqual('__test_permission_name__');
     $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
-    $this->assertEquals('__test_server_id__', $body['permissions'][0]['resource_server_identifier']);
+    expect($body['permissions'][0]['resource_server_identifier'])->toEqual('__test_server_id__');
 });
 
 test('getUsers() issues an appropriate request', function(): void {
@@ -128,8 +128,8 @@ test('getUsers() issues an appropriate request', function(): void {
 
     $this->endpoint->getUsers($id);
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/roles/' . $id . '/users', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/roles/' . $id . '/users');
 });
 
 test('addUsers() issues an appropriate request', function(): void {
@@ -137,15 +137,15 @@ test('addUsers() issues an appropriate request', function(): void {
 
     $this->endpoint->addUsers($id, ['strategy|1234567890', 'strategy|0987654321']);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/roles/' .$id . '/users', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' .$id . '/users');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('users', $body);
-    $this->assertCount(2, $body['users']);
-    $this->assertContains('strategy|1234567890', $body['users']);
-    $this->assertContains('strategy|0987654321', $body['users']);
+    expect($body['users'])->toHaveCount(2);
+    expect($body['users'])->toContain('strategy|1234567890');
+    expect($body['users'])->toContain('strategy|0987654321');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['users' => ['strategy|1234567890', 'strategy|0987654321']]), $body);
+    expect($body)->toEqual(json_encode(['users' => ['strategy|1234567890', 'strategy|0987654321']]));
 });

@@ -26,30 +26,30 @@ test('create() issues an appropriate request', function(): void {
 
     $this->endpoint->create($mock->id, $mock->name, $mock->branding, $mock->metadata, $mock->body);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/organizations', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/organizations');
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
 
     $this->assertArrayHasKey('name', $body);
-    $this->assertEquals($mock->id, $body['name']);
+    expect($body['name'])->toEqual($mock->id);
 
     $this->assertArrayHasKey('display_name', $body);
-    $this->assertEquals($mock->name, $body['display_name']);
+    expect($body['display_name'])->toEqual($mock->name);
 
     $this->assertArrayHasKey('branding', $body);
     $this->assertArrayHasKey('logo_url', $body['branding']);
-    $this->assertEquals($mock->branding['logo_url'], $body['branding']['logo_url']);
+    expect($body['branding']['logo_url'])->toEqual($mock->branding['logo_url']);
 
     $this->assertArrayHasKey('metadata', $body);
     $this->assertArrayHasKey('test', $body['metadata']);
-    $this->assertEquals($mock->metadata['test'], $body['metadata']['test']);
+    expect($body['metadata']['test'])->toEqual($mock->metadata['test']);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(array_merge(['name' => $mock->id, 'display_name' => $mock->name, 'branding' => $mock->branding, 'metadata' => $mock->metadata], $mock->body)), $body);
+    expect($body)->toEqual(json_encode(array_merge(['name' => $mock->id, 'display_name' => $mock->name, 'branding' => $mock->branding, 'metadata' => $mock->metadata], $mock->body)));
 });
 
 test('create() throws an exception when an invalid `name` argument is used', function(): void {
@@ -86,30 +86,30 @@ test('update() issues an appropriate request', function(): void {
 
     $this->endpoint->update($mock->id, $mock->name, $mock->displayName, $mock->branding, $mock->metadata, $mock->body);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/organizations/' . $mock->id, $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/organizations/' . $mock->id);
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
 
     $this->assertArrayHasKey('name', $body);
-    $this->assertEquals($mock->name, $body['name']);
+    expect($body['name'])->toEqual($mock->name);
 
     $this->assertArrayHasKey('display_name', $body);
-    $this->assertEquals($mock->displayName, $body['display_name']);
+    expect($body['display_name'])->toEqual($mock->displayName);
 
     $this->assertArrayHasKey('branding', $body);
     $this->assertArrayHasKey('logo_url', $body['branding']);
-    $this->assertEquals($mock->branding['logo_url'], $body['branding']['logo_url']);
+    expect($body['branding']['logo_url'])->toEqual($mock->branding['logo_url']);
 
     $this->assertArrayHasKey('metadata', $body);
     $this->assertArrayHasKey('test', $body['metadata']);
-    $this->assertEquals($mock->metadata['test'], $body['metadata']['test']);
+    expect($body['metadata']['test'])->toEqual($mock->metadata['test']);
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(array_merge(['name' => $mock->name, 'display_name' => $mock->displayName, 'branding' => $mock->branding, 'metadata' => $mock->metadata], $mock->body)), $body);
+    expect($body)->toEqual(json_encode(array_merge(['name' => $mock->name, 'display_name' => $mock->displayName, 'branding' => $mock->branding, 'metadata' => $mock->metadata], $mock->body)));
 });
 
 test('update() throws an exception when an invalid `id` is used', function(): void {
@@ -129,11 +129,11 @@ test('update() throws an exception when an invalid `displayName` is used', funct
 test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete('test-organization');
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/organizations/test-organization', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/organizations/test-organization');
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 });
 
 test('delete() throws an exception when an invalid `id` is used', function(): void {
@@ -146,15 +146,15 @@ test('delete() throws an exception when an invalid `id` is used', function(): vo
 test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll();
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations');
 });
 
 test('get() issues an appropriate request', function(): void {
     $this->endpoint->get('123');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/123', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/123');
 });
 
 test('get() throws an exception when an invalid `id` is used', function(): void {
@@ -167,8 +167,8 @@ test('get() throws an exception when an invalid `id` is used', function(): void 
 test('getByName() issues an appropriate request', function(): void {
     $this->endpoint->getByName('test-organization');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/name/test-organization', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/name/test-organization');
 });
 
 test('getByName() throws an exception when an invalid `name` is used', function(): void {
@@ -181,8 +181,8 @@ test('getByName() throws an exception when an invalid `name` is used', function(
 test('getEnabledConnections() issues an appropriate request', function(): void {
     $this->endpoint->getEnabledConnections('test-organization');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections');
 });
 
 test('getEnabledConnections() throws an exception when an invalid `id` is used', function(): void {
@@ -195,8 +195,8 @@ test('getEnabledConnections() throws an exception when an invalid `id` is used',
 test('getEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->getEnabledConnection('test-organization', 'test-connection');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection');
 });
 
 test('getEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
@@ -216,15 +216,15 @@ test('getEnabledConnection() throws an exception when an invalid `connectionId` 
 test('addEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->addEnabledConnection('test-organization', 'test-connection', ['assign_membership_on_login' => true]);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('connection_id', $body);
-    $this->assertEquals('test-connection', $body['connection_id']);
+    expect($body['connection_id'])->toEqual('test-connection');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['connection_id' => 'test-connection', 'assign_membership_on_login' => true]), $body);
+    expect($body)->toEqual(json_encode(['connection_id' => 'test-connection', 'assign_membership_on_login' => true]));
 });
 
 test('addEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
@@ -244,18 +244,18 @@ test('addEnabledConnection() throws an exception when an invalid `connectionId` 
 test('updateEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->updateEnabledConnection('test-organization', 'test-connection', ['assign_membership_on_login' => true]);
 
-    $this->assertEquals('PATCH', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection');
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('assign_membership_on_login', $body);
-    $this->assertTrue($body['assign_membership_on_login']);
+    expect($body['assign_membership_on_login'])->toBeTrue();
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['assign_membership_on_login' => true]), $body);
+    expect($body)->toEqual(json_encode(['assign_membership_on_login' => true]));
 });
 
 test('updateEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
@@ -275,8 +275,8 @@ test('updateEnabledConnection() throws an exception when an invalid `connectionI
 test('removeEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->removeEnabledConnection('test-organization', 'test-connection');
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection');
 });
 
 test('removeEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
@@ -296,8 +296,8 @@ test('removeEnabledConnection() throws an exception when an invalid `connectionI
 test('getMembers() issues an appropriate request', function(): void {
     $this->endpoint->getMembers('test-organization');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/members', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members');
 });
 
 test('getMembers() throws an exception when an invalid `id` is used', function(): void {
@@ -310,18 +310,18 @@ test('getMembers() throws an exception when an invalid `id` is used', function()
 test('addMembers() issues an appropriate request', function(): void {
     $this->endpoint->addMembers('test-organization', ['test-user']);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/members', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members');
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('members', $body);
-    $this->assertContains('test-user', $body['members']);
+    expect($body['members'])->toContain('test-user');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['members' => ['test-user']]), $body);
+    expect($body)->toEqual(json_encode(['members' => ['test-user']]));
 });
 
 test('addMembers() throws an exception when an invalid `id` is used', function(): void {
@@ -341,15 +341,15 @@ test('addMembers() throws an exception when an invalid `members` is used', funct
 test('removeMembers() issues an appropriate request', function(): void {
     $this->endpoint->removeMembers('test-organization', ['test-user']);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/members', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('members', $body);
-    $this->assertContains('test-user', $body['members']);
+    expect($body['members'])->toContain('test-user');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['members' => ['test-user']]), $body);
+    expect($body)->toEqual(json_encode(['members' => ['test-user']]));
 });
 
 test('removeMembers() throws an exception when an invalid `id` is used', function(): void {
@@ -369,8 +369,8 @@ test('removeMembers() throws an exception when an invalid `members` is used', fu
 test('getMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->getMemberRoles('test-organization', 'test-user');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles');
 });
 
 test('getMemberRoles() throws an exception when an invalid `id` is used', function(): void {
@@ -390,18 +390,18 @@ test('getMemberRoles() throws an exception when an invalid `userId` is used', fu
 test('addMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->addMemberRoles('test-organization', 'test-user', ['test-role']);
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles');
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('roles', $body);
-    $this->assertContains('test-role', $body['roles']);
+    expect($body['roles'])->toContain('test-role');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['roles' => ['test-role']]), $body);
+    expect($body)->toEqual(json_encode(['roles' => ['test-role']]));
 });
 
 test('addMemberRoles() throws an exception when an invalid `id` is used', function(): void {
@@ -428,15 +428,15 @@ test('addMemberRoles() throws an exception when an invalid `roles` is used', fun
 test('removeMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->removeMemberRoles('test-organization', 'test-user', ['test-role']);
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('roles', $body);
-    $this->assertContains('test-role', $body['roles']);
+    expect($body['roles'])->toContain('test-role');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['roles' => ['test-role']]), $body);
+    expect($body)->toEqual(json_encode(['roles' => ['test-role']]));
 });
 
 test('removeMemberRoles() throws an exception when an invalid `id` is used', function(): void {
@@ -463,8 +463,8 @@ test('removeMemberRoles() throws an exception when an invalid `roles` is used', 
 test('getInvitations() issues an appropriate request', function(): void {
     $this->endpoint->getInvitations('test-organization');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/invitations', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/invitations');
 });
 
 test('getInvitations() throws an exception when an invalid `id` is used', function(): void {
@@ -477,8 +477,8 @@ test('getInvitations() throws an exception when an invalid `id` is used', functi
 test('getInvitation() issues an appropriate request', function(): void {
     $this->endpoint->getInvitation('test-organization', 'test-invitation');
 
-    $this->assertEquals('GET', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/invitations/test-invitation', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/invitations/test-invitation');
 });
 
 test('getInvitation() throws an exception when an invalid `id` is used', function(): void {
@@ -503,24 +503,24 @@ test('createInvitation() issues an appropriate request', function(): void {
         ['email' => 'email@test.com']
     );
 
-    $this->assertEquals('POST', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/invitations', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/invitations');
 
     $headers = $this->api->getRequestHeaders();
-    $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('client_id', $body);
-    $this->assertEquals('test-client', $body['client_id']);
+    expect($body['client_id'])->toEqual('test-client');
     $this->assertArrayHasKey('inviter', $body);
     $this->assertArrayHasKey('name', $body['inviter']);
-    $this->assertEquals('Test Sender', $body['inviter']['name']);
+    expect($body['inviter']['name'])->toEqual('Test Sender');
     $this->assertArrayHasKey('invitee', $body);
     $this->assertArrayHasKey('email', $body['invitee']);
-    $this->assertEquals('email@test.com', $body['invitee']['email']);
+    expect($body['invitee']['email'])->toEqual('email@test.com');
 
     $body = $this->api->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['client_id' => 'test-client', 'inviter' => ['name' => 'Test Sender'], 'invitee' => ['email' => 'email@test.com']]), $body);
+    expect($body)->toEqual(json_encode(['client_id' => 'test-client', 'inviter' => ['name' => 'Test Sender'], 'invitee' => ['email' => 'email@test.com']]));
 });
 
 test('createInvitation() throws an exception when an invalid `id` is used', function(): void {
@@ -568,8 +568,8 @@ test('createInvitation() throws an exception when an invalid `invitee.email` is 
 test('deleteInvitation() issues an appropriate request', function(): void {
     $this->endpoint->deleteInvitation('test-organization', 'test-invitation');
 
-    $this->assertEquals('DELETE', $this->api->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/organizations/test-organization/invitations/test-invitation', $this->api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/invitations/test-invitation');
 });
 
 test('deleteInvitation() throws an exception when an invalid `id` is used', function(): void {
