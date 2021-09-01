@@ -2,446 +2,346 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
+uses()->group('management', 'management.users');
 
-use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
+beforeEach(function(): void {
+    $this->endpoint = $this->api->mock()->users();
+});
 
-/**
- * Class UsersTest.
- */
-class UsersTest extends TestCase
-{
-    /**
-     * Test getAll() request.
-     */
-    public function testGetAll(): void
-    {
-        $id = uniqid();
+test('getAll() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->getAll(['test' => $id]);
+    $this->endpoint->getAll(['test' => $id]);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/users', $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users');
 
-        $query = $api->getRequestQuery();
-        $this->assertStringContainsString('&test=' . $id, $query);
-    }
+    $query = $this->api->getRequestQuery();
+    expect($query)->toContain('&test=' . $id);
+});
 
-    /**
-     * Test get() request.
-     */
-    public function testGet(): void
-    {
-        $id = uniqid();
+test('get() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->get($id);
+    $this->endpoint->get($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $id, $api->getRequestUrl());
-    }
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $id);
+});
 
-    /**
-     * Test update() request.
-     */
-    public function testUpdate(): void
-    {
-        $mockup = (object) [
-            'id' => uniqid(),
-            'query' => [
-                'given_name' => uniqid(),
-                'user_metadata' => [
-                    '__test_meta_key__' => uniqid(),
-                ],
+test('update() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'query' => [
+            'given_name' => uniqid(),
+            'user_metadata' => [
+                '__test_meta_key__' => uniqid(),
             ],
-        ];
+        ],
+    ];
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->update($mockup->id, $mockup->query);
+    $this->endpoint->update($mockup->id, $mockup->query);
 
-        $this->assertEquals('PATCH', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id, $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id);
 
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('given_name', $body);
-        $this->assertEquals($mockup->query['given_name'], $body['given_name']);
-        $this->assertArrayHasKey('user_metadata', $body);
-        $this->assertArrayHasKey('__test_meta_key__', $body['user_metadata']);
-        $this->assertEquals($mockup->query['user_metadata']['__test_meta_key__'], $body['user_metadata']['__test_meta_key__']);
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('given_name', $body);
+    expect($body['given_name'])->toEqual($mockup->query['given_name']);
+    $this->assertArrayHasKey('user_metadata', $body);
+    $this->assertArrayHasKey('__test_meta_key__', $body['user_metadata']);
+    expect($body['user_metadata']['__test_meta_key__'])->toEqual($mockup->query['user_metadata']['__test_meta_key__']);
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode($mockup->query), $body);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode($mockup->query));
+});
 
-    /**
-     * Test create() request.
-     */
-    public function testCreate(): void
-    {
-        $mockup = (object) [
-            'connection' => uniqid(),
-            'query' => [
-                'email' => uniqid(),
-                'password' => uniqid(),
-            ],
-        ];
+test('create() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'connection' => uniqid(),
+        'query' => [
+            'email' => uniqid(),
+            'password' => uniqid(),
+        ],
+    ];
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->create($mockup->connection, $mockup->query);
+    $this->endpoint->create($mockup->connection, $mockup->query);
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users', $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users');
 
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('connection', $body);
-        $this->assertEquals($mockup->connection, $body['connection']);
-        $this->assertArrayHasKey('email', $body);
-        $this->assertEquals($mockup->query['email'], $body['email']);
-        $this->assertArrayHasKey('password', $body);
-        $this->assertEquals($mockup->query['password'], $body['password']);
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('connection', $body);
+    expect($body['connection'])->toEqual($mockup->connection);
+    $this->assertArrayHasKey('email', $body);
+    expect($body['email'])->toEqual($mockup->query['email']);
+    $this->assertArrayHasKey('password', $body);
+    expect($body['password'])->toEqual($mockup->query['password']);
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode(array_merge(['connection' => $mockup->connection], $mockup->query)), $body);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(array_merge(['connection' => $mockup->connection], $mockup->query)));
+});
 
-    /**
-     * Test delete() request.
-     */
-    public function testDelete(): void
-    {
-        $id = uniqid();
+test('delete() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->delete($id);
+    $this->endpoint->delete($id);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $id, $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $id);
 
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-    }
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
 
-    /**
-     * Test linkAccount() request.
-     */
-    public function testLinkAccount(): void
-    {
-        $mockup = (object) [
-            'id' => uniqid(),
-            'query' => [
-                'provider' => uniqid(),
-                'connection_id' => uniqid(),
-                'user_id' => uniqid(),
-            ],
-        ];
-
-        $api = new MockManagementApi();
-        $api->mock()->users()->linkAccount($mockup->id, $mockup->query);
-
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/identities', $api->getRequestUrl());
-
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('provider', $body);
-        $this->assertEquals($mockup->query['provider'], $body['provider']);
-        $this->assertArrayHasKey('connection_id', $body);
-        $this->assertEquals($mockup->query['connection_id'], $body['connection_id']);
-        $this->assertArrayHasKey('user_id', $body);
-        $this->assertEquals($mockup->query['user_id'], $body['user_id']);
-
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode($mockup->query), $body);
-    }
-
-    /**
-     * Test unlinkAccount() request.
-     */
-    public function testUnlinkAccount(): void
-    {
-        $mockup = (object) [
-            'id' => uniqid(),
+test('linkAccount() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'query' => [
             'provider' => uniqid(),
-            'identity' => uniqid(),
-        ];
+            'connection_id' => uniqid(),
+            'user_id' => uniqid(),
+        ],
+    ];
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->unlinkAccount($mockup->id, $mockup->provider, $mockup->identity);
+    $this->endpoint->linkAccount($mockup->id, $mockup->query);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/identities/' . $mockup->provider . '/' . $mockup->identity, $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/identities');
 
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-    }
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
-    /**
-     * Test deleteMultifactorProvider() request.
-     */
-    public function testDeleteMultifactorProvider(): void
-    {
-        $mockup = (object) [
-            'id' => uniqid(),
-            'provider' => uniqid(),
-        ];
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('provider', $body);
+    expect($body['provider'])->toEqual($mockup->query['provider']);
+    $this->assertArrayHasKey('connection_id', $body);
+    expect($body['connection_id'])->toEqual($mockup->query['connection_id']);
+    $this->assertArrayHasKey('user_id', $body);
+    expect($body['user_id'])->toEqual($mockup->query['user_id']);
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->deleteMultifactorProvider($mockup->id, $mockup->provider);
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode($mockup->query));
+});
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/multifactor/' . $mockup->provider, $api->getRequestUrl());
+test('unlinkAccount() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'provider' => uniqid(),
+        'identity' => uniqid(),
+    ];
 
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-    }
+    $this->endpoint->unlinkAccount($mockup->id, $mockup->provider, $mockup->identity);
 
-    /**
-     * Test getRoles() request.
-     */
-    public function testThatGetRolesRequestIsFormattedProperly(): void
-    {
-        $mockupId = uniqid();
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/identities/' . $mockup->provider . '/' . $mockup->identity);
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->getRoles($mockupId);
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/users/' . $mockupId . '/roles', $api->getRequestUrl());
-    }
+test('deleteMultifactorProvider() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'provider' => uniqid(),
+    ];
 
-    /**
-     * Test removeRoles() request.
-     */
-    public function testRemoveRoles(): void
-    {
-        $mockup = (object) [
-            'id' => uniqid(),
-            'roles' => [
-                uniqid(),
-                uniqid(),
+    $this->endpoint->deleteMultifactorProvider($mockup->id, $mockup->provider);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/multifactor/' . $mockup->provider);
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
+
+test('getRoles() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
+
+    $this->endpoint->getRoles($mockupId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/roles');
+});
+
+test('removeRoles() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'roles' => [
+            uniqid(),
+            uniqid(),
+        ],
+    ];
+
+    $this->endpoint->removeRoles($mockup->id, $mockup->roles);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/roles');
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('roles', $body);
+    expect($body['roles'])->toHaveCount(2);
+    expect($body['roles'][0])->toEqual($mockup->roles[0]);
+    expect($body['roles'][1])->toEqual($mockup->roles[1]);
+
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual('{"roles":' . json_encode($mockup->roles) . '}');
+});
+
+test('addRoles() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'roles' => [
+            uniqid(),
+            uniqid(),
+        ],
+    ];
+
+    $this->endpoint->addRoles($mockup->id, $mockup->roles);
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/roles');
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('roles', $body);
+    expect($body['roles'])->toHaveCount(2);
+    expect($body['roles'][0])->toEqual($mockup->roles[0]);
+    expect($body['roles'][1])->toEqual($mockup->roles[1]);
+
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual('{"roles":' . json_encode($mockup->roles) . '}');
+});
+
+test('getEnrollments() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
+
+    $this->endpoint->getEnrollments($mockupId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockupId . '/enrollments');
+});
+
+test('getPermissions() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
+
+    $this->endpoint->getPermissions($mockupId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/permissions');
+});
+
+test('removePermissions() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'permissions' => [
+            [
+                'permission_name' => 'test:' . uniqid(),
+                'resource_server_identifier' => uniqid(),
             ],
-        ];
+        ],
+    ];
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->removeRoles($mockup->id, $mockup->roles);
+    $this->endpoint->removePermissions($mockup->id, $mockup->permissions);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/roles', $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/permissions');
 
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('roles', $body);
-        $this->assertCount(2, $body['roles']);
-        $this->assertEquals($mockup->roles[0], $body['roles'][0]);
-        $this->assertEquals($mockup->roles[1], $body['roles'][1]);
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('permissions', $body);
+    expect($body['permissions'])->toHaveCount(1);
+    $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
+    expect($body['permissions'][0]['permission_name'])->toEqual($mockup->permissions[0]['permission_name']);
+    $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
+    expect($body['permissions'][0]['resource_server_identifier'])->toEqual($mockup->permissions[0]['resource_server_identifier']);
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals('{"roles":' . json_encode($mockup->roles) . '}', $body);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual('{"permissions":' . json_encode($mockup->permissions) . '}');
+});
 
-    /**
-     * Test addRoles() request.
-     */
-    public function testAddRoles(): void
-    {
-        $mockup = (object) [
-            'id' => uniqid(),
-            'roles' => [
-                uniqid(),
-                uniqid(),
+test('addPermissions() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'permissions' => [
+            [
+                'permission_name' => 'test:' . uniqid(),
+                'resource_server_identifier' => uniqid(),
             ],
-        ];
+        ],
+    ];
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->addRoles($mockup->id, $mockup->roles);
+    $this->endpoint->addPermissions($mockup->id, $mockup->permissions);
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/roles', $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/permissions');
 
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('roles', $body);
-        $this->assertCount(2, $body['roles']);
-        $this->assertEquals($mockup->roles[0], $body['roles'][0]);
-        $this->assertEquals($mockup->roles[1], $body['roles'][1]);
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('permissions', $body);
+    expect($body['permissions'])->toHaveCount(1);
+    $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
+    expect($body['permissions'][0]['permission_name'])->toEqual($mockup->permissions[0]['permission_name']);
+    $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
+    expect($body['permissions'][0]['resource_server_identifier'])->toEqual($mockup->permissions[0]['resource_server_identifier']);
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals('{"roles":' . json_encode($mockup->roles) . '}', $body);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual('{"permissions":' . json_encode($mockup->permissions) . '}');
+});
 
-    /**
-     * Test getEnrollments() request.
-     */
-    public function testGetEnrollments(): void
-    {
+test('getLogs() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
+
+    $this->endpoint->getLogs($mockupId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/logs');
+});
+
+test('getOrganizations() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
+
+    $this->endpoint->getOrganizations($mockupId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/organizations');
+});
+
+test('createRecoveryCode() issues an appropriate request', function(): void {
         $mockupId = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->getEnrollments($mockupId);
+    $this->endpoint->createRecoveryCode($mockupId);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockupId . '/enrollments', $api->getRequestUrl());
-    }
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockupId . '/recovery-code-regeneration');
 
-    /**
-     * Test getPermissions() request.
-     */
-    public function testGetPermissions(): void
-    {
-        $mockupId = uniqid();
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->getPermissions($mockupId);
+test('invalidateBrowsers() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/users/' . $mockupId . '/permissions', $api->getRequestUrl());
-    }
+    $this->endpoint->invalidateBrowsers($mockupId);
 
-    /**
-     * Test removePermissions() request.
-     */
-    public function testRemovePermissions(): void
-    {
-        $mockup = (object) [
-            'id' => uniqid(),
-            'permissions' => [
-                [
-                    'permission_name' => 'test:' . uniqid(),
-                    'resource_server_identifier' => uniqid(),
-                ],
-            ],
-        ];
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockupId . '/multifactor/actions/invalidate-remember-browser');
 
-        $api = new MockManagementApi();
-        $api->mock()->users()->removePermissions($mockup->id, $mockup->permissions);
-
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/permissions', $api->getRequestUrl());
-
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('permissions', $body);
-        $this->assertCount(1, $body['permissions']);
-        $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
-        $this->assertEquals($mockup->permissions[0]['permission_name'], $body['permissions'][0]['permission_name']);
-        $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
-        $this->assertEquals($mockup->permissions[0]['resource_server_identifier'], $body['permissions'][0]['resource_server_identifier']);
-
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals('{"permissions":' . json_encode($mockup->permissions) . '}', $body);
-    }
-
-    /**
-     * Test addPermissions() request.
-     */
-    public function testThatAddPermissionsRequestIsFormattedProperly(): void
-    {
-        $mockup = (object) [
-            'id' => uniqid(),
-            'permissions' => [
-                [
-                    'permission_name' => 'test:' . uniqid(),
-                    'resource_server_identifier' => uniqid(),
-                ],
-            ],
-        ];
-
-        $api = new MockManagementApi();
-        $api->mock()->users()->addPermissions($mockup->id, $mockup->permissions);
-
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockup->id . '/permissions', $api->getRequestUrl());
-
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('permissions', $body);
-        $this->assertCount(1, $body['permissions']);
-        $this->assertArrayHasKey('permission_name', $body['permissions'][0]);
-        $this->assertEquals($mockup->permissions[0]['permission_name'], $body['permissions'][0]['permission_name']);
-        $this->assertArrayHasKey('resource_server_identifier', $body['permissions'][0]);
-        $this->assertEquals($mockup->permissions[0]['resource_server_identifier'], $body['permissions'][0]['resource_server_identifier']);
-
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals('{"permissions":' . json_encode($mockup->permissions) . '}', $body);
-    }
-
-    /**
-     * Test getLogs() request.
-     */
-    public function testGetLogs(): void
-    {
-        $mockupId = uniqid();
-
-        $api = new MockManagementApi();
-        $api->mock()->users()->getLogs($mockupId);
-
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/users/' . $mockupId . '/logs', $api->getRequestUrl());
-    }
-
-    /**
-     * Test getOrganizations() request.
-     */
-    public function testGetOrganizations(): void
-    {
-        $mockupId = uniqid();
-
-        $api = new MockManagementApi();
-        $api->mock()->users()->getOrganizations($mockupId);
-
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/users/' . $mockupId . '/organizations', $api->getRequestUrl());
-    }
-
-    /**
-     * Test createRecoveryCode() request.
-     */
-    public function testThatCreateRecoveryCodeRequestIsFormattedProperly(): void
-    {
-        $mockupId = uniqid();
-
-        $api = new MockManagementApi();
-        $api->mock()->users()->createRecoveryCode($mockupId);
-
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockupId . '/recovery-code-regeneration', $api->getRequestUrl());
-
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-    }
-
-    /**
-     * Test invalidateBrowsers() request.
-     */
-    public function testInvalidateBrowsers(): void
-    {
-        $mockupId = uniqid();
-
-        $api = new MockManagementApi();
-        $api->mock()->users()->invalidateBrowsers($mockupId);
-
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/users/' . $mockupId . '/multifactor/actions/invalidate-remember-browser', $api->getRequestUrl());
-
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-    }
-}
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});

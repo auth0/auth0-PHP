@@ -43,7 +43,7 @@ abstract class ManagementEndpoint
      */
     final public function getLastRequest(): ?HttpRequest
     {
-        return $this->httpClient->getLastRequest();
+        return $this->getHttpClient()->getLastRequest();
     }
 
     /**
@@ -51,6 +51,6 @@ abstract class ManagementEndpoint
      */
     final public function getResponsePaginator(): HttpResponsePaginator
     {
-        return new HttpResponsePaginator($this->httpClient);
+        return new HttpResponsePaginator($this->getHttpClient());
     }
 }

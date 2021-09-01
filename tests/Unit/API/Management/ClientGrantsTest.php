@@ -2,158 +2,124 @@
 
 declare(strict_types=1);
 
-use Auth0\SDK\Utility\Request\FilteredRequest;
-use Auth0\SDK\Utility\Request\PaginatedRequest;
-use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\Tests\Utilities\MockManagementApi;
-
-uses()->group('management', 'clientgrants');
+uses()->group('management', 'management.client_grants');
 
 beforeEach(function(): void {
-    $this->sdk = new MockManagementApi();
-
-    $this->filteredRequest = new FilteredRequest();
-    $this->paginatedRequest = new PaginatedRequest();
-    $this->requestOptions = new RequestOptions(
-        $this->filteredRequest,
-        $this->paginatedRequest
-    );
+    $this->endpoint = $this->api->mock()->clientGrants();
 });
 
-test('create() throws an error when missing required variables', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
+test('create() throws an error when clientId is missing', function(): void {
+    $this->endpoint->create('', '');
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'clientId'));
 
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'clientId'));
+test('create() throws an error when audience is missing', function(): void {
+    $this->endpoint->create(uniqid(), '');
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'audience'));
 
-    $endpoint->create('', '');
-
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'audience'));
-
-    $endpoint->create(uniqid(), '');
-});
-
-test('create() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
-
+test('create() issues an appropriate request', function(): void {
     $clientId = uniqid();
     $audience = uniqid();
     $scope = uniqid();
 
-    $endpoint->create($clientId, $audience, [$scope]);
+    $this->endpoint->create($clientId, $audience, [$scope]);
 
-    $this->assertEquals('POST', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/client-grants', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants');
 
-    $body = $this->sdk->getRequestBody();
+    $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('client_id', $body);
     $this->assertArrayHasKey('audience', $body);
     $this->assertArrayHasKey('scope', $body);
-    $this->assertEquals($clientId, $body['client_id']);
-    $this->assertEquals($audience, $body['audience']);
-    $this->assertContains($scope, $body['scope']);
+    expect($body['client_id'])->toEqual($clientId);
+    expect($body['audience'])->toEqual($audience);
+    expect($body['scope'])->toContain($scope);
 
-    $body = $this->sdk->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['client_id' => $clientId, 'audience' => $audience, 'scope' => [$scope]]), $body);
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['client_id' => $clientId, 'audience' => $audience, 'scope' => [$scope]]));
 });
 
-test('getAll() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
-
+test('getAll() issues an appropriate request', function(): void {
     $exampleParam = uniqid();
 
-    $endpoint->getAll(['example' => $exampleParam]);
+    $this->endpoint->getAll(['example' => $exampleParam]);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertEquals('example=' . $exampleParam, $this->sdk->getRequestQuery(null));
+    expect($this->api->getRequestQuery(null))->toEqual('example=' . $exampleParam);
 });
 
 test('getAll() supports field filtering parameters', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
-
     $field1 = uniqid();
     $field2 = uniqid();
     $this->filteredRequest->setFields([$field1, $field2])->setIncludeFields(true);
 
-    $endpoint->getAll(null, $this->requestOptions);
+    $this->endpoint->getAll(null, $this->requestOptions);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertStringContainsString('&fields=' . rawurlencode($field1 . ',' . $field2), $this->sdk->getRequestQuery());
-    $this->assertStringContainsString('&include_fields=true', $this->sdk->getRequestQuery());
+    expect($this->api->getRequestQuery())->toContain('&fields=' . rawurlencode($field1 . ',' . $field2));
+    expect($this->api->getRequestQuery())->toContain('&include_fields=true');
 });
 
 test('getAll() supports standard pagination parameters', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
-
     $this->paginatedRequest->setPage(1)->setPerPage(5)->setIncludeTotals(true);
 
-    $endpoint->getAll(null, $this->requestOptions);
+    $this->endpoint->getAll(null, $this->requestOptions);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertStringContainsString('&page=1', $this->sdk->getRequestQuery());
-    $this->assertStringContainsString('&per_page=5', $this->sdk->getRequestQuery());
-    $this->assertStringContainsString('&include_totals=true', $this->sdk->getRequestQuery());
+    expect($this->api->getRequestQuery())->toContain('&page=1');
+    expect($this->api->getRequestQuery())->toContain('&per_page=5');
+    expect($this->api->getRequestQuery())->toContain('&include_totals=true');
 });
 
-test('getAllByAudience() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
-
+test('getAllByAudience() issues an appropriate request', function(): void {
     $audience = uniqid();
 
-    $endpoint->getAllByAudience($audience);
+    $this->endpoint->getAllByAudience($audience);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertEquals('audience=' . $audience, $this->sdk->getRequestQuery(null));
+    expect($this->api->getRequestQuery(null))->toEqual('audience=' . $audience);
 });
 
-test('getAllByClientId() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
-
+test('getAllByClientId() issues an appropriate request', function(): void {
     $clientId = uniqid();
 
-    $endpoint->getAllByClientId($clientId);
+    $this->endpoint->getAllByClientId($clientId);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/client-grants', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
 
-    $this->assertEquals('client_id=' . $clientId, $this->sdk->getRequestQuery(null));
+    expect($this->api->getRequestQuery(null))->toEqual('client_id=' . $clientId);
 });
 
-test('update() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
-
+test('update() issues an appropriate request', function(): void {
     $grantId = uniqid();
     $scope = uniqid();
 
-    $endpoint->update($grantId, [$scope]);
+    $this->endpoint->update($grantId, [$scope]);
 
-    $this->assertEquals('PATCH', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/client-grants/' . $grantId, $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants/' . $grantId);
 
-    $body = $this->sdk->getRequestBody();
+    $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('scope', $body);
-    $this->assertContains($scope, $body['scope']);
+    expect($body['scope'])->toContain($scope);
 
-    $body = $this->sdk->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['scope' => [$scope]]), $body);
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['scope' => [$scope]]));
 });
 
-test('delete() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->clientGrants();
-
+test('delete() issues an appropriate request', function(): void {
     $grantId = uniqid();
 
-    $endpoint->delete($grantId);
+    $this->endpoint->delete($grantId);
 
-    $this->assertEquals('DELETE', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/client-grants/' . $grantId, $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants/' . $grantId);
 });

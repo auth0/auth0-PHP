@@ -19,9 +19,9 @@ test('__construct() accepts a configuration array', function(): void {
         'redirectUri' => $redirectUri,
     ]);
 
-    $this->assertEquals($domain, $sdk->getDomain());
-    $this->assertEquals($clientId, $sdk->getClientId());
-    $this->assertEquals($redirectUri, $sdk->getRedirectUri());
+    expect($sdk->getDomain())->toEqual($domain);
+    expect($sdk->getClientId())->toEqual($clientId);
+    expect($sdk->getRedirectUri())->toEqual($redirectUri);
 });
 
 test('__construct() overrides arguments with configuration array', function(): void
@@ -39,20 +39,17 @@ test('__construct() overrides arguments with configuration array', function(): v
         'redirectUri' => $redirectUri,
     ], $domain2);
 
-    $this->assertEquals($domain, $sdk->getDomain());
+    expect($sdk->getDomain())->toEqual($domain);
 });
 
 test('__construct() does not accept invalid types from configuration array', function(): void
 {
     $randomNumber = mt_rand();
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_INCOMPATIBLE_NULLABLE, 'domain', 'string', 'integer'));
-
     new SdkConfiguration([
         'domain' => $randomNumber,
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_INCOMPATIBLE_NULLABLE, 'domain', 'string', 'int'));
 
 test('__construct() successfully only stores the host when passed a full uri as `domain`', function(): void
 {
@@ -63,7 +60,7 @@ test('__construct() successfully only stores the host when passed a full uri as 
         'redirectUri' => uniqid(),
     ]);
 
-    $this->assertEquals('test.auth0.com', $sdk->getDomain());
+    expect($sdk->getDomain())->toEqual('test.auth0.com');
 });
 
 test('__construct() throws an exception if domain is an empty string', function(): void {
@@ -71,25 +68,19 @@ test('__construct() throws an exception if domain is an empty string', function(
     $clientId = uniqid();
     $redirectUri = uniqid();
 
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
-
     $sdk = new SdkConfiguration([
         'domain' => '',
         'cookieSecret' => $cookieSecret,
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
 
 test('__construct() throws an exception if an invalid token algorithm is specified', function(): void {
     $domain = uniqid();
     $cookieSecret = uniqid();
     $clientId = uniqid();
     $redirectUri = uniqid();
-
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_INVALID_TOKEN_ALGORITHM);
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
@@ -98,16 +89,13 @@ test('__construct() throws an exception if an invalid token algorithm is specifi
         'redirectUri' => $redirectUri,
         'tokenAlgorithm' => 'X8675309'
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_INVALID_TOKEN_ALGORITHM);
 
 test('__construct() throws an exception if an invalid token leeway is specified', function(): void {
     $domain = uniqid();
     $cookieSecret = uniqid();
     $clientId = uniqid();
     $redirectUri = uniqid();
-
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'tokenLeeway'));
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
@@ -116,24 +104,7 @@ test('__construct() throws an exception if an invalid token leeway is specified'
         'redirectUri' => $redirectUri,
         'tokenLeeway' => 'TEST'
     ]);
-});
-
-test('__construct() converts token leeway passed as a string into an int silently', function(): void {
-    $domain = uniqid();
-    $cookieSecret = uniqid();
-    $clientId = uniqid();
-    $redirectUri = uniqid();
-
-    $sdk = new SdkConfiguration([
-        'domain' => $domain,
-        'cookieSecret' => $cookieSecret,
-        'clientId' => $clientId,
-        'redirectUri' => $redirectUri,
-        'tokenLeeway' => '300'
-    ]);
-
-    $this->assertEquals(300, $sdk->getTokenLeeway());
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_INCOMPATIBLE, 'tokenLeeway', 'int', 'string'));
 
 test('successfully updates values', function(): void
 {
@@ -154,20 +125,20 @@ test('successfully updates values', function(): void
         'redirectUri' => $redirectUri1,
     ]);
 
-    $this->assertEquals($domain1, $sdk->getDomain());
-    $this->assertEquals($cookieSecret1, $sdk->getCookieSecret());
-    $this->assertEquals($clientId1, $sdk->getClientId());
-    $this->assertEquals($redirectUri1, $sdk->getRedirectUri());
+    expect($sdk->getDomain())->toEqual($domain1);
+    expect($sdk->getCookieSecret())->toEqual($cookieSecret1);
+    expect($sdk->getClientId())->toEqual($clientId1);
+    expect($sdk->getRedirectUri())->toEqual($redirectUri1);
 
     $sdk->setDomain($domain2);
     $sdk->setCookieSecret($cookieSecret2);
     $sdk->setClientId($clientId2);
     $sdk->setRedirectUri($redirectUri2);
 
-    $this->assertEquals($domain2, $sdk->getDomain());
-    $this->assertEquals($cookieSecret2, $sdk->getCookieSecret());
-    $this->assertEquals($clientId2, $sdk->getClientId());
-    $this->assertEquals($redirectUri2, $sdk->getRedirectUri());
+    expect($sdk->getDomain())->toEqual($domain2);
+    expect($sdk->getCookieSecret())->toEqual($cookieSecret2);
+    expect($sdk->getClientId())->toEqual($clientId2);
+    expect($sdk->getRedirectUri())->toEqual($redirectUri2);
 });
 
 test('successfully resets values', function(): void
@@ -182,13 +153,33 @@ test('successfully resets values', function(): void
         'usePkce' => false,
     ]);
 
-    $this->assertEquals($domain, $sdk->getDomain());
-    $this->assertFalse($sdk->getUsePkce());
+    expect($sdk->getDomain())->toEqual($domain);
+    expect($sdk->getUsePkce())->toBeFalse();
 
     $sdk->reset();
 
-    $this->assertEquals(null, $sdk->getDomain());
-    $this->assertTrue($sdk->getUsePkce());
+    expect($sdk->getDomain())->toEqual(null);
+    expect($sdk->getUsePkce())->toBeTrue();
+});
+
+test('an invalid strategy throws an exception', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+        'strategy' => uniqid(),
+    ]);
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'strategy'));
+
+test('a non-existent array value is ignored', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => uniqid(),
+        'clientId' => uniqid(),
+        'organization' => [],
+    ]);
+
+    expect($sdk->getOrganization())->toBeNull();
 });
 
 test('a `webapp` strategy is used by default', function(): void
@@ -198,84 +189,63 @@ test('a `webapp` strategy is used by default', function(): void
         'clientId' => uniqid(),
     ]);
 
-    $this->assertEquals('webapp', $sdk->getStrategy());
+    expect($sdk->getStrategy())->toEqual('webapp');
 });
 
 test('a `webapp` strategy requires a domain', function(): void
 {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
-
     $sdk = new SdkConfiguration([
         'strategy' => 'webapp',
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `webapp` strategy requires a client id', function(): void
 {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
-
     $sdk = new SdkConfiguration([
         'strategy' => 'webapp',
         'domain' => uniqid()
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
 
 test('a `webapp` strategy requires a client secret when HS256 is used', function(): void
 {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
-
     $sdk = new SdkConfiguration([
         'strategy' => 'webapp',
         'domain' => uniqid(),
         'clientId' => uniqid(),
         'tokenAlgorithm' => 'HS256'
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
 
 test('a `api` strategy requires a domain', function(): void
 {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
-
     $sdk = new SdkConfiguration([
         'strategy' => 'api',
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `api` strategy requires an audience', function(): void
 {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_AUDIENCE);
-
     $sdk = new SdkConfiguration([
         'strategy' => 'api',
         'domain' => uniqid()
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_AUDIENCE);
 
 test('a `management` strategy requires a client id if a management token is not provided', function(): void
 {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
-
     $sdk = new SdkConfiguration([
         'strategy' => 'management'
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
 
 test('a `management` strategy requires a client secret if a management token is not provided', function(): void
 {
-    $this->expectException(\Auth0\SDK\Exception\ConfigurationException::class);
-    $this->expectExceptionMessage(\Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
-
     $sdk = new SdkConfiguration([
         'strategy' => 'management',
         'clientId' => uniqid()
     ]);
-});
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
 
 test('a `management` strategy does not require a client id or secret if a management token is provided', function(): void
 {
@@ -284,7 +254,7 @@ test('a `management` strategy does not require a client id or secret if a manage
         'managementToken' => uniqid()
     ]);
 
-    $this->assertInstanceOf(SdkConfiguration::class, $sdk);
+    expect($sdk)->toBeInstanceOf(SdkConfiguration::class);
 });
 
 test('formatDomain() returns a properly formatted uri', function(): void
@@ -298,7 +268,7 @@ test('formatDomain() returns a properly formatted uri', function(): void
         'redirectUri' => uniqid(),
     ]);
 
-    $this->assertEquals('https://' . $domain, $sdk->formatDomain());
+    expect($sdk->formatDomain())->toEqual('https://' . $domain);
 });
 
 test('formatScope() returns an empty string when there are no scopes defined', function(): void
@@ -311,7 +281,7 @@ test('formatScope() returns an empty string when there are no scopes defined', f
         'scope' => [],
     ]);
 
-    $this->assertEquals('', $sdk->formatScope());
+    expect($sdk->formatScope())->toEqual('');
 });
 
 test('scope() successfully converts the array to a string', function(): void
@@ -324,7 +294,7 @@ test('scope() successfully converts the array to a string', function(): void
         'scope' => ['one', 'two', 'three'],
     ]);
 
-    $this->assertEquals('one two three', $sdk->formatScope());
+    expect($sdk->formatScope())->toEqual('one two three');
 });
 
 test('defaultOrganization() successfully returns the first organization', function(): void
@@ -337,7 +307,7 @@ test('defaultOrganization() successfully returns the first organization', functi
         'organization' => ['org1', 'org2', 'org3'],
     ]);
 
-    $this->assertEquals('org1', $sdk->defaultOrganization());
+    expect($sdk->defaultOrganization())->toEqual('org1');
 });
 
 test('defaultAudience() successfully returns the first audience', function(): void
@@ -350,5 +320,5 @@ test('defaultAudience() successfully returns the first audience', function(): vo
         'audience' => ['aud1', 'aud2', 'aud3'],
     ]);
 
-    $this->assertEquals('aud1', $sdk->defaultAudience());
+    expect($sdk->defaultAudience())->toEqual('aud1');
 });

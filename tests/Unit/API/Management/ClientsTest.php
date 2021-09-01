@@ -2,96 +2,66 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
+uses()->group('management', 'management.clients');
 
-use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
+beforeEach(function(): void {
+    $this->endpoint = $this->api->mock()->clients();
+});
 
-/**
- * Class ClientsTest.
- */
-class ClientsTest extends TestCase
-{
-    /**
-     * Test getAll() request.
-     */
-    public function testGetAll(): void
-    {
-        $api = new MockManagementApi();
-        $api->mock()->clients()->getAll(['client_id' => '__test_client_id__', 'app_type' => '__test_app_type__']);
+test('getAll() issues an appropriate request', function(): void {
+    $this->endpoint->getAll(['client_id' => '__test_client_id__', 'app_type' => '__test_app_type__']);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/clients', $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/clients');
 
-        $query = $api->getRequestQuery();
-        $this->assertStringContainsString('&client_id=__test_client_id__&app_type=__test_app_type__', $query);
-    }
+    $query = $this->api->getRequestQuery();
+    expect($query)->toContain('&client_id=__test_client_id__&app_type=__test_app_type__');
+});
 
-    /**
-     * Test get() request.
-     */
-    public function testGet(): void
-    {
-        $api = new MockManagementApi();
-        $api->mock()->clients()->get('__test_id__');
+test('get() issues an appropriate request', function(): void {
+    $this->endpoint->get('__test_id__');
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/clients/__test_id__', $api->getRequestUrl());
-    }
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/clients/__test_id__');
+});
 
-    /**
-     * Test delete() request.
-     */
-    public function testDelete(): void
-    {
-        $api = new MockManagementApi();
-        $api->mock()->clients()->delete('__test_id__');
+test('delete() issues an appropriate request', function(): void {
+    $this->endpoint->delete('__test_id__');
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/clients/__test_id__', $api->getRequestUrl());
-    }
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients/__test_id__');
+});
 
-    /**
-     * Test create() request.
-     */
-    public function testCreate(): void
-    {
-        $mock = (object) [
-            'name' => uniqid(),
-            'body'=> [
-                'app_type' => uniqid()
-            ]
-        ];
+test('create() issues an appropriate request', function(): void {
+    $mock = (object) [
+        'name' => uniqid(),
+        'body'=> [
+            'app_type' => uniqid()
+        ]
+    ];
 
-        $api = new MockManagementApi();
-        $api->mock()->clients()->create($mock->name, $mock->body);
+    $this->endpoint->create($mock->name, $mock->body);
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/clients', $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients');
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('name', $body);
-        $this->assertEquals($mock->name, $body['name']);
-        $this->assertArrayHasKey('app_type', $body);
-        $this->assertEquals($mock->body['app_type'], $body['app_type']);
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('name', $body);
+    expect($body['name'])->toEqual($mock->name);
+    $this->assertArrayHasKey('app_type', $body);
+    expect($body['app_type'])->toEqual($mock->body['app_type']);
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode(array_merge(['name' => $mock->name], $mock->body)), $body);
-    }
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(array_merge(['name' => $mock->name], $mock->body)));
+});
 
-    /**
-     * Test update() request.
-     */
-    public function testUpdate(): void
-    {
-        $api = new MockManagementApi();
-        $api->mock()->clients()->update('__test_id__', ['name' => '__test_new_name__']);
+test('update() issues an appropriate request', function(): void {
+    $this->endpoint->update('__test_id__', ['name' => '__test_new_name__']);
 
-        $this->assertEquals('PATCH', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/clients/__test_id__', $api->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients/__test_id__');
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('name', $body);
-        $this->assertEquals('__test_new_name__', $body['name']);
-    }
-}
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('name', $body);
+    expect($body['name'])->toEqual('__test_new_name__');
+});

@@ -185,7 +185,7 @@ final class Token
         $claim = $this->parser->getClaim('aud');
 
         if (is_string($claim)) {
-            return [ $claim ];
+            $claim = [ $claim ];
         }
 
         return $claim;
@@ -202,9 +202,10 @@ final class Token
     /**
      * Get the contents of the 'auth_time' claim. Null if not present.
      */
-    public function getAuthTime(): ?string
+    public function getAuthTime(): ?int
     {
-        return $this->parser->getClaim('auth_time');
+        $response = $this->parser->getClaim('auth_time');
+        return $response === null ? null : (int) $response;
     }
 
     /**
@@ -212,7 +213,8 @@ final class Token
      */
     public function getExpiration(): ?int
     {
-        return $this->parser->getClaim('exp');
+        $response = $this->parser->getClaim('exp');
+        return $response === null ? null : (int) $response;
     }
 
     /**
@@ -220,7 +222,8 @@ final class Token
      */
     public function getIssued(): ?int
     {
-        return $this->parser->getClaim('iat');
+        $response = $this->parser->getClaim('iat');
+        return $response === null ? null : (int) $response;
     }
 
     /**

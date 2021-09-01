@@ -2,33 +2,24 @@
 
 declare(strict_types=1);
 
-use Auth0\SDK\Utility\Request\FilteredRequest;
-use Auth0\SDK\Utility\Request\PaginatedRequest;
-use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\Tests\Utilities\MockManagementApi;
-
-uses()->group('management', 'logs');
+uses()->group('management', 'management.logs');
 
 beforeEach(function(): void {
-    $this->sdk = new MockManagementApi();
+    $this->endpoint = $this->api->mock()->logs();
 });
 
 test('getAll() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->logs();
+    $this->endpoint->getAll();
 
-    $endpoint->getAll();
-
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/logs', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/logs');
 });
 
 test('get() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->logs();
-
     $logId = uniqid();
 
-    $endpoint->get($logId);
+    $this->endpoint->get($logId);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/logs/' . $logId, $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/logs/' . $logId);
 });

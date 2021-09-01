@@ -2,105 +2,106 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\Store;
-
 use Auth0\SDK\Contract\StoreInterface;
-use Auth0\SDK\Store\InMemoryStorage;
+use Auth0\SDK\Store\MemoryStore;
 use Auth0\SDK\Store\Psr6Store;
-use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-/**
- * @author Tobias Nyholm <tobias.nyholm@gmail.com>
- */
-class Psr6StoreTest extends TestCase
-{
-    private const PUBLIC_STORAGE_KEY = 'storage_key';
+uses()->group('storage', 'storage.psr6');
 
-    public function testSetGet(): void
-    {
-        $public = new InMemoryStorage();
-        $private = new ArrayAdapter();
-        $store = new Psr6Store($public, $private);
-        $store->set('test_set_key', '__test_set_value__');
-        $this->assertSame('__test_set_value__', $store->get('test_set_key'));
-        $this->assertSame(null, $store->get('missing_key'));
+beforeEach(function(): void {
+    $this->public = new MemoryStore();
+    $this->private = new ArrayAdapter();
+    $this->storageKey = uniqid();
+    $this->store = new Psr6Store($this->public, $this->private, $this->storageKey);
+});
 
-        $this->assertNotNull($randomKey = $public->get(self::PUBLIC_STORAGE_KEY));
-        $public->delete(self::PUBLIC_STORAGE_KEY);
-        $this->assertSame(null, $store->get('test_set_key'));
+test('set() and get() behave as expected', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+    expect($this->store->get($key))->toBe($value);
+    expect($this->store->get('missing_key'))->toBe(null);
 
-        // Make sure we have a new key
-        $this->assertNotSame($randomKey, $store->get('test_set_key'));
-        $this->assertNotNull($public->get(self::PUBLIC_STORAGE_KEY));
-    }
+    $this->assertNotNull($randomKey = $this->public->get($this->storageKey));
+    $this->public->delete($this->storageKey);
+    expect($this->store->get($key))->toBe(null);
 
-    public function testDataIsStoredInPrivate(): void
-    {
-        $public = $this->getMockBuilder(StoreInterface::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['set', 'get', 'delete', 'purge', 'defer'])
-            ->getMock();
-        $public->expects($this->atLeastOnce())->method('get')->with(self::PUBLIC_STORAGE_KEY)->willReturn('foobar');
-        // Make sure we don't create a new key
-        $public->expects($this->never())->method('set');
+    // Make sure we have a new key
+    $this->assertNotSame($randomKey, $this->store->get($key));
+    $this->assertNotNull($this->public->get($this->storageKey));
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-        $private = $this->getMockBuilder(CacheItemPoolInterface::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods([
-                'getItem', 'saveDeferred', 'getItems', 'hasItem', 'clear',
-                'save', 'deleteItems', 'deleteItem', 'commit'
-            ])
-            ->getMock();
+it('stores data in private', function(string $key, string $value): void {
+    $public = $this->getMockBuilder(StoreInterface::class)
+        ->disableOriginalConstructor()
+        ->onlyMethods(['set', 'get', 'delete', 'purge', 'defer'])
+        ->getMock();
 
-        $item = $this->getMockBuilder(CacheItemInterface::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['get', 'set', 'getKey', 'isHit', 'expiresAt', 'expiresAfter'])
-            ->getMock();
-        $item->expects($this->once())->method('set')->with(['test_set_key'=>'__test_set_value__']);
-        $item->method('get')->willReturnOnConsecutiveCalls(null, ['test_set_key'=>'__test_set_value__']);
+    $private = $this->getMockBuilder(CacheItemPoolInterface::class)
+        ->disableOriginalConstructor()
+        ->onlyMethods([
+            'getItem', 'saveDeferred', 'getItems', 'hasItem', 'clear',
+            'save', 'deleteItems', 'deleteItem', 'commit'
+        ])
+        ->getMock();
 
-        $private->method('getItem')->with('auth0_foobar')->willReturn($item);
-        $private->method('saveDeferred')->willReturn(true);
+    $public->expects($this->atLeastOnce())->method('get')->with($this->storageKey)->willReturn('foobar');
 
-        $store = new Psr6Store($public, $private);
-        $store->set('test_set_key', '__test_set_value__');
-        $this->assertSame('__test_set_value__', $store->get('test_set_key'));
-        $this->assertSame(null, $store->get('missing_key'));
-    }
+    // Make sure we don't create a new key
+    $public->expects($this->never())->method('set');
 
-    public function testGetDefault(): void
-    {
-        $public = new InMemoryStorage();
-        $private = new ArrayAdapter();
-        $store = new Psr6Store($public, $private);
-        $store->set('test_set_key', null);
-        $this->assertSame(null, $store->get('test_set_key', 'foobar'));
-        $this->assertSame('foobar', $store->get('missing_key', 'foobar'));
-        $this->assertSame(null, $store->get('missing_key'));
-    }
+    $item = $this->getMockBuilder(CacheItemInterface::class)
+        ->disableOriginalConstructor()
+        ->onlyMethods(['get', 'set', 'getKey', 'isHit', 'expiresAt', 'expiresAfter'])
+        ->getMock();
 
-    public function testDelete(): void
-    {
-        $public = new InMemoryStorage();
-        $private = new ArrayAdapter();
-        $store = new Psr6Store($public, $private);
-        $store->set('test_set_key', '__test_set_value__');
+    $item->expects($this->once())->method('set')->with([$key=>$value]);
+    $item->method('get')->willReturnOnConsecutiveCalls(null, [$key=>$value]);
 
-        $store->delete('test_set_key');
-        $this->assertNull($store->get('test_set_key'));
-    }
+    $private->method('getItem')->with('auth0_foobar')->willReturn($item);
+    $private->method('saveDeferred')->willReturn(true);
 
-    public function testPurge(): void
-    {
-        $public = new InMemoryStorage();
-        $private = new ArrayAdapter();
-        $store = new Psr6Store($public, $private);
-        $store->set('test_set_key', '__test_set_value__');
+    $store = new Psr6Store($public, $private, $this->storageKey);
+    $store->set($key, $value);
+    expect($store->get($key))->toBe($value);
+    expect($store->get('missing_key'))->toBe(null);
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
 
-        $store->purge();
-        $this->assertNull($store->get('test_set_key'));
-    }
-}
+test('get() retrieves a default value as expected', function(string $key): void {
+    $this->store->set($key, null);
+
+    expect($this->store->get($key, 'foobar'))->toBe(null);
+    expect($this->store->get('missing_key', 'foobar'))->toBe('foobar');
+    expect($this->store->get('missing_key'))->toBe(null);
+})->with(['mocked key' => [
+    fn() => uniqid(),
+]]);
+
+test('delete() clears values as expected', function(string $key, string $value): void {
+    $this->store->delete($key);
+    expect($this->store->get($key))->toBeNull();
+
+    $this->store->set($key, $value);
+    $this->store->delete($key);
+    expect($this->store->get($key))->toBeNull();
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
+
+test('purge() clears values as expected', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+
+    $this->store->purge();
+    expect($this->store->get($key))->toBeNull();
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);

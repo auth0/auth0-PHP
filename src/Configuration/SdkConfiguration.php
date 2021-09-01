@@ -353,6 +353,8 @@ final class SdkConfiguration implements ConfigurableContract
      * Setup SDK factories.
      *
      * @throws NotFoundException When a PSR-18 or PSR-17 are not configured, and cannot be discovered.
+     *
+     * @codeCoverageIgnore
      */
     private function setupStateFactories(): void
     {
@@ -450,20 +452,6 @@ final class SdkConfiguration implements ConfigurableContract
             throw \Auth0\SDK\Exception\ConfigurationException::invalidAlgorithm();
         }
 
-        if ($propertyName === 'tokenMaxAge' || $propertyName === 'tokenLeeway') {
-            if (is_int($propertyValue)) {
-                // Value was passed as an int, perfect.
-                return $propertyValue;
-            }
-
-            if (is_numeric($propertyValue)) {
-                // Value was passed as a string, but it is numeric so cast to int.
-                return (int) $propertyValue;
-            }
-
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
-        }
-
         if (in_array($propertyName, ['organization', 'audience'], true)) {
             if (is_array($propertyValue) && count($propertyValue) !== 0) {
                 return $propertyValue;
@@ -473,19 +461,6 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         return $propertyValue;
-    }
-
-    /**
-     * Fires when a validation event fails to pass, such as a bad parameter type being used.
-     *
-     * @param string      $parameter The name of the parameter that failed validation.
-     *
-     * @throws ConfigurationException When invoked.
-     */
-    private function onValidationException(
-        string $parameter
-    ): void {
-        throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($parameter);
     }
 
     /**

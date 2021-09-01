@@ -2,55 +2,39 @@
 
 declare(strict_types=1);
 
-use Auth0\SDK\Utility\Request\FilteredRequest;
-use Auth0\SDK\Utility\Request\PaginatedRequest;
-use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\Tests\Utilities\MockManagementApi;
-
-uses()->group('management', 'blacklists');
+uses()->group('management', 'management.blacklists');
 
 beforeEach(function(): void {
-    $this->sdk = new MockManagementApi();
-
-    $this->filteredRequest = new FilteredRequest();
-    $this->paginatedRequest = new PaginatedRequest();
-    $this->requestOptions = new RequestOptions(
-        $this->filteredRequest,
-        $this->paginatedRequest
-    );
+    $this->endpoint = $this->api->mock()->blacklists();
 });
 
-test('create() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->blacklists();
-
+test('create() issues an appropriate request', function(): void {
     $jti = uniqid();
     $aud = uniqid();
 
-    $endpoint->create($jti, $aud);
+    $this->endpoint->create($jti, $aud);
 
-    $this->assertEquals('POST', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/blacklists/tokens', $this->sdk->getRequestUrl());
-    $this->assertEmpty($this->sdk->getRequestQuery());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/blacklists/tokens');
+    expect($this->api->getRequestQuery())->toBeEmpty();
 
-    $body = $this->sdk->getRequestBody();
+    $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('aud', $body);
-    $this->assertEquals($aud, $body['aud']);
+    expect($body['aud'])->toEqual($aud);
     $this->assertArrayHasKey('jti', $body);
-    $this->assertEquals($jti, $body['jti']);
+    expect($body['jti'])->toEqual($jti);
 
-    $body = $this->sdk->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['jti' => $jti, 'aud' => $aud]), $body);
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['jti' => $jti, 'aud' => $aud]));
 });
 
 test('get() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->blacklists();
-
     $aud = uniqid();
 
-    $endpoint->get($aud);
+    $this->endpoint->get($aud);
 
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/blacklists/tokens', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/blacklists/tokens');
 
-    $this->assertEquals('aud=' . $aud, $this->sdk->getRequestQuery(null));
+    expect($this->api->getRequestQuery(null))->toEqual('aud=' . $aud);
 });

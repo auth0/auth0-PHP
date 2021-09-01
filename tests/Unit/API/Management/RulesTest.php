@@ -2,127 +2,87 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
+uses()->group('management', 'management.rules');
 
-use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
+beforeEach(function(): void {
+    $this->endpoint = $this->api->mock()->rules();
+});
 
-/**
- * Class RulesTest.
- */
-class RulesTest extends TestCase
-{
-    /**
-     * Default request headers.
-     */
-    protected static array $headers = ['content-type' => 'json'];
+test('getAll() issues an appropriate request', function(): void {
+    $this->endpoint->getAll(['enabled' => true]);
 
-    /**
-     * Test getAll() request.
-     */
-    public function testGetAll(): void
-    {
-        $api = new MockManagementApi();
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/rules');
 
-        $api->mock()->rules()->getAll(['enabled' => true]);
+    $query = $this->api->getRequestQuery();
+    expect($query)->toContain('enabled=true');
+});
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/rules', $api->getRequestUrl());
+test('get() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
 
-        $query = $api->getRequestQuery();
-        $this->assertStringContainsString('enabled=true', $query);
-    }
+    $this->endpoint->get($mockupId);
 
-    /**
-     * Test get() request.
-     */
-    public function testGet(): void
-    {
-        $api = new MockManagementApi();
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/rules/' . $mockupId);
+});
 
-        $mockupId = uniqid();
+test('delete() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
 
-        $api->mock()->rules()->get($mockupId);
+    $this->endpoint->delete($mockupId);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockupId, $api->getRequestUrl());
-    }
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/rules/' . $mockupId);
+});
 
-    /**
-     * Test delete() request.
-     */
-    public function testDelete(): void
-    {
-        $api = new MockManagementApi();
+test('create() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'name' => uniqid(),
+        'script' => uniqid(),
+        'query' => [ 'test_parameter' => uniqid() ],
+    ];
 
-        $mockupId = uniqid();
+    $this->endpoint->create($mockup->name, $mockup->script, $mockup->query);
 
-        $api->mock()->rules()->delete($mockupId);
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/rules');
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockupId, $api->getRequestUrl());
-    }
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
-    /**
-     * Test create() request.
-     */
-    public function testCreate(): void
-    {
-        $api = new MockManagementApi();
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('name', $body);
+    expect($body['name'])->toEqual($mockup->name);
 
-        $mockup = (object) [
-            'name' => uniqid(),
-            'script' => uniqid(),
-            'query' => [ 'test_parameter' => uniqid() ],
-        ];
+    $this->assertArrayHasKey('script', $body);
+    expect($body['script'])->toEqual($mockup->script);
 
-        $api->mock()->rules()->create($mockup->name, $mockup->script, $mockup->query);
+    $this->assertArrayHasKey('test_parameter', $body);
+    expect($body['test_parameter'])->toEqual($mockup->query['test_parameter']);
 
-        $this->assertEquals('POST', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/rules', $api->getRequestUrl());
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(array_merge(['name' => $mockup->name, 'script' => $mockup->script], $mockup->query)));
+});
 
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
+test('update() issues an appropriate request', function(): void {
+    $mockup = (object) [
+        'id' => uniqid(),
+        'query' => [ 'test_parameter' => uniqid() ],
+    ];
 
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('name', $body);
-        $this->assertEquals($mockup->name, $body['name']);
+    $this->endpoint->update($mockup->id, $mockup->query);
 
-        $this->assertArrayHasKey('script', $body);
-        $this->assertEquals($mockup->script, $body['script']);
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/rules/' . $mockup->id);
 
-        $this->assertArrayHasKey('test_parameter', $body);
-        $this->assertEquals($mockup->query['test_parameter'], $body['test_parameter']);
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode(array_merge(['name' => $mockup->name, 'script' => $mockup->script], $mockup->query)), $body);
-    }
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('test_parameter', $body);
+    expect($body['test_parameter'])->toEqual($mockup->query['test_parameter']);
 
-    /**
-     * Test update() request.
-     */
-    public function testUpdate(): void
-    {
-        $api = new MockManagementApi();
-
-        $mockup = (object) [
-            'id' => uniqid(),
-            'query' => [ 'test_parameter' => uniqid() ],
-        ];
-
-        $api->mock()->rules()->update($mockup->id, $mockup->query);
-
-        $this->assertEquals('PATCH', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/rules/' . $mockup->id, $api->getRequestUrl());
-
-        $headers = $api->getRequestHeaders();
-        $this->assertEquals('application/json', $headers['Content-Type'][0]);
-
-        $body = $api->getRequestBody();
-        $this->assertArrayHasKey('test_parameter', $body);
-        $this->assertEquals($mockup->query['test_parameter'], $body['test_parameter']);
-
-        $body = $api->getRequestBodyAsString();
-        $this->assertEquals(json_encode($mockup->query), $body);
-    }
-}
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode($mockup->query));
+});

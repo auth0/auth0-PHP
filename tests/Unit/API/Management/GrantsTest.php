@@ -2,86 +2,56 @@
 
 declare(strict_types=1);
 
-namespace Auth0\Tests\Unit\API\Management;
+uses()->group('management', 'management.grants');
 
-use Auth0\Tests\Utilities\MockManagementApi;
-use PHPUnit\Framework\TestCase;
+beforeEach(function(): void {
+    $this->endpoint = $this->api->mock()->grants();
+});
 
-/**
- * Class GrantsTest.
- */
-class GrantsTest extends TestCase
-{
-    /**
-     * Test that getAll requests properly.
-     */
-    public function testGet(): void
-    {
-        $api = new MockManagementApi();
-        $api->mock()->grants()->getAll();
+test('getAll() issues an appropriate request', function(): void {
+    $this->endpoint->getAll();
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/grants', $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-    }
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestQuery())->toBeEmpty();
+});
 
-    /**
-     * Test that getByClientId adds a client_id to the request.
-     */
-    public function testGetByClientId(): void
-    {
-        $id = uniqid();
+test('getAllByClientId() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->grants()->getAllByClientId($id);
+    $this->endpoint->getAllByClientId($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
-        $this->assertEquals('client_id=' . $id, $api->getRequestQuery(null));
-    }
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestQuery(null))->toEqual('client_id=' . $id);
+});
 
-    /**
-     * Test that getByAudience adds an audience to the request.
-     */
-    public function testGetByAudience(): void
-    {
-        $id = uniqid();
+test('getAllByAudience() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->grants()->getAllByAudience($id);
+    $this->endpoint->getAllByAudience($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
-        $this->assertEquals('audience=' . $id, $api->getRequestQuery(null));
-    }
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestQuery(null))->toEqual('audience=' . $id);
+});
 
-    /**
-     * Test that getByUserId adds an audience to the request.
-     */
-    public function testGetByUserId(): void
-    {
-        $id = uniqid();
+test('getAllByUserId() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->grants()->getAllByUserId($id);
+    $this->endpoint->getAllByUserId($id);
 
-        $this->assertEquals('GET', $api->getRequestMethod());
-        $this->assertStringStartsWith('https://api.test.local/api/v2/grants', $api->getRequestUrl());
-        $this->assertEquals('user_id=' . $id, $api->getRequestQuery(null));
-    }
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestQuery(null))->toEqual('user_id=' . $id);
+});
 
-    /**
-     * Test that delete requests properly.
-     */
-    public function testDelete(): void
-    {
-        $id = uniqid();
+test('delete() issues an appropriate request', function(): void {
+    $id = uniqid();
 
-        $api = new MockManagementApi();
-        $api->mock()->grants()->delete($id);
+    $this->endpoint->delete($id);
 
-        $this->assertEquals('DELETE', $api->getRequestMethod());
-        $this->assertEquals('https://api.test.local/api/v2/grants/' . $id, $api->getRequestUrl());
-        $this->assertEmpty($api->getRequestQuery());
-    }
-}
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/grants/' . $id);
+    expect($this->api->getRequestQuery())->toBeEmpty();
+});

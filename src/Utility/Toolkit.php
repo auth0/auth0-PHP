@@ -56,10 +56,10 @@ final class Toolkit
      * @param \Closure $callback The function to pass each item through.
      */
     public static function each(
-        iterable $items,
+        iterable &$items,
         \Closure $callback
     ): void {
-        foreach ($items as $key => $item) {
+        foreach ($items as $key => &$item) {
             if ($callback($item, $key) === false) {
                 break;
             }
@@ -95,16 +95,14 @@ final class Toolkit
      * Throw an $exception or return false if any of the provided values are null.
      *
      * @param \Throwable|null $exception An exception to throw if all values are null.
-     * @param mixed           $values    One or more values to check.
+     * @param array<mixed>    $values    One or more values to check.
      *
      * @throws \Throwable If there are no non-null values.
      */
     public static function every(
-        ?\Throwable $exception = null,
-        ...$values
+        ?\Throwable $exception,
+        array $values
     ): bool {
-        $values = array_values($values);
-
         foreach ($values as $value) {
             if ($value === null) {
                 if ($exception !== null) {
@@ -122,21 +120,21 @@ final class Toolkit
      * Throw an $exception or return false if all the provided values are null.
      *
      * @param \Throwable|null $exception An exception to throw if all values are null.
-     * @param mixed           $values    One or more values to check.
+     * @param array<mixed>    $values    One or more values to check.
      *
      * @return array<mixed>|false
      *
      * @throws \Throwable If there are no non-null values.
      */
     public static function some(
-        ?\Throwable $exception = null,
-        ...$values
+        ?\Throwable $exception,
+        array $values
     ) {
         // Trim the array of null values.
-        $result = self::filter($values)->array()->trim();
+        [$trimmed] = self::filter([$values])->array()->trim();
 
         // All values were null, throw an exception.
-        if (count($result) === 0) {
+        if (count($trimmed) === 0) {
             if ($exception !== null) {
                 throw $exception;
             }
@@ -145,6 +143,6 @@ final class Toolkit
         }
 
         // Return all non-null values.
-        return $result;
+        return $trimmed;
     }
 }

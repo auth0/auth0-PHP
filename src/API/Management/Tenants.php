@@ -26,7 +26,7 @@ final class Tenants extends ManagementEndpoint
      *
      * @link https://auth0.com/docs/api/management/v2#!/Tenants/tenant_settings_route
      */
-    public function get(
+    public function getSettings(
         ?RequestOptions $options = null
     ): ResponseInterface {
         return $this->getHttpClient()
@@ -48,15 +48,15 @@ final class Tenants extends ManagementEndpoint
      *
      * @link https://auth0.com/docs/api/management/v2#!/Tenants/patch_settings
      */
-    public function update(
+    public function updateSettings(
         array $body,
         ?RequestOptions $options = null
     ): ResponseInterface {
-        [$body] = Toolkit::filter([$body])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
-        ])->isString();
+        ])->isArray();
 
         return $this->getHttpClient()
             ->method('patch')

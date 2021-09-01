@@ -2,41 +2,21 @@
 
 declare(strict_types=1);
 
-use Auth0\SDK\Utility\Request\FilteredRequest;
-use Auth0\SDK\Utility\Request\PaginatedRequest;
-use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\Tests\Utilities\MockManagementApi;
-
-uses()->group('management', 'emails');
+uses()->group('management', 'management.emails');
 
 beforeEach(function(): void {
-    $this->sdk = new MockManagementApi();
-
-    $this->filteredRequest = new FilteredRequest();
-    $this->paginatedRequest = new PaginatedRequest();
-    $this->requestOptions = new RequestOptions(
-        $this->filteredRequest,
-        $this->paginatedRequest
-    );
+    $this->endpoint = $this->api->mock()->emails();
 });
 
-test('createProvider() throws an error when missing required arguments', function(): void {
-    $endpoint = $this->sdk->mock()->emails();
+test('createProvider() throws an error when missing `name`', function(): void {
+    $this->endpoint->createProvider('', []);
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
 
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
-
-    $endpoint->createProvider('', []);
-
-    $this->expectException(\Auth0\SDK\Exception\ArgumentException::class);
-    $this->expectExceptionMessage(sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'credentials'));
-
-    $endpoint->createProvider(uniqid(), []);
-});
+test('createProvider() throws an error when missing `credentials`', function(): void {
+    $this->endpoint->createProvider(uniqid(), []);
+})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'credentials'));
 
 test('createProvider() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->emails();
-
     $name = uniqid();
     $credentials = [
         'api_user' => uniqid(),
@@ -50,36 +30,32 @@ test('createProvider() issues valid requests', function(): void {
         'test2' => uniqid(),
     ];
 
-    $endpoint->createProvider($name, $credentials, ['additional' => $additional]);
+    $this->endpoint->createProvider($name, $credentials, ['additional' => $additional]);
 
-    $this->assertEquals('POST', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/emails/provider', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
 
-    $body = $this->sdk->getRequestBody();
+    $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
     $this->assertArrayHasKey('credentials', $body);
     $this->assertArrayHasKey('additional', $body);
-    $this->assertCount(5, $body['credentials']);
-    $this->assertEquals($name, $body['name']);
-    $this->assertEquals($credentials, $body['credentials']);
-    $this->assertEquals($additional, $body['additional']);
+    expect($body['credentials'])->toHaveCount(5);
+    expect($body['name'])->toEqual($name);
+    expect($body['credentials'])->toEqual($credentials);
+    expect($body['additional'])->toEqual($additional);
 
-    $body = $this->sdk->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]), $body);
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]));
 });
 
 test('getProvider() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->emails();
+    $this->endpoint->getProvider();
 
-    $endpoint->getProvider();
-
-    $this->assertEquals('GET', $this->sdk->getRequestMethod());
-    $this->assertStringStartsWith('https://api.test.local/api/v2/emails/provider', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/emails/provider');
 });
 
 test('updateProvider() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->emails();
-
     $name = uniqid();
     $credentials = [
         'api_user' => uniqid(),
@@ -93,29 +69,27 @@ test('updateProvider() issues valid requests', function(): void {
         'test2' => uniqid(),
     ];
 
-    $endpoint->updateProvider($name, $credentials, ['additional' => $additional]);
+    $this->endpoint->updateProvider($name, $credentials, ['additional' => $additional]);
 
-    $this->assertEquals('PATCH', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/emails/provider', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
 
-    $body = $this->sdk->getRequestBody();
+    $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
     $this->assertArrayHasKey('credentials', $body);
     $this->assertArrayHasKey('additional', $body);
-    $this->assertCount(5, $body['credentials']);
-    $this->assertEquals($name, $body['name']);
-    $this->assertEquals($credentials, $body['credentials']);
-    $this->assertEquals($additional, $body['additional']);
+    expect($body['credentials'])->toHaveCount(5);
+    expect($body['name'])->toEqual($name);
+    expect($body['credentials'])->toEqual($credentials);
+    expect($body['additional'])->toEqual($additional);
 
-    $body = $this->sdk->getRequestBodyAsString();
-    $this->assertEquals(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]), $body);
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['name' => $name, 'credentials' => $credentials, 'additional' => $additional]));
 });
 
 test('delete() issues valid requests', function(): void {
-    $endpoint = $this->sdk->mock()->emails();
+    $this->endpoint->deleteProvider();
 
-    $endpoint->deleteProvider();
-
-    $this->assertEquals('DELETE', $this->sdk->getRequestMethod());
-    $this->assertEquals('https://api.test.local/api/v2/emails/provider', $this->sdk->getRequestUrl());
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
 });

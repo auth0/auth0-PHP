@@ -131,6 +131,8 @@ final class Psr6Store implements StoreInterface
      *
      * @param bool $deferring Whether to defer persisting the storage state.
      *
+     * @codeCoverageIgnore
+     *
      * @phpstan-ignore-next-line
      */
     public function defer(
@@ -141,6 +143,8 @@ final class Psr6Store implements StoreInterface
 
     /**
      * Generate a cryptographically-secure random string.
+     *
+     * @codeCoverageIgnore
      */
     private function generateKey(): string
     {
@@ -155,6 +159,8 @@ final class Psr6Store implements StoreInterface
 
     /**
      * Generate a cryptographically-secure random string.
+     *
+     * @codeCoverageIgnore
      */
     private function getCacheKey(): string
     {

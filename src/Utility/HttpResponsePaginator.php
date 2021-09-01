@@ -151,6 +151,8 @@ final class HttpResponsePaginator implements \Countable, \Iterator
      * Return the current result at our position, if available.
      *
      * @return array<mixed>|bool
+     *
+     * @codeCoverageIgnore
      */
     public function current()
     {
@@ -236,9 +238,11 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         if ($lastBuilder !== null && $this->lastResponse() !== null) {
             // Ensure basic pagination details are included in the request.
             if ($this->usingCheckpointPagination) {
+                // @codeCoverageIgnoreStart
                 if ($this->nextCheckpoint === null) {
                     return false;
                 }
+                // @codeCoverageIgnoreEnd
 
                 $lastBuilder->withParam('from', $this->nextCheckpoint);
             } else {
@@ -263,7 +267,9 @@ final class HttpResponsePaginator implements \Countable, \Iterator
             return $this->processLastResponse();
         }
 
+        // @codeCoverageIgnoreStart
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -298,10 +304,12 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
                 $start = (int) $start;
 
+                // @codeCoverageIgnoreStart
                 // No results, abort processing.
                 if (! is_array($results) || count($results) === 0) {
                     return false;
                 }
+                // @codeCoverageIgnoreEnd
 
                 $hadResults = false;
                 $nextCheckpoint = null;
@@ -358,7 +366,9 @@ final class HttpResponsePaginator implements \Countable, \Iterator
             return false;
         }
 
+        // @codeCoverageIgnoreStart
         return false;
+        // @codeCoverageIgnoreEnd
     }
 
     /**

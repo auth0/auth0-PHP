@@ -87,9 +87,12 @@ final class Parser
         $this->tokenClaims = $this->decodeClaims($parts[1]);
         $this->tokenSignature = $this->decodeSignature($parts[2]);
 
+        // @codeCoverageIgnoreStart
+        // This is not currently testable using our JWT encoding test libraries.
         if (! isset($this->tokenHeaders['typ'])) {
             $this->tokenHeaders['typ'] = 'JWT';
         }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -181,9 +184,12 @@ final class Parser
     {
         $claims = $this->tokenClaims;
 
+        // @codeCoverageIgnoreStart
+        // This is not currently testable using our JWT encoding test libraries.
         if (! is_array($claims)) {
             return [];
         }
+        // @codeCoverageIgnoreEnd
 
         return $claims;
     }
@@ -260,6 +266,8 @@ final class Parser
      * @return array<array|int|string>|null
      *
      * @throws \JsonException When claims portion cannot be decoded properly.
+     *
+     * @codeCoverageIgnore
      */
     private function decodeClaims(
         string $claims
@@ -281,6 +289,8 @@ final class Parser
      * @return array<int|string>|null
      *
      * @throws \JsonException When headers portion cannot be decoded properly.
+     *
+     * @codeCoverageIgnore
      */
     private function decodeHeaders(
         string $headers
@@ -298,6 +308,8 @@ final class Parser
      * Decodes and returns the signature portion of a JWT as a string.
      *
      * @param string $signature String representing the signature portion of the JWT.
+     *
+     * @codeCoverageIgnore
      */
     private function decodeSignature(
         string $signature
