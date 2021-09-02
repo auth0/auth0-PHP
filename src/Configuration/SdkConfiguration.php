@@ -32,6 +32,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setClientId(?string $clientId = null)
  * @method SdkConfiguration setClientSecret(?string $clientSecret = null)
  * @method SdkConfiguration setDomain(?string $domain = null)
+ * @method SdkConfiguration setCustomDomain(?string $customDomain = null)
  * @method SdkConfiguration setEventListenerProvider(?ListenerProviderInterface $eventListenerProvider = null)
  * @method SdkConfiguration setHttpClient(?ClientInterface $httpClient = null)
  * @method SdkConfiguration setHttpMaxRetries(int $httpMaxRetires = 3)
@@ -73,6 +74,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method string|null getClientId(?\Throwable $exceptionIfNull = null)
  * @method string|null getClientSecret(?\Throwable $exceptionIfNull = null)
  * @method string|string getDomain(?\Throwable $exceptionIfNull = null)
+ * @method string|string getCustomDomain(?\Throwable $exceptionIfNull = null)
  * @method ListenerProviderInterface|null getEventListenerProvider(?\Throwable $exceptionIfNull = null)
  * @method ClientInterface|null getHttpClient(?\Throwable $exceptionIfNull = null)
  * @method int getHttpMaxRetries()
@@ -114,6 +116,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool hasClientId()
  * @method bool hasClientSecret()
  * @method bool hasDomain()
+ * @method bool hasCustomDomain()
  * @method bool hasEventListenerProvider()
  * @method bool hasHttpClient()
  * @method bool hasHttpMaxRetries()
@@ -163,7 +166,8 @@ final class SdkConfiguration implements ConfigurableContract
      *
      * @param array<mixed>|null              $configuration         An key-value array matching this constructor's arguments. Overrides any other passed arguments with the same key name.
      * @param string|null                    $strategy              Defaults to 'webapp'. Should be assigned either 'api', 'management', or 'webapp' to specify the type of application the SDK is being applied to. Determines what configuration options will be required at initialization.
-     * @param string|null                    $domain                Auth0 domain for your tenant.
+     * @param string|null                    $domain                Auth0 domain for your tenant, found in your Auth0 Application settings.
+     * @param string|null                    $customDomain          If you have configured Auth0 to use a custom domain, configure it here.
      * @param string|null                    $clientId              Client ID, found in the Auth0 Application settings.
      * @param string|null                    $redirectUri           Authentication callback URI, as defined in your Auth0 Application settings.
      * @param string|null                    $clientSecret          Client Secret, found in the Auth0 Application settings.
@@ -209,6 +213,7 @@ final class SdkConfiguration implements ConfigurableContract
         ?array $configuration = null,
         ?string $strategy = 'webapp',
         ?string $domain = null,
+        ?string $customDomain = null,
         ?string $clientId = null,
         ?string $redirectUri = null,
         ?string $clientSecret = null,
@@ -258,11 +263,30 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
+     * Return the configured custom or tenant domain, formatted with protocol.
+     *
+     * @param bool $forceTenantDomain Force the return of the tenant domain even if a custom domain is configured.
+     */
+    public function formatDomain(
+        bool $forceTenantDomain = false
+    ): string {
+        if ($this->hasCustomDomain() && ! $forceTenantDomain) {
+            return 'https://' . $this->getCustomDomain();
+        }
+
+        return 'https://' . $this->getDomain();
+    }
+
+    /**
      * Return the configured domain with protocol.
      */
-    public function formatDomain(): string
+    public function formatCustomDomain(): ?string
     {
-        return 'https://' . $this->getDomain();
+        if ($this->hasCustomDomain()) {
+            return 'https://' . $this->getCustomDomain();
+        }
+
+        return null;
     }
 
     /**

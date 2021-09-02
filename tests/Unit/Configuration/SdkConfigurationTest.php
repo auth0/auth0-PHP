@@ -271,6 +271,68 @@ test('formatDomain() returns a properly formatted uri', function(): void
     expect($sdk->formatDomain())->toEqual('https://' . $domain);
 });
 
+test('formatDomain() returns the custom domain when a custom domain is configured', function(): void
+{
+    $domain = uniqid();
+    $customDomain = uniqid();
+
+    $sdk = new SdkConfiguration([
+        'domain' => $domain,
+        'customDomain' => $customDomain,
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+    ]);
+
+    expect($sdk->formatDomain())->toEqual('https://' . $customDomain);
+});
+
+test('formatDomain() returns the tenant domain even when a custom domain is configured if `forceTenantDomain` argument is `true`', function(): void
+{
+    $domain = uniqid();
+    $customDomain = uniqid();
+
+    $sdk = new SdkConfiguration([
+        'domain' => $domain,
+        'customDomain' => $customDomain,
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+    ]);
+
+    expect($sdk->formatDomain(true))->toEqual('https://' . $domain);
+});
+
+test('formatCustomDomain() returns a properly formatted uri', function(): void
+{
+    $domain = uniqid();
+    $customDomain = uniqid();
+
+    $sdk = new SdkConfiguration([
+        'domain' => $domain,
+        'customDomain' => $customDomain,
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+    ]);
+
+    expect($sdk->formatCustomDomain())->toEqual('https://' . $customDomain);
+});
+
+test('formatCustomDomain() returns null when a custom domain is not configured', function(): void
+{
+    $domain = uniqid();
+
+    $sdk = new SdkConfiguration([
+        'domain' => $domain,
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+    ]);
+
+    expect($sdk->formatCustomDomain())->toBeNull();
+});
+
 test('formatScope() returns an empty string when there are no scopes defined', function(): void
 {
     $sdk = new SdkConfiguration([
