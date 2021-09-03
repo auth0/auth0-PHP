@@ -6,7 +6,7 @@ Our version 8 release includes many significant improvements:
 
 - Adoption of [modern PHP language features](https://stitcher.io/blog/new-in-php-74) including typed properties, null coalescing assignment operators, and array spreading.
 - Support for custom [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) factories for customizing network requests. [PSR-7](https://www.php-fig.org/psr/psr-7/) responses are also now returned throughout the SDK.
-- The codebase has been streamlined, offering a cleaner API and improved performance.
+- [PSR-4](https://www.php-fig.org/psr/psr-4/) event hooks are now supported throughout the SDK.
 - [Fluent interface](https://en.wikipedia.org/wiki/Fluent_interface#PHP) throughout the SDK, offering simplified usage.
 - Optional auto-pagination of Management API endpoints that support pagination.
 - [PKCE](https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce) is now enabled by default.
@@ -19,6 +19,10 @@ As is to be expected with a major release, there are breaking changes in this up
 - SDK v8.0 requires PHP 7.4 or higher. PHP 8.0 is supported, and its use with this library is preferred and strongly encouraged.
 - 7.4 will be the final release in PHP's 7.x branch. This SDK will only support PHP 8.0+ after 7.4 leaves [supported status](https://www.php.net/supported-versions.php) in November 2022.
 - We strongly encourage you to make use of PHP 8.0's new [named arguments language feature](https://stitcher.io/blog/php-8-named-arguments). Once 7.4 support ends, we will no longer consider method argument order changes to be a breaking change.
+
+### Session Storage Chan ges Require User Reauthentication
+
+The new default session storage medium in 8.0 are encrypted cookies. Upgrading to 8.0 from 7.x will require your application's users to re-authenticate.
 
 ### Class and Method Changes
 
@@ -131,6 +135,11 @@ These classes were updated in SDK 8.0:
     - All other arguments have been removed.
   - Public method 'getHttpClient()' added.
   - Public method `getResponsePaginator()` added.
+
+- Class `Auth0\SDK\API\Management\Tenants` updated:
+
+  - Public method `get` renamed to `getSettings`.
+  - Public method `update` renamed to `updateSettings`.
 
 - Class `Auth0\SDK\API\Management\GenericResource` renamed to `Auth0\SDK\API\Management\ManagementEndpoint`, and:
 

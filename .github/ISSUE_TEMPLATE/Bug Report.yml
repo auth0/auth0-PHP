@@ -11,6 +11,7 @@ body:
       label: SDK Version
       description: What version of our SDK are you running? (`composer show | grep auth0/auth0-php`)
       options:
+        - 8.0.0-BETA3
         - 8.0.0-BETA2
         - 8.0.0-BETA1
         - 7.9.1
