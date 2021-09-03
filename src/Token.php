@@ -133,7 +133,7 @@ final class Token
         ?int $tokenLeeway = null,
         ?int $tokenNow = null
     ): self {
-        $tokenIssuer = $tokenIssuer ?? 'https://' . $this->configuration->getDomain() . '/';
+        $tokenIssuer = $tokenIssuer ?? $this->configuration->formatDomain() . '/';
         $tokenAudience = $tokenAudience ?? $this->configuration->getAudience() ?? [];
         $tokenOrganization = $tokenOrganization ?? $this->configuration->getOrganization() ?? null;
         $tokenNonce = $tokenNonce ?? null;

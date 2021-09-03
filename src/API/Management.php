@@ -166,7 +166,7 @@ final class Management
         // If no token was provided or available from cache, try to get one.
         if ($managementToken === null && $this->configuration->hasClientSecret()) {
             $authentication = $authentication ?? new Authentication($this->configuration);
-            $response = $authentication->clientCredentials(['audience' => $this->configuration->formatDomain() . '/api/v2/']);
+            $response = $authentication->clientCredentials(['audience' => $this->configuration->formatDomain(true) . '/api/v2/']);
 
             if (HttpResponse::wasSuccessful($response)) {
                 $response = HttpResponse::decodeContent($response);
