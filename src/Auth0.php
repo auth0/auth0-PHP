@@ -446,107 +446,59 @@ final class Auth0
     }
 
     /**
-     * Get ID token from persisted session or from a code exchange
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * Get ID token from an active session
      */
     public function getIdToken(): ?string
     {
-        if (! $this->getState()->hasIdToken()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getIdToken();
     }
 
     /**
-     * Get userinfo from persisted session or from a code exchange
+     * Get userinfo from an active session
      *
      * @return array<string,array|int|string>|null
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getUser(): ?array
     {
-        if (! $this->getState()->hasUser()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getUser();
     }
 
     /**
-     * Get access token from persisted session or from a code exchange
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * Get access token from an active session
      */
     public function getAccessToken(): ?string
     {
-        if (! $this->getState()->hasAccessToken()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getAccessToken();
     }
 
     /**
-     * Get refresh token from persisted session or from a code exchange
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * Get refresh token from an active session
      */
     public function getRefreshToken(): ?string
     {
-        if (! $this->getState()->hasRefreshToken()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getRefreshToken();
     }
 
     /**
-     * Get token expiration from persisted session or from a code exchange
+     * Get token scopes from an active session
      *
      * @return array<string>
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getAccessTokenScope(): ?array
     {
-        if (! $this->getState()->hasAccessTokenScope()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getAccessTokenScope();
     }
 
     /**
-     * Get token expiration from persisted session or from a code exchange
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * Get token expiration from an active session
      */
     public function getAccessTokenExpiration(): ?int
     {
-        if (! $this->getState()->hasAccessTokenExpiration()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getAccessTokenExpiration();
     }
 
     /**
-     * Sets, validates, and persists the ID token.
+     * Updates the active session's stored Id Token.
      *
      * @param string $idToken Id token returned from the code exchange.
      */
