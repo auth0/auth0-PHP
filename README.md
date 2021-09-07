@@ -83,8 +83,8 @@ The libraries specified above are simply examples. Any libraries that support th
 ↗ [Guzzle 6 is compatible with an adaptor library.](https://github.com/php-http/guzzle6-adapter)<br />
 ↗ [Symfony's HttpClient component natively supports PSR-18.](https://symfony.com/doc/current/http_client.html#psr-18-and-psr-17)<br />
 ↗ [Learn about other compatible libraries from PHP-HTTP.](https://docs.php-http.org/en/latest/clients.html)<br />
-↗ [Search packagist for other PSR-17 HTTP factory libraries.](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017)<br />
-↗ [Search packagist for other PSR-18 HTTP client libraries.](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018)
+↗ [Search packagist for other PSR-17 HTTP factory libraries.](https://packagist.org/providers/psr/http-factory-implementation)<br />
+↗ [Search packagist for other PSR-18 HTTP client libraries.](https://packagist.org/providers/psr/http-client-implementation)
 
 ### SDK Initialization
 
@@ -211,9 +211,9 @@ $eventListenerProvider ListenerProviderInterface|null A PSR-14 compatible event 
 ↗ [Learn more about PSR-14 Event Dispatchers.](https://www.php-fig.org/psr/psr-14/)<br />
 ↗ [Learn more about PSR-17 HTTP Factories,](https://www.php-fig.org/psr/psr-17/) which are used to create [PSR-7 HTTP messages.](https://www.php-fig.org/psr/psr-7/)<br />
 ↗ [Learn more about the PSR-18 HTTP Client standard.](https://www.php-fig.org/psr/psr-18/)<br />
-↗ [Find PSR-6 cache libraries on Packagist.](https://packagist.org/search/?query=PSR-6&type=library&tags=psr%206)<br />
-↗ [Find PSR-17 HTTP factory libraries on Packagist.](https://packagist.org/search/?query=PSR-17&type=library&tags=psr%2017)<br />
-↗ [Find PSR-18 HTTP client libraries on Packagist.](https://packagist.org/search/?query=PSR-18&type=library&tags=psr%2018)
+↗ [Find PSR-6 cache libraries on Packagist.](https://packagist.org/providers/psr/cache-implementation)<br />
+↗ [Find PSR-17 HTTP factory libraries on Packagist.](https://packagist.org/providers/psr/http-factory-implementation)<br />
+↗ [Find PSR-18 HTTP client libraries on Packagist.](https://packagist.org/providers/psr/http-client-implementation)
 
 ### Configuration Strategies
 
