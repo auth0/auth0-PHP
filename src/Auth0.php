@@ -283,22 +283,29 @@ final class Auth0
      * Exchange authorization code for access, ID, and refresh tokens.
      *
      * @param string|null $redirectUri  Optional. Redirect URI sent with authorize request. Defaults to the SDK's configured redirectUri.
+     * @param string|null $code         Optional. The value of the `code` parameter. One will be extracted from $_GET if not specified.
+     * @param string|null $state        Optional. The value of the `state` parameter. One will be extracted from $_GET if not specified.
      *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If the code value is missing from the request parameters.
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing from the request parameters, or otherwise invalid.
      * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
     public function exchange(
-        ?string $redirectUri = null
+        ?string $redirectUri = null,
+        ?string $code = null,
+        ?string $state = null
     ): bool {
-        $this->deferStateSaving();
+        [$redirectUri, $code, $state] = Toolkit::filter([$redirectUri, $code, $state])->string()->trim();
 
-        $code = $this->getRequestParameter('code');
-        $state = $this->getRequestParameter('state');
+        $code = $code ?? $this->getRequestParameter('code');
+        $state = $state ?? $this->getRequestParameter('state');
         $codeVerifier = null;
         $user = null;
+
+        $this->deferStateSaving();
 
         if ($code === null) {
             $this->clear();
