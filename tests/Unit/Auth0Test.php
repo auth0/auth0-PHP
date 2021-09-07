@@ -391,10 +391,10 @@ test('decode() throws an exception when `org_id` does not match `organization` c
     $auth0->decode($token);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
-test('exchange() returns false if no code is present', function(): void {
+test('exchange() throws an exception if no code is present', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-    expect($auth0->exchange())->toBeFalse();
-});
+    $auth0->exchange();
+})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_MISSING_CODE);
 
 test('exchange() returns false if no nonce is stored', function(): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
@@ -702,54 +702,6 @@ test('getCredentials() returns the expected object structure when a session is a
 
     expect($credentials->user)->toBeArray();
 });
-
-test('getIdToken() performs an exchange if a session is not available', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $_GET['code'] = uniqid();
-
-    $auth0->getIdToken();
-})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
-test('getUser() performs an exchange if a session is not available', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $_GET['code'] = uniqid();
-
-    $auth0->getUser();
-})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
-test('getRefreshToken() performs an exchange if a session is not available', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $_GET['code'] = uniqid();
-
-    $auth0->getRefreshToken();
-})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
-test('getAccessToken() performs an exchange if a session is not available', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $_GET['code'] = uniqid();
-
-    $auth0->getAccessToken();
-})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
-test('getAccessTokenScope() performs an exchange if a session is not available', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $_GET['code'] = uniqid();
-
-    $auth0->getAccessTokenScope();
-})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
-
-test('getAccessTokenExpiration() performs an exchange if a session is not available', function(): void {
-    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
-
-    $_GET['code'] = uniqid();
-
-    $auth0->getAccessTokenExpiration();
-})->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('setIdToken() properly stores data', function(): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
