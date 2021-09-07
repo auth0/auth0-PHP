@@ -631,7 +631,25 @@ final class Auth0
     }
 
     /**
-     * Get the invitation details GET request
+     * Get the code exchange details from the GET request
+     */
+    public function getExchangeParameters(): ?object
+    {
+        $code = $this->getRequestParameter('code');
+        $state = $this->getRequestParameter('state');
+
+        if ($code !== null && $state !== null) {
+            return (object) [
+                'code' => $code,
+                'state' => $state
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the invitation details from the GET request
      */
     public function getInvitationParameters(): ?object
     {

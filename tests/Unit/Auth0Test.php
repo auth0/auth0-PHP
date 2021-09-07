@@ -770,3 +770,28 @@ test('getInvitationParameters() does not return invalid request parameters', fun
 
     $this->assertIsNotObject($auth0->getInvitationParameters());
 });
+
+test('getExchangeParameters() returns request parameters when valid', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = uniqid();
+
+    $extracted = $auth0->getExchangeParameters();
+
+    $this->assertIsObject($extracted, 'Invitation parameters were not extracted from the $_GET (environment variable seeded with query parameters during a GET request) successfully.');
+
+    $this->assertObjectHasAttribute('code', $extracted);
+    $this->assertObjectHasAttribute('state', $extracted);
+
+    expect($extracted->code)->toEqual($_GET['code']);
+    expect($extracted->state)->toEqual($_GET['state']);
+});
+
+test('getExchangeParameters() does not return invalid request parameters', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['code'] = 123;
+
+    $this->assertIsNotObject($auth0->getExchangeParameters());
+});
