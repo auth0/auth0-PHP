@@ -202,7 +202,7 @@ final class Auth0
     /**
      * Delete any persistent data and clear out all stored properties.
      *
-     * @oaram bool $transient When true, data in transient storage is also cleared.
+     * @param bool $transient When true, data in transient storage is also cleared.
      */
     public function clear(
         bool $transient = true
