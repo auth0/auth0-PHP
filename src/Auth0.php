@@ -301,7 +301,8 @@ final class Auth0
         $user = null;
 
         if ($code === null) {
-            return false;
+            $this->clear();
+            throw \Auth0\SDK\Exception\StateException::missingCode();
         }
 
         $this->clear(false);
