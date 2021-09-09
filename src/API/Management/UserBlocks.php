@@ -25,6 +25,8 @@ final class UserBlocks extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks_by_id
      */
     public function get(
         string $id,
@@ -52,6 +54,8 @@ final class UserBlocks extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/User_Blocks/delete_user_blocks_by_id
      */
     public function delete(
         string $id,
@@ -79,6 +83,8 @@ final class UserBlocks extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `identifier` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks
      */
     public function getByIdentifier(
         string $identifier,
@@ -107,6 +113,8 @@ final class UserBlocks extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `identifier` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/User_Blocks/delete_user_blocks
      */
     public function deleteByIdentifier(
         string $identifier,

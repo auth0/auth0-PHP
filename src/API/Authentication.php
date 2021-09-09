@@ -415,6 +415,9 @@ final class Authentication
      * @throws \Auth0\SDK\Exception\ConfigurationException When a Client Secret is not configured.
      * @throws \Auth0\SDK\Exception\ConfigurationException When a redirect uri is not configured.
      * @throws \Auth0\SDK\Exception\NetworkException       When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/authentication#authorization-code-flow45
+     * @link https://auth0.com/docs/api/authentication#authorization-code-flow-with-pkce46
      */
     public function codeExchange(
         string $code,
@@ -453,6 +456,9 @@ final class Authentication
      * @throws \Auth0\SDK\Exception\ConfigurationException When a Client ID is not configured.
      * @throws \Auth0\SDK\Exception\ConfigurationException When a Client Secret is not configured.
      * @throws \Auth0\SDK\Exception\NetworkException       When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/authentication#resource-owner-password
+     * @link https://auth0.com/docs/authorization/flows/resource-owner-password-flow
      */
     public function login(
         string $username,
@@ -490,7 +496,8 @@ final class Authentication
      * @throws \Auth0\SDK\Exception\ConfigurationException When a Client Secret is not configured.
      * @throws \Auth0\SDK\Exception\NetworkException       When the API request fails due to a network error.
      *
-     * @link https://auth0.com/docs/api-auth/grant/password
+     * @link https://auth0.com/docs/api/authentication#resource-owner-password
+     * @link https://auth0.com/docs/authorization/flows/resource-owner-password-flow
      */
     public function loginWithDefaultDirectory(
         string $username,
@@ -522,7 +529,8 @@ final class Authentication
      * @throws \Auth0\SDK\Exception\ConfigurationException When a Client Secret is not configured.
      * @throws \Auth0\SDK\Exception\NetworkException       When the API request fails due to a network error.
      *
-     * @link https://auth0.com/docs/api-auth/grant/client-credentials
+     * @link https://auth0.com/docs/api/authentication#client-credentials-flow
+     * @link https://auth0.com/docs/authorization/flows/client-credentials-flow
      */
     public function clientCredentials(
         ?array $params = null,
