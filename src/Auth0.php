@@ -641,7 +641,7 @@ final class Auth0
         if ($code !== null && $state !== null) {
             return (object) [
                 'code' => $code,
-                'state' => $state
+                'state' => $state,
             ];
         }
 
