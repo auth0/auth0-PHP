@@ -283,25 +283,33 @@ final class Auth0
      * Exchange authorization code for access, ID, and refresh tokens.
      *
      * @param string|null $redirectUri  Optional. Redirect URI sent with authorize request. Defaults to the SDK's configured redirectUri.
+     * @param string|null $code         Optional. The value of the `code` parameter. One will be extracted from $_GET if not specified.
+     * @param string|null $state        Optional. The value of the `state` parameter. One will be extracted from $_GET if not specified.
      *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
+     * @throws \Auth0\SDK\Exception\StateException   If the code value is missing from the request parameters.
+     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing from the request parameters, or otherwise invalid.
      * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
     public function exchange(
-        ?string $redirectUri = null
+        ?string $redirectUri = null,
+        ?string $code = null,
+        ?string $state = null
     ): bool {
-        $this->deferStateSaving();
+        [$redirectUri, $code, $state] = Toolkit::filter([$redirectUri, $code, $state])->string()->trim();
 
-        $code = $this->getRequestParameter('code');
-        $state = $this->getRequestParameter('state');
+        $code = $code ?? $this->getRequestParameter('code');
+        $state = $state ?? $this->getRequestParameter('state');
         $codeVerifier = null;
         $user = null;
 
+        $this->deferStateSaving();
+
         if ($code === null) {
-            return false;
+            $this->clear();
+            throw \Auth0\SDK\Exception\StateException::missingCode();
         }
 
         $this->clear(false);
@@ -446,107 +454,59 @@ final class Auth0
     }
 
     /**
-     * Get ID token from persisted session or from a code exchange
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * Get ID token from an active session
      */
     public function getIdToken(): ?string
     {
-        if (! $this->getState()->hasIdToken()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getIdToken();
     }
 
     /**
-     * Get userinfo from persisted session or from a code exchange
+     * Get userinfo from an active session
      *
      * @return array<string,array|int|string>|null
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getUser(): ?array
     {
-        if (! $this->getState()->hasUser()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getUser();
     }
 
     /**
-     * Get access token from persisted session or from a code exchange
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * Get access token from an active session
      */
     public function getAccessToken(): ?string
     {
-        if (! $this->getState()->hasAccessToken()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getAccessToken();
     }
 
     /**
-     * Get refresh token from persisted session or from a code exchange
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * Get refresh token from an active session
      */
     public function getRefreshToken(): ?string
     {
-        if (! $this->getState()->hasRefreshToken()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getRefreshToken();
     }
 
     /**
-     * Get token expiration from persisted session or from a code exchange
+     * Get token scopes from an active session
      *
      * @return array<string>
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      */
     public function getAccessTokenScope(): ?array
     {
-        if (! $this->getState()->hasAccessTokenScope()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getAccessTokenScope();
     }
 
     /**
-     * Get token expiration from persisted session or from a code exchange
-     *
-     * @throws \Auth0\SDK\Exception\StateException   If the state value is missing or invalid.
-     * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     * Get token expiration from an active session
      */
     public function getAccessTokenExpiration(): ?int
     {
-        if (! $this->getState()->hasAccessTokenExpiration()) {
-            $this->exchange();
-        }
-
         return $this->getState()->getAccessTokenExpiration();
     }
 
     /**
-     * Sets, validates, and persists the ID token.
+     * Updates the active session's stored Id Token.
      *
      * @param string $idToken Id token returned from the code exchange.
      */
@@ -671,7 +631,25 @@ final class Auth0
     }
 
     /**
-     * Get the invitation details GET request
+     * Get the code exchange details from the GET request
+     */
+    public function getExchangeParameters(): ?object
+    {
+        $code = $this->getRequestParameter('code');
+        $state = $this->getRequestParameter('state');
+
+        if ($code !== null && $state !== null) {
+            return (object) [
+                'code' => $code,
+                'state' => $state
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the invitation details from the GET request
      */
     public function getInvitationParameters(): ?object
     {

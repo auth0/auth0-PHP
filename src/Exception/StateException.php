@@ -10,6 +10,7 @@ namespace Auth0\SDK\Exception;
 final class StateException extends \Exception implements Auth0Exception
 {
     public const MSG_INVALID_STATE = 'Invalid state';
+    public const MSG_MISSING_CODE = 'Missing code';
     public const MSG_MISSING_CODE_VERIFIER = 'Missing code_verifier';
     public const MSG_BAD_ACCESS_TOKEN = 'Invalid access_token';
     public const MSG_MISSING_NONCE = 'Nonce was not found in the application storage';
@@ -21,6 +22,12 @@ final class StateException extends \Exception implements Auth0Exception
         ?\Throwable $previous = null
     ): self {
         return new self(self::MSG_INVALID_STATE, 0, $previous);
+    }
+
+    public static function missingCode(
+        ?\Throwable $previous = null
+    ): self {
+        return new self(self::MSG_MISSING_CODE, 0, $previous);
     }
 
     public static function missingCodeVerifier(
