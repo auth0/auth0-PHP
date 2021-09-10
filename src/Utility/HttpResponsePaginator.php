@@ -154,6 +154,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
      *
      * @codeCoverageIgnore
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         if ($this->valid()) {
