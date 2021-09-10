@@ -223,7 +223,7 @@ The PHP SDK is a robust and flexible library capable of integration with many ty
 - `api` indicates you'll be using the SDK in a stateless API-only environment; only `domain` and `audience` are required in this configuration.
 - `management` is for stateless applications exclusively using Management API calls; `managementToken` and/or `clientId` and `clientSecret` are required in this case.
 
-### Getting an active session
+### Checking for an active session
 
 ```PHP
 <?php
@@ -234,27 +234,11 @@ The PHP SDK is a robust and flexible library capable of integration with many ty
 $session = $auth0->getCredentials();
 
 if ($session !== null) {
-    // The Id Token for the user as a string.
-    $idToken = $session->idToken;
-
-    // The Access Token for the user, as a string.
-    $accessToken = $session->accessToken;
-
-    // A Unix timestamp representing when the Access Token is expected to expire, as an int.
-    $accessTokenExpiration = $session->accessTokenExpiration;
-
-    // A bool; if time() is greater than the value of $accessTokenExpiration, this will be true.
-    $accessTokenExpired = $session->accessTokenExpired;
-
-    // A Refresh Token, if available, as a string.
-    $refreshToken = $session->refreshToken;
-
-    // Data about the user as an array.
-    $user = $session->user;
+    // The user is signed in.
 }
 ```
 
-### Logging in
+### Authorizing User
 
 ```PHP
 <?php
@@ -268,6 +252,28 @@ if ($session === null) {
     // They are not. Redirect the end user to the login page.
     header('Location: ' . $auth0->login());
     exit;
+}
+```
+
+### Requesting Tokens
+
+After a user successfully authenticates with Auth0 from the step above, they'll be returned to your application with the `state` and `code` URL parameters necessary to request a token. This is the last step in finalizing the user session.
+
+```PHP
+<?php
+
+// 🧩 Include the configuration code from the 'SDK Initialization' step above here.
+
+$session = $auth0->getCredentials();
+
+// Is this end-user already signed in?
+if ($session === null && isset($_GET['code']) && isset($_GET['state'])) {
+    if ($auth0->exchange() === false) {
+        die("Authentication failed.");
+    }
+
+    // Authentication complete!
+    print_r($auth0->getUser());
 }
 ```
 
