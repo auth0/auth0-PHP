@@ -150,7 +150,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     /**
      * Return the current result at our position, if available.
      *
-     * @return array<mixed>|bool
+     * @return mixed
      *
      * @codeCoverageIgnore
      */
