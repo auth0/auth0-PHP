@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
  *
  * @phpstan-implements \Iterator<int,mixed>
  */
-final class HttpResponsePaginator implements \Countable, \Iterator
+#[\Attribute(\Attribute::TARGET_CLASS)] final class HttpResponsePaginator implements \Countable, \Iterator
 {
     /**
      * These endpoints support checkpoint-based pagination (from, take). A 'next' value will be present in responses if more results are available.
