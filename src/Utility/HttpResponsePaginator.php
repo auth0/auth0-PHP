@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class HttpResponsePaginator.
  *
- * @phpstan-implements \Iterator<int,array|bool>
+ * @phpstan-implements \Iterator<int,mixed>
  */
 final class HttpResponsePaginator implements \Countable, \Iterator
 {
