@@ -1,0 +1,6 @@
+.circleci/
+.github/
+build/
+vendor/
+composer.lock
+composer.phar

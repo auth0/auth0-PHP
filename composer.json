@@ -74,17 +74,43 @@
     "sort-packages": true
   },
   "scripts": {
-    "tests:docker": "docker compose run --rm tests",
     "tests": [
       "@tests:phpinsights",
       "@tests:phpstan",
       "@tests:psalm",
       "@tests:pest"
     ],
-    "tests:phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
-    "tests:phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
-    "tests:psalm": "@php ./vendor/bin/psalm",
-    "tests:pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
-    "tests:infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest"
+    "tests:phpinsights": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/phpinsights -v --no-interaction"
+    ],
+    "tests:phpstan": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M"
+    ],
+    "tests:psalm": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/psalm"
+    ],
+    "tests:pest": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/pest --stop-on-failure --coverage"
+    ],
+    "tests:infection": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/infection --threads=4 --test-framework=pest"
+    ],
+    "tests:7.4": [
+      "Composer\\Config::disableProcessTimeout",
+      "docker compose run --rm tests-7.4"
+    ],
+    "tests:8.0": [
+      "Composer\\Config::disableProcessTimeout",
+      "docker compose run --rm tests-8.0"
+    ],
+    "tests:8.1": [
+      "Composer\\Config::disableProcessTimeout",
+      "docker compose run --rm tests-8.1"
+    ]
   }
 }

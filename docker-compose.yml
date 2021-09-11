@@ -1,16 +1,30 @@
 version: "3.9"
 
 services:
-  tests:
-    image: composer:2.1
+  tests-7.4:
     volumes:
       - ./:/app
+    tmpfs:
+      - /app/vendor
     working_dir: /app
-    command: >
-      sh -c "rm -f ./composer.lock &&
-             composer validate &&
-             composer install &&
-             php ./vendor/bin/phpinsights -v --no-interaction &&
-             php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M &&
-             php ./vendor/bin/psalm &&
-             php ./vendor/bin/pest --stop-on-failure"
+    build:
+      context: .
+      dockerfile: ./docker/php-7.4.dockerfile
+  tests-8.0:
+    volumes:
+      - ./:/app
+    tmpfs:
+      - /app/vendor
+    working_dir: /app
+    build:
+      context: .
+      dockerfile: ./docker/php-8.0.dockerfile
+  tests-8.1:
+    volumes:
+      - ./:/app
+    tmpfs:
+      - /app/vendor
+    working_dir: /app
+    build:
+      context: .
+      dockerfile: ./docker/php-8.1.dockerfile
