@@ -96,6 +96,8 @@ final class Users extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/get_users_by_id
      */
     public function get(
         string $id,
@@ -514,6 +516,8 @@ final class Users extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users/get_user_organizations
      */
     public function getOrganizations(
         string $id,

@@ -62,6 +62,8 @@ final class Tickets extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `body` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Tickets/post_password_change
      */
     public function createPasswordChange(
         array $body,

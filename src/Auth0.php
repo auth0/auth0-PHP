@@ -291,7 +291,7 @@ final class Auth0
      * @throws \Auth0\SDK\Exception\StateException   If access token is missing from the response.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
      *
-     * @link https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
+     * @link https://auth0.com/docs/authorization/flows/call-your-api-using-the-authorization-code-flow
      */
     public function exchange(
         ?string $redirectUri = null,
@@ -673,7 +673,11 @@ final class Auth0
      */
     private function getTransientStore(): TransientStoreHandler
     {
-        return $this->transient = new TransientStoreHandler($this->configuration()->getTransientStorage());
+        if ($this->transient === null) {
+            $this->transient = new TransientStoreHandler($this->configuration()->getTransientStorage());
+        }
+
+        return $this->transient;
     }
 
     /**
