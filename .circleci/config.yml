@@ -130,7 +130,7 @@ commands:
     steps:
       - run:
           name: Run unit tests (Pest)
-          command: php -d memory_limit=2G ./vendor/bin/pest --stop-on-failure --min=80 --coverage-clover=<< parameters.clover >>/coverage.xml --coverage-xml=<< parameters.clover >>/coverage-xml --log-junit=<< parameters.clover >>/junit.xml
+          command: php -d error_reporting='E_ALL ^ E_DEPRECATED' -d session.use_cookies=false -d session.cache_limiter=false -d memory_limit=2G ./vendor/bin/pest --stop-on-failure --min=95 --coverage-clover=<< parameters.clover >>/coverage.xml --coverage-xml=<< parameters.clover >>/coverage-xml --log-junit=<< parameters.clover >>/junit.xml
 
   run-infection:
     parameters:
@@ -205,7 +205,6 @@ workflows:
       - run-tests:
           name: run-tests-8.0
           php: "8.0.9"
-      # - run-tests:
-      #     name: run-tests-8.1
-      #     php: "8.1.0beta1"
-      #     composer: "--ignore-platform-reqs"
+      - run-tests:
+          name: run-tests-8.1
+          php: "8.1.0RC1"
