@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility;
 
-use Auth0\SDK\Stub\ReturnTypeWillChange;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -153,9 +152,11 @@ final class HttpResponsePaginator implements \Countable, \Iterator
      *
      * @return mixed
      *
+     * @psalm-suppress InvalidAttribute
+     *
      * @codeCoverageIgnore
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if ($this->valid()) {

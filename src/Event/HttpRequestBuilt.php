@@ -17,7 +17,7 @@ final class HttpRequestBuilt implements Auth0Event
         $this->httpRequest = $httpRequest;
     }
 
-    public function &get(): RequestInterface
+    public function get(): RequestInterface
     {
         return $this->httpRequest;
     }

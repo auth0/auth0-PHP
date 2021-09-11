@@ -21,7 +21,7 @@ final class HttpResponseReceived implements Auth0Event
         $this->httpRequest = $httpRequest;
     }
 
-    public function &get(): ResponseInterface
+    public function get(): ResponseInterface
     {
         return $this->httpResponse;
     }

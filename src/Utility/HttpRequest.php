@@ -138,7 +138,7 @@ final class HttpRequest
         string $basePath = '/',
         array $headers = [],
         ?string $domain = null,
-        ?array &$mockedResponses = null
+        ?array & $mockedResponses = null
     ) {
         $this->configuration = $configuration;
         $this->context = $context;
