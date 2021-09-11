@@ -28,7 +28,7 @@
     }
   ],
   "require": {
-    "php": "^7.4 || ^8.0",
+    "php": "^7.4 || ^8.0, <8.2",
     "ext-filter": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
@@ -50,14 +50,14 @@
     "mockery/mockery": "^1.4",
     "nunomaduro/phpinsights": "^2.0",
     "nyholm/psr7": "^1.4",
-    "pestphp/pest": "^1.0",
-    "pestphp/pest-plugin-parallel": "^0.2.0",
+    "pestphp/pest": "^1.18",
+    "pestphp/pest-plugin-parallel": "^0.2",
     "php-http/mock-client": "^1.4",
     "phpstan/phpstan": "^0.12",
     "phpstan/phpstan-strict-rules": "^0.12",
     "symfony/cache": "^4.4 || ^5.2",
     "thecodingmachine/phpstan-strict-rules": "^0.12",
-    "vimeo/psalm": "^4.7"
+    "vimeo/psalm": "^4.10"
   },
   "autoload": {
     "psr-4": {
