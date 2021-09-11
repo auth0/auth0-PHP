@@ -673,7 +673,11 @@ final class Auth0
      */
     private function getTransientStore(): TransientStoreHandler
     {
-        return $this->transient = new TransientStoreHandler($this->configuration()->getTransientStorage());
+        if ($this->transient === null) {
+            $this->transient = new TransientStoreHandler($this->configuration()->getTransientStorage());
+        }
+
+        return $this->transient;
     }
 
     /**
