@@ -93,7 +93,7 @@ final class Verifier
         ?string $clientSecret = null,
         ?int $cacheExpires = null,
         ?CacheItemPoolInterface $cache = null,
-        ?array &$mockedHttpResponses = null
+        ?array & $mockedHttpResponses = null
     ) {
         $this->configuration = $configuration;
         $this->payload = $payload;
