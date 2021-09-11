@@ -25,6 +25,8 @@ final class UsersByEmail extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `email` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Users_By_Email/get_users_by_email
      */
     public function get(
         string $email,

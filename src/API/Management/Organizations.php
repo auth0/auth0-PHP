@@ -29,6 +29,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `name` or `displayName` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/post_organizations
      */
     public function create(
         string $name,
@@ -69,6 +71,8 @@ final class Organizations extends ManagementEndpoint
      * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/get_organizations
      */
     public function getAll(
         ?RequestOptions $options = null
@@ -89,6 +93,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/get_organizations_by_id
      */
     public function get(
         string $id,
@@ -116,6 +122,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `name` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/get_name_by_name
      */
     public function getByName(
         string $name,
@@ -148,6 +156,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `displayName` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/patch_organizations_by_id
      */
     public function update(
         string $id,
@@ -191,6 +201,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/delete_organizations_by_id
      */
     public function delete(
         string $id,
@@ -220,6 +232,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/post_enabled_connections
      */
     public function addEnabledConnection(
         string $id,
@@ -260,6 +274,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/get_enabled_connections
      */
     public function getEnabledConnections(
         string $id,
@@ -288,6 +304,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/get_enabled_connections_by_connectionId
      */
     public function getEnabledConnection(
         string $id,
@@ -319,6 +337,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/patch_enabled_connections_by_connectionId
      */
     public function updateEnabledConnection(
         string $id,
@@ -352,6 +372,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/delete_enabled_connections_by_connectionId
      */
     public function removeEnabledConnection(
         string $id,
@@ -382,6 +404,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `members` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/post_members
      */
     public function addMembers(
         string $id,
@@ -420,6 +444,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/get_members
      */
     public function getMembers(
         string $id,
@@ -448,6 +474,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `members` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/delete_members
      */
     public function removeMembers(
         string $id,
@@ -488,6 +516,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id`, `userId`, or `roles` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/post_organization_member_roles
      */
     public function addMemberRoles(
         string $id,
@@ -529,6 +559,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `userId` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/get_organization_member_roles
      */
     public function getMemberRoles(
         string $id,
@@ -560,6 +592,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id`, `userId`, or `roles` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/delete_organization_member_roles
      */
     public function removeMemberRoles(
         string $id,
@@ -606,6 +640,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id`, `clientId`, `inviter`, or `invitee` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/post_invitations
      */
     public function createInvitation(
         string $id,
@@ -659,6 +695,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` is provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/get_invitations
      */
     public function getInvitations(
         string $id,
@@ -687,6 +725,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `invitationId` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * https://auth0.com/docs/api/management/v2#!/Organizations/get_invitations_by_invitation_id
      */
     public function getInvitation(
         string $id,
@@ -717,6 +757,8 @@ final class Organizations extends ManagementEndpoint
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `invitationId` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
+     *
+     * @link https://auth0.com/docs/api/management/v2#!/Organizations/delete_invitations_by_invitation_id
      */
     public function deleteInvitation(
         string $id,
