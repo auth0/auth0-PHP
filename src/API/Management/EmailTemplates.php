@@ -116,7 +116,7 @@ final class EmailTemplates extends ManagementEndpoint
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `templateName` or `body` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
-     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName
+     * @link https://auth0.com/docs/api/management/v2#!/Email_Templates/put_email_templates_by_templateName
      */
     public function update(
         string $templateName,
