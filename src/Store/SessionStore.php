@@ -151,14 +151,18 @@ final class SessionStore implements StoreInterface
         $sessionId = session_id();
 
         if ($sessionId === '' || $sessionId === false) {
-            session_set_cookie_params([
-                'lifetime' => $this->configuration->getCookieExpires(),
-                'domain' => $this->configuration->getCookieDomain(),
-                'path' => $this->configuration->getCookiePath(),
-                'secure' => $this->configuration->getCookieSecure(),
-                'httponly' => true,
-                'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
-            ]);
+            // @codeCoverageIgnoreStart
+            if (! defined('AUTH0_TESTS_DIR')) {
+                session_set_cookie_params([
+                    'lifetime' => $this->configuration->getCookieExpires(),
+                    'domain' => $this->configuration->getCookieDomain(),
+                    'path' => $this->configuration->getCookiePath(),
+                    'secure' => $this->configuration->getCookieSecure(),
+                    'httponly' => true,
+                    'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
+                ]);
+            }
+            // @codeCoverageIgnoreEnd
 
             session_register_shutdown();
 
