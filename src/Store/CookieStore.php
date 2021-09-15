@@ -200,7 +200,11 @@ final class CookieStore implements StoreInterface
                     $_COOKIE[$cookieName] = $chunk;
 
                     // Push the updated cookie to the host device for persistence.
-                    setcookie($cookieName, $chunk, $setOptions);
+                    // @codeCoverageIgnoreStart
+                    if (! defined('AUTH0_TESTS_DIR')) {
+                        setcookie($cookieName, $chunk, $setOptions);
+                    }
+                    // @codeCoverageIgnoreEnd
 
                     // Keep track of the cookie names in use., _1, _2, _3, and so on.
                     $using[] = $cookieName;
@@ -216,7 +220,11 @@ final class CookieStore implements StoreInterface
 
         foreach ($orphaned as $cookieName) {
             // Push the cookie deletion command to the host device.
-            setcookie($cookieName, '', $deleteOptions);
+            // @codeCoverageIgnoreStart
+            if (! defined('AUTH0_TESTS_DIR')) {
+                setcookie($cookieName, '', $deleteOptions);
+            }
+            // @codeCoverageIgnoreEnd
 
             // Clear PHP's internal COOKIE global of the orphaned cookie.
             unset($_COOKIE[$cookieName]);

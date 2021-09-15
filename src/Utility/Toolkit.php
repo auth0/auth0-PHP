@@ -56,7 +56,7 @@ final class Toolkit
      * @param \Closure $callback The function to pass each item through.
      */
     public static function each(
-        iterable &$items,
+        iterable & $items,
         \Closure $callback
     ): void {
         foreach ($items as $key => &$item) {

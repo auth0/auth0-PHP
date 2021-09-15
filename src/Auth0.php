@@ -611,11 +611,11 @@ final class Auth0
      * Get the specified parameter from POST or GET, depending on configured response mode.
      *
      * @param string $parameterName Name of the parameter to pull from the request.
-     * @param int $filter Defaults to FILTER_SANITIZE_STRING. The type of PHP filter_var() filter to apply.
+     * @param int $filter Defaults to \FILTER_UNSAFE_RAW. The type of PHP filter_var() filter to apply.
      */
     public function getRequestParameter(
         string $parameterName,
-        int $filter = FILTER_SANITIZE_STRING
+        int $filter = \FILTER_UNSAFE_RAW
     ): ?string {
         $responseMode = $this->configuration()->getResponseMode();
 
@@ -641,7 +641,7 @@ final class Auth0
         if ($code !== null && $state !== null) {
             return (object) [
                 'code' => $code,
-                'state' => $state
+                'state' => $state,
             ];
         }
 

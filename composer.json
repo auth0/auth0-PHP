@@ -28,7 +28,7 @@
     }
   ],
   "require": {
-    "php": "^7.4 || ^8.0",
+    "php": "^7.4 || ^8.0, <8.2",
     "ext-filter": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
@@ -50,14 +50,14 @@
     "mockery/mockery": "^1.4",
     "nunomaduro/phpinsights": "^2.0",
     "nyholm/psr7": "^1.4",
-    "pestphp/pest": "^1.0",
-    "pestphp/pest-plugin-parallel": "^0.2.0",
+    "pestphp/pest": "^1.18",
+    "pestphp/pest-plugin-parallel": "^0.2",
     "php-http/mock-client": "^1.4",
     "phpstan/phpstan": "^0.12",
     "phpstan/phpstan-strict-rules": "^0.12",
     "symfony/cache": "^4.4 || ^5.2",
     "thecodingmachine/phpstan-strict-rules": "^0.12",
-    "vimeo/psalm": "^4.7"
+    "vimeo/psalm": "^4.10"
   },
   "autoload": {
     "psr-4": {
@@ -74,17 +74,43 @@
     "sort-packages": true
   },
   "scripts": {
-    "tests:docker": "docker compose run --rm tests",
     "tests": [
       "@tests:phpinsights",
       "@tests:phpstan",
       "@tests:psalm",
       "@tests:pest"
     ],
-    "tests:phpinsights": "@php ./vendor/bin/phpinsights -v --no-interaction",
-    "tests:phpstan": "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M",
-    "tests:psalm": "@php ./vendor/bin/psalm",
-    "tests:pest": "@php ./vendor/bin/pest --stop-on-failure --coverage",
-    "tests:infection": "@php ./vendor/bin/infection --threads=4 --test-framework=pest"
+    "tests:phpinsights": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/phpinsights -v --no-interaction"
+    ],
+    "tests:phpstan": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/phpstan analyse --ansi --memory-limit 512M"
+    ],
+    "tests:psalm": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/psalm"
+    ],
+    "tests:pest": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/pest --stop-on-failure --coverage"
+    ],
+    "tests:infection": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php ./vendor/bin/infection --threads=4 --test-framework=pest"
+    ],
+    "tests:7.4": [
+      "Composer\\Config::disableProcessTimeout",
+      "docker compose run --rm tests-7.4"
+    ],
+    "tests:8.0": [
+      "Composer\\Config::disableProcessTimeout",
+      "docker compose run --rm tests-8.0"
+    ],
+    "tests:8.1": [
+      "Composer\\Config::disableProcessTimeout",
+      "docker compose run --rm tests-8.1"
+    ]
   }
 }

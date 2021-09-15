@@ -10,7 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class HttpResponsePaginator.
  *
- * @phpstan-implements \Iterator<int,array|bool>
+ * @phpstan-implements \Iterator<int,mixed>
  */
 final class HttpResponsePaginator implements \Countable, \Iterator
 {
@@ -150,10 +150,13 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     /**
      * Return the current result at our position, if available.
      *
-     * @return array<mixed>|bool
+     * @return mixed
+     *
+     * @psalm-suppress InvalidAttribute
      *
      * @codeCoverageIgnore
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         if ($this->valid()) {
