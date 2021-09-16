@@ -10,4 +10,9 @@
       <directory>tests/Unit</directory>
     </testsuite>
   </testsuites>
+  <php>
+    <ini name="error_reporting" value="E_ALL ^ E_DEPRECATED"/>
+    <ini name="session.use_cookies" value="false"/>
+    <ini name="session.cache_limiter" value="false"/>
+  </php>
 </phpunit>
