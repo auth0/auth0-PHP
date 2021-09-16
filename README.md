@@ -57,19 +57,12 @@ To get started, you'll need to create a [free Auth0 account](https://auth0.com/s
 The supported method of SDK installation is through [Composer](https://getcomposer.org/). From your terminal shell, `cd` into your project directory and issue the following command:
 
 ```bash
-$ composer require auth0/auth0-php:8.0.0-BETA3
+$ composer require auth0/auth0-php
 ```
 
 You can find guidance on installing Composer [here](https://getcomposer.org/doc/00-intro.md).
 
 > ⚠️ Your application must include the Composer autoloader, [as explained here](https://getcomposer.org/doc/01-basic-usage.md#autoloading), for the SDK to be usable within your application.
-
-If you receive a warning regarding 'minimum-stability', you may need to update your `composer.json` file to include the following options, and then retry the `require` command above:
-
-```
-"minimum-stability": "beta",
-"prefer-stable": true
-```
 
 Next, you will want ensure your application has [PSR-17](https://www.php-fig.org/psr/psr-17/) and [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible libraries installed. These are used for network requests. As an example, let's say you wish to use [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which include PSR-18 and PSR-17 factories, respectively:
 
@@ -506,8 +499,8 @@ In some cases, your application may need to support validating tokens' `org_id` 
   - [Management API](https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php)
   - [Troubleshooting](https://auth0.com/docs/libraries/auth0-php/troubleshoot-auth0-php-library)
 - Quickstarts
-  - [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/php-beta/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-web-app/tree/8.x))
-  - [Backend API Authorization](https://auth0.com/docs/quickstart/backend/php-beta/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-api-samples/tree/8.x))
+  - [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-web-app))
+  - [Backend API Authorization](https://auth0.com/docs/quickstart/backend/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-api-samples))
 
 ## Contributing
 
