@@ -156,7 +156,7 @@ SDK 7.6 introduces support for [the newly released PHP 8.0](https://www.php.net/
 
 **BEFORE YOU UPGRADE**
 
-This is a major release with several breaking changes. Please see the [v5 to v7 migration guide here](https://github.com/auth0/auth0-PHP/blob/master/MIGRATE-v5-TO-v7.md) before you upgrade.
+This is a major release with several breaking changes. Please see the [v5 to v7 migration guide here](https://github.com/auth0/auth0-PHP/blob/7.x/MIGRATE-v5-TO-v7.md) before you upgrade.
 
 **Added**
 
