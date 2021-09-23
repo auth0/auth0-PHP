@@ -10,7 +10,7 @@
 - The SDK no longer specifically relies on Guzzle for network requests. Options for supplying your libraries of choice have been added through [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) configuration options.
 - PHP 7.4 is now the minimum supported PHP version, but we encourage using PHP 8.0. PHP 7.4 will be the last supported 7.x release. This library follows [the official support schedule for PHP](https://www.php.net/supported-versions.php).
 
-**Changes Since 8.0.1**
+**Changes Since 8.0.0**
 
 - Simplify decoding of Access Tokens via `Auth0::decode()` [#534](https://github.com/auth0/auth0-PHP/pull/571) ([shadowhand](https://github.com/shadowhand))
 
