@@ -391,6 +391,26 @@ test('decode() throws an exception when `org_id` does not match `organization` c
     $auth0->decode($token);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
+test('decode() can be used with access tokens', function (): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $decoded = $auth0->decode($token,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        \Auth0\SDK\Token::TYPE_TOKEN,
+    );
+
+    expect($decoded->getAudience())->toContain('__test_client_id__');
+});
+
 test('exchange() throws an exception if no code is present', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
     $auth0->exchange();

@@ -158,12 +158,11 @@ test('validate() overrides globally configured algorithm', function(
     array $claims
 ): void {
     $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
-
     $token->validate(null, [ $claims['aud'] ]);
 })->with(['mocked data' => [
     function(): SdkConfiguration {
         $this->configuration->setDomain('__test_domain__');
-        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setClientId('__diff_client_id__');
         $this->configuration->setTokenAlgorithm('HS256');
         return $this->configuration;
     },

@@ -246,28 +246,28 @@ final class Auth0
         ?string $tokenNonce = null,
         ?int $tokenMaxAge = null,
         ?int $tokenLeeway = null,
-        ?int $tokenNow = null
+        ?int $tokenNow = null,
+        ?int $tokenType = null
     ): Token {
-        // instantiate Token handler using the provided JWT, expecting an ID token, using the SDK configuration.
-        $token = new Token($this->configuration, $token, Token::TYPE_ID_TOKEN);
+        $tokenType = $tokenType ?? Token::TYPE_ID_TOKEN;
+        $tokenNonce = $tokenNonce ?? $this->getTransientStore()->getOnce('nonce') ?? null;
+        $tokenMaxAge = $tokenMaxAge ?? $this->getTransientStore()->getOnce('max_age') ?? null;
+        $tokenIssuer = null;
 
-        // Verify token signature.
+        $token = new Token($this->configuration, $token, $tokenType);
         $token->verify();
 
-        $tokenMaxAge = $tokenMaxAge ?? $this->getTransientStore()->getOnce('max_age') ?? null;
-
-        // If pulling from transient storage, $tokenMaxAge might be a string.
+        // If pulled from transient storage, $tokenMaxAge might be a string.
         if ($tokenMaxAge !== null) {
             $tokenMaxAge = (int) $tokenMaxAge;
         }
 
-        // Validate token claims.
         $token->validate(
-            null,
+            $tokenIssuer,
             $tokenAudience,
             $tokenOrganization,
-            $tokenNonce ?? $this->getTransientStore()->getOnce('nonce') ?? null,
-            $tokenMaxAge ?? null,
+            $tokenNonce,
+            $tokenMaxAge,
             $tokenLeeway,
             $tokenNow
         );
