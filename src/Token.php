@@ -139,11 +139,8 @@ final class Token
         $tokenNonce = $tokenNonce ?? null;
         $tokenMaxAge = $tokenMaxAge ?? $this->configuration->getTokenMaxAge() ?? null;
         $tokenLeeway = $tokenLeeway ?? $this->configuration->getTokenLeeway() ?? 60;
-
-        // If 'aud' claim check isn't defined, fallback to client id, if configured.
-        if (count($tokenAudience) === 0 && $this->configuration->hasClientId()) {
-            $tokenAudience[] = (string) $this->configuration->getClientId();
-        }
+        $tokenAudience[] = (string) $this->configuration->getClientId();
+        $tokenAudience = array_unique($tokenAudience);
 
         $validator = $this->parser->validate();
         $now = $tokenNow ?? time();
