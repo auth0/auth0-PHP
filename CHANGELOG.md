@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## [8.0.1](https://github.com/auth0/auth0-PHP/tree/8.0.1) (2021-09-23)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.0...8.0.1)
+
+**BEFORE YOU UPGRADE**
+
+- This is a major release that includes breaking changes. Please see [UPGRADE.md](UPGRADE.md) before upgrading. This release will require changes to your application.
+- The SDK no longer specifically relies on Guzzle for network requests. Options for supplying your libraries of choice have been added through [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) configuration options.
+- PHP 7.4 is now the minimum supported PHP version, but we encourage using PHP 8.0. PHP 7.4 will be the last supported 7.x release. This library follows [the official support schedule for PHP](https://www.php.net/supported-versions.php).
+
+**Changes Since 8.0.1**
+
+- Simplify decoding of Access Tokens via `Auth0::decode()` [#534](https://github.com/auth0/auth0-PHP/pull/571) ([shadowhand](https://github.com/shadowhand))
+
+**8.0 Highlights**
+
+- Updated SDK API for more intuitive use and improved usability. Now follows fluent interface principles.
+- Updated SDK API designed with PHP 8.0's named arguments as the encouraged interface method.
+- New configuration object, SdkConfiguration, allows for dynamic changes within your application.
+- Updated PHP language support, including typed properties and return types, are now used throughout the SDK.
+- Added support for the following PHP-FIG standards interfaces:
+  - [PSR-6](https://www.php-fig.org/psr/psr-6/) caches are now used for caching JWKs and Management API tokens.
+  - [PSR-7](https://www.php-fig.org/psr/psr-7/) HTTP messages are now returned by methods that initiate network requests.
+  - [PSR-14](https://www.php-fig.org/psr/psr-14/) events are now raised, allowing for deeper integration into the SDK's behavior.
+  - [PSR-17](https://www.php-fig.org/psr/psr-17/) HTTP factories are now used during network requests for generating PSR-7 messages.
+  - [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP clients are now supported, allowing you to choose your network client.
+- Improved Token handling system.
+- Encrypted session cookies, with cookies being the default session handler. PHP sessions may be phased out in a future release.
+- New Management API auto-pagination helper for iterating through API results.
+- [PKCE](https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce) is now enabled by default.
+
+For a complete overview of API changes, please see [UPGRADE.md](UPGRADE.md).
+
+For guidance on using the new configuration interface or SDK API, please see [README.md](README.md).
+
 ## [8.0.0](https://github.com/auth0/auth0-PHP/tree/8.0.0) (2021-09-20)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...8.0.0)
