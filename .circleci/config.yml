@@ -36,6 +36,7 @@ commands:
       - run:
           name: Configure pcov
           command: |
+            apk add autoconf
             pecl install pcov
             docker-php-ext-enable pcov
 
@@ -62,7 +63,7 @@ commands:
     steps:
       - run:
           name: Run static code analysis (Psalm)
-          command: php -d memory_limit=2G ./vendor/bin/psalm --threads=$(nproc)
+          command: php -d memory_limit=2G ./vendor/bin/psalm
 
   run-pest:
     steps:
