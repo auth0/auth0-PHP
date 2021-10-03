@@ -36,7 +36,7 @@ commands:
       - run:
           name: Configure pcov
           command: |
-            apk add autoconf gcc
+            apk add autoconf gcc make
             pecl install pcov
             docker-php-ext-enable pcov
 
