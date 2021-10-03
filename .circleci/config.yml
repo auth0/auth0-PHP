@@ -6,17 +6,9 @@ commands:
       - run:
           name: Configure environment
           command: |
-            apk update && apk add npm gcc autoconf make musl-dev oniguruma-dev gnupg
+            apk update && apk add npm
 
       - checkout
-
-      - run:
-          name: Configure environment
-          command: |
-            docker-php-ext-install posix
-            docker-php-ext-install pcntl
-            docker-php-ext-install mbstring
-            docker-php-ext-enable posix pcntl mbstring
 
   setup-composer:
     steps:
@@ -91,7 +83,37 @@ commands:
           command: snyk test --org=auth0-sdks --project-name=auth0-PHP
 
 jobs:
-  php:
+  phpinsights:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - setup-composer
+      - run-phpinsights
+  phpstan:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - setup-composer
+      - run-phpstan
+  psalm:
+    parameters:
+      php:
+        type: string
+    docker:
+      - image: php:<< parameters.php >>-cli-alpine
+    steps:
+      - setup
+      - setup-composer
+      - run-psalm
+  pest:
     parameters:
       php:
         type: string
@@ -101,9 +123,6 @@ jobs:
       - setup
       - setup-composer
       - setup-pcov
-      - run-phpinsights
-      - run-phpstan
-      - run-psalm
       - run-pest
   snyk:
     parameters:
@@ -131,14 +150,26 @@ jobs:
 workflows:
   test:
     jobs:
-      - php:
+      - phpinsights:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1.0RC3"]
+      - phpstan:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1.0RC3"]
+      - psalm:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1.0RC3"]
+      - pest:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1.0RC3"]
       - infection:
           matrix:
             parameters:
-              php: ["7.4"]
+              php: ["7.4", "8.0"]
       - hold:
           type: approval
       - snyk:
