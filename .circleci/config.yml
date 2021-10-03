@@ -91,7 +91,7 @@ commands:
           command: snyk test --org=auth0-sdks --project-name=auth0-PHP
 
 jobs:
-  test:
+  php:
     parameters:
       php:
         type: string
