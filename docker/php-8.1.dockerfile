@@ -1,4 +1,4 @@
-FROM php:8.1.0RC1-cli-alpine
+FROM php:8.1.0RC3-cli-alpine
 
 # Setup essentials for building PHP extensions
 RUN apk update && \
