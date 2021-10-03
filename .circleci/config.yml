@@ -75,7 +75,7 @@ commands:
           command: |
             apk add npm
             npm install -g snyk
-            snyk test --org=auth0-sdks --project-name=auth0-PHP
+            snyk test --dev --org=auth0-sdks --project-name=auth0-PHP
 
 jobs:
   phpinsights:
