@@ -6,7 +6,7 @@ commands:
       - run:
           name: Configure environment
           command: |
-            apk update && apk add npm
+            apk update
 
       - checkout
 
@@ -45,6 +45,7 @@ commands:
       - run:
           name: Configure snyk
           command: |
+            apk add npm
             npm install -g snyk
 
   run-phpinsights:
