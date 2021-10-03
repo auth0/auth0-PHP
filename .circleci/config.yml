@@ -104,7 +104,7 @@ jobs:
     steps:
       - prepare:
           php: << parameters.php-version >>
-        - run-snyk
+      - run-snyk
   infection:
     parameters:
       php-version:
