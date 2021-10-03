@@ -1,7 +1,7 @@
 version: 2.1
 
 commands:
-  prepare:
+  setup:
     steps:
       - run:
           name: Configure environment
@@ -13,18 +13,16 @@ commands:
       - run:
           name: Configure environment
           command: |
-            pecl install pcov
             docker-php-ext-install posix
             docker-php-ext-install pcntl
             docker-php-ext-install mbstring
+            docker-php-ext-enable posix pcntl mbstring
 
-            docker-php-ext-enable pcov posix pcntl mbstring
-
+  setup-composer:
+    steps:
       - run:
-          name: Install dependencies
+          name: Install COMPOSER
           command: |
-            npm install -g snyk
-
             EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
             php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
             ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
@@ -40,6 +38,21 @@ commands:
             rm composer-setup.php
 
             php composer.phar install --no-interaction --prefer-dist
+
+  setup-pcov:
+    steps:
+      - run:
+          name: Configure PCOV
+          command: |
+            pecl install pcov
+            docker-php-ext-enable pcov
+
+  setup-snyk:
+    steps:
+      - run:
+          name: Configure SNYK
+          command: |
+            npm install -g snyk
 
   run-phpinsights:
     steps:
@@ -85,7 +98,9 @@ jobs:
     docker:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare
+      - setup
+      - setup-composer
+      - setup-pcov
       - run-phpinsights
       - run-phpstan
       - run-psalm
@@ -97,7 +112,9 @@ jobs:
     docker:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare
+      - setup
+      - setup-composer
+      - setup-snyk
       - run-snyk
   infection:
     parameters:
@@ -106,13 +123,15 @@ jobs:
     docker:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare
+      - setup
+      - setup-composer
+      - setup-pcov
       - run-infection
 
 workflows:
-  run-tests:
+  tests:
     jobs:
-      - test:
+      - php:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1.0RC3"]
