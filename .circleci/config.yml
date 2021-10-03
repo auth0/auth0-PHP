@@ -3,12 +3,8 @@ version: 2.1
 commands:
   prepare:
     parameters:
-      php:
+      php-version:
         type: string
-      composer:
-        type: string
-      cache:
-        type: integer
 
     steps:
       - run:
@@ -19,97 +15,41 @@ commands:
       - checkout
 
       - run:
-          name: Prepare environment
-          command: |
-            mkdir -p /root/project/php-ext-cache
-            mkdir -p /root/project/npm-cache
-            mkdir -p /usr/local/lib/node_modules
-
-      - restore_cache:
-          keys:
-            - PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
-
-      - run:
           name: Configure environment
           command: |
-            PHP_EXT_DIR=$(php-config --extension-dir)
-            NPM_MODULES=$(npm root -g)
-
-            find /root/project/php-ext-cache/ -name '*.so' -exec cp -prv '{}' ${PHP_EXT_DIR}/ ';'
-            cp -a /root/project/npm-cache/. ${NPM_MODULES}
-
-            if [ ! -f ${PHP_EXT_DIR}/pcov.so ]; then
-                pecl install pcov
-            fi
-
-            if [ ! -f ${PHP_EXT_DIR}/posix.so ]; then
-                docker-php-ext-install posix
-            fi
-
-            if [ ! -f ${PHP_EXT_DIR}/pcntl.so ]; then
-                docker-php-ext-install pcntl
-            fi
-
-            if [ ! -f ${PHP_EXT_DIR}/mbstring.so ]; then
-                docker-php-ext-install mbstring
-            fi
+            pecl install pcov
+            docker-php-ext-install posix
+            docker-php-ext-install pcntl
+            docker-php-ext-install mbstring
 
             docker-php-ext-enable pcov posix pcntl mbstring
 
       - run:
           name: Install dependencies
           command: |
-            if [ `npm list -g | grep -c snyk` -eq 0 ]; then
-              npm install -g snyk
-            else
-              npm update -g
+            npm install -g snyk
+
+            EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+
+            if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
+                >&2 echo 'ERROR: Invalid installer checksum'
+                rm composer-setup.php
+                exit 1
             fi
 
-            if [ ! -f composer.phar ]; then
-              EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
-              php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-              ACTUAL_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")"
+            php composer-setup.php --quiet
+            RESULT=$?
+            rm composer-setup.php
 
-              if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ]; then
-                  >&2 echo 'ERROR: Invalid installer checksum'
-                  rm composer-setup.php
-                  exit 1
-              fi
-
-              php composer-setup.php --quiet
-              RESULT=$?
-              rm composer-setup.php
-            fi
-
-            if [ ! -f vendor ]; then
-              php composer.phar install --no-interaction --prefer-dist << parameters.composer >>
-            else
-              php composer.phar update --no-interaction --prefer-dist
-            fi
-
-      - run:
-          name: Cache extensions
-          command: |
-            PHP_EXT_DIR=$(php-config --extension-dir)
-            NPM_MODULES=$(npm root -g)
-
-            find ${PHP_EXT_DIR}/ -name '*.so' -exec cp -prv '{}' '/root/project/php-ext-cache/' ';'
-            cp -a ${NPM_MODULES}/. /root/project/npm-cache
-
-      - save_cache:
-          key: PHP<< parameters.php >>-{{ checksum "composer.json" }}-<< parameters.cache >>
-          paths:
-            - vendor
-            - php-ext-cache
-            - npm-cache
-            - composer.lock
-            - composer.phar
+            php composer.phar install --no-interaction --prefer-dist
 
   run-phpinsights:
     steps:
       - run:
           name: Run code quality analysis (PHP Insights)
-          command: php -d memory-limit=2G ./vendor/bin/phpinsights -v --no-interaction --min-quality=90 --min-complexity=50 --min-architecture=90 --min-style=90
+          command: php -d memory-limit=2G ./vendor/bin/phpinsights -v --no-interaction --min-quality=100 --min-complexity=50 --min-architecture=100 --min-style=100
 
   run-phpstan:
     steps:
@@ -124,22 +64,16 @@ commands:
           command: php -d memory_limit=2G ./vendor/bin/psalm --threads=$(nproc)
 
   run-pest:
-    parameters:
-      clover:
-        type: string
     steps:
       - run:
           name: Run unit tests (Pest)
-          command: php -d memory_limit=2G ./vendor/bin/pest --stop-on-failure --min=95 --coverage-clover=<< parameters.clover >>/coverage.xml --coverage-xml=<< parameters.clover >>/coverage-xml --log-junit=<< parameters.clover >>/junit.xml
+          command: php -d memory_limit=2G ./vendor/bin/pest --stop-on-failure --min=100
 
   run-infection:
-    parameters:
-      clover:
-        type: string
     steps:
       - run:
           name: Run mutation tests (Infection)
-          command: php -d memory_limit=2G ./vendor/bin/infection --skip-initial-tests --threads=$(nproc) --test-framework=pest --coverage=<< parameters.clover >> --no-progress --only-covered --min-msi=48 --min-covered-msi=70
+          command: php -d memory_limit=2G ./vendor/bin/infection --threads=$(nproc) --test-framework=pest --no-progress --only-covered --min-msi=48 --min-covered-msi=70
 
   run-snyk:
     steps:
@@ -148,63 +82,58 @@ commands:
           command: snyk test --org=auth0-sdks --project-name=auth0-PHP
 
 jobs:
-  run-tests:
+  test:
     parameters:
-      php:
+      php-version:
         type: string
-      composer:
-        type: string
-        default: ""
-      snyk:
-        type: boolean
-        default: false
-      infection:
-        type: boolean
-        default: false
-      clover:
-        type: string
-        default: "build/coverage"
     docker:
-      - image: php:<< parameters.php >>-cli-alpine
+      - image: php:<< parameters.php-version >>-cli-alpine
     steps:
       - prepare:
-          php: << parameters.php >>
-          composer: << parameters.composer >>
-          cache: 5
+          php: << parameters.php-version >>
       - run-phpinsights
       - run-phpstan
       - run-psalm
-      - run-pest:
-          clover: << parameters.clover >>
-      - when:
-          condition:
-            and:
-              - equal: [main, <<pipeline.git.branch >>]
-              - equal: [true, << parameters.snyk >>]
-          steps:
-            - run-snyk
-      - when:
-          condition:
-            and:
-              - equal: [main, <<pipeline.git.branch >>]
-              - equal: [true, << parameters.infection >>]
-          steps:
-            - run-infection:
-                clover: << parameters.clover >>
+      - run-pest
+  snyk:
+    parameters:
+      php-version:
+        type: string
+    docker:
+      - image: php:<< parameters.php-version >>-cli-alpine
+    steps:
+      - prepare:
+          php: << parameters.php-version >>
+        - run-snyk
+  infection:
+    parameters:
+      php-version:
+        type: string
+    docker:
+      - image: php:<< parameters.php-version >>-cli-alpine
+    steps:
+      - prepare:
+          php: << parameters.php-version >>
+      - run-infection
 
 workflows:
   run-tests:
     jobs:
-      - run-tests:
-          name: run-tests-7.4
-          php: "7.4.22"
-          snyk: true
-          infection: true
+      - test:
+          matrix:
+            parameters:
+              php-version: ["7.4", "8.0", "8.1.0RC3"]
+      - infection:
+          matrix:
+            parameters:
+              php-version: ["7.4"]
+      - snyk:
+          matrix:
+            parameters:
+              php-version: ["7.4", "8.0"]
           context:
             - snyk-env
-      - run-tests:
-          name: run-tests-8.0
-          php: "8.0.9"
-      - run-tests:
-          name: run-tests-8.1
-          php: "8.1.0RC1"
+          filters:
+            branches:
+              only:
+                - main
