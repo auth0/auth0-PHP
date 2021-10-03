@@ -38,14 +38,6 @@ commands:
             pecl install pcov
             docker-php-ext-enable pcov
 
-  setup-snyk:
-    steps:
-      - run:
-          name: Configure snyk
-          command: |
-            apk add npm
-            npm install -g snyk
-
   run-phpinsights:
     steps:
       - run:
@@ -80,7 +72,10 @@ commands:
     steps:
       - run:
           name: Run vulnerabilities tests (Snyk)
-          command: snyk test --org=auth0-sdks --project-name=auth0-PHP
+          command: |
+            apk add npm
+            npm install -g snyk
+            snyk test --org=auth0-sdks --project-name=auth0-PHP
 
 jobs:
   phpinsights:
