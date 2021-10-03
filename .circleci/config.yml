@@ -10,8 +10,6 @@ commands:
 
       - checkout
 
-  setup-composer:
-    steps:
       - run:
           name: Install dependencies
           command: |
@@ -93,7 +91,6 @@ jobs:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
       - setup
-      - setup-composer
       - run-phpinsights
   phpstan:
     parameters:
@@ -103,7 +100,6 @@ jobs:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
       - setup
-      - setup-composer
       - run-phpstan
   psalm:
     parameters:
@@ -113,7 +109,6 @@ jobs:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
       - setup
-      - setup-composer
       - run-psalm
   pest:
     parameters:
@@ -123,7 +118,6 @@ jobs:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
       - setup
-      - setup-composer
       - setup-pcov
       - run-pest
   snyk:
@@ -134,8 +128,6 @@ jobs:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
       - setup
-      - setup-composer
-      - setup-snyk
       - run-snyk
   infection:
     parameters:
@@ -145,7 +137,6 @@ jobs:
       - image: php:<< parameters.php >>-cli-alpine
     steps:
       - setup
-      - setup-composer
       - setup-pcov
       - run-infection
 
