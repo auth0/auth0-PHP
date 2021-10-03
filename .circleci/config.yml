@@ -10,6 +10,14 @@ commands:
 
       - checkout
 
+      - run:
+          name: Configure environment
+          command: |
+            docker-php-ext-install posix
+            docker-php-ext-install pcntl
+            docker-php-ext-install mbstring
+            docker-php-ext-enable posix pcntl mbstring
+
   setup-composer:
     steps:
       - run:
@@ -132,7 +140,7 @@ workflows:
             parameters:
               php: ["7.4"]
       - hold:
-        type: approval
+          type: approval
       - snyk:
           matrix:
             parameters:
