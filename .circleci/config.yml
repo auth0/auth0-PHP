@@ -42,31 +42,31 @@ commands:
     steps:
       - run:
           name: Run code quality analysis (PHP Insights)
-          command: php -d memory-limit=2G ./vendor/bin/phpinsights -v --no-interaction --min-quality=100 --min-complexity=50 --min-architecture=100 --min-style=100
+          command: php -d memory-limit=-1 ./vendor/bin/phpinsights -v --no-interaction --min-quality=100 --min-complexity=50 --min-architecture=100 --min-style=100
 
   run-phpstan:
     steps:
       - run:
           name: Run static code analysis (PHPStan)
-          command: php -d memory_limit=2G ./vendor/bin/phpstan analyse --ansi
+          command: php -d memory_limit=-1 ./vendor/bin/phpstan analyse --ansi
 
   run-psalm:
     steps:
       - run:
           name: Run static code analysis (Psalm)
-          command: php -d memory_limit=2G ./vendor/bin/psalm
+          command: php -d memory_limit=-1 ./vendor/bin/psalm
 
   run-pest:
     steps:
       - run:
           name: Run unit tests (Pest)
-          command: php -d memory_limit=2G ./vendor/bin/pest --stop-on-failure --min=100
+          command: php -d memory_limit=-1 ./vendor/bin/pest --stop-on-failure --min=100
 
   run-infection:
     steps:
       - run:
           name: Run mutation tests (Infection)
-          command: php -d memory_limit=2G ./vendor/bin/infection --threads=$(nproc) --test-framework=pest --no-progress --only-covered --min-msi=48 --min-covered-msi=70
+          command: php -d memory_limit=-1 ./vendor/bin/infection --threads=$(nproc) --test-framework=pest --no-progress --only-covered --min-msi=48 --min-covered-msi=70 --initial-tests-php-options='-d memory_limit=-1'
 
   run-snyk:
     steps:
