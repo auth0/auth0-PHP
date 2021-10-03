@@ -2,10 +2,6 @@ version: 2.1
 
 commands:
   prepare:
-    parameters:
-      php-version:
-        type: string
-
     steps:
       - run:
           name: Configure environment
@@ -84,36 +80,33 @@ commands:
 jobs:
   test:
     parameters:
-      php-version:
+      php:
         type: string
     docker:
-      - image: php:<< parameters.php-version >>-cli-alpine
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare:
-          php: << parameters.php-version >>
+      - prepare
       - run-phpinsights
       - run-phpstan
       - run-psalm
       - run-pest
   snyk:
     parameters:
-      php-version:
+      php:
         type: string
     docker:
-      - image: php:<< parameters.php-version >>-cli-alpine
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare:
-          php: << parameters.php-version >>
+      - prepare
       - run-snyk
   infection:
     parameters:
-      php-version:
+      php:
         type: string
     docker:
-      - image: php:<< parameters.php-version >>-cli-alpine
+      - image: php:<< parameters.php >>-cli-alpine
     steps:
-      - prepare:
-          php: << parameters.php-version >>
+      - prepare
       - run-infection
 
 workflows:
@@ -122,15 +115,15 @@ workflows:
       - test:
           matrix:
             parameters:
-              php-version: ["7.4", "8.0", "8.1.0RC3"]
+              php: ["7.4", "8.0", "8.1.0RC3"]
       - infection:
           matrix:
             parameters:
-              php-version: ["7.4"]
+              php: ["7.4"]
       - snyk:
           matrix:
             parameters:
-              php-version: ["7.4", "8.0"]
+              php: ["7.4", "8.0"]
           context:
             - snyk-env
           filters:
