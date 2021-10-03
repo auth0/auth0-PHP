@@ -21,7 +21,7 @@ commands:
   setup-composer:
     steps:
       - run:
-          name: Install COMPOSER
+          name: Install dependencies
           command: |
             EXPECTED_CHECKSUM="$(php -r 'copy("https://composer.github.io/installer.sig", "php://stdout");')"
             php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -42,7 +42,7 @@ commands:
   setup-pcov:
     steps:
       - run:
-          name: Configure PCOV
+          name: Configure pcov
           command: |
             pecl install pcov
             docker-php-ext-enable pcov
@@ -50,7 +50,7 @@ commands:
   setup-snyk:
     steps:
       - run:
-          name: Configure SNYK
+          name: Configure snyk
           command: |
             npm install -g snyk
 
@@ -129,7 +129,7 @@ jobs:
       - run-infection
 
 workflows:
-  tests:
+  test:
     jobs:
       - php:
           matrix:
@@ -140,12 +140,9 @@ workflows:
             parameters:
               php: ["7.4"]
       - snyk:
+          type: approval
           matrix:
             parameters:
               php: ["7.4", "8.0"]
           context:
             - snyk-env
-          filters:
-            branches:
-              only:
-                - main
