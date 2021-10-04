@@ -6,10 +6,7 @@
     },
     "logs": {
         "text": "infection.log",
-        "perMutator": "infection.mutators.md",
-        "badge": {
-            "branch": "main"
-        }
+        "perMutator": "infection.mutators.md"
     },
     "mutators": {
         "@default": true
