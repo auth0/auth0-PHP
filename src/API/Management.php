@@ -4,7 +4,54 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API;
 
+use Auth0\SDK\API\Management\Actions;
+use Auth0\SDK\API\Management\Blacklists;
+use Auth0\SDK\API\Management\ClientGrants;
+use Auth0\SDK\API\Management\Clients;
+use Auth0\SDK\API\Management\Connections;
+use Auth0\SDK\API\Management\DeviceCredentials;
+use Auth0\SDK\API\Management\Emails;
+use Auth0\SDK\API\Management\EmailTemplates;
+use Auth0\SDK\API\Management\Grants;
+use Auth0\SDK\API\Management\Guardian;
+use Auth0\SDK\API\Management\Jobs;
+use Auth0\SDK\API\Management\Logs;
+use Auth0\SDK\API\Management\LogStreams;
+use Auth0\SDK\API\Management\Organizations;
+use Auth0\SDK\API\Management\ResourceServers;
+use Auth0\SDK\API\Management\Roles;
+use Auth0\SDK\API\Management\Rules;
+use Auth0\SDK\API\Management\Stats;
+use Auth0\SDK\API\Management\Tenants;
+use Auth0\SDK\API\Management\Tickets;
+use Auth0\SDK\API\Management\UserBlocks;
+use Auth0\SDK\API\Management\Users;
+use Auth0\SDK\API\Management\UsersByEmail;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\API\Management\ActionsInterface;
+use Auth0\SDK\Contract\API\Management\BlacklistsInterface;
+use Auth0\SDK\Contract\API\Management\ClientGrantsInterface;
+use Auth0\SDK\Contract\API\Management\ClientsInterface;
+use Auth0\SDK\Contract\API\Management\ConnectionsInterface;
+use Auth0\SDK\Contract\API\Management\DeviceCredentialsInterface;
+use Auth0\SDK\Contract\API\Management\EmailsInterface;
+use Auth0\SDK\Contract\API\Management\EmailTemplatesInterface;
+use Auth0\SDK\Contract\API\Management\GrantsInterface;
+use Auth0\SDK\Contract\API\Management\GuardianInterface;
+use Auth0\SDK\Contract\API\Management\JobsInterface;
+use Auth0\SDK\Contract\API\Management\LogsInterface;
+use Auth0\SDK\Contract\API\Management\LogStreamsInterface;
+use Auth0\SDK\Contract\API\Management\OrganizationsInterface;
+use Auth0\SDK\Contract\API\Management\ResourceServersInterface;
+use Auth0\SDK\Contract\API\Management\RolesInterface;
+use Auth0\SDK\Contract\API\Management\RulesInterface;
+use Auth0\SDK\Contract\API\Management\StatsInterface;
+use Auth0\SDK\Contract\API\Management\TenantsInterface;
+use Auth0\SDK\Contract\API\Management\TicketsInterface;
+use Auth0\SDK\Contract\API\Management\UserBlocksInterface;
+use Auth0\SDK\Contract\API\Management\UsersByEmailInterface;
+use Auth0\SDK\Contract\API\Management\UsersInterface;
+use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
@@ -12,31 +59,8 @@ use Auth0\SDK\Utility\HttpResponsePaginator;
 
 /**
  * Class Management
- *
- * @method \Auth0\SDK\API\Management\Blacklists blacklists()
- * @method \Auth0\SDK\API\Management\Clients clients()
- * @method \Auth0\SDK\API\Management\ClientGrants clientGrants()
- * @method \Auth0\SDK\API\Management\Connections connections()
- * @method \Auth0\SDK\API\Management\DeviceCredentials deviceCredentials()
- * @method \Auth0\SDK\API\Management\Emails emails()
- * @method \Auth0\SDK\API\Management\EmailTemplates emailTemplates()
- * @method \Auth0\SDK\API\Management\Grants grants()
- * @method \Auth0\SDK\API\Management\Guardian guardian()
- * @method \Auth0\SDK\API\Management\Jobs jobs()
- * @method \Auth0\SDK\API\Management\Logs logs()
- * @method \Auth0\SDK\API\Management\LogStreams logStreams()
- * @method \Auth0\SDK\API\Management\Organizations organizations()
- * @method \Auth0\SDK\API\Management\Roles roles()
- * @method \Auth0\SDK\API\Management\Rules rules()
- * @method \Auth0\SDK\API\Management\ResourceServers resourceServers()
- * @method \Auth0\SDK\API\Management\Stats stats()
- * @method \Auth0\SDK\API\Management\Tenants tenants()
- * @method \Auth0\SDK\API\Management\Tickets tickets()
- * @method \Auth0\SDK\API\Management\UserBlocks userBlocks()
- * @method \Auth0\SDK\API\Management\Users users()
- * @method \Auth0\SDK\API\Management\UsersByEmail usersByEmail()
  */
-final class Management
+final class Management implements ManagementInterface
 {
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
@@ -79,58 +103,6 @@ final class Management
 
         // Store the configuration internally.
         $this->configuration = $configuration;
-    }
-
-    /**
-     * Magic method for creating management class instances.
-     *
-     * @param string       $functionName The name of the magic function being invoked.
-     * @param array<mixed> $arguments    Any arguments being passed to the magic function.
-     *
-     * @return mixed|void
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException When an unknown method is called.
-     */
-    public function __call(
-        string $functionName,
-        array $arguments
-    ) {
-        $classes = [
-            'actions' => 'Actions',
-            'blacklists' => 'Blacklists',
-            'clients' => 'Clients',
-            'clientGrants' => 'ClientGrants',
-            'connections' => 'Connections',
-            'deviceCredentials' => 'DeviceCredentials',
-            'emails' => 'Emails',
-            'emailTemplates' => 'EmailTemplates',
-            'grants' => 'Grants',
-            'guardian' => 'Guardian',
-            'jobs' => 'Jobs',
-            'logs' => 'Logs',
-            'logStreams' => 'LogStreams',
-            'organizations' => 'Organizations',
-            'roles' => 'Roles',
-            'rules' => 'Rules',
-            'resourceServers' => 'ResourceServers',
-            'stats' => 'Stats',
-            'tenants' => 'Tenants',
-            'tickets' => 'Tickets',
-            'userBlocks' => 'UserBlocks',
-            'users' => 'Users',
-            'usersByEmail' => 'UsersByEmail',
-        ];
-
-        if (isset($classes[$functionName])) {
-            if (! isset($this->instances[$functionName])) {
-                $className = 'Auth0\SDK\API\Management\\' . $classes[$functionName];
-                $this->instances[$functionName] = new $className($this->getHttpClient());
-            }
-
-            return $this->instances[$functionName];
-        }
-
-        throw \Auth0\SDK\Exception\ArgumentException::unknownMethod($functionName);
     }
 
     /**
@@ -209,5 +181,135 @@ final class Management
     public function getResponsePaginator(): HttpResponsePaginator
     {
         return new HttpResponsePaginator($this->getHttpClient());
+    }
+
+    public function actions(): ActionsInterface
+    {
+        return $this->getClassInstance(Actions::class);
+    }
+
+    public function blacklists(): BlacklistsInterface
+    {
+        return $this->getClassInstance(Blacklists::class);
+    }
+
+    public function clients(): ClientsInterface
+    {
+        return $this->getClassInstance(Clients::class);
+    }
+
+    public function connections(): ConnectionsInterface
+    {
+        return $this->getClassInstance(Connections::class);
+    }
+
+    public function clientGrants(): ClientGrantsInterface
+    {
+        return $this->getClassInstance(ClientGrants::class);
+    }
+
+    public function deviceCredentials(): DeviceCredentialsInterface
+    {
+        return $this->getClassInstance(DeviceCredentials::class);
+    }
+
+    public function emails(): EmailsInterface
+    {
+        return $this->getClassInstance(Emails::class);
+    }
+
+    public function emailTemplates(): EmailTemplatesInterface
+    {
+        return $this->getClassInstance(EmailTemplates::class);
+    }
+
+    public function grants(): GrantsInterface
+    {
+        return $this->getClassInstance(Grants::class);
+    }
+
+    public function guardian(): GuardianInterface
+    {
+        return $this->getClassInstance(Guardian::class);
+    }
+
+    public function jobs(): JobsInterface
+    {
+        return $this->getClassInstance(Jobs::class);
+    }
+
+    public function logs(): LogsInterface
+    {
+        return $this->getClassInstance(Logs::class);
+    }
+
+    public function logStreams(): LogStreamsInterface
+    {
+        return $this->getClassInstance(LogStreams::class);
+    }
+
+    public function organizations(): OrganizationsInterface
+    {
+        return $this->getClassInstance(Organizations::class);
+    }
+
+    public function roles(): RolesInterface
+    {
+        return $this->getClassInstance(Roles::class);
+    }
+
+    public function rules(): RulesInterface
+    {
+        return $this->getClassInstance(Rules::class);
+    }
+
+    public function resourceServers(): ResourceServersInterface
+    {
+        return $this->getClassInstance(ResourceServers::class);
+    }
+
+    public function stats(): StatsInterface
+    {
+        return $this->getClassInstance(Stats::class);
+    }
+
+    public function tenants(): TenantsInterface
+    {
+        return $this->getClassInstance(Tenants::class);
+    }
+
+    public function tickets(): TicketsInterface
+    {
+        return $this->getClassInstance(Tickets::class);
+    }
+
+    public function userBlocks(): UserBlocksInterface
+    {
+        return $this->getClassInstance(UserBlocks::class);
+    }
+
+    public function users(): UsersInterface
+    {
+        return $this->getClassInstance(Users::class);
+    }
+
+    public function usersByEmail(): UsersByEmailInterface
+    {
+        return $this->getClassInstance(UsersByEmail::class);
+    }
+
+    /**
+     * Return an instance of Api Management Class.
+     *
+     * @return mixed
+     */
+    private function getClassInstance(
+        string $className
+    ) {
+        if (! isset($this->instances[$className])) {
+            $this->instances[$className] = new $className($this->getHttpClient());
+        }
+
+        return $this->instances[$className];
     }
 }

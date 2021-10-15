@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\Contract\API\Management;
 
-use Auth0\SDK\Contract\API\Management\LogsInterface;
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Logs.
- * Handles requests to the Logs endpoint of the v2 Management API.
- *
- * @link https://auth0.com/docs/api/management/v2#!/Logs
+ * Interface LogsInterface
  */
-final class Logs extends ManagementEndpoint implements LogsInterface
+interface LogsInterface
 {
     /**
      * Retrieves log entries that match the specified search criteria (or list all entries if no criteria is used).
@@ -31,16 +26,7 @@ final class Logs extends ManagementEndpoint implements LogsInterface
     public function getAll(
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('logs')
-            ->withParams($parameters)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Retrieve an individual log event.
@@ -57,17 +43,5 @@ final class Logs extends ManagementEndpoint implements LogsInterface
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('logs', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 }

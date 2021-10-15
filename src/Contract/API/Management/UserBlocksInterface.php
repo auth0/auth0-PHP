@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\Contract\API\Management;
 
-use Auth0\SDK\Contract\API\Management\UserBlocksInterface;
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class UserBlocks.
- * Handles requests to the User Blocks endpoint of the v2 Management API.
- *
- * @link https://auth0.com/docs/api/management/v2#!/User_Blocks
+ * Interface UserBlocksInterface
  */
-final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
+interface UserBlocksInterface
 {
     /**
      * Retrieve a list of blocked IP addresses for the login identifiers (email, username, phone number, etc) associated with the specified user.
@@ -32,19 +27,7 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('user-blocks', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Unblock a user that was blocked due to an excessive amount of incorrectly provided credentials.
@@ -61,19 +44,7 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('user-blocks', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Retrieve a list of blocked IP addresses for a given identifier (e.g., username, phone number or email).
@@ -90,20 +61,7 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
     public function getByIdentifier(
         string $identifier,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$identifier] = Toolkit::filter([$identifier])->string()->trim();
-
-        Toolkit::assert([
-            [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('user-blocks')
-            ->withParam('identifier', $identifier)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Unblock a user blocked due to an excessive amount of incorrectly-provided credentials.
@@ -120,18 +78,5 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
     public function deleteByIdentifier(
         string $identifier,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$identifier] = Toolkit::filter([$identifier])->string()->trim();
-
-        Toolkit::assert([
-            [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('user-blocks')
-            ->withParam('identifier', $identifier)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 }

@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\Contract\API\Management;
 
-use Auth0\SDK\Contract\API\Management\UsersInterface;
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Users.
- * Handles requests to the Users endpoint of the v2 Management API.
- *
- * @link https://auth0.com/docs/api/management/v2#!/Users
+ * Interface UsersInterface
  */
-final class Users extends ManagementEndpoint implements UsersInterface
+interface UsersInterface
 {
     /**
      * Create a new user for a given database or passwordless connection.
@@ -34,29 +29,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $connection,
         array $body,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$connection] = Toolkit::filter([$connection])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$connection, \Auth0\SDK\Exception\ArgumentException::missing('connection')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users')
-            ->withBody(
-                (object) Toolkit::merge([
-                    'connection' => $connection,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Search all Users.
@@ -75,16 +48,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function getAll(
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users')
-            ->withParams($parameters)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get a User.
@@ -103,19 +67,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Update a User.
@@ -136,25 +88,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('users', $id)
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Delete a User by ID.
@@ -171,19 +105,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Link one user identity to another.
@@ -202,25 +124,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'identities')
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Unlink an identity from the target user.
@@ -241,21 +145,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $provider,
         string $identityId,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id, $provider, $identityId] = Toolkit::filter([$id, $provider, $identityId])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-            [$provider, \Auth0\SDK\Exception\ArgumentException::missing('provider')],
-            [$identityId, \Auth0\SDK\Exception\ArgumentException::missing('identityId')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'identities', $provider, $identityId)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Add one or more roles to a specific user.
@@ -276,29 +166,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $id,
         array $roles,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$roles] = Toolkit::filter([$roles])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$roles, \Auth0\SDK\Exception\ArgumentException::missing('roles')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'roles')
-            ->withBody(
-                (object) [
-                    'roles' => $roles,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get all roles assigned to a specific user.
@@ -317,19 +185,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function getRoles(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'roles')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Remove one or more roles from a specific user.
@@ -348,29 +204,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $id,
         array $roles,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$roles] = Toolkit::filter([$roles])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$roles, \Auth0\SDK\Exception\ArgumentException::missing('roles')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'roles')
-            ->withBody(
-                (object) [
-                    'roles' => $roles,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Add one or more permissions to a specific user.
@@ -389,27 +223,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $id,
         array $permissions,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$permissions] = Toolkit::filter([$permissions])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$permissions, \Auth0\SDK\Exception\ArgumentException::missing('permissions')],
-        ])->isPermissions();
-
-        [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'permissions')
-            ->withBody($permissions)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get all permissions for a specific user.
@@ -426,19 +240,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function getPermissions(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'permissions')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Remove one or more permissions from a specific user.
@@ -457,27 +259,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $id,
         array $permissions,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$permissions] = Toolkit::filter([$permissions])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$permissions, \Auth0\SDK\Exception\ArgumentException::missing('permissions')],
-        ])->isPermissions();
-
-        [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'permissions')
-            ->withBody($permissions)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get log entries for a specific user.
@@ -494,19 +276,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function getLogs(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'logs')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get organizations a specific user belongs to.
@@ -523,19 +293,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function getOrganizations(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'organizations')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Retrieve the first confirmed Guardian enrollment for a user.
@@ -552,19 +310,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function getEnrollments(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'enrollments')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Remove the current multi-factor authentication recovery code and generate a new one.
@@ -581,19 +327,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function createRecoveryCode(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'recovery-code-regeneration')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Invalidate all remembered browsers across all authentication factors for a user.
@@ -610,19 +344,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     public function invalidateBrowsers(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'multifactor', 'actions', 'invalidate-remember-browser')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Delete the multifactor provider settings for a particular user.
@@ -642,18 +364,5 @@ final class Users extends ManagementEndpoint implements UsersInterface
         string $id,
         string $provider,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id, $provider] = Toolkit::filter([$id, $provider])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-            [$provider, \Auth0\SDK\Exception\ArgumentException::missing('provider')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'multifactor', $provider)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 }

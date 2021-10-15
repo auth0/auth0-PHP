@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\Contract\API\Management;
 
-use Auth0\SDK\Contract\API\Management\EmailsInterface;
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Emails.
- * Handles requests to the Emails endpoint of the v2 Management API.
- *
- * @link https://auth0.com/docs/api/management/v2#!/Emails
+ * Interface EmailsInterface
  */
-final class Emails extends ManagementEndpoint implements EmailsInterface
+interface EmailsInterface
 {
     /**
      * Create the email provider.
@@ -36,30 +31,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         array $credentials,
         ?array $body = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$name] = Toolkit::filter([$name])->string()->trim();
-        [$credentials, $body] = Toolkit::filter([$credentials, $body])->array()->trim();
-
-        Toolkit::assert([
-            [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$credentials, \Auth0\SDK\Exception\ArgumentException::missing('credentials')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('emails', 'provider')
-            ->withBody(
-                (object) Toolkit::merge([
-                    'name' => $name,
-                    'credentials' => (object) $credentials,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Retrieve email provider details.
@@ -73,13 +45,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
      */
     public function getProvider(
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('emails', 'provider')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Update the email provider.
@@ -100,30 +66,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         array $credentials,
         ?array $body = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$name] = Toolkit::filter([$name])->string()->trim();
-        [$credentials, $body] = Toolkit::filter([$credentials, $body])->array()->trim();
-
-        Toolkit::assert([
-            [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$credentials, \Auth0\SDK\Exception\ArgumentException::missing('credentials')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('emails', 'provider')
-            ->withBody(
-                (object) Toolkit::merge([
-                    'name' => $name,
-                    'credentials' => (object) $credentials,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Delete the email provider.
@@ -137,11 +80,5 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
      */
     public function deleteProvider(
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('emails', 'provider')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 }
