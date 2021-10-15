@@ -104,7 +104,7 @@ final class SessionStore implements StoreInterface
         $session = $_SESSION;
         $prefix = $this->sessionPrefix . '_';
 
-        while (current($session)) {
+        while (key($session)) {
             $sessionKey = key($session);
 
             if (is_string($sessionKey) && mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
