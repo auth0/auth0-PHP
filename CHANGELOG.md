@@ -88,6 +88,10 @@ For guidance on using the new configuration interface or SDK API, please see [RE
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...7.9.1)
 
+**Fixed**
+
+- Replace deprated/removed GuzzleHttp\Psr7\build_query [\#500](https://github.com/auth0/auth0-PHP/pull/500) ([bartvanraaij](https://github.com/bartvanraaij))
+
 ## [8.0.0-BETA1](https://github.com/auth0/auth0-PHP/tree/8.0.0-BETA1) (2021-06-30)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...8.0.0-BETA1)
