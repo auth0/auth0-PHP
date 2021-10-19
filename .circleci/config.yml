@@ -141,19 +141,19 @@ workflows:
       - phpinsights:
           matrix:
             parameters:
-              php: ["7.4", "8.0", "8.1.0RC3"]
+              php: ["7.4", "8.0", "8.1.0RC4"]
       - phpstan:
           matrix:
             parameters:
-              php: ["7.4", "8.0", "8.1.0RC3"]
+              php: ["7.4", "8.0", "8.1.0RC4"]
       - psalm:
           matrix:
             parameters:
-              php: ["7.4", "8.0", "8.1.0RC3"]
+              php: ["7.4", "8.0", "8.1.0RC4"]
       - pest:
           matrix:
             parameters:
-              php: ["7.4", "8.0", "8.1.0RC3"]
+              php: ["7.4", "8.0", "8.1.0RC4"]
       - infection:
           matrix:
             parameters:
