@@ -1,39 +1,20 @@
 # CHANGELOG
 
+## [8.0.2](https://github.com/auth0/auth0-PHP/tree/8.0.2) (2021-10-18)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.1...8.0.2)
+
+**Fixed**
+
+- Resolve `SessionStore::purge()` not iterating over session storage when a falsey value is stored [#577](https://github.com/auth0/auth0-PHP/pull/577) ([evansims](https://github.com/evansims))
+
 ## [8.0.1](https://github.com/auth0/auth0-PHP/tree/8.0.1) (2021-09-23)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.0...8.0.1)
 
-**BEFORE YOU UPGRADE**
-
-- This is a major release that includes breaking changes. Please see [UPGRADE.md](UPGRADE.md) before upgrading. This release will require changes to your application.
-- The SDK no longer specifically relies on Guzzle for network requests. Options for supplying your libraries of choice have been added through [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) configuration options.
-- PHP 7.4 is now the minimum supported PHP version, but we encourage using PHP 8.0. PHP 7.4 will be the last supported 7.x release. This library follows [the official support schedule for PHP](https://www.php.net/supported-versions.php).
-
-**Changes Since 8.0.0**
+**Fixed**
 
 - Simplify decoding of Access Tokens via `Auth0::decode()` [#534](https://github.com/auth0/auth0-PHP/pull/571) ([shadowhand](https://github.com/shadowhand))
-
-**8.0 Highlights**
-
-- Updated SDK API for more intuitive use and improved usability. Now follows fluent interface principles.
-- Updated SDK API designed with PHP 8.0's named arguments as the encouraged interface method.
-- New configuration object, SdkConfiguration, allows for dynamic changes within your application.
-- Updated PHP language support, including typed properties and return types, are now used throughout the SDK.
-- Added support for the following PHP-FIG standards interfaces:
-  - [PSR-6](https://www.php-fig.org/psr/psr-6/) caches are now used for caching JWKs and Management API tokens.
-  - [PSR-7](https://www.php-fig.org/psr/psr-7/) HTTP messages are now returned by methods that initiate network requests.
-  - [PSR-14](https://www.php-fig.org/psr/psr-14/) events are now raised, allowing for deeper integration into the SDK's behavior.
-  - [PSR-17](https://www.php-fig.org/psr/psr-17/) HTTP factories are now used during network requests for generating PSR-7 messages.
-  - [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP clients are now supported, allowing you to choose your network client.
-- Improved Token handling system.
-- Encrypted session cookies, with cookies being the default session handler. PHP sessions may be phased out in a future release.
-- New Management API auto-pagination helper for iterating through API results.
-- [PKCE](https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce) is now enabled by default.
-
-For a complete overview of API changes, please see [UPGRADE.md](UPGRADE.md).
-
-For guidance on using the new configuration interface or SDK API, please see [README.md](README.md).
 
 ## [8.0.0](https://github.com/auth0/auth0-PHP/tree/8.0.0) (2021-09-20)
 
@@ -70,12 +51,6 @@ For guidance on using the new configuration interface or SDK API, please see [RE
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...8.0.0-BETA3)
 
-**BEFORE YOU UPGRADE**
-
-- This is a major release that includes breaking changes. Please see [UPGRADE.md](UPGRADE.md) before upgrading. This release will require changes to your application.
-- The SDK no longer specifically relies on Guzzle for network requests. Options for supplying your libraries of choice have been added through [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) configuration options.
-- PHP 7.4 is now the minimum supported PHP version, but we encourage using PHP 8.0. PHP 7.4 will be the last supported 7.x release. This library follows [the official support schedule for PHP](https://www.php.net/supported-versions.php).
-
 **Changes Since BETA2**
 
 - Cookie namespace prefixes are now configurable from `SdkConfiguration` interface. [#534](https://github.com/auth0/auth0-PHP/pull/534) ([Nyholm](https://github.com/Nyholm))
@@ -90,36 +65,9 @@ For guidance on using the new configuration interface or SDK API, please see [RE
 - Support for Actions API endpoints in Management SDK [#551](https://github.com/auth0/auth0-PHP/pull/551) ([evansims](https://github.com/evansims))
 - Expand test coverage to 100% and transition to PEST test framework [#552](https://github.com/auth0/auth0-PHP/pull/552) ([evansims](https://github.com/evansims))
 
-**8.0 Highlights**
-
-- Updated SDK API for more intuitive use and improved usability. Now follows fluent interface principles.
-- Updated SDK API designed with PHP 8.0's named arguments as the encouraged interface method.
-- New configuration object, SdkConfiguration, allows for dynamic changes within your application.
-- Updated PHP language support, including typed properties and return types, are now used throughout the SDK.
-- Added support for the following PHP-FIG standards interfaces:
-  - [PSR-6](https://www.php-fig.org/psr/psr-6/) caches are now used for caching JWKs and Management API tokens.
-  - [PSR-7](https://www.php-fig.org/psr/psr-7/) HTTP messages are now returned by methods that initiate network requests.
-  - [PSR-14](https://www.php-fig.org/psr/psr-14/) events are now raised, allowing for deeper integration into the SDK's behavior.
-  - [PSR-17](https://www.php-fig.org/psr/psr-17/) HTTP factories are now used during network requests for generating PSR-7 messages.
-  - [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP clients are now supported, allowing you to choose your network client.
-- Improved Token handling system.
-- Encrypted session cookies, with cookies being the default session handler. PHP sessions may be phased out in a future release.
-- New Management API auto-pagination helper for iterating through API results.
-- [PKCE](https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce) is now enabled by default.
-
-For a complete overview of API changes, please see [UPGRADE.md](UPGRADE.md).
-
-For guidance on using the new configuration interface or SDK API, please see [README.md](README.md).
-
 ## [8.0.0-BETA2](https://github.com/auth0/auth0-PHP/tree/8.0.0-BETA2) (2021-08-06)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...8.0.0-BETA2)
-
-**BEFORE YOU UPGRADE**
-
-- This is a major release that includes breaking changes. Please see [UPGRADE.md](UPGRADE.md) before upgrading. This release will require changes to your application.
-- The SDK no longer specifically relies on Guzzle for network requests. Options for supplying your libraries of choice have been added through [PSR-18](https://www.php-fig.org/psr/psr-18/) and [PSR-17](https://www.php-fig.org/psr/psr-17/) configuration options.
-- PHP 7.4 is now the minimum supported PHP version, but we encourage using PHP 8.0. PHP 7.4 will be the last supported 7.x release. This library follows [the official support schedule for PHP](https://www.php.net/supported-versions.php).
 
 **Changes Since BETA1**
 
@@ -127,27 +75,6 @@ For guidance on using the new configuration interface or SDK API, please see [RE
 - `Auth0\SDK\API\Authentication` and `Auth0\SDK\API\Management` create their HTTP client instances as needed when `getHttpClient()` is invoked, rather than at class initialization.
 - `Auth0\SDK\Configuration\SdkConfiguration` now supports passing a `strategy` option to customize what configuration options are necessary at initialization appropriate for different use cases. Defaults to the general use `webapp` with the same configuration requirements as previously used. See the `README` for more information.
 - `Auth0\SDK\Utility\HttpRequest` now intercepts `429` rate-limit errors from Auth0 API responses and will automatically retry these requests on your behalf, using an exponential backoff strategy. Defaults to 3 retry attempts, configurable with `httpMaxRetires` during SDK configuration up to 10, or 0 to opt-out of this behavior.
-
-**8.0 Highlights**
-
-- Updated SDK API for more intuitive use and improved usability. Now follows fluent interface principles.
-- Updated SDK API designed with PHP 8.0's named arguments as the encouraged interface method.
-- New configuration object, SdkConfiguration, allows for dynamic changes within your application.
-- Updated PHP language support, including typed properties and return types, are now used throughout the SDK.
-- Added support for the following PHP-FIG standards interfaces:
-  - [PSR-6](https://www.php-fig.org/psr/psr-6/) caches are now used for caching JWKs and Management API tokens.
-  - [PSR-7](https://www.php-fig.org/psr/psr-7/) HTTP messages are now returned by methods that initiate network requests.
-  - [PSR-14](https://www.php-fig.org/psr/psr-14/) events are now raised, allowing for deeper integration into the SDK's behavior.
-  - [PSR-17](https://www.php-fig.org/psr/psr-17/) HTTP factories are now used during network requests for generating PSR-7 messages.
-  - [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP clients are now supported, allowing you to choose your network client.
-- Improved Token handling system.
-- Encrypted session cookies, with cookies being the default session handler. PHP sessions may be phased out in a future release.
-- New Management API auto-pagination helper for iterating through API results.
-- [PKCE](https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce) is now enabled by default.
-
-For a complete overview of API changes, please see [UPGRADE.md](UPGRADE.md).
-
-For guidance on using the new configuration interface or SDK API, please see [README.md](README.md).
 
 ## [7.9.2](https://github.com/auth0/auth0-PHP/tree/7.9.2) (2021-08-03)
 
@@ -160,6 +87,10 @@ For guidance on using the new configuration interface or SDK API, please see [RE
 ## [7.9.1](https://github.com/auth0/auth0-PHP/tree/7.9.1) (2021-07-06)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...7.9.1)
+
+**Fixed**
+
+- Replace deprated/removed GuzzleHttp\Psr7\build_query [\#500](https://github.com/auth0/auth0-PHP/pull/500) ([bartvanraaij](https://github.com/bartvanraaij))
 
 ## [8.0.0-BETA1](https://github.com/auth0/auth0-PHP/tree/8.0.0-BETA1) (2021-06-30)
 
