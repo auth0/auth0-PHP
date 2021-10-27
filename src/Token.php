@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Auth0\SDK;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Token\Parser;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
  * Class Token.
  */
-final class Token
+final class Token implements TokenInterface
 {
     public const TYPE_ID_TOKEN = 1;
     public const TYPE_TOKEN = 2;

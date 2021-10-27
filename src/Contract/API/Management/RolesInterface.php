@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\Contract\API\Management;
 
-use Auth0\SDK\Contract\API\Management\RolesInterface;
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Roles.
- * Handles requests to the Roles endpoint of the v2 Management API.
- *
- * @link https://auth0.com/docs/api/management/v2#!/Roles
+ * Interface RolesInterface
  */
-final class Roles extends ManagementEndpoint implements RolesInterface
+interface RolesInterface
 {
     /**
      * Create a new Role.
@@ -34,25 +29,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         string $name,
         ?array $body = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$name] = Toolkit::filter([$name])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('roles')
-            ->withBody(
-                (object) Toolkit::merge([
-                    'name' => $name,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get all Roles
@@ -68,16 +45,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
     public function getAll(
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('roles')
-            ->withParams($parameters)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get a single Role by ID.
@@ -94,19 +62,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('roles', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Update a Role by ID.
@@ -125,25 +81,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         string $id,
         array $body,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('roles', $id)
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Delete a single Role by ID.
@@ -160,19 +98,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('roles', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Associate permissions with a role.
@@ -191,27 +117,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         string $id,
         array $permissions,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$permissions] = Toolkit::filter([$permissions])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$permissions, \Auth0\SDK\Exception\ArgumentException::missing('permissions')],
-        ])->isPermissions();
-
-        [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('roles', $id, 'permissions')
-            ->withBody($permissions)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get the permissions associated to a role.
@@ -228,19 +134,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
     public function getPermissions(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('roles', $id, 'permissions')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Delete permissions from a role.
@@ -259,27 +153,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         string $id,
         array $permissions,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$permissions] = Toolkit::filter([$permissions])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$permissions, \Auth0\SDK\Exception\ArgumentException::missing('permissions')],
-        ])->isPermissions();
-
-        [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('roles', $id, 'permissions')
-            ->withBody($permissions)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Add one or more users to a role.
@@ -298,29 +172,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         string $id,
         array $users,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$users] = Toolkit::filter([$users])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$users, \Auth0\SDK\Exception\ArgumentException::missing('users')],
-        ])->isArray();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('roles', $id, 'users')
-            ->withBody(
-                (object) [
-                    'users' => $users,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get users assigned to a specific role.
@@ -339,17 +191,5 @@ final class Roles extends ManagementEndpoint implements RolesInterface
     public function getUsers(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('roles', $id, 'users')
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 }

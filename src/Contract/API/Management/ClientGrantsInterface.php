@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\Contract\API\Management;
 
-use Auth0\SDK\Contract\API\Management\ClientGrantsInterface;
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class ClientGrants.
- * Handles requests to the Client Grants endpoint of the v2 Management API.
- *
- * @link https://auth0.com/docs/api/management/v2#!/Client_Grants
+ * Interface ClientGrantsInterface
  */
-final class ClientGrants extends ManagementEndpoint implements ClientGrantsInterface
+interface ClientGrantsInterface
 {
     /**
      * Create a new Client Grant.
@@ -36,28 +31,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         string $audience,
         ?array $scope = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$clientId, $audience] = Toolkit::filter([$clientId, $audience])->string()->trim();
-        [$scope] = Toolkit::filter([$scope])->array()->trim();
-
-        Toolkit::assert([
-            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
-            [$audience, \Auth0\SDK\Exception\ArgumentException::missing('audience')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('client-grants')
-            ->withBody(
-                (object) [
-                    'client_id' => $clientId,
-                    'audience' => $audience,
-                    'scope' => $scope,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Retrieve client grants, by page if desired.
@@ -73,16 +47,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
     public function getAll(
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('client-grants')
-            ->withParams($parameters)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get Client Grants by audience.
@@ -101,18 +66,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         string $audience,
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$audience] = Toolkit::filter([$audience])->string()->trim();
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        Toolkit::assert([
-            [$audience, \Auth0\SDK\Exception\ArgumentException::missing('audience')],
-        ])->isString();
-
-        return $this->getAll(Toolkit::merge([
-            'audience' => $audience,
-        ], $parameters), $options);
-    }
+    ): ResponseInterface;
 
     /**
      * Get Client Grants by Client ID.
@@ -131,18 +85,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         string $clientId,
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        Toolkit::assert([
-            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
-        ])->isString();
-
-        return $this->getAll(Toolkit::merge([
-            'client_id' => $clientId,
-        ], $parameters), $options);
-    }
+    ): ResponseInterface;
 
     /**
      * Update an existing Client Grant.
@@ -161,25 +104,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         string $grantId,
         ?array $scope = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$grantId] = Toolkit::filter([$grantId])->string()->trim();
-        [$scope] = Toolkit::filter([$scope])->array()->trim();
-
-        Toolkit::assert([
-            [$grantId, \Auth0\SDK\Exception\ArgumentException::missing('grantId')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('client-grants', $grantId)
-            ->withBody(
-                (object) [
-                    'scope' => $scope,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Delete a Client Grant by ID.
@@ -196,17 +121,5 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
     public function delete(
         string $grantId,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$grantId] = Toolkit::filter([$grantId])->string()->trim();
-
-        Toolkit::assert([
-            [$grantId, \Auth0\SDK\Exception\ArgumentException::missing('grantId')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('client-grants', $grantId)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 }

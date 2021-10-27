@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Token;
 
+use Auth0\SDK\Contract\Token\ValidatorInterface;
+
 /**
  * Class Validator.
  */
-final class Validator
+final class Validator implements ValidatorInterface
 {
     /**
      * Array representing the claims of a JWT.

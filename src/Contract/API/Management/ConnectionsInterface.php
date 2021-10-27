@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\Contract\API\Management;
 
-use Auth0\SDK\Contract\API\Management\ConnectionsInterface;
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Connections.
- * Handles requests to the Connections endpoint of the v2 Management API.
- *
- * @link https://auth0.com/docs/api/management/v2#!/Connections
+ * Interface ConnectionsInterface
  */
-final class Connections extends ManagementEndpoint implements ConnectionsInterface
+interface ConnectionsInterface
 {
     /**
      * Create a new Connection.
@@ -36,27 +31,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         string $strategy,
         ?array $body = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$name, $strategy] = Toolkit::filter([$name, $strategy])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
-            [$strategy, \Auth0\SDK\Exception\ArgumentException::missing('strategy')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('connections')
-            ->withBody(
-                (object) Toolkit::merge([
-                    'name' => $name,
-                    'strategy' => $strategy,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get connection(s).
@@ -72,16 +47,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
     public function getAll(
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('connections')
-            ->withParams($parameters)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get a single Connection.
@@ -98,19 +64,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
     public function get(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('connections', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Update a Connection.
@@ -129,21 +83,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         string $id,
         ?array $body = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('connections', $id)
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Delete a Connection.
@@ -160,19 +100,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('connections', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Delete a specific User for a Connection.
@@ -191,22 +119,5 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         string $id,
         string $email,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id, $email] = Toolkit::filter([$id, $email])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$email, \Auth0\SDK\Exception\ArgumentException::missing('email')],
-        ])->isEmail();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('connections', $id, 'users')
-            ->withParam('email', $email)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 }

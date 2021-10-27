@@ -8,6 +8,10 @@ use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Configuration\SdkState;
+use Auth0\SDK\Contract\API\AuthenticationInterface;
+use Auth0\SDK\Contract\API\ManagementInterface;
+use Auth0\SDK\Contract\Auth0Interface;
+use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Utility\HttpResponse;
 use Auth0\SDK\Utility\PKCE;
 use Auth0\SDK\Utility\Toolkit;
@@ -16,7 +20,7 @@ use Auth0\SDK\Utility\TransientStoreHandler;
 /**
  * Class Auth0.
  */
-final class Auth0
+final class Auth0 implements Auth0Interface
 {
     public const VERSION = '8.0.2';
 
@@ -65,7 +69,7 @@ final class Auth0
     /**
      * Create, configure, and return an instance of the Authentication class.
      */
-    public function authentication(): Authentication
+    public function authentication(): AuthenticationInterface
     {
         if ($this->authentication === null) {
             $this->authentication = new Authentication($this->configuration);
@@ -77,7 +81,7 @@ final class Auth0
     /**
      * Create, configure, and return an instance of the Management class.
      */
-    public function management(): Management
+    public function management(): ManagementInterface
     {
         if ($this->management === null) {
             $this->management = new Management($this->configuration);
@@ -248,7 +252,7 @@ final class Auth0
         ?int $tokenLeeway = null,
         ?int $tokenNow = null,
         ?int $tokenType = null
-    ): Token {
+    ): TokenInterface {
         $tokenType = $tokenType ?? Token::TYPE_ID_TOKEN;
         $tokenNonce = $tokenNonce ?? $this->getTransientStore()->getOnce('nonce') ?? null;
         $tokenMaxAge = $tokenMaxAge ?? $this->getTransientStore()->getOnce('max_age') ?? null;

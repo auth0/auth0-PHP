@@ -177,10 +177,6 @@ test('getLastRequest() returns an HttpRequest or null', function(): void {
     expect($this->sdk->management()->getLastRequest())->toBeInstanceOf(HttpRequest::class);
 });
 
-test('Magic method throws an exception when an invalid class is requested', function(): void {
-    $class = $this->sdk->management()->example();
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_UNKNOWN_METHOD, 'example'));
-
 test('Caching of management tokens works.', function(): void {
     $managementToken = uniqid();
 

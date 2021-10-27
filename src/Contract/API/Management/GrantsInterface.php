@@ -2,20 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Auth0\SDK\API\Management;
+namespace Auth0\SDK\Contract\API\Management;
 
-use Auth0\SDK\Contract\API\Management\GrantsInterface;
 use Auth0\SDK\Utility\Request\RequestOptions;
-use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Grants.
- * Handles requests to the Grants endpoint of the v2 Management API.
- *
- * @link https://auth0.com/docs/api/management/v2#!/Grants
+ * Interface GrantsInterface
  */
-final class Grants extends ManagementEndpoint implements GrantsInterface
+interface GrantsInterface
 {
     /**
      * Retrieve the grants associated with your account.
@@ -31,16 +26,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
     public function getAll(
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('grants')
-            ->withParams($parameters)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 
     /**
      * Get Grants by Client ID with pagination.
@@ -59,18 +45,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
         string $clientId,
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        Toolkit::assert([
-            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
-        ])->isString();
-
-        return $this->getAll(Toolkit::merge([
-            'client_id' => $clientId,
-        ], $parameters), $options);
-    }
+    ): ResponseInterface;
 
     /**
      * Get Grants by Audience with pagination.
@@ -89,18 +64,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
         string $audience,
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$audience] = Toolkit::filter([$audience])->string()->trim();
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        Toolkit::assert([
-            [$audience, \Auth0\SDK\Exception\ArgumentException::missing('audience')],
-        ])->isString();
-
-        return $this->getAll(Toolkit::merge([
-            'audience' => $audience,
-        ], $parameters), $options);
-    }
+    ): ResponseInterface;
 
     /**
      * Get Grants by User ID with pagination.
@@ -119,18 +83,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
         string $userId,
         ?array $parameters = null,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$userId] = Toolkit::filter([$userId])->string()->trim();
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        Toolkit::assert([
-            [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
-        ])->isString();
-
-        return $this->getAll(Toolkit::merge([
-            'user_id' => $userId,
-        ], $parameters), $options);
-    }
+    ): ResponseInterface;
 
     /**
      * Delete a grant by Grant ID or User ID.
@@ -147,17 +100,5 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
     public function delete(
         string $id,
         ?RequestOptions $options = null
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('grants', $id)
-            ->withOptions($options)
-            ->call();
-    }
+    ): ResponseInterface;
 }
