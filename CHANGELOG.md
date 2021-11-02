@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [8.0.3](https://github.com/auth0/auth0-PHP/tree/8.0.3) (2021-11-01)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.2...8.0.1)
+
+**Changes**
+
+- Introduce Interfaces to Final Classes [#581](https://github.com/auth0/auth0-PHP/pull/581) ([komando82](https://github.com/komando82))
+
 ## [8.0.2](https://github.com/auth0/auth0-PHP/tree/8.0.2) (2021-10-18)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.1...8.0.2)
