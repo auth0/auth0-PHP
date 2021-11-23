@@ -56,7 +56,7 @@ These classes were updated in SDK 8.0:
   - Public method `deleteAllPersistentData()` renamed to `clear()`.
   - Public methods `getNonce()` and `urlSafeBase64Decode()` were removed.
   - Public methods `getAccessTokenExpiration()` and `setAccessTokenExpiration()` were added for retrieving for storing an access token expiration timestamp in session storage, respectively.
-  - Public methods `getUser()`, `getAccessToken()`, `getIdToken()` and `getRefreshToken()` won`t implicitly call `exchange()` for you anymore. They will just return what's stored locally. So, in order to get the Store filled, you must call `Auth0::exchange()` yourself before calling any of these methods.
+  - Public methods `getUser()`, `getAccessToken()`, `getIdToken()` and `getRefreshToken()` won't implicitly call `exchange()` for you anymore. They will just return what's stored locally. So, in order to get the Store filled, you must call `Auth0::exchange()` yourself before calling any of these methods.
   - Public method `getCredentials()` added as a convenience. This method returns the Id Token, Access Token, Refresh Token, Access Token expiration timestamp, and user data from an available session without invoking an authorization flow, exchange, or raising an error if a session is not available.
 
 - Class `Auth0\SDK\API\Authentication` updated:
