@@ -40,6 +40,7 @@ These classes were updated in SDK 8.0:
   - Public method `login()` updated:
     - Method now accepts an argument, `params`: an array of parameters to pass with the API request.
     - Arguments `state`, `connection`, and `additionalParameters` have been removed. Use the new `params` argument for these uses.
+    - Method won't redirect to the Auth0 login page any more. It will instead return a login URL. It's now the callers responsibility to send the http redirect.
   - Public method `signup()` added as a convenience. This method will pass the ?screen_hint=signup param, supported by the New Universal Login Experience.
   - Public method `getLoginUrl()` moved to `Auth0\SDK\API\Authentication\getLoginLink()`, and:
     - Argument `params` is now a nullable array.
