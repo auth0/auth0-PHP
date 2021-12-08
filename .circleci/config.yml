@@ -105,6 +105,29 @@ jobs:
     steps:
       - setup
       - run-psalm
+  semgrep:
+    parameters:
+      repo_path:
+        type: string
+        default: auth0/auth0-php
+      default_branch:
+        type: string
+        default: main
+    environment:
+      SEMGREP_RULES: >-
+        p/ci
+        p/security-audit
+        p/secrets
+        p/phpcs-security-audit
+      SEMGREP_BASELINE_REF: main
+      SEMGREP_TIMEOUT: 300
+    docker:
+      - image: returntocorp/semgrep-agent:v1
+    steps:
+      - checkout
+      - run:
+          name: Run static code analysis (Semgrep)
+          command: semgrep-agent
   pest:
     parameters:
       php:
@@ -134,25 +157,6 @@ jobs:
       - setup
       - setup-pcov
       - run-infection
-  semgrep:
-    parameters:
-      repo_path:
-        type: string
-        default: auth0/auth0-php
-      default_branch:
-        type: string
-        default: main
-    environment:
-      SEMGREP_RULES: >-
-        p/security-audit
-        p/secrets
-      SEMGREP_BASELINE_REF: main
-      SEMGREP_TIMEOUT: 300
-    docker:
-      - image: returntocorp/semgrep-agent:v1
-    steps:
-      - checkout
-      - semgrep-agent
 
 workflows:
   test:
