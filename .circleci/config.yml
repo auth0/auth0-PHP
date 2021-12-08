@@ -112,7 +112,7 @@ jobs:
       - checkout
       - run:
           name: Run static code analysis (Semgrep)
-          command: semgrep --config auto
+          command: semgrep --config auto --metrics=off
   pest:
     parameters:
       php:
@@ -146,34 +146,34 @@ jobs:
 workflows:
   test:
     jobs:
-      # - phpinsights:
-      #     matrix:
-      #       parameters:
-      #         php: ["7.4", "8.0", "8.1"]
-      # - phpstan:
-      #     matrix:
-      #       parameters:
-      #         php: ["7.4", "8.0", "8.1"]
-      # - psalm:
-      #     matrix:
-      #       parameters:
-      #         php: ["7.4", "8.0", "8.1"]
-      # - pest:
-      #     matrix:
-      #       parameters:
-      #         php: ["7.4", "8.0", "8.1"]
-      # - infection:
-      #     matrix:
-      #       parameters:
-      #         php: ["7.4", "8.0", "8.1"]
       - semgrep
-      # - hold:
-      #     type: approval
-      # - snyk:
-      #     matrix:
-      #       parameters:
-      #         php: ["7.4", "8.0", "8.1"]
-      #     context:
-      #       - snyk-env
-      #     requires:
-      #       - hold
+      - phpinsights:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - phpstan:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - psalm:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - pest:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - infection:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+      - hold:
+          type: approval
+      - snyk:
+          matrix:
+            parameters:
+              php: ["7.4", "8.0", "8.1"]
+          context:
+            - snyk-env
+          requires:
+            - hold
