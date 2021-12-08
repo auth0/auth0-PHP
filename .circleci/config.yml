@@ -112,7 +112,7 @@ jobs:
       - checkout
       - run:
           name: Run static code analysis (Semgrep)
-          command: semgrep --config auto src/
+          command: semgrep --config auto
   pest:
     parameters:
       php:
