@@ -120,7 +120,7 @@ jobs:
       - checkout
       - run:
           name: Run static code analysis (Semgrep)
-          command: semgrep-agent src
+          command: semgrep-agent --help
   pest:
     parameters:
       php:
