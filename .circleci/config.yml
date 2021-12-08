@@ -160,30 +160,29 @@ workflows:
       - phpinsights:
           matrix:
             parameters:
-              php: ["7.4", "8.0", "8.1.0RC4"]
+              php: ["7.4", "8.0", "8.1"]
       - phpstan:
           matrix:
             parameters:
-              php: ["7.4", "8.0", "8.1.0RC4"]
+              php: ["7.4", "8.0", "8.1"]
       - psalm:
           matrix:
             parameters:
-              php: ["7.4", "8.0", "8.1.0RC4"]
+              php: ["7.4", "8.0", "8.1"]
       - pest:
           matrix:
             parameters:
-              php: ["7.4", "8.0", "8.1.0RC4"]
+              php: ["7.4", "8.0", "8.1"]
       - infection:
           matrix:
             parameters:
-              php: ["7.4", "8.0"]
-      - semgrep
+              php: ["7.4", "8.0", "8.1"]
       - hold:
           type: approval
       - snyk:
           matrix:
             parameters:
-              php: ["7.4", "8.0"]
+              php: ["7.4", "8.0", "8.1"]
           context:
             - snyk-env
           requires:
