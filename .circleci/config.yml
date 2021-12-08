@@ -134,6 +134,25 @@ jobs:
       - setup
       - setup-pcov
       - run-infection
+  semgrep:
+    parameters:
+      repo_path:
+        type: string
+        default: auth0/auth0-php
+      default_branch:
+        type: string
+        default: main
+    environment:
+      SEMGREP_RULES: >-
+        p/security-audit
+        p/secrets
+      SEMGREP_BASELINE_REF: main
+      SEMGREP_TIMEOUT: 300
+    docker:
+      - image: returntocorp/semgrep-agent:v1
+    steps:
+      - checkout
+      - semgrep-agent
 
 workflows:
   test:
@@ -158,6 +177,7 @@ workflows:
           matrix:
             parameters:
               php: ["7.4", "8.0"]
+      - semgrep
       - hold:
           type: approval
       - snyk:
