@@ -106,13 +106,6 @@ jobs:
       - setup
       - run-psalm
   semgrep:
-    parameters:
-      repo_path:
-        type: string
-        default: auth0/auth0-php
-      default_branch:
-        type: string
-        default: main
     environment:
       SEMGREP_RULES: >-
         p/ci
@@ -127,7 +120,7 @@ jobs:
       - checkout
       - run:
           name: Run static code analysis (Semgrep)
-          command: semgrep-agent
+          command: semgrep-agent src/*.php
   pest:
     parameters:
       php:
