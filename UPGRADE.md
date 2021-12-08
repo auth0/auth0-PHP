@@ -40,6 +40,7 @@ These classes were updated in SDK 8.0:
   - Public method `login()` updated:
     - Method now accepts an argument, `params`: an array of parameters to pass with the API request.
     - Arguments `state`, `connection`, and `additionalParameters` have been removed. Use the new `params` argument for these uses.
+    - Method now returns an intended login URL as a string. Method no longer sends redirect headers itself to better integrate with application frameworks. Developers should redirect users to the returned URL using a method appropriate for the application type/framework. For example, the redirect() method in Laravel or Symfony, Header("Location: $url") with plain PHP, etc.
   - Public method `signup()` added as a convenience. This method will pass the ?screen_hint=signup param, supported by the New Universal Login Experience.
   - Public method `getLoginUrl()` moved to `Auth0\SDK\API\Authentication\getLoginLink()`, and:
     - Argument `params` is now a nullable array.
