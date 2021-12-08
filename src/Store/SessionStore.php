@@ -101,17 +101,19 @@ final class SessionStore implements StoreInterface
      */
     public function purge(): void
     {
-        $session = $_SESSION;
+        $session = $_SESSION ?? [];
         $prefix = $this->sessionPrefix . '_';
 
-        while (key($session)) {
-            $sessionKey = key($session);
+        if (count($session) > 0) {
+            while (key($session)) {
+                $sessionKey = (string) (key($session) ?? '');
 
-            if (is_string($sessionKey) && mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
-                unset($_SESSION[$sessionKey]);
+                if (mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
+                    unset($_SESSION[$sessionKey]);
+                }
+
+                next($session);
             }
-
-            next($session);
         }
     }
 

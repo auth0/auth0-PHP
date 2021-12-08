@@ -583,12 +583,14 @@ final class HttpRequest
     private function sleep(
         int $milliseconds
     ): self {
-        $this->waits[] = $milliseconds;
+        if ($milliseconds > 0) {
+            $this->waits[] = $milliseconds;
 
-        // Don't actually trigger a sleep if we're running tests.
-        if (! defined('AUTH0_TESTS_DIR')) {
-            // usleep() uses microseconds, so * 1000 for the correct conversion.
-            usleep($milliseconds * 1000);
+            // Don't actually trigger a sleep if we're running tests.
+            if (! defined('AUTH0_TESTS_DIR')) {
+                // usleep() uses microseconds, so * 1000 for the correct conversion.
+                usleep($milliseconds * 1000);
+            }
         }
 
         return $this;
