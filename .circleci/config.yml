@@ -106,21 +106,13 @@ jobs:
       - setup
       - run-psalm
   semgrep:
-    environment:
-      SEMGREP_RULES: >-
-        p/ci
-        p/security-audit
-        p/secrets
-        p/phpcs-security-audit
-      SEMGREP_BASELINE_REF: main
-      SEMGREP_TIMEOUT: 300
     docker:
-      - image: returntocorp/semgrep-agent:v1
+      - image: returntocorp/semgrep:latest
     steps:
       - checkout
       - run:
           name: Run static code analysis (Semgrep)
-          command: semgrep-agent --help
+          command: semgrep --config auto src/
   pest:
     parameters:
       php:
