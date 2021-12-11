@@ -232,10 +232,18 @@ test('a `api` strategy requires an audience', function(): void
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_AUDIENCE);
 
-test('a `management` strategy requires a client id if a management token is not provided', function(): void
+test('a `management` strategy requires a domain', function(): void
 {
     $sdk = new SdkConfiguration([
         'strategy' => 'management'
+    ]);
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
+
+test('a `management` strategy requires a client id if a management token is not provided', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'strategy' => 'management',
+        'domain' => uniqid()
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
 
@@ -243,6 +251,7 @@ test('a `management` strategy requires a client secret if a management token is 
 {
     $sdk = new SdkConfiguration([
         'strategy' => 'management',
+        'domain' => uniqid(),
         'clientId' => uniqid()
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
@@ -251,6 +260,7 @@ test('a `management` strategy does not require a client id or secret if a manage
 {
     $sdk = new SdkConfiguration([
         'strategy' => 'management',
+        'domain' => uniqid(),
         'managementToken' => uniqid()
     ]);
 

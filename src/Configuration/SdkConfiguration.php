@@ -527,6 +527,10 @@ final class SdkConfiguration implements ConfigurableContract
      */
     private function validateStateManagement(): void
     {
+        if (! $this->hasDomain()) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresDomain();
+        }
+
         if (! $this->hasManagementToken()) {
             if (! $this->hasClientId()) {
                 throw \Auth0\SDK\Exception\ConfigurationException::requiresClientId();
