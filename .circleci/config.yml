@@ -105,6 +105,14 @@ jobs:
     steps:
       - setup
       - run-psalm
+  semgrep:
+    docker:
+      - image: returntocorp/semgrep:latest
+    steps:
+      - checkout
+      - run:
+          name: Run static code analysis (Semgrep)
+          command: semgrep --config auto
   pest:
     parameters:
       php:
@@ -138,6 +146,7 @@ jobs:
 workflows:
   test:
     jobs:
+      - semgrep
       - phpinsights:
           matrix:
             parameters:
