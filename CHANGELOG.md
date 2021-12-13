@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## [8.0.4](https://github.com/auth0/auth0-PHP/tree/8.0.4) (2021-12-13)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.3...8.0.4)
+
+**Fixed**
+
+- Require `domain` configuration for `management` strategy [#589](https://github.com/auth0/auth0-PHP/pull/589) ([evansims](https://github.com/evansims))
+
+**Documentation**
+- Update UPGRADE.md with additional notes about `Auth0::login()` changes from v7. [#585](https://github.com/auth0/auth0-PHP/pull/585) ([BGehrels](https://github.com/BGehrels))
+- Update UPGRADE.md with additional notes about `Auth0::exchange()` changes from v7. [#584](https://github.com/auth0/auth0-PHP/pull/584) ([BGehrels](https://github.com/BGehrels))
+
+**Tests**
+
+- Add Semgrep to test suite [#588](https://github.com/auth0/auth0-PHP/pull/588) ([evansims](https://github.com/evansims))
+- Upgrade test suite to use 8.1 GA (up from RC builds) [#587](https://github.com/auth0/auth0-PHP/pull/587) ([evansims](https://github.com/evansims))
+- Fix warnings introduced in new Psalm update [#586](https://github.com/auth0/auth0-PHP/pull/586) ([evansims](https://github.com/evansims))
+
 ## [8.0.3](https://github.com/auth0/auth0-PHP/tree/8.0.3) (2021-11-01)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.2...8.0.1)
