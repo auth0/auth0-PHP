@@ -210,8 +210,7 @@ final class Auth0 implements Auth0Interface
      * @param bool $immediate When true, disables deferred state saving and writes immediately
      */
     public function clear(
-        bool $transient = true,
-        bool $immediate = true
+        bool $transient = true
     ): self {
         // Delete all data in the session storage medium.
         if ($this->configuration()->hasSessionStorage()) {
@@ -224,9 +223,7 @@ final class Auth0 implements Auth0Interface
         }
 
         // If state saving had been deferred, disable it and force a update to persistent storage.
-        if ($immediate) {
-            $this->deferStateSaving(false);
-        }
+        $this->deferStateSaving(false);
 
         // Reset the internal state.
         $this->getState()->reset();
@@ -313,14 +310,13 @@ final class Auth0 implements Auth0Interface
         $codeVerifier = null;
         $user = null;
 
+        $this->clear(false);
         $this->deferStateSaving();
 
         if ($code === null) {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::missingCode();
         }
-
-        $this->clear(false, false);
 
         if ($state === null || ! $this->getTransientStore()->verify('state', $state)) {
             $this->clear();
