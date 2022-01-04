@@ -207,7 +207,6 @@ final class Auth0 implements Auth0Interface
      * Delete any persistent data and clear out all stored properties.
      *
      * @param bool $transient When true, data in transient storage is also cleared.
-     * @param bool $immediate When true, disables deferred state saving and writes immediately
      */
     public function clear(
         bool $transient = true
