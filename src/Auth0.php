@@ -309,14 +309,13 @@ final class Auth0 implements Auth0Interface
         $codeVerifier = null;
         $user = null;
 
+        $this->clear(false);
         $this->deferStateSaving();
 
         if ($code === null) {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::missingCode();
         }
-
-        $this->clear(false);
 
         if ($state === null || ! $this->getTransientStore()->verify('state', $state)) {
             $this->clear();
