@@ -2,7 +2,7 @@
 
 ## [8.0.5](https://github.com/auth0/auth0-PHP/tree/8.0.4) (2022-01-04)
 
-[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.34..8.0.5)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.4..8.0.5)
 
 **Fixed**
 
