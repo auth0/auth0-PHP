@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [8.0.5](https://github.com/auth0/auth0-PHP/tree/8.0.4) (2022-01-04)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.34..8.0.5)
+
+**Fixed**
+
+- Auth0->exchange(): optimize setcookie() calls [#591](https://github.com/auth0/auth0-PHP/pull/591) ([Nebual](https://github.com/Nebual))
+
 ## [8.0.4](https://github.com/auth0/auth0-PHP/tree/8.0.4) (2021-12-13)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.3...8.0.4)
