@@ -427,6 +427,14 @@ final class Auth0 implements Auth0Interface
             $this->setIdToken($response['id_token']);
         }
 
+        if (isset($response['refresh_token'])) {
+            $this->setRefreshToken($response['refresh_token']);
+        }
+
+        if (isset($response['scope'])) {
+            $this->setAccessTokenScope(explode(' ', $response['scope']));
+        }
+
         $this->deferStateSaving(false);
 
         return $this;
