@@ -654,7 +654,7 @@ test('renew() succeeds under expected and valid conditions', function(): void {
 
     $httpClient->mockResponses([
         \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $token . '"}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $token . '","expires_in":"123"}'),
     ]);
 
     $_GET['code'] = uniqid();
@@ -672,6 +672,7 @@ test('renew() succeeds under expected and valid conditions', function(): void {
 
     expect($auth0->getAccessToken())->toEqual('__test_access_token__');
     expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->getAccessTokenExpiration())->toBeGreaterThanOrEqual(time() + 123);
 
     expect($requestBody['scope'])->toEqual('openid');
     expect($requestBody['client_secret'])->toEqual('__test_client_secret__');
