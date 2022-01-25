@@ -418,6 +418,11 @@ final class Auth0 implements Auth0Interface
 
         $this->setAccessToken($response['access_token']);
 
+        if (isset($response['expires_in']) && is_numeric($response['expires_in'])) {
+            $expiresIn = time() + (int) $response['expires_in'];
+            $this->setAccessTokenExpiration($expiresIn);
+        }
+
         if (isset($response['id_token'])) {
             $this->setIdToken($response['id_token']);
         }
