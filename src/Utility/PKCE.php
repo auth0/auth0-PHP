@@ -29,6 +29,7 @@ final class PKCE
 
         while (($len = mb_strlen($string)) < $length) {
             $size = $length - $len;
+            $size = $size >= 1 ? $size : 1;
 
             // @codeCoverageIgnoreStart
             try {
