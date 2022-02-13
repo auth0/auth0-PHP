@@ -132,6 +132,8 @@ final class TransientStoreHandler
     private function getNonce(
         int $length = 16
     ): string {
+        $length = $length >= 1 ? $length : 1;
+
         try {
             $randomBytes = random_bytes($length);
         } catch (\Exception $exception) {
