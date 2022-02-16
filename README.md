@@ -17,6 +17,7 @@ The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessi
     - [Configuration Options](#configuration-options)
     - [Configuration Strategies](#configuration-strategies)
     - [Checking for an active session](#checking-for-an-active-session)
+    - [Checking for an expired session](#checking-for-an-expired-session)
     - [Authorizing User](#authorizing-user)
     - [Requesting Tokens](#requesting-tokens)
     - [Logging out](#logging-out)
@@ -228,8 +229,29 @@ The PHP SDK is a robust and flexible library capable of integration with many ty
 // Auth0::getCredentials() returns either null if no session is active, or an object.
 $session = $auth0->getCredentials();
 
-if ($session !== null) {
+if ($session !== null && !$session->accessTokenExpired) {
     // The user is signed in.
+}
+```
+
+### Checking for an expired session
+
+Important: After checking for an available session, you must ensure that session hasn't expired. This gives your app an opportunity to [renew the tokens](#renewing-tokens) or customize the handling behavior of your application's reauthentication flow, such as offering a customized intersitial page or error.
+
+```PHP
+<?php
+
+// 🧩 Include the configuration code from the 'SDK Initialization' step above here.
+
+// Auth0::getCredentials() returns either null if no session is active, or an object.
+$session = $auth0->getCredentials();
+
+if ($session !== null && $session->accessTokenExpired) {
+    // The user was signed in, but their token has expired.
+    // See the "renewing tokens" section of this README for examples of using refresh tokens.
+    // You could display a custom error here, or simply redirect the user back to your login route.
+    // It's also a good opportunity to save any important app state data for the user before redirecting them.
+    // However you choose to handle this, it's important to address this scenario.
 }
 ```
 
@@ -329,7 +351,7 @@ if ($session->accessTokenExpired) {
 
 ### Decoding an Id Token
 
-In instances where you need to manually decode an Id Token, such as a custom API service you've built, you can use the `Auth0::decode()` method:
+In instances where you need to manually decode an Id Token, you can use the `Auth0::decode()` method:
 
 ```PHP
 <?php
@@ -340,6 +362,22 @@ try {
     $token = $auth0->decode('{{YOUR_ID_TOKEN}}');
 } catch (\Auth0\SDK\Exception\InvalidTokenException $exception) {
     die("Unable to decode Id Token; " . $exception->getMessage());
+}
+```
+
+### Decoding an Access Token
+
+In instances where you need to manually decode an Access Token, such as a custom API backend you've built where an access token is provided by a frontend client, you can use the `Auth0::decode()` method:
+
+```PHP
+<?php
+
+// 🧩 Include the configuration code from the 'SDK Initialization' step above here.
+
+try {
+    $token = $auth0->decode('{{YOUR_ACCESS_TOKEN}}', null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_ID_TOKEN);
+} catch (\Auth0\SDK\Exception\InvalidTokenException $exception) {
+    die("Unable to decode Access Token; " . $exception->getMessage());
 }
 ```
 
