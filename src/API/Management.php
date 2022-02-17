@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API;
 
 use Auth0\SDK\API\Management\Actions;
+use Auth0\SDK\API\Management\AttackProtection;
 use Auth0\SDK\API\Management\Blacklists;
 use Auth0\SDK\API\Management\ClientGrants;
 use Auth0\SDK\API\Management\Clients;
@@ -29,6 +30,7 @@ use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\Management\ActionsInterface;
+use Auth0\SDK\Contract\API\Management\AttackProtectionInterface;
 use Auth0\SDK\Contract\API\Management\BlacklistsInterface;
 use Auth0\SDK\Contract\API\Management\ClientGrantsInterface;
 use Auth0\SDK\Contract\API\Management\ClientsInterface;
@@ -186,6 +188,11 @@ final class Management implements ManagementInterface
     public function actions(): ActionsInterface
     {
         return $this->getClassInstance(Actions::class);
+    }
+
+    public function attackProtection(): AttackProtectionInterface
+    {
+        return $this->getClassInstance(AttackProtection::class);
     }
 
     public function blacklists(): BlacklistsInterface
