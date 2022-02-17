@@ -1,8 +1,16 @@
 # CHANGELOG
 
+## [8.1.0](https://github.com/auth0/auth0-PHP/tree/8.1.0) (2022-02-17)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.6..8.1.0)
+
+**Added**
+
+- Add Attack Protection endpoints [#593](https://github.com/auth0/auth0-PHP/pull/597) ([evansims](https://github.com/evansims))
+
 ## [8.0.6](https://github.com/auth0/auth0-PHP/tree/8.0.6) (2022-01-25)
 
-[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.4..8.0.5)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.5..8.0.6)
 
 **Fixed**
 
