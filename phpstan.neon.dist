@@ -7,6 +7,7 @@ parameters:
     level: max
     paths:
         - src
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - '#Constructor in (.*) has parameter (.*) with default value.#'
         - '#Constructor in (.*) has parameter (.*) with null as default value.#'
