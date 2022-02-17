@@ -1,13 +1,12 @@
 includes:
-    - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/ergebnis/phpstan-rules/rules.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
     - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
 
 parameters:
     level: max
     paths:
         - src
-
     ignoreErrors:
         - '#Constructor in (.*) has parameter (.*) with default value.#'
         - '#Constructor in (.*) has parameter (.*) with null as default value.#'
@@ -51,8 +50,3 @@ parameters:
         - '#\$(.*) of function call_user_func expects callable\(\): mixed, array\(\$this\((.*) given.#'
         - '#Casting to string something that(.*) already string.#'
         - '#\$object_or_class of function method_exists expects object\|string, (.*) given.#'
-
-    bootstrapFiles:
-        - %rootDir%/../../squizlabs/php_codesniffer/autoload.php
-
-    reportUnmatchedIgnoredErrors: false

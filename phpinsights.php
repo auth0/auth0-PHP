@@ -6,10 +6,6 @@ return [
     'preset' => 'default',
     'ide' => null,
 
-    'exclude' => [
-        // 'path/to/directory-or-file'
-    ],
-
     'add' => [
         \NunoMaduro\PhpInsights\Domain\Metrics\Code\Comments::class => [
             \SlevomatCodingStandard\Sniffs\Classes\RequireMultiLineMethodSignatureSniff::class,
@@ -65,10 +61,10 @@ return [
     ],
 
     'requirements' => [
-        'min-quality' => 90,
+        'min-quality' => 100,
         'min-complexity' => 50,
-        'min-architecture' => 90,
-        'min-style' => 90,
+        'min-architecture' => 100,
+        'min-style' => 100,
         'disable-security-check' => false,
     ],
 ];

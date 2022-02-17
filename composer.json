@@ -111,6 +111,9 @@
     "tests:8.1": [
       "Composer\\Config::disableProcessTimeout",
       "docker compose run --rm tests-8.1"
+    ],
+    "docs": [
+      "php .\\phpdoc.phar"
     ]
   }
 }
