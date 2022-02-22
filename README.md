@@ -425,12 +425,12 @@ Once configured, use the `Auth0::management()` method to get a configured instan
 // 🧩 Include the configuration code from the above example here.
 
 // Request users from the /users Management API endpoint
-$management = $auth0->management()->users()->getAll();
+$response = $auth0->management()->users()->getAll();
 
 // Was the API request successful?
 if (HttpResponse::wasSuccessful($response)) {
     // It was, decode the JSON into a PHP array:
-    print_r(HttpResponse::decodeContent($response);
+    print_r(HttpResponse::decodeContent($response));
 }
 ```
 
