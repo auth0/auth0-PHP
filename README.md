@@ -217,7 +217,7 @@ The PHP SDK is a robust and flexible library capable of integration with many ty
 
 - `webapp`, the default configuration, will require `domain` and `clientId`. `clientSecret` is required when `tokenAlgorithm` is set to `HS256`. This is suitable for most application types.
 - `api` indicates you'll be using the SDK in a stateless API-only environment; only `domain` and `audience` are required in this configuration.
-- `management` is for stateless applications exclusively using Management API calls; `domain` is required. If an optional `managementToken` is provided then `clientId` and `clientSecret` are also required.
+- `management` is for stateless applications exclusively using Management API calls; `domain` is required. You must also provide either a `managementToken`, or assign `clientId` and `clientSecret` for the SDK to automatically aquire a token.
 
 ### Checking for an active session
 
