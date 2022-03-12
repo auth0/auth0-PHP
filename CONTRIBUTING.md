@@ -23,13 +23,15 @@ echo '#!/bin/sh' > .git/hooks/pre-commit && echo 'composer tests' >> .git/hooks/
 
 Ensure it's executable: `chmod 0700 .git/hooks/pre-commit`
 
+> Note: you need [Xdebug](https://xdebug.org/) installed. In Xdebug 3.x you need the following modes enabled: `xdebug.mode = develop,coverage,debug`
+
 ### PHP version-specific tests
 
 Prior to making a PR, please ensure that the PHP version-specific tests pass (required Docker):
 
-> Note: ensure `docker/entrypoint.sh` is executable. You may be asked to grant permissions to certain Composer plugins. You can also [add them to your allow-plugins config](https://getcomposer.org/allow-plugins)
-
 `compooser tests:phpversions`
+
+> Note: ensure `docker/entrypoint.sh` is executable.
 
 ### Running integration tests
 
