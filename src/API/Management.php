@@ -157,6 +157,17 @@ final class Management implements ManagementInterface
                         $cache->save($cachedKey);
                     }
                 }
+            } else {
+                $response = HttpResponse::decodeContent($response);
+
+                if (isset($response['error'])) {
+                    $errorMessage = (string) $response['error'];
+                    if (isset($response['error_description'])) {
+                        $errorMessage .= ': ' . (string) $response['error_description'];
+                    }
+
+                    throw \Auth0\SDK\Exception\NetworkException::requestRejected($errorMessage);
+                }
             }
         }
 

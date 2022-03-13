@@ -37,6 +37,18 @@ test('getHttpClient() fails without a managementToken, if client id and secret a
     $this->sdk->management()->blacklists();
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_MANAGEMENT_KEY);
 
+test('getHttpClient() fails if tenant is not configured with required scope(s)', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $this->configuration->setManagementToken(null);
+
+    $authentication = new Authentication($this->configuration);
+    $authentication->getHttpClient()->mockResponse(
+        HttpResponseGenerator::create('{"error":"access_denied","error_description":"Client is not authorized to access"}', 403),
+    );
+
+    $this->sdk->management()->getHttpClient($authentication);
+})->throws(\Auth0\SDK\Exception\NetworkException::class, sprintf(\Auth0\SDK\Exception\NetworkException::MSG_NETWORK_REQUEST_REJECTED, ''));
+
 test('blacklists() returns an instance of Auth0\SDK\API\Management\Blacklists', function(): void {
     $class = $this->sdk->management()->blacklists();
 
