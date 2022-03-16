@@ -217,7 +217,7 @@ The PHP SDK is a robust and flexible library capable of integration with many ty
 
 - `webapp`, the default configuration, will require `domain` and `clientId`. `clientSecret` is required when `tokenAlgorithm` is set to `HS256`. This is suitable for most application types.
 - `api` indicates you'll be using the SDK in a stateless API-only environment; only `domain` and `audience` are required in this configuration.
-- `management` is for stateless applications exclusively using Management API calls; `managementToken` and/or `clientId` and `clientSecret` are required in this case.
+- `management` is for stateless applications exclusively using Management API calls; `domain` is required. You must also provide either a `managementToken`, or assign `clientId` and `clientSecret` for the SDK to automatically aquire a token.
 
 ### Checking for an active session
 
@@ -425,12 +425,12 @@ Once configured, use the `Auth0::management()` method to get a configured instan
 // 🧩 Include the configuration code from the above example here.
 
 // Request users from the /users Management API endpoint
-$management = $auth0->management()->users()->getAll();
+$response = $auth0->management()->users()->getAll();
 
 // Was the API request successful?
 if (HttpResponse::wasSuccessful($response)) {
     // It was, decode the JSON into a PHP array:
-    print_r(HttpResponse::decodeContent($response);
+    print_r(HttpResponse::decodeContent($response));
 }
 ```
 
