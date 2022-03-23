@@ -39,13 +39,11 @@ The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessi
 
 ## Requirements
 
-- PHP [7.4](https://www.php.net/ChangeLog-7.php) or [8.0](https://www.php.net/ChangeLog-8.php)
+- PHP [7.4](https://www.php.net/ChangeLog-7.php), [8.0](https://www.php.net/ChangeLog-8.php#PHP_8_0) or  [8.1](https://www.php.net/ChangeLog-8.php#PHP_8_1)
 - [Composer](https://getcomposer.org/)
 - A [PSR-17](https://www.php-fig.org/psr/psr-17/) HTTP factory library. (↗ [Find libraries](https://packagist.org/providers/psr/http-factory-implementation))
 - A [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP client library. (↗ [Find libraries](https://packagist.org/providers/psr/http-client-implementation))
 - A [PSR-6](https://www.php-fig.org/psr/psr-6/) caching library is strongly recommended for performance reasons. (↗ [Find libraries](https://packagist.org/providers/psr/cache-implementation))
-
-> ⚠️ PHP 7.3 is supported on the SDK 7.0 branch through December 2021. This README.md is relevant for the SDK 8.0 branch. Please review the README.md within the 7.0 branch for guidance on that version.
 
 > ⚠️ This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP releases after they reach end-of-life. As Composer handles these deprecations safely, this is not considered a breaking change and we may drop version support with minor library releases. Please ensure you are always running the latest PHP version to keep your application up to date with PHP's security fixes, and continue to receive our latest library updates.
 
