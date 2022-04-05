@@ -83,8 +83,14 @@ final class Parser
 
         $this->tokenRaw = $jwt;
         $this->tokenParts = $parts;
-        $this->tokenHeaders = $this->decodeHeaders($parts[0]);
-        $this->tokenClaims = $this->decodeClaims($parts[1]);
+
+        try {
+            $this->tokenHeaders = $this->decodeHeaders($parts[0]);
+            $this->tokenClaims = $this->decodeClaims($parts[1]);
+        } catch (\JsonException $exception) {
+            throw \Auth0\SDK\Exception\InvalidTokenException::jsonError($exception->getMessage());
+        }
+
         $this->tokenSignature = $this->decodeSignature($parts[2]);
 
         // @codeCoverageIgnoreStart
