@@ -373,7 +373,7 @@ In instances where you need to manually decode an Access Token, such as a custom
 // 🧩 Include the configuration code from the 'SDK Initialization' step above here.
 
 try {
-    $token = $auth0->decode('{{YOUR_ACCESS_TOKEN}}', null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_ID_TOKEN);
+    $token = $auth0->decode('{{YOUR_ACCESS_TOKEN}}', null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN);
 } catch (\Auth0\SDK\Exception\InvalidTokenException $exception) {
     die("Unable to decode Access Token; " . $exception->getMessage());
 }
