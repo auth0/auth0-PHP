@@ -19,6 +19,26 @@ beforeEach(function() {
     ]);
 });
 
+it('throws an exception with json error on decoding headers', function(
+    SdkConfiguration $configuration
+): void {
+    $jwt = sprintf('1234567879.%s.%s', uniqid(), uniqid());
+
+    $token = new Parser($jwt, $configuration);
+})->with(['mocked configured' => [
+    fn() => $this->configuration
+]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, 'Malformed UTF-8 characters, possibly incorrectly encoded');
+
+it('throws an exception with json error on decoding claims', function(
+    SdkConfiguration $configuration
+): void {
+    $jwt = sprintf('%s.1234567879.%s', uniqid(), uniqid());
+
+    $token = new Parser($jwt, $configuration);
+})->with(['mocked configured' => [
+    fn() => $this->configuration
+]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, 'Malformed UTF-8 characters, possibly incorrectly encoded');
+
 it('throws an exception with malformed token separators', function(
     SdkConfiguration $configuration
 ): void {
