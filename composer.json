@@ -50,7 +50,7 @@
     "nunomaduro/phpinsights": "^2.0",
     "nyholm/psr7": "^1.4",
     "pestphp/pest": "^1.18",
-    "pestphp/pest-plugin-parallel": "^0.2",
+    "pestphp/pest-plugin-parallel": "^0.2 || ^1.0",
     "php-http/mock-client": "^1.4",
     "phpstan/phpstan": "^0.12",
     "phpstan/phpstan-strict-rules": "^0.12",
