@@ -77,6 +77,13 @@ commands:
             npm install -g snyk
             snyk test --dev --org=auth0-sdks --project-name=auth0-PHP
 
+  run-semgrep:
+    steps:
+      - run:
+          name: Run vulnerabilities tests (Semgrep)
+          command: |
+            semgrep-agent
+
 jobs:
   phpinsights:
     parameters:
@@ -105,14 +112,6 @@ jobs:
     steps:
       - setup
       - run-psalm
-  semgrep:
-    docker:
-      - image: returntocorp/semgrep:latest
-    steps:
-      - checkout
-      - run:
-          name: Run static code analysis (Semgrep)
-          command: semgrep --config auto
   pest:
     parameters:
       php:
@@ -132,6 +131,22 @@ jobs:
     steps:
       - setup
       - run-snyk
+  semgrep:
+    environment:
+      SEMGREP_BASELINE_REF: main
+      SEMGREP_APP_TOKEN: $SEMGREP_APP_TOKEN
+    docker:
+      - image: returntocorp/semgrep-agent:v1
+    steps:
+      - checkout
+      - run:
+          name: "Semgrep scan"
+          command: semgrep-agent
+    docker:
+      - image: returntocorp/semgrep:latest
+    steps:
+      - setup
+      - run-semgrep
   infection:
     parameters:
       php:
@@ -146,7 +161,6 @@ jobs:
 workflows:
   test:
     jobs:
-      - semgrep
       - phpinsights:
           matrix:
             parameters:
@@ -169,6 +183,11 @@ workflows:
               php: ["7.4", "8.0", "8.1"]
       - hold:
           type: approval
+      - semgrep:
+          context:
+            - semgrep
+          requires:
+            - hold
       - snyk:
           matrix:
             parameters:
