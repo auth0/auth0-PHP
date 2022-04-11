@@ -158,6 +158,7 @@ jobs:
 
 workflows:
   test:
+    jobs:
       - semgrep:
           context:
             - semgrep
