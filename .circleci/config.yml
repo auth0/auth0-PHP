@@ -143,6 +143,7 @@ jobs:
     docker:
       - image: returntocorp/semgrep-agent:v1
     steps:
+      - run: echo $SEMGREP_APP_TOKEN
       - run-semgrep
       
   infection:
