@@ -94,6 +94,7 @@ jobs:
     steps:
       - setup
       - run-phpinsights
+      
   phpstan:
     parameters:
       php:
@@ -103,6 +104,7 @@ jobs:
     steps:
       - setup
       - run-phpstan
+      
   psalm:
     parameters:
       php:
@@ -112,6 +114,7 @@ jobs:
     steps:
       - setup
       - run-psalm
+      
   pest:
     parameters:
       php:
@@ -122,6 +125,7 @@ jobs:
       - setup
       - setup-pcov
       - run-pest
+      
   snyk:
     parameters:
       php:
@@ -131,6 +135,7 @@ jobs:
     steps:
       - setup
       - run-snyk
+      
   semgrep:
     environment:
       SEMGREP_BASELINE_REF: main
@@ -138,15 +143,9 @@ jobs:
     docker:
       - image: returntocorp/semgrep-agent:v1
     steps:
-      - checkout
-      - run:
-          name: "Semgrep scan"
-          command: semgrep-agent
-    docker:
-      - image: returntocorp/semgrep:latest
-    steps:
       - setup
       - run-semgrep
+      
   infection:
     parameters:
       php:
