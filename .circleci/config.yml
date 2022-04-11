@@ -139,12 +139,12 @@ jobs:
   semgrep:
     environment:
       SEMGREP_BASELINE_REF: main
-      SEMGREP_APP_TOKEN: $SEMGREP_APP_TOKEN
+      SEMGREP_APP_TOKEN: $SEMGREP_TOKEN
     docker:
       - image: returntocorp/semgrep-agent:v1
     steps:
       - checkout
-      - run: echo $SEMGREP_APP_TOKEN
+      - run: echo $SEMGREP_TOKEN
       - run: echo $SNYK_TOKEN
       - run-semgrep
 
@@ -164,5 +164,5 @@ workflows:
     jobs:
       - semgrep:
           context:
-            - semgrep
+            - semgrep-env
             - snyk-env
