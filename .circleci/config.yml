@@ -62,12 +62,6 @@ commands:
           name: Run unit tests (Pest)
           command: php -d memory_limit=-1 ./vendor/bin/pest --stop-on-failure --min=100
 
-  run-infection:
-    steps:
-      - run:
-          name: Run mutation tests (Infection)
-          command: php -d memory_limit=-1 ./vendor/bin/infection --threads=$(nproc) --test-framework=pest --no-progress --only-covered --min-msi=48 --min-covered-msi=70 --initial-tests-php-options='-d memory_limit=-1'
-
   run-snyk:
     steps:
       - run:
@@ -142,17 +136,6 @@ jobs:
           command: |
             semgrep-agent --baseline-ref main --publish-token $SEMGREP_TOKEN
 
-  infection:
-    parameters:
-      php:
-        type: string
-    docker:
-      - image: php:<< parameters.php >>-cli-alpine
-    steps:
-      - setup
-      - setup-pcov
-      - run-infection
-
 workflows:
   test:
     jobs:
@@ -169,10 +152,6 @@ workflows:
             parameters:
               php: ["7.4", "8.0", "8.1"]
       - pest:
-          matrix:
-            parameters:
-              php: ["7.4", "8.0", "8.1"]
-      - infection:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
