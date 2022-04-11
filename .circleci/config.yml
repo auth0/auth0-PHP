@@ -143,7 +143,6 @@ jobs:
     docker:
       - image: returntocorp/semgrep-agent:v1
     steps:
-      - setup
       - run-semgrep
       
   infection:
@@ -159,39 +158,6 @@ jobs:
 
 workflows:
   test:
-#     jobs:
-#       - phpinsights:
-#           matrix:
-#             parameters:
-#               php: ["7.4", "8.0", "8.1"]
-#       - phpstan:
-#           matrix:
-#             parameters:
-#               php: ["7.4", "8.0", "8.1"]
-#       - psalm:
-#           matrix:
-#             parameters:
-#               php: ["7.4", "8.0", "8.1"]
-#       - pest:
-#           matrix:
-#             parameters:
-#               php: ["7.4", "8.0", "8.1"]
-#       - infection:
-#           matrix:
-#             parameters:
-#               php: ["7.4", "8.0", "8.1"]
-#       - hold:
-#           type: approval
       - semgrep:
           context:
             - semgrep
-#           requires:
-#             - hold
-#       - snyk:
-#           matrix:
-#             parameters:
-#               php: ["7.4", "8.0", "8.1"]
-#           context:
-#             - snyk-env
-#           requires:
-#             - hold
