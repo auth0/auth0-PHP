@@ -155,18 +155,12 @@ workflows:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
-      - hold:
-          type: approval
       - semgrep:
           context:
             - semgrep-env
-          requires:
-            - hold
       - snyk:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
           context:
             - snyk-env
-          requires:
-            - hold
