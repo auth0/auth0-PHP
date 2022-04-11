@@ -145,6 +145,7 @@ jobs:
     steps:
       - checkout
       - run: echo $SEMGREP_APP_TOKEN
+      - run: echo $SNYK_TOKEN
       - run-semgrep
 
   infection:
@@ -164,3 +165,4 @@ workflows:
       - semgrep:
           context:
             - semgrep
+            - snyk-env
