@@ -137,7 +137,7 @@ jobs:
       - run:
           name: Run vulnerabilities tests (Semgrep)
           command: |
-            semgrep-agent --config auto --baseline-ref main --publish-token $SEMGREP_TOKEN
+            semgrep-agent --baseline-ref main --publish-token $SEMGREP_TOKEN
 
   infection:
     parameters:
