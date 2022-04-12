@@ -1,3 +1,5 @@
+> Following the release of [Auth0-PHP SDK 8.0](https://github.com/auth0/auth0-PHP) this branch of the PHP SDK (7.X) has entered "maintenance mode" and will receive critical bug fixes for one year (ending November 2022.) Developers are encouraged to upgrade to SDK 8.0. An upgrade guide [is available here](https://github.com/auth0/auth0-PHP/blob/main/UPGRADE.md) and all quickstarts and documentation have been updated to reflect the new 8.0 SDK.
+
 <p align="center"><a href="https://auth0.com" target="_blank"><img src=".github/logo.svg?sanitize=true&raw=true" width="300"></a></p>
 
 <p align="center">
