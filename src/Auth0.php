@@ -527,7 +527,7 @@ final class Auth0 implements Auth0Interface
      * @param array<string>|null $get Optional. An array of viable parameter names to search against $_GET as a token candidate.
      * @param array<string>|null $post Optional. An array of viable parameter names to search against $_POST as a token candidate.
      * @param array<string>|null $server Optional. An array of viable parameter names to search against $_SERVER as a token candidate.
-     * @param array<string>|null $haystack Optional. An array of viable names to search against $_SERVER as a token candidate.
+     * @param array<string>|null $haystack Optional. A key-value array in which to search for `$needles` as token candidates.
      * @param array<string>|null $needles Optional. An array of viable keys to search against `$haystack` as token candidates.
      */
     public function getBearerToken(
