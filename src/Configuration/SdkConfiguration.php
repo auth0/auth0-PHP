@@ -156,6 +156,11 @@ final class SdkConfiguration implements ConfigurableContract
 {
     use ConfigurableMixin;
 
+    public const STRATEGY_REGULAR = 'webapp';
+    public const STRATEGY_API = 'api';
+    public const STRATEGY_MANAGEMENT_API = 'management';
+    public const STRATEGY_NONE = 'none';
+
     /**
      * An instance of the EventDispatcher utility.
      */
@@ -455,7 +460,7 @@ final class SdkConfiguration implements ConfigurableContract
             if (is_string($propertyValue) && mb_strlen($propertyValue) !== 0) {
                 $propertyValue = mb_strtolower($propertyValue);
 
-                if (in_array($propertyValue, ['api', 'management', 'webapp', 'none'], true)) {
+                if (in_array($propertyValue, [self::STRATEGY_REGULAR, self::STRATEGY_API, self::STRATEGY_MANAGEMENT_API, self::STRATEGY_NONE], true)) {
                     return $propertyValue;
                 }
             }
@@ -495,16 +500,16 @@ final class SdkConfiguration implements ConfigurableContract
     ): void {
         $strategy = $strategy ?? $this->getStrategy();
 
-        if ($strategy === 'api') {
+        if ($strategy === self::STRATEGY_REGULAR) {
+            $this->validateStateWebApp();
+        }
+
+        if ($strategy === self::STRATEGY_API) {
             $this->validateStateApi();
         }
 
-        if ($strategy === 'management') {
+        if ($strategy === self::STRATEGY_MANAGEMENT_API) {
             $this->validateStateManagement();
-        }
-
-        if ($strategy === 'webapp') {
-            $this->validateStateWebApp();
         }
     }
 
