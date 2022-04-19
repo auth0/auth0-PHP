@@ -844,7 +844,9 @@ test('getBearerToken() successfully finds a candidate token in $_GET', function(
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
-        get: [$testParameterName]
+        [
+            $testParameterName
+        ],
     ));
 })->with(['mocked rs256 bearer token' => [
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
@@ -862,7 +864,10 @@ test('getBearerToken() successfully finds a candidate token in $_POST', function
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
-        post: [$testParameterName]
+        null,
+        [
+            $testParameterName
+        ],
     ));
 })->with(['mocked rs256 bearer token' => [
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
@@ -880,7 +885,11 @@ test('getBearerToken() successfully finds a candidate token in $_SERVER', functi
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
-        server: [$testParameterName]
+        null,
+        null,
+        [
+            $testParameterName
+        ],
     ));
 })->with(['mocked rs256 bearer token' => [
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
@@ -897,8 +906,10 @@ test('getBearerToken() successfully finds a candidate token needle in a haystack
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
-        needles: [uniqid(), $testParameterName, uniqid(), uniqid(), uniqid()],
-        haystack: [
+        null,
+        null,
+        null,
+        [
             uniqid() => uniqid(),
             uniqid() => uniqid(),
             uniqid() => uniqid(),
@@ -906,7 +917,14 @@ test('getBearerToken() successfully finds a candidate token needle in a haystack
             uniqid() => uniqid(),
             uniqid() => uniqid(),
             uniqid() => uniqid(),
-        ]
+        ],
+        [
+            uniqid(),
+            $testParameterName,
+            uniqid(),
+            uniqid(),
+            uniqid()
+        ],
     ));
 })->with(['mocked rs256 bearer token' => [
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
@@ -927,8 +945,10 @@ test('getBearerToken() correctly returns null when there are no candidates', fun
     ]));
 
     $this->assertEquals($auth0->getBearerToken(
-        needles: [uniqid(), $testParameterName, uniqid(), uniqid(), uniqid()],
-        haystack: [
+        null,
+        null,
+        null,
+        [
             uniqid() => uniqid(),
             uniqid() => uniqid(),
             uniqid() => uniqid(),
@@ -936,7 +956,14 @@ test('getBearerToken() correctly returns null when there are no candidates', fun
             uniqid() => uniqid(),
             uniqid() => uniqid(),
             uniqid() => uniqid(),
-        ]
+        ],
+        [
+            uniqid(),
+            $testParameterName,
+            uniqid(),
+            uniqid(),
+            uniqid()
+        ],
     ), null);
 })->with(['mocked rs256 bearer token' => [
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
@@ -953,9 +980,14 @@ test('getBearerToken() correctly returns null when the candidate value is empty'
     ]));
 
     $this->assertEquals($auth0->getBearerToken(
-        needles: [$testParameterName],
-        haystack: [
+        null,
+        null,
+        null,
+        [
             $testParameterName => '',
+        ],
+        [
+            $testParameterName
         ]
     ), null);
 })->with(['mocked rs256 bearer token' => [
@@ -976,7 +1008,7 @@ test('getBearerToken() correctly silently handles token validation exceptions', 
     ]));
 
     $this->assertEquals($auth0->getBearerToken(
-        get: [$testParameterName],
+        [$testParameterName],
     ), null);
 })->with(['mocked rs256 bearer token' => [
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
