@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Token;
+use Auth0\Tests\Utilities\TokenGenerator;
+use Auth0\Tests\Utilities\TokenGeneratorResponse;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('auth0');
 
@@ -818,3 +822,194 @@ test('getExchangeParameters() does not return invalid request parameters', funct
 
     $this->assertIsNotObject($auth0->getExchangeParameters());
 });
+
+
+test('getBearerToken() checks $_GET for specified value', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+
+    $_GET['token'] = 123;
+
+    $this->assertIsNotObject($auth0->getExchangeParameters());
+});
+
+test('getBearerToken() successfully finds a candidate token in $_GET', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $testParameterName = uniqid();
+    $_GET[$testParameterName] = $candidate->token;
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
+
+    $this->assertIsObject($auth0->getBearerToken(
+        [
+            $testParameterName
+        ],
+    ));
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
+]]);
+
+test('getBearerToken() successfully finds a candidate token in $_POST', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $testParameterName = uniqid();
+    $_POST[$testParameterName] = $candidate->token;
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
+
+    $this->assertIsObject($auth0->getBearerToken(
+        null,
+        [
+            $testParameterName
+        ],
+    ));
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
+]]);
+
+test('getBearerToken() successfully finds a candidate token in $_SERVER', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $testParameterName = uniqid();
+    $_SERVER[$testParameterName] = 'Bearer ' . $candidate->token;
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
+
+    $this->assertIsObject($auth0->getBearerToken(
+        null,
+        null,
+        [
+            $testParameterName
+        ],
+    ));
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
+]]);
+
+test('getBearerToken() successfully finds a candidate token needle in a haystack', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $testParameterName = uniqid();
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
+
+    $this->assertIsObject($auth0->getBearerToken(
+        null,
+        null,
+        null,
+        [
+            uniqid() => uniqid(),
+            uniqid() => uniqid(),
+            uniqid() => uniqid(),
+            $testParameterName => 'Bearer ' . $candidate->token,
+            uniqid() => uniqid(),
+            uniqid() => uniqid(),
+            uniqid() => uniqid(),
+        ],
+        [
+            uniqid(),
+            $testParameterName,
+            uniqid(),
+            uniqid(),
+            uniqid()
+        ],
+    ));
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
+]]);
+
+test('getBearerToken() correctly returns null when there are no candidates', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $testParameterName = uniqid();
+
+    $_GET[uniqid()] = $candidate->token;
+    $_POST[uniqid()] = $candidate->token;
+    $_SERVER[uniqid()] = $candidate->token;
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
+
+    $this->assertEquals($auth0->getBearerToken(
+        null,
+        null,
+        null,
+        [
+            uniqid() => uniqid(),
+            uniqid() => uniqid(),
+            uniqid() => uniqid(),
+            uniqid() => 'Bearer ' . $candidate->token,
+            uniqid() => uniqid(),
+            uniqid() => uniqid(),
+            uniqid() => uniqid(),
+        ],
+        [
+            uniqid(),
+            $testParameterName,
+            uniqid(),
+            uniqid(),
+            uniqid()
+        ],
+    ), null);
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
+]]);
+
+test('getBearerToken() correctly returns null when the candidate value is empty', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $testParameterName = uniqid();
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
+
+    $this->assertEquals($auth0->getBearerToken(
+        null,
+        null,
+        null,
+        [
+            $testParameterName => '',
+        ],
+        [
+            $testParameterName
+        ]
+    ), null);
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
+]]);
+
+test('getBearerToken() correctly silently handles token validation exceptions', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $testParameterName = uniqid();
+
+    $_GET[$testParameterName] = $candidate->token;
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'domain' => '__bad_domain__',
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
+
+    $this->assertEquals($auth0->getBearerToken(
+        [$testParameterName],
+    ), null);
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
+]]);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Tests\Utilities;
 
 use Firebase\JWT\JWT;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
  * Class TokenGenerator.
@@ -171,6 +172,13 @@ class TokenGenerator
         $response->claims = $claims;
         $response->jwks = 'https://test.auth0.com/.well-known/jwks.json';
         $response->cache = hash('sha256', 'https://test.auth0.com/.well-known/jwks.json');
+
+        $cache = new ArrayAdapter();
+        $item = $cache->getItem($response->cache);
+        $item->set(['__test_kid__' => ['x5c' => [$keys['cert']]]]);
+        $cache->save($item);
+
+        $response->cached = $cache;
 
         return $response;
     }
