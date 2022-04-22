@@ -66,8 +66,8 @@ These classes were updated in SDK 8.0:
     - `configuration` added as a required instance of either an `SdkConfiguration` class, or an array of configuration options. See the [8.0 configuration](#configuring-auth0-sdk-80) and [8.0 configuration options](#updated-configuration-options) guides for usage information.
     - All other arguments have been removed.
   - Public method 'getHttpClient()' added.
-  - Public method `get_authorize_link()` renamed to `getAuthorizationLink()`, and:
-    - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options.
+  - Public method `get_authorize_link()` renamed to `getLoginLink()`, and:
+    - Method now accepts an argument, `params`: an array of parameters to pass with the request. Please see the API endpoint documentation for available options. Note also the previously optional `state` argument is now required.
   - Public method `get_samlp_link()` renamed to `getSamlpLink()`, and:
     - Argument `client_id` renamed to `clientId`.
   - Public method `get_samlp_metadata_link()` renamed to `getSamlpMetadataLink()`, and:
