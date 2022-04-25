@@ -40,6 +40,13 @@
       "Auth0\\Tests\\": "tests/"
     }
   },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
   "scripts": {
     "test": "SHELL_INTERACTIVE=1 \"vendor/bin/phpunit\" --coverage-text",
     "test-ci": "\"vendor/bin/phpunit\" --stop-on-failure --coverage-clover=build/coverage.xml",
