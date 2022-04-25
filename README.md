@@ -57,7 +57,7 @@ The PHP and SDK version combinations listed below are supported through the indi
 | 7¹          | 8.0         | Nov 2022                                                   |
 |             | 7.4         | Nov 2022                                                   |
 
-¹ SDK v7 exits extended support status in November 2022. It will no longer be supported at that time. Developers are encouraged to migrate to SDK v8.
+¹ SDK v7 is now in extended support status and is only receiving critical bugfixes. This extended support window ends in November 2022, after which point v7 will cease to receive updates. Developers are encouraged to migrate to SDK v8.
 
 ## Usage
 
