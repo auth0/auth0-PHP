@@ -10,7 +10,7 @@ class Jobs extends GenericResource
      * Retrieves a job. Useful to check its status.
      * Required scopes: "create:users" "read:users"
      *
-     * @param  string  $id
+     * @param string $id
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
@@ -29,7 +29,7 @@ class Jobs extends GenericResource
      * Retrieve error details of a failed job.
      * Required scopes: "create:users" "read:users"
      *
-     * @param  string  $id
+     * @param string $id
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
@@ -48,9 +48,9 @@ class Jobs extends GenericResource
      * Import users from a formatted file into a connection via a long-running job.
      * Required scopes: "create:users" "read:users"
      *
-     * @param  string  $file_path
-     * @param  string  $connection_id
-     * @param  array   $params
+     * @param string $file_path
+     * @param string $connection_id
+     * @param array  $params
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
@@ -85,7 +85,7 @@ class Jobs extends GenericResource
      * Export all users to a file via a long-running job.
      * Required scopes: "read:users"
      *
-     * @param  array  $params
+     * @param array $params
      *
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
      *
@@ -100,19 +100,19 @@ class Jobs extends GenericResource
 
         $body = [];
 
-        if (!empty($params['connection_id'])) {
+        if (! empty($params['connection_id'])) {
             $body['connection_id'] = $params['connection_id'];
         }
 
-        if (!empty($params['format']) && in_array($params['format'], ['json', 'csv'])) {
+        if (! empty($params['format']) && in_array($params['format'], ['json', 'csv'])) {
             $body['format'] = $params['format'];
         }
 
-        if (!empty($params['limit']) && is_numeric($params['limit'])) {
+        if (! empty($params['limit']) && is_numeric($params['limit'])) {
             $body['limit'] = $params['limit'];
         }
 
-        if (!empty($params['fields']) && is_array($params['fields'])) {
+        if (! empty($params['fields']) && is_array($params['fields'])) {
             $body['fields'] = $params['fields'];
         }
 
@@ -125,10 +125,11 @@ class Jobs extends GenericResource
      *
      * @param string $user_id User ID of the user to send the verification email to.
      * @param array  $params  Array of optional parameters to add.
-     *        - client_id: Client ID of the requesting application. If not provided, the global Client ID will be used.
-     *        - identity:  The optional identity of the user, as an array. Required to verify primary identities when using social, enterprise, or passwordless connections. It is also required to verify secondary identities.
-     *              - user_id: User ID of the identity to be verified. Must be a non-empty string.
-     *              - provider: Identity provider name of the identity (e.g. google-oauth2). Must be a non-empty string.
+     *                        - client_id: Client ID of the requesting application. If not provided, the global Client ID will be used.
+     *                        - identity: The optional identity of the user, as an array. Required to verify primary identities when using social, enterprise, or passwordless connections. It is also required to verify secondary identities.
+     *                        - user_id: User ID of the identity to be verified. Must be a non-empty string.
+     *                        - provider: Identity provider name of the identity (e.g. google-oauth2). Must be a non-empty string.
+     *                        - organization_id: ID of the organization. If provided, the organization_id and organization_name will be included as query arguments in the link back to the application.
      *
      * @throws EmptyOrInvalidParameterException Thrown if any required parameters are empty or invalid.
      * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
@@ -145,13 +146,19 @@ class Jobs extends GenericResource
             $body['client_id'] = $params['client_id'];
         }
 
+        if (! empty( $params['organization_id'] )) {
+            $body['organization_id'] = $params['organization_id'];
+        }
+
         if (! empty( $params['identity'] )) {
-            if ( empty( $params['identity']['user_id']) || ! is_string($params['identity']['user_id']) ) {
+            if (empty( $params['identity']['user_id']) || ! is_string($params['identity']['user_id'])) {
                 throw new EmptyOrInvalidParameterException('Missing required "user_id" field of the "identity" object.');
             }
-            if ( empty( $params['identity']['provider'] ) || ! is_string($params['identity']['provider']) ) {
+
+            if (empty( $params['identity']['provider'] ) || ! is_string($params['identity']['provider'])) {
                 throw new EmptyOrInvalidParameterException('Missing required "provider" field of the "identity" object.');
             }
+
             $body['identity'] = $params['identity'];
         }
 

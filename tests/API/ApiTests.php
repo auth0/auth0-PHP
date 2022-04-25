@@ -37,25 +37,37 @@ class ApiTests extends TestCase
         }
 
         $env_path = '.env';
+
         if (file_exists($env_path)) {
             $loader = new Loader($env_path);
             $loader->parse()->putenv(true);
         }
 
-        $env = [
-            'DOMAIN' => getenv('DOMAIN'),
-            'APP_CLIENT_ID' => getenv('APP_CLIENT_ID'),
-            'APP_CLIENT_SECRET' => getenv('APP_CLIENT_SECRET'),
-            'API_TOKEN' => getenv('API_TOKEN'),
+        $env = getenv();
+
+        self::$env = [
+            'DOMAIN'                  => $env['DOMAIN'] ?? false,
+            'APP_CLIENT_ID'           => $env['APP_CLIENT_ID'] ?? false,
+            'APP_CLIENT_SECRET'       => $env['APP_CLIENT_SECRET'] ?? false,
+            'API_TOKEN'               => $env['API_TOKEN'] ?? false,
+            'AUTH0_API_REQUEST_DELAY' => (int) ($env['AUTH0_API_REQUEST_DELAY'] ?? 0),
         ];
 
-        if (! $env['API_TOKEN'] && $env['APP_CLIENT_SECRET']) {
-            $auth_api         = new Authentication( $env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET'] );
-            $response         = $auth_api->client_credentials( [ 'audience' => 'https://'.$env['DOMAIN'].'/api/v2/' ] );
-            $env['API_TOKEN'] = $response['access_token'];
+        if (self::$env['AUTH0_API_REQUEST_DELAY'] <= 0) {
+            self::$env['AUTH0_API_REQUEST_DELAY'] = 200000;
         }
 
-        self::$env = $env;
+        if (! isset($env['API_TOKEN']) && $env['APP_CLIENT_SECRET']) {
+            $auth_api               = new Authentication( $env['DOMAIN'], $env['APP_CLIENT_ID'], $env['APP_CLIENT_SECRET'] );
+            $response               = $auth_api->client_credentials( [ 'audience' => 'https://'.$env['DOMAIN'].'/api/v2/' ] );
+            self::$env['API_TOKEN'] = $response['access_token'];
+        }
+
         return self::$env;
+    }
+
+    protected static function sleep(?int $microseconds = null)
+    {
+        usleep($microseconds ?? self::$env['AUTH0_API_REQUEST_DELAY']);
     }
 }

@@ -34,7 +34,7 @@ class EmailsMockedTest extends TestCase
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
@@ -69,7 +69,7 @@ class EmailsMockedTest extends TestCase
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/emails/provider', $api->getHistoryUrl() );
 
         $params = $api->getHistoryQuery();
-        $this->assertContains( 'fields=name,credentials', $params );
-        $this->assertContains( 'include_fields=true', $params );
+        $this->assertStringContainsString( 'fields=name,credentials', $params );
+        $this->assertStringContainsString( 'include_fields=true', $params );
     }
 }

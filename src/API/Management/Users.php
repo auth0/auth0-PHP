@@ -142,6 +142,7 @@ class Users extends GenericResource
         }
 
         $params = $this->normalizePagination( $params, $page, $per_page );
+        $params = $this->normalizeIncludeTotals( $params );
 
         return $this->apiClient->method('get')
             ->addPath('users')
@@ -456,6 +457,28 @@ class Users extends GenericResource
         return $this->apiClient->method('get')
             ->addPath('users', $user_id, 'logs')
             ->withDictParams($params)
+            ->call();
+    }
+
+    /**
+     * Get organizations a specific user belongs to.
+     * Required scope: "read:organizations"
+     *
+     * @param string $user_id User ID to get organization entries for.
+     * @param array  $params  Additional listing params like page, per_page, sort, and include_totals.
+     *
+     * @throws EmptyOrInvalidParameterException Thrown if the user_id parameter is empty or is not a string.
+     * @throws \Exception Thrown by the HTTP client when there is a problem with the API call.
+     *
+     * @return mixed
+     */
+    public function getOrganizations($user_id, array $params = [])
+    {
+        $this->checkEmptyOrInvalidString($user_id, 'user_id');
+
+        return $this->apiClient->method('get')
+            ->addPath('users', $user_id, 'organizations')
+            ->withDictParams($this->normalizeRequest($params))
             ->call();
     }
 

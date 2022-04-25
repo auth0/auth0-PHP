@@ -35,7 +35,7 @@ class RolesTestMocked extends TestCase
     /**
      * Runs before test suite starts.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $infoHeadersData = new InformationHeaders;
         $infoHeadersData->setCorePackage();
@@ -59,8 +59,8 @@ class RolesTestMocked extends TestCase
         $this->assertStringStartsWith( 'https://api.test.local/api/v2/roles', $api->getHistoryUrl() );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'page=2', $query );
-        $this->assertContains( 'name_filter=__test_name_filter__', $query );
+        $this->assertStringContainsString( 'page=2', $query );
+        $this->assertStringContainsString( 'name_filter=__test_name_filter__', $query );
 
         $headers = $api->getHistoryHeaders();
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
@@ -85,7 +85,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid name', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid name', $exception_message );
     }
 
     /**
@@ -134,7 +134,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid role_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -176,7 +176,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid role_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -218,7 +218,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid role_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -265,7 +265,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid role_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -292,8 +292,8 @@ class RolesTestMocked extends TestCase
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
         $query = $api->getHistoryQuery();
-        $this->assertContains( 'page=3', $query );
-        $this->assertContains( 'per_page=6', $query );
+        $this->assertStringContainsString( 'page=3', $query );
+        $this->assertStringContainsString( 'per_page=6', $query );
     }
 
     /**
@@ -312,11 +312,11 @@ class RolesTestMocked extends TestCase
 
         $api->call()->roles()->getPermissions( '__test_role_id__', [ 'include_totals' => false ] );
 
-        $this->assertContains( 'include_totals=false', $api->getHistoryQuery() );
+        $this->assertStringContainsString( 'include_totals=false', $api->getHistoryQuery() );
 
         $api->call()->roles()->getPermissions( '__test_role_id__', [ 'include_totals' => 1 ] );
 
-        $this->assertContains( 'include_totals=true', $api->getHistoryQuery() );
+        $this->assertStringContainsString( 'include_totals=true', $api->getHistoryQuery() );
     }
 
     /**
@@ -337,7 +337,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid role_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -420,7 +420,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid role_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -517,7 +517,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid role_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -529,7 +529,10 @@ class RolesTestMocked extends TestCase
      */
     public function testThatGetUsersRequestIsFormattedProperly()
     {
-        $api = new MockManagementApi( [ new Response( 200, self::$headers ) ] );
+        $api = new MockManagementApi( [
+            new Response( 200, self::$headers ),
+            new Response( 200, self::$headers )
+        ] );
 
         $api->call()->roles()->getUsers( '__test_role_id__', [ 'per_page' => 6, 'include_totals' => 1 ] );
 
@@ -543,9 +546,15 @@ class RolesTestMocked extends TestCase
         $this->assertEquals( 'Bearer __api_token__', $headers['Authorization'][0] );
         $this->assertEquals( self::$expectedTelemetry, $headers['Auth0-Client'][0] );
 
-        $query = $api->getHistoryQuery();
-        $this->assertContains( 'page=6', $query );
-        $this->assertContains( 'include_totals=true', $query );
+        $query = '&' . $api->getHistoryQuery();
+        $this->assertStringContainsString( '&per_page=6', $query );
+        $this->assertStringContainsString( '&include_totals=true', $query );
+
+        $api->call()->roles()->getUsers( '__test_role_id__', [ 'per_page' => 12 ] );
+
+        $query = '&' . $api->getHistoryQuery();
+        $this->assertStringContainsString( '&per_page=12', $query );
+        $this->assertStringContainsString( '&include_totals=false', $query );
     }
 
     /**
@@ -566,7 +575,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid role_id', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid role_id', $exception_message );
     }
 
     /**
@@ -587,7 +596,7 @@ class RolesTestMocked extends TestCase
             $exception_message = $e->getMessage();
         }
 
-        $this->assertContains( 'Empty or invalid users', $exception_message );
+        $this->assertStringContainsString( 'Empty or invalid users', $exception_message );
     }
 
     /**

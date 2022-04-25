@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 class InformationHeadersExtendTest extends TestCase
 {
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $reset_headers = new InformationHeaders;
         $reset_headers->setCorePackage();

@@ -1,5 +1,79 @@
 # CHANGELOG
 
+## [7.9.2](https://github.com/auth0/auth0-PHP/tree/7.9.2) (2021-08-03)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.1...7.9.2)
+
+**Fixed**
+
+- Add missing API2 POST /tickets/password-change params [\#523](https://github.com/auth0/auth0-PHP/pull/523) ([evansims](https://github.com/evansims))
+
+## [7.9.1](https://github.com/auth0/auth0-PHP/tree/7.9.1) (2021-07-06)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.9.0...7.9.1)
+
+**Fixed**
+
+- Replace deprated/removed GuzzleHttp\Psr7\build_query [\#500](https://github.com/auth0/auth0-PHP/pull/500) ([bartvanraaij](https://github.com/bartvanraaij))
+
+## [7.9.0](https://github.com/auth0/auth0-PHP/tree/7.9.0) (2021-05-03)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.8.0...7.9.0)
+
+**Changed**
+
+- Reintroduce Guzzle 6 support [\#489](https://github.com/auth0/auth0-PHP/pull/489) ([marko-ilic](https://github.com/marko-ilic))
+- Update Auth0\SDK\Auth0::getState() visibility to public [\#498](https://github.com/auth0/auth0-PHP/pull/498) ([evansims](https://github.com/evansims))
+
+## [7.8.0](https://github.com/auth0/auth0-PHP/tree/7.8.0) (2021-03-19)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.7.0...7.8.0)
+
+This release expands Organizations support to the Management API client. Please see the README for details on Organizations, currently in closed beta testing.
+
+**Added**
+
+- Add Organizations support to Management API Client [\#483](https://github.com/auth0/auth0-PHP/pull/483) ([evansims](https://github.com/evansims))
+
+## [7.7.0](https://github.com/auth0/auth0-PHP/tree/7.7.0) (2021-03-19)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.2...7.7.0)
+
+This release includes initial support for Organizations, a new feature from Auth0 currently in closed beta testing. Please see the updated README for usage instructions.
+
+**Added**
+
+- Add Organizations support to Authentication API Client [\#482](https://github.com/auth0/auth0-PHP/pull/482) ([evansims](https://github.com/evansims))
+
+**Changed**
+
+- Support client_id on /tickets/password-change [\#481](https://github.com/auth0/auth0-PHP/pull/481) ([evansims](https://github.com/evansims))
+
+## [7.6.2](https://github.com/auth0/auth0-PHP/tree/7.6.2) (2021-01-01)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.1...7.6.2)
+
+**Fixed**
+
+- Ensure ?include_totals are handled properly on GET /users and GET /roles requests for Management API [\#476](https://github.com/auth0/auth0-PHP/pull/476) ([evansims](https://github.com/evansims))
+
+## [7.6.1](https://github.com/auth0/auth0-PHP/tree/7.6.1) (2021-01-01)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.6.0...7.6.1)
+
+This hotfix addresses an issue with a dependency reference.
+
+## [7.6.0](https://github.com/auth0/auth0-PHP/tree/7.6.0) (2021-01-01)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.5.0...7.6.0)
+
+SDK 7.6 introduces support for [the newly released PHP 8.0](https://www.php.net/releases/8.0/en.php) and drops supported for PHP 7.1 and 7.2 (which have reached their end of support cycles.) Please ensure you are running [supported versions of PHP](https://www.php.net/supported-versions.php) in your environments.
+
+**Added**
+
+- PHP 8.0 support [\#467](https://github.com/auth0/auth0-PHP/pull/467) ([evansims](https://github.com/evansims))
+- Static code analysis [#470](https://github.com/auth0/auth0-PHP/pull/470) ([FrontEndCoffee](https://github.com/FrontEndCoffee))
+
 ## [7.5.0](https://github.com/auth0/auth0-PHP/tree/7.5.0) (2020-11-16)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/7.4.0...7.5.0)
@@ -82,7 +156,7 @@
 
 **BEFORE YOU UPGRADE**
 
-This is a major release with several breaking changes. Please see the [v5 to v7 migration guide here](https://github.com/auth0/auth0-PHP/blob/master/MIGRATE-v5-TO-v7.md) before you upgrade.
+This is a major release with several breaking changes. Please see the [v5 to v7 migration guide here](https://github.com/auth0/auth0-PHP/blob/7.x/MIGRATE-v5-TO-v7.md) before you upgrade.
 
 **Added**
 

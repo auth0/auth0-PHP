@@ -70,7 +70,7 @@ class JWKFetcher
         $this->cache         = $cache;
         $this->guzzleOptions = $guzzleOptions;
 
-        if (!empty($options['ttl'])) {
+        if (! empty($options['ttl'])) {
             $this->setTtl($options['ttl']);
         }
     }
@@ -176,7 +176,7 @@ class JWKFetcher
      * Set how long to cache JWKs in seconds.
      * We strongly encouraged you leave the default value.
      *
-     * @param string  $ttlSeconds  Number of seconds to keep a JWK in memory.
+     * @param string $ttlSeconds Number of seconds to keep a JWK in memory.
      *
      * @return $this
      *
@@ -205,7 +205,7 @@ class JWKFetcher
     /**
      * Generate a cache id to use for a URL.
      *
-     * @param string  $jwks_url  Full URL to the JWKS.
+     * @param string $jwks_url Full URL to the JWKS.
      *
      * @return string
      */
@@ -224,7 +224,7 @@ class JWKFetcher
     /**
      * Get a specific JWK from the cache by it's URL.
      *
-     * @param string  $jwks_url  Full URL to the JWKS.
+     * @param string $jwks_url Full URL to the JWKS.
      *
      * @return null|array
      */
@@ -240,11 +240,11 @@ class JWKFetcher
         return null;
     }
 
-   /**
+    /**
      * Add or overwrite a specific JWK from the cache.
      *
-     * @param string  $jwks_url  Full URL to the JWKS.
-     * @param array   $keys      An array representing the JWKS.
+     * @param string $jwks_url Full URL to the JWKS.
+     * @param array  $keys     An array representing the JWKS.
      *
      * @return $this
      */
@@ -260,7 +260,7 @@ class JWKFetcher
     /**
      * Remove a specific JWK from the cache by it's URL.
      *
-     * @param string  $jwks_url  Full URL to the JWKS.
+     * @param string $jwks_url Full URL to the JWKS.
      *
      * @return boolean
      */

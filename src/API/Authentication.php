@@ -53,6 +53,13 @@ class Authentication
     private $audience;
 
     /**
+     * The Id of an organization to log in to.
+     *
+     * @var null|string
+     */
+    private $organization;
+
+    /**
      * Scopes to request during login.
      *
      * @var null|string
@@ -78,10 +85,11 @@ class Authentication
      *
      * @param string      $domain        Tenant domain, found in Application settings.
      * @param string      $client_id     Client ID, found in Application settings.
-     * @param null|string $client_secret Client Secret, found in Application settings.
-     * @param null|string $audience      API audience identifier for the access token, found in API settings.
-     * @param null|string $scope         Scopes to request during login.
-     * @param array       $guzzleOptions Options for the Guzzle HTTP client.
+     * @param null|string $client_secret Optional. Client Secret, found in Application settings.
+     * @param null|string $audience      Optional. API audience identifier for the access token, found in API settings.
+     * @param null|string $scope         Optional. Scopes to request during login.
+     * @param array       $guzzleOptions Optional. Options for the Guzzle HTTP client.
+     * @param null|string $organization  Optional. The Id of an organization to log in to.
      *
      * @link https://auth0.com/docs/scopes/current
      * @link http://docs.guzzlephp.org/en/stable/request-options.html
@@ -92,7 +100,8 @@ class Authentication
         ?string $client_secret = null,
         ?string $audience = null,
         ?string $scope = null,
-        array $guzzleOptions = []
+        array $guzzleOptions = [],
+        ?string $organization = null
     )
     {
         $this->domain        = $domain;
@@ -101,6 +110,7 @@ class Authentication
         $this->audience      = $audience;
         $this->scope         = $scope;
         $this->guzzleOptions = $guzzleOptions;
+        $this->organization  = $organization;
 
         $this->apiClient = new ApiClient( [
             'domain' => 'https://'.$this->domain,
@@ -138,13 +148,14 @@ class Authentication
         $params['state']         = $state ?? $params['state'] ?? null;
         $params['audience']      = $params['audience'] ?? $this->audience ?? null;
         $params['scope']         = $params['scope'] ?? $this->scope ?? null;
+        $params['organization']  = $params['organization'] ?? $this->organization ?? null;
 
         $params = array_filter($params);
 
         return sprintf(
             'https://%s/authorize?%s',
             $this->domain,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
@@ -207,7 +218,7 @@ class Authentication
             'https://%s/wsfed/%s?%s',
             $this->domain,
             $client_id ?? $this->client_id,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
@@ -247,7 +258,7 @@ class Authentication
         return sprintf(
             'https://%s/v2/logout?%s',
             $this->domain,
-            Psr7\build_query($params)
+            Psr7\Query::build($params)
         );
     }
 
@@ -389,8 +400,8 @@ class Authentication
     /**
      * Makes a call to the `oauth/token` endpoint with `authorization_code` grant type
      *
-     * @param string $code               Authorization code received during login.
-     * @param string $redirect_uri       Redirect URI sent with authorize request.
+     * @param string      $code          Authorization code received during login.
+     * @param string      $redirect_uri  Redirect URI sent with authorize request.
      * @param string|null $code_verifier The clear-text version of the code_challenge from the /authorize call
      *
      * @return array

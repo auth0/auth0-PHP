@@ -11,6 +11,6 @@
     PHPCompatibility sniffs to check for PHP cross-version incompatible code.
     https://github.com/PHPCompatibility/PHPCompatibility
     -->
-    <config name="testVersion" value="7.1-"/>
+    <config name="testVersion" value="7.3-"/>
     <rule ref="PHPCompatibility"/>
 </ruleset>

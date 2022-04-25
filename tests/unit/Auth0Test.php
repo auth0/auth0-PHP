@@ -43,7 +43,7 @@ class Auth0Test extends TestCase
     /**
      * Runs after each test completes.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -64,7 +64,7 @@ class Auth0Test extends TestCase
     /**
      * Runs after each test completes.
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         $_GET     = [];
@@ -460,6 +460,7 @@ class Auth0Test extends TestCase
             'prompt' => 'none',
             'audience' => '__test_audience__',
             'state' => '__test_state__',
+            'invitation' => '__test_invitation__'
         ];
 
         $auth_url         = $auth0->getLoginUrl( $custom_params );
@@ -472,6 +473,7 @@ class Auth0Test extends TestCase
         $this->assertContains( 'prompt=none', $url_query );
         $this->assertContains( 'audience=__test_audience__', $url_query );
         $this->assertContains( 'state=__test_state__', $url_query );
+        $this->assertContains( 'invitation=__test_invitation__', $url_query );
     }
 
     public function testThatGetLoginUrlOverridesDefaultValues()
@@ -525,8 +527,40 @@ class Auth0Test extends TestCase
         $url_query        = explode( '&', $parsed_url_query );
 
         $this->assertArrayHasKey( 'auth0__code_verifier', $_SESSION );
-        $this->assertContains( 'code_challenge=', $parsed_url_query );
+        $this->assertStringContainsString( 'code_challenge=', $parsed_url_query );
         $this->assertContains( 'code_challenge_method=S256', $url_query );
+    }
+
+    public function testThatInvitationParametersAreExtracted()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+
+        $_GET['invitation'] = '__test_invitation__';
+        $_GET['organization'] = '__test_organization__';
+        $_GET['organization_name'] = '__test_organization_name__';
+
+        $extracted = $auth0->getInvitationParameters();
+
+        $this->assertIsObject($extracted, 'Invitation parameters were not extracted from the $_GET (environment variable seeded with query parameters during a GET request) successfully.');
+
+        $this->assertObjectHasAttribute('invitation', $extracted);
+        $this->assertObjectHasAttribute('organization', $extracted);
+        $this->assertObjectHasAttribute('organizationName', $extracted);
+
+        $this->assertEquals($extracted->invitation, '__test_invitation__');
+        $this->assertEquals($extracted->organization, '__test_organization__');
+        $this->assertEquals($extracted->organizationName, '__test_organization_name__');
+    }
+
+    public function testThatInvitationParametersArentExtractedWhenIncomplete()
+    {
+        $auth0 = new Auth0( self::$baseConfig );
+
+        $_GET['invitation'] = '__test_invitation__';
+
+        $extracted = $auth0->getInvitationParameters();
+
+        $this->assertIsNotObject($extracted);
     }
 
     /**
@@ -697,6 +731,45 @@ class Auth0Test extends TestCase
             'Authentication Time (auth_time) claim in the ID token indicates that too much time has passed',
             $e_message
         );
+    }
+
+    /**
+     * @throws CoreException
+     */
+    public function testThatIdTokenOrganizationIsCheckedWhenSet()
+    {
+        $auth0    = new Auth0( self::$baseConfig + [ 'id_token_alg' => 'HS256', 'organization' => '__test_organization__' ] );
+
+        $this->expectException(InvalidTokenException::class);
+        $this->expectExceptionMessage('Organization Id (org_id) claim must be a string present in the ID token');
+
+        $auth0->decodeIdToken( self::getIdToken() );
+    }
+
+    /**
+     * @throws CoreException
+     */
+    public function testThatIdTokenOrganizationSucceesWhenMatched()
+    {
+        $auth0 = new Auth0( self::$baseConfig + [ 'id_token_alg' => 'HS256', 'organization' => '__test_organization__' ] );
+
+        $decodedToken = $auth0->decodeIdToken( self::getIdToken([ 'org_id' => '__test_organization__' ]) );
+
+        $this->assertArrayHasKey( 'org_id', $decodedToken );
+        $this->assertEquals( '__test_organization__', $decodedToken['org_id'] );
+    }
+
+    /**
+     * @throws CoreException
+     */
+    public function testThatIdTokenOrganizationFailsWhenMismatched()
+    {
+        $auth0 = new Auth0( self::$baseConfig + [ 'id_token_alg' => 'HS256', 'organization' => '__test_organization__' ] );
+
+        $this->expectException(InvalidTokenException::class);
+        $this->expectExceptionMessage('Organization Id (org_id) claim value mismatch in the ID token; expected "__test_organization__", found "__bad_test_organization__"');
+
+        $auth0->decodeIdToken( self::getIdToken(['org_id' => '__bad_test_organization__',]) );
     }
 
     public function testThatDecodeIdTokenOptionsAreUsed()

@@ -34,8 +34,8 @@ use Psr\SimpleCache\CacheInterface;
  */
 class Auth0
 {
-    const TRANSIENT_STATE_KEY = 'state';
-    const TRANSIENT_NONCE_KEY = 'nonce';
+    const TRANSIENT_STATE_KEY         = 'state';
+    const TRANSIENT_NONCE_KEY         = 'nonce';
     const TRANSIENT_CODE_VERIFIER_KEY = 'code_verifier';
 
     /**
@@ -91,6 +91,14 @@ class Auth0
      * @var string
      */
     protected $audience;
+
+    /**
+     * Auth0 Organization ID, found in your Organization settings.
+     * Used for generating log in urls and validating token claims.
+     *
+     * @var string
+     */
+    protected $organization;
 
     /**
      * Scope for ID tokens and /userinfo endpoint
@@ -172,12 +180,12 @@ class Auth0
      */
     protected $skipUserinfo;
 
-	/**
-	 * Enable Authorization Code Flow with Proof Key for Code Exchange (PKCE)
-	 *
-	 * @var boolean
-	 */
-	protected $enablePkce;
+    /**
+     * Enable Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+     *
+     * @var boolean
+     */
+    protected $enablePkce;
 
     /**
      * Algorithm used for ID token validation.
@@ -232,6 +240,7 @@ class Auth0
      *     - client_secret          (String)  Optional. Client Secret found in the Application settings
      *     - secret_base64_encoded  (Boolean) Optional. Client Secret base64 encoded (true) or not (false, default)
      *     - audience               (String)  Optional. API identifier to generate an access token
+     *     - organization           (String)  Optional. ID of the Organization, if used. Found in your Organization settings.
      *     - response_mode          (String)  Optional. Response mode from the authorization server
      *     - response_type          (String)  Optional. Response type from the authorization server
      *     - scope                  (String)  Optional. Scope for ID and access tokens.
@@ -277,6 +286,8 @@ class Auth0
         if ($this->clientSecret && ($config['secret_base64_encoded'] ?? false)) {
             $this->clientSecret = self::urlSafeBase64Decode($this->clientSecret);
         }
+
+        $this->organization = $config['organization'] ?? $_ENV['AUTH0_ORGANIZATION'] ?? null;
 
         $this->audience      = $config['audience'] ?? null;
         $this->responseMode  = $config['response_mode'] ?? 'query';
@@ -345,7 +356,8 @@ class Auth0
             $this->clientSecret,
             $this->audience,
             $this->scope,
-            $this->guzzleOptions
+            $this->guzzleOptions,
+            $this->organization
         );
 
         $this->user         = $this->store->get('user');
@@ -425,7 +437,7 @@ class Auth0
         }
 
         if ($this->enablePkce) {
-            $codeVerifier = PKCE::generateCodeVerifier(128);
+            $codeVerifier                  = PKCE::generateCodeVerifier(128);
             $auth_params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
             // The PKCE spec defines two methods, S256 and plain, the former is
             // the only one supported by Auth0 since the latter is discouraged.
@@ -541,7 +553,7 @@ class Auth0
         $code_verifier = null;
         if ($this->enablePkce) {
             $code_verifier = $this->transientHandler->getOnce(self::TRANSIENT_CODE_VERIFIER_KEY);
-            if (!$code_verifier) {
+            if (! $code_verifier) {
                 throw new CoreException('Missing code_verifier');
             }
         }
@@ -692,6 +704,7 @@ class Auth0
         }
 
         $verifierOptions = $verifierOptions + [
+            'org_id' => $this->organization,
             'leeway' => $this->idTokenLeeway,
             'max_age' => $this->transientHandler->getOnce('max_age') ?? $this->maxAge,
             self::TRANSIENT_NONCE_KEY => $this->transientHandler->getOnce(self::TRANSIENT_NONCE_KEY)
@@ -744,7 +757,7 @@ class Auth0
      *
      * @see https://auth0.com/docs/api-auth/tutorials/authorization-code-grant
      */
-    protected function getState()
+    public function getState()
     {
         $state = null;
         if ($this->responseMode === 'query' && isset($_GET[self::TRANSIENT_STATE_KEY])) {
@@ -754,6 +767,49 @@ class Auth0
         }
 
         return $state;
+    }
+
+    /**
+     * If invitation parameters are present in the request, handle extraction and automatically redirect to Universal Login.
+     *
+     * @return void
+     */
+    public function handleInvitation()
+    {
+        if ($invite = $this->getInvitationParameters()) {
+            $this->login(null, null, [
+                'invitation'   => $invite->invitation,
+                'organization' => $invite->organization
+            ]);
+        }
+    }
+
+    /**
+     * Get the invitation details GET request
+     *
+     * @return object|null
+     */
+    public function getInvitationParameters()
+    {
+        $invite  = null;
+        $orgId   = null;
+        $orgName = null;
+
+        if ($this->responseMode === 'query') {
+            $invite  = (isset($_GET['invitation']) ? filter_var($_GET['invitation'], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE) : null);
+            $orgId   = (isset($_GET['organization']) ? filter_var($_GET['organization'], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE) : null);
+            $orgName = (isset($_GET['organization_name']) ? filter_var($_GET['organization_name'], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE) : null);
+        }
+
+        if ($invite && $orgId && $orgName) {
+            return (object) [
+                'invitation' => $invite,
+                'organization' => $orgId,
+                'organizationName' => $orgName
+            ];
+        }
+
+        return null;
     }
 
     /**
