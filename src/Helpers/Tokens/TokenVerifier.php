@@ -95,7 +95,7 @@ class TokenVerifier
          * Issuer checks
          */
 
-        $tokenIss = $verifiedToken->getClaim('iss', false);
+        $tokenIss = $verifiedToken->claims()->get('iss', false);
         if (! $tokenIss || ! is_string($tokenIss)) {
             throw new InvalidTokenException('Issuer (iss) claim must be a string present in the ID token');
         }
@@ -110,7 +110,7 @@ class TokenVerifier
          * Audience checks
          */
 
-        $tokenAud = $verifiedToken->getClaim('aud', false);
+        $tokenAud = $verifiedToken->claims()->get('aud', false);
         if (! $tokenAud || (! is_string($tokenAud) && ! is_array($tokenAud))) {
             throw new InvalidTokenException(
                 'Audience (aud) claim must be a string or array of strings present in the ID token'
@@ -136,7 +136,7 @@ class TokenVerifier
         $now    = $options['time'] ?? time();
         $leeway = $options['leeway'] ?? $this->leeway;
 
-        $tokenExp = $verifiedToken->getClaim('exp', false);
+        $tokenExp = $verifiedToken->claims()->get('exp', false);
         if (! $tokenExp || ! is_int($tokenExp)) {
             throw new InvalidTokenException('Expiration Time (exp) claim must be a number present in the ID token');
         }
@@ -151,7 +151,7 @@ class TokenVerifier
         }
 
         $profile = [];
-        foreach ($verifiedToken->getClaims() as $claim => $value) {
+        foreach ($verifiedToken->claims()->all() as $claim => $value) {
             $profile[$claim] = $value->getValue();
         }
 
