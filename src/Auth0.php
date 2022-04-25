@@ -522,6 +522,73 @@ final class Auth0 implements Auth0Interface
     }
 
     /**
+     * Get an available bearer token from a variety of input sources.
+     *
+     * @param array<string>|null $get Optional. An array of viable parameter names to search against $_GET as a token candidate.
+     * @param array<string>|null $post Optional. An array of viable parameter names to search against $_POST as a token candidate.
+     * @param array<string>|null $server Optional. An array of viable parameter names to search against $_SERVER as a token candidate.
+     * @param array<string,string>|null $haystack Optional. A key-value array in which to search for `$needles` as token candidates.
+     * @param array<string>|null $needles Optional. An array of viable keys to search against `$haystack` as token candidates.
+     */
+    public function getBearerToken(
+        ?array $get = null,
+        ?array $post = null,
+        ?array $server = null,
+        ?array $haystack = null,
+        ?array $needles = null
+    ): ?TokenInterface {
+        if ($get !== null && count($get) >= 1 && count($_GET) >= 1) {
+            foreach ($get as $parameterName) {
+                if (isset($_GET[$parameterName]) && is_string($_GET[$parameterName])) {
+                    $candidate = $this->processBearerToken($_GET[$parameterName]);
+
+                    if ($candidate !== null) {
+                        return $candidate;
+                    }
+                }
+            }
+        }
+
+        if ($post !== null && count($post) >= 1 && count($_POST) >= 1) {
+            foreach ($post as $parameterName) {
+                if (isset($_POST[$parameterName]) && is_string($_POST[$parameterName])) {
+                    $candidate = $this->processBearerToken($_POST[$parameterName]);
+
+                    if ($candidate !== null) {
+                        return $candidate;
+                    }
+                }
+            }
+        }
+
+        if ($server !== null && count($server) >= 1 && count($_SERVER) >= 1) {
+            foreach ($server as $parameterName) {
+                if (isset($_SERVER[$parameterName]) && is_string($_SERVER[$parameterName])) {
+                    $candidate = $this->processBearerToken($_SERVER[$parameterName]);
+
+                    if ($candidate !== null) {
+                        return $candidate;
+                    }
+                }
+            }
+        }
+
+        if ($needles !== null && $haystack !== null && count($needles) >= 1 && count($haystack) >= 1) {
+            foreach ($needles as $needle) {
+                if (isset($haystack[$needle])) {
+                    $candidate = $this->processBearerToken($haystack[$needle]);
+
+                    if ($candidate !== null) {
+                        return $candidate;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Updates the active session's stored Id Token.
      *
      * @param string $idToken Id token returned from the code exchange.
@@ -753,5 +820,22 @@ final class Auth0 implements Auth0Interface
         }
 
         return $this;
+    }
+
+    private function processBearerToken(
+        string $token
+    ): ?TokenInterface {
+        $token = trim($token);
+        $token = substr($token, 0, 7) === 'Bearer ' ? trim(substr($token, 7)) : $token;
+
+        if (strlen($token) >= 1) {
+            try {
+                return $this->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN);
+            } catch (\Auth0\SDK\Exception\InvalidTokenException $exception) {
+                return null;
+            }
+        }
+
+        return null;
     }
 }

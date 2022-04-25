@@ -208,4 +208,11 @@ final class InvalidTokenException extends \Exception implements Auth0Exception
     ): self {
         return new self(sprintf(self::MSG_MISMATCHED_ORG_ID_CLAIM, $expected, $found), 0, $previous);
     }
+
+    public static function jsonError(
+        string $message,
+        ?\Throwable $previous = null
+    ): self {
+        return new self($message, 0, $previous);
+    }
 }

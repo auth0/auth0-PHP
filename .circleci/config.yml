@@ -62,12 +62,6 @@ commands:
           name: Run unit tests (Pest)
           command: php -d memory_limit=-1 ./vendor/bin/pest --stop-on-failure --min=100
 
-  run-infection:
-    steps:
-      - run:
-          name: Run mutation tests (Infection)
-          command: php -d memory_limit=-1 ./vendor/bin/infection --threads=$(nproc) --test-framework=pest --no-progress --only-covered --min-msi=48 --min-covered-msi=70 --initial-tests-php-options='-d memory_limit=-1'
-
   run-snyk:
     steps:
       - run:
@@ -87,6 +81,7 @@ jobs:
     steps:
       - setup
       - run-phpinsights
+
   phpstan:
     parameters:
       php:
@@ -96,6 +91,7 @@ jobs:
     steps:
       - setup
       - run-phpstan
+
   psalm:
     parameters:
       php:
@@ -105,14 +101,7 @@ jobs:
     steps:
       - setup
       - run-psalm
-  semgrep:
-    docker:
-      - image: returntocorp/semgrep:latest
-    steps:
-      - checkout
-      - run:
-          name: Run static code analysis (Semgrep)
-          command: semgrep --config auto
+
   pest:
     parameters:
       php:
@@ -123,6 +112,7 @@ jobs:
       - setup
       - setup-pcov
       - run-pest
+
   snyk:
     parameters:
       php:
@@ -132,21 +122,23 @@ jobs:
     steps:
       - setup
       - run-snyk
-  infection:
-    parameters:
-      php:
-        type: string
+
+  semgrep:
     docker:
-      - image: php:<< parameters.php >>-cli-alpine
+      - image: returntocorp/semgrep-agent:v1
+    environment:
+      SEMGREP_REPO_NAME: "auth0/auth0-php"
+      SEMGREP_REPO_URL: "https://github.com/auth0/auth0-PHP"
     steps:
-      - setup
-      - setup-pcov
-      - run-infection
+      - checkout
+      - run:
+          name: Run vulnerabilities tests (Semgrep)
+          command: |
+            semgrep-agent --baseline-ref main --publish-token $SEMGREP_TOKEN
 
 workflows:
   test:
     jobs:
-      - semgrep
       - phpinsights:
           matrix:
             parameters:
@@ -163,17 +155,12 @@ workflows:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
-      - infection:
-          matrix:
-            parameters:
-              php: ["7.4", "8.0", "8.1"]
-      - hold:
-          type: approval
+      - semgrep:
+          context:
+            - semgrep-env
       - snyk:
           matrix:
             parameters:
               php: ["7.4", "8.0", "8.1"]
           context:
             - snyk-env
-          requires:
-            - hold
