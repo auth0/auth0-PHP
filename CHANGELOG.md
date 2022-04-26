@@ -1,5 +1,35 @@
 # CHANGELOG
 
+## [8.2.0](https://github.com/auth0/auth0-PHP/tree/8.2.0) (2022-04-25)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.1.0..8.2.0)
+
+Many thanks to our community contributors for this release: [elbebass](https://github.com/elbebass), [fullstackfool](https://github.com/fullstackfool), [jeromefitzpatrick](https://github.com/jeromefitzpatrick), [marko-ilic](https://github.com/marko-ilic) and [sepiariver](https://github.com/sepiariver).
+
+**Added**
+
+- Add bearer token extraction helper, `Auth0\SDK\Auth0::getBearerToken()` [#620](https://github.com/auth0/auth0-PHP/pull/620) ([evansims](https://github.com/evansims))
+- Add configuration strategy constants, e.g. `Auth0\SDK\Configuration\SdkConfiguration::STRATEGY_API` [#619](https://github.com/auth0/auth0-PHP/pull/619) ([evansims](https://github.com/evansims))
+
+**Changed**
+
+- Throw `Auth0\SDK\Exception\InvalidTokenException` on JsonException [#614](https://github.com/auth0/auth0-PHP/pull/614) ([marko-ilic](https://github.com/marko-ilic))
+- Throw `Auth0\SDK\Exception\NetworkException` when Management API credential exchange fails [#608](https://github.com/auth0/auth0-PHP/pull/608) ([sepiariver](https://github.com/sepiariver))
+
+**Documentation Contributions**
+
+- Correct the new method name for get_authorize_link() for 8.x in UPGRADE.md [#623](https://github.com/auth0/auth0-PHP/pull/623) ([jeromefitzpatrick](https://github.com/jeromefitzpatrick))
+- Remove PHP 7.3 README note (deprecated) [#610](https://github.com/auth0/auth0-PHP/pull/610) ([evansims](https://github.com/evansims))
+- Update CONTRIBUTING.md guidance [#609](https://github.com/auth0/auth0-PHP/pull/609) ([sepiariver](https://github.com/sepiariver))
+- Update README.md guidance on `management` configuration strategy (`domain` is required) [#604](https://github.com/auth0/auth0-PHP/pull/604) ([fullstackfool](https://github.com/fullstackfool))
+- Correct README.md typos in Management API example [#602](https://github.com/auth0/auth0-PHP/pull/602) ([elbebass](https://github.com/elbebass))
+
+**Other Improvements**
+
+- Relax `pestphp/pest-plugin-parallel` dev dependency from `^0.2` to `^0.2 || ^1.0` [#617](https://github.com/auth0/auth0-PHP/pull/617)
+- Bump `firebase/php-jwt` dev dependency to `^6.0` [#613](https://github.com/auth0/auth0-PHP/pull/613) ([evansims](https://github.com/evansims))
+- Add Semgrep to continous integration test suite [#616](https://github.com/auth0/auth0-PHP/pull/616) ([evansims](https://github.com/evansims))
+
 ## [8.1.0](https://github.com/auth0/auth0-PHP/tree/8.1.0) (2022-02-17)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.0.6..8.1.0)
