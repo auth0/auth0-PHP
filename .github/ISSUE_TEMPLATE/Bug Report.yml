@@ -11,13 +11,10 @@ body:
       label: SDK Version
       description: What version of our SDK are you running? (`composer show | grep auth0/auth0-php`)
       options:
+        - 8.2
+        - 8.1
         - 8.0
         - 7.9
-        - 7.8
-        - 7.7
-        - 7.6
-        - 7.5
-        - 7.4
         - Other (specify in 'additional context')
     validations:
       required: true
@@ -27,20 +24,11 @@ body:
       label: PHP Version
       description: What version of PHP are you running? (`php -v`)
       options:
-        - PHP 8.1 (In Development)
+        - PHP 8.2
+        - PHP 8.1
         - PHP 8.0
         - PHP 7.4
         - Other (specify in 'additional context')
-    validations:
-      required: true
-  - type: dropdown
-    id: composer
-    attributes:
-      label: Composer Version
-      description: What version of Composer are you running? (`composer -v`)
-      options:
-        - 2.x
-        - 1.x
     validations:
       required: true
   - type: textarea
