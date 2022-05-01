@@ -1,6 +1,9 @@
 <!--
   Please only send a pull request to branches that are currently supported.
   Pull requests without a descriptive title, thorough description, or tests will be closed.
+  -
+  When proposing enhancements, please ensure you have created an Issue and given our engineers time to
+  review your suggestion there prior to commiting work.
 -->
 
 ### Changes
@@ -21,10 +24,12 @@ Resolves #
 ### Testing
 
 <!--
-  Would you please describe how reviewers can test this? Be specific about anything not tested and the reasons why. Tests must be added for new functionality, and existing tests should complete without errors.
+  Would you please describe how reviewers can test this?
+  Be specific about anything not tested and the reasons why.
+  Tests must be added for new functionality, and existing tests should complete without errors.
 -->
 
 ### Contributor Checklist
 
 - [ ] I have read the [Auth0 general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
-- [ ] I have read the [Auth0 Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
+- [ ] I have read the [Auth0 code of conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
