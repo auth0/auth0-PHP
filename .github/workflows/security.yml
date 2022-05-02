@@ -68,8 +68,8 @@ jobs:
             p/secrets
             p/owasp-top-ten
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-          SEMGREP_REPO_NAME: "auth0/laravel-auth0"
-          SEMGREP_REPO_URL: "https://github.com/auth0/laravel-auth0"
+          SEMGREP_REPO_NAME: "auth0/auth0-PHP"
+          SEMGREP_REPO_URL: "https://github.com/auth0/auth0-PHP"
 
       - name: Check to see if the SARIF a was generated
         id: sarif_file_exists
