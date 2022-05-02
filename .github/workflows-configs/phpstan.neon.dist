@@ -3,8 +3,12 @@ includes:
 
 parameters:
     level: max
+
     paths:
         - src
+
+    bootstrapFiles:
+        - %rootDir%/../../squizlabs/php_codesniffer/autoload.php
 
     ignoreErrors:
         - '#Constructor in (.*) has parameter (.*) with default value.#'
@@ -49,8 +53,5 @@ parameters:
         - '#\$(.*) of function call_user_func expects callable\(\): mixed, array\(\$this\((.*) given.#'
         - '#Casting to string something that(.*) already string.#'
         - '#\$object_or_class of function method_exists expects object\|string, (.*) given.#'
-
-    bootstrapFiles:
-        - %rootDir%/../../squizlabs/php_codesniffer/autoload.php
 
     reportUnmatchedIgnoredErrors: false
