@@ -86,7 +86,7 @@ final class Authentication implements AuthenticationInterface
         return sprintf(
             '%s/samlp/%s?%s',
             $this->configuration->formatDomain(),
-            $clientId,
+            $clientId, // $clientId is string
             http_build_query(Toolkit::filter([
                 ['connection' => $connection],
             ])->array()->trim()[0], '', '&', PHP_QUERY_RFC3986)
