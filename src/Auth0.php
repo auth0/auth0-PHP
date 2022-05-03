@@ -165,7 +165,7 @@ final class Auth0 implements Auth0Interface
         }
 
         // Delete all data in the transient storage medium.
-        if ($this->configuration()->hasTransientStorage() && $transient === true) {
+        if ($this->configuration()->hasTransientStorage() && $transient) {
             $this->configuration->getTransientStorage()->purge();
         }
 
@@ -263,7 +263,7 @@ final class Auth0 implements Auth0Interface
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
 
-        if (! isset($response['access_token']) || strlen(trim($response['access_token'])) === 0) {
+        if (! isset($response['access_token']) || trim($response['access_token']) === '') {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::badAccessToken();
         }
@@ -293,7 +293,7 @@ final class Auth0 implements Auth0Interface
             $this->setAccessTokenExpiration($expiresIn);
         }
 
-        if ($user === null || $this->configuration()->getQueryUserInfo() === true) {
+        if ($user === null || $this->configuration()->getQueryUserInfo()) {
             $response = $this->authentication()->userInfo($response['access_token']);
 
             if (HttpResponse::wasSuccessful($response)) {
@@ -325,7 +325,7 @@ final class Auth0 implements Auth0Interface
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
 
-        if (! isset($response['access_token']) || strlen(trim($response['access_token'])) === 0) {
+        if (! isset($response['access_token']) || trim($response['access_token']) === '') {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingAccessToken();
         }

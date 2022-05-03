@@ -95,7 +95,7 @@ final class CookieStore implements StoreInterface
         bool $deferring
     ): void {
         // If we were deferring state saving and we've been asked to cancel that deference
-        if ($this->deferring === true && $deferring === false) {
+        if ($this->deferring && !$deferring) {
             // Immediately push the state to the host device.
             $this->setState();
         }
@@ -171,7 +171,7 @@ final class CookieStore implements StoreInterface
         $using = [];
 
         // Iterate through the host device cookies and collect a list of ones that belong to us.
-        foreach ($_COOKIE as $cookieName => $_) {
+        foreach (array_keys($_COOKIE) as $cookieName) {
             $cookieBeginsWith = $this->namespace . self::KEY_SEPARATOR;
 
             if (strlen($cookieName) >= strlen($cookieBeginsWith) &&
@@ -181,7 +181,7 @@ final class CookieStore implements StoreInterface
         }
 
         // Check if we have anything in memory to encrypt and store on the host device.
-        if (count($this->store) !== 0) {
+        if ($this->store !== []) {
             // Return an encrypted string representing our memory state.
             $encrypted = $this->encrypt($this->store);
 
@@ -251,7 +251,7 @@ final class CookieStore implements StoreInterface
 
         $this->store[(string) $key] = $value;
 
-        if ($this->deferring === false) {
+        if (!$this->deferring) {
             $this->setState();
         }
     }
@@ -294,7 +294,7 @@ final class CookieStore implements StoreInterface
 
         unset($this->store[(string) $key]);
 
-        if ($this->deferring === false) {
+        if (!$this->deferring) {
             $this->setState();
         }
     }
@@ -306,7 +306,7 @@ final class CookieStore implements StoreInterface
     {
         $this->store = [];
 
-        if ($this->deferring === false) {
+        if (!$this->deferring) {
             $this->setState();
         }
     }

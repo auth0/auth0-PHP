@@ -81,12 +81,12 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         $lastResponse = $this->lastResponse();
 
         // Did the network request return a successful response?
-        if ($lastResponse === null || ! HttpResponse::wasSuccessful($lastResponse)) {
+        if (!$lastResponse instanceof \Psr\Http\Message\ResponseInterface || ! HttpResponse::wasSuccessful($lastResponse)) {
             throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
         }
 
         // Was the last request a GET request?
-        if ($lastRequest === null || mb_strtolower($lastRequest->getMethod()) !== 'get') {
+        if (!$lastRequest instanceof \Psr\Http\Message\RequestInterface || mb_strtolower($lastRequest->getMethod()) !== 'get') {
             throw \Auth0\SDK\Exception\PaginatorException::httpMethodUnsupported();
         }
 
@@ -250,7 +250,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                 $lastBuilder->withParam('from', $this->nextCheckpoint);
             } else {
                 // Get the next page.
-                $page = intval(ceil($this->position / $this->requestLimit));
+                $page = (int) ceil($this->position / $this->requestLimit);
 
                 // Set the next page.
                 $lastBuilder->withParam('page', $page);
@@ -294,7 +294,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                 }
 
                 // No results, abort processing.
-                if (! is_array($results) || count($results) === 0) {
+                if (! is_array($results) || $results === []) {
                     return false;
                 }
 
@@ -323,20 +323,16 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                             $this->requestLimit = (int) $result;
                             continue;
                         }
-
                         if ($resultKey === 'total') {
                             $this->requestTotal = (int) $result;
                             continue;
                         }
-
                         if ($resultKey === 'length') {
                             continue;
                         }
-                    } else {
-                        if ($resultKey === 'next') {
-                            $nextCheckpoint = (string) $result;
-                            continue;
-                        }
+                    } elseif ($resultKey === 'next') {
+                        $nextCheckpoint = (string) $result;
+                        continue;
                     }
 
                     if ($resultKey !== 'start') {

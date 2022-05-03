@@ -133,7 +133,7 @@ final class Parser
 
         new Verifier(
             $this->configuration,
-            join('.', [$parts[0], $parts[1]]),
+            implode('.', [$parts[0], $parts[1]]),
             $signature,
             $headers,
             $algorithm,

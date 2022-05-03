@@ -100,7 +100,7 @@ final class SessionStore implements StoreInterface
         $session = $_SESSION ?? [];
         $prefix = $this->sessionPrefix . '_';
 
-        if (count($session) > 0) {
+        if ($session !== []) {
             while ($sessionKey = key($session)) {
                 if (mb_substr((string) $sessionKey, 0, strlen($prefix)) === $prefix) {
                     unset($_SESSION[(string) $sessionKey]);

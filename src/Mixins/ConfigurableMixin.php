@@ -55,13 +55,13 @@ trait ConfigurableMixin
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
         }
 
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'set' && count($arguments) !== 0) {
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'set' && $arguments !== []) {
             $propertyName = lcfirst(mb_substr($functionName, 3));
             $this->changeState($propertyName, $arguments[0]);
             return $this;
         }
 
-        if (mb_strlen($functionName) > 5 && mb_substr($functionName, 0, 4) === 'push' && count($arguments) !== 0) {
+        if (mb_strlen($functionName) > 5 && mb_substr($functionName, 0, 4) === 'push' && $arguments !== []) {
             $propertyName = lcfirst(mb_substr($functionName, 4));
 
             if (isset($this->configuredState[$propertyName])) {
@@ -73,11 +73,11 @@ trait ConfigurableMixin
                     Toolkit::filter($arguments)->array()->trim(),
                     static function ($val): bool {
                         /** @var array<mixed>|null $val */
-                        return $val !== null && count($val) !== 0;
+                        return $val !== null && $val !== [];
                     }
                 );
 
-                if (count($arguments) !== 0) {
+                if ($arguments !== []) {
                     /** @var array<mixed> $argument */
                     $argument = $arguments[0];
 
@@ -96,7 +96,7 @@ trait ConfigurableMixin
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
         }
 
-        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'has' && count($arguments) === 0) {
+        if (mb_strlen($functionName) > 4 && mb_substr($functionName, 0, 3) === 'has' && $arguments === []) {
             $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
@@ -160,7 +160,7 @@ trait ConfigurableMixin
 
         /** @var array<array<mixed>> $arguments */
 
-        if (count($parameters) !== 0) {
+        if ($parameters !== []) {
             $typeName = $parameters[0]->getType();
 
             if ($typeName instanceof \ReflectionNamedType) {
@@ -204,13 +204,11 @@ trait ConfigurableMixin
                 $newPropertyName = $parameter->getName();
                 $newPropertyValue = $newProperty['defaultValue'];
 
-                if (count($arguments) !== 0) {
+                if ($arguments !== []) {
                     if ($usingArgumentsArray) {
                         $newPropertyValue = $arguments[$parameter->getName()] ?? $parameter->getDefaultValue();
-                    } else {
-                        if (isset($arguments[$parameter->getPosition()])) {
-                            $newPropertyValue = $arguments[$parameter->getPosition()];
-                        }
+                    } elseif (isset($arguments[$parameter->getPosition()])) {
+                        $newPropertyValue = $arguments[$parameter->getPosition()];
                     }
                 }
 
@@ -258,16 +256,12 @@ trait ConfigurableMixin
             $allowedTypes[] = 'NULL';
         }
 
-        if (! in_array($propertyType, $allowedTypes, true)) {
-            if (! $propertyValue instanceof $expectedType) {
-                /** @var int|string $expectedType */
-
-                if ($this->configuredState[$propertyName]['allowsNull']) {
-                    throw \Auth0\SDK\Exception\ConfigurationException::setIncompatibleNullable($propertyName, (string) $expectedType, $propertyType);
-                }
-
-                throw \Auth0\SDK\Exception\ConfigurationException::setIncompatible($propertyName, (string) $expectedType, $propertyType);
+        if (! in_array($propertyType, $allowedTypes, true) && ! $propertyValue instanceof $expectedType) {
+            /** @var int|string $expectedType */
+            if ($this->configuredState[$propertyName]['allowsNull']) {
+                throw \Auth0\SDK\Exception\ConfigurationException::setIncompatibleNullable($propertyName, (string) $expectedType, $propertyType);
             }
+            throw \Auth0\SDK\Exception\ConfigurationException::setIncompatible($propertyName, (string) $expectedType, $propertyType);
         }
 
         if (method_exists($this, 'onStateChange')) {

@@ -39,7 +39,7 @@ final class ArrayFilter
         $results = [];
 
         foreach ($this->subjects as $subject) {
-            if (count($subject) === 0) {
+            if ($subject === []) {
                 $results[] = null;
                 continue;
             }
@@ -60,7 +60,7 @@ final class ArrayFilter
         $results = [];
 
         foreach ($this->subjects as $subject) {
-            if (count($subject) === 0) {
+            if ($subject === []) {
                 $results[] = null;
                 continue;
             }
@@ -81,7 +81,7 @@ final class ArrayFilter
         $results = [];
 
         foreach ($this->subjects as $subject) {
-            if (count($subject) === 0) {
+            if ($subject === []) {
                 $results[] = [];
                 continue;
             }
@@ -113,7 +113,7 @@ final class ArrayFilter
         $results = [];
 
         foreach ($this->subjects as $subject) {
-            if (count($subject) === 0) {
+            if ($subject === []) {
                 continue;
             }
 
@@ -140,7 +140,7 @@ final class ArrayFilter
         foreach ($this->subjects as $subject) {
             $payload = [];
 
-            if (count($subject) !== 0) {
+            if ($subject !== []) {
                 $payload['permissions'] = [];
 
                 foreach ($subject as $permission) {

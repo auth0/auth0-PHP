@@ -49,7 +49,7 @@ final class Validator implements ValidatorInterface
             $audience = [ $audience ];
         }
 
-        if (count(array_intersect($audience, $expects)) !== 0) {
+        if (array_intersect($audience, $expects) !== []) {
             return $this;
         }
 

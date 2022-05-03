@@ -39,7 +39,7 @@ final class Assert
                 throw $exception;
             }
 
-            if (count($value) === 0) {
+            if ($value === []) {
                 throw $exception;
             }
 
@@ -99,7 +99,7 @@ final class Assert
                 throw $exception;
             }
 
-            if (count($value) === 0) {
+            if ($value === []) {
                 throw $exception;
             }
         }

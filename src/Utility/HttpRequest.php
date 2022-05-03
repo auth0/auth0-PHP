@@ -194,7 +194,7 @@ final class HttpRequest
         /** @var array<string> $params */
         [$params] = Toolkit::filter([$params])->array()->trim();
 
-        if (count($params) !== 0) {
+        if ($params !== []) {
             $this->path = array_merge($this->path, $params);
         }
 
@@ -222,7 +222,7 @@ final class HttpRequest
             }
         }
 
-        return count($params) === 0 ? '' : '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+        return $params === [] ? '' : '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
     }
 
     /**
@@ -297,23 +297,18 @@ final class HttpRequest
             $httpRequest->getBody()->write($this->body);
         }
 
-        if (count($this->files) !== 0) {
+        if ($this->files !== []) {
             // If we're sending a file, build a multipart message.
             $multipart = $this->buildMultiPart();
-
             // Set the request body to the built multipart message.
             $httpRequest->getBody()->write($multipart['stream']->__toString());
-
             // Set the content-type header to multipart/form-data.
             $headers['Content-Type'] = 'multipart/form-data; boundary="' . $multipart['boundary'] . '"';
-        } else {
-            if (count($this->formParams) !== 0) {
-                // If we're sending form parameters, build the query and ensure it's encoded properly.
-                $httpRequest->getBody()->write(http_build_query($this->formParams, '', '&', PHP_QUERY_RFC1738));
-
-                // Set the content-type header to application/x-www-form-urlencoded.
-                $headers['Content-Type'] = 'application/x-www-form-urlencoded';
-            }
+        } elseif ($this->formParams !== []) {
+            // If we're sending form parameters, build the query and ensure it's encoded properly.
+            $httpRequest->getBody()->write(http_build_query($this->formParams, '', '&', PHP_QUERY_RFC1738));
+            // Set the content-type header to application/x-www-form-urlencoded.
+            $headers['Content-Type'] = 'application/x-www-form-urlencoded';
         }
 
         // Add headers to request payload.
@@ -328,7 +323,7 @@ final class HttpRequest
         }
 
         // IF we are mocking responses, add the mocked response to the client response stack.
-        if ($this->mockedResponses !== null && count($this->mockedResponses) !== 0 && method_exists($httpClient, 'addResponse')) {
+        if ($this->mockedResponses !== null && $this->mockedResponses !== [] && method_exists($httpClient, 'addResponse')) {
             $mockedResponse = array_shift($this->mockedResponses);
             $httpClient->addResponse($mockedResponse->response); // @phpstan-ignore-line
         }
@@ -376,7 +371,7 @@ final class HttpRequest
                      * ✔ Is never less than MIN_REQUEST_RETRY_DELAY (100ms)
                      * ✔ Is never more than MAX_REQUEST_RETRY_DELAY (1s)
                      */
-                    $wait = intval(100 * pow(2, $attempt - 1)); // Exponential delay with each subsequent request attempt.
+                    $wait = (int) (100 * pow(2, $attempt - 1)); // Exponential delay with each subsequent request attempt.
                     $wait = mt_rand($wait + 1, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
                     $wait = min(self::MAX_REQUEST_RETRY_DELAY, $wait); // Ensure delay is less than MAX_REQUEST_RETRY_DELAY.
                     $wait = max(self::MIN_REQUEST_RETRY_DELAY, $wait); // Ensure delay is more than MIN_REQUEST_RETRY_DELAY.
@@ -436,7 +431,7 @@ final class HttpRequest
         $body,
         bool $jsonEncode = true
     ): self {
-        if (is_array($body) || is_object($body) || is_string($body) && $jsonEncode === true) {
+        if (is_array($body) || is_object($body) || is_string($body) && $jsonEncode) {
             $body = json_encode($body, JSON_THROW_ON_ERROR);
         }
 
@@ -572,7 +567,7 @@ final class HttpRequest
         $value
     ) {
         if (is_bool($value)) {
-            return $value === true ? 'true' : 'false';
+            return $value ? 'true' : 'false';
         }
 
         return $value;

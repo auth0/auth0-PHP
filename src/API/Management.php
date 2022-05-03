@@ -121,13 +121,11 @@ final class Management implements ManagementInterface
         $cache = $this->configuration->getManagementTokenCache();
 
         // If no token was provided, try to get one from cache.
-        if ($managementToken === null) {
-            if ($cache !== null) {
-                $item = $cache->getItem('managementAccessToken');
-                if ($item->isHit()) {
-                    $managementToken = $item->get();
-                    /** @var int|string|null $managementToken */
-                }
+        if ($managementToken === null && $cache !== null) {
+            $item = $cache->getItem('managementAccessToken');
+            if ($item->isHit()) {
+                $managementToken = $item->get();
+                /** @var int|string|null $managementToken */
             }
         }
 
@@ -137,9 +135,9 @@ final class Management implements ManagementInterface
             $response = $authentication->clientCredentials(['audience' => $this->configuration->formatDomain(true) . '/api/v2/']);
             $decoded = HttpResponse::decodeContent($response);
 
-            if (HttpResponse::wasSuccessful($response)) {
-                /** @var array{access_token?: (string|null), expires_in?: (int|string)} $decoded */
+            /** @var array{access_token?: (string|null), expires_in?: (int|string), error?: int|string, error_description?: int|string} $decoded */
 
+            if (HttpResponse::wasSuccessful($response)) {
                 if (isset($decoded['access_token'])) {
                     $managementToken = $decoded['access_token'];
 
@@ -152,17 +150,12 @@ final class Management implements ManagementInterface
                         $cache->save($cachedKey);
                     }
                 }
-            } else {
-                /** @var array{error?: int|string, error_description?: int|string} $decoded */
-
-                if (isset($decoded['error'])) {
-                    $errorMessage = (string) $decoded['error'];
-                    if (isset($decoded['error_description'])) {
-                        $errorMessage .= ': ' . (string) $decoded['error_description'];
-                    }
-
-                    throw \Auth0\SDK\Exception\NetworkException::requestRejected($errorMessage);
+            } elseif (isset($decoded['error'])) {
+                $errorMessage = (string) $decoded['error'];
+                if (isset($decoded['error_description'])) {
+                    $errorMessage .= ': ' . (string) $decoded['error_description'];
                 }
+                throw \Auth0\SDK\Exception\NetworkException::requestRejected($errorMessage);
             }
         }
 

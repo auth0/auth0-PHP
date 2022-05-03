@@ -79,11 +79,11 @@ final class Toolkit
         $result = [];
 
         foreach ($arrays as $array) {
-            if (is_array($array) && count($array) !== 0) {
+            if (is_array($array) && $array !== []) {
                 /** @var array<mixed> $merging */
                 [$merging] = self::filter([$array])->array()->trim();
 
-                if (count($merging) !== 0) {
+                if ($merging !== []) {
                     $result = array_merge($result, $merging);
                 }
             }
@@ -137,7 +137,7 @@ final class Toolkit
         [$trimmed] = self::filter([$values])->array()->trim(); // Trim the array of null values.
 
         // All values were null, throw an exception.
-        if (count($trimmed) === 0) {
+        if ($trimmed === []) {
             if ($exception !== null) {
                 throw $exception;
             }
