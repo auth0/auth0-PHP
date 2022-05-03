@@ -21,7 +21,7 @@ use Auth0\SDK\Mixins\ConfigurableMixin;
  * @method string|null getAccessToken()
  * @method array<string,string>|null getAccessTokenScope()
  * @method string|null getRefreshToken()
- * @method array<string,array|int|string>|null getUser()
+ * @method array<string,array<mixed>|int|string>|null getUser()
  * @method int|null getAccessTokenExpiration()
  *
  * @method bool hasIdToken()

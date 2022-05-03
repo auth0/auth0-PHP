@@ -376,6 +376,7 @@ final class CookieStore implements StoreInterface
             return null;
         }
 
+        /** @var array{iv?: int|string|null, tag?: int|string|null, data: string} */
         $data = unserialize($data);
 
         if (! isset($data['iv']) || ! isset($data['tag']) || ! is_string($data['iv']) || ! is_string($data['tag'])) {
@@ -395,7 +396,10 @@ final class CookieStore implements StoreInterface
             return null;
         }
 
-        return unserialize($data);
+        $data = unserialize($data);
+
+        /** @var array<mixed> $data */
+        return $data;
     }
 
     /**
@@ -403,7 +407,7 @@ final class CookieStore implements StoreInterface
      *
      * @param int|null $expires
      *
-     * @return array<mixed>
+     * @return array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int}
      */
     private function getCookieOptions(
         ?int $expires = null
@@ -425,6 +429,7 @@ final class CookieStore implements StoreInterface
         $domain = $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'] ?? null;
 
         if ($domain !== null) {
+            /** @var string $domain */
             $options['domain'] = $domain;
         }
 

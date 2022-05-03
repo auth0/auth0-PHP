@@ -186,6 +186,7 @@ final class Token implements TokenInterface
             $claim = [ $claim ];
         }
 
+        /** @var array<string>|null $claim */
         return $claim;
     }
 
@@ -194,7 +195,10 @@ final class Token implements TokenInterface
      */
     public function getAuthorizedParty(): ?string
     {
-        return $this->parser->getClaim('azp');
+        $claim = $this->parser->getClaim('azp');
+
+        /** @var string|null $claim */
+        return $claim;
     }
 
     /**
@@ -202,6 +206,7 @@ final class Token implements TokenInterface
      */
     public function getAuthTime(): ?int
     {
+        /** @var int|string|null $response */
         $response = $this->parser->getClaim('auth_time');
         return $response === null ? null : (int) $response;
     }
@@ -211,6 +216,7 @@ final class Token implements TokenInterface
      */
     public function getExpiration(): ?int
     {
+        /** @var int|string|null $response */
         $response = $this->parser->getClaim('exp');
         return $response === null ? null : (int) $response;
     }
@@ -220,6 +226,7 @@ final class Token implements TokenInterface
      */
     public function getIssued(): ?int
     {
+        /** @var int|string|null $response */
         $response = $this->parser->getClaim('iat');
         return $response === null ? null : (int) $response;
     }
@@ -229,7 +236,10 @@ final class Token implements TokenInterface
      */
     public function getIssuer(): ?string
     {
-        return $this->parser->getClaim('iss');
+        $claim = $this->parser->getClaim('iss');
+
+        /** @var string|null $claim */
+        return $claim;
     }
 
     /**
@@ -237,7 +247,10 @@ final class Token implements TokenInterface
      */
     public function getNonce(): ?string
     {
-        return $this->parser->getClaim('nonce');
+        $claim = $this->parser->getClaim('nonce');
+
+        /** @var string|null $claim */
+        return $claim;
     }
 
     /**
@@ -245,7 +258,10 @@ final class Token implements TokenInterface
      */
     public function getOrganization(): ?string
     {
-        return $this->parser->getClaim('org_id');
+        $claim = $this->parser->getClaim('org_id');
+
+        /** @var string|null $claim */
+        return $claim;
     }
 
     /**
@@ -253,7 +269,10 @@ final class Token implements TokenInterface
      */
     public function getSubject(): ?string
     {
-        return $this->parser->getClaim('sub');
+        $claim = $this->parser->getClaim('sub');
+
+        /** @var string|null $claim */
+        return $claim;
     }
 
     /**

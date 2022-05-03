@@ -191,6 +191,7 @@ final class HttpRequest
     public function addPath(
         ?string ...$params
     ): self {
+        /** @var array<string> $params */
         [$params] = Toolkit::filter([$params])->array()->trim();
 
         if (count($params) !== 0) {
@@ -282,7 +283,7 @@ final class HttpRequest
      */
     public function call(): ResponseInterface
     {
-        $domain = $this->configuration->formatDomain();
+        $domain = $this->domain ?? $this->configuration->formatDomain();
         $uri = $domain . $this->basePath . $this->getUrl();
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();
@@ -299,20 +300,17 @@ final class HttpRequest
         if (count($this->files) !== 0) {
             // If we're sending a file, build a multipart message.
             $multipart = $this->buildMultiPart();
-            /**
-             * Set the request body to the built multipart message.
-             *
-             * @psalm-suppress MixedMethodCall,MixedArgument
-             *
-             * @phpstan-ignore-next-line
-             */
+
+            // Set the request body to the built multipart message.
             $httpRequest->getBody()->write($multipart['stream']->__toString());
+
             // Set the content-type header to multipart/form-data.
-            $headers['Content-Type'] = 'multipart/form-data; boundary="' . (string) $multipart['boundary'] . '"';
+            $headers['Content-Type'] = 'multipart/form-data; boundary="' . $multipart['boundary'] . '"';
         } else {
             if (count($this->formParams) !== 0) {
                 // If we're sending form parameters, build the query and ensure it's encoded properly.
                 $httpRequest->getBody()->write(http_build_query($this->formParams, '', '&', PHP_QUERY_RFC1738));
+
                 // Set the content-type header to application/x-www-form-urlencoded.
                 $headers['Content-Type'] = 'application/x-www-form-urlencoded';
             }
@@ -320,6 +318,7 @@ final class HttpRequest
 
         // Add headers to request payload.
         foreach ($headers as $headerName => $headerValue) {
+            /** @var string|int $headerValue */
             $httpRequest = $httpRequest->withHeader($headerName, (string) $headerValue);
         }
 
@@ -344,7 +343,7 @@ final class HttpRequest
             ++$this->count;
 
             if ($mockedResponse && $mockedResponse->exception instanceof \Exception) { // @phpstan-ignore-line
-                throw $mockedResponse->exception; // @phpstan-ignore-line
+                throw $mockedResponse->exception;
             }
 
             // Use the http client to issue the request and collect the response.
@@ -352,7 +351,7 @@ final class HttpRequest
 
             // Used for unit testing: if we're mocking responses and have a callback assigned, invoke that callback with our request and response.
             if ($mockedResponse && $mockedResponse->callback && is_callable($mockedResponse->callback)) { // @phpstan-ignore-line
-                call_user_func($mockedResponse->callback, $httpRequest, $httpResponse); // @phpstan-ignore-line
+                call_user_func($mockedResponse->callback, $httpRequest, $httpResponse);
             }
 
             // Dispatch event to listeners of Auth0\SDK\HttpResponseReceived.
@@ -441,7 +440,9 @@ final class HttpRequest
             $body = json_encode($body, JSON_THROW_ON_ERROR);
         }
 
+        /** @var int|string $body */
         $this->body = (string) $body;
+
         return $this;
     }
 
@@ -459,7 +460,10 @@ final class HttpRequest
             return $this;
         }
 
-        $this->params[$key] = $this->prepareBoolParam($value);
+        /** @var int|string|null $value */
+        $value = $this->prepareBoolParam($value);
+        $this->params[$key] = $value;
+
         return $this;
     }
 
@@ -530,13 +534,14 @@ final class HttpRequest
     /**
      * Build a multi-part request.
      *
-     * @return array<string,mixed>
+     * @return array{stream: \Psr\Http\Message\StreamInterface, boundary: string}
      */
     private function buildMultiPart(): array
     {
         $builder = new MultipartStreamBuilder($this->configuration->getHttpStreamFactory());
 
         foreach ($this->files as $field => $file) {
+            /** @var int|string $file */
             $resource = fopen((string) $file, 'r');
 
             if ($resource !== false) {

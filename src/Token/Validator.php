@@ -14,14 +14,14 @@ final class Validator implements ValidatorInterface
     /**
      * Array representing the claims of a JWT.
      *
-     * @var array<string,array|int|string>
+     * @var array<string,array<int|string>|int|string>
      */
     private array $claims;
 
     /**
      * Constructor for the Token Validator class.
      *
-     * @param array<string,array|int|string> $claims Array representing the claims of a JWT.
+     * @param array<string,array<int|string>|int|string> $claims Array representing the claims of a JWT.
      */
     public function __construct(
         array $claims

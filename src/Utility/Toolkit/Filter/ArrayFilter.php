@@ -14,19 +14,19 @@ final class ArrayFilter
     /**
      * Values to process.
      *
-     * @var array<array|string|null>
+     * @var array<array<mixed>>
      */
-    private array $subject;
+    private array $subjects;
 
     /**
      * StringFilter constructor.
      *
-     * @param array<array|string|null> $subject An array of arrays to filter.
+     * @param array<array<mixed>> $subjects An array of arrays to filter.
      */
     public function __construct(
-        array $subject
+        array $subjects
     ) {
-        $this->subject = $subject;
+        $this->subjects = $subjects;
     }
 
     /**
@@ -38,8 +38,8 @@ final class ArrayFilter
     {
         $results = [];
 
-        foreach ($this->subject as $subject) {
-            if (! is_array($subject) || count($subject) === 0) {
+        foreach ($this->subjects as $subject) {
+            if (count($subject) === 0) {
                 $results[] = null;
                 continue;
             }
@@ -59,8 +59,8 @@ final class ArrayFilter
     {
         $results = [];
 
-        foreach ($this->subject as $subject) {
-            if (! is_array($subject) || count($subject) === 0) {
+        foreach ($this->subjects as $subject) {
+            if (count($subject) === 0) {
                 $results[] = null;
                 continue;
             }
@@ -80,8 +80,8 @@ final class ArrayFilter
     {
         $results = [];
 
-        foreach ($this->subject as $subject) {
-            if (! is_array($subject) || count($subject) === 0) {
+        foreach ($this->subjects as $subject) {
+            if (count($subject) === 0) {
                 $results[] = [];
                 continue;
             }
@@ -112,8 +112,8 @@ final class ArrayFilter
     ) {
         $results = [];
 
-        foreach ($this->subject as $subject) {
-            if (! is_array($subject) || count($subject) === 0) {
+        foreach ($this->subjects as $subject) {
+            if (count($subject) === 0) {
                 continue;
             }
 
@@ -137,14 +137,15 @@ final class ArrayFilter
     {
         $results = [];
 
-        foreach ($this->subject as $subject) {
+        foreach ($this->subjects as $subject) {
             $payload = [];
 
-            if (is_array($subject) && count($subject) !== 0) {
+            if (count($subject) !== 0) {
                 $payload['permissions'] = [];
 
                 foreach ($subject as $permission) {
-                    if (isset($permission['permission_name']) && $permission['resource_server_identifier']) {
+                    /** @var array{permission_name?: string, resource_server_identifier?: string} $permission */
+                    if (isset($permission['permission_name']) && isset($permission['resource_server_identifier'])) {
                         $payload['permissions'][] = (object) $permission;
                     }
                 }

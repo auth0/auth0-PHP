@@ -12,19 +12,19 @@ final class Assert
     /**
      * Values to process.
      *
-     * @var array<mixed>
+     * @var array{0: mixed, 1: \Throwable}[]
      */
-    private array $subject;
+    private array $subjects;
 
     /**
      * ArrayProcessor Constructor
      *
-     * @param array<mixed> $subject Values to process.
+     * @param array{0: mixed, 1: \Throwable}[] $subjects Values to process.
      */
     public function __construct(
-        array $subject
+        array $subjects
     ) {
-        $this->subject = $subject;
+        $this->subjects = $subjects;
     }
 
     /**
@@ -34,7 +34,7 @@ final class Assert
      */
     public function isPermissions(): void
     {
-        foreach ($this->subject as [$value, $exception]) {
+        foreach ($this->subjects as [$value, $exception]) {
             if (! is_array($value)) {
                 throw $exception;
             }
@@ -62,7 +62,7 @@ final class Assert
      */
     public function isString(): void
     {
-        foreach ($this->subject as [$value, $exception]) {
+        foreach ($this->subjects as [$value, $exception]) {
             if (! is_string($value)) {
                 throw $exception;
             }
@@ -80,7 +80,7 @@ final class Assert
      */
     public function isEmail(): void
     {
-        foreach ($this->subject as [$value, $exception]) {
+        foreach ($this->subjects as [$value, $exception]) {
             if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
                 throw $exception;
             }
@@ -94,7 +94,7 @@ final class Assert
      */
     public function isArray(): void
     {
-        foreach ($this->subject as [$value, $exception]) {
+        foreach ($this->subjects as [$value, $exception]) {
             if (! is_array($value)) {
                 throw $exception;
             }

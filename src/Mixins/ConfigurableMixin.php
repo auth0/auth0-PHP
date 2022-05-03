@@ -12,7 +12,7 @@ trait ConfigurableMixin
     /**
      * Tracks the state of the current configuration.
      *
-     * @var array<object>
+     * @var array{value: mixed, allowsNull: bool, defaultValue: mixed, type: mixed}[]
      */
     private array $configuredState = [];
 
@@ -39,9 +39,9 @@ trait ConfigurableMixin
             $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
-                $value = $this->configuredState[$propertyName]->value;
+                $value = $this->configuredState[$propertyName]['value'];
 
-                if (count($arguments) === 1 && $arguments[0] !== null && $this->configuredState[$propertyName]->allowsNull && $value === null) {
+                if (count($arguments) === 1 && $arguments[0] !== null && $this->configuredState[$propertyName]['allowsNull'] && $value === null) {
                     if ($arguments[0] instanceof \Throwable) {
                         throw $arguments[0];
                     }
@@ -72,17 +72,21 @@ trait ConfigurableMixin
                 $arguments = array_filter(
                     Toolkit::filter($arguments)->array()->trim(),
                     static function ($val): bool {
+                        /** @var array<mixed>|null $val */
                         return $val !== null && count($val) !== 0;
                     }
                 );
 
                 if (count($arguments) !== 0) {
-                    if (is_array($this->configuredState[$propertyName]->value)) {
-                        $this->changeState($propertyName, array_merge($this->configuredState[$propertyName]->value, $arguments[0]));
+                    /** @var array<mixed> $argument */
+                    $argument = $arguments[0];
+
+                    if (is_array($this->configuredState[$propertyName]['value'])) {
+                        $this->changeState($propertyName, array_merge($this->configuredState[$propertyName]['value'], $argument));
                         return $this;
                     }
 
-                    $this->changeState($propertyName, $arguments[0]);
+                    $this->changeState($propertyName, $argument);
                     return $this;
                 }
 
@@ -96,7 +100,7 @@ trait ConfigurableMixin
             $propertyName = lcfirst(mb_substr($functionName, 3));
 
             if (isset($this->configuredState[$propertyName])) {
-                return $this->configuredState[$propertyName]->value !== null;
+                return $this->configuredState[$propertyName]['value'] !== null;
             }
 
             throw \Auth0\SDK\Exception\ConfigurationException::getMissing($propertyName);
@@ -126,7 +130,7 @@ trait ConfigurableMixin
         }
 
         foreach ($this->configuredState as $parameterKey => $parameterValue) {
-            $this->configuredState[$parameterKey]->value = $parameterValue->defaultValue;
+            $this->configuredState[$parameterKey]['value'] = $parameterValue['defaultValue'];
         }
 
         return $this;
@@ -153,6 +157,8 @@ trait ConfigurableMixin
         $parameters = $constructor->getParameters();
         $arguments = $args[0];
         $usingArgumentsArray = false;
+
+        /** @var array<array<mixed>> $arguments */
 
         if (count($parameters) !== 0) {
             $typeName = $parameters[0]->getType();
@@ -188,6 +194,7 @@ trait ConfigurableMixin
                     'allowsNull' => $parameter->allowsNull(),
                     'defaultValue' => null,
                     'type' => $typeName,
+                    'value' => null
                 ];
 
                 if ($parameter->isDefaultValueAvailable()) {
@@ -207,7 +214,7 @@ trait ConfigurableMixin
                     }
                 }
 
-                $this->configuredState[$newPropertyName] = (object) $newProperty;
+                $this->configuredState[$newPropertyName] = $newProperty;
                 $this->changeState($newPropertyName, $newPropertyValue);
             }
         }
@@ -244,20 +251,22 @@ trait ConfigurableMixin
 
         $propertyType = $normalizedPropertyTypes[$propertyType] ?? $propertyType;
 
-        $allowedTypes = [$this->configuredState[$propertyName]->type];
-        $expectedType = $this->configuredState[$propertyName]->type;
+        $allowedTypes = [$this->configuredState[$propertyName]['type']];
+        $expectedType = $this->configuredState[$propertyName]['type'];
 
-        if ($this->configuredState[$propertyName]->allowsNull) {
+        if ($this->configuredState[$propertyName]['allowsNull']) {
             $allowedTypes[] = 'NULL';
         }
 
         if (! in_array($propertyType, $allowedTypes, true)) {
             if (! $propertyValue instanceof $expectedType) {
-                if ($this->configuredState[$propertyName]->allowsNull) {
-                    throw \Auth0\SDK\Exception\ConfigurationException::setIncompatibleNullable($propertyName, $expectedType, $propertyType);
+                /** @var int|string $expectedType */
+
+                if ($this->configuredState[$propertyName]['allowsNull']) {
+                    throw \Auth0\SDK\Exception\ConfigurationException::setIncompatibleNullable($propertyName, (string) $expectedType, $propertyType);
                 }
 
-                throw \Auth0\SDK\Exception\ConfigurationException::setIncompatible($propertyName, $expectedType, $propertyType);
+                throw \Auth0\SDK\Exception\ConfigurationException::setIncompatible($propertyName, (string) $expectedType, $propertyType);
             }
         }
 
@@ -265,6 +274,6 @@ trait ConfigurableMixin
             $propertyValue = $this->onStateChange($propertyName, $propertyValue);
         }
 
-        $this->configuredState[$propertyName]->value = $propertyValue;
+        $this->configuredState[$propertyName]['value'] = $propertyValue;
     }
 }

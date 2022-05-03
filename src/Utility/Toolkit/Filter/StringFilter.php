@@ -12,14 +12,14 @@ final class StringFilter
     /**
      * Values to process.
      *
-     * @var array<array|string|null>
+     * @var array<string|null>
      */
     private array $subjects;
 
     /**
      * StringFilter constructor.
      *
-     * @param array<array|string|null> $subjects An array of string or null values.
+     * @param array<string|null> $subjects An array of string or null values.
      */
     public function __construct(
         array $subjects

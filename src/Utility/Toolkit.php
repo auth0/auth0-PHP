@@ -15,7 +15,7 @@ final class Toolkit
     /**
      * Convenience methods for asserting the content of values.
      *
-     * @param array<mixed> $subjects An array of values to work with.
+     * @param array{0: mixed, 1: \Throwable}[] $subjects An array of values to work with.
      */
     public static function assert(
         array $subjects
@@ -80,6 +80,7 @@ final class Toolkit
 
         foreach ($arrays as $array) {
             if (is_array($array) && count($array) !== 0) {
+                /** @var array<mixed> $merging */
                 [$merging] = self::filter([$array])->array()->trim();
 
                 if (count($merging) !== 0) {
@@ -88,7 +89,9 @@ final class Toolkit
             }
         }
 
-        return self::filter([$result])->array()->trim()[0];
+        /** @var array<mixed> $response */
+        $response = self::filter([$result])->array()->trim()[0];
+        return $response;
     }
 
     /**
@@ -130,8 +133,8 @@ final class Toolkit
         ?\Throwable $exception,
         array $values
     ) {
-        // Trim the array of null values.
-        [$trimmed] = self::filter([$values])->array()->trim();
+        /** @var array<mixed> $trimmed */
+        [$trimmed] = self::filter([$values])->array()->trim(); // Trim the array of null values.
 
         // All values were null, throw an exception.
         if (count($trimmed) === 0) {

@@ -18,8 +18,8 @@ final class HttpResponsePaginator implements \Countable, \Iterator
      * These endpoints support checkpoint-based pagination (from, take). A 'next' value will be present in responses if more results are available.
      */
     private const SUPPORTED_ENDPOINTS_WITH_CHECKPOINT = [
-        '/api/v2/logs',
-        '/api/v2/organizations',
+        '^\/api\/v2\/logs$',
+        '^\/api\/v2\/organizations$',
         '^\/api\/v2\/organizations\/(.*)\/members$',
         '^\/api\/v2\/roles\/(.*)\/users$',
     ];
@@ -52,7 +52,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     /**
      * A cache of the paginated results. Appended to when new responses are retrieved from the network.
      *
-     * @var array<int,array>
+     * @var array<array<mixed>>
      */
     private array $results = [];
 
@@ -293,6 +293,13 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                     throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
                 }
 
+                // No results, abort processing.
+                if (! is_array($results) || count($results) === 0) {
+                    return false;
+                }
+
+                /** @var array{start?: string|int|null, limit?: string|int|null, total?: string|int|null, length?: string|int|null, next?: string|null} $results */
+
                 // If not using checkpoint pagination, grab the 'start' value.
                 $start = $results['start'] ?? null;
 
@@ -306,13 +313,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                 }
 
                 $start = (int) $start;
-
-                // @codeCoverageIgnoreStart
-                // No results, abort processing.
-                if (! is_array($results) || count($results) === 0) {
-                    return false;
-                }
-                // @codeCoverageIgnoreEnd
 
                 $hadResults = false;
                 $nextCheckpoint = null;
@@ -340,8 +340,10 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                     }
 
                     if ($resultKey !== 'start') {
+                        /** @var mixed $result */
                         $resultCount = is_array($result) ? count($result) : 0;
 
+                        /** @var array<array<mixed>> $result */
                         for ($i = 0; $i < $resultCount; $i++) {
                             $hadResults = true;
 

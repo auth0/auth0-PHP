@@ -197,7 +197,9 @@ final class Verifier
         if ($this->cache !== null) {
             $item = $this->cache->getItem($jwksCacheKey);
             if ($item->isHit()) {
+                /** @var array<mixed> $value */
                 $value = $item->get();
+
                 if ($expectsKid === null || isset($value[$expectsKid])) {
                     return $value;
                 }
@@ -246,6 +248,7 @@ final class Verifier
     private function getKey(
         string $kid
     ) {
+        /** @var array<array{x5c: array<int|string>}> $keys */
         $keys = $this->getKeySet($kid);
 
         if (! isset($keys[$kid])) {
