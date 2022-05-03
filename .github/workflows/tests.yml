@@ -89,7 +89,7 @@ jobs:
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpinsights.php $GITHUB_WORKSPACE/phpinsights.php
 
       - name: Execute PHPInsights
-        run: vendor/bin/phpinsights --no-interaction
+        run: vendor/bin/phpinsights --no-interaction -v
 
   rector:
     name: Rector
