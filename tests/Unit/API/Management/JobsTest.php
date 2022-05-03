@@ -23,7 +23,7 @@ test('getErrors() issues an appropriate request', function (): void {
 });
 
 test('createImportUsers() issues an appropriate request', function (): void {
-    $importPath = join(DIRECTORY_SEPARATOR, [AUTH0_TESTS_DIR, 'json', 'test-import-users-file.json']);
+    $importPath = implode(DIRECTORY_SEPARATOR, [AUTH0_TESTS_DIR, 'json', 'test-import-users-file.json']);
     $keyOffset = 3;
 
     $this->endpoint->createImportUsers(

@@ -67,7 +67,7 @@ test('an exponential back-off and jitter are being applied', function (): void {
 
     for ($i = 0; $i < 10; $i++) {
         $this->client->mockResponse(clone $this->httpResponse429);
-        $baseWait = intval(100 * pow(2, $i));
+        $baseWait = (int) (100 * pow(2, $i));
         $baseWaits[] = $baseWait;
         $baseWaitSum += $baseWait;
     }

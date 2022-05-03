@@ -29,14 +29,16 @@ abstract class MockApi
         // Create an instance of the intended API.
         $this->setClient();
 
-        if ($responses !== null && ! count($responses)) {
+        if ($responses !== null && $responses === []) {
             $responses[] = HttpResponseGenerator::create();
         }
 
         // Setup the API class' mock httpClient with the response payload.
         if ($responses !== null && count($responses)) {
             foreach ($responses as $response) {
-                $this->client->getHttpClient()->mockResponse($response, [$this, 'onFetch']);
+                $this->client->getHttpClient()->mockResponse($response, function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response) : void {
+                    $this->onFetch($request, $response);
+                });
             }
         }
     }
