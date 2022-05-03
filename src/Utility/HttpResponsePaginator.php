@@ -101,14 +101,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
             // Iterate through SUPPORTED_ENDPOINTS to check if this endpoint will work for pagination.
             foreach (self::SUPPORTED_ENDPOINTS_WITH_CHECKPOINT as $endpoint) {
-                // Try a plain text match first:
-                if ($endpoint === $requestPath) {
-                    // Match! Break out of loop and give this paginator a green light for processing.
-                    $endpointSupported = true;
-                    break;
-                }
-
-                // Perform regex matches where appropriate:
                 if (mb_substr($endpoint, 0, 1) === '^' && preg_match('/' . $endpoint . '/', $requestPath) === 1) {
                     // Match! Break out of loop and give this paginator a green light for processing.
                     $endpointSupported = true;
@@ -295,7 +287,9 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
                 // No results, abort processing.
                 if (! is_array($results) || $results === []) {
+                    // @codeCoverageIgnoreStart
                     return false;
+                    // @codeCoverageIgnoreEnd
                 }
 
                 /** @var array{start?: string|int|null, limit?: string|int|null, total?: string|int|null, length?: string|int|null, next?: string|null} $results */

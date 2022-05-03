@@ -50,6 +50,8 @@ final class SessionStore implements StoreInterface
      * This has no effect when using sessions as the storage medium.
      *
      * @param bool $deferring Whether to defer persisting the storage state.
+     *
+     * @codeCoverageIgnore
      */
     public function defer(
         bool $deferring
