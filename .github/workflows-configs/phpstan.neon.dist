@@ -39,6 +39,12 @@ parameters:
             message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) never returns (.*) so it can be removed from the return typehint.#'
             path: src\Token\Verifier.php
         -
+            message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) has invalid return type OpenSSLAsymmetricKey.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) never returns OpenSSLAsymmetricKey so it can be removed from the return type.#'
+            path: src\Token\Verifier.php
+        -
             message: '#Return typehint of method Auth0\\SDK\\Token\\Verifier::getKey\(\) has invalid type OpenSSLAsymmetricKey.#'
             path: src\Token\Verifier.php
         -
