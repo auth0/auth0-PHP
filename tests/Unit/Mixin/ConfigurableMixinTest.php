@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 uses()->group('mixin', 'mixin.configurable');
 
-test('get() throws a ConfigurationException exception when a value is missing', function(): void {
+test('get() throws a ConfigurationException exception when a value is missing', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -19,7 +19,7 @@ test('get() throws a ConfigurationException exception when a value is missing', 
     $configurable->getExample('123');
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALUE_REQUIRED, 'example'));
 
-test('get() throws an exception when a value is missing', function(): void {
+test('get() throws an exception when a value is missing', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -31,15 +31,15 @@ test('get() throws an exception when a value is missing', function(): void {
         }
     };
 
-    $exception = new class() extends \Exception implements \Throwable {};
+    $exception = new class() extends \Exception implements \Throwable {
+    };
 
     $this->expectException(get_class($exception));
 
     $configurable->getExample($exception);
 });
 
-
-test('get() throws a ConfigurationException exception when a property is not defined', function(): void {
+test('get() throws a ConfigurationException exception when a property is not defined', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -54,7 +54,7 @@ test('get() throws a ConfigurationException exception when a property is not def
     $configurable->getMissing();
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
 
-test('get() returns a default value', function(): void {
+test('get() returns a default value', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -69,7 +69,7 @@ test('get() returns a default value', function(): void {
     expect($configurable->getExample())->toEqual(123);
 });
 
-test('set() assigns a value', function(): void {
+test('set() assigns a value', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -85,7 +85,7 @@ test('set() assigns a value', function(): void {
     expect($configurable->getExample())->toEqual(456);
 });
 
-test('set() throws an exception when a property does not exist', function(): void {
+test('set() throws an exception when a property does not exist', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -100,7 +100,7 @@ test('set() throws an exception when a property does not exist', function(): voi
     $configurable->setMissing(456);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SET_MISSING, 'missing'));
 
-test('set() throws an exception when a non-nullable property is assigned a null value', function(): void {
+test('set() throws an exception when a non-nullable property is assigned a null value', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -115,7 +115,7 @@ test('set() throws an exception when a non-nullable property is assigned a null 
     $configurable->setExample(null);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class);
 
-test('set() throws an exception when a property is assigned an invalid value type', function(): void {
+test('set() throws an exception when a property is assigned an invalid value type', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -130,7 +130,7 @@ test('set() throws an exception when a property is assigned an invalid value typ
     $configurable->setExample(123);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class);
 
-test('set() throws an exception when a nullable property is assigned an invalid value type', function(): void {
+test('set() throws an exception when a nullable property is assigned an invalid value type', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -145,7 +145,7 @@ test('set() throws an exception when a nullable property is assigned an invalid 
     $configurable->setExample(123);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class);
 
-test('set() calls an onStateChange callback method on the parent class', function(): void {
+test('set() calls an onStateChange callback method on the parent class', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -169,7 +169,7 @@ test('set() calls an onStateChange callback method on the parent class', functio
     expect($this->getExample())->toEqual('success');
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class);
 
-test('push() adds to an array property value that has a nullable default value', function(): void {
+test('push() adds to an array property value that has a nullable default value', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -187,7 +187,7 @@ test('push() adds to an array property value that has a nullable default value',
     expect($configurable->getExample())->toEqual(['c']);
 });
 
-test('push() adds to an array property value that has a default array value', function(): void {
+test('push() adds to an array property value that has a default array value', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -203,7 +203,7 @@ test('push() adds to an array property value that has a default array value', fu
     expect($configurable->getExample())->toEqual(['a','b','c']);
 });
 
-test('push() without a value does not change the target property', function(): void {
+test('push() without a value does not change the target property', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -219,7 +219,7 @@ test('push() without a value does not change the target property', function(): v
     expect($configurable->getExample())->toEqual(['a','b']);
 });
 
-test('push() throws a ConfigurationException exception when a property is not defined', function(): void {
+test('push() throws a ConfigurationException exception when a property is not defined', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -234,7 +234,7 @@ test('push() throws a ConfigurationException exception when a property is not de
     $configurable->pushMissing([123]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
 
-test('has() returns false if a value was not defined', function(): void {
+test('has() returns false if a value was not defined', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -249,7 +249,7 @@ test('has() returns false if a value was not defined', function(): void {
     expect($configurable->hasExample())->toBeFalse();
 });
 
-test('has() throws a ConfigurationException exception when a property is not defined', function(): void {
+test('has() throws a ConfigurationException exception when a property is not defined', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -264,7 +264,7 @@ test('has() throws a ConfigurationException exception when a property is not def
     $configurable->hasMissing();
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_GET_MISSING, 'missing'));
 
-test('calling a non-existent method throws an ArgumentException', function(): void {
+test('calling a non-existent method throws an ArgumentException', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -279,7 +279,7 @@ test('calling a non-existent method throws an ArgumentException', function(): vo
     $configurable->somethingSomething();
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_UNKNOWN_METHOD, 'somethingSomething'));
 
-test('lock() causes a configuration to become immutable', function(): void {
+test('lock() causes a configuration to become immutable', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -296,7 +296,7 @@ test('lock() causes a configuration to become immutable', function(): void {
     $configurable->setExample(true);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_SET_IMMUTABLE);
 
-test('reset() resets property values as expected', function(): void {
+test('reset() resets property values as expected', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -314,7 +314,7 @@ test('reset() resets property values as expected', function(): void {
     expect($configurable->getExample())->toBeNull();
 });
 
-test('reset() is not possible once lock() is used', function(): void {
+test('reset() is not possible once lock() is used', function (): void {
     $configurable = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -331,7 +331,7 @@ test('reset() is not possible once lock() is used', function(): void {
     $configurable->reset();
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_SET_IMMUTABLE);
 
-test('setState() will use a supplied configuration array, and values supplied this way overwrite passed arguments', function(): void {
+test('setState() will use a supplied configuration array, and values supplied this way overwrite passed arguments', function (): void {
     $class = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 
@@ -347,7 +347,7 @@ test('setState() will use a supplied configuration array, and values supplied th
 
     $configurable = new $class([
         'example' => 123,
-        'example2' => 'test2'
+        'example2' => 'test2',
     ], 456, 'xyz', true);
 
     expect($configurable->getExample())->toEqual(123);
@@ -355,7 +355,7 @@ test('setState() will use a supplied configuration array, and values supplied th
     expect($configurable->getExample3())->toBeNull();
 });
 
-test('setState() applies constructor values correctly', function(): void {
+test('setState() applies constructor values correctly', function (): void {
     $class = new class() {
         use \Auth0\SDK\Mixins\ConfigurableMixin;
 

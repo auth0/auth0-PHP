@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.tickets');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->tickets();
 });
 
-test('createEmailVerification() issues an appropriate request', function(): void {
+test('createEmailVerification() issues an appropriate request', function (): void {
     $mock = (object) [
         'userId' => uniqid(),
         'identity' => [
@@ -36,7 +36,7 @@ test('createEmailVerification() issues an appropriate request', function(): void
     expect($body)->toEqual(json_encode(['user_id' => $mock->userId, 'identity' => $mock->identity]));
 });
 
-test('createPasswordChange() issues an appropriate request', function(): void {
+test('createPasswordChange() issues an appropriate request', function (): void {
     $mock = [
         'user_id' => uniqid(),
         'new_password' => uniqid(),

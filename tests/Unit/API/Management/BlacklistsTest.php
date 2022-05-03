@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.blacklists');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->blacklists();
 });
 
-test('create() issues an appropriate request', function(): void {
+test('create() issues an appropriate request', function (): void {
     $jti = uniqid();
     $aud = uniqid();
 
@@ -28,7 +28,7 @@ test('create() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode(['jti' => $jti, 'aud' => $aud]));
 });
 
-test('get() issues valid requests', function(): void {
+test('get() issues valid requests', function (): void {
     $aud = uniqid();
 
     $this->endpoint->get($aud);

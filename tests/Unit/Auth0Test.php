@@ -3,14 +3,12 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('auth0');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $_GET = [];
     $_COOKIE = [];
 
@@ -23,7 +21,7 @@ beforeEach(function(): void {
     ];
 });
 
-it('does not persist user data when configured so', function(): void {
+it('does not persist user data when configured so', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + ['persistUser' => false]);
     $auth0->setUser(['sub' => '__test_user__']);
 
@@ -31,9 +29,8 @@ it('does not persist user data when configured so', function(): void {
     expect($auth0->getUser())->toBeNull();
 });
 
-
-it('uses the configured session storage handler', function(): void {
-    $storeMock = new class () implements \Auth0\SDK\Contract\StoreInterface {
+it('uses the configured session storage handler', function (): void {
+    $storeMock = new class() implements \Auth0\SDK\Contract\StoreInterface {
         /**
          * Example of an empty store.
          *
@@ -72,8 +69,7 @@ it('uses the configured session storage handler', function(): void {
 
         public function defer(
             bool $deferring = false
-        ): void
-        {
+        ): void {
         }
     };
 
@@ -84,17 +80,17 @@ it('uses the configured session storage handler', function(): void {
     expect($auth0->getUser())->toEqual(['__test_custom_store__user__']);
 });
 
-test('authentication() returns an instance of the Authentication class', function(): void {
+test('authentication() returns an instance of the Authentication class', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
     expect($auth0->authentication())->toBeInstanceOf(\Auth0\SDK\API\Authentication::class);
 });
 
-test('management() returns an instance of the Management class', function(): void {
+test('management() returns an instance of the Management class', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
     expect($auth0->management())->toBeInstanceOf(\Auth0\SDK\API\Management::class);
 });
 
-test('configuration() returns the same instance of the SdkConfiguration class that was provided at instantiation', function(): void {
+test('configuration() returns the same instance of the SdkConfiguration class that was provided at instantiation', function (): void {
     $configuration = new SdkConfiguration($this->configuration);
     $auth0 = new \Auth0\SDK\Auth0($configuration);
 
@@ -103,7 +99,7 @@ test('configuration() returns the same instance of the SdkConfiguration class th
         ->toEqual($configuration);
 });
 
-test('getLoginLink() returns expected default value', function(): void {
+test('getLoginLink() returns expected default value', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $url = parse_url($auth0->authentication()->getLoginLink(uniqid()));
@@ -119,7 +115,7 @@ test('getLoginLink() returns expected default value', function(): void {
             ->toContain('client_id=' . $this->configuration['clientId']);
 });
 
-test('getLoginLink() returns expected value when supplying parameters', function(): void {
+test('getLoginLink() returns expected value when supplying parameters', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $params = [
@@ -171,7 +167,7 @@ test('getLoginLink() returns expected value when overriding defaults', function(
             ->toContain('client_id=' . $this->configuration['clientId']);
 });
 
-test('getLoginLink() assigns a nonce and state', function(): void {
+test('getLoginLink() assigns a nonce and state', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $url = parse_url($auth0->authentication()->getLoginLink(uniqid(), null, ['nonce' => uniqid()]));
@@ -185,7 +181,7 @@ test('getLoginLink() assigns a nonce and state', function(): void {
             ->toContain('nonce=');
 });
 
-test('login() assigns a challenge and challenge method when PKCE is enabled', function(): void {
+test('login() assigns a challenge and challenge method when PKCE is enabled', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $url = parse_url($auth0->login(uniqid()));
@@ -199,7 +195,7 @@ test('login() assigns a challenge and challenge method when PKCE is enabled', fu
             ->toContain('code_challenge_method=S256');
 });
 
-test('login() assigns `max_age` from default values', function(): void {
+test('login() assigns `max_age` from default values', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenMaxAge' => 1000,
     ]);
@@ -214,7 +210,7 @@ test('login() assigns `max_age` from default values', function(): void {
             ->toContain('max_age=1000');
 });
 
-test('login() assigns `max_age` from overridden values', function(): void {
+test('login() assigns `max_age` from overridden values', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenMaxAge' => 1000,
     ]);
@@ -231,7 +227,7 @@ test('login() assigns `max_age` from overridden values', function(): void {
             ->toContain('max_age=1001');
 });
 
-test('signup() returns a url with a `screen_hint` parameter', function(): void {
+test('signup() returns a url with a `screen_hint` parameter', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $url = parse_url($auth0->signup(uniqid()));
@@ -244,7 +240,7 @@ test('signup() returns a url with a `screen_hint` parameter', function(): void {
             ->toContain('screen_hint=signup');
 });
 
-test('handleInvitation() creates a valid login url', function(): void {
+test('handleInvitation() creates a valid login url', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['invitation'] = '__test_invitation__';
@@ -262,13 +258,13 @@ test('handleInvitation() creates a valid login url', function(): void {
             ->toContain('organization=__test_organization__');
 });
 
-test('handleInvitation() returns null if organization invite parameters are not present in query', function(): void {
+test('handleInvitation() returns null if organization invite parameters are not present in query', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     expect($auth0->handleInvitation())->toBeNull();
 });
 
-test('logout() returns a a valid logout url', function(): void {
+test('logout() returns a a valid logout url', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $returnUrl = uniqid();
@@ -288,7 +284,7 @@ test('logout() returns a a valid logout url', function(): void {
             ->toContain('rand=' . $randomParam);
 });
 
-test('decode() uses the configured cache handler', function(): void {
+test('decode() uses the configured cache handler', function (): void {
     $cacheKey = hash('sha256', 'https://test.auth0.com/.well-known/jwks.json');
     $mockJwks = [
         '__test_kid__' => [
@@ -313,7 +309,7 @@ test('decode() uses the configured cache handler', function(): void {
     $auth0->decode((new \Auth0\Tests\Utilities\TokenGenerator())->withRs256([], null, ['kid' => '__test_kid__']));
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE);
 
-test('decode() compares `auth_time` against `tokenMaxAge` configuration', function(): void {
+test('decode() compares `auth_time` against `tokenMaxAge` configuration', function (): void {
     $now = time();
     $maxAge = 10;
     $drift = 100;
@@ -331,7 +327,7 @@ test('decode() compares `auth_time` against `tokenMaxAge` configuration', functi
     $auth0->decode($token, null, null, null, null, null, $now);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
-test('decode() converts a string `max_age` value from transient storage into an int', function(): void {
+test('decode() converts a string `max_age` value from transient storage into an int', function (): void {
     $now = time();
     $maxAge = 10;
     $drift = 100;
@@ -351,7 +347,7 @@ test('decode() converts a string `max_age` value from transient storage into an 
     $auth0->decode($token, null, null, null, null, null, $now);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
-test('decode() compares `org_id` against `organization` configuration', function(): void {
+test('decode() compares `org_id` against `organization` configuration', function (): void {
     $orgId = 'org8675309';
 
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
@@ -368,7 +364,7 @@ test('decode() compares `org_id` against `organization` configuration', function
     expect($decoded->getOrganization())->toEqual($orgId);
 });
 
-test('decode() throws an exception when `org_id` claim does not exist, but an `organization` is configured', function(): void {
+test('decode() throws an exception when `org_id` claim does not exist, but an `organization` is configured', function (): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
@@ -379,7 +375,7 @@ test('decode() throws an exception when `org_id` claim does not exist, but an `o
     $auth0->decode($token);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_ORG_ID_CLAIM);
 
-test('decode() throws an exception when `org_id` does not match `organization` configuration', function(): void {
+test('decode() throws an exception when `org_id` does not match `organization` configuration', function (): void {
     $expectedOrgId = uniqid();
     $tokenOrgId = uniqid();
 
@@ -402,7 +398,8 @@ test('decode() can be used with access tokens', function (): void {
         'tokenAlgorithm' => 'HS256',
     ]);
 
-    $decoded = $auth0->decode($token,
+    $decoded = $auth0->decode(
+        $token,
         null,
         null,
         null,
@@ -415,12 +412,12 @@ test('decode() can be used with access tokens', function (): void {
     expect($decoded->getAudience())->toContain('__test_client_id__');
 });
 
-test('exchange() throws an exception if no code is present', function(): void {
+test('exchange() throws an exception if no code is present', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
     $auth0->exchange();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_MISSING_CODE);
 
-test('exchange() returns false if no nonce is stored', function(): void {
+test('exchange() returns false if no nonce is stored', function (): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
@@ -439,29 +436,29 @@ test('exchange() returns false if no nonce is stored', function(): void {
     $auth0->exchange();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_MISSING_NONCE);
 
-test('exchange() throws an exception if no code verified was found', function(): void {
+test('exchange() throws an exception if no code verified was found', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = uniqid();
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  null);
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', null);
 
     $auth0->exchange();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_MISSING_CODE_VERIFIER);
 
-test('exchange() throws an exception if no state was found', function(): void {
+test('exchange() throws an exception if no state was found', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = uniqid();
 
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  null);
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', null);
 
     $auth0->exchange();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
-test('exchange() succeeds with a valid id token', function(): void {
+test('exchange() succeeds with a valid id token', function (): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
@@ -479,8 +476,8 @@ test('exchange() succeeds with a valid id token', function(): void {
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
     expect($auth0->exchange())->toBeTrue();
     $this->assertArrayHasKey('sub', $auth0->getUser());
@@ -492,21 +489,21 @@ test('exchange() succeeds with a valid id token', function(): void {
     expect($auth0->getRefreshToken())->toEqual('4.5.6');
 });
 
-test('exchange() succeeds with no id token', function(): void {
+test('exchange() succeeds with no id token', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $httpClient = $auth0->authentication()->getHttpClient();
 
     $httpClient->mockResponses([
         \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"123"}')
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"123"}'),
     ]);
 
     $_GET['code'] = uniqid();
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
     expect($auth0->exchange())->toBeTrue();
     $this->assertArrayHasKey('sub', $auth0->getUser());
@@ -515,7 +512,7 @@ test('exchange() succeeds with no id token', function(): void {
     expect($auth0->getRefreshToken())->toEqual('4.5.6');
 });
 
-test('exchange() succeeds with PKCE disabled', function(): void {
+test('exchange() succeeds with PKCE disabled', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'usePkce' => false,
     ]);
@@ -531,7 +528,7 @@ test('exchange() succeeds with PKCE disabled', function(): void {
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
 
     expect($auth0->exchange())->toBeTrue();
     expect($auth0->getUser())->toEqual(['sub' => '__test_sub__']);
@@ -539,7 +536,7 @@ test('exchange() succeeds with PKCE disabled', function(): void {
     expect($auth0->getRefreshToken())->toEqual('4.5.6');
 });
 
-test('exchange() skips hitting userinfo endpoint', function(): void {
+test('exchange() skips hitting userinfo endpoint', function (): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
@@ -557,8 +554,8 @@ test('exchange() skips hitting userinfo endpoint', function(): void {
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
     expect($auth0->exchange())->toBeTrue();
     expect($auth0->getUser()['sub'])->toEqual('__test_sub__');
@@ -566,66 +563,66 @@ test('exchange() skips hitting userinfo endpoint', function(): void {
     expect($auth0->getAccessToken())->toEqual('1.2.3');
 });
 
-test('exchange() throws an exception when code exchange fails', function(): void {
+test('exchange() throws an exception when code exchange fails', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $httpClient = $auth0->authentication()->getHttpClient();
 
     $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"error": "Something happened.}', 500)
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"error": "Something happened.}', 500),
     ]);
 
     $_GET['code'] = uniqid();
     $_GET['state'] = uniqid();
 
     $auth0->configuration()->getTransientStorage()->set('state', $_GET['state']);
-    $auth0->configuration()->getTransientStorage()->set('nonce',  uniqid());
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  uniqid());
+    $auth0->configuration()->getTransientStorage()->set('nonce', uniqid());
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', uniqid());
 
     $auth0->exchange();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_FAILED_CODE_EXCHANGE);
 
-test('exchange() throws an exception when an access token is not returned from code exchange', function(): void {
+test('exchange() throws an exception when an access token is not returned from code exchange', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $httpClient = $auth0->authentication()->getHttpClient();
 
     $httpClient->mockResponses([
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}')
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}'),
     ]);
 
     $_GET['code'] = uniqid();
     $_GET['state'] = uniqid();
 
     $auth0->configuration()->getTransientStorage()->set('state', $_GET['state']);
-    $auth0->configuration()->getTransientStorage()->set('nonce',  uniqid());
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  uniqid());
+    $auth0->configuration()->getTransientStorage()->set('nonce', uniqid());
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', uniqid());
 
     $auth0->exchange();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_BAD_ACCESS_TOKEN);
 
-test('renew() throws an exception if there is no refresh token available', function(): void {
+test('renew() throws an exception if there is no refresh token available', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $httpClient = $auth0->authentication()->getHttpClient();
 
     $httpClient->mockResponses([
         \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3"}'),
-        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}')
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{}'),
     ]);
 
     $_GET['code'] = uniqid();
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
     expect($auth0->exchange())->toBeTrue();
 
     $auth0->renew();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN);
 
-test('renew() throws an exception if no access token is returned', function(): void {
+test('renew() throws an exception if no access token is returned', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $httpClient = $auth0->authentication()->getHttpClient();
@@ -640,14 +637,14 @@ test('renew() throws an exception if no access token is returned', function(): v
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
     expect($auth0->exchange())->toBeTrue();
 
     $auth0->renew();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
 
-test('renew() succeeds under expected and valid conditions', function(): void {
+test('renew() succeeds under expected and valid conditions', function (): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
@@ -665,8 +662,8 @@ test('renew() succeeds under expected and valid conditions', function(): void {
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
     expect($auth0->exchange())->toBeTrue();
 
@@ -687,12 +684,12 @@ test('renew() succeeds under expected and valid conditions', function(): void {
     expect($request->getUri()->__toString())->toEqual('https://__test_domain__/oauth/token');
 });
 
-test('getCredentials() returns null when a session is not available', function(): void {
+test('getCredentials() returns null when a session is not available', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
     expect($auth0->getCredentials())->toBeNull();
 });
 
-test('getCredentials() returns the expected object structure when a session is available', function(): void {
+test('getCredentials() returns the expected object structure when a session is available', function (): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
@@ -710,8 +707,8 @@ test('getCredentials() returns the expected object structure when a session is a
     $_GET['state'] = '__test_state__';
 
     $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
-    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
 
     expect($auth0->exchange())->toBeTrue();
 
@@ -730,13 +727,13 @@ test('getCredentials() returns the expected object structure when a session is a
     expect($credentials->user)->toBeArray();
 });
 
-test('setIdToken() properly stores data', function(): void {
+test('setIdToken() properly stores data', function (): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
     ]);
 
-    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
 
     $auth0->setIdToken($token);
 
@@ -744,7 +741,7 @@ test('setIdToken() properly stores data', function(): void {
     expect($auth0->configuration()->getSessionStorage()->get('idToken'))->toEqual($token);
 });
 
-test('setIdToken() uses `tokenLeeway` configuration', function(): void {
+test('setIdToken() uses `tokenLeeway` configuration', function (): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
         'exp' => time() - 100,
     ]);
@@ -758,7 +755,7 @@ test('setIdToken() uses `tokenLeeway` configuration', function(): void {
     expect($auth0->getIdToken())->toEqual($token);
 });
 
-test('getRequestParameter() retrieves from $_POST when `responseMode` is configured to `form_post`', function(): void {
+test('getRequestParameter() retrieves from $_POST when `responseMode` is configured to `form_post`', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + ['responseMode' => 'form_post']);
 
     $_GET['test'] = uniqid();
@@ -770,7 +767,7 @@ test('getRequestParameter() retrieves from $_POST when `responseMode` is configu
     $this->assertNotEquals($_GET['test'], $extracted);
 });
 
-test('getInvitationParameters() returns request parameters when valid', function(): void {
+test('getInvitationParameters() returns request parameters when valid', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['invitation'] = '__test_invitation__';
@@ -790,7 +787,7 @@ test('getInvitationParameters() returns request parameters when valid', function
     expect('__test_organization_name__')->toEqual($extracted['organizationName']);
 });
 
-test('getInvitationParameters() does not return invalid request parameters', function(): void {
+test('getInvitationParameters() does not return invalid request parameters', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['invitation'] = '__test_invitation__';
@@ -798,7 +795,7 @@ test('getInvitationParameters() does not return invalid request parameters', fun
     $this->assertIsNotObject($auth0->getInvitationParameters());
 });
 
-test('getExchangeParameters() returns request parameters when valid', function(): void {
+test('getExchangeParameters() returns request parameters when valid', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = uniqid();
@@ -815,7 +812,7 @@ test('getExchangeParameters() returns request parameters when valid', function()
     expect($extracted->state)->toEqual($_GET['state']);
 });
 
-test('getExchangeParameters() does not return invalid request parameters', function(): void {
+test('getExchangeParameters() does not return invalid request parameters', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['code'] = 123;
@@ -823,8 +820,7 @@ test('getExchangeParameters() does not return invalid request parameters', funct
     $this->assertIsNotObject($auth0->getExchangeParameters());
 });
 
-
-test('getBearerToken() checks $_GET for specified value', function(): void {
+test('getBearerToken() checks $_GET for specified value', function (): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
     $_GET['token'] = 123;
@@ -832,7 +828,7 @@ test('getBearerToken() checks $_GET for specified value', function(): void {
     $this->assertIsNotObject($auth0->getExchangeParameters());
 });
 
-test('getBearerToken() successfully finds a candidate token in $_GET', function(
+test('getBearerToken() successfully finds a candidate token in $_GET', function (
     TokenGeneratorResponse $candidate
 ): void {
     $testParameterName = uniqid();
@@ -840,19 +836,20 @@ test('getBearerToken() successfully finds a candidate token in $_GET', function(
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
         [
-            $testParameterName
+            $testParameterName,
         ],
     ));
 })->with(['mocked rs256 bearer token' => [
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
-]]);
+    fn () => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256),
+],
+]);
 
-test('getBearerToken() successfully finds a candidate token in $_POST', function(
+test('getBearerToken() successfully finds a candidate token in $_POST', function (
     TokenGeneratorResponse $candidate
 ): void {
     $testParameterName = uniqid();
@@ -860,20 +857,21 @@ test('getBearerToken() successfully finds a candidate token in $_POST', function
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
         null,
         [
-            $testParameterName
+            $testParameterName,
         ],
     ));
 })->with(['mocked rs256 bearer token' => [
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
-]]);
+    fn () => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256),
+],
+]);
 
-test('getBearerToken() successfully finds a candidate token in $_SERVER', function(
+test('getBearerToken() successfully finds a candidate token in $_SERVER', function (
     TokenGeneratorResponse $candidate
 ): void {
     $testParameterName = uniqid();
@@ -881,28 +879,29 @@ test('getBearerToken() successfully finds a candidate token in $_SERVER', functi
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
         null,
         null,
         [
-            $testParameterName
+            $testParameterName,
         ],
     ));
 })->with(['mocked rs256 bearer token' => [
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
-]]);
+    fn () => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256),
+],
+]);
 
-test('getBearerToken() successfully finds a candidate token needle in a haystack', function(
+test('getBearerToken() successfully finds a candidate token needle in a haystack', function (
     TokenGeneratorResponse $candidate
 ): void {
     $testParameterName = uniqid();
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
@@ -923,14 +922,15 @@ test('getBearerToken() successfully finds a candidate token needle in a haystack
             $testParameterName,
             uniqid(),
             uniqid(),
-            uniqid()
+            uniqid(),
         ],
     ));
 })->with(['mocked rs256 bearer token' => [
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
-]]);
+    fn () => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256),
+],
+]);
 
-test('getBearerToken() correctly returns null when there are no candidates', function(
+test('getBearerToken() correctly returns null when there are no candidates', function (
     TokenGeneratorResponse $candidate
 ): void {
     $testParameterName = uniqid();
@@ -941,7 +941,7 @@ test('getBearerToken() correctly returns null when there are no candidates', fun
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
     ]));
 
     $this->assertEquals($auth0->getBearerToken(
@@ -962,21 +962,22 @@ test('getBearerToken() correctly returns null when there are no candidates', fun
             $testParameterName,
             uniqid(),
             uniqid(),
-            uniqid()
+            uniqid(),
         ],
     ), null);
 })->with(['mocked rs256 bearer token' => [
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
-]]);
+    fn () => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256),
+],
+]);
 
-test('getBearerToken() correctly returns null when the candidate value is empty', function(
+test('getBearerToken() correctly returns null when the candidate value is empty', function (
     TokenGeneratorResponse $candidate
 ): void {
     $testParameterName = uniqid();
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
     ]));
 
     $this->assertEquals($auth0->getBearerToken(
@@ -987,14 +988,15 @@ test('getBearerToken() correctly returns null when the candidate value is empty'
             $testParameterName => '',
         ],
         [
-            $testParameterName
+            $testParameterName,
         ]
     ), null);
 })->with(['mocked rs256 bearer token' => [
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
-]]);
+    fn () => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256),
+],
+]);
 
-test('getBearerToken() correctly silently handles token validation exceptions', function(
+test('getBearerToken() correctly silently handles token validation exceptions', function (
     TokenGeneratorResponse $candidate
 ): void {
     $testParameterName = uniqid();
@@ -1004,12 +1006,13 @@ test('getBearerToken() correctly silently handles token validation exceptions', 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'domain' => '__bad_domain__',
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
     ]));
 
     $this->assertEquals($auth0->getBearerToken(
         [$testParameterName],
     ), null);
 })->with(['mocked rs256 bearer token' => [
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
-]]);
+    fn () => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256),
+],
+]);

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.client_grants');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->clientGrants();
 });
 
-test('create() throws an error when clientId is missing', function(): void {
+test('create() throws an error when clientId is missing', function (): void {
     $this->endpoint->create('', '');
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'clientId'));
 
-test('create() throws an error when audience is missing', function(): void {
+test('create() throws an error when audience is missing', function (): void {
     $this->endpoint->create(uniqid(), '');
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'audience'));
 
-test('create() issues an appropriate request', function(): void {
+test('create() issues an appropriate request', function (): void {
     $clientId = uniqid();
     $audience = uniqid();
     $scope = uniqid();
@@ -38,7 +38,7 @@ test('create() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode(['client_id' => $clientId, 'audience' => $audience, 'scope' => [$scope]]));
 });
 
-test('getAll() issues an appropriate request', function(): void {
+test('getAll() issues an appropriate request', function (): void {
     $exampleParam = uniqid();
 
     $this->endpoint->getAll(['example' => $exampleParam]);
@@ -49,7 +49,7 @@ test('getAll() issues an appropriate request', function(): void {
     expect($this->api->getRequestQuery(null))->toEqual('example=' . $exampleParam);
 });
 
-test('getAll() supports field filtering parameters', function(): void {
+test('getAll() supports field filtering parameters', function (): void {
     $field1 = uniqid();
     $field2 = uniqid();
     $this->filteredRequest->setFields([$field1, $field2])->setIncludeFields(true);
@@ -63,7 +63,7 @@ test('getAll() supports field filtering parameters', function(): void {
     expect($this->api->getRequestQuery())->toContain('&include_fields=true');
 });
 
-test('getAll() supports standard pagination parameters', function(): void {
+test('getAll() supports standard pagination parameters', function (): void {
     $this->paginatedRequest->setPage(1)->setPerPage(5)->setIncludeTotals(true);
 
     $this->endpoint->getAll(null, $this->requestOptions);
@@ -76,7 +76,7 @@ test('getAll() supports standard pagination parameters', function(): void {
     expect($this->api->getRequestQuery())->toContain('&include_totals=true');
 });
 
-test('getAllByAudience() issues an appropriate request', function(): void {
+test('getAllByAudience() issues an appropriate request', function (): void {
     $audience = uniqid();
 
     $this->endpoint->getAllByAudience($audience);
@@ -87,7 +87,7 @@ test('getAllByAudience() issues an appropriate request', function(): void {
     expect($this->api->getRequestQuery(null))->toEqual('audience=' . $audience);
 });
 
-test('getAllByClientId() issues an appropriate request', function(): void {
+test('getAllByClientId() issues an appropriate request', function (): void {
     $clientId = uniqid();
 
     $this->endpoint->getAllByClientId($clientId);
@@ -98,7 +98,7 @@ test('getAllByClientId() issues an appropriate request', function(): void {
     expect($this->api->getRequestQuery(null))->toEqual('client_id=' . $clientId);
 });
 
-test('update() issues an appropriate request', function(): void {
+test('update() issues an appropriate request', function (): void {
     $grantId = uniqid();
     $scope = uniqid();
 
@@ -115,7 +115,7 @@ test('update() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode(['scope' => [$scope]]));
 });
 
-test('delete() issues an appropriate request', function(): void {
+test('delete() issues an appropriate request', function (): void {
     $grantId = uniqid();
 
     $this->endpoint->delete($grantId);

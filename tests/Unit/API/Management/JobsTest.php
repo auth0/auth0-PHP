@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.jobs');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->jobs();
 });
 
-test('get() issues an appropriate request', function(): void {
+test('get() issues an appropriate request', function (): void {
     $this->endpoint->get('__test_id__');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/__test_id__');
 });
 
-test('getErrors() issues an appropriate request', function(): void {
+test('getErrors() issues an appropriate request', function (): void {
     $this->endpoint->getErrors('__test_id__');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/__test_id__/errors');
 });
 
-test('createImportUsers() issues an appropriate request', function(): void {
+test('createImportUsers() issues an appropriate request', function (): void {
     $importPath = join(DIRECTORY_SEPARATOR, [AUTH0_TESTS_DIR, 'json', 'test-import-users-file.json']);
     $keyOffset = 3;
 
@@ -67,15 +67,15 @@ test('createImportUsers() issues an appropriate request', function(): void {
     expect($form_body_arr[$ext_id_key + $keyOffset])->toEqual('__test_ext_id__');
 });
 
-test('createExportUsers() issues an appropriate request', function(): void {
+test('createExportUsers() issues an appropriate request', function (): void {
     $mock = [
         'connection_id' => uniqid(),
         'limit' => uniqid(),
         'format' => 'json',
         'fields' => [
             [
-                'name' => uniqid()
-            ]
+                'name' => uniqid(),
+            ],
         ],
     ];
 
@@ -103,16 +103,16 @@ test('createExportUsers() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode((object) $mock));
 });
 
-test('createSendVerificationEmail() issues an appropriate request', function(): void {
+test('createSendVerificationEmail() issues an appropriate request', function (): void {
     $mock = (object) [
         'userId' => uniqid(),
-        'body' =>             [
+        'body' => [
             'client_id' => '__test_client_id__',
             'identity' => [
                 'user_id' => '__test_secondary_user_id__',
                 'provider' => '__test_provider__',
             ],
-        ]
+        ],
     ];
 
     $this->endpoint->createSendVerificationEmail($mock->userId, $mock->body);

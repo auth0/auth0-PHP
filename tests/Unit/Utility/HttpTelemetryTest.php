@@ -7,11 +7,11 @@ use Auth0\SDK\Utility\HttpTelemetry;
 
 uses()->group('utility', 'utility.http_telemetry', 'networking');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     HttpTelemetry::reset();
 });
 
-test('setCorePackage() is assigned by default', function(): void {
+test('setCorePackage() is assigned by default', function (): void {
     $header_data = HttpTelemetry::get();
 
     $this->assertArrayHasKey('name', $header_data);
@@ -24,7 +24,7 @@ test('setCorePackage() is assigned by default', function(): void {
     expect($header_data['env']['php'])->toEqual(phpversion());
 });
 
-test('setCorePackage() restores default data correctly', function(): void {
+test('setCorePackage() restores default data correctly', function (): void {
     HttpTelemetry::setPackage('test_name', '1.2.3');
     $headers = HttpTelemetry::get();
 
@@ -47,7 +47,7 @@ test('setCorePackage() restores default data correctly', function(): void {
     expect($header_data['env']['php'])->toEqual(phpversion());
 });
 
-test('setPackage() assigns data correctly', function(): void {
+test('setPackage() assigns data correctly', function (): void {
     HttpTelemetry::setPackage('test_name', '1.2.3');
     $headers = HttpTelemetry::get();
 
@@ -58,7 +58,7 @@ test('setPackage() assigns data correctly', function(): void {
     expect($headers['version'])->toEqual('1.2.3');
 });
 
-test('setEnvProperty() assigns data correctly', function(): void {
+test('setEnvProperty() assigns data correctly', function (): void {
     HttpTelemetry::setEnvProperty('test_env_name', '2.3.4');
     $headers = HttpTelemetry::get();
 
@@ -76,9 +76,9 @@ test('setEnvProperty() assigns data correctly', function(): void {
     expect($headers['env']['test_env_name_2'])->toEqual('4.5.6');
 });
 
-test('setEnvironmentData() assigns data correctly', function(): void {
+test('setEnvironmentData() assigns data correctly', function (): void {
     HttpTelemetry::setEnvironmentData([
-        'test_env_name' => '2.3.4'
+        'test_env_name' => '2.3.4',
     ]);
     $headers = HttpTelemetry::get();
 
@@ -96,7 +96,7 @@ test('setEnvironmentData() assigns data correctly', function(): void {
     expect($headers['env']['test_env_name_2'])->toEqual('4.5.6');
 });
 
-test('build() creates the expected header structure', function(): void {
+test('build() creates the expected header structure', function (): void {
     $header_data = [
         'name' => 'test_name_2',
         'version' => '5.6.7',

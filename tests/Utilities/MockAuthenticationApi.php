@@ -17,6 +17,14 @@ class MockAuthenticationApi extends MockApi
     protected Authentication $client;
 
     /**
+     * Return the endpoint being used.
+     */
+    public function mock(): Authentication
+    {
+        return $this->client;
+    }
+
+    /**
      * Setup the MockAPI to use the Authentication class.
      */
     protected function setClient(): void
@@ -26,13 +34,5 @@ class MockAuthenticationApi extends MockApi
             'clientId' => '__test_client_id__',
             'redirectUri' => uniqid(),
         ]);
-    }
-
-    /**
-     * Return the endpoint being used.
-     */
-    public function mock(): Authentication
-    {
-        return $this->client;
     }
 }

@@ -42,11 +42,6 @@ abstract class MockApi
     }
 
     /**
-     * Assign the type of API class being used.
-     */
-    abstract protected function setClient();
-
-    /**
      * Returns an instance of the configured API class.
      */
     abstract public function mock();
@@ -88,8 +83,9 @@ abstract class MockApi
      *
      * @param int $parse_component Component for parse_url, null to return complete URL.
      */
-    public function getRequestUrl(?int $parseComponent = null): ?string
-    {
+    public function getRequestUrl(
+        ?int $parseComponent = null
+    ): ?string {
         $requestUrl = $this->getRequest()->getUri()->__toString();
         return is_null($parseComponent) ? $requestUrl : parse_url($requestUrl, $parseComponent);
     }
@@ -99,8 +95,7 @@ abstract class MockApi
      */
     public function getRequestQuery(
         ?string $prefix = '&'
-    ): string
-    {
+    ): string {
         $query = $this->getRequestUrl(PHP_URL_QUERY);
 
         if ($query !== null) {
@@ -149,6 +144,11 @@ abstract class MockApi
     {
         return $this->getRequest()->getHeaders();
     }
+
+    /**
+     * Assign the type of API class being used.
+     */
+    abstract protected function setClient();
 
     /**
      * Get a Guzzle history record from an array populated by Middleware::history().

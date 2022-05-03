@@ -10,7 +10,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('token', 'token.verifier');
 
-beforeEach(function() {
+beforeEach(function (): void {
     $this->configuration = new SdkConfiguration([
         'domain' => uniqid(),
         'clientId' => uniqid(),
@@ -40,25 +40,25 @@ dataset('tokenRs256', static function () {
     $signature = TokenGenerator::decodePart($signature, false);
 
     // Mimic JWKS response format: strip opening and closing comment lines from public key, remove line breaks.
-    $keyPair['cert'] = trim(mb_substr($keyPair['cert'], strpos($keyPair['cert'], "\n")+1));
+    $keyPair['cert'] = trim(mb_substr($keyPair['cert'], strpos($keyPair['cert'], "\n") + 1));
     $keyPair['cert'] = str_replace("\n", '', mb_substr($keyPair['cert'], 0, strrpos($keyPair['cert'], "\n")));
 
     yield [ $keyPair, $token, $payload, $signature, $headers, 'https://test.auth0.com/.well-known/jwks.json', hash('sha256', 'https://test.auth0.com/.well-known/jwks.json') ];
 });
 
-test('verify() throws an error when token alg claim is missing', function(): void {
+test('verify() throws an error when token alg claim is missing', function (): void {
     new Verifier($this->configuration, '', '', []);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_ALG_HEADER);
 
-test('verify() throws an error when token alg claim conflicts with expected algorithm', function(): void {
+test('verify() throws an error when token alg claim conflicts with expected algorithm', function (): void {
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_HS256], Token::ALGO_RS256);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class, sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_UNEXPECTED_SIGNING_ALGORITHM, 'RS256', 'HS256'));
 
-test('verify() throws an error when token alg claim is not supported', function(): void {
+test('verify() throws an error when token alg claim is not supported', function (): void {
     new Verifier($this->configuration, '', '', ['alg' => uniqid()]);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
-test('verify() throws an exception signature is incorrect', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
+test('verify() throws an exception signature is incorrect', function ($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
     $headers = TokenGenerator::decodePart($headers);
     $cache = new ArrayAdapter();
     $item = $cache->getItem($jwksCacheKey);
@@ -70,23 +70,23 @@ test('verify() throws an exception signature is incorrect', function($keyPair, $
 
 // RS256-specific tests:
 
-test('[RS256] verify() throws an error when token kid claim is missing', function(): void {
+test('[RS256] verify() throws an error when token kid claim is missing', function (): void {
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256]);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_KID_HEADER);
 
-test('[RS256] getKeySet() throws an error when jwks uri is not configured', function(): void {
+test('[RS256] getKeySet() throws an error when jwks uri is not configured', function (): void {
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => uniqid()]);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_REQUIRES_JWKS_URI);
 
-test('[RS256] getKeySet() throws an error when jwks uri is not reachable', function($jwksUri): void {
+test('[RS256] getKeySet() throws an error when jwks uri is not reachable', function ($jwksUri): void {
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => uniqid()], null, $jwksUri);
 })->with('jwksUri')->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
-test('[RS256] getKeySet() throws an error when jwks uri is not a valid url', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
+test('[RS256] getKeySet() throws an error when jwks uri is not a valid url', function ($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
     new Verifier($this->configuration, $payload, $signature, TokenGenerator::decodePart($headers, true), Token::ALGO_RS256, ':', null, null);
 })->with('tokenRs256')->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
-test('[RS256] getKeySet() makes a network request to fetch JWKS and caches the result', function($jwksUri, $jwksCacheKey): void {
+test('[RS256] getKeySet() makes a network request to fetch JWKS and caches the result', function ($jwksUri, $jwksCacheKey): void {
     $cache = new ArrayAdapter();
 
     $httpResponses = [
@@ -101,17 +101,18 @@ test('[RS256] getKeySet() makes a network request to fetch JWKS and caches the r
                     'kid' => uniqid(),
                     'x5t' => uniqid(),
                     'x5c' => [
-                        uniqid()
-                    ]
-                ]
-            ]
-        ])), 'callback' => null, 'exception' => null],
+                        uniqid(),
+                    ],
+                ],
+            ],
+        ])), 'callback' => null, 'exception' => null,
+        ],
     ];
 
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => '__test_kid__'], null, $jwksUri, null, null, $cache, $httpResponses);
 })->with('jwksUri')->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE_MISSING_KID);
 
-test('[RS256] getKeySet() throws an exception if an incompatible signing algorithm is returned from the JWKS payload', function($jwksUri, $jwksCacheKey): void {
+test('[RS256] getKeySet() throws an exception if an incompatible signing algorithm is returned from the JWKS payload', function ($jwksUri, $jwksCacheKey): void {
     $differentKeyPair = TokenGenerator::generateDsaKeyPair();
 
     $httpResponses = [
@@ -126,17 +127,18 @@ test('[RS256] getKeySet() throws an exception if an incompatible signing algorit
                     'kid' => '__test_kid_1234__',
                     'x5t' => uniqid(),
                     'x5c' => [
-                        str_replace(['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\n"], '', $differentKeyPair['cert'])
-                    ]
-                ]
-            ]
-        ])), 'callback' => null, 'exception' => null],
+                        str_replace(['-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----', "\n"], '', $differentKeyPair['cert']),
+                    ],
+                ],
+            ],
+        ])), 'callback' => null, 'exception' => null,
+        ],
     ];
 
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => '__test_kid_1234__'], null, $jwksUri, null, null, null, $httpResponses);
 })->with('jwksUri')->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE_INCOMPATIBLE_ALGORITHM);
 
-test('[RS256] getKeySet() does not make a network request when there are matching cached results', function($jwksUri, $jwksCacheKey): void {
+test('[RS256] getKeySet() does not make a network request when there are matching cached results', function ($jwksUri, $jwksCacheKey): void {
     $cache = new ArrayAdapter();
     $item = $cache->getItem($jwksCacheKey);
     $item->set(['__test_kid__' => ['x5c' => ['123']]]);
@@ -146,7 +148,7 @@ test('[RS256] getKeySet() does not make a network request when there are matchin
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => '__test_kid__'], null, $jwksUri, null, null, $cache);
 })->with('jwksUri')->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE);
 
-test('[RS256] getKeySet() invalidates cache when expected key is missing', function($jwksUri, $jwksCacheKey): void {
+test('[RS256] getKeySet() invalidates cache when expected key is missing', function ($jwksUri, $jwksCacheKey): void {
     $cache = new ArrayAdapter();
     $item = $cache->getItem($jwksCacheKey);
     $item->set(['__test_kid__' => ['x5c' => ['123']]]);
@@ -156,7 +158,7 @@ test('[RS256] getKeySet() invalidates cache when expected key is missing', funct
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => '__missing_kid__'], null, $jwksUri, null, null, $cache);
 })->with('jwksUri')->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
-test('[RS256] verify() succeeds when signing key is correct', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
+test('[RS256] verify() succeeds when signing key is correct', function ($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
     $headers = TokenGenerator::decodePart($headers);
     $cache = new ArrayAdapter();
     $item = $cache->getItem($jwksCacheKey);
@@ -166,7 +168,7 @@ test('[RS256] verify() succeeds when signing key is correct', function($keyPair,
     expect(new Verifier($this->configuration, $payload, $signature, $headers, Token::ALGO_RS256, $jwksUri, null, null, $cache))->toBeObject();
 })->with('tokenRs256');
 
-test('[RS256] verify() throws an error when signing key is wrong', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
+test('[RS256] verify() throws an error when signing key is wrong', function ($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
     $headers = TokenGenerator::decodePart($headers);
 
     $differentKeyPair = TokenGenerator::generateRsaKeyPair();
@@ -181,17 +183,17 @@ test('[RS256] verify() throws an error when signing key is wrong', function($key
 
 // HS256-specific tests:
 
-test('[HS256] verify() throws an error when client secret is not configured', function(): void {
+test('[HS256] verify() throws an error when client secret is not configured', function (): void {
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_HS256], Token::ALGO_HS256);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_REQUIRES_CLIENT_SECRET);
 
-test('[HS256] verify() throws an error when secret is wrong', function($token, $payload, $signature, $headers): void {
+test('[HS256] verify() throws an error when secret is wrong', function ($token, $payload, $signature, $headers): void {
     $headers = TokenGenerator::decodePart($headers);
 
     new Verifier($this->configuration, $payload, $signature, $headers, Token::ALGO_HS256, null, '__a_different_secret__');
 })->with('tokenHs256')->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SIGNATURE);
 
-test('[HS256] verify() succeeds when secret is correct', function($token, $payload, $signature, $headers): void {
+test('[HS256] verify() succeeds when secret is correct', function ($token, $payload, $signature, $headers): void {
     $headers = TokenGenerator::decodePart($headers);
     expect(new Verifier($this->configuration, $payload, $signature, $headers, Token::ALGO_HS256, null, '__test_client_secret__'))->toBeObject();
 })->with('tokenHs256');

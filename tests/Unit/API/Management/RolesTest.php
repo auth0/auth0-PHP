@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.roles');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->roles();
 });
 
-test('getAll() issues an appropriate request', function(): void {
+test('getAll() issues an appropriate request', function (): void {
     $this->endpoint->getAll(['name_filter' => '__test_name_filter__']);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
@@ -18,7 +18,7 @@ test('getAll() issues an appropriate request', function(): void {
     expect($query)->toContain('name_filter=__test_name_filter__');
 });
 
-test('create() issues an appropriate request', function(): void {
+test('create() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->create($id, ['description' => '__test_description__']);
@@ -36,7 +36,7 @@ test('create() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode(['name' => $id, 'description' => '__test_description__']));
 });
 
-test('get() issues an appropriate request', function(): void {
+test('get() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->get($id);
@@ -45,7 +45,7 @@ test('get() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id);
 });
 
-test('delete() issues an appropriate request', function(): void {
+test('delete() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->delete($id);
@@ -54,7 +54,7 @@ test('delete() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id);
 });
 
-test('update() issues an appropriate request', function(): void {
+test('update() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->update($id, ['name' => '__test_new_name__']);
@@ -70,7 +70,7 @@ test('update() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode(['name' => '__test_new_name__']));
 });
 
-test('getPermissions() issues an appropriate request', function(): void {
+test('getPermissions() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->getPermissions($id);
@@ -79,7 +79,7 @@ test('getPermissions() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/roles/' . $id . '/permissions');
 });
 
-test('addPermissions() issues an appropriate request', function(): void {
+test('addPermissions() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->addPermissions($id, [
@@ -101,7 +101,7 @@ test('addPermissions() issues an appropriate request', function(): void {
     expect($body['permissions'][0]['resource_server_identifier'])->toEqual('__test_server_id__');
 });
 
-test('removePermissions() issues an appropriate request', function(): void {
+test('removePermissions() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->removePermissions($id, [
@@ -123,7 +123,7 @@ test('removePermissions() issues an appropriate request', function(): void {
     expect($body['permissions'][0]['resource_server_identifier'])->toEqual('__test_server_id__');
 });
 
-test('getUsers() issues an appropriate request', function(): void {
+test('getUsers() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->getUsers($id);
@@ -132,7 +132,7 @@ test('getUsers() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/roles/' . $id . '/users');
 });
 
-test('addUsers() issues an appropriate request', function(): void {
+test('addUsers() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->addUsers($id, ['strategy|1234567890', 'strategy|0987654321']);

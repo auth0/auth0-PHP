@@ -24,7 +24,7 @@ class MockCrypto
         $encrypted = json_encode(serialize([
             'tag' => base64_encode($tag),
             'iv' => base64_encode($iv),
-            'data' => $encrypted
+            'data' => $encrypted,
         ]), JSON_THROW_ON_ERROR);
 
         if ($encrypted === false) {
