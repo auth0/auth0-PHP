@@ -95,7 +95,7 @@ final class CookieStore implements StoreInterface
         bool $deferring
     ): void {
         // If we were deferring state saving and we've been asked to cancel that deference
-        if ($this->deferring && !$deferring) {
+        if ($this->deferring && ! $deferring) {
             // Immediately push the state to the host device.
             $this->setState();
         }
@@ -251,7 +251,7 @@ final class CookieStore implements StoreInterface
 
         $this->store[(string) $key] = $value;
 
-        if (!$this->deferring) {
+        if (! $this->deferring) {
             $this->setState();
         }
     }
@@ -294,7 +294,7 @@ final class CookieStore implements StoreInterface
 
         unset($this->store[(string) $key]);
 
-        if (!$this->deferring) {
+        if (! $this->deferring) {
             $this->setState();
         }
     }
@@ -306,7 +306,7 @@ final class CookieStore implements StoreInterface
     {
         $this->store = [];
 
-        if (!$this->deferring) {
+        if (! $this->deferring) {
             $this->setState();
         }
     }

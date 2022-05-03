@@ -81,12 +81,12 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         $lastResponse = $this->lastResponse();
 
         // Did the network request return a successful response?
-        if (!$lastResponse instanceof \Psr\Http\Message\ResponseInterface || ! HttpResponse::wasSuccessful($lastResponse)) {
+        if (! $lastResponse instanceof \Psr\Http\Message\ResponseInterface || ! HttpResponse::wasSuccessful($lastResponse)) {
             throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
         }
 
         // Was the last request a GET request?
-        if (!$lastRequest instanceof \Psr\Http\Message\RequestInterface || mb_strtolower($lastRequest->getMethod()) !== 'get') {
+        if (! $lastRequest instanceof \Psr\Http\Message\RequestInterface || mb_strtolower($lastRequest->getMethod()) !== 'get') {
             throw \Auth0\SDK\Exception\PaginatorException::httpMethodUnsupported();
         }
 
