@@ -2,25 +2,21 @@
 
 declare(strict_types=1);
 
-use Rector\Core\Configuration\Option;
-use Rector\Set\ValueObject\LevelSetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Rector\Config\RectorConfig;
+use Rector\Core\ValueObject\PhpVersion;
+use Rector\Php74\Rector\Property\TypedPropertyRector;
+use Rector\Set\ValueObject\SetList;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    // get parameters
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [
-        __DIR__ . '/src',
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->paths([__DIR__ . '/src', __DIR__ . '/tests']);
+
+    $rectorConfig->sets([
+        SetList::CODE_QUALITY,
     ]);
 
-    // Define what rule sets will be applied
-    $containerConfigurator->import(LevelSetList::UP_TO_PHP_74);
+    $rectorConfig->rule(TypedPropertyRector::class);
 
-    // get services (needed for register a single rule)
-    // $services = $containerConfigurator->services();
+    $rectorConfig->phpVersion(PhpVersion::PHP_74);
 
-    // register a single rule
-    // $services->set(TypedPropertyRector::class);
-
-    $parameters->set(Option::PHPSTAN_FOR_RECTOR_PATH, getcwd() . '/phpstan.neon.dist');
+    $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon.dist');
 };

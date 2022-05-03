@@ -11,8 +11,6 @@ parameters:
         - %rootDir%/../../squizlabs/php_codesniffer/autoload.php
 
     ignoreErrors:
-        - '#\$key of function openssl_free_key expects OpenSSLAsymmetricKey, mixed given.#'
-        - '#Access to an undefined property object::\$(.*).#'
         - '#Call to function method_exists\(\) with \$this\(Auth0\\SDK\\Configuration\\(.*)\) and (.*) will always evaluate to false.#'
         - '#Call to function method_exists\(\) with \$this\(Auth0\\SDK\\Configuration\\(.*)\) and (.*) will always evaluate to true.#'
         - '#Cannot call method createRequest\(\) on Psr\\Http\\Message\\RequestFactoryInterface\|null.#'
@@ -25,5 +23,14 @@ parameters:
         - '#Instanceof between Auth0\\SDK\\Configuration\\SdkConfiguration and Auth0\\SDK\\Configuration\\SdkConfiguration will always evaluate to true.#'
         - '#Casting to string something that(.*) already string.#'
         - '#\$object_or_class of function method_exists expects object\|string, (.*) given.#'
+        -
+            message: '#Parameter \#3 \$public_key of function openssl_verify expects array\|OpenSSLAsymmetricKey\|OpenSSLCertificate\|string, OpenSSLAsymmetricKey\|resource given.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) never returns resource so it can be removed from the return type.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#\$key of function openssl_free_key expects OpenSSLAsymmetricKey, mixed given.#'
+            path: src\Token\Verifier.php
 
     reportUnmatchedIgnoredErrors: true
