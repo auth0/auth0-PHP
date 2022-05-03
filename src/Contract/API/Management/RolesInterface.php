@@ -105,7 +105,7 @@ interface RolesInterface
      * Required scope: `update:roles`
      *
      * @param string                                                                                   $id          Role ID to get permissions.
-     * @param array{permissions: array{permission_name: string, resource_server_identifier: string}[]} $permissions Permissions to add, array of permission arrays.
+     * @param array{permissions: array<array{permission_name: string, resource_server_identifier: string}>} $permissions Permissions to add, array of permission arrays.
      * @param RequestOptions|null                                                                      $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `permissions` are provided.
@@ -141,7 +141,7 @@ interface RolesInterface
      * Required scope: `update:roles`
      *
      * @param string                                                                                   $id          Role ID to get permissions.
-     * @param array{permissions: array{permission_name: string, resource_server_identifier: string}[]} $permissions Permissions to delete, array of permission arrays.
+     * @param array{permissions: array<array{permission_name: string, resource_server_identifier: string}>} $permissions Permissions to delete, array of permission arrays.
      * @param RequestOptions|null                                                                      $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `permissions` are provided.

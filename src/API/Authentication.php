@@ -327,7 +327,7 @@ final class Authentication implements AuthenticationInterface
             [$redirectUri, $this->configuration->getRedirectUri()],
         ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
 
-        $params =  Toolkit::filter([
+        $params = Toolkit::filter([
             [
                 'redirect_uri' => $redirectUri,
                 'code' => $code,
@@ -337,7 +337,7 @@ final class Authentication implements AuthenticationInterface
 
         /** @var array<int|string|null> $params */
 
-        return $this->oauthToken('authorization_code',$params);
+        return $this->oauthToken('authorization_code', $params);
     }
 
     public function login(

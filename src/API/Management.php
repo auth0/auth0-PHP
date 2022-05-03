@@ -138,7 +138,7 @@ final class Management implements ManagementInterface
             $decoded = HttpResponse::decodeContent($response);
 
             if (HttpResponse::wasSuccessful($response)) {
-                /** @var array{access_token?: null|string, expires_in?: int|string} $decoded */
+                /** @var array{access_token?: (string|null), expires_in?: (int|string)} $decoded */
 
                 if (isset($decoded['access_token'])) {
                     $managementToken = $decoded['access_token'];

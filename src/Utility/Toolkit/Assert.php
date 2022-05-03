@@ -12,14 +12,14 @@ final class Assert
     /**
      * Values to process.
      *
-     * @var array{0: mixed, 1: \Throwable}[]
+     * @var array<array{0: mixed, 1: \Throwable}>
      */
     private array $subjects;
 
     /**
      * ArrayProcessor Constructor
      *
-     * @param array{0: mixed, 1: \Throwable}[] $subjects Values to process.
+     * @param array<array{0: mixed, 1: \Throwable}> $subjects Values to process.
      */
     public function __construct(
         array $subjects

@@ -12,7 +12,7 @@ trait ConfigurableMixin
     /**
      * Tracks the state of the current configuration.
      *
-     * @var array{value: mixed, allowsNull: bool, defaultValue: mixed, type: mixed}[]
+     * @var array<array{value: mixed, allowsNull: bool, defaultValue: mixed, type: mixed}>
      */
     private array $configuredState = [];
 
@@ -194,7 +194,7 @@ trait ConfigurableMixin
                     'allowsNull' => $parameter->allowsNull(),
                     'defaultValue' => null,
                     'type' => $typeName,
-                    'value' => null
+                    'value' => null,
                 ];
 
                 if ($parameter->isDefaultValueAvailable()) {

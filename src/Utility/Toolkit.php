@@ -15,7 +15,7 @@ final class Toolkit
     /**
      * Convenience methods for asserting the content of values.
      *
-     * @param array{0: mixed, 1: \Throwable}[] $subjects An array of values to work with.
+     * @param array<array{0: mixed, 1: \Throwable}> $subjects An array of values to work with.
      */
     public static function assert(
         array $subjects
