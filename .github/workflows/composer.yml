@@ -1,4 +1,4 @@
-name: Checks
+name: Composer
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   composer-normalize:
-    name: Composer Normalize
+    name: Normalize
     runs-on: ubuntu-latest
 
     steps:
@@ -17,3 +17,14 @@ jobs:
 
       - name: Composer normalize
         uses: docker://ergebnis/composer-normalize-action
+
+  composer-validate:
+    name: Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer validate
+        run: composer validate
