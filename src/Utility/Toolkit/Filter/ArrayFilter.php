@@ -81,6 +81,7 @@ final class ArrayFilter
         $results = [];
 
         foreach ($this->subjects as $subject) {
+            /** @var array<mixed>|null $subject */
             if (! is_array($subject) || $subject === []) {
                 $results[] = [];
                 continue;
@@ -113,6 +114,8 @@ final class ArrayFilter
         $results = [];
 
         foreach ($this->subjects as $subject) {
+            /** @var array<mixed>|null $subject */
+
             if (! is_array($subject) || $subject === []) {
                 continue;
             }
