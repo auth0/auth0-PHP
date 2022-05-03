@@ -24,13 +24,25 @@ parameters:
         - '#Casting to string something that(.*) already string.#'
         - '#\$object_or_class of function method_exists expects object\|string, (.*) given.#'
         -
-            message: '#Parameter \#3 \$public_key of function openssl_verify expects array\|OpenSSLAsymmetricKey\|OpenSSLCertificate\|string, OpenSSLAsymmetricKey\|resource given.#'
+            message: '#Parameter \#3 \$(.*) of function openssl_verify expects (.*), (.*) given.#'
             path: src\Token\Verifier.php
         -
             message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) never returns resource so it can be removed from the return type.#'
             path: src\Token\Verifier.php
         -
-            message: '#\$key of function openssl_free_key expects OpenSSLAsymmetricKey, mixed given.#'
+            message: '#\$(.*) of function openssl_free_key expects (.*), mixed given.#'
             path: src\Token\Verifier.php
+        -
+            message: '#Class OpenSSLAsymmetricKey not found.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) never returns (.*) so it can be removed from the return typehint.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Return typehint of method Auth0\\SDK\\Token\\Verifier::getKey\(\) has invalid type OpenSSLAsymmetricKey.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Parameter \#1 \$object of function method_exists expects object\|string, Psr\\Http\\Client\\ClientInterface\|null given.#'
+            path: src\Utility\HttpRequest.php
 
-    reportUnmatchedIgnoredErrors: true
+    reportUnmatchedIgnoredErrors: false
