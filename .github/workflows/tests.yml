@@ -113,8 +113,11 @@ jobs:
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
 
-      - name: Prepare configuration
+      - name: Prepare configuration (1)
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/rector.php $GITHUB_WORKSPACE/rector.php
+
+      - name: Prepare configuration (2)
+        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpstan.neon.dist $GITHUB_WORKSPACE/phpstan.neon.dist
 
       - name: Execute Rector
         run: vendor/bin/rector process src --dry-run
