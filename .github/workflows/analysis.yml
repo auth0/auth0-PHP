@@ -1,4 +1,4 @@
-name: Static analysis
+name: Analysis
 
 on:
   push:
@@ -33,6 +33,7 @@ jobs:
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpstan.neon.dist $GITHUB_WORKSPACE/phpstan.neon.dist
 
       - name: Execute PHPStan
+        continue-on-error: true
         run: vendor/bin/phpstan analyze --no-progress
 
   psalm:
@@ -61,6 +62,7 @@ jobs:
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/psalm.xml.dist $GITHUB_WORKSPACE/psalm.xml.dist
 
       - name: Execute PHPStan
+        continue-on-error: true
         run: vendor/bin/psalm
 
   phpinsights:
@@ -89,6 +91,7 @@ jobs:
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpinsights.php $GITHUB_WORKSPACE/phpinsights.php
 
       - name: Execute PHPInsights
+        continue-on-error: true
         run: vendor/bin/phpinsights --no-interaction -v
 
   rector:
@@ -120,6 +123,7 @@ jobs:
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpstan.neon.dist $GITHUB_WORKSPACE/phpstan.neon.dist
 
       - name: Execute Rector
+        continue-on-error: true
         run: vendor/bin/rector process src --dry-run
 
   pest:
@@ -148,4 +152,5 @@ jobs:
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
 
       - name: Execute Pest
+        continue-on-error: true
         run: vendor/bin/pest --ci --coverage

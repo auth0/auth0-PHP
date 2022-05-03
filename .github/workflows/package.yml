@@ -1,4 +1,4 @@
-name: Composer
+name: Package
 
 on:
   push:
