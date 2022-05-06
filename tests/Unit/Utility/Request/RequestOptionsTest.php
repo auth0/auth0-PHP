@@ -8,7 +8,7 @@ use Auth0\SDK\Utility\Request\RequestOptions;
 
 uses()->group('utility', 'utility.request', 'utility.request.request_options');
 
-test('setFields() accepts a `FilteredRequest` instance', function (): void {
+test('setFields() accepts a `FilteredRequest` instance', function(): void {
     $filters = new FilteredRequest();
     $request = new RequestOptions();
 
@@ -17,7 +17,7 @@ test('setFields() accepts a `FilteredRequest` instance', function (): void {
     expect($request->getFields())->toEqual($filters);
 });
 
-test('setPagination() accepts a `PaginatedRequest` instance', function (): void {
+test('setPagination() accepts a `PaginatedRequest` instance', function(): void {
     $pagination = new PaginatedRequest();
     $request = new RequestOptions();
 

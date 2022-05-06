@@ -14,33 +14,32 @@ use Auth0\Tests\Utilities\HttpResponseGenerator;
 
 uses()->group('management', 'management.generic');
 
-beforeEach(function (): void {
+beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([
         'strategy' => 'none',
-        'domain' => 'api.local.test',
+        'domain' => 'api.local.test'
     ]);
 
-    $this->httpClient = new HttpClient($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT);
-    $this->endpoint = new class($this->httpClient) extends ManagementEndpoint {
-    };
+    $this->httpClient = new HttpClient($this->configuration,  HttpClient::CONTEXT_GENERIC_CLIENT);
+    $this->endpoint = new class($this->httpClient) extends ManagementEndpoint {};
 });
 
-test('getHttpClient() returns an HttpClient instance', function (): void {
+test('getHttpClient() returns an HttpClient instance', function(): void {
     expect($this->endpoint->getHttpClient())->toBeInstanceOf(HttpClient::class);
 });
 
-test('getLastRequest() returns null when no requests have been made', function (): void {
+test('getLastRequest() returns null when no requests have been made', function(): void {
     expect($this->endpoint->getLastRequest())->toBeNull();
 });
 
-test('getLastRequest() returns an HttpRequest instance', function (): void {
+test('getLastRequest() returns an HttpRequest instance', function(): void {
     $client = new Users($this->httpClient);
     $client->getAll();
 
     expect($client->getLastRequest())->toBeInstanceOf(HttpRequest::class);
 });
 
-test('getResponsePaginator() returns an HttpResponsePaginator instance', function (): void {
+test('getResponsePaginator() returns an HttpResponsePaginator instance', function(): void {
     $this->httpClient->mockResponse(HttpResponseGenerator::create(json_encode([
         'start' => 0,
         'total' => 3,
@@ -55,6 +54,6 @@ test('getResponsePaginator() returns an HttpResponsePaginator instance', functio
     expect($client->getResponsePaginator())->toBeInstanceOf(HttpResponsePaginator::class);
 });
 
-test('getResponsePaginator() throws an exception when a request has not been made', function (): void {
+test('getResponsePaginator() throws an exception when a request has not been made', function(): void {
     expect($this->endpoint->getResponsePaginator())->toBeInstanceOf(HttpResponsePaginator::class);
 })->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);

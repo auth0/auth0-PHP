@@ -8,28 +8,27 @@ use Psr\EventDispatcher\StoppableEventInterface;
 
 uses()->group('utility', 'utility.event_dispatcher');
 
-test('dispatch() functions as expected', function (): void {
+test('dispatch() functions as expected', function(): void {
     $mockEvent = new class() implements StoppableEventInterface {
         public int $id = 123;
         public bool $hit = false;
         public bool $stopped = false;
 
-        public function isPropagationStopped(): bool
-        {
+        public function isPropagationStopped(): bool {
             return $this->stopped;
         }
     };
 
     $listener = new ListenerProvider();
 
-    $listener->on($mockEvent::class, function ($test) {
+    $listener->on(get_class($mockEvent), function($test) {
         $test->hit = true;
         return $test;
     });
 
     $configuration = new SdkConfiguration([
         'strategy' => 'none',
-        'eventListenerProvider' => $listener,
+        'eventListenerProvider' => $listener
     ]);
 
     expect($configuration->getEventListenerProvider())->toBeInstanceOf(ListenerProvider::class);

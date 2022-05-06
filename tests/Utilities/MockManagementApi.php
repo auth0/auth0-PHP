@@ -17,14 +17,6 @@ class MockManagementApi extends MockApi
     protected Management $client;
 
     /**
-     * Return the endpoint being used.
-     */
-    public function mock(): Management
-    {
-        return $this->client;
-    }
-
-    /**
      * Setup the MockAPI to use the Management class.
      */
     protected function setClient(): void
@@ -36,5 +28,13 @@ class MockManagementApi extends MockApi
             'redirectUri' => uniqid(),
             'managementToken' => '__api_token__',
         ]);
+    }
+
+    /**
+     * Return the endpoint being used.
+     */
+    public function mock(): Management
+    {
+        return $this->client;
     }
 }

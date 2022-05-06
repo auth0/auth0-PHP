@@ -18,6 +18,37 @@ class TokenGenerator
     public const TOKEN_ID = 1;
     public const TOKEN_ACCESS = 2;
 
+    protected static function getAccessTokenClaims(
+        array $overrides
+    ): array {
+        $defaults = [
+            'aud' => '__test_client_id__',
+            'nonce' => '__test_nonce__',
+            'auth_time' => time() - 100,
+            'exp' => time() + 1000,
+            'iat' => time() - 1000,
+        ];
+
+        return array_merge($defaults, $overrides);
+    }
+
+    protected static function getIdTokenClaims(
+        array $overrides
+    ): array {
+        $defaults = [
+            'sub' => '__test_sub__',
+            'iss' => 'https://__test_domain__/',
+            'aud' => '__test_client_id__',
+            'nonce' => '__test_nonce__',
+            'auth_time' => time() - 100,
+            'exp' => time() + 1000,
+            'iat' => time() - 1000,
+            'azp' => '__test_azp__'
+        ];
+
+        return array_merge($defaults, $overrides);
+    }
+
     public static function generateRsaKeyPair(): array
     {
         $privateKeyResource = openssl_pkey_new([
@@ -117,7 +148,7 @@ class TokenGenerator
             $keys = self::generateRsaKeyPair();
             $headers = array_merge(['kid' => '__test_kid__'], $headers);
             $token = self::withRs256($claims, $keys['private'], $headers);
-            $keys['cert'] = trim(mb_substr($keys['cert'], strpos($keys['cert'], "\n") + 1));
+            $keys['cert'] = trim(mb_substr($keys['cert'], strpos($keys['cert'], "\n")+1));
             $keys['cert'] = str_replace("\n", '', mb_substr($keys['cert'], 0, strrpos($keys['cert'], "\n")));
         }
 
@@ -126,7 +157,7 @@ class TokenGenerator
         }
 
         [$headers, $claims, $signature] = explode('.', $token);
-        $payload = implode('.', [$headers, $claims]);
+        $payload = join('.', [$headers, $claims]);
         $signature = (string) TokenGenerator::decodePart($signature, false);
         $claims = (array) TokenGenerator::decodePart($claims, true);
         $headers = (array) TokenGenerator::decodePart($headers, true);
@@ -156,37 +187,6 @@ class TokenGenerator
         TokenGeneratorResponse $token
     ): TokenGeneratorResponse {
         return $token;
-    }
-
-    protected static function getAccessTokenClaims(
-        array $overrides
-    ): array {
-        $defaults = [
-            'aud' => '__test_client_id__',
-            'nonce' => '__test_nonce__',
-            'auth_time' => time() - 100,
-            'exp' => time() + 1000,
-            'iat' => time() - 1000,
-        ];
-
-        return array_merge($defaults, $overrides);
-    }
-
-    protected static function getIdTokenClaims(
-        array $overrides
-    ): array {
-        $defaults = [
-            'sub' => '__test_sub__',
-            'iss' => 'https://__test_domain__/',
-            'aud' => '__test_client_id__',
-            'nonce' => '__test_nonce__',
-            'auth_time' => time() - 100,
-            'exp' => time() + 1000,
-            'iat' => time() - 1000,
-            'azp' => '__test_azp__',
-        ];
-
-        return array_merge($defaults, $overrides);
     }
 }
 

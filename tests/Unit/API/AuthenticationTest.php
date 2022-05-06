@@ -8,7 +8,8 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 
 uses()->group('authentication');
 
-beforeEach(function (): void {
+beforeEach(function(): void {
+
     $this->configuration = new SdkConfiguration([
         'domain' => 'https://test-domain.auth0.com',
         'cookieSecret' => uniqid(),
@@ -22,35 +23,35 @@ beforeEach(function (): void {
     $this->sdk = new Auth0($this->configuration);
 });
 
-test('__construct() fails without a configuration', function (): void {
+test('__construct() fails without a configuration', function(): void {
     new Authentication(null);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_CONFIGURATION_REQUIRED);
 
-test('__construct() accepts a configuration as an array', function (): void {
+test('__construct() accepts a configuration as an array', function(): void {
     $auth = new Authentication([
         'strategy' => 'api',
         'domain' => uniqid(),
-        'audience' => [uniqid()],
+        'audience' => [uniqid()]
     ]);
 
     expect($auth)->toBeInstanceOf(Authentication::class);
 });
 
-test('__construct() successfully loads an inherited configuration', function (): void {
+test('__construct() successfully loads an inherited configuration', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getLoginLink(uniqid());
 
     expect($uri)->toContain($this->configuration->getDomain());
 });
 
-test('__construct() successfully loads a direct configuration', function (): void {
+test('__construct() successfully loads a direct configuration', function(): void {
     $class = new Authentication($this->configuration);
     $uri = $class->getLoginLink(uniqid());
 
     expect($uri)->toContain($this->configuration->getDomain());
 });
 
-test('getLoginLink() is properly formatted', function (): void {
+test('getLoginLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getLoginLink(uniqid());
 
@@ -70,7 +71,7 @@ test('getLoginLink() is properly formatted', function (): void {
     expect($uri)->toContain('scope=' . rawurlencode($exampleScope));
 });
 
-test('getSamlpLink() is properly formatted', function (): void {
+test('getSamlpLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getSamlpLink();
 
@@ -85,7 +86,7 @@ test('getSamlpLink() is properly formatted', function (): void {
     expect($uri)->toContain('connection=' . rawurlencode($exampleConnection));
 });
 
-test('getSamlpMetadataLink() is properly formatted', function (): void {
+test('getSamlpMetadataLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getSamlpMetadataLink();
 
@@ -98,7 +99,7 @@ test('getSamlpMetadataLink() is properly formatted', function (): void {
     expect($uri)->toContain('/samlp/metadata/' . rawurlencode($exampleClientId));
 });
 
-test('getWsfedLink() is properly formatted', function (): void {
+test('getWsfedLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getWsfedLink();
 
@@ -113,7 +114,7 @@ test('getWsfedLink() is properly formatted', function (): void {
     expect($uri)->toContain('whr=' . rawurlencode($exampleParam));
 });
 
-test('getWsfedMetadataLink() is properly formatted', function (): void {
+test('getWsfedMetadataLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getWsfedMetadataLink();
 
@@ -121,7 +122,7 @@ test('getWsfedMetadataLink() is properly formatted', function (): void {
     expect($uri)->toContain('/wsfed/FederationMetadata/2007-06/FederationMetadata.xml');
 });
 
-test('getLogoutLink() is properly formatted', function (): void {
+test('getLogoutLink() is properly formatted', function(): void {
     $class = $this->sdk->authentication();
     $uri = $class->getLogoutLink();
 
@@ -136,16 +137,16 @@ test('getLogoutLink() is properly formatted', function (): void {
     expect($uri)->toContain('ex=' . rawurlencode($exampleParam));
 });
 
-test('passwordlessStart() throws a ConfigurationException if client secret is not configured', function (): void {
+test('passwordlessStart() throws a ConfigurationException if client secret is not configured', function(): void {
     $this->sdk->authentication()->passwordlessStart();
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
 
-test('passwordlessStart() throws a ConfigurationException if client id is not configured', function (): void {
+test('passwordlessStart() throws a ConfigurationException if client id is not configured', function(): void {
     $this->configuration->setClientId(null);
     $this->sdk->authentication()->passwordlessStart();
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
 
-test('passwordlessStart() is properly formatted', function (): void {
+test('passwordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->passwordlessStart();
 
@@ -161,22 +162,22 @@ test('passwordlessStart() is properly formatted', function (): void {
     expect($requestBody['client_secret'])->toEqual($this->configuration->getClientSecret());
 });
 
-test('emailPasswordlessStart() throws an ArgumentException if `email` is empty', function (): void {
+test('emailPasswordlessStart() throws an ArgumentException if `email` is empty', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->emailPasswordlessStart('', '');
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'email'));
 
-test('emailPasswordlessStart() throws an ArgumentException if `email` is not a valid email address', function (): void {
+test('emailPasswordlessStart() throws an ArgumentException if `email` is not a valid email address', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->emailPasswordlessStart(uniqid(), '');
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'email'));
 
-test('emailPasswordlessStart() throws an ArgumentException if `type` is empty', function (): void {
+test('emailPasswordlessStart() throws an ArgumentException if `type` is empty', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', '');
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'type'));
 
-test('emailPasswordlessStart() is properly formatted', function (): void {
+test('emailPasswordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow   ', 'code');
 
@@ -198,12 +199,12 @@ test('emailPasswordlessStart() is properly formatted', function (): void {
     expect($requestBody['send'])->toEqual('code');
 });
 
-test('smsPasswordlessStart() throws an ArgumentException if `phoneNumber` is empty', function (): void {
+test('smsPasswordlessStart() throws an ArgumentException if `phoneNumber` is empty', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->smsPasswordlessStart('');
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'phoneNumber'));
 
-test('smsPasswordlessStart() is properly formatted', function (): void {
+test('smsPasswordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->smsPasswordlessStart('   8675309');
 
@@ -223,7 +224,7 @@ test('smsPasswordlessStart() is properly formatted', function (): void {
     expect($requestBody['phone_number'])->toEqual('8675309');
 });
 
-test('userInfo() is properly formatted', function (): void {
+test('userInfo() is properly formatted', function(): void {
     $accessToken = uniqid();
 
     $this->sdk->authentication()->userInfo($accessToken);
@@ -239,7 +240,7 @@ test('userInfo() is properly formatted', function (): void {
     expect($requestHeaders['Authorization'][0])->toEqual('Bearer ' . $accessToken);
 });
 
-test('oauthToken() is properly formatted', function (): void {
+test('oauthToken() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
@@ -247,7 +248,7 @@ test('oauthToken() is properly formatted', function (): void {
 
     $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
-    $requestBody = explode('&', $request->getBody()->__toString());
+    $requestBody =  explode('&', $request->getBody()->__toString());
 
     expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
     expect($requestUri->getPath())->toEqual('/oauth/token');
@@ -257,7 +258,7 @@ test('oauthToken() is properly formatted', function (): void {
     expect($requestBody)->toContain('client_secret=' . $clientSecret);
 });
 
-test('codeExchange() is properly formatted', function (): void {
+test('codeExchange() is properly formatted', function(): void {
     $clientSecret = uniqid();
     $code = uniqid();
     $redirect = uniqid();
@@ -268,7 +269,7 @@ test('codeExchange() is properly formatted', function (): void {
 
     $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
-    $requestBody = explode('&', $request->getBody()->__toString());
+    $requestBody =  explode('&', $request->getBody()->__toString());
 
     expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
     expect($requestUri->getPath())->toEqual('/oauth/token');
@@ -281,7 +282,7 @@ test('codeExchange() is properly formatted', function (): void {
     expect($requestBody)->toContain('code_verifier=' . $verifier);
 });
 
-test('login() is properly formatted', function (): void {
+test('login() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
     $username = uniqid();
@@ -293,7 +294,7 @@ test('login() is properly formatted', function (): void {
 
     $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
-    $requestBody = explode('&', $request->getBody()->__toString());
+    $requestBody =  explode('&', $request->getBody()->__toString());
 
     expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
     expect($requestUri->getPath())->toEqual('/oauth/token');
@@ -306,7 +307,7 @@ test('login() is properly formatted', function (): void {
     expect($requestBody)->toContain('realm=' . $realm);
 });
 
-test('loginWithDefaultDirectory() is properly formatted', function (): void {
+test('loginWithDefaultDirectory() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
     $username = uniqid();
@@ -317,7 +318,7 @@ test('loginWithDefaultDirectory() is properly formatted', function (): void {
 
     $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
-    $requestBody = explode('&', $request->getBody()->__toString());
+    $requestBody =  explode('&', $request->getBody()->__toString());
 
     expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
     expect($requestUri->getPath())->toEqual('/oauth/token');
@@ -329,7 +330,7 @@ test('loginWithDefaultDirectory() is properly formatted', function (): void {
     expect($requestBody)->toContain('password=' . $password);
 });
 
-test('clientCredentials() is properly formatted', function (): void {
+test('clientCredentials() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
@@ -337,7 +338,7 @@ test('clientCredentials() is properly formatted', function (): void {
 
     $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
-    $requestBody = explode('&', $request->getBody()->__toString());
+    $requestBody =  explode('&', $request->getBody()->__toString());
     $requestHeaders = $request->getHeaders();
 
     expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
@@ -353,7 +354,7 @@ test('clientCredentials() is properly formatted', function (): void {
     expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
-test('refreshToken() is properly formatted', function (): void {
+test('refreshToken() is properly formatted', function(): void {
     $clientSecret = uniqid();
     $refreshToken = uniqid();
 
@@ -362,7 +363,7 @@ test('refreshToken() is properly formatted', function (): void {
 
     $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
-    $requestBody = explode('&', $request->getBody()->__toString());
+    $requestBody =  explode('&', $request->getBody()->__toString());
     $requestHeaders = $request->getHeaders();
 
     expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
@@ -378,7 +379,7 @@ test('refreshToken() is properly formatted', function (): void {
     expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
-test('dbConnectionsSignup() is properly formatted', function (): void {
+test('dbConnectionsSignup() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
     $email = 'someone@somewhere.somehow   ';
@@ -412,7 +413,7 @@ test('dbConnectionsSignup() is properly formatted', function (): void {
     expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
-test('dbConnectionsChangePassword() is properly formatted', function (): void {
+test('dbConnectionsChangePassword() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
     $email = '    someone@somewhere.somehow';

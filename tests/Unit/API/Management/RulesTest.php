@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.rules');
 
-beforeEach(function (): void {
+beforeEach(function(): void {
     $this->endpoint = $this->api->mock()->rules();
 });
 
-test('getAll() issues an appropriate request', function (): void {
+test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll(['enabled' => true]);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
@@ -18,7 +18,7 @@ test('getAll() issues an appropriate request', function (): void {
     expect($query)->toContain('enabled=true');
 });
 
-test('get() issues an appropriate request', function (): void {
+test('get() issues an appropriate request', function(): void {
     $mockupId = uniqid();
 
     $this->endpoint->get($mockupId);
@@ -27,7 +27,7 @@ test('get() issues an appropriate request', function (): void {
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/rules/' . $mockupId);
 });
 
-test('delete() issues an appropriate request', function (): void {
+test('delete() issues an appropriate request', function(): void {
     $mockupId = uniqid();
 
     $this->endpoint->delete($mockupId);
@@ -36,7 +36,7 @@ test('delete() issues an appropriate request', function (): void {
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/rules/' . $mockupId);
 });
 
-test('create() issues an appropriate request', function (): void {
+test('create() issues an appropriate request', function(): void {
     $mockup = (object) [
         'name' => uniqid(),
         'script' => uniqid(),
@@ -65,7 +65,7 @@ test('create() issues an appropriate request', function (): void {
     expect($body)->toEqual(json_encode(array_merge(['name' => $mockup->name, 'script' => $mockup->script], $mockup->query)));
 });
 
-test('update() issues an appropriate request', function (): void {
+test('update() issues an appropriate request', function(): void {
     $mockup = (object) [
         'id' => uniqid(),
         'query' => [ 'test_parameter' => uniqid() ],

@@ -29,19 +29,22 @@ abstract class MockApi
         // Create an instance of the intended API.
         $this->setClient();
 
-        if ($responses !== null && $responses === []) {
+        if ($responses !== null && ! count($responses)) {
             $responses[] = HttpResponseGenerator::create();
         }
 
         // Setup the API class' mock httpClient with the response payload.
         if ($responses !== null && count($responses)) {
             foreach ($responses as $response) {
-                $this->client->getHttpClient()->mockResponse($response, function (\Psr\Http\Message\RequestInterface $request, \Psr\Http\Message\ResponseInterface $response) : void {
-                    $this->onFetch($request, $response);
-                });
+                $this->client->getHttpClient()->mockResponse($response, [$this, 'onFetch']);
             }
         }
     }
+
+    /**
+     * Assign the type of API class being used.
+     */
+    abstract protected function setClient();
 
     /**
      * Returns an instance of the configured API class.
@@ -85,9 +88,8 @@ abstract class MockApi
      *
      * @param int $parse_component Component for parse_url, null to return complete URL.
      */
-    public function getRequestUrl(
-        ?int $parseComponent = null
-    ): ?string {
+    public function getRequestUrl(?int $parseComponent = null): ?string
+    {
         $requestUrl = $this->getRequest()->getUri()->__toString();
         return is_null($parseComponent) ? $requestUrl : parse_url($requestUrl, $parseComponent);
     }
@@ -97,7 +99,8 @@ abstract class MockApi
      */
     public function getRequestQuery(
         ?string $prefix = '&'
-    ): string {
+    ): string
+    {
         $query = $this->getRequestUrl(PHP_URL_QUERY);
 
         if ($query !== null) {
@@ -146,11 +149,6 @@ abstract class MockApi
     {
         return $this->getRequest()->getHeaders();
     }
-
-    /**
-     * Assign the type of API class being used.
-     */
-    abstract protected function setClient();
 
     /**
      * Get a Guzzle history record from an array populated by Middleware::history().
