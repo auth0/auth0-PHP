@@ -40,7 +40,7 @@ final class Parser
     /**
      * Decoded claims contained within the JWT.
      *
-     * @var array<string,array|int|string>
+     * @var array<string,array<int|string>|int|string>
      */
     private ?array $tokenClaims = null;
 
@@ -133,7 +133,7 @@ final class Parser
 
         new Verifier(
             $this->configuration,
-            join('.', [$parts[0], $parts[1]]),
+            implode('.', [$parts[0], $parts[1]]),
             $signature,
             $headers,
             $algorithm,
@@ -184,7 +184,7 @@ final class Parser
     /**
      * Return an array representing the Token's claims.
      *
-     * @return array<string,array|int|string>
+     * @return array<string,array<int|string>|int|string>
      */
     public function getClaims(): array
     {
@@ -269,7 +269,7 @@ final class Parser
      *
      * @param string $claims String representing the claims portion of the JWT.
      *
-     * @return array<array|int|string>|null
+     * @return array<array<int|string>|int|string>|null
      *
      * @throws \JsonException When claims portion cannot be decoded properly.
      *
@@ -279,12 +279,14 @@ final class Parser
         string $claims
     ): ?array {
         $decoded = base64_decode(strtr($claims, '-_', '+/'), true);
+        $response = null;
 
         if ($decoded !== false) {
-            return json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+            /** @var array<array<int|string>|int|string>|null $response */
+            $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
         }
 
-        return null;
+        return $response;
     }
 
     /**
@@ -302,12 +304,14 @@ final class Parser
         string $headers
     ): ?array {
         $decoded = base64_decode(strtr($headers, '-_', '+/'), true);
+        $response = null;
 
         if ($decoded !== false) {
-            return json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+            /** @var array<int|string>|null $response */
+            $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
         }
 
-        return null;
+        return $response;
     }
 
     /**

@@ -302,7 +302,7 @@ final class SdkConfiguration implements ConfigurableContract
         if ($this->hasScope()) {
             $scope = $this->getScope();
 
-            if (count($scope) !== 0) {
+            if ($scope !== []) {
                 return implode(' ', $scope);
             }
         }
@@ -319,7 +319,7 @@ final class SdkConfiguration implements ConfigurableContract
         if ($this->hasOrganization()) {
             $organization = $this->getOrganization();
 
-            if ($organization !== null && count($organization) !== 0) {
+            if ($organization !== null && $organization !== []) {
                 return $organization[0];
             }
         }
@@ -336,7 +336,7 @@ final class SdkConfiguration implements ConfigurableContract
         if ($this->hasAudience()) {
             $audience = $this->getAudience();
 
-            if ($audience !== null && count($audience) !== 0) {
+            if ($audience !== null && $audience !== []) {
                 return $audience[0] ?? '';
             }
         }
@@ -482,7 +482,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         if (in_array($propertyName, ['organization', 'audience'], true)) {
-            if (is_array($propertyValue) && count($propertyValue) !== 0) {
+            if (is_array($propertyValue) && $propertyValue !== []) {
                 return $propertyValue;
             }
 

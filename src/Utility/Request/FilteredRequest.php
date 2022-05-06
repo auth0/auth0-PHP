@@ -102,7 +102,7 @@ final class FilteredRequest
             $response['fields'] = implode(',', array_unique(array_values($this->fields)));
 
             if ($this->includeFields !== null) {
-                $response['include_fields'] = $this->includeFields === true ? 'true' : 'false';
+                $response['include_fields'] = $this->includeFields ? 'true' : 'false';
             }
         }
 

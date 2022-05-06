@@ -210,15 +210,16 @@ interface UsersInterface
      * Add one or more permissions to a specific user.
      * Required scope: `update:users`
      *
-     * @param string              $id          User ID to add permissions to.
-     * @param array<array>        $permissions Array of permissions to add.
-     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                                                                                   $id          User ID to add permissions to.
+     * @param array{permissions: array<array{permission_name: string, resource_server_identifier: string}>} $permissions Array of permissions to add.
+     * @param RequestOptions|null                                                                      $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `permissions` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
      *
      * @link https://auth0.com/docs/api/management/v2#!/Users/post_permissions
      */
+
     public function addPermissions(
         string $id,
         array $permissions,
@@ -246,9 +247,9 @@ interface UsersInterface
      * Remove one or more permissions from a specific user.
      * Required scope: `update:users`
      *
-     * @param string              $id          User ID to remove permissions from.
-     * @param array<array>        $permissions Array of permissions to remove.
-     * @param RequestOptions|null $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param string                                                                                   $id          User ID to remove permissions from.
+     * @param array{permissions: array<array{permission_name: string, resource_server_identifier: string}>} $permissions Array of permissions to remove.
+     * @param RequestOptions|null                                                                      $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `permissions` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.

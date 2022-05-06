@@ -48,7 +48,7 @@ final class EventDispatcher implements EventDispatcherInterface
     ): object {
         $listenerProvider = $this->getListenerProvider();
 
-        if ($listenerProvider === null) {
+        if (! $listenerProvider instanceof \Psr\EventDispatcher\ListenerProviderInterface) {
             return new \stdClass();
         }
 

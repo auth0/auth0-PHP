@@ -1,0 +1,30 @@
+name: Package
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  composer-normalize:
+    name: Normalize
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer normalize
+        uses: docker://ergebnis/composer-normalize-action
+
+  composer-validate:
+    name: Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Composer validate
+        run: composer validate

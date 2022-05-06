@@ -76,8 +76,6 @@ final class MemoryStore implements StoreInterface
      * @param bool $deferring Whether to defer persisting the storage state.
      *
      * @codeCoverageIgnore
-     *
-     * @phpstan-ignore-next-line
      */
     public function defer(
         bool $deferring = true

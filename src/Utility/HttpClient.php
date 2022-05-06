@@ -112,7 +112,7 @@ final class HttpClient
     /**
      * Inject a series of Psr\Http\Message\ResponseInterface objects into created HttpRequest clients.
      *
-     * @param array<ResponseInterface|array> $responses An array of ResponseInterface objects, or an array of arrays containing ResponseInterfaces with callbacks.
+     * @param array<ResponseInterface|array{response?: ResponseInterface, callback?: callable, exception?: \Exception}> $responses An array of ResponseInterface objects, or an array of arrays containing ResponseInterfaces with callbacks.
      *
      * @codeCoverageIgnore
      */
@@ -128,16 +128,14 @@ final class HttpClient
                 continue;
             }
 
-            if ($response['response'] instanceof ResponseInterface) {
-                $callback = $response['callback'] ?? null;
+            $callback = $response['callback'] ?? null;
 
-                if ($callback !== null && is_callable($callback)) {
-                    $this->mockResponse($response['response'], $callback);
-                    continue;
-                }
-
-                $this->mockResponse($response['response']);
+            if ($callback !== null) {
+                $this->mockResponse($response['response'], $callback);
+                continue;
             }
+
+            $this->mockResponse($response['response']);
         }
 
         return $this;

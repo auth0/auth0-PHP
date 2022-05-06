@@ -17,20 +17,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class ClientGrants extends ManagementEndpoint implements ClientGrantsInterface
 {
-    /**
-     * Create a new Client Grant.
-     * Required scope: `create:client_grants`
-     *
-     * @param string              $clientId Client ID to receive the grant.
-     * @param string              $audience Audience identifier for the API being granted.
-     * @param array<string>|null  $scope    Optional. Scopes allowed for this client grant.
-     * @param RequestOptions|null $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `clientId` or `audience` are provided.
-     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/post_client_grants
-     */
     public function create(
         string $clientId,
         string $audience,
@@ -59,22 +45,13 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             ->call();
     }
 
-    /**
-     * Retrieve client grants, by page if desired.
-     * Required scope: `read:client_grants`
-     *
-     * @param array<int|string|null> $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null    $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\NetworkException When the API request fails due to a network error.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
-     */
     public function getAll(
         ?array $parameters = null,
         ?RequestOptions $options = null
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        /** @var array<int|string|null> $parameters */
 
         return $this->getHttpClient()
             ->method('get')
@@ -84,19 +61,6 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             ->call();
     }
 
-    /**
-     * Get Client Grants by audience.
-     * Required scope: `read:client_grants`
-     *
-     * @param string                      $audience   API Audience to filter by.
-     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `audience` is provided.
-     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
-     */
     public function getAllByAudience(
         string $audience,
         ?array $parameters = null,
@@ -109,24 +73,17 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             [$audience, \Auth0\SDK\Exception\ArgumentException::missing('audience')],
         ])->isString();
 
-        return $this->getAll(Toolkit::merge([
+        /** @var array<int|string|null> $parameters */
+
+        $params = Toolkit::merge([
             'audience' => $audience,
-        ], $parameters), $options);
+        ], $parameters);
+
+        /** @var array<int|string|null> $params */
+
+        return $this->getAll($params, $options);
     }
 
-    /**
-     * Get Client Grants by Client ID.
-     * Required scope: `read:client_grants`
-     *
-     * @param string                      $clientId   Client ID to filter by.
-     * @param array<int|string|null>|null $parameters Optional. Additional query parameters to pass with the API request. See @link for supported options.
-     * @param RequestOptions|null         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `clientId` is provided.
-     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants
-     */
     public function getAllByClientId(
         string $clientId,
         ?array $parameters = null,
@@ -139,24 +96,17 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
         ])->isString();
 
-        return $this->getAll(Toolkit::merge([
+        /** @var array<int|string|null> $parameters */
+
+        $params = Toolkit::merge([
             'client_id' => $clientId,
-        ], $parameters), $options);
+        ], $parameters);
+
+        /** @var array<int|string|null> $params */
+
+        return $this->getAll($params, $options);
     }
 
-    /**
-     * Update an existing Client Grant.
-     * Required scope: `update:client_grants`
-     *
-     * @param string              $grantId Grant (by it's ID) to update.
-     * @param array<string>|null  $scope   Optional. Array of scopes to update; will replace existing scopes, not merge.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `grantId` is provided.
-     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/patch_client_grants_by_id
-     */
     public function update(
         string $grantId,
         ?array $scope = null,
@@ -181,18 +131,6 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             ->call();
     }
 
-    /**
-     * Delete a Client Grant by ID.
-     * Required scope: `delete:client_grants`
-     *
-     * @param string              $grantId Grant (by it's ID) to delete.
-     * @param RequestOptions|null $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `grantId` is provided.
-     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
-     *
-     * @link https://auth0.com/docs/api/management/v2#!/Client_Grants/delete_client_grants_by_id
-     */
     public function delete(
         string $grantId,
         ?RequestOptions $options = null

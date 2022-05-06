@@ -10,5 +10,8 @@ vendor
 phpcs.xml
 .phpunit.result.cache
 .DS_Store
-infection.log
-infection.mutators.md
+phpinsights.php
+phpstan.neon.dist
+phpunit.xml.dist
+psalm.xml.dist
+rector.php
