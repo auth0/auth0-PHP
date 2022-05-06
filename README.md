@@ -53,13 +53,13 @@ This library follows the [PHP release support schedule](https://www.php.net/supp
 
 The PHP and SDK version combinations listed below are supported through the indicated support timelines:
 
-| SDK Version | PHP Runtime | [Support Ends](https://www.php.net/supported-versions.php) |
-| ----------- | ----------- | ---------------------------------------------------------- |
-| 8           | 8.1         | Nov 2024                                                   |
-|             | 8.0         | Nov 2023                                                   |
-|             | 7.4         | Nov 2022                                                   |
-| 7¹          | 8.0         | Nov 2022                                                   |
-|             | 7.4         | Nov 2022                                                   |
+| SDK Version | PHP Runtime | [Support Concludes](https://www.php.net/supported-versions.php) |
+| ----------- | ----------- | --------------------------------------------------------------- |
+| 8           | 8.1         | Nov 2024                                                        |
+|             | 8.0         | Nov 2023                                                        |
+|             | 7.4         | Nov 2022                                                        |
+| 7¹          | 8.0         | Nov 2022                                                        |
+|             | 7.4         | Nov 2022                                                        |
 
 ¹ SDK v7 is now in extended support status and is only receiving critical bugfixes. This extended support window ends in November 2022. Developers are encouraged to migrate to SDK v8 prior to November 2022.
 
