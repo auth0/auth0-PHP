@@ -1,0 +1,54 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    level: max
+
+    paths:
+        - src
+
+    bootstrapFiles:
+        - %rootDir%/../../squizlabs/php_codesniffer/autoload.php
+
+    ignoreErrors:
+        - '#Call to function method_exists\(\) with \$this\(Auth0\\SDK\\Configuration\\(.*)\) and (.*) will always evaluate to false.#'
+        - '#Call to function method_exists\(\) with \$this\(Auth0\\SDK\\Configuration\\(.*)\) and (.*) will always evaluate to true.#'
+        - '#Cannot call method createRequest\(\) on Psr\\Http\\Message\\RequestFactoryInterface\|null.#'
+        - '#Cannot call method sendRequest\(\) on Psr\\Http\\Client\\ClientInterface\|null.#'
+        - '#class Auth0\\SDK\\Utility\\TransientStoreHandler constructor expects Auth0\\SDK\\Contract\\StoreInterface, Auth0\\SDK\\Contract\\StoreInterface\|null given.#'
+        - '#Cannot call method get\(\) on Auth0\\SDK\\Contract\\StoreInterface\|null.#'
+        - '#Cannot call method set\(\) on Auth0\\SDK\\Contract\\StoreInterface\|null.#'
+        - '#Cannot call method defer\(\) on Auth0\\SDK\\Contract\\StoreInterface\|null.#'
+        - '#Cannot call method purge\(\) on Auth0\\SDK\\Contract\\StoreInterface\|null.#'
+        - '#Instanceof between Auth0\\SDK\\Configuration\\SdkConfiguration and Auth0\\SDK\\Configuration\\SdkConfiguration will always evaluate to true.#'
+        - '#Casting to string something that(.*) already string.#'
+        - '#\$object_or_class of function method_exists expects object\|string, (.*) given.#'
+        -
+            message: '#Parameter \#3 \$(.*) of function openssl_verify expects (.*), (.*) given.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) never returns resource so it can be removed from the return type.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#\$(.*) of function openssl_free_key expects (.*), mixed given.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Class OpenSSLAsymmetricKey not found.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) never returns (.*) so it can be removed from the return typehint.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) has invalid return type OpenSSLAsymmetricKey.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Method Auth0\\SDK\\Token\\Verifier::getKey\(\) never returns OpenSSLAsymmetricKey so it can be removed from the return type.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Return typehint of method Auth0\\SDK\\Token\\Verifier::getKey\(\) has invalid type OpenSSLAsymmetricKey.#'
+            path: src\Token\Verifier.php
+        -
+            message: '#Parameter \#1 \$object of function method_exists expects object\|string, Psr\\Http\\Client\\ClientInterface\|null given.#'
+            path: src\Utility\HttpRequest.php
+
+    reportUnmatchedIgnoredErrors: false

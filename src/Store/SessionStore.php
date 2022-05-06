@@ -52,8 +52,6 @@ final class SessionStore implements StoreInterface
      * @param bool $deferring Whether to defer persisting the storage state.
      *
      * @codeCoverageIgnore
-     *
-     * @phpstan-ignore-next-line
      */
     public function defer(
         bool $deferring
@@ -104,12 +102,10 @@ final class SessionStore implements StoreInterface
         $session = $_SESSION ?? [];
         $prefix = $this->sessionPrefix . '_';
 
-        if (count($session) > 0) {
-            while (key($session)) {
-                $sessionKey = (string) (key($session) ?? '');
-
-                if (mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
-                    unset($_SESSION[$sessionKey]);
+        if ($session !== []) {
+            while ($sessionKey = key($session)) {
+                if (mb_substr((string) $sessionKey, 0, strlen($prefix)) === $prefix) {
+                    unset($_SESSION[(string) $sessionKey]);
                 }
 
                 next($session);

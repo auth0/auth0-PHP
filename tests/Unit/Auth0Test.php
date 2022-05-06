@@ -779,15 +779,15 @@ test('getInvitationParameters() returns request parameters when valid', function
 
     $extracted = $auth0->getInvitationParameters();
 
-    $this->assertIsObject($extracted, 'Invitation parameters were not extracted from the $_GET (environment variable seeded with query parameters during a GET request) successfully.');
+    expect($extracted)
+        ->toBeArray()
+        ->toHaveKey('invitation')
+        ->toHaveKey('organization')
+        ->toHaveKey('organizationName');
 
-    $this->assertObjectHasAttribute('invitation', $extracted);
-    $this->assertObjectHasAttribute('organization', $extracted);
-    $this->assertObjectHasAttribute('organizationName', $extracted);
-
-    expect('__test_invitation__')->toEqual($extracted->invitation);
-    expect('__test_organization__')->toEqual($extracted->organization);
-    expect('__test_organization_name__')->toEqual($extracted->organizationName);
+    expect('__test_invitation__')->toEqual($extracted['invitation']);
+    expect('__test_organization__')->toEqual($extracted['organization']);
+    expect('__test_organization_name__')->toEqual($extracted['organizationName']);
 });
 
 test('getInvitationParameters() does not return invalid request parameters', function(): void {

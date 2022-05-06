@@ -49,14 +49,6 @@ final class HttpTelemetry
     public static function setCorePackage(): void
     {
         $phpVersion = phpversion();
-
-        // @codeCoverageIgnoreStart
-        // phpversion() can potentially return false in unusual circumstances; set PHP version to an empty string in those cases.
-        if ($phpVersion === false) {
-            $phpVersion = '';
-        }
-        // @codeCoverageIgnoreEnd
-
         self::setPackage('auth0-php', Auth0::VERSION);
         self::setEnvProperty('php', $phpVersion);
     }
@@ -100,13 +92,16 @@ final class HttpTelemetry
             self::setCorePackage();
         }
 
-        return Toolkit::filter([
+        /** @var array<mixed> $response */
+        $response = Toolkit::filter([
             [
                 'name' => self::$packageName,
                 'version' => self::$packageVersion,
                 'env' => self::$environment,
             ],
         ])->array()->trim()[0];
+
+        return $response;
     }
 
     /**

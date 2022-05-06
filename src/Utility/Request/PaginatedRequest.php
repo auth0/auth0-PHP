@@ -188,7 +188,7 @@ final class PaginatedRequest
             $response['per_page'] = $this->perPage;
 
             if ($this->includeTotals !== null) {
-                $response['include_totals'] = $this->includeTotals === true ? 'true' : 'false';
+                $response['include_totals'] = $this->includeTotals ? 'true' : 'false';
             }
         }
 

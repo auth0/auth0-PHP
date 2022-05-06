@@ -18,8 +18,8 @@ final class HttpResponsePaginator implements \Countable, \Iterator
      * These endpoints support checkpoint-based pagination (from, take). A 'next' value will be present in responses if more results are available.
      */
     private const SUPPORTED_ENDPOINTS_WITH_CHECKPOINT = [
-        '/api/v2/logs',
-        '/api/v2/organizations',
+        '^\/api\/v2\/logs$',
+        '^\/api\/v2\/organizations$',
         '^\/api\/v2\/organizations\/(.*)\/members$',
         '^\/api\/v2\/roles\/(.*)\/users$',
     ];
@@ -52,7 +52,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     /**
      * A cache of the paginated results. Appended to when new responses are retrieved from the network.
      *
-     * @var array<int,array>
+     * @var array<array<mixed>>
      */
     private array $results = [];
 
@@ -81,12 +81,12 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         $lastResponse = $this->lastResponse();
 
         // Did the network request return a successful response?
-        if ($lastResponse === null || ! HttpResponse::wasSuccessful($lastResponse)) {
+        if (! $lastResponse instanceof \Psr\Http\Message\ResponseInterface || ! HttpResponse::wasSuccessful($lastResponse)) {
             throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
         }
 
         // Was the last request a GET request?
-        if ($lastRequest === null || mb_strtolower($lastRequest->getMethod()) !== 'get') {
+        if (! $lastRequest instanceof \Psr\Http\Message\RequestInterface || mb_strtolower($lastRequest->getMethod()) !== 'get') {
             throw \Auth0\SDK\Exception\PaginatorException::httpMethodUnsupported();
         }
 
@@ -101,14 +101,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
             // Iterate through SUPPORTED_ENDPOINTS to check if this endpoint will work for pagination.
             foreach (self::SUPPORTED_ENDPOINTS_WITH_CHECKPOINT as $endpoint) {
-                // Try a plain text match first:
-                if ($endpoint === $requestPath) {
-                    // Match! Break out of loop and give this paginator a green light for processing.
-                    $endpointSupported = true;
-                    break;
-                }
-
-                // Perform regex matches where appropriate:
                 if (mb_substr($endpoint, 0, 1) === '^' && preg_match('/' . $endpoint . '/', $requestPath) === 1) {
                     // Match! Break out of loop and give this paginator a green light for processing.
                     $endpointSupported = true;
@@ -250,7 +242,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                 $lastBuilder->withParam('from', $this->nextCheckpoint);
             } else {
                 // Get the next page.
-                $page = intval(ceil($this->position / $this->requestLimit));
+                $page = (int) ceil($this->position / $this->requestLimit);
 
                 // Set the next page.
                 $lastBuilder->withParam('page', $page);
@@ -293,6 +285,15 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                     throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
                 }
 
+                // No results, abort processing.
+                if (! is_array($results) || $results === []) {
+                    // @codeCoverageIgnoreStart
+                    return false;
+                    // @codeCoverageIgnoreEnd
+                }
+
+                /** @var array{start?: string|int|null, limit?: string|int|null, total?: string|int|null, length?: string|int|null, next?: string|null} $results */
+
                 // If not using checkpoint pagination, grab the 'start' value.
                 $start = $results['start'] ?? null;
 
@@ -307,13 +308,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
                 $start = (int) $start;
 
-                // @codeCoverageIgnoreStart
-                // No results, abort processing.
-                if (! is_array($results) || count($results) === 0) {
-                    return false;
-                }
-                // @codeCoverageIgnoreEnd
-
                 $hadResults = false;
                 $nextCheckpoint = null;
 
@@ -323,25 +317,23 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                             $this->requestLimit = (int) $result;
                             continue;
                         }
-
                         if ($resultKey === 'total') {
                             $this->requestTotal = (int) $result;
                             continue;
                         }
-
                         if ($resultKey === 'length') {
                             continue;
                         }
-                    } else {
-                        if ($resultKey === 'next') {
-                            $nextCheckpoint = (string) $result;
-                            continue;
-                        }
+                    } elseif ($resultKey === 'next') {
+                        $nextCheckpoint = (string) $result;
+                        continue;
                     }
 
                     if ($resultKey !== 'start') {
+                        /** @var mixed $result */
                         $resultCount = is_array($result) ? count($result) : 0;
 
+                        /** @var array<array<mixed>> $result */
                         for ($i = 0; $i < $resultCount; $i++) {
                             $hadResults = true;
 

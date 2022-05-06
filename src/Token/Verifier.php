@@ -197,7 +197,9 @@ final class Verifier
         if ($this->cache !== null) {
             $item = $this->cache->getItem($jwksCacheKey);
             if ($item->isHit()) {
+                /** @var array<mixed> $value */
                 $value = $item->get();
+
                 if ($expectsKid === null || isset($value[$expectsKid])) {
                     return $value;
                 }
@@ -215,13 +217,13 @@ final class Verifier
 
             if (is_array($keys) && isset($keys['keys']) && count($keys['keys']) !== 0) {
                 foreach ($keys['keys'] as $key) {
-                    if (isset($key['kid']) && isset($key['x5c']) && is_array($key['x5c']) && count($key['x5c']) !== 0) {
+                    if (isset($key['kid']) && isset($key['x5c']) && is_array($key['x5c']) && $key['x5c'] !== []) {
                         $response[(string) $key['kid']] = $key;
                     }
                 }
             }
 
-            if (count($response) !== 0 && $this->cache !== null) {
+            if ($response !== [] && $this->cache !== null) {
                 $item = $this->cache->getItem($jwksCacheKey);
                 $item->set($response);
                 $item->expiresAfter($this->cacheExpires ?? 60);
@@ -246,6 +248,7 @@ final class Verifier
     private function getKey(
         string $kid
     ) {
+        /** @var array<array{x5c: array<int|string>}> $keys */
         $keys = $this->getKeySet($kid);
 
         if (! isset($keys[$kid])) {

@@ -177,7 +177,7 @@ interface Auth0Interface
     /**
      * Get userinfo from an active session
      *
-     * @return array<string,array|int|string>|null
+     * @return array<string,array<mixed>|int|string>|null
      */
     public function getUser(): ?array;
 
@@ -215,7 +215,7 @@ interface Auth0Interface
     /**
      * Set the user property to a userinfo array and, if configured, persist
      *
-     * @param array<array|int|string> $user User data to store.
+     * @param array<array<mixed>|int|string> $user User data to store.
      */
     public function setUser(
         array $user
@@ -258,6 +258,23 @@ interface Auth0Interface
     ): self;
 
     /**
+     * Get an available bearer token from a variety of input sources.
+     *
+     * @param array<string>|null $get Optional. An array of viable parameter names to search against $_GET as a token candidate.
+     * @param array<string>|null $post Optional. An array of viable parameter names to search against $_POST as a token candidate.
+     * @param array<string>|null $server Optional. An array of viable parameter names to search against $_SERVER as a token candidate.
+     * @param array<string,string>|null $haystack Optional. A key-value array in which to search for `$needles` as token candidates.
+     * @param array<string>|null $needles Optional. An array of viable keys to search against `$haystack` as token candidates.
+     */
+    public function getBearerToken(
+        ?array $get = null,
+        ?array $post = null,
+        ?array $server = null,
+        ?array $haystack = null,
+        ?array $needles = null
+    ): ?TokenInterface;
+
+    /**
      * Get the specified parameter from POST or GET, depending on configured response mode.
      *
      * @param string $parameterName Name of the parameter to pull from the request.
@@ -275,6 +292,8 @@ interface Auth0Interface
 
     /**
      * Get the invitation details from the GET request
+     *
+     * @return array{invitation: string, organization: string, organizationName: string}
      */
-    public function getInvitationParameters(): ?object;
+    public function getInvitationParameters(): ?array;
 }
