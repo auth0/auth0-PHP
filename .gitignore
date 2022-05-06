@@ -15,3 +15,5 @@ phpstan.neon.dist
 phpunit.xml.dist
 psalm.xml.dist
 rector.php
+phpdoc.phar
+.phpdoc
