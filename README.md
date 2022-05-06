@@ -11,6 +11,7 @@ The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessi
 
 - [Auth0 PHP SDK](#auth0-php-sdk)
   - [Requirements](#requirements)
+      - [Support Matrix](#support-matrix)
   - [Usage](#usage)
     - [Getting Started](#getting-started)
     - [Installation](#installation)
@@ -40,11 +41,13 @@ The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessi
 
 ## Requirements
 
-- PHP 7.4, 8.0 or 8.1. (See our support matrix below for support timelines.)
+- PHP 7.4, 8.0 or 8.1. (See our support matrix below.)
 - Installation through [Composer](https://getcomposer.org/).
 - A [PSR-17](https://www.php-fig.org/psr/psr-17/) HTTP factory library. (↗ [Find libraries](https://packagist.org/providers/psr/http-factory-implementation))
 - A [PSR-18](https://www.php-fig.org/psr/psr-18/) HTTP client library. (↗ [Find libraries](https://packagist.org/providers/psr/http-client-implementation))
 - A [PSR-6](https://www.php-fig.org/psr/psr-6/) caching library is strongly recommended for performance reasons. (↗ [Find libraries](https://packagist.org/providers/psr/cache-implementation))
+
+### Support Matrix
 
 This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php) and we do not support PHP versions after they leave their security support window. Developers are encouraged to ensure their environments remain up-to-date to continue receiving timely security fixes from PHP and SDK updates and support from Auth0.
 
@@ -58,7 +61,7 @@ The PHP and SDK version combinations listed below are supported through the indi
 | 7¹          | 8.0         | Nov 2022                                                   |
 |             | 7.4         | Nov 2022                                                   |
 
-¹ SDK v7 is now in extended support status and is only receiving critical bugfixes. This extended support window ends in November 2022, after which point v7 will cease to receive updates. Developers are encouraged to migrate to SDK v8.
+¹ SDK v7 is now in extended support status and is only receiving critical bugfixes. This extended support window ends in November 2022. Developers are encouraged to migrate to SDK v8 prior to November 2022.
 
 ## Usage
 
