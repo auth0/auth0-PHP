@@ -293,7 +293,7 @@ interface Auth0Interface
     /**
      * Get the invitation details from the GET request
      *
-     * @return array{invitation: string, organization: string, organizationName: string}
+     * @return array{invitation: string, organization: string, organizationName: string}|null
      */
     public function getInvitationParameters(): ?array;
 }
