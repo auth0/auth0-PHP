@@ -12,6 +12,7 @@ The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessi
 - [Auth0 PHP SDK](#auth0-php-sdk)
   - [Requirements](#requirements)
       - [Support Matrix](#support-matrix)
+  - [Documentation](#documentation)
   - [Usage](#usage)
     - [Getting Started](#getting-started)
     - [Installation](#installation)
@@ -32,7 +33,6 @@ The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessi
       - [Logging in with an Organization](#logging-in-with-an-organization)
       - [Accepting user invitations](#accepting-user-invitations)
       - [Validation guidance for supporting multiple organizations](#validation-guidance-for-supporting-multiple-organizations)
-  - [Documentation](#documentation)
   - [Contributing](#contributing)
   - [Support + Feedback](#support--feedback)
   - [Vulnerability Reporting](#vulnerability-reporting)
@@ -62,6 +62,13 @@ The PHP and SDK version combinations listed below are supported through the indi
 |             | 7.4         | Nov 2022                                                        |
 
 ¹ SDK v7 is now in extended support status and is only receiving critical bugfixes. This extended support window ends in November 2022. Developers are encouraged to migrate to SDK v8 prior to November 2022.
+
+## Documentation
+
+- Quickstarts
+  - [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-web-app))
+  - [Backend API Authorization](https://auth0.com/docs/quickstart/backend/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-api-samples))
+- [SDK API Documentation](https://auth0.github.io/auth0-PHP/)
 
 ## Usage
 
@@ -542,19 +549,6 @@ In the examples above, our application is operating with a single, configured Or
 In some cases, your application may need to support validating tokens' `org_id` claims for several different organizations. When initializing the SDK, the `organization` argument accepts an array of organizations; during token validation, if ANY of those Organization Ids match, the token passes validation. When generating links or issuing API calls, the first Organization Id in that configuration array will be used. You can alter this value at any time by updating your instance of the `SdkConfiguration` or passing custom parameters to methods that use Organization Ids.
 
 > ⚠️ If you have a more complex application with custom token validation code, you must validate the `org_id` claim on tokens to ensure the value received is expected and known by your application. If the claim is not valid, your application should reject the token. See [https://auth0.com/docs/organizations/using-tokens](https://auth0.com/docs/organizations/using-tokens) for more information.
-
-## Documentation
-
-- [Documentation](https://auth0.com/docs/libraries/auth0-php)
-  - [Installation](https://auth0.com/docs/libraries/auth0-php#installation)
-  - [Getting Started](https://auth0.com/docs/libraries/auth0-php#getting-started)
-  - [Basic Usage](https://auth0.com/docs/libraries/auth0-php/auth0-php-basic-use)
-  - [Authentication API](https://auth0.com/docs/libraries/auth0-php/using-the-authentication-api-with-auth0-php)
-  - [Management API](https://auth0.com/docs/libraries/auth0-php/using-the-management-api-with-auth0-php)
-  - [Troubleshooting](https://auth0.com/docs/libraries/auth0-php/troubleshoot-auth0-php-library)
-- Quickstarts
-  - [Web Application Authentication](https://auth0.com/docs/quickstart/webapp/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-web-app))
-  - [Backend API Authorization](https://auth0.com/docs/quickstart/backend/php/) ([GitHub repo](https://github.com/auth0-samples/auth0-php-api-samples))
 
 ## Contributing
 
