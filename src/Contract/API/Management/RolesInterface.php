@@ -104,9 +104,9 @@ interface RolesInterface
      * Associate permissions with a role.
      * Required scope: `update:roles`
      *
-     * @param string                                                                                   $id          Role ID to get permissions.
+     * @param string                                                                                        $id          Role ID to get permissions.
      * @param array{permissions: array<array{permission_name: string, resource_server_identifier: string}>} $permissions Permissions to add, array of permission arrays.
-     * @param RequestOptions|null                                                                      $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param RequestOptions|null                                                                           $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `permissions` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
@@ -140,9 +140,9 @@ interface RolesInterface
      * Delete permissions from a role.
      * Required scope: `update:roles`
      *
-     * @param string                                                                                   $id          Role ID to get permissions.
+     * @param string                                                                                        $id          Role ID to get permissions.
      * @param array{permissions: array<array{permission_name: string, resource_server_identifier: string}>} $permissions Permissions to delete, array of permission arrays.
-     * @param RequestOptions|null                                                                      $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
+     * @param RequestOptions|null                                                                           $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `permissions` are provided.
      * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error.
