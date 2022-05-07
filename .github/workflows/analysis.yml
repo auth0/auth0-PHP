@@ -149,3 +149,32 @@ jobs:
 
       - name: Execute Pest
         run: vendor/bin/pest --ci --coverage
+
+  codecov:
+    name: Codecov
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          coverage: pcov
+          extensions: mbstring
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: composer update --no-interaction --no-progress
+
+      - name: Prepare configuration
+        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
+
+      - name: Generate coverage report
+        run: vendor/bin/pest --ci --coverage --coverage-clover coverage/coverage.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: coverage
