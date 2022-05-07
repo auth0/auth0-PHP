@@ -1,0 +1,43 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  phpdoc:
+    name: Generate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          coverage: none
+          extensions: mbstring
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: composer update --no-interaction --no-progress
+
+      - name: Prepare configuration
+        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpdoc.dist.xml $GITHUB_WORKSPACE/phpdoc.dist.xml
+
+      - name: Download phpDocumentor
+        run: wget https://www.phpdoc.org/phpDocumentor.phar -O ./phpdoc.phar
+
+      - name: Generate documentation
+        run: php ./phpdoc.phar
+
+      - name: Push to GitHub Pages
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: docs
+          FOLDER: docs
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MESSAGE: "Build: ({sha}) {msg}"
