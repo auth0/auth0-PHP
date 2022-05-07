@@ -19,5 +19,5 @@
             <default-package-name>Auth0\/SDK</default-package-name>
         </api>
     </version>
-    <template name="clean"/>
+    <template name="checkstyle"/>
 </phpdocumentor>
