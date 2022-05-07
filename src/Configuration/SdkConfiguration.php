@@ -65,7 +65,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setTransientStorageId(string $transientStorageId = 'auth0_transient')
  * @method SdkConfiguration setUsePkce(bool $usePkce)
  *
- * @method array<string>|null getAudience(?\Throwable $exceptionIfNull = null) Returns the currently configured Audience(s).
+ * @method array<string>|null getAudience(?\Throwable $exceptionIfNull = null)
  * @method string|null getCookieDomain(?\Throwable $exceptionIfNull = null)
  * @method int getCookieExpires()
  * @method string getCookiePath()
