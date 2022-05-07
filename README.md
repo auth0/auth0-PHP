@@ -527,15 +527,15 @@ Suppose you prefer to have more control over this process. In that case, extract
 // Returns an object containing the invitation query parameters, or null if they aren't present
 if ($invite = $auth0->getInvitationParameters()) {
   // Does the invite organization match one of your configured organizations?
-  if (in_array($invite->organization, $configuration->getOrganization()) === false) {
+  if (in_array($invite['organization'], $configuration->getOrganization()) === false) {
     // It does not. Throw an error; for example:
     throw new Exception("This invitation isn't intended for this service. Please have your administrator check the service configuration and request a new invitation.");
   }
 
   // Redirect to Universal Login using the emailed invitation code and Organization Id
   header('Location: ' . $auth0->login(null, [
-    'invitation' => $invite->invitation,
-    'organization' => $invite->organization,
+    'invitation' => $invite['invitation'],
+    'organization' => $invite['organization'],
   ]));
 }
 ```
