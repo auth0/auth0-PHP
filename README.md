@@ -5,7 +5,6 @@
 [![Security CI State](https://github.com/auth0/auth0-php/actions/workflows/security.yml/badge.svg)](https://github.com/auth0/auth0-PHP/actions/workflows/security.yml?query=branch%3Amain)
 [![Latest Stable Version](https://img.shields.io/packagist/v/auth0/auth0-PHP?label=stable)](https://packagist.org/packages/auth0/auth0-PHP)
 [![Supported PHP Versions](https://img.shields.io/packagist/php-v/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-PHP)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fauth0%2Fauth0-PHP?ref=badge_shield)
 [![License](https://img.shields.io/github/license/auth0/auth0-php?style=social)](https://github.com/auth0/auth0-PHP/blob/main/LICENSE.txt)
 
 The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessing Auth0's Authentication and Management API endpoints using modern PHP releases. Auth0 enables you to quickly integrate authentication and authorization into your applications so that you can focus on your core business. [Learn more.](https://auth0.com/why-auth0)
