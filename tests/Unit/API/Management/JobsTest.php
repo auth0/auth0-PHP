@@ -23,11 +23,15 @@ test('getErrors() issues an appropriate request', function(): void {
 });
 
 test('createImportUsers() issues an appropriate request', function(): void {
-    $importPath = join(DIRECTORY_SEPARATOR, [AUTH0_TESTS_DIR, 'json', 'test-import-users-file.json']);
+    // Create temporary JSON file
+    $import = tmpfile();
+    fwrite($import, '[{"email":"php-sdk-test-import-user-job@auth0.com","email_verified":true,"app_metadata":{"roles":["admin","super"],"plan":"premium"},"user_metadata":{"theme":"dark"}}]');
+
+    $path = stream_get_meta_data($import)['uri'];
     $keyOffset = 3;
 
     $this->endpoint->createImportUsers(
-        $importPath,
+        $path,
         '__test_conn_id__',
         [
             'upsert' => true,
@@ -46,8 +50,8 @@ test('createImportUsers() issues an appropriate request', function(): void {
     $form_body_arr = explode("\r\n", $form_body);
 
     // Test that the form data contains our import file content.
-    $import_content = file_get_contents($importPath);
-    expect($form_body)->toContain('name="users"; filename="test-import-users-file.json"');
+    $import_content = file_get_contents($path);
+    expect($form_body)->toContain(sprintf('name="users"; filename="%s"', basename($path)));
     expect($form_body)->toContain($import_content);
 
     $conn_id_key = array_search('Content-Disposition: form-data; name="connection_id"', $form_body_arr);
@@ -65,6 +69,9 @@ test('createImportUsers() issues an appropriate request', function(): void {
     $ext_id_key = array_search('Content-Disposition: form-data; name="external_id"', $form_body_arr);
     $this->assertNotEmpty($ext_id_key);
     expect($form_body_arr[$ext_id_key + $keyOffset])->toEqual('__test_ext_id__');
+
+    // Delete temporary file
+    fclose($import);
 });
 
 test('createExportUsers() issues an appropriate request', function(): void {
