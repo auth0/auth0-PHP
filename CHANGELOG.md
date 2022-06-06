@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [8.2.1](https://github.com/auth0/auth0-PHP/tree/8.2.1) (2022-06-06)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.2.0..8.2.1)
+
+**Fixed**
+
+- Fixed an issue in `Auth0\SDK\Configuration\SdkConfiguration` where `customDomain` was not properly formatted in some configurations, leading to inconsistencies in certain SDK functions, such as Token validation. `customDomain` is now formatted identically to `domain`. [#633](https://github.com/auth0/auth0-PHP/pull/633) ([evansims](https://github.com/evansims))
+
+**Closed Issues**
+
+- Resolves [#630](https://github.com/auth0/auth0-PHP/issues/630) ([barasimumatik](https://github.com/barasimumatik))
+
 ## [8.2.0](https://github.com/auth0/auth0-PHP/tree/8.2.0) (2022-04-25)
 
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.1.0..8.2.0)
