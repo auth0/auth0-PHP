@@ -17,3 +17,4 @@ psalm.xml.dist
 rector.php
 phpdoc.phar
 .phpdoc
+phpdoc.dist.xml
