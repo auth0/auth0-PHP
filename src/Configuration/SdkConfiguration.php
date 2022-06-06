@@ -468,7 +468,7 @@ final class SdkConfiguration implements ConfigurableContract
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
         }
 
-        if ($propertyName === 'domain') {
+        if ($propertyName === 'domain' || $propertyName === 'customDomain') {
             if (is_string($propertyValue) && mb_strlen($propertyValue) !== 0) {
                 $host = parse_url($propertyValue, PHP_URL_HOST);
                 return $host ?? $propertyValue;

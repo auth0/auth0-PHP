@@ -288,7 +288,7 @@ test('formatDomain() returns the custom domain when a custom domain is configure
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
-        'customDomain' => $customDomain,
+        'customDomain' => 'test://' . $customDomain,
         'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
