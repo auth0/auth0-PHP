@@ -9,35 +9,35 @@
 
 The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessing Auth0's Authentication and Management API endpoints using modern PHP releases. Auth0 enables you to quickly integrate authentication and authorization into your applications so that you can focus on your core business. [Learn more.](https://auth0.com/why-auth0)
 
-- [Auth0 PHP SDK](#auth0-php-sdk)
-  - [Requirements](#requirements)
-      - [Support Matrix](#support-matrix)
-  - [Documentation](#documentation)
-  - [Usage](#usage)
-    - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [SDK Initialization](#sdk-initialization)
-    - [Configuration Options](#configuration-options)
-    - [Configuration Strategies](#configuration-strategies)
-    - [Checking for an active session](#checking-for-an-active-session)
-    - [Checking for an expired session](#checking-for-an-expired-session)
-    - [Authorizing User](#authorizing-user)
-    - [Requesting Tokens](#requesting-tokens)
-    - [Logging out](#logging-out)
-    - [Renewing tokens](#renewing-tokens)
-    - [Decoding an Id Token](#decoding-an-id-token)
-    - [Using the Authentication API](#using-the-authentication-api)
-    - [Using the Management API](#using-the-management-api)
-    - [Using Organizations](#using-organizations)
-      - [Initializing the SDK with Organizations](#initializing-the-sdk-with-organizations)
-      - [Logging in with an Organization](#logging-in-with-an-organization)
-      - [Accepting user invitations](#accepting-user-invitations)
-      - [Validation guidance for supporting multiple organizations](#validation-guidance-for-supporting-multiple-organizations)
-  - [Contributing](#contributing)
-  - [Support + Feedback](#support--feedback)
-  - [Vulnerability Reporting](#vulnerability-reporting)
-  - [What is Auth0?](#what-is-auth0)
-  - [License](#license)
+- [Requirements](#requirements)
+  - [Support Matrix](#support-matrix)
+- [Documentation](#documentation)
+- [Usage](#usage)
+  - [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [SDK Initialization](#sdk-initialization)
+  - [Configuration Options](#configuration-options)
+  - [Configuration Strategies](#configuration-strategies)
+  - [Checking for an active session](#checking-for-an-active-session)
+  - [Checking for an expired session](#checking-for-an-expired-session)
+  - [Authorizing User](#authorizing-user)
+  - [Requesting Tokens](#requesting-tokens)
+  - [Logging out](#logging-out)
+  - [Renewing tokens](#renewing-tokens)
+  - [Decoding an Id Token](#decoding-an-id-token)
+  - [Decoding an Access Token](#decoding-an-access-token)
+  - [Using the Authentication API](#using-the-authentication-api)
+  - [Using the Management API](#using-the-management-api)
+  - [Using Organizations](#using-organizations)
+    - [Initializing the SDK with Organizations](#initializing-the-sdk-with-organizations)
+    - [Logging in with an Organization](#logging-in-with-an-organization)
+    - [Accepting user invitations](#accepting-user-invitations)
+    - [Validation guidance for supporting multiple organizations](#validation-guidance-for-supporting-multiple-organizations)
+- [Contributing](#contributing)
+- [Support + Feedback](#support--feedback)
+- [Vulnerability Reporting](#vulnerability-reporting)
+- [What is Auth0?](#what-is-auth0)
+- [License](#license)
 
 ## Requirements
 
@@ -304,13 +304,17 @@ After a user successfully authenticates with Auth0 from the step above, they'll 
 
 $session = $auth0->getCredentials();
 
-// Is this end-user already signed in?
+// Is this user returning to complete the authentication flow?
 if ($session === null && isset($_GET['code']) && isset($_GET['state'])) {
-    if ($auth0->exchange() === false) {
-        die("Authentication failed.");
+    try {
+        // Exchange the code for a token.
+        $auth0->exchange();
+    } catch (StateException $exception) {
+        echo("Authentication failed.", $exception->getMessage());
+        exit();
     }
 
-    // Authentication complete!
+    // Authentication successful!
     print_r($auth0->getUser());
 }
 ```
