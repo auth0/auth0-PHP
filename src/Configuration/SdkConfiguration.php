@@ -563,5 +563,9 @@ final class SdkConfiguration implements ConfigurableContract
         if ($this->getTokenAlgorithm() === 'HS256' && ! $this->hasClientSecret()) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresClientSecret();
         }
+
+        if (! $this->hasCookieSecret()) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
+        }
     }
 }
