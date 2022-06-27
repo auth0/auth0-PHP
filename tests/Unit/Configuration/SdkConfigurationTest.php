@@ -174,6 +174,7 @@ test('an invalid strategy throws an exception', function(): void
 test('a non-existent array value is ignored', function(): void
 {
     $sdk = new SdkConfiguration([
+        'strategy' => 'none',
         'domain' => uniqid(),
         'clientId' => uniqid(),
         'organization' => [],
@@ -187,6 +188,7 @@ test('a `webapp` strategy is used by default', function(): void
     $sdk = new SdkConfiguration([
         'domain' => uniqid(),
         'clientId' => uniqid(),
+        'cookieSecret' => uniqid(),
     ]);
 
     expect($sdk->getStrategy())->toEqual('webapp');
