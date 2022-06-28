@@ -269,7 +269,7 @@ It's important to configure these values properly for your application to ensure
 
 Cookies are stored in an encrypted state using the `cookieSecret` as a salt, and it is therefore important to keep this value secure. Treat it like a password. Because of the size of these encrypted cookies can sometimes grow relatively large (varying based on the size of the user data), the SDK uses a technique called "chunking" to avoid hitting size limitations imposed by some browsers. The SDK will manage these chunked cookies (ending in a suffix of _1, _2, and so on) efficiently. Note that some legacy browsers that have reached end-of-life, particularly Internet Explorer, may have trouble with chunked cookies.
 
-In some environments this chunked cookie approach may not be suitable for you, such as applications that run behind a load balancer that impose stricter limits on cookie sizes. For example, some Customers have reported issues with load balances like AWS Elastic Load Balancing due to cookie header restrictions. In these cases you can use the SDK's support for [native PHP sessions](#php-sessions) instead.
+In some environments this chunked cookie approach may not be suitable for you, such as applications that run behind a load balancer that impose stricter limits on cookie sizes. For example, some customers have reported issues with load balancers like AWS Elastic Load Balancing due to cookie header restrictions. In these cases you can use the SDK's support for [native PHP sessions](#php-sessions) instead.
 
 #### PHP Sessions (Recommended)
 
