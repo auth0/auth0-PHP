@@ -246,7 +246,7 @@ The PHP SDK is a robust and flexible library capable of integration with many ty
 
 ### Session Storage
 
-When configured for a `webapp` strategy (the default strategy; see [Configuration Strategies](#configuration-strategies) above), the SDK will use a configured session storage interface to persist state data between requests. This is referred to as "stateful" storage, as it relies on a state being persisted between requests to maintain an end user's the session.
+When configured for a `webapp` strategy (the default strategy; see [Configuration Strategies](#configuration-strategies) above), the SDK will use a configured session storage interface to persist state data between requests. This is referred to as "stateful" storage, as it relies on a state being persisted between requests to maintain an end-user's session.
 
 Note that other "stateless" strategies such as `api` and `management` do not persist state data between requests, and therefor session storage configuration is not required.
 
