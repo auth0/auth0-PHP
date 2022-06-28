@@ -468,6 +468,14 @@ final class SdkConfiguration implements ConfigurableContract
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
         }
 
+        if ($propertyName === 'cookieSecret') {
+            if (is_string($propertyValue) && mb_strlen($propertyValue) !== 0) {
+                return $propertyValue;
+            }
+
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
+        }
+
         if ($propertyName === 'domain' || $propertyName === 'customDomain') {
             if (is_string($propertyValue) && mb_strlen($propertyValue) !== 0) {
                 $host = parse_url($propertyValue, PHP_URL_HOST);
@@ -562,6 +570,10 @@ final class SdkConfiguration implements ConfigurableContract
 
         if ($this->getTokenAlgorithm() === 'HS256' && ! $this->hasClientSecret()) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresClientSecret();
+        }
+
+        if (! $this->hasCookieSecret()) {
+            throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
     }
 }
