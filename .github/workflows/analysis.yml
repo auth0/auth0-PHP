@@ -123,6 +123,9 @@ jobs:
       - name: Install PHPStan strict rules
         run: composer require phpstan/phpstan-strict-rules
 
+      - name: Install PHPCS
+        run: composer require squizlabs/php_codesniffer
+
       - name: Prepare configuration
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpstan.neon.dist $GITHUB_WORKSPACE/phpstan.neon.dist
 
@@ -135,7 +138,7 @@ jobs:
     strategy:
       max-parallel: 10
       matrix:
-        php: ["7.4", "8.0", "8.1", "8.2"]
+        php: ["7.4", "8.0", "8.1"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
@@ -171,7 +174,7 @@ jobs:
       - name: Prepare configuration
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/psalm.xml.dist $GITHUB_WORKSPACE/psalm.xml.dist
 
-      - name: Execute PHPStan
+      - name: Execute Psalm
         run: vendor/bin/psalm
 
   pint:
@@ -254,6 +257,12 @@ jobs:
 
       - name: Install Rector
         run: composer require rector/rector
+
+      - name: Install PHPStan strict rules
+        run: composer require phpstan/phpstan-strict-rules
+
+      - name: Install PHPCS
+        run: composer require squizlabs/php_codesniffer
 
       - name: Prepare configuration (1)
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/rector.php $GITHUB_WORKSPACE/rector.php
