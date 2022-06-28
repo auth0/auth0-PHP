@@ -9,35 +9,39 @@
 
 The Auth0 PHP SDK is a straightforward and rigorously-tested library for accessing Auth0's Authentication and Management API endpoints using modern PHP releases. Auth0 enables you to quickly integrate authentication and authorization into your applications so that you can focus on your core business. [Learn more.](https://auth0.com/why-auth0)
 
-- [Auth0 PHP SDK](#auth0-php-sdk)
-  - [Requirements](#requirements)
-      - [Support Matrix](#support-matrix)
-  - [Documentation](#documentation)
-  - [Usage](#usage)
-    - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [SDK Initialization](#sdk-initialization)
-    - [Configuration Options](#configuration-options)
-    - [Configuration Strategies](#configuration-strategies)
-    - [Checking for an active session](#checking-for-an-active-session)
-    - [Checking for an expired session](#checking-for-an-expired-session)
-    - [Authorizing User](#authorizing-user)
-    - [Requesting Tokens](#requesting-tokens)
-    - [Logging out](#logging-out)
-    - [Renewing tokens](#renewing-tokens)
-    - [Decoding an Id Token](#decoding-an-id-token)
-    - [Using the Authentication API](#using-the-authentication-api)
-    - [Using the Management API](#using-the-management-api)
-    - [Using Organizations](#using-organizations)
-      - [Initializing the SDK with Organizations](#initializing-the-sdk-with-organizations)
-      - [Logging in with an Organization](#logging-in-with-an-organization)
-      - [Accepting user invitations](#accepting-user-invitations)
-      - [Validation guidance for supporting multiple organizations](#validation-guidance-for-supporting-multiple-organizations)
-  - [Contributing](#contributing)
-  - [Support + Feedback](#support--feedback)
-  - [Vulnerability Reporting](#vulnerability-reporting)
-  - [What is Auth0?](#what-is-auth0)
-  - [License](#license)
+- [Requirements](#requirements)
+  - [Support Matrix](#support-matrix)
+- [Documentation](#documentation)
+- [Usage](#usage)
+  - [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [SDK Initialization](#sdk-initialization)
+  - [Configuration Options](#configuration-options)
+  - [Configuration Strategies](#configuration-strategies)
+  - [Session Storage](#session-storage)
+    - [Cookies (Default)](#cookies-default)
+    - [PHP Sessions (Recommended)](#php-sessions-recommended)
+    - [PSR-6 (Advanced)](#psr-6-advanced)
+  - [Checking for an active session](#checking-for-an-active-session)
+  - [Checking for an expired session](#checking-for-an-expired-session)
+  - [Authorizing User](#authorizing-user)
+  - [Requesting Tokens](#requesting-tokens)
+  - [Logging out](#logging-out)
+  - [Renewing tokens](#renewing-tokens)
+  - [Decoding an Id Token](#decoding-an-id-token)
+  - [Decoding an Access Token](#decoding-an-access-token)
+  - [Using the Authentication API](#using-the-authentication-api)
+  - [Using the Management API](#using-the-management-api)
+  - [Using Organizations](#using-organizations)
+    - [Initializing the SDK with Organizations](#initializing-the-sdk-with-organizations)
+    - [Logging in with an Organization](#logging-in-with-an-organization)
+    - [Accepting user invitations](#accepting-user-invitations)
+    - [Validation guidance for supporting multiple organizations](#validation-guidance-for-supporting-multiple-organizations)
+- [Contributing](#contributing)
+- [Support + Feedback](#support--feedback)
+- [Vulnerability Reporting](#vulnerability-reporting)
+- [What is Auth0?](#what-is-auth0)
+- [License](#license)
 
 ## Requirements
 
@@ -240,6 +244,49 @@ The PHP SDK is a robust and flexible library capable of integration with many ty
 - `api` indicates you'll be using the SDK in a stateless API-only environment; only `domain` and `audience` are required in this configuration.
 - `management` is for stateless applications exclusively using Management API calls; `domain` is required. You must also provide either a `managementToken`, or assign `clientId` and `clientSecret` for the SDK to automatically aquire a token.
 
+### Session Storage
+
+When configured for a `webapp` strategy (the default strategy; see [Configuration Strategies](#configuration-strategies) above), the SDK will use a configured session storage interface to persist state data between requests. This is referred to as "stateful" storage, as it relies on a state being persisted between requests to maintain an end-user's session.
+
+Note that other "stateless" strategies such as `api` and `management` do not persist state data between requests, and therefore session storage configuration is not required.
+
+#### Cookies (Default)
+
+By default, the SDK will use cookies stored on an end-user's device to persist state data between requests. This data is stored in an encrypted state on the device. When using this storage method, the SDK will use the following configuration options to customize storage behavior:
+
+- `cookieSecret` (a string) to derive an encryption key for the session cookie.
+  - This should be a long, unique string that is ideally cryptographically generated. For example, running `openssl rand -hex 64` from a shell would deliver a viable string for this use.
+- `cookieDomain` (a string; falls back to your environment's `HTTP_HOST` if none is provided) to determine the domain to use for the session cookie.
+  - In most cases, this should be the domain of your application. To make cookies visible on all subdomains then the domain must be prefixed with a dot, like '.example.com'.
+- `cookieExpires` (an integer; defaults to `0`) to determine the expiration time (in seconds) for the session cookie.
+  - If set to `0` the cookie will expire at the end of the session (usually [but not always] when the browser closes).
+- `cookiePath` (a string; defaults to `/`) to determine the path to use for the session cookie.
+  - This is useful if you host multiple application instances on the same domain, at different paths.
+- `cookieSecure` (a boolean; defaults to `false`) to determine whether the session cookie should only be sent over secure connections.
+  - In production environments you should set this to `true`, unless you have a very good reason not to and [understand the risks](https://owasp.org/www-community/controls/SecureCookieAttribute).
+
+It's important to configure these values properly for your application to ensure session cookies are stored securely and accessible to your application, especially once it is pushed to production.
+
+Cookies are stored in an encrypted state using the `cookieSecret` as a salt, and it is therefore important to keep this value secure. Treat it like a password. Because of the size of these encrypted cookies can sometimes grow relatively large (varying based on the size of the user data), the SDK uses a technique called "chunking" to avoid hitting size limitations imposed by some browsers. The SDK will manage these chunked cookies (ending in a suffix of _1, _2, and so on) efficiently. Note that some legacy browsers that have reached end-of-life, particularly Internet Explorer, may have trouble with chunked cookies.
+
+In some environments this chunked cookie approach may not be suitable for you, such as applications that run behind a load balancer that impose stricter limits on cookie sizes. For example, some customers have reported issues with load balancers like AWS Elastic Load Balancing due to cookie header restrictions. In these cases you can use the SDK's support for [native PHP sessions](#php-sessions) instead.
+
+#### PHP Sessions (Recommended)
+
+To use native PHP sessions, you can set the `sessionStorage` configuration option to an instance of `Auth0\SDK\Store\SessionStore` during SDK initialization. Note that SDK configuration options for cookies are not applied in this case, and the SDK will instead rely on PHP's native session storage handling. You can learn more about native sessions from the PHP documentation site: [https://www.php.net/manual/en/book.session.php](https://www.php.net/manual/en/book.session.php)
+
+Although native sessions are simple, reliable and secure, they are more complicated to deploy in real production environments, particularly where load balanced application servers are in use. This is the only reason the storage medium is not the default for the SDK. In load balanced environments, you have to configure your PHP environment's session storage to be available across all of your balanced application servers. This is usually accomplished with memcached or AWS ElastiCache, but there are many options available. This topic is outside the scope of this SDK's documentation, but you should review [the PHP documentation](https://www.php.net/manual/en/book.session.php) for the `session.save_handler` and `session.save_path` settings in your PHP configuration file.
+
+#### PSR-6 (Advanced)
+
+The SDK also supports a generic storage interface for connecting PSR-6 compatible cache libraries. To use this approach, set the `sessionStorage` configuration option to an instance of `Auth0\SDK\Store\Psr6Store`. This method requires you to create custom code that implements the `Auth0\SDK\Contract\StoreInterface` interface to connect with your services/libraries of choice.
+
+This storage mechanism supports three configuration parameters at initialization: `publicStore`, `privateStore` and `storageKey`.
+
+- `publicStore` should be a custom class that implements the `Auth0\SDK\Contract\StoreInterface` interface, for connecting to your backend of choice.
+- `privateStore` is an instance of a PSR-6 compatible class that implements `Psr\Cache\CacheItemPoolInterface`.
+- `storageKey` is a string that will be used to prefix all keys stored in the cache, so it should be unique to your application.
+
 ### Checking for an active session
 
 ```PHP
@@ -304,13 +351,17 @@ After a user successfully authenticates with Auth0 from the step above, they'll 
 
 $session = $auth0->getCredentials();
 
-// Is this end-user already signed in?
+// Is this user returning to complete the authentication flow?
 if ($session === null && isset($_GET['code']) && isset($_GET['state'])) {
-    if ($auth0->exchange() === false) {
-        die("Authentication failed.");
+    try {
+        // Exchange the code for a token.
+        $auth0->exchange();
+    } catch (StateException $exception) {
+        echo("Authentication failed.", $exception->getMessage());
+        exit();
     }
 
-    // Authentication complete!
+    // Authentication successful!
     print_r($auth0->getUser());
 }
 ```
