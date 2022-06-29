@@ -4,5 +4,9 @@
       "type": "path",
       "url": "../"
     }
-  ]
+  ],
+  "require": {
+    "auth0/auth0-PHP": "*"
+  },
+  "minimum-stability": "dev"
 }
