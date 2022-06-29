@@ -43,13 +43,10 @@ jobs:
       - name: Override composer manifest of boilerplate for local package
         uses: sergeysova/jq-action@v2
         with:
-          cmd: jq -s add ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json > ./boilerplate/composer.json
+          cmd: jq -s '.[0] * .[1]' ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json > ./boilerplate/composer.json
 
       - name: Result
         run: cat ./boilerplate/composer.json
 
-      - name: Result (WRONG)
-        run: cat ./.github/workflows-configs/boilerplate.json
-
       - name: Update boilerplate dependencies
-        run: cd ./boilerplate && composer require "auth0/auth0-PHP @dev"
+        run: cd ./boilerplate && composer update
