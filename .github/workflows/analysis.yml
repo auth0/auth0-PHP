@@ -87,7 +87,7 @@ jobs:
         run: mv .github/workflows-configs/phpunit.xml.dist phpunit.xml.dist
 
       - name: Execute Pest
-        run: vendor/bin/pest --coverage-clover coverage/coverage.xml
+        run: php -d memory_limit=512M vendor/bin/pest --coverage-clover coverage/coverage.xml
 
       - if: (matrix.php == '8.1')
         name: Store coverage file
