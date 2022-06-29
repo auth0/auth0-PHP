@@ -6,7 +6,7 @@
     }
   ],
   "require": {
-    "auth0/auth0-PHP": "*"
+    "auth0/auth0-php": "*"
   },
   "minimum-stability": "dev"
 }
