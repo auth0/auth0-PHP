@@ -63,9 +63,6 @@
   },
   "config": {
     "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true,
-      "pestphp/pest-plugin": true,
-      "ergebnis/composer-normalize": true,
       "wikimedia/composer-merge-plugin": true
     },
     "optimize-autoloader": true,
