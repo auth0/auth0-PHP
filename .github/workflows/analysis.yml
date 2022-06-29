@@ -62,9 +62,6 @@ jobs:
       - name: Install dependencies with composer
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --${{ matrix.prefer }}
 
-      - name: Install Pest
-        run: composer require pestphp/pest "^1.21" --with-all-dependencies
-
       - name: Prepare configuration
         run: mv .github/workflows-configs/phpunit.xml.dist phpunit.xml.dist
 
@@ -137,15 +134,6 @@ jobs:
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
 
-      - name: Install PHPStan
-        run: composer require phpstan/phpstan:* --with-all-dependencies
-
-      - name: Install PHPStan strict rules
-        run: composer require phpstan/phpstan-strict-rules:* --with-all-dependencies
-
-      - name: Install PHPCS
-        run: composer require squizlabs/php_codesniffer:* --with-all-dependencies
-
       - name: Prepare configuration
         run: mv .github/workflows-configs/phpstan.neon.dist phpstan.neon.dist
 
@@ -188,9 +176,6 @@ jobs:
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
-
-      - name: Install Psalm
-        run: composer require vimeo/psalm:* --with-all-dependencies
 
       - name: Prepare configuration
         run: mv .github/workflows-configs/psalm.xml.dist psalm.xml.dist
@@ -279,15 +264,6 @@ jobs:
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
-
-      - name: Install Rector
-        run: composer require rector/rector:* --with-all-dependencies
-
-      - name: Install PHPStan strict rules
-        run: composer require phpstan/phpstan-strict-rules:* --with-all-dependencies
-
-      - name: Install PHPCS
-        run: composer require squizlabs/php_codesniffer:* --with-all-dependencies
 
       - name: Prepare configuration (1)
         run: mv .github/workflows-configs/rector.php rector.php
