@@ -48,3 +48,6 @@ jobs:
 
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+
+      - name: Run tests
+        run: cat ./boilerplate && php artisan test
