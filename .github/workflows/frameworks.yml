@@ -50,7 +50,47 @@ jobs:
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
 
       - name: Run tests
-        run: cd ./boilerplate && php artisan test
+        run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
+
+  symfony:
+    name: Symfony
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+        symfony: ["^4.4", "^5.4", "^6.1"]
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: pcov
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create boilerplate application
+        run: composer create-project symfony/skeleton=${{ matrix.symfony }} boilerplate --prefer-dist
+
+      - name: Install tools
+        run: npm install --location=global json
+
+      - name: Override boilerplate dependencies
+        run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+
+      - name: Update dependencies
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+
+      - name: Run tests
+        run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
 
   lumen:
     name: Lumen
@@ -95,7 +135,7 @@ jobs:
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
 
       - name: Run tests
-        run: cd ./boilerplate && php artisan test
+        run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
 
   slim:
     name: Slim
@@ -135,4 +175,4 @@ jobs:
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
 
       - name: Run tests
-        run: cd ./boilerplate && php artisan test
+        run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
