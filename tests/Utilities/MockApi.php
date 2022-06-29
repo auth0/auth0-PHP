@@ -13,7 +13,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class MockApi
 {
-    public $client;
     /**
      * History container for mock requests.
      */
@@ -30,7 +29,7 @@ abstract class MockApi
         // Create an instance of the intended API.
         $this->setClient();
 
-        if ($responses !== null && $responses === []) {
+        if ($responses !== null && ! count($responses)) {
             $responses[] = HttpResponseGenerator::create();
         }
 
@@ -102,7 +101,8 @@ abstract class MockApi
      */
     public function getRequestQuery(
         ?string $prefix = '&'
-    ): string {
+    ): string
+    {
         $query = $this->getRequestUrl(PHP_URL_QUERY);
 
         if ($query !== null) {

@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 
 uses()->group('utility', 'utility.http_response', 'networking');
 
-test('getHeaders() returns the expected response', function (): void {
+test('getHeaders() returns the expected response', function(): void {
     $response = Mockery::mock(ResponseInterface::class);
     $response->shouldReceive('getStatusCode')->andReturn(200);
     $response->shouldReceive('getHeaders')->andReturn(['X-TEST' => 'Testing']);

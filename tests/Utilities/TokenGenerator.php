@@ -157,7 +157,7 @@ class TokenGenerator
         }
 
         [$headers, $claims, $signature] = explode('.', $token);
-        $payload = implode('.', [$headers, $claims]);
+        $payload = join('.', [$headers, $claims]);
         $signature = (string) TokenGenerator::decodePart($signature, false);
         $claims = (array) TokenGenerator::decodePart($claims, true);
         $headers = (array) TokenGenerator::decodePart($headers, true);

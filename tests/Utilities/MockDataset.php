@@ -41,7 +41,7 @@ class MockDataset
             }
 
             if ($type === 'boolean') {
-                $response[$name] = random_int(0, 1) == 1;
+                $response[$name] = random_int(0,1) == 1;
                 continue;
             }
 

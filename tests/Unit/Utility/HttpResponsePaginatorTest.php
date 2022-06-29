@@ -9,17 +9,17 @@ use Auth0\Tests\Utilities\MockManagementApi;
 
 uses()->group('utility', 'utility.http_response_paginator', 'networking');
 
-beforeEach(function (): void {
+beforeEach(function(): void {
     $this->usePagination = new RequestOptions(null, new PaginatedRequest(0, 1, true));
 });
 
-it('throws an error when paginating without any request prepared', function (): void {
+it('throws an error when paginating without any request prepared', function(): void {
     $sdk = (new MockManagementApi())->mock();
 
     $paginator = $sdk->getResponsePaginator();
 })->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
 
-it('throws an error when attempting to initiate pagination on a failed network request', function (): void {
+it('throws an error when attempting to initiate pagination on a failed network request', function(): void {
     $sdk = new MockManagementApi(null);
 
     $sdk->getHttpClient()->mockResponse(
@@ -39,7 +39,7 @@ it('throws an error when attempting to initiate pagination on a failed network r
     $paginator = $sdk->getResponsePaginator();
 })->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
 
-it('throws an error when no start is returned from the API response', function (): void {
+it('throws an error when no start is returned from the API response', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'total' => 0,
@@ -56,7 +56,7 @@ it('throws an error when no start is returned from the API response', function (
     expect(count($paginator))->toEqual(0);
 })->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
 
-it('returns a count of 0 when there are no results', function (): void {
+it('returns a count of 0 when there are no results', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'start' => 0,
@@ -74,7 +74,7 @@ it('returns a count of 0 when there are no results', function (): void {
     expect(count($paginator))->toEqual(0);
 });
 
-it('returns a count when there are results', function (): void {
+it('returns a count when there are results', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'start' => 0,
@@ -91,21 +91,21 @@ it('returns a count when there are results', function (): void {
     expect(count($paginator))->toEqual(2);
 });
 
-it('throws an error when used with a non-GET endpoint', function (): void {
+it('throws an error when used with a non-GET endpoint', function(): void {
     $sdk = (new MockManagementApi())->mock();
     $sdk->users()->create(uniqid(), [uniqid()]);
 
     $paginator = $sdk->getResponsePaginator();
 })->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_METHOD_UNSUPPORTED);
 
-it('throws an error when used with an unsupported endpoint', function (): void {
+it('throws an error when used with an unsupported endpoint', function(): void {
     $sdk = (new MockManagementApi())->mock();
     $sdk->logStreams()->getAll();
 
     $paginator = $sdk->getResponsePaginator();
 })->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
 
-it('returns loaded results', function (): void {
+it('returns loaded results', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'start' => 0,
@@ -126,7 +126,7 @@ it('returns loaded results', function (): void {
     }
 });
 
-it('returns network requests for paginated results', function (): void {
+it('returns network requests for paginated results', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'start' => 0,
@@ -156,7 +156,7 @@ it('returns network requests for paginated results', function (): void {
     expect($paginator->countNetworkRequests())->toEqual(1);
 });
 
-it('ignores network errors and exits iteration', function (): void {
+it('ignores network errors and exits iteration', function(): void {
     $sdk = new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'start' => 0,
@@ -186,7 +186,7 @@ it('ignores network errors and exits iteration', function (): void {
     expect($paginator->countNetworkRequests())->toEqual(1);
 });
 
-it('uses checkpoint pagination params when appropriate', function (): void {
+it('uses checkpoint pagination params when appropriate', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'organizations' => ['org1', 'org2'],
@@ -215,7 +215,7 @@ it('uses checkpoint pagination params when appropriate', function (): void {
     count($paginator);
 })->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_CANNOT_COUNT_CHECKPOINT_PAGINATION);
 
-it('throws an error if checkpoint pagination is used on an unsupported endpoint', function (): void {
+it('throws an error if checkpoint pagination is used on an unsupported endpoint', function(): void {
     $sdk = (new MockManagementApi())->mock();
     $pagination = (new PaginatedRequest())->setTake(2);
     $sdk->users()->getAll([], new RequestOptions(null, $pagination));
@@ -223,14 +223,14 @@ it('throws an error if checkpoint pagination is used on an unsupported endpoint'
     $paginator = $sdk->getResponsePaginator();
 })->throws(\Auth0\SDK\Exception\PaginatorException::class);
 
-it('triggers checkpoint pagination on enabled regex endpoints', function (): void {
+it('triggers checkpoint pagination on enabled regex endpoints', function(): void {
     $sdk = (new MockManagementApi())->mock();
     $sdk->organizations()->getMembers('xyz', new RequestOptions(null, (new PaginatedRequest())->setFrom('xyz')->setTake(2)));
 
     $paginator = $sdk->getResponsePaginator();
 })->throws(\Auth0\SDK\Exception\PaginatorException::class);
 
-it('checkpoint pagination stops iterating when a `next` response is not present', function (): void {
+it('checkpoint pagination stops iterating when a `next` response is not present', function(): void {
     $sdk = (new MockManagementApi([
         HttpResponseGenerator::create(json_encode([
             'start' => 0,

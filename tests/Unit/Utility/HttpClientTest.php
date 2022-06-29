@@ -10,7 +10,7 @@ use Auth0\Tests\Utilities\HttpResponseGenerator;
 
 uses()->group('utility', 'utility.http_client', 'networking');
 
-beforeEach(function (): void {
+beforeEach(function(): void {
     $this->config = new SdkConfiguration([
         'domain' => 'api.local.test',
         'cookieSecret' => uniqid(),
@@ -24,7 +24,7 @@ beforeEach(function (): void {
     $this->httpResponse429 = HttpResponseGenerator::create('{"error": "too_many_requests", "error_description": "Rate limit exceeded"}', 429);
 });
 
-test('a 429 response is not retried if httpMaxRetries is zero', function (): void {
+test('a 429 response is not retried if httpMaxRetries is zero', function(): void {
     $this->config->setHttpMaxRetries(0);
 
     for ($i=0; $i < 3; $i++) {
@@ -42,7 +42,7 @@ test('a 429 response is not retried if httpMaxRetries is zero', function (): voi
     expect($requestCount)->toEqual(1);
 });
 
-test('a 429 response is not retried more than the hard cap', function (): void {
+test('a 429 response is not retried more than the hard cap', function(): void {
     $this->config->setHttpMaxRetries(HttpRequest::MAX_REQUEST_RETRIES * 2);
 
     for ($i=0; $i < 11; $i++) {
@@ -60,16 +60,16 @@ test('a 429 response is not retried more than the hard cap', function (): void {
     expect($requestCount)->toEqual(10);
 });
 
-test('an exponential back-off and jitter are being applied', function (): void {
+test('an exponential back-off and jitter are being applied', function(): void {
     $this->config->setHttpMaxRetries(10);
     $baseWaits = [0];
     $baseWaitSum = 0;
 
     for ($i=0; $i < 10; $i++) {
         $this->client->mockResponse(clone $this->httpResponse429);
-        $baseWait = (int) (100 * pow(2, $i));
+        $baseWait = intval(100 * pow(2, $i));
         $baseWaits[] = $baseWait;
-        $baseWaitSum += $baseWait;
+        $baseWaitSum = $baseWaitSum + $baseWait;
     }
 
     $response = $this->client->method('get')
@@ -132,7 +132,7 @@ test('an exponential back-off and jitter are being applied', function (): void {
     expect(array_sum($requestDelays))->toBeLessThanOrEqual(10000);
 });
 
-test('a request is tried 3 times before failing in the event of a 429', function (): void {
+test('a request is tried 3 times before failing in the event of a 429', function(): void {
     for ($i=0; $i < 3; $i++) {
         $this->client->mockResponse(clone $this->httpResponse429);
     }
@@ -150,7 +150,7 @@ test('a request is tried 3 times before failing in the event of a 429', function
     expect($requestCount)->toEqual(3);
 });
 
-test('a request recovers from a 429 response and returns the successful result', function (): void {
+test('a request recovers from a 429 response and returns the successful result', function(): void {
     $this->client->mockResponses([
         clone $this->httpResponse429,
         clone $this->httpResponse200,

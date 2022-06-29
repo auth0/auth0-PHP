@@ -11,14 +11,14 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('storage', 'storage.psr6');
 
-beforeEach(function (): void {
+beforeEach(function(): void {
     $this->public = new MemoryStore();
     $this->private = new ArrayAdapter();
     $this->storageKey = uniqid();
     $this->store = new Psr6Store($this->public, $this->private, $this->storageKey);
 });
 
-test('set() and get() behave as expected', function (string $key, string $value): void {
+test('set() and get() behave as expected', function(string $key, string $value): void {
     $this->store->set($key, $value);
     expect($this->store->get($key))->toBe($value);
     expect($this->store->get('missing_key'))->toBe(null);
@@ -31,11 +31,11 @@ test('set() and get() behave as expected', function (string $key, string $value)
     $this->assertNotSame($randomKey, $this->store->get($key));
     $this->assertNotNull($this->public->get($this->storageKey));
 })->with(['mocked data' => [
-    fn () => uniqid(),
-    fn () => uniqid(),
+    fn() => uniqid(),
+    fn() => uniqid(),
 ]]);
 
-it('stores data in private', function (string $key, string $value): void {
+it('stores data in private', function(string $key, string $value): void {
     $public = $this->getMockBuilder(StoreInterface::class)
         ->disableOriginalConstructor()
         ->onlyMethods(['set', 'get', 'delete', 'purge', 'defer'])
@@ -70,21 +70,21 @@ it('stores data in private', function (string $key, string $value): void {
     expect($store->get($key))->toBe($value);
     expect($store->get('missing_key'))->toBe(null);
 })->with(['mocked data' => [
-    fn () => uniqid(),
-    fn () => uniqid(),
+    fn() => uniqid(),
+    fn() => uniqid(),
 ]]);
 
-test('get() retrieves a default value as expected', function (string $key): void {
+test('get() retrieves a default value as expected', function(string $key): void {
     $this->store->set($key, null);
 
     expect($this->store->get($key, 'foobar'))->toBe(null);
     expect($this->store->get('missing_key', 'foobar'))->toBe('foobar');
     expect($this->store->get('missing_key'))->toBe(null);
 })->with(['mocked key' => [
-    fn () => uniqid(),
+    fn() => uniqid(),
 ]]);
 
-test('delete() clears values as expected', function (string $key, string $value): void {
+test('delete() clears values as expected', function(string $key, string $value): void {
     $this->store->delete($key);
     expect($this->store->get($key))->toBeNull();
 
@@ -92,16 +92,16 @@ test('delete() clears values as expected', function (string $key, string $value)
     $this->store->delete($key);
     expect($this->store->get($key))->toBeNull();
 })->with(['mocked data' => [
-    fn () => uniqid(),
-    fn () => uniqid(),
+    fn() => uniqid(),
+    fn() => uniqid(),
 ]]);
 
-test('purge() clears values as expected', function (string $key, string $value): void {
+test('purge() clears values as expected', function(string $key, string $value): void {
     $this->store->set($key, $value);
 
     $this->store->purge();
     expect($this->store->get($key))->toBeNull();
 })->with(['mocked data' => [
-    fn () => uniqid(),
-    fn () => uniqid(),
+    fn() => uniqid(),
+    fn() => uniqid(),
 ]]);
