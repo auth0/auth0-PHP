@@ -54,11 +54,11 @@ jobs:
       - name: Install Pest
         run: composer require pestphp/pest:* --with-all-dependencies
 
-      - if: (matrix.os != "windows-latest")
+      - if: (matrix.os != 'windows-latest')
         name: Prepare configuration
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
 
-      - if: (matrix.os == "windows-latest")
+      - if: (matrix.os == 'windows-latest')
         name: Prepare configuration
         run: move $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
 
