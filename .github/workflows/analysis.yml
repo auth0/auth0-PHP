@@ -57,8 +57,8 @@ jobs:
       - name: Prepare configuration
         uses: canastro/copy-file-action@master
         with:
-          source: $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist
-          target: $GITHUB_WORKSPACE/phpunit.xml.dist
+          source: ${{ github.GITHUB_WORKSPACE }}/.github/workflows-configs/phpunit.xml.dist
+          target: ${{ github.GITHUB_WORKSPACE }}/phpunit.xml.dist
 
       - name: Execute Pest
         run: vendor/bin/pest --ci --coverage --coverage-clover coverage/coverage.xml
