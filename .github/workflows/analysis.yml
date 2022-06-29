@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up PHP ${{ matrix.php }} (${{ matrix.os }})
+      - name: Set up PHP ${{ matrix.php }} (${{ matrix.prefer }})
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
@@ -55,9 +55,16 @@ jobs:
     strategy:
       max-parallel: 10
       matrix:
-        php: ["8.0", "8.1"]
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        php: ["7.4", 8.0", "8.1"]
+        os: ["ubuntu-latest", "windows-latest"]
         prefer: ["prefer-lowest", "prefer-stable"]
+        exclude:
+          - php: "7.4"
+            os: ubuntu-latest
+            prefer: "prefer-lowest"
+          - php: "7.4"
+            os: windows-latest
+            prefer: "prefer-lowest"
 
     steps:
       - name: Set up PHP ${{ matrix.php }} (${{ matrix.os }})
@@ -155,8 +162,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
+          key: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-prefer-stable-
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
@@ -201,8 +208,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
+          key: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-prefer-stable-
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
@@ -247,8 +254,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
+          key: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-prefer-stable-
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
@@ -293,8 +300,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
+          key: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-prefer-stable-
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
