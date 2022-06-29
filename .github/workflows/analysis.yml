@@ -11,6 +11,7 @@ jobs:
     name: Pest
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1", "8.2"]
@@ -51,7 +52,7 @@ jobs:
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Install Pest
-        run: composer require pestphp/pest
+        run: composer require pestphp/pest:* --with-all-dependencies
 
       - name: Prepare configuration
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
@@ -90,6 +91,7 @@ jobs:
     name: PHPStan
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1", "8.2"]
@@ -123,13 +125,13 @@ jobs:
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Install PHPStan
-        run: composer require phpstan/phpstan
+        run: composer require phpstan/phpstan:* --with-all-dependencies
 
       - name: Install PHPStan strict rules
-        run: composer require phpstan/phpstan-strict-rules
+        run: composer require phpstan/phpstan-strict-rules:* --with-all-dependencies
 
       - name: Install PHPCS
-        run: composer require squizlabs/php_codesniffer
+        run: composer require squizlabs/php_codesniffer:* --with-all-dependencies
 
       - name: Prepare configuration
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpstan.neon.dist $GITHUB_WORKSPACE/phpstan.neon.dist
@@ -141,6 +143,7 @@ jobs:
     name: Psalm
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1"]
@@ -174,7 +177,7 @@ jobs:
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Install Psalm
-        run: composer require vimeo/psalm
+        run: composer require vimeo/psalm:* --with-all-dependencies
 
       - name: Prepare configuration
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/psalm.xml.dist $GITHUB_WORKSPACE/psalm.xml.dist
@@ -186,6 +189,7 @@ jobs:
     name: Laravel Pint
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
         php: ["8.0", "8.1", "8.2"]
@@ -219,7 +223,7 @@ jobs:
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Install Laravel Pint
-        run: composer require laravel/pint --dev
+        run: composer require laravel/pint:* --dev --with-all-dependencies
 
       - name: Execute Laravel Pint
         run: vendor/bin/pint --config .\.github\workflows-configs\pint.json --test
@@ -228,6 +232,7 @@ jobs:
     name: Rector
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1", "8.2"]
@@ -261,13 +266,13 @@ jobs:
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Install Rector
-        run: composer require rector/rector
+        run: composer require rector/rector:* --with-all-dependencies
 
       - name: Install PHPStan strict rules
-        run: composer require phpstan/phpstan-strict-rules
+        run: composer require phpstan/phpstan-strict-rules:* --with-all-dependencies
 
       - name: Install PHPCS
-        run: composer require squizlabs/php_codesniffer
+        run: composer require squizlabs/php_codesniffer:* --with-all-dependencies
 
       - name: Prepare configuration (1)
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/rector.php $GITHUB_WORKSPACE/rector.php
