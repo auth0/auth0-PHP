@@ -20,6 +20,8 @@ jobs:
         exclude:
           - php: "7.4"
             laravel: "^9.0"
+          - php: "8.1"
+            laravel: "^6.0"
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
@@ -35,10 +37,13 @@ jobs:
       - name: Create Laravel project
         run: composer create-project laravel/laravel=${{ matrix.laravel }} . --prefer-dist
 
-      - name: Install dependencies with composer
+      - name: Install dependencies
         run: composer install --prefer-dist
 
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           path: ./vendor/auth0/auth0-php
+
+      - name: Update autoloader
+        uses: composer require "auth0/auth0-php @dev"
