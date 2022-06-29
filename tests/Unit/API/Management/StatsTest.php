@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.stats');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->stats();
 });
 
-test('getActiveUsers() issues an appropriate request', function(): void {
+test('getActiveUsers() issues an appropriate request', function (): void {
     $this->endpoint->getActiveUsers();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
@@ -16,7 +16,7 @@ test('getActiveUsers() issues an appropriate request', function(): void {
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
-test('getDaily() issues an appropriate request', function(string $from, string $to): void {
+test('getDaily() issues an appropriate request', function (string $from, string $to): void {
     $this->endpoint->getDaily($from, $to);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
@@ -24,6 +24,6 @@ test('getDaily() issues an appropriate request', function(string $from, string $
     expect($this->api->getRequestQuery(null))->toContain('from=' . $from);
     expect($this->api->getRequestQuery(null))->toContain('to=' . $to);
 })->with(['mocked id' => [
-    fn() => uniqid(),
-    fn() => uniqid(),
+    fn () => uniqid(),
+    fn () => uniqid(),
 ]]);

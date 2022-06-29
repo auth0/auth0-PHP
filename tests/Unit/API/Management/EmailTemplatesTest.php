@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.email_templates');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->emailTemplates();
 });
 
-test('create() throws an error when missing `template`', function(): void {
+test('create() throws an error when missing `template`', function (): void {
     $this->endpoint->create('', '', '', '', '', false);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'template'));
 
 
-test('create() throws an error when missing `body`', function(): void {
-    $this->endpoint->create(uniqid(), '', '', '' , '', false);
+test('create() throws an error when missing `body`', function (): void {
+    $this->endpoint->create(uniqid(), '', '', '', '', false);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 
-test('create() throws an error when missing `from`', function(): void {
-    $this->endpoint->create(uniqid(), uniqid(), '', '' , '', false);
+test('create() throws an error when missing `from`', function (): void {
+    $this->endpoint->create(uniqid(), uniqid(), '', '', '', false);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'from'));
 
 
-test('create() throws an error when missing `subject`', function(): void {
+test('create() throws an error when missing `subject`', function (): void {
     $this->endpoint->create(uniqid(), uniqid(), uniqid(), '', '', false);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'subject'));
 
 
-test('create() throws an error when missing `syntax`', function(): void {
+test('create() throws an error when missing `syntax`', function (): void {
     $this->endpoint->create(uniqid(), uniqid(), uniqid(), uniqid(), '', false);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'syntax'));
 
-test('create() issues valid requests', function(): void {
+test('create() issues valid requests', function (): void {
     $template = uniqid();
     $payload = uniqid();
     $from = uniqid();
@@ -62,7 +62,7 @@ test('create() issues valid requests', function(): void {
     expect($body)->toEqual(json_encode(['template' => $template, 'body' => $payload, 'from' => $from, 'subject' => $subject, 'syntax' => $syntax, 'enabled' => true]));
 });
 
-test('get() issues valid requests', function(): void {
+test('get() issues valid requests', function (): void {
     $templateName = uniqid();
 
     $this->endpoint->get($templateName);
@@ -71,7 +71,7 @@ test('get() issues valid requests', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/email-templates/' . $templateName);
 });
 
-test('update() issues valid requests', function(): void {
+test('update() issues valid requests', function (): void {
     $templateName = uniqid();
     $payload = uniqid();
 
@@ -88,7 +88,7 @@ test('update() issues valid requests', function(): void {
     expect($body)->toEqual(json_encode(['test' => $payload]));
 });
 
-test('patch() issues valid requests', function(): void {
+test('patch() issues valid requests', function (): void {
     $templateName = uniqid();
     $payload = uniqid();
 

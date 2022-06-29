@@ -6,18 +6,18 @@ use Auth0\SDK\Utility\PKCE;
 
 uses()->group('utility', 'utility.pkce');
 
-test('generateCodeVerifier() throws an exception when an invalid length is used', function(): void {
+test('generateCodeVerifier() throws an exception when an invalid length is used', function (): void {
     PKCE::generateCodeVerifier(10);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, \Auth0\SDK\Exception\ArgumentException::MSG_PKCE_CODE_VERIFIER_LENGTH);
 
-test('generateCodeVerifier() generates a value of an expected length', function(): void {
+test('generateCodeVerifier() generates a value of an expected length', function (): void {
     $code_verifier = PKCE::generateCodeVerifier(43);
 
     $this->assertNotEmpty($code_verifier);
     expect(mb_strlen($code_verifier))->toEqual(43);
 });
 
-test('generateCodeChallenge() generates an expected value', function(): void {
+test('generateCodeChallenge() generates an expected value', function (): void {
     $codeVerifier = 'Q6D5aiJHs6QdEILJoCz5pFw3Wmi9UiP8ovQbvlgd3Gc';
 
     $code_challenge = PKCE::generateCodeChallenge($codeVerifier);

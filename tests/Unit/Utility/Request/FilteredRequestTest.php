@@ -6,7 +6,7 @@ use Auth0\SDK\Utility\Request\FilteredRequest;
 
 uses()->group('utility', 'utility.request', 'utility.request.request_options', 'utility.request.request_options.filtered_request');
 
-test('setFields() works as expected', function(): void {
+test('setFields() works as expected', function (): void {
     $filters = new FilteredRequest();
 
     $filters->setFields(['a', 'b', 'c']);
@@ -14,7 +14,7 @@ test('setFields() works as expected', function(): void {
     expect($filters->getFields())->toEqualCanonicalizing(['a', 'b', 'c']);
 });
 
-test('clearFields() works as expected', function(): void {
+test('clearFields() works as expected', function (): void {
     $filters = new FilteredRequest();
 
     $filters->setFields(['a', 'b', 'c']);
@@ -23,7 +23,7 @@ test('clearFields() works as expected', function(): void {
     expect($filters->getFields())->toBeNull();
 });
 
-test('setIncludeFields() works as expected', function(): void {
+test('setIncludeFields() works as expected', function (): void {
     $filters = new FilteredRequest();
 
     $filters->setIncludeFields(true);

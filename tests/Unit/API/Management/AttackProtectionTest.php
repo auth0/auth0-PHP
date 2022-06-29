@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.attack_protection');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->attackProtection();
 });
 
-test('getBreachedPasswordDetection() issues valid requests', function(): void {
+test('getBreachedPasswordDetection() issues valid requests', function (): void {
     $this->endpoint->getBreachedPasswordDetection();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
@@ -16,7 +16,7 @@ test('getBreachedPasswordDetection() issues valid requests', function(): void {
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
-test('getBruteForceProtection() issues valid requests', function(): void {
+test('getBruteForceProtection() issues valid requests', function (): void {
     $this->endpoint->getBruteForceProtection();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
@@ -24,7 +24,7 @@ test('getBruteForceProtection() issues valid requests', function(): void {
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
-test('getSuspiciousIpThrottling() issues valid requests', function(): void {
+test('getSuspiciousIpThrottling() issues valid requests', function (): void {
     $this->endpoint->getSuspiciousIpThrottling();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
@@ -32,19 +32,19 @@ test('getSuspiciousIpThrottling() issues valid requests', function(): void {
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
-test('updateBreachedPasswordDetection() throws an error with an empty body', function(): void {
+test('updateBreachedPasswordDetection() throws an error with an empty body', function (): void {
     $this->endpoint->updateBreachedPasswordDetection([]);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
-test('updateBruteForceProtection() throws an error with an empty body', function(): void {
+test('updateBruteForceProtection() throws an error with an empty body', function (): void {
     $this->endpoint->updateBruteForceProtection([]);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
-test('updateSuspiciousIpThrottling() throws an error with an empty body', function(): void {
+test('updateSuspiciousIpThrottling() throws an error with an empty body', function (): void {
     $this->endpoint->updateSuspiciousIpThrottling([]);
 })->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
-test('updateBreachedPasswordDetection() issues valid requests', function(array $body): void {
+test('updateBreachedPasswordDetection() issues valid requests', function (array $body): void {
     $this->endpoint->updateBreachedPasswordDetection($body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
@@ -79,7 +79,7 @@ test('updateBreachedPasswordDetection() issues valid requests', function(array $
         ->toEqual(json_encode($body))
         ->json();
 })->with(['valid request' => [
-    fn() => [
+    fn () => [
         'enabled' => true,
         'shields' => [
             'block',
@@ -93,7 +93,7 @@ test('updateBreachedPasswordDetection() issues valid requests', function(array $
     ]
 ]]);
 
-test('updateBruteForceProtection() issues valid requests', function(array $body): void {
+test('updateBruteForceProtection() issues valid requests', function (array $body): void {
     $this->endpoint->updateBruteForceProtection($body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
@@ -131,7 +131,7 @@ test('updateBruteForceProtection() issues valid requests', function(array $body)
         ->toEqual(json_encode($body))
         ->json();
 })->with(['valid request' => [
-    fn() => [
+    fn () => [
         'enabled' => false,
         'shields' => [
             'block',
@@ -146,7 +146,7 @@ test('updateBruteForceProtection() issues valid requests', function(array $body)
     ]
 ]]);
 
-test('updateSuspiciousIpThrottling() issues valid requests', function(array $body): void {
+test('updateSuspiciousIpThrottling() issues valid requests', function (array $body): void {
     $this->endpoint->updateSuspiciousIpThrottling($body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
@@ -197,7 +197,7 @@ test('updateSuspiciousIpThrottling() issues valid requests', function(array $bod
         ->toEqual(json_encode($body))
         ->json();
 })->with(['valid request' => [
-    fn() => [
+    fn () => [
         'enabled' => false,
         'shields' => [
             'block',

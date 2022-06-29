@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.jobs');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->jobs();
 });
 
-test('get() issues an appropriate request', function(): void {
+test('get() issues an appropriate request', function (): void {
     $this->endpoint->get('__test_id__');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/__test_id__');
 });
 
-test('getErrors() issues an appropriate request', function(): void {
+test('getErrors() issues an appropriate request', function (): void {
     $this->endpoint->getErrors('__test_id__');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/__test_id__/errors');
 });
 
-test('createImportUsers() issues an appropriate request', function(): void {
+test('createImportUsers() issues an appropriate request', function (): void {
     // Create temporary JSON file
     $import = tmpfile();
     fwrite($import, '[{"email":"php-sdk-test-import-user-job@auth0.com","email_verified":true,"app_metadata":{"roles":["admin","super"],"plan":"premium"},"user_metadata":{"theme":"dark"}}]');
@@ -74,7 +74,7 @@ test('createImportUsers() issues an appropriate request', function(): void {
     fclose($import);
 });
 
-test('createExportUsers() issues an appropriate request', function(): void {
+test('createExportUsers() issues an appropriate request', function (): void {
     $mock = [
         'connection_id' => uniqid(),
         'limit' => uniqid(),
@@ -110,7 +110,7 @@ test('createExportUsers() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode((object) $mock));
 });
 
-test('createSendVerificationEmail() issues an appropriate request', function(): void {
+test('createSendVerificationEmail() issues an appropriate request', function (): void {
     $mock = (object) [
         'userId' => uniqid(),
         'body' =>             [

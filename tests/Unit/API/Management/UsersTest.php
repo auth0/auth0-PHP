@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.users');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->users();
 });
 
-test('getAll() issues an appropriate request', function(): void {
+test('getAll() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->getAll(['test' => $id]);
@@ -20,7 +20,7 @@ test('getAll() issues an appropriate request', function(): void {
     expect($query)->toContain('&test=' . $id);
 });
 
-test('get() issues an appropriate request', function(): void {
+test('get() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->get($id);
@@ -29,7 +29,7 @@ test('get() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $id);
 });
 
-test('update() issues an appropriate request', function(): void {
+test('update() issues an appropriate request', function (): void {
     $mockup = (object) [
         'id' => uniqid(),
         'query' => [
@@ -59,7 +59,7 @@ test('update() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode($mockup->query));
 });
 
-test('create() issues an appropriate request', function(): void {
+test('create() issues an appropriate request', function (): void {
     $mockup = (object) [
         'connection' => uniqid(),
         'query' => [
@@ -88,7 +88,7 @@ test('create() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode(array_merge(['connection' => $mockup->connection], $mockup->query)));
 });
 
-test('delete() issues an appropriate request', function(): void {
+test('delete() issues an appropriate request', function (): void {
     $id = uniqid();
 
     $this->endpoint->delete($id);
@@ -100,7 +100,7 @@ test('delete() issues an appropriate request', function(): void {
     expect($headers['Content-Type'][0])->toEqual('application/json');
 });
 
-test('linkAccount() issues an appropriate request', function(): void {
+test('linkAccount() issues an appropriate request', function (): void {
     $mockup = (object) [
         'id' => uniqid(),
         'query' => [
@@ -130,7 +130,7 @@ test('linkAccount() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode($mockup->query));
 });
 
-test('unlinkAccount() issues an appropriate request', function(): void {
+test('unlinkAccount() issues an appropriate request', function (): void {
     $mockup = (object) [
         'id' => uniqid(),
         'provider' => uniqid(),
@@ -146,7 +146,7 @@ test('unlinkAccount() issues an appropriate request', function(): void {
     expect($headers['Content-Type'][0])->toEqual('application/json');
 });
 
-test('deleteMultifactorProvider() issues an appropriate request', function(): void {
+test('deleteMultifactorProvider() issues an appropriate request', function (): void {
     $mockup = (object) [
         'id' => uniqid(),
         'provider' => uniqid(),
@@ -161,7 +161,7 @@ test('deleteMultifactorProvider() issues an appropriate request', function(): vo
     expect($headers['Content-Type'][0])->toEqual('application/json');
 });
 
-test('getRoles() issues an appropriate request', function(): void {
+test('getRoles() issues an appropriate request', function (): void {
     $mockupId = uniqid();
 
     $this->endpoint->getRoles($mockupId);
@@ -170,7 +170,7 @@ test('getRoles() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/roles');
 });
 
-test('removeRoles() issues an appropriate request', function(): void {
+test('removeRoles() issues an appropriate request', function (): void {
     $mockup = (object) [
         'id' => uniqid(),
         'roles' => [
@@ -197,7 +197,7 @@ test('removeRoles() issues an appropriate request', function(): void {
     expect($body)->toEqual('{"roles":' . json_encode($mockup->roles) . '}');
 });
 
-test('addRoles() issues an appropriate request', function(): void {
+test('addRoles() issues an appropriate request', function (): void {
     $mockup = (object) [
         'id' => uniqid(),
         'roles' => [
@@ -224,7 +224,7 @@ test('addRoles() issues an appropriate request', function(): void {
     expect($body)->toEqual('{"roles":' . json_encode($mockup->roles) . '}');
 });
 
-test('getEnrollments() issues an appropriate request', function(): void {
+test('getEnrollments() issues an appropriate request', function (): void {
     $mockupId = uniqid();
 
     $this->endpoint->getEnrollments($mockupId);
@@ -233,7 +233,7 @@ test('getEnrollments() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockupId . '/enrollments');
 });
 
-test('getPermissions() issues an appropriate request', function(): void {
+test('getPermissions() issues an appropriate request', function (): void {
     $mockupId = uniqid();
 
     $this->endpoint->getPermissions($mockupId);
@@ -242,7 +242,7 @@ test('getPermissions() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/permissions');
 });
 
-test('removePermissions() issues an appropriate request', function(): void {
+test('removePermissions() issues an appropriate request', function (): void {
     $mockup = (object) [
         'id' => uniqid(),
         'permissions' => [
@@ -273,7 +273,7 @@ test('removePermissions() issues an appropriate request', function(): void {
     expect($body)->toEqual('{"permissions":' . json_encode($mockup->permissions) . '}');
 });
 
-test('addPermissions() issues an appropriate request', function(): void {
+test('addPermissions() issues an appropriate request', function (): void {
     $mockup = (object) [
         'id' => uniqid(),
         'permissions' => [
@@ -304,7 +304,7 @@ test('addPermissions() issues an appropriate request', function(): void {
     expect($body)->toEqual('{"permissions":' . json_encode($mockup->permissions) . '}');
 });
 
-test('getLogs() issues an appropriate request', function(): void {
+test('getLogs() issues an appropriate request', function (): void {
     $mockupId = uniqid();
 
     $this->endpoint->getLogs($mockupId);
@@ -313,7 +313,7 @@ test('getLogs() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/logs');
 });
 
-test('getOrganizations() issues an appropriate request', function(): void {
+test('getOrganizations() issues an appropriate request', function (): void {
     $mockupId = uniqid();
 
     $this->endpoint->getOrganizations($mockupId);
@@ -322,8 +322,8 @@ test('getOrganizations() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/organizations');
 });
 
-test('createRecoveryCode() issues an appropriate request', function(): void {
-        $mockupId = uniqid();
+test('createRecoveryCode() issues an appropriate request', function (): void {
+    $mockupId = uniqid();
 
     $this->endpoint->createRecoveryCode($mockupId);
 
@@ -334,7 +334,7 @@ test('createRecoveryCode() issues an appropriate request', function(): void {
     expect($headers['Content-Type'][0])->toEqual('application/json');
 });
 
-test('invalidateBrowsers() issues an appropriate request', function(): void {
+test('invalidateBrowsers() issues an appropriate request', function (): void {
     $mockupId = uniqid();
 
     $this->endpoint->invalidateBrowsers($mockupId);

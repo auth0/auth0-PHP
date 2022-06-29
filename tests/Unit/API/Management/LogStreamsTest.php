@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.log_streams');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->logStreams();
 });
 
-test('getAll() issues an appropriate request', function(): void {
+test('getAll() issues an appropriate request', function (): void {
     $this->endpoint->getAll();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/log-streams');
 });
 
-test('get() issues an appropriate request', function(): void {
+test('get() issues an appropriate request', function (): void {
     $this->endpoint->get('123');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
     expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/log-streams/123');
 });
 
-test('create() issues an appropriate request', function(): void {
+test('create() issues an appropriate request', function (): void {
     $mock = (object) [
         'type' => uniqid(),
         'sink' => [
@@ -54,7 +54,7 @@ test('create() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode($mock));
 });
 
-test('update() issues an appropriate request', function(): void {
+test('update() issues an appropriate request', function (): void {
     $mock = (object) [
         'id' => uniqid(),
         'body' => [
@@ -78,7 +78,7 @@ test('update() issues an appropriate request', function(): void {
     expect($body)->toEqual(json_encode($mock->body));
 });
 
-test('delete() issues an appropriate request', function(): void {
+test('delete() issues an appropriate request', function (): void {
     $this->endpoint->delete('123');
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 uses()->group('management', 'management.tenants');
 
-beforeEach(function(): void {
+beforeEach(function (): void {
     $this->endpoint = $this->api->mock()->tenants();
 });
 
-test('get() issues an appropriate request', function(): void {
+test('get() issues an appropriate request', function (): void {
     $this->endpoint->getSettings();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
@@ -16,7 +16,7 @@ test('get() issues an appropriate request', function(): void {
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
-test('update() issues an appropriate request', function(array $body): void {
+test('update() issues an appropriate request', function (array $body): void {
     $this->endpoint->updateSettings($body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
@@ -30,5 +30,5 @@ test('update() issues an appropriate request', function(array $body): void {
     $request = $this->api->getRequestBodyAsString();
     expect($request)->toEqual(json_encode($body));
 })->with(['mocked data' => [
-    fn() => [ 'test' => uniqid() ],
+    fn () => [ 'test' => uniqid() ],
 ]]);
