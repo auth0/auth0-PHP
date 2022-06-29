@@ -41,13 +41,13 @@ jobs:
         run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist
 
       - name: Install tools
-        run: npm install -g json
+        run: npm install --location=global json
 
       - name: Override boilerplate dependency with local package
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
-      # - name: ORIGINAL
-      #   run: cat ./boilerplate/composer.json
+      - name: ORIGINAL
+        run: cat ./boilerplate/composer.json
 
       # - name: Override composer manifest of boilerplate for local package
       #   uses: sergeysova/jq-action@v2
