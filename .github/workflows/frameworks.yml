@@ -1,0 +1,41 @@
+name: Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  laravel:
+    name: Laravel
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+        laravel: ["^8.0", "^9.0"]
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: pcov
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Laravel project
+        run: composer create-project laravel/laravel=${{ matrix.laravel }} . --prefer-dist
+
+      - name: Install dependencies with composer
+        run: composer install --prefer-dist
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          path: ./vendor/auth0/auth0-php
