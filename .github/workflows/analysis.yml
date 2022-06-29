@@ -64,7 +64,7 @@ jobs:
             prefer: "prefer-lowest"
           - php: "7.4"
             os: windows-latest
-            prefer: "prefer-stable"
+            prefer: "prefer-lowest"
 
     steps:
       - name: Set up PHP ${{ matrix.php }} (${{ matrix.os }})
