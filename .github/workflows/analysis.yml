@@ -40,7 +40,6 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
 
       - name: Install dependencies with composer
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --${{ matrix.prefer }}
@@ -55,7 +54,7 @@ jobs:
     strategy:
       max-parallel: 10
       matrix:
-        php: ["7.4", 8.0", "8.1"]
+        php: ["7.4", "8.0", "8.1"]
         os: ["ubuntu-latest", "windows-latest"]
         prefer: ["prefer-lowest", "prefer-stable"]
         exclude:
@@ -89,10 +88,10 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
+          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
 
       - name: Install dependencies with composer
-        run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --${{ matrix.prefer }}
+        run: composer install --prefer-dist
 
       - name: Prepare configuration
         run: mv .github/workflows-configs/phpunit.xml.dist phpunit.xml.dist
@@ -163,10 +162,10 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-prefer-stable-
+          restore-keys: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
 
       - name: Install dependencies
-        run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
+        run: composer install --prefer-dist
 
       - name: Prepare configuration
         run: mv .github/workflows-configs/phpstan.neon.dist phpstan.neon.dist
@@ -209,10 +208,10 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-prefer-stable-
+          restore-keys: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
 
       - name: Install dependencies
-        run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
+        run: composer install --prefer-dist
 
       - name: Prepare configuration
         run: mv .github/workflows-configs/psalm.xml.dist psalm.xml.dist
@@ -255,10 +254,10 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-prefer-stable-
+          restore-keys: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
 
       - name: Install dependencies
-        run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
+        run: composer install --prefer-dist
 
       - name: Install Laravel Pint
         run: composer require laravel/pint:* --dev --with-all-dependencies
@@ -301,10 +300,10 @@ jobs:
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ matrix.php }}-composer-prefer-stable-
+          restore-keys: ${{ matrix.php }}-composer-prefer-stable-${{ hashFiles('**/composer.json') }}
 
       - name: Install dependencies
-        run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
+        run: composer install --prefer-dist
 
       - name: Prepare configuration (1)
         run: mv .github/workflows-configs/rector.php rector.php
