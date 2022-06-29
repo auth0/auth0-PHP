@@ -34,16 +34,16 @@ jobs:
           update: true
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Laravel project
-        run: composer create-project laravel/laravel=${{ matrix.laravel }} . --prefer-dist
-
-      - name: Install dependencies
-        run: composer install --prefer-dist
-
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          path: ./vendor/auth0/auth0-php
 
-      - name: Update autoloader
-        run: composer require "auth0/auth0-php @dev"
+      - name: Create Laravel project
+        run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist
+
+      - name: Update package.json version
+        uses: sergeysova/jq-action@v2
+        with:
+          cmd: jq -s add ./boilerplate/composer.json ./github/workflows-configs/boilerplate.json
+
+      - name: Result
+        run: cat ./boilerplate/composer.json
