@@ -37,10 +37,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Create Laravel project
+      - name: Create boilerplate application
         run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist
 
-      - name: Override composer manifest for local package
+      - name: Override composer manifest of boilerplate for local package
         uses: sergeysova/jq-action@v2
         with:
           cmd: jq -s add ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json
@@ -48,5 +48,5 @@ jobs:
       - name: Result
         run: cat ./boilerplate/composer.json
 
-      - name: Update dependencies
+      - name: Update boilerplate dependencies
         run: cd ./boilerplate && composer require "auth0/auth0-php @dev"
