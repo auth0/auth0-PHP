@@ -47,7 +47,7 @@ jobs:
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
-        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
 
       - name: Run tests
         run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
@@ -61,7 +61,12 @@ jobs:
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1"]
-        symfony: ["^4.4", "^5.4", "^6.1"]
+        symfony: ["^4.0", "^5.0", "^6.0"]
+        exclude:
+          - php: "7.4"
+            symfony: "^6.0"
+          - php: "8.0"
+            laravel: "^6.0"
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
@@ -87,7 +92,7 @@ jobs:
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
-        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
 
       - name: Run tests
         run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
@@ -105,6 +110,8 @@ jobs:
         exclude:
           - php: "7.4"
             lumen: "^9.0"
+          - php: "8.0"
+            lumen: "^6.0"
           - php: "8.1"
             lumen: "^6.0"
 
@@ -132,7 +139,7 @@ jobs:
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
-        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
 
       - name: Run tests
         run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
@@ -172,7 +179,7 @@ jobs:
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
-        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
 
       - name: Run tests
         run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
