@@ -55,7 +55,7 @@ jobs:
         run: composer require pestphp/pest:* --with-all-dependencies
 
       - name: Prepare configuration
-        run: mv ${{ github.GITHUB_WORKSPACE }}/.github/workflows-configs/phpunit.xml.dist ${{ github.GITHUB_WORKSPACE }}/phpunit.xml.dist
+        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
 
       - name: Execute Pest
         run: vendor/bin/pest --ci --coverage --coverage-clover coverage/coverage.xml
