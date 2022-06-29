@@ -40,10 +40,13 @@ jobs:
       - name: Create Laravel project
         run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist
 
-      - name: Update package.json version
+      - name: Override composer manifest for local package
         uses: sergeysova/jq-action@v2
         with:
           cmd: jq -s add ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json
 
       - name: Result
         run: cat ./boilerplate/composer.json
+
+      - name: Create Laravel project
+        run: cd ./boilerplatge && composer require "auth0/auth0-php @dev"
