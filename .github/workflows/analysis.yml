@@ -9,13 +9,12 @@ on:
 jobs:
   dependencies:
     name: Dependencies
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     strategy:
       max-parallel: 10
       matrix:
-        php: ["7.4", "8.0", "8.1", "8.2"]
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        php: ["7.4", "8.0", "8.1"]
         prefer: ["prefer-lowest", "prefer-stable"]
 
     steps:
@@ -40,8 +39,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
+          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
 
       - name: Install dependencies with composer
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --${{ matrix.prefer }}
@@ -82,8 +81,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
+          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
 
       - name: Install dependencies with composer
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --${{ matrix.prefer }}
@@ -156,8 +155,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-prefer-stable-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-prefer-stable-${{ matrix.php }}-composer-
+          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
@@ -202,8 +201,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-prefer-stable-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-prefer-stable-${{ matrix.php }}-composer-
+          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
@@ -248,8 +247,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-prefer-stable-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-prefer-stable-${{ matrix.php }}-composer-
+          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
@@ -294,8 +293,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-prefer-stable-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-prefer-stable-${{ matrix.php }}-composer-
+          key: ${{ matrix.php }}-composer-${{ matrix.prefer }}-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ matrix.php }}-composer-${{ matrix.prefer }}-
 
       - name: Install dependencies
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
