@@ -42,16 +42,13 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
 
-      - name: Install dependencies
-        run: composer install --prefer-dist
-
       - name: Install (lowest) dependencies with composer
         if: matrix.prefer == 'lowest'
-        run: composer install --prefer-dist --prefer-lowest
+        run: composer update --no-ansi --no-interaction --no-progress --prefer-lowest
 
       - name: Install (stable) dependencies with composer
         if: matrix.prefer == 'stable'
-        run: composer install --prefer-dist
+        run: composer update --no-ansi --no-interaction --no-progress
 
       - name: Install Pest
         run: composer require pestphp/pest
@@ -123,7 +120,7 @@ jobs:
           restore-keys: ${{ runner.os }}-stable-${{ matrix.php }}-composer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist
+        run: composer update --no-ansi --no-interaction --no-progress
 
       - name: Install PHPStan
         run: composer require phpstan/phpstan
@@ -174,7 +171,7 @@ jobs:
           restore-keys: ${{ runner.os }}-stable-${{ matrix.php }}-composer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist
+        run: composer update --no-ansi --no-interaction --no-progress
 
       - name: Install Psalm
         run: composer require vimeo/psalm
@@ -219,7 +216,7 @@ jobs:
           restore-keys: ${{ runner.os }}-stable-${{ matrix.php }}-composer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist
+        run: composer update --no-ansi --no-interaction --no-progress
 
       - name: Install Laravel Pint
         run: composer require laravel/pint --dev
@@ -261,7 +258,7 @@ jobs:
           restore-keys: ${{ runner.os }}-stable-${{ matrix.php }}-composer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist
+        run: composer update --no-ansi --no-interaction --no-progress
 
       - name: Install Rector
         run: composer require rector/rector
