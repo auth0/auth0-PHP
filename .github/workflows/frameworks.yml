@@ -48,5 +48,5 @@ jobs:
       - name: Result
         run: cat ./boilerplate/composer.json
 
-      - name: Create Laravel project
-        run: cd ./boilerplatge && composer require "auth0/auth0-php @dev"
+      - name: Update dependencies
+        run: cd ./boilerplate && composer require "auth0/auth0-php @dev"
