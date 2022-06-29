@@ -46,4 +46,4 @@ jobs:
           path: ./vendor/auth0/auth0-php
 
       - name: Update autoloader
-        uses: composer require "auth0/auth0-php @dev"
+        run: composer require "auth0/auth0-php @dev"
