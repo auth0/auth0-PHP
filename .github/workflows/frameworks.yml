@@ -47,10 +47,7 @@ jobs:
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
-        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
-
-      - name: Run tests
-        run: cd ./boilerplate && php artisan make:test UserTest && php artisan test
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
 
   symfony:
     name: Symfony
@@ -92,14 +89,7 @@ jobs:
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
-        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
-
-      - name: Run tests
-        run: |
-          mkdir -p ./boilerplate/tests/Feature/ &&
-          mv ./github/workflows-configs/BasicTest.php ./boilerplate/tests/Feature/BasicTest.php &&
-          cd ./boilerplate &&
-          vendor/bin/phpunit --coverage-text
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
 
   lumen:
     name: Lumen
@@ -143,14 +133,7 @@ jobs:
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
-        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
-
-      - name: Run tests
-        run: |
-          mkdir -p ./boilerplate/tests/Feature/ &&
-          mv ./github/workflows-configs/BasicTest.php ./boilerplate/tests/Feature/BasicTest.php &&
-          cd ./boilerplate &&
-          vendor/bin/phpunit --coverage-text
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
 
   slim:
     name: Slim
@@ -187,11 +170,4 @@ jobs:
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
-        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
-
-      - name: Run tests
-        run: |
-          mkdir -p ./boilerplate/tests/Feature/ &&
-          mv ./github/workflows-configs/BasicTest.php ./boilerplate/tests/Feature/BasicTest.php &&
-          cd ./boilerplate &&
-          vendor/bin/phpunit --coverage-text
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
