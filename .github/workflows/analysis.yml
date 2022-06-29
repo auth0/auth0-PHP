@@ -45,7 +45,7 @@ jobs:
 
   pest:
     name: Pest
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     continue-on-error: true
     needs:
       - dependencies
@@ -54,10 +54,9 @@ jobs:
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1"]
-        os: ["ubuntu-latest", "windows-latest"]
 
     steps:
-      - name: Set up PHP ${{ matrix.php }} (${{ matrix.os }})
+      - name: Set up PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
@@ -90,7 +89,7 @@ jobs:
       - name: Execute Pest
         run: vendor/bin/pest --coverage-clover coverage/coverage.xml
 
-      - if: (matrix.php == '8.1' && matrix.os == 'ubuntu-latest')
+      - if: (matrix.php == '8.1')
         name: Store coverage file
         uses: actions/upload-artifact@v3
         with:
