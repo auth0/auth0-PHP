@@ -48,5 +48,8 @@ jobs:
       - name: Result
         run: cat ./boilerplate/composer.json
 
+      - name: Result (WRONG)
+        run: cat ./.github/workflows-configs/boilerplate.json
+
       - name: Update boilerplate dependencies
         run: cd ./boilerplate && composer update --no-ansi --no-interaction --no-progress
