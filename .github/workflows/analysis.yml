@@ -7,10 +7,51 @@ on:
   pull_request:
 
 jobs:
+  dependencies:
+    name: Dependencies
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1", "8.2"]
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        prefer: ["prefer-lowest", "prefer-stable"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP ${{ matrix.php }} (${{ matrix.os }})
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: pcov
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
+
+      - name: Install dependencies with composer
+        run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --${{ matrix.prefer }}
+
   pest:
     name: Pest
     runs-on: ${{ matrix.os }}
     continue-on-error: true
+    needs:
+      - dependencies
 
     strategy:
       max-parallel: 10
@@ -63,7 +104,8 @@ jobs:
   codecov:
     name: Codecov
     runs-on: ubuntu-latest
-    needs: pest
+    needs:
+      - pest
 
     steps:
       - name: Checkout code
@@ -83,7 +125,8 @@ jobs:
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
-    needs: pest
+    needs:
+      - dependencies
 
     strategy:
       fail-fast: true
@@ -128,7 +171,8 @@ jobs:
   psalm:
     name: Psalm
     runs-on: ubuntu-latest
-    needs: pest
+    needs:
+      - dependencies
 
     strategy:
       fail-fast: true
@@ -173,7 +217,8 @@ jobs:
   pint:
     name: Laravel Pint
     runs-on: ubuntu-latest
-    needs: pest
+    needs:
+      - dependencies
 
     strategy:
       fail-fast: true
@@ -218,7 +263,8 @@ jobs:
   rector:
     name: Rector
     runs-on: ubuntu-latest
-    needs: pest
+    needs:
+      - dependencies
 
     strategy:
       fail-fast: true
