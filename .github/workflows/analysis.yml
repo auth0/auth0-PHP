@@ -15,7 +15,7 @@ jobs:
       matrix:
         php: ["7.4", "8.0", "8.1", "8.2"]
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
-        prefer: ["prefer-lowest", "prefer-stable"]
+        prefer: ["lowest", "stable"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }} (${{ matrix.os }})
@@ -43,6 +43,14 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
 
       - name: Install dependencies
+        run: composer install --prefer-dist
+
+      - name: Install (lowest) dependencies with composer
+        if: matrix.prefer == 'lowest'
+        run: composer install --prefer-dist --prefer-lowest
+
+      - name: Install (stable) dependencies with composer
+        if: matrix.prefer == 'stable'
         run: composer install --prefer-dist
 
       - name: Install Pest
@@ -111,8 +119,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
+          key: ${{ runner.os }}-stable-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-stable-${{ matrix.php }}-composer-
 
       - name: Install dependencies
         run: composer install --prefer-dist
@@ -162,8 +170,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
+          key: ${{ runner.os }}-stable-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-stable-${{ matrix.php }}-composer-
 
       - name: Install dependencies
         run: composer install --prefer-dist
@@ -207,8 +215,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
+          key: ${{ runner.os }}-stable-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-stable-${{ matrix.php }}-composer-
 
       - name: Install dependencies
         run: composer install --prefer-dist
@@ -249,8 +257,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
+          key: ${{ runner.os }}-stable-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-stable-${{ matrix.php }}-composer-
 
       - name: Install dependencies
         run: composer install --prefer-dist
