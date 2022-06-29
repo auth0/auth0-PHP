@@ -44,11 +44,11 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
 
       - name: Install (lowest) dependencies with composer
-        if: matrix.prefer == 'lowest'
+        if: (matrix.prefer == 'lowest' && matrix.php != '7.4')
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-lowest
 
       - name: Install (stable) dependencies with composer
-        if: matrix.prefer == 'stable'
+        if: (matrix.prefer == 'stable' || matrix.php == '7.4')
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Install Pest
