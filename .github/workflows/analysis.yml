@@ -104,7 +104,7 @@ jobs:
       fail-fast: true
       max-parallel: 10
       matrix:
-        php: ${{ fromJson(needs.supported-versions-matrix.outputs.version) }}
+        php: ["7.4", "8.0", "8.1"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
@@ -235,7 +235,7 @@ jobs:
       fail-fast: true
       max-parallel: 10
       matrix:
-        php: ${{ fromJson(needs.supported-versions-matrix.outputs.version) }}
+        php: ["7.4", "8.0", "8.1"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
