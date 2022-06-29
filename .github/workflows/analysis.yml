@@ -62,7 +62,7 @@ jobs:
       - name: Execute Pest
         run: vendor/bin/pest --ci --coverage --coverage-clover coverage/coverage.xml
 
-      - if: (matrix.php == '8.1' && matrix.os == 'ubuntu-latest')
+      - if: (matrix.php == '8.1' && matrix.os == 'ubuntu-latest' && matrix.prefer == 'stable')
         name: Upload coverage file
         uses: actions/upload-artifact@v3
         with:
