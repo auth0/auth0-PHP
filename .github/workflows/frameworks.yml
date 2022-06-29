@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create boilerplate application
-        run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist
+        run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist phpunit-tests
 
       - name: Install tools
         run: npm install --location=global json
@@ -94,9 +94,6 @@ jobs:
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
 
-      - name: Run tests
-        run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
-
   lumen:
     name: Lumen
     runs-on: ubuntu-latest
@@ -130,7 +127,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create boilerplate application
-        run: composer create-project laravel/lumen=${{ matrix.lumen }} boilerplate --prefer-dist
+        run: composer create-project laravel/lumen=${{ matrix.lumen }} boilerplate --prefer-dist phpunit-tests
 
       - name: Install tools
         run: npm install --location=global json
@@ -180,6 +177,3 @@ jobs:
 
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
-
-      - name: Run tests
-        run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
