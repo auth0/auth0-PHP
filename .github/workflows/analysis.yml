@@ -43,19 +43,24 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-${{ matrix.prefer }}-${{ matrix.php }}-composer-
 
-      - name: Install (lowest) dependencies with composer
-        if: (matrix.prefer == 'lowest' && matrix.php != '7.4')
+      - if: (matrix.prefer == 'lowest' && matrix.php != '7.4')
+        name: Install dependencies with composer
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-lowest
 
-      - name: Install (stable) dependencies with composer
-        if: (matrix.prefer == 'stable' || matrix.php == '7.4')
+      - if: (matrix.prefer == 'stable' || matrix.php == '7.4')
+        name: Install dependencies with composer
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Install Pest
         run: composer require pestphp/pest:* --with-all-dependencies
 
-      - name: Prepare configuration
+      - if: (matrix.os != "windows-latest")
+        name: Prepare configuration
         run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
+
+      - if: (matrix.os == "windows-latest")
+        name: Prepare configuration
+        run: move $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
 
       - name: Execute Pest
         run: vendor/bin/pest --ci --coverage --coverage-clover coverage/coverage.xml
