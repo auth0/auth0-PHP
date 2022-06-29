@@ -43,7 +43,7 @@ jobs:
       - name: Update package.json version
         uses: sergeysova/jq-action@v2
         with:
-          cmd: jq -s add ./boilerplate/composer.json ./github/workflows-configs/boilerplate.json
+          cmd: jq -s add ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json
 
       - name: Result
         run: cat ./boilerplate/composer.json
