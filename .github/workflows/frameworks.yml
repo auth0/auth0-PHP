@@ -43,19 +43,8 @@ jobs:
       - name: Install tools
         run: npm install --location=global json
 
-      - name: Override boilerplate dependency with local package
+      - name: Override boilerplate dependencies
         run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
-      - name: ORIGINAL
-        run: cat ./boilerplate/composer.json
-
-      # - name: Override composer manifest of boilerplate for local package
-      #   uses: sergeysova/jq-action@v2
-      #   with:
-      #     cmd: jq -s '.[0] * .[1]' ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json
-
-      # - name: RESULT
-      #   run: cat ./boilerplate/composer.json
-
-      - name: Update boilerplate dependencies
-        run: cd ./boilerplate && composer update
+      - name: Update dependencies
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
