@@ -49,4 +49,4 @@ jobs:
         run: cat ./boilerplate/composer.json
 
       - name: Update boilerplate dependencies
-        run: cd ./boilerplate && composer require "auth0/auth0-php @dev"
+        run: cd ./boilerplate && composer update --no-ansi --no-interaction --no-progress
