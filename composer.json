@@ -47,7 +47,7 @@
     "hyperf/event": "^2.2",
     "mockery/mockery": "^1.4",
     "nyholm/psr7": "^1.4",
-    "pestphp/pest": "^1.21",
+    "pestphp/pest": "^1.21.3",
     "php-http/mock-client": "^1.4",
     "phpstan/phpstan": "^1.7",
     "phpstan/phpstan-strict-rules": "^1.3",
