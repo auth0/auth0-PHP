@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create boilerplate application
-        run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist phpunit-tests
+        run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist
 
       - name: Install tools
         run: npm install --location=global json
@@ -50,7 +50,7 @@ jobs:
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
 
       - name: Run tests
-        run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
+        run: cd ./boilerplate && php artisan make:test UserTest && php artisan test
 
   symfony:
     name: Symfony
@@ -94,6 +94,13 @@ jobs:
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
 
+      - name: Run tests
+        run: |
+          mkdir -p ./boilerplate/tests/Feature/ &&
+          mv ./github/workflows-configs/BasicTest.php ./boilerplate/tests/Feature/BasicTest.php &&
+          cd ./boilerplate &&
+          vendor/bin/phpunit --coverage-text
+
   lumen:
     name: Lumen
     runs-on: ubuntu-latest
@@ -127,7 +134,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create boilerplate application
-        run: composer create-project laravel/lumen=${{ matrix.lumen }} boilerplate --prefer-dist phpunit-tests
+        run: composer create-project laravel/lumen=${{ matrix.lumen }} boilerplate --prefer-dist
 
       - name: Install tools
         run: npm install --location=global json
@@ -139,7 +146,11 @@ jobs:
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
 
       - name: Run tests
-        run: cd ./boilerplate && vendor/bin/phpunit --coverage-text
+        run: |
+          mkdir -p ./boilerplate/tests/Feature/ &&
+          mv ./github/workflows-configs/BasicTest.php ./boilerplate/tests/Feature/BasicTest.php &&
+          cd ./boilerplate &&
+          vendor/bin/phpunit --coverage-text
 
   slim:
     name: Slim
@@ -177,3 +188,10 @@ jobs:
 
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 phpunit/phpunit && composer update
+
+      - name: Run tests
+        run: |
+          mkdir -p ./boilerplate/tests/Feature/ &&
+          mv ./github/workflows-configs/BasicTest.php ./boilerplate/tests/Feature/BasicTest.php &&
+          cd ./boilerplate &&
+          vendor/bin/phpunit --coverage-text
