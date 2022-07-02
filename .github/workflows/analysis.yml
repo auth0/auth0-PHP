@@ -47,11 +47,6 @@ jobs:
     name: Configuration
     runs-on: ubuntu-latest
 
-    strategy:
-      max-parallel: 10
-      matrix:
-        php: ["7.4", "8.0", "8.1"]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
