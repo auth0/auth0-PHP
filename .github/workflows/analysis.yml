@@ -151,12 +151,6 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist
 
-      - name: Prepare configuration (phpstan.neon.dist)
-        uses: actions/download-artifact@v3
-        with:
-          name: config-phpstan
-          path: phpstan.neon.dist
-
       - name: Execute PHPStan
         run: vendor/bin/phpstan analyze --configuration .github/workflows-configs/phpstan.neon.dist --no-progress
 
@@ -285,18 +279,6 @@ jobs:
 
       - name: Install dependencies
         run: composer install --prefer-dist
-
-      - name: Prepare configuration (rector.php)
-        uses: actions/download-artifact@v3
-        with:
-          name: config-rector
-          path: rector.php
-
-      - name: Prepare configuration (phpstan.neon.dist)
-        uses: actions/download-artifact@v3
-        with:
-          name: config-phpstan
-          path: phpstan.neon.dist
 
       - name: Execute Rector
         run: vendor/bin/rector process src --config .github/workflows-configs/rector.php --dry-run
