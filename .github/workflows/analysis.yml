@@ -124,7 +124,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: config-phpunit
-          path: ./phpunit.xml.dist
+          path: phpunit.xml.dist
 
       - name: Execute Pest
         run: php -d memory_limit=512M vendor/bin/pest --coverage-clover coverage/coverage.xml
@@ -199,7 +199,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: config-phpstan
-          path: ./phpstan.neon.dist
+          path: phpstan.neon.dist
 
       - name: Execute PHPStan
         run: vendor/bin/phpstan analyze --no-progress
@@ -247,7 +247,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: config-psalm
-          path: ./psalm.xml.dist
+          path: psalm.xml.dist
 
       - name: Execute Psalm
         run: vendor/bin/psalm
@@ -298,7 +298,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: config-pint
-          path: ./pint.json
+          path: pint.json
 
       - name: Execute Laravel Pint
         run: vendor/bin/pint --preset psr12 --test
@@ -346,13 +346,13 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: config-rector
-          path: ./rector.php
+          path: rector.php
 
       - name: Prepare configuration (phpstan.neon.dist)
         uses: actions/download-artifact@v3
         with:
           name: config-phpstan
-          path: ./phpstan.neon.dist
+          path: phpstan.neon.dist
 
       - name: Execute Rector
         run: vendor/bin/rector process src --dry-run
