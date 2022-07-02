@@ -24,9 +24,6 @@ jobs:
       - name: Install dependencies
         run: composer update --no-interaction --no-progress
 
-      - name: Prepare configuration
-        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpdoc.dist.xml $GITHUB_WORKSPACE/phpdoc.dist.xml
-
       - name: Download phpDocumentor
         run: wget https://www.phpdoc.org/phpDocumentor.phar -O ./phpdoc.phar
 
