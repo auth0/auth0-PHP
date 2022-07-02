@@ -44,42 +44,57 @@ jobs:
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
 
   configurations:
-    name: Configurations
+    name: Configuration
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Prepare configuration (rector.php)
+        run: mv .github/workflows-configs/rector.php rector.php
+
       - name: Store coverage file (rector.php)
         uses: actions/upload-artifact@v3
         with:
           name: config-rector
-          path: .github/workflows-configs/rector.php
+          path: rector.php
+
+      - name: Prepare configuration (phpstan.neon.dist)
+        run: mv .github/workflows-configs/phpstan.neon.dist phpstan.neon.dist
 
       - name: Store coverage file (phpstan.neon.php)
         uses: actions/upload-artifact@v3
         with:
           name: config-phpstan
-          path: .github/workflows-configs/phpstan.neon.dist
+          path: phpstan.neon.php
+
+      - name: Prepare configuration (phpunit.xml.dist)
+        run: mv .github/workflows-configs/phpunit.xml.dist phpunit.xml.dist
 
       - name: Store coverage file (phpunit.xml.dist)
         uses: actions/upload-artifact@v3
         with:
           name: config-phpunit
-          path: .github/workflows-configs/phpunit.xml.dist
+          path: phpunit.xml.dist
+
+      - name: Prepare configuration (psalm.xml.dist)
+        run: mv .github/workflows-configs/psalm.xml.dist psalm.xml.dist
 
       - name: Store coverage file (psalm.xml.dist)
         uses: actions/upload-artifact@v3
         with:
           name: config-psalm
-          path: .github/workflows-configs/psalm.xml.dist
+          path: psalm.xml.dist
+
+      - name: Prepare configuration (pint.json)
+        run: mv .github/workflows-configs/pint.json pint.json
 
       - name: Store coverage file (pint.json)
         uses: actions/upload-artifact@v3
         with:
           name: config-pint
-          path: .github/workflows-configs/pint.json
+          path: pint.json
 
   pest:
     name: Pest
@@ -293,12 +308,6 @@ jobs:
 
       - name: Install Laravel Pint
         run: composer require laravel/pint:* --dev --with-all-dependencies
-
-      - name: Prepare configuration (pint.json)
-        uses: actions/download-artifact@v3
-        with:
-          name: config-pint
-          path: pint.json
 
       - name: Execute Laravel Pint
         run: vendor/bin/pint --preset psr12 --test
