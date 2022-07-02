@@ -7,30 +7,127 @@ on:
   pull_request:
 
 jobs:
-  phpstan:
-    name: PHPStan
+  dependencies:
+    name: Dependencies
     runs-on: ubuntu-latest
+
     strategy:
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1"]
 
     steps:
-      - name: Set up PHP
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
           extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+
+      - name: Install dependencies with composer
+        run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
+
+  pest:
+    name: Pest
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: ["dependencies"]
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: pcov
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: composer update --no-interaction --no-progress
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Prepare configuration
-        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpstan.neon.dist $GITHUB_WORKSPACE/phpstan.neon.dist
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+
+      - name: Install dependencies with composer
+        run: composer install --prefer-dist
+
+      - name: Execute Pest
+        run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction
+
+      - if: (matrix.php == '8.1')
+        uses: codecov/codecov-action@v2
+        with:
+          directory: coverage
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    needs: ["dependencies"]
+
+    strategy:
+      fail-fast: true
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+
+      - name: Install dependencies
+        run: composer install --prefer-dist
 
       - name: Execute PHPStan
         run: vendor/bin/phpstan analyze --no-progress
@@ -38,143 +135,128 @@ jobs:
   psalm:
     name: Psalm
     runs-on: ubuntu-latest
+    needs: ["dependencies"]
+
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1"]
 
     steps:
-      - name: Set up PHP
+      - name: Set up PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
           extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+
       - name: Install dependencies
-        run: composer update --no-interaction --no-progress
+        run: composer install --prefer-dist
 
-      - name: Prepare configuration
-        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/psalm.xml.dist $GITHUB_WORKSPACE/psalm.xml.dist
+      - name: Execute Psalm
+        run: vendor/bin/psalm --no-progress
 
-      - name: Execute PHPStan
-        run: vendor/bin/psalm
-
-  phpinsights:
-    name: PHPInsights
+  pint:
+    name: Laravel Pint
     runs-on: ubuntu-latest
+    needs: ["dependencies"]
+
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
-        php: ["7.4", "8.0", "8.1"]
+        php: ["8.0", "8.1"]
 
     steps:
-      - name: Set up PHP
+      - name: Set up PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
           extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+
       - name: Install dependencies
-        run: composer update --no-interaction --no-progress
+        run: composer install --prefer-dist
 
-      - name: Prepare configuration
-        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpinsights.php $GITHUB_WORKSPACE/phpinsights.php
+      - name: Install Laravel Pint
+        run: composer require laravel/pint:* --dev --with-all-dependencies
 
-      - name: Execute PHPInsights
-        run: vendor/bin/phpinsights --no-interaction -v
+      - name: Execute Laravel Pint
+        run: vendor/bin/pint --test
 
   rector:
     name: Rector
     runs-on: ubuntu-latest
+    needs: ["dependencies"]
+
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
         php: ["7.4", "8.0", "8.1"]
 
     steps:
-      - name: Set up PHP
+      - name: Set up PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: none
           extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+
       - name: Install dependencies
-        run: composer update --no-interaction --no-progress
-
-      - name: Prepare configuration (1)
-        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/rector.php $GITHUB_WORKSPACE/rector.php
-
-      - name: Prepare configuration (2)
-        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpstan.neon.dist $GITHUB_WORKSPACE/phpstan.neon.dist
+        run: composer install --prefer-dist
 
       - name: Execute Rector
         run: vendor/bin/rector process src --dry-run
-
-  pest:
-    name: Pest
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 10
-      matrix:
-        php: ["7.4", "8.0", "8.1"]
-
-    steps:
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          coverage: pcov
-          extensions: mbstring
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: composer update --no-interaction --no-progress
-
-      - name: Prepare configuration
-        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
-
-      - name: Execute Pest
-        run: vendor/bin/pest --ci --coverage
-
-  codecov:
-    name: Codecov
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.1
-          coverage: pcov
-          extensions: mbstring
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: composer update --no-interaction --no-progress
-
-      - name: Prepare configuration
-        run: mv $GITHUB_WORKSPACE/.github/workflows-configs/phpunit.xml.dist $GITHUB_WORKSPACE/phpunit.xml.dist
-
-      - name: Generate coverage report
-        run: vendor/bin/pest --ci --coverage --coverage-clover coverage/coverage.xml
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          directory: coverage

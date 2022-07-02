@@ -1,0 +1,173 @@
+name: Frameworks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  laravel:
+    name: Laravel
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+        laravel: ["^6.0", "^8.0", "^9.0"]
+        exclude:
+          - php: "7.4"
+            laravel: "^9.0"
+          - php: "8.1"
+            laravel: "^6.0"
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create boilerplate application
+        run: composer create-project laravel/laravel=${{ matrix.laravel }} boilerplate --prefer-dist
+
+      - name: Install tools
+        run: npm install --location=global json
+
+      - name: Override boilerplate dependencies
+        run: cat ./boilerplate/composer.json ./.github/configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+
+      - name: Update dependencies
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+
+  symfony:
+    name: Symfony
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+        symfony: ["^4.0", "^5.0", "^6.0"]
+        exclude:
+          - php: "7.4"
+            symfony: "^6.0"
+          - php: "8.0"
+            symfony: "^6.0"
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create boilerplate application
+        run: composer create-project symfony/skeleton=${{ matrix.symfony }} boilerplate --prefer-dist
+
+      - name: Install tools
+        run: npm install --location=global json
+
+      - name: Override boilerplate dependencies
+        run: cat ./boilerplate/composer.json ./.github/configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+
+      - name: Update dependencies
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+
+  lumen:
+    name: Lumen
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+        lumen: ["^6.0", "^8.0", "^9.0"]
+        exclude:
+          - php: "7.4"
+            lumen: "^9.0"
+          - php: "8.0"
+            lumen: "^6.0"
+          - php: "8.1"
+            lumen: "^6.0"
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create boilerplate application
+        run: composer create-project laravel/lumen=${{ matrix.lumen }} boilerplate --prefer-dist
+
+      - name: Install tools
+        run: npm install --location=global json
+
+      - name: Override boilerplate dependencies
+        run: cat ./boilerplate/composer.json ./.github/configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+
+      - name: Update dependencies
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
+
+  slim:
+    name: Slim
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+        slim: ["^3.0", "^4.0"]
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring
+        env:
+          update: true
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create boilerplate application
+        run: composer create-project slim/slim-skeleton=${{ matrix.slim }} boilerplate --prefer-dist
+
+      - name: Install tools
+        run: npm install --location=global json
+
+      - name: Override boilerplate dependencies
+        run: cat ./boilerplate/composer.json ./.github/configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+
+      - name: Update dependencies
+        run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update

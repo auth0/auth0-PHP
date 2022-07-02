@@ -1,0 +1,12 @@
+{
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../"
+    }
+  ],
+  "require": {
+    "auth0/auth0-php": "*"
+  },
+  "minimum-stability": "dev"
+}

@@ -10,11 +10,3 @@ vendor
 phpcs.xml
 .phpunit.result.cache
 .DS_Store
-phpinsights.php
-phpstan.neon.dist
-phpunit.xml.dist
-psalm.xml.dist
-rector.php
-phpdoc.phar
-.phpdoc
-phpdoc.dist.xml
