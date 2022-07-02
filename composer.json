@@ -45,7 +45,6 @@
   "require-dev": {
     "firebase/php-jwt": "^6.2",
     "hyperf/event": "^2.2",
-    "laravel/pint": "^0.2.2",
     "mockery/mockery": "^1.4",
     "nyholm/psr7": "^1.5",
     "pestphp/pest": "^1.21",
