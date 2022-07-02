@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" stderr="true" colors="true" verbose="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">./src/</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="unit">
+      <directory>tests/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <ini name="error_reporting" value="E_ALL ^ E_DEPRECATED"/>
+    <ini name="session.use_cookies" value="false"/>
+    <ini name="session.cache_limiter" value="false"/>
+  </php>
+</phpunit>
