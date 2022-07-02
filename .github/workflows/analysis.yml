@@ -83,7 +83,7 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Execute Pest
-        run: vendor/bin/pest --configuration .github/workflows-configs/phpunit.xml.dist --coverage-clover coverage/coverage.xml --no-interaction
+        run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction
 
       - if: (matrix.php == '8.1')
         name: Store coverage file
@@ -152,7 +152,7 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Execute PHPStan
-        run: vendor/bin/phpstan analyze --configuration .github/workflows-configs/phpstan.neon.dist --no-progress
+        run: vendor/bin/phpstan analyze --no-progress
 
   psalm:
     name: Psalm
@@ -194,7 +194,7 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Execute Psalm
-        run: vendor/bin/psalm --config .github/workflows-configs/psalm.xml.dist --no-progress
+        run: vendor/bin/psalm --no-progress
 
   pint:
     name: Laravel Pint
@@ -239,7 +239,7 @@ jobs:
         run: composer require laravel/pint:* --dev --with-all-dependencies
 
       - name: Execute Laravel Pint
-        run: vendor/bin/pint --config .github/workflows-configs/pint.json --test
+        run: vendor/bin/pint --test
 
   rector:
     name: Rector
@@ -281,4 +281,4 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Execute Rector
-        run: vendor/bin/rector process src --config .github/workflows-configs/rector.php --dry-run
+        run: vendor/bin/rector process src --dry-run

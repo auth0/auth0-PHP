@@ -44,7 +44,7 @@ jobs:
         run: npm install --location=global json
 
       - name: Override boilerplate dependencies
-        run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+        run: cat ./boilerplate/composer.json ./.github/configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
@@ -86,7 +86,7 @@ jobs:
         run: npm install --location=global json
 
       - name: Override boilerplate dependencies
-        run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+        run: cat ./boilerplate/composer.json ./.github/configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
@@ -130,7 +130,7 @@ jobs:
         run: npm install --location=global json
 
       - name: Override boilerplate dependencies
-        run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+        run: cat ./boilerplate/composer.json ./.github/configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
@@ -167,7 +167,7 @@ jobs:
         run: npm install --location=global json
 
       - name: Override boilerplate dependencies
-        run: cat ./boilerplate/composer.json ./.github/workflows-configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
+        run: cat ./boilerplate/composer.json ./.github/configs/boilerplate.json | json --deep-merge > ./boilerplate/composer.json
 
       - name: Update dependencies
         run: cd ./boilerplate && composer require kriswallsmith/buzz nyholm/psr7 && composer update
