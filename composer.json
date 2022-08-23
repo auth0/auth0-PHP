@@ -73,7 +73,9 @@
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "pestphp/pest-plugin": true,
       "ergebnis/composer-normalize": true,
-      "wikimedia/composer-merge-plugin": true
+      "wikimedia/composer-merge-plugin": true,
+      "symfony/flex": true,
+      "phpstan/extension-installer": true
     },
     "optimize-autoloader": true,
     "sort-packages": true
