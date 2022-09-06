@@ -82,23 +82,19 @@ To get started, you'll need to create a [free Auth0 account](https://auth0.com/s
 
 ### Installation
 
-The supported method of SDK installation is through [Composer](https://getcomposer.org/). From your terminal shell, `cd` into your project directory and issue the following command:
+The supported method of SDK installation is through [Composer](https://getcomposer.org/). Please ensure `composer` is [installed](https://getcomposer.org/doc/00-intro.md) and available from your shell prompt. Please note that we do not support installing this SDK without Composer.
+
+If you do not already have a `composer.json` file in your project directory, you must create one:
 
 ```bash
-$ composer require auth0/auth0-php
+$ composer init
 ```
-
-You can find guidance on installing Composer [here](https://getcomposer.org/doc/00-intro.md).
 
 > ⚠️ Your application must include the Composer autoloader, [as explained here](https://getcomposer.org/doc/01-basic-usage.md#autoloading), for the SDK to be usable within your application.
 
-Next, you will want ensure your application has [PSR-17](https://www.php-fig.org/psr/psr-17/) and [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible libraries installed. These are used for network requests. As an example, let's say you wish to use [Buzz](https://github.com/kriswallsmith/Buzz) and [Nylom's PSR-7 implementation](https://github.com/Nyholm/psr7), which include PSR-18 and PSR-17 factories, respectively:
+#### Install Support Libraries
 
-```bash
-$ composer require kriswallsmith/buzz nyholm/psr7
-```
-
-The libraries specified above are simply examples. Any libraries that support the PSR-18 and PSR-17 standards will work.
+Our SDK requires [PSR-17](https://www.php-fig.org/psr/psr-17/) and [PSR-18](https://www.php-fig.org/psr/psr-18/) compatible libraries be installed within your application. These are used for handling network requests. Any PSR-17 and PSR-18 library will work.
 
 ↗ [Guzzle 7 natively supports PSR-18.](https://docs.php-http.org/en/latest/clients/guzzle7-adapter.html)<br />
 ↗ [Guzzle 6 is compatible with an adaptor library.](https://github.com/php-http/guzzle6-adapter)<br />
@@ -106,6 +102,22 @@ The libraries specified above are simply examples. Any libraries that support th
 ↗ [Learn about other compatible libraries from PHP-HTTP.](https://docs.php-http.org/en/latest/clients.html)<br />
 ↗ [Search packagist for other PSR-17 HTTP factory libraries.](https://packagist.org/providers/psr/http-factory-implementation)<br />
 ↗ [Search packagist for other PSR-18 HTTP client libraries.](https://packagist.org/providers/psr/http-client-implementation)
+
+As an example, let's say you wish to use [Buzz](https://github.com/kriswallsmith/Buzz) and [Nyholm's PSR-7 implementation](https://github.com/Nyholm/psr7) in your application, which include PSR-18 and PSR-17 factories, respectively:
+
+```bash
+$ composer require kriswallsmith/buzz nyholm/psr7
+```
+
+The SDK will automatically discover the presence of these libraries in your application and use them without any configuration. Again, the libraries chosen above are simply examples. Any PSR-18 and PSR-17 providers will work the same.
+
+#### SDK Installation
+
+Once support libraries are installed (as outlined above) you can install the SDK itself:
+
+```bash
+$ composer require auth0/auth0-php
+```
 
 ### SDK Initialization
 
@@ -128,7 +140,7 @@ $auth0 = new Auth0($configuration);
 
 > ⚠️ You should **never** hard-code tokens or other sensitive configuration data in a real-world application. Consider using environment variables to store and pass these values to your application.
 
-During configuration, you should pass instances of the PSR-18 and PSR-17 libraries your application is using:
+During configuration, you can pass instances of the PSR-18 and PSR-17 libraries your application is using, although autodiscovery usually makes this unnecessary:
 
 ```PHP
 <?php
