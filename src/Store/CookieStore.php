@@ -53,6 +53,8 @@ final class CookieStore implements StoreInterface
      *
      * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      * @param string           $namespace       A string in which to store cookies under on devices.
+     *
+     * @psalm-suppress RedundantCondition
      */
     public function __construct(
         SdkConfiguration $configuration,
