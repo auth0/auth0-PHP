@@ -264,7 +264,7 @@ trait ConfigurableMixin
             throw \Auth0\SDK\Exception\ConfigurationException::setIncompatible($propertyName, (string) $expectedType, $propertyType);
         }
 
-        if ($propertyType === 'string' && is_string($propertyValue) && strlen(trim($propertyValue)) === 0 && in_array('NULL', $allowedTypes, true)) {
+        if ($propertyType === 'string' && is_string($propertyValue) && trim($propertyValue) === '' && in_array('NULL', $allowedTypes, true)) {
             $propertyValue = null;
         }
 
