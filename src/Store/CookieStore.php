@@ -65,7 +65,13 @@ final class CookieStore implements StoreInterface
         ])->isString();
 
         $this->configuration = $configuration;
-        $this->namespace = (self::USE_CRYPTO) ? hash(self::KEY_HASHING_ALGO, (string) $namespace) : (string) $namespace;
+        $this->namespace = (string) $namespace;
+
+        // @phpstan-ignore-next-line
+        if (self::USE_CRYPTO) {
+            $this->namespace = hash(self::KEY_HASHING_ALGO, $this->namespace);
+        }
+
         $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
 
         $this->getState();
@@ -316,11 +322,14 @@ final class CookieStore implements StoreInterface
      * Encrypt data for safe storage format for a cookie.
      *
      * @param array<mixed> $data Data to encrypt.
+     *
+     * @psalm-suppress TypeDoesNotContainType
      */
     private function encrypt(
         array $data
     ): string {
         // @codeCoverageIgnoreStart
+        // @phpstan-ignore-next-line
         if (! self::USE_CRYPTO) {
             return base64_encode(json_encode(serialize($data), JSON_THROW_ON_ERROR));
         }
@@ -361,13 +370,31 @@ final class CookieStore implements StoreInterface
      * @param string $data String representing an encrypted data structure.
      *
      * @return array<mixed>|null
+     *
+     * @psalm-suppress TypeDoesNotContainType
      */
     private function decrypt(
         string $data
     ) {
         // @codeCoverageIgnoreStart
+        // @phpstan-ignore-next-line
         if (! self::USE_CRYPTO) {
-            return unserialize(json_decode(base64_decode($data), true, 512, JSON_THROW_ON_ERROR));
+            $returns = [];
+            $decoded = base64_decode($data, true);
+
+            if (is_string($decoded)) {
+                $decoded = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+            }
+
+            if (is_string($decoded)) {
+                $decoded = unserialize($decoded);
+            }
+
+            if (is_array($decoded)) {
+                $returns = $decoded;
+            }
+
+            return $returns;
         }
         // @codeCoverageIgnoreEnd
 
