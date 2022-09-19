@@ -37,7 +37,7 @@ class TokenGenerator
     ): array {
         $defaults = [
             'sub' => '__test_sub__',
-            'iss' => 'https://__test_domain__/',
+            'iss' => 'https://domain.test/',
             'aud' => '__test_client_id__',
             'nonce' => '__test_nonce__',
             'auth_time' => time() - 100,

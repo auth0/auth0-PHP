@@ -142,7 +142,7 @@ test('validate() returns a fluent interface', function(
     expect($token->validate(null, null, ['__test_org__'], $claims['nonce'], 100))->toEqual($token);
 })->with(['mocked data' => [
     function(): SdkConfiguration {
-        $this->configuration->setDomain('__test_domain__');
+        $this->configuration->setDomain('domain.test');
         $this->configuration->setClientId('__test_client_id__');
         $this->configuration->setTokenAlgorithm('HS256');
         $this->configuration->setClientSecret('__test_client_secret__');
@@ -161,7 +161,7 @@ test('validate() overrides globally configured algorithm', function(
     $token->validate(null, [ $claims['aud'] ]);
 })->with(['mocked data' => [
     function(): SdkConfiguration {
-        $this->configuration->setDomain('__test_domain__');
+        $this->configuration->setDomain('domain.test');
         $this->configuration->setClientId('__diff_client_id__');
         $this->configuration->setTokenAlgorithm('HS256');
         return $this->configuration;

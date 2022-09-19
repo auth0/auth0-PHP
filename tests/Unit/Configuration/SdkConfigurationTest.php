@@ -324,12 +324,12 @@ test('formatDomain() returns a properly formatted uri', function(): void
 
 test('formatDomain() returns the custom domain when a custom domain is configured', function(): void
 {
-    $domain = uniqid();
-    $customDomain = uniqid();
+    $domain = uniqid() . '.test';
+    $customDomain = uniqid() . '.test';
 
     $sdk = new SdkConfiguration([
         'domain' => $domain,
-        'customDomain' => 'test://' . $customDomain,
+        'customDomain' => $customDomain,
         'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid(),
