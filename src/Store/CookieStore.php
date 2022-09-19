@@ -338,7 +338,7 @@ final class CookieStore implements StoreInterface
             'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax'
         ];
 
-        if(! in_array(strtolower($options['samesite']), ['lax', 'none', 'strict'], true)) {
+        if (! in_array(strtolower($options['samesite']), ['lax', 'none', 'strict'], true)) {
             $options['samesite'] = 'Lax';
         }
 
