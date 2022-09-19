@@ -548,11 +548,11 @@ final class Auth0 implements Auth0Interface
         $responseMode = $this->configuration()->getResponseMode();
 
         if ($responseMode === 'query' && isset($_GET[$parameterName])) {
-            return filter_var(trim($_GET[$parameterName]), $filter, $filterOptions);
+            return filter_var(trim((string) $_GET[$parameterName]), $filter, $filterOptions);
         }
 
         if ($responseMode === 'form_post' && isset($_POST[$parameterName])) {
-            return filter_var(trim($_POST[$parameterName]), $filter, $filterOptions);
+            return filter_var(trim((string) $_POST[$parameterName]), $filter, $filterOptions);
         }
 
         return null;
