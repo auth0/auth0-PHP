@@ -93,6 +93,8 @@ final class Auth0 implements Auth0Interface
         ?string $redirectUrl = null,
         ?array $params = null
     ): string {
+        $this->deferStateSaving();
+
         $params = $params ?? [];
         $state = $params['state'] ?? $this->getTransientStore()->issue('state');
         $params['nonce'] = $params['nonce'] ?? $this->getTransientStore()->issue('nonce');
@@ -110,6 +112,8 @@ final class Auth0 implements Auth0Interface
         if ($params['max_age'] !== null) {
             $this->getTransientStore()->store('max_age', (string) $params['max_age']);
         }
+
+        $this->deferStateSaving(false);
 
         return $this->authentication()->getLoginLink((string) $state, $redirectUrl, $params);
     }
@@ -159,6 +163,8 @@ final class Auth0 implements Auth0Interface
     public function clear(
         bool $transient = true
     ): self {
+        $this->deferStateSaving();
+
         // Delete all data in the session storage medium.
         if ($this->configuration()->hasSessionStorage()) {
             $this->configuration->getSessionStorage()->purge();
