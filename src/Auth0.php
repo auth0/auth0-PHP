@@ -542,16 +542,17 @@ final class Auth0 implements Auth0Interface
 
     public function getRequestParameter(
         string $parameterName,
-        int $filter = \FILTER_UNSAFE_RAW
+        int $filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+        array $filterOptions = []
     ): ?string {
         $responseMode = $this->configuration()->getResponseMode();
 
         if ($responseMode === 'query' && isset($_GET[$parameterName])) {
-            return filter_var($_GET[$parameterName], $filter, FILTER_NULL_ON_FAILURE);
+            return filter_var(trim($_GET[$parameterName]), $filter, $filterOptions);
         }
 
         if ($responseMode === 'form_post' && isset($_POST[$parameterName])) {
-            return filter_var($_POST[$parameterName], $filter, FILTER_NULL_ON_FAILURE);
+            return filter_var(trim($_POST[$parameterName]), $filter, $filterOptions);
         }
 
         return null;
