@@ -74,6 +74,19 @@ test('__construct() throws an exception if domain is an empty string', function(
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
+
+test('__construct() throws an exception if domain is an invalid uri', function(): void {
+    $cookieSecret = uniqid();
+    $clientId = uniqid();
+    $redirectUri = uniqid();
+
+    $sdk = new SdkConfiguration([
+        'domain' => '₠',
+        'cookieSecret' => $cookieSecret,
+        'clientId' => $clientId,
+        'redirectUri' => $redirectUri,
+    ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
 
 test('__construct() throws an exception if cookieSecret is undefined', function(): void {
@@ -100,7 +113,7 @@ test('__construct() throws an exception if cookieSecret is an empty string', fun
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'cookieSecret'));
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
 
 test('__construct() throws an exception if an invalid token algorithm is specified', function(): void {
     $domain = uniqid();
