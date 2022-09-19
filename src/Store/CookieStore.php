@@ -14,6 +14,7 @@ use Auth0\SDK\Utility\Toolkit;
  */
 final class CookieStore implements StoreInterface
 {
+    public const USE_CRYPTO = true;
     public const KEY_HASHING_ALGO = 'sha256';
     public const KEY_CHUNKING_THRESHOLD = 3072;
     public const KEY_SEPARATOR = '_';
@@ -64,7 +65,7 @@ final class CookieStore implements StoreInterface
         ])->isString();
 
         $this->configuration = $configuration;
-        $this->namespace = hash(self::KEY_HASHING_ALGO, (string) $namespace);
+        $this->namespace = (self::USE_CRYPTO) ? hash(self::KEY_HASHING_ALGO, (string) $namespace) : (string) $namespace;
         $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
 
         $this->getState();
@@ -319,6 +320,12 @@ final class CookieStore implements StoreInterface
     private function encrypt(
         array $data
     ): string {
+        // @codeCoverageIgnoreStart
+        if (! self::USE_CRYPTO) {
+            return base64_encode(json_encode(serialize($data), JSON_THROW_ON_ERROR));
+        }
+        // @codeCoverageIgnoreEnd
+
         $secret = $this->configuration->getCookieSecret();
         $ivLen = openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
 
@@ -358,6 +365,12 @@ final class CookieStore implements StoreInterface
     private function decrypt(
         string $data
     ) {
+        // @codeCoverageIgnoreStart
+        if (! self::USE_CRYPTO) {
+            return unserialize(json_decode(base64_decode($data), true, 512, JSON_THROW_ON_ERROR));
+        }
+        // @codeCoverageIgnoreEnd
+
         [$data] = Toolkit::filter([$data])->string()->trim();
 
         Toolkit::assert([
