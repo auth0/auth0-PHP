@@ -473,14 +473,12 @@ final class SdkConfiguration implements ConfigurableContract
                 $propertyValue = trim($propertyValue);
 
                 if (strlen($propertyValue) !== 0) {
-                    if (filter_var($propertyValue, FILTER_VALIDATE_DOMAIN, [FILTER_FLAG_HOSTNAME, FILTER_NULL_ON_FAILURE]) !== null) {
-                        $host = preg_replace('#^[^:/.]*[:/]+#i', '', $propertyValue);
-                        $host = parse_url('https://' . $host, PHP_URL_HOST);
-                        $host = filter_var($host, FILTER_SANITIZE_URL, FILTER_NULL_ON_FAILURE);
+                    $host = preg_replace('#^[^:/.]*[:/]+#i', '', $propertyValue);
+                    $host = parse_url('https://' . $host, PHP_URL_HOST);
+                    $host = filter_var($host, FILTER_SANITIZE_URL, FILTER_NULL_ON_FAILURE);
 
-                        if (is_string($host) && strlen($host) !== 0) {
-                            return $host;
-                        }
+                    if (is_string($host) && strlen($host) !== 0 && filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) !== false) {
+                        return $host;
                     }
                 }
             }
