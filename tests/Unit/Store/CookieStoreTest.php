@@ -222,3 +222,19 @@ test('decrypt() returns null if a malformed data payload is encoded', function()
 
     expect($this->store->getState())->toBeEmpty();
 });
+
+test('Configured SameSite() is reflected', function(): void {
+    $this->configuration->setCookieSameSite('strict');
+
+    $options = $this->store->getCookieOptions();
+
+    expect($options['samesite'])->toEqual('strict');
+});
+
+test('Unsupported configured SameSite() is overwritten by default of `lax`', function(): void {
+    $this->configuration->setCookieSameSite('testing');
+
+    $options = $this->store->getCookieOptions();
+
+    expect($options['samesite'])->toEqual('Lax');
+});
