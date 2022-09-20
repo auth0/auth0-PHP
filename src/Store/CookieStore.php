@@ -211,6 +211,7 @@ final class CookieStore implements StoreInterface
                     // Push the updated cookie to the host device for persistence.
                     // @codeCoverageIgnoreStart
                     if (! defined('AUTH0_TESTS_DIR')) {
+                        /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
                         setcookie($cookieName, $chunk, $setOptions);
                     }
                     // @codeCoverageIgnoreEnd
@@ -231,6 +232,7 @@ final class CookieStore implements StoreInterface
             // Push the cookie deletion command to the host device.
             // @codeCoverageIgnoreStart
             if (! defined('AUTH0_TESTS_DIR')) {
+                /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $deleteOptions */
                 setcookie($cookieName, '', $deleteOptions);
             }
             // @codeCoverageIgnoreEnd
@@ -318,6 +320,45 @@ final class CookieStore implements StoreInterface
         if (! $this->deferring) {
             $this->setState();
         }
+    }
+
+
+    /**
+     * Build options array for use with setcookie()
+     *
+     * @param int|null $expires
+     *
+     * @return array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: string, url_encode?: int}
+     */
+    public function getCookieOptions(
+        ?int $expires = null
+    ): array {
+        $expires = $expires ?? $this->configuration->getCookieExpires();
+
+        if ($expires !== 0) {
+            $expires = time() + $expires;
+        }
+
+        $options = [
+            'expires' => $expires,
+            'path' => $this->configuration->getCookiePath(),
+            'secure' => $this->configuration->getCookieSecure(),
+            'httponly' => true,
+            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax'
+        ];
+
+        if (! in_array(strtolower($options['samesite']), ['lax', 'none', 'strict'], true)) {
+            $options['samesite'] = 'Lax';
+        }
+
+        $domain = $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'] ?? null;
+
+        if ($domain !== null) {
+            /** @var string $domain */
+            $options['domain'] = $domain;
+        }
+
+        return $options;
     }
 
     /**
@@ -442,39 +483,5 @@ final class CookieStore implements StoreInterface
 
         /** @var array<mixed> $data */
         return $data;
-    }
-
-    /**
-     * Build options array for use with setcookie()
-     *
-     * @param int|null $expires
-     *
-     * @return array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int}
-     */
-    private function getCookieOptions(
-        ?int $expires = null
-    ): array {
-        $expires = $expires ?? $this->configuration->getCookieExpires();
-
-        if ($expires !== 0) {
-            $expires = time() + $expires;
-        }
-
-        $options = [
-            'expires' => $expires,
-            'path' => $this->configuration->getCookiePath(),
-            'secure' => $this->configuration->getCookieSecure(),
-            'httponly' => true,
-            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
-        ];
-
-        $domain = $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'] ?? null;
-
-        if ($domain !== null) {
-            /** @var string $domain */
-            $options['domain'] = $domain;
-        }
-
-        return $options;
     }
 }
