@@ -157,7 +157,7 @@ final class SessionStore implements StoreInterface
                     'path' => $this->configuration->getCookiePath(),
                     'secure' => $this->configuration->getCookieSecure(),
                     'httponly' => true,
-                    'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
+                    'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax',
                 ]);
             }
             // @codeCoverageIgnoreEnd

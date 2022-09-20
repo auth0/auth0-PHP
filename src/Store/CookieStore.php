@@ -14,6 +14,7 @@ use Auth0\SDK\Utility\Toolkit;
  */
 final class CookieStore implements StoreInterface
 {
+    public const USE_CRYPTO = true;
     public const KEY_HASHING_ALGO = 'sha256';
     public const KEY_CHUNKING_THRESHOLD = 3072;
     public const KEY_SEPARATOR = '_';
@@ -52,6 +53,8 @@ final class CookieStore implements StoreInterface
      *
      * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      * @param string           $namespace       A string in which to store cookies under on devices.
+     *
+     * @psalm-suppress RedundantCondition
      */
     public function __construct(
         SdkConfiguration $configuration,
@@ -64,7 +67,13 @@ final class CookieStore implements StoreInterface
         ])->isString();
 
         $this->configuration = $configuration;
-        $this->namespace = hash(self::KEY_HASHING_ALGO, (string) $namespace);
+        $this->namespace = (string) $namespace;
+
+        // @phpstan-ignore-next-line
+        if (self::USE_CRYPTO) {
+            $this->namespace = hash(self::KEY_HASHING_ALGO, $this->namespace);
+        }
+
         $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
 
         $this->getState();
@@ -202,6 +211,7 @@ final class CookieStore implements StoreInterface
                     // Push the updated cookie to the host device for persistence.
                     // @codeCoverageIgnoreStart
                     if (! defined('AUTH0_TESTS_DIR')) {
+                        /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
                         setcookie($cookieName, $chunk, $setOptions);
                     }
                     // @codeCoverageIgnoreEnd
@@ -222,6 +232,7 @@ final class CookieStore implements StoreInterface
             // Push the cookie deletion command to the host device.
             // @codeCoverageIgnoreStart
             if (! defined('AUTH0_TESTS_DIR')) {
+                /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $deleteOptions */
                 setcookie($cookieName, '', $deleteOptions);
             }
             // @codeCoverageIgnoreEnd
@@ -311,14 +322,62 @@ final class CookieStore implements StoreInterface
         }
     }
 
+
+    /**
+     * Build options array for use with setcookie()
+     *
+     * @param int|null $expires
+     *
+     * @return array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: string, url_encode?: int}
+     */
+    public function getCookieOptions(
+        ?int $expires = null
+    ): array {
+        $expires = $expires ?? $this->configuration->getCookieExpires();
+
+        if ($expires !== 0) {
+            $expires = time() + $expires;
+        }
+
+        $options = [
+            'expires' => $expires,
+            'path' => $this->configuration->getCookiePath(),
+            'secure' => $this->configuration->getCookieSecure(),
+            'httponly' => true,
+            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax'
+        ];
+
+        if (! in_array(strtolower($options['samesite']), ['lax', 'none', 'strict'], true)) {
+            $options['samesite'] = 'Lax';
+        }
+
+        $domain = $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'] ?? null;
+
+        if ($domain !== null) {
+            /** @var string $domain */
+            $options['domain'] = $domain;
+        }
+
+        return $options;
+    }
+
     /**
      * Encrypt data for safe storage format for a cookie.
      *
      * @param array<mixed> $data Data to encrypt.
+     *
+     * @psalm-suppress TypeDoesNotContainType
      */
     private function encrypt(
         array $data
     ): string {
+        // @codeCoverageIgnoreStart
+        // @phpstan-ignore-next-line
+        if (! self::USE_CRYPTO) {
+            return base64_encode(json_encode(serialize($data), JSON_THROW_ON_ERROR));
+        }
+        // @codeCoverageIgnoreEnd
+
         $secret = $this->configuration->getCookieSecret();
         $ivLen = openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
 
@@ -354,10 +413,34 @@ final class CookieStore implements StoreInterface
      * @param string $data String representing an encrypted data structure.
      *
      * @return array<mixed>|null
+     *
+     * @psalm-suppress TypeDoesNotContainType
      */
     private function decrypt(
         string $data
     ) {
+        // @codeCoverageIgnoreStart
+        // @phpstan-ignore-next-line
+        if (! self::USE_CRYPTO) {
+            $returns = [];
+            $decoded = base64_decode($data, true);
+
+            if (is_string($decoded)) {
+                $decoded = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+            }
+
+            if (is_string($decoded)) {
+                $decoded = unserialize($decoded);
+            }
+
+            if (is_array($decoded)) {
+                $returns = $decoded;
+            }
+
+            return $returns;
+        }
+        // @codeCoverageIgnoreEnd
+
         [$data] = Toolkit::filter([$data])->string()->trim();
 
         Toolkit::assert([
@@ -400,39 +483,5 @@ final class CookieStore implements StoreInterface
 
         /** @var array<mixed> $data */
         return $data;
-    }
-
-    /**
-     * Build options array for use with setcookie()
-     *
-     * @param int|null $expires
-     *
-     * @return array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int}
-     */
-    private function getCookieOptions(
-        ?int $expires = null
-    ): array {
-        $expires = $expires ?? $this->configuration->getCookieExpires();
-
-        if ($expires !== 0) {
-            $expires = time() + $expires;
-        }
-
-        $options = [
-            'expires' => $expires,
-            'path' => $this->configuration->getCookiePath(),
-            'secure' => $this->configuration->getCookieSecure(),
-            'httponly' => true,
-            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : 'Lax',
-        ];
-
-        $domain = $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'] ?? null;
-
-        if ($domain !== null) {
-            /** @var string $domain */
-            $options['domain'] = $domain;
-        }
-
-        return $options;
     }
 }
