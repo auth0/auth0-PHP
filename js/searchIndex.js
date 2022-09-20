@@ -3666,6 +3666,11 @@ Search.appendIndex(
             "summary": "Build\u0020options\u0020array\u0020for\u0020use\u0020with\u0020setcookie\u0028\u0029",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AUSE_CRYPTO",
+            "name": "USE_CRYPTO",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Store-CookieStore.html#constant_USE_CRYPTO"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AKEY_HASHING_ALGO",
             "name": "KEY_HASHING_ALGO",
             "summary": "",
