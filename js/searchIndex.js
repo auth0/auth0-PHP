@@ -3651,6 +3651,11 @@ Search.appendIndex(
             "summary": "Removes\u0020all\u0020persisted\u0020values.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_purge"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AgetCookieOptions\u0028\u0029",
+            "name": "getCookieOptions",
+            "summary": "Build\u0020options\u0020array\u0020for\u0020use\u0020with\u0020setcookie\u0028\u0029",
+            "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003Aencrypt\u0028\u0029",
             "name": "encrypt",
             "summary": "Encrypt\u0020data\u0020for\u0020safe\u0020storage\u0020format\u0020for\u0020a\u0020cookie.",
@@ -3660,11 +3665,6 @@ Search.appendIndex(
             "name": "decrypt",
             "summary": "Decrypt\u0020data\u0020from\u0020a\u0020stored\u0020cookie\u0020string.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_decrypt"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AgetCookieOptions\u0028\u0029",
-            "name": "getCookieOptions",
-            "summary": "Build\u0020options\u0020array\u0020for\u0020use\u0020with\u0020setcookie\u0028\u0029",
-            "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AUSE_CRYPTO",
             "name": "USE_CRYPTO",
