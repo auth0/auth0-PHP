@@ -31,13 +31,33 @@ class MockPsr14StoreListener
     {
         $listener = new ListenerProvider();
 
-        $listener->on(Boot::class, [$this, 'onBoot']);
-        $listener->on(Destruct::class, [$this, 'onDestruct']);
-        $listener->on(Defer::class, [$this, 'onDefer']);
-        $listener->on(Get::class, [$this, 'onGet']);
-        $listener->on(Set::class, [$this, 'onSet']);
-        $listener->on(Delete::class, [$this, 'onDelete']);
-        $listener->on(Clear::class, [$this, 'onClear']);
+        $listener->on(Boot::class, function (Boot $event): MockPsr14StoreListener {
+            return $this->onBoot($event);
+        });
+
+        $listener->on(Destruct::class, function (Destruct $event): MockPsr14StoreListener {
+            return $this->onDestruct($event);
+        });
+
+        $listener->on(Defer::class, function (Defer $event): MockPsr14StoreListener {
+            return $this->onDefer($event);
+        });
+
+        $listener->on(Get::class, function (Get $event): Auth0Event {
+            return $this->onGet($event);
+        });
+
+        $listener->on(Set::class, function (Set $event): Auth0Event {
+            return $this->onSet($event);
+        });
+
+        $listener->on(Delete::class, function (Delete $event): Auth0Event {
+            return $this->onDelete($event);
+        });
+
+        $listener->on(Clear::class, function (Clear $event): Auth0Event {
+            return $this->onClear($event);
+        });
 
         return $listener;
     }
