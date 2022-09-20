@@ -14,6 +14,7 @@ use Auth0\SDK\Utility\Toolkit;
  */
 final class CookieStore implements StoreInterface
 {
+    public const USE_CRYPTO = true;
     public const KEY_HASHING_ALGO = 'sha256';
     public const KEY_CHUNKING_THRESHOLD = 3072;
     public const KEY_SEPARATOR = '_';
@@ -52,6 +53,8 @@ final class CookieStore implements StoreInterface
      *
      * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      * @param string           $namespace       A string in which to store cookies under on devices.
+     *
+     * @psalm-suppress RedundantCondition
      */
     public function __construct(
         SdkConfiguration $configuration,
@@ -64,7 +67,13 @@ final class CookieStore implements StoreInterface
         ])->isString();
 
         $this->configuration = $configuration;
-        $this->namespace = hash(self::KEY_HASHING_ALGO, (string) $namespace);
+        $this->namespace = (string) $namespace;
+
+        // @phpstan-ignore-next-line
+        if (self::USE_CRYPTO) {
+            $this->namespace = hash(self::KEY_HASHING_ALGO, $this->namespace);
+        }
+
         $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
 
         $this->getState();
@@ -356,10 +365,19 @@ final class CookieStore implements StoreInterface
      * Encrypt data for safe storage format for a cookie.
      *
      * @param array<mixed> $data Data to encrypt.
+     *
+     * @psalm-suppress TypeDoesNotContainType
      */
     private function encrypt(
         array $data
     ): string {
+        // @codeCoverageIgnoreStart
+        // @phpstan-ignore-next-line
+        if (! self::USE_CRYPTO) {
+            return base64_encode(json_encode(serialize($data), JSON_THROW_ON_ERROR));
+        }
+        // @codeCoverageIgnoreEnd
+
         $secret = $this->configuration->getCookieSecret();
         $ivLen = openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
 
@@ -395,10 +413,34 @@ final class CookieStore implements StoreInterface
      * @param string $data String representing an encrypted data structure.
      *
      * @return array<mixed>|null
+     *
+     * @psalm-suppress TypeDoesNotContainType
      */
     private function decrypt(
         string $data
     ) {
+        // @codeCoverageIgnoreStart
+        // @phpstan-ignore-next-line
+        if (! self::USE_CRYPTO) {
+            $returns = [];
+            $decoded = base64_decode($data, true);
+
+            if (is_string($decoded)) {
+                $decoded = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+            }
+
+            if (is_string($decoded)) {
+                $decoded = unserialize($decoded);
+            }
+
+            if (is_array($decoded)) {
+                $returns = $decoded;
+            }
+
+            return $returns;
+        }
+        // @codeCoverageIgnoreEnd
+
         [$data] = Toolkit::filter([$data])->string()->trim();
 
         Toolkit::assert([
