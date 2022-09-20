@@ -278,11 +278,13 @@ interface Auth0Interface
      * Get the specified parameter from POST or GET, depending on configured response mode.
      *
      * @param string $parameterName Name of the parameter to pull from the request.
-     * @param int $filter Defaults to \FILTER_UNSAFE_RAW. The type of PHP filter_var() filter to apply.
+     * @param int $filter Defaults to \FILTER_SANITIZE_FULL_SPECIAL_CHARS. The type of PHP filter_var() filter to apply.
+     * @param int[] $filterOptions Optional. Any additional `filter_var()` sanitization filters to pass. See: https://www.php.net/manual/en/filter.filters.sanitize.php
      */
     public function getRequestParameter(
         string $parameterName,
-        int $filter = \FILTER_UNSAFE_RAW
+        int $filter = FILTER_SANITIZE_FULL_SPECIAL_CHARS,
+        array $filterOptions = []
     ): ?string;
 
     /**
