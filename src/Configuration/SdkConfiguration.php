@@ -27,6 +27,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method SdkConfiguration setCookieDomain(?string $cookieDomain = null)
  * @method SdkConfiguration setCookieExpires(int $cookieExpires = 0)
  * @method SdkConfiguration setCookiePath(string $cookiePath = '/')
+ * @method SdkConfiguration setCookieSameSite(?string $cookieSameSite)
  * @method SdkConfiguration setCookieSecret(?string $cookieSecret)
  * @method SdkConfiguration setCookieSecure(bool $cookieSecure = false)
  * @method SdkConfiguration setClientId(?string $clientId = null)
@@ -69,6 +70,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method string|null getCookieDomain(?\Throwable $exceptionIfNull = null)
  * @method int getCookieExpires()
  * @method string getCookiePath()
+ * @method string|null getCookieSameSite(?\Throwable $exceptionIfNull = null)
  * @method string|null getCookieSecret(?\Throwable $exceptionIfNull = null)
  * @method bool getCookieSecure()
  * @method string|null getClientId(?\Throwable $exceptionIfNull = null)
@@ -111,6 +113,7 @@ use Psr\Http\Message\StreamFactoryInterface;
  * @method bool hasCookieDomain()
  * @method bool hasCookieExpires()
  * @method bool hasCookiePath()
+ * @method bool hasCookieSameSite()
  * @method bool hasCookieSecret()
  * @method bool hasCookieSecure()
  * @method bool hasClientId()
@@ -200,6 +203,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param string|null                    $cookieDomain          Defaults to value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
      * @param int                            $cookieExpires         Defaults to 0. How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
      * @param string                         $cookiePath            Defaults to '/'. Specifies path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
+     * @param string|null                    $cookieSameSite        Defaults to 'lax'. Specifies whether cookies should be restricted to first-party or same-site context.
      * @param bool                           $cookieSecure          Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
      * @param bool                           $persistUser           Defaults to true. If true, the user data will persist in session storage.
      * @param bool                           $persistIdToken        Defaults to true. If true, the Id Token will persist in session storage.
@@ -247,6 +251,7 @@ final class SdkConfiguration implements ConfigurableContract
         int $cookieExpires = 0,
         string $cookiePath = '/',
         bool $cookieSecure = false,
+        ?string $cookieSameSite = null,
         bool $persistUser = true,
         bool $persistIdToken = true,
         bool $persistAccessToken = true,
