@@ -1,4 +1,17 @@
-# CHANGELOG
+# Change Log
+
+## [8.3.0](https://github.com/auth0/auth0-PHP/tree/8.3.0) (2022-09-22)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.2.1...8.3.0)
+
+**Added**
+- [SDK-3636] Add PSR-14 Event Dispatcher, for ultra customizable session storage purposes [\#646](https://github.com/auth0/auth0-PHP/pull/646) ([evansims](https://github.com/evansims))
+
+**Changed**
+- [SDK-3633] Treat passing an empty string to SdkConfiguration as the default undefined value type of NULL [\#643](https://github.com/auth0/auth0-PHP/pull/643) ([evansims](https://github.com/evansims))
+- [SDK-3635] Enable configuration of SessionStore and CookieStore `samesite` property [\#645](https://github.com/auth0/auth0-PHP/pull/645) ([evansims](https://github.com/evansims))
+- [SDK-3634] Add hardcoded debugging flag to CookieStore to disable encryption of session cookies [\#644](https://github.com/auth0/auth0-PHP/pull/644) ([evansims](https://github.com/evansims))
+- [SDK-3632] Update `getRequestParameter()` filter to use FILTER_SANITIZE_FULL_SPECIAL_CHARS and allow passing extra filter options [\#642](https://github.com/auth0/auth0-PHP/pull/642) ([evansims](https://github.com/evansims))
+- [SDK-3631] Defer/batch "Set-Cookie" headers at `login()` for transient cookies, and `clear()` [\#641](https://github.com/auth0/auth0-PHP/pull/641) ([evansims](https://github.com/evansims))
 
 ## [8.2.1](https://github.com/auth0/auth0-PHP/tree/8.2.1) (2022-06-06)
 
