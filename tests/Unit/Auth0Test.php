@@ -15,7 +15,7 @@ beforeEach(function(): void {
     $_COOKIE = [];
 
     $this->configuration = [
-        'domain' => '__test_domain__',
+        'domain' => 'domain.test',
         'clientId' => '__test_client_id__',
         'cookieSecret' => uniqid(),
         'clientSecret' => '__test_client_secret__',
@@ -110,7 +110,7 @@ test('getLoginLink() returns expected default value', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('scope=openid%20profile%20email')
@@ -134,7 +134,7 @@ test('getLoginLink() returns expected value when supplying parameters', function
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('scope=openid%20profile%20email')
@@ -161,7 +161,7 @@ test('getLoginLink() returns expected value when overriding defaults', function(
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('scope=' . $params['scope'])
@@ -178,7 +178,7 @@ test('getLoginLink() assigns a nonce and state', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('state=')
@@ -192,7 +192,7 @@ test('login() assigns a challenge and challenge method when PKCE is enabled', fu
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('code_challenge=')
@@ -208,7 +208,7 @@ test('login() assigns `max_age` from default values', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('max_age=1000');
@@ -225,7 +225,7 @@ test('login() assigns `max_age` from overridden values', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('max_age=1001');
@@ -238,7 +238,7 @@ test('signup() returns a url with a `screen_hint` parameter', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('screen_hint=signup');
@@ -255,7 +255,7 @@ test('handleInvitation() creates a valid login url', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/authorize')
         ->query
             ->toContain('invitation=__test_invitation__')
@@ -280,7 +280,7 @@ test('logout() returns a a valid logout url', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('__test_domain__')
+        ->host->toEqual('domain.test')
         ->path->toEqual('/v2/logout')
         ->query
             ->toContain('returnTo=' . $returnUrl)
@@ -684,7 +684,7 @@ test('renew() succeeds under expected and valid conditions', function(): void {
     expect($requestBody['client_secret'])->toEqual('__test_client_secret__');
     expect($requestBody['client_id'])->toEqual('__test_client_id__');
     expect($requestBody['refresh_token'])->toEqual('2.3.4');
-    expect($request->getUri()->__toString())->toEqual('https://__test_domain__/oauth/token');
+    expect($request->getUri()->__toString())->toEqual('https://domain.test/oauth/token');
 });
 
 test('getCredentials() returns null when a session is not available', function(): void {
@@ -1002,7 +1002,7 @@ test('getBearerToken() correctly silently handles token validation exceptions', 
     $_GET[$testParameterName] = $candidate->token;
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
-        'domain' => '__bad_domain__',
+        'domain' => 'domain.bad',
         'tokenJwksUri' => $candidate->jwks,
         'tokenCache' => $candidate->cached
     ]));

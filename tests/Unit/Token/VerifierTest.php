@@ -26,7 +26,7 @@ dataset('jwksUri', static function () {
 dataset('tokenHs256', static function () {
     $token = (new TokenGenerator())->withHs256([]);
     [$headers, $claims, $signature] = explode('.', $token);
-    $payload = join('.', [$headers, $claims]);
+    $payload = implode('.', [$headers, $claims]);
     $signature = TokenGenerator::decodePart($signature, false);
 
     yield [ $token, $payload, $signature, $headers ];
@@ -36,7 +36,7 @@ dataset('tokenRs256', static function () {
     $keyPair = TokenGenerator::generateRsaKeyPair();
     $token = (new TokenGenerator())->withRs256([], $keyPair['private'], ['kid' => '__test_kid__']);
     [$headers, $claims, $signature] = explode('.', $token);
-    $payload = join('.', [$headers, $claims]);
+    $payload = implode('.', [$headers, $claims]);
     $signature = TokenGenerator::decodePart($signature, false);
 
     // Mimic JWKS response format: strip opening and closing comment lines from public key, remove line breaks.
