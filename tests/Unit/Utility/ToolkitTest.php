@@ -28,7 +28,7 @@ test('each() passes each item in an array through a function', function(): void 
     $items = ['a', 'b', 'c'];
 
     Toolkit::each($items, function(&$item, $key) {
-        $item = $item . $key;
+        $item .= $key;
     });
 
     expect($items)->toEqual(['a0', 'b1', 'c2']);
@@ -38,7 +38,7 @@ test('each() will break loop if false is returned', function(): void {
     $items = ['a', 'b', 'c'];
 
     Toolkit::each($items, function(&$item, $key) {
-        $item = $item . $key;
+        $item .= $key;
         return false;
     });
 

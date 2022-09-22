@@ -473,18 +473,19 @@ final class SdkConfiguration implements ConfigurableContract
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
         }
 
-        if ($propertyName === 'cookieSecret') {
-            if (is_string($propertyValue) && mb_strlen($propertyValue) !== 0) {
-                return $propertyValue;
-            }
-
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);
-        }
-
         if ($propertyName === 'domain' || $propertyName === 'customDomain') {
-            if (is_string($propertyValue) && mb_strlen($propertyValue) !== 0) {
-                $host = parse_url($propertyValue, PHP_URL_HOST);
-                return $host ?? $propertyValue;
+            if (is_string($propertyValue)) {
+                $propertyValue = trim($propertyValue);
+
+                if (strlen($propertyValue) !== 0) {
+                    $host = preg_replace('#^[^:/.]*[:/]+#i', '', $propertyValue);
+                    $host = parse_url('https://' . $host, PHP_URL_HOST);
+                    $host = filter_var($host, FILTER_SANITIZE_URL, FILTER_NULL_ON_FAILURE);
+
+                    if (is_string($host) && strlen($host) !== 0 && filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) !== false) {
+                        return $host;
+                    }
+                }
             }
 
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($propertyName);

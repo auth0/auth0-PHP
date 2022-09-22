@@ -37,7 +37,7 @@ class TokenGenerator
     ): array {
         $defaults = [
             'sub' => '__test_sub__',
-            'iss' => 'https://__test_domain__/',
+            'iss' => 'https://domain.test/',
             'aud' => '__test_client_id__',
             'nonce' => '__test_nonce__',
             'auth_time' => time() - 100,
@@ -157,7 +157,7 @@ class TokenGenerator
         }
 
         [$headers, $claims, $signature] = explode('.', $token);
-        $payload = join('.', [$headers, $claims]);
+        $payload = implode('.', [$headers, $claims]);
         $signature = (string) TokenGenerator::decodePart($signature, false);
         $claims = (array) TokenGenerator::decodePart($claims, true);
         $headers = (array) TokenGenerator::decodePart($headers, true);

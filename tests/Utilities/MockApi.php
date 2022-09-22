@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Utilities;
 
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Utility\HttpClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -29,7 +30,7 @@ abstract class MockApi
         // Create an instance of the intended API.
         $this->setClient();
 
-        if ($responses !== null && ! count($responses)) {
+        if ($responses !== null && $responses === []) {
             $responses[] = HttpResponseGenerator::create();
         }
 
