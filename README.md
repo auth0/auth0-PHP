@@ -187,7 +187,7 @@ $auth0 = new Auth0([
     'domain' => '{{YOUR_TENANT}}.auth0.com',
     'clientId' => '{{YOUR_APPLICATION_CLIENT_ID}}',
     'clientSecret' => '{{YOUR_APPLICATION_CLIENT_SECRET}}',
-    `cookieSecret` => 'A long, random string of your choosing.'
+    'cookieSecret' => 'A long, random string of your choosing.'
 ]);
 ```
 
