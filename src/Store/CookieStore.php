@@ -227,8 +227,7 @@ final class CookieStore implements StoreInterface
                     // @codeCoverageIgnoreStart
                     if (! defined('AUTH0_TESTS_DIR')) {
                         /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
-                        $result = setcookie($cookieName, $chunk, $setOptions);
-                        $debug[] = 'Set cookie: ' . ($result === true ? 'TRUE' : 'FALSE');
+                        setcookie($cookieName, $chunk, $setOptions);
                     }
                     // @codeCoverageIgnoreEnd
 
@@ -380,7 +379,6 @@ final class CookieStore implements StoreInterface
         $domain = $this->configuration->getCookieDomain() ?? null;
 
         if ($domain !== null && $domain !== $_SERVER['HTTP_HOST']) {
-            /** @var string $domain */
             $options['domain'] = $domain;
         }
 
@@ -479,7 +477,7 @@ final class CookieStore implements StoreInterface
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        $data = base64_decode($data, true);
+        $data = base64_decode((string) $data, true);
 
         if (! is_string($data)) {
             return null;
