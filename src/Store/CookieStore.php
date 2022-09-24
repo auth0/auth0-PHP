@@ -16,7 +16,7 @@ final class CookieStore implements StoreInterface
 {
     public const USE_CRYPTO = true;
     public const KEY_HASHING_ALGO = 'sha256';
-    public const KEY_CHUNKING_THRESHOLD = 3072;
+    public const KEY_CHUNKING_THRESHOLD = 2048;
     public const KEY_SEPARATOR = '_';
     public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
 
@@ -47,6 +47,11 @@ final class CookieStore implements StoreInterface
      * When true, CookieStore will not setState() itself. You will need manually call the method to persist state to storage.
      */
     private bool $deferring = false;
+
+    /**
+     * Determine if changes have been made since the last setState.
+     */
+    private bool $dirty = false;
 
     /**
      * CookieStore constructor.
@@ -103,14 +108,13 @@ final class CookieStore implements StoreInterface
     public function defer(
         bool $deferring
     ): void {
+        $this->deferring = $deferring;
+
         // If we were deferring state saving and we've been asked to cancel that deference
-        if ($this->deferring && ! $deferring) {
+        if (! $deferring) {
             // Immediately push the state to the host device.
             $this->setState();
         }
-
-        // Update our deference state.
-        $this->deferring = $deferring;
     }
 
     /**
@@ -125,6 +129,10 @@ final class CookieStore implements StoreInterface
     ): array {
         // Overwrite our internal state with one passed (presumably during unit tests.)
         if ($state !== null) {
+            if ($this->store !== $state) {
+                $this->dirty = true;
+            }
+
             return $this->store = $state;
         }
 
@@ -151,7 +159,7 @@ final class CookieStore implements StoreInterface
         }
 
         // If no cookies were found, set an empty state and continue.
-        if (mb_strlen($data) === 0) {
+        if (strlen($data) === 0) {
             return $this->store = [];
         }
 
@@ -172,8 +180,15 @@ final class CookieStore implements StoreInterface
     /**
      * Push our storage state to the source for persistence.
      */
-    public function setState(): self
-    {
+    public function setState(
+        bool $force = false
+    ): self {
+        if ($this->dirty === false) {
+            if ($force !== true) {
+                return $this;
+            }
+        }
+
         $setOptions = $this->getCookieOptions();
         $deleteOptions = $this->getCookieOptions(-1000);
         $existing = [];
@@ -212,7 +227,8 @@ final class CookieStore implements StoreInterface
                     // @codeCoverageIgnoreStart
                     if (! defined('AUTH0_TESTS_DIR')) {
                         /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
-                        setcookie($cookieName, $chunk, $setOptions);
+                        $result = setcookie($cookieName, $chunk, $setOptions);
+                        $debug[] = 'Set cookie: ' . ($result === true ? 'TRUE' : 'FALSE');
                     }
                     // @codeCoverageIgnoreEnd
 
@@ -241,6 +257,7 @@ final class CookieStore implements StoreInterface
             unset($_COOKIE[$cookieName]);
         }
 
+        $this->dirty = false;
         return $this;
     }
 
@@ -260,7 +277,10 @@ final class CookieStore implements StoreInterface
             [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
         ])->isString();
 
-        $this->store[(string) $key] = $value;
+        if (! isset($this->store[(string) $key]) || $this->store[(string) $key] !== $value) {
+            $this->store[(string) $key] = $value;
+            $this->dirty = true;
+        }
 
         if (! $this->deferring) {
             $this->setState();
@@ -303,7 +323,10 @@ final class CookieStore implements StoreInterface
             [$key, \Auth0\SDK\Exception\ArgumentException::missing('key')],
         ])->isString();
 
-        unset($this->store[(string) $key]);
+        if (isset($this->store[(string) $key])) {
+            unset($this->store[(string) $key]);
+            $this->dirty = true;
+        }
 
         if (! $this->deferring) {
             $this->setState();
@@ -315,7 +338,10 @@ final class CookieStore implements StoreInterface
      */
     public function purge(): void
     {
-        $this->store = [];
+        if ($this->store !== []) {
+            $this->store = [];
+            $this->dirty = true;
+        }
 
         if (! $this->deferring) {
             $this->setState();
@@ -351,9 +377,9 @@ final class CookieStore implements StoreInterface
             $options['samesite'] = 'Lax';
         }
 
-        $domain = $this->configuration->getCookieDomain() ?? $_SERVER['HTTP_HOST'] ?? null;
+        $domain = $this->configuration->getCookieDomain() ?? null;
 
-        if ($domain !== null) {
+        if ($domain !== null && $domain !== $_SERVER['HTTP_HOST']) {
             /** @var string $domain */
             $options['domain'] = $domain;
         }
@@ -368,7 +394,7 @@ final class CookieStore implements StoreInterface
      *
      * @psalm-suppress TypeDoesNotContainType
      */
-    private function encrypt(
+    public function encrypt(
         array $data
     ): string {
         // @codeCoverageIgnoreStart
@@ -404,7 +430,7 @@ final class CookieStore implements StoreInterface
         $encrypted = openssl_encrypt(serialize($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
 
         // Return a JSON encoded object containing the crypto tag and iv, and the encrypted data.
-        return json_encode(serialize(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]), JSON_THROW_ON_ERROR);
+        return base64_encode(serialize(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]));
     }
 
     /**
@@ -416,7 +442,7 @@ final class CookieStore implements StoreInterface
      *
      * @psalm-suppress TypeDoesNotContainType
      */
-    private function decrypt(
+    public function decrypt(
         string $data
     ) {
         // @codeCoverageIgnoreStart
@@ -453,7 +479,7 @@ final class CookieStore implements StoreInterface
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        $data = json_decode((string) $data, true);
+        $data = base64_decode($data, true);
 
         if (! is_string($data)) {
             return null;
