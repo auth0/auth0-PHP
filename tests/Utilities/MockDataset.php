@@ -18,7 +18,7 @@ class MockDataset
         int $depth = 0
     ): array {
         $response = [];
-        $types = ['string', 'integer', 'float', 'boolean', 'array', 'object', 'null'];
+        $types = ['string', 'integer', 'float', 'boolean', 'array', 'null'];
         $childCount = random_int(count($types), count($types) * 2);
 
         for ($k = 0; $k < $childCount; $k++) {
@@ -52,16 +52,6 @@ class MockDataset
                 }
 
                 $response[$name] = array_values(self::state($depth + 1));
-                continue;
-            }
-
-            if ($type === 'object') {
-                if ($depth >= 1) {
-                    $response[$name] = (object) [];
-                    continue;
-                }
-
-                $response[$name] = (object) self::state($depth + 1);
                 continue;
             }
 
