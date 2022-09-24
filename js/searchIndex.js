@@ -3911,6 +3911,16 @@ Search.appendIndex(
             "summary": "Returns\u0020the\u0020current\u0020threshold\u0020for\u0020chunk\u0020size\u0020calculations.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getThreshold"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AgetEncrypted\u0028\u0029",
+            "name": "getEncrypted",
+            "summary": "Returns\u0020the\u0020current\u0020encryption\u0020state",
+            "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getEncrypted"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AsetEncrypted\u0028\u0029",
+            "name": "setEncrypted",
+            "summary": "Toggle\u0020the\u0020encryption\u0020state",
+            "url": "classes/Auth0-SDK-Store-CookieStore.html#method_setEncrypted"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003Adefer\u0028\u0029",
             "name": "defer",
             "summary": "Defer\u0020saving\u0020state\u0020changes\u0020to\u0020destination\u0020to\u0020improve\u0020performance\u0020during\u0020blocks\u0020of\u0020changes.",
@@ -3951,20 +3961,15 @@ Search.appendIndex(
             "summary": "Build\u0020options\u0020array\u0020for\u0020use\u0020with\u0020setcookie\u0028\u0029",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003Aencrypt\u0028\u0029",
+            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024encrypt",
             "name": "encrypt",
-            "summary": "Encrypt\u0020data\u0020for\u0020safe\u0020storage\u0020format\u0020for\u0020a\u0020cookie.",
-            "url": "classes/Auth0-SDK-Store-CookieStore.html#method_encrypt"
+            "summary": "Determine\u0020if\u0020changes\u0020have\u0020been\u0020made\u0020since\u0020the\u0020last\u0020setState.",
+            "url": "classes/Auth0-SDK-Store-CookieStore.html#property_encrypt"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003Adecrypt\u0028\u0029",
             "name": "decrypt",
             "summary": "Decrypt\u0020data\u0020from\u0020a\u0020stored\u0020cookie\u0020string.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_decrypt"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AUSE_CRYPTO",
-            "name": "USE_CRYPTO",
-            "summary": "",
-            "url": "classes/Auth0-SDK-Store-CookieStore.html#constant_USE_CRYPTO"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AKEY_HASHING_ALGO",
             "name": "KEY_HASHING_ALGO",
@@ -4010,6 +4015,11 @@ Search.appendIndex(
             "name": "deferring",
             "summary": "When\u0020true,\u0020CookieStore\u0020will\u0020not\u0020setState\u0028\u0029\u0020itself.\u0020You\u0020will\u0020need\u0020manually\u0020call\u0020the\u0020method\u0020to\u0020persist\u0020state\u0020to\u0020storage.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#property_deferring"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024dirty",
+            "name": "dirty",
+            "summary": "Determine\u0020if\u0020changes\u0020have\u0020been\u0020made\u0020since\u0020the\u0020last\u0020setState.",
+            "url": "classes/Auth0-SDK-Store-CookieStore.html#property_dirty"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\MemoryStore",
             "name": "MemoryStore",
