@@ -1,5 +1,14 @@
 # Change Log
 
+## [8.3.1](https://github.com/auth0/auth0-PHP/tree/8.3.1) (2022-09-24)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.0...8.3.1)
+
+**Changed**
+- [SDK-3647] Add PHP 8.2.0-dev to test matrix [\#650](https://github.com/auth0/auth0-PHP/pull/650) ([evansims](https://github.com/evansims))
+
+**Fixed**
+- [SDK-3646] Reliability and performance improvements to CookieStore [\#649](https://github.com/auth0/auth0-PHP/pull/649) ([evansims](https://github.com/evansims))
+
 ## [8.3.0](https://github.com/auth0/auth0-PHP/tree/8.3.0) (2022-09-22)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.2.1...8.3.0)
 
