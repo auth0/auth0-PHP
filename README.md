@@ -187,6 +187,7 @@ $auth0 = new Auth0([
     'domain' => '{{YOUR_TENANT}}.auth0.com',
     'clientId' => '{{YOUR_APPLICATION_CLIENT_ID}}',
     'clientSecret' => '{{YOUR_APPLICATION_CLIENT_SECRET}}',
+    'cookieSecret' => 'A long, random string of your choosing.'
 ]);
 ```
 
@@ -252,7 +253,7 @@ $eventListenerProvider ListenerProviderInterface|null A PSR-14 compatible event 
 
 The PHP SDK is a robust and flexible library capable of integration with many types of applications. You can define the style of application you're integrating the SDK with using the `strategy` configuration option, which controls what configuration options will be required at class instantiation to provide the best experience.
 
-- `webapp`, the default configuration, will require `domain` and `clientId`. `clientSecret` is required when `tokenAlgorithm` is set to `HS256`. This is suitable for most application types.
+- `webapp`, the default configuration, will require `domain`, `clientId` and `cookieSecret`. `clientSecret` is required when `tokenAlgorithm` is set to `HS256`. This is suitable for the most common application types.
 - `api` indicates you'll be using the SDK in a stateless API-only environment; only `domain` and `audience` are required in this configuration.
 - `management` is for stateless applications exclusively using Management API calls; `domain` is required. You must also provide either a `managementToken`, or assign `clientId` and `clientSecret` for the SDK to automatically aquire a token.
 
