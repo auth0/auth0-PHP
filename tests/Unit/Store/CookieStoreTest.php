@@ -125,7 +125,8 @@ test('delete() updates state and $_COOKIE', function(array $state): void {
 
     $previousCookieState = $_COOKIE[$cookieNamespace];
 
-    $this->store->setState();
+    // Force the state change. As we didn't use the class methods to mutate the session state, it won't be flagged as dirty internally.
+    $this->store->setState(true);
 
     $this->assertNotEquals($_COOKIE[$cookieNamespace], $previousCookieState);
 

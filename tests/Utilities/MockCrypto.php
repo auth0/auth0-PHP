@@ -21,11 +21,11 @@ class MockCrypto
         $ivLength = openssl_cipher_iv_length(CookieStore::VAL_CRYPTO_ALGO);
         $iv = openssl_random_pseudo_bytes($ivLength);
         $encrypted = openssl_encrypt($data, CookieStore::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
-        $encrypted = json_encode(serialize([
+        $encrypted = base64_encode(serialize([
             'tag' => base64_encode($tag),
             'iv' => base64_encode($iv),
             'data' => $encrypted
-        ]), JSON_THROW_ON_ERROR);
+        ]));
 
         if ($encrypted === false) {
             return '';
