@@ -16,21 +16,26 @@ class MockCrypto
      */
     public static function cookieCompatibleEncrypt(
         string $secret,
-        string $data
+        $data,
+        ?string $overrideIv = null,
+        ?string $overrideTag = null
     ): string {
         $ivLength = openssl_cipher_iv_length(CookieStore::VAL_CRYPTO_ALGO);
-        $iv = openssl_random_pseudo_bytes($ivLength);
-        $encrypted = openssl_encrypt($data, CookieStore::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
-        $encrypted = base64_encode(serialize([
-            'tag' => base64_encode($tag),
+
+        $iv = $overrideIv ?? openssl_random_pseudo_bytes($ivLength);
+
+        $encrypted = openssl_encrypt(json_encode($data), CookieStore::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+
+        $data = json_encode([
+            'tag' => base64_encode($overrideTag ?? $tag),
             'iv' => base64_encode($iv),
             'data' => $encrypted
-        ]));
+        ]);
 
-        if ($encrypted === false) {
+        if (! is_string($data)) {
             return '';
         }
 
-        return $encrypted;
+        return rawurlencode($data);
     }
 }

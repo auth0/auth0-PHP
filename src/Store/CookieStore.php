@@ -14,7 +14,6 @@ use Auth0\SDK\Utility\Toolkit;
  */
 final class CookieStore implements StoreInterface
 {
-    public const USE_CRYPTO = true;
     public const KEY_HASHING_ALGO = 'sha256';
     public const KEY_CHUNKING_THRESHOLD = 2048;
     public const KEY_SEPARATOR = '_';
@@ -54,6 +53,11 @@ final class CookieStore implements StoreInterface
     private bool $dirty = false;
 
     /**
+     * Determine if changes have been made since the last setState.
+     */
+    private bool $encrypt = true;
+
+    /**
      * CookieStore constructor.
      *
      * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
@@ -73,13 +77,7 @@ final class CookieStore implements StoreInterface
 
         $this->configuration = $configuration;
         $this->namespace = (string) $namespace;
-
-        // @phpstan-ignore-next-line
-        if (self::USE_CRYPTO) {
-            $this->namespace = hash(self::KEY_HASHING_ALGO, $this->namespace);
-        }
-
-        $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace) + 2;
+        $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace);
 
         $this->getState();
     }
@@ -98,6 +96,25 @@ final class CookieStore implements StoreInterface
     public function getThreshold(): int
     {
         return $this->threshold;
+    }
+
+    /**
+     * Returns the current encryption state
+     */
+    public function getEncrypted(): bool
+    {
+        return $this->encrypt;
+    }
+
+    /**
+     * Toggle the encryption state
+     *
+     * @param bool $encrypt Enable or disable cookie encryption.
+     */
+    public function setEncrypted(bool $encrypt = true): self
+    {
+        $this->encrypt = $encrypt;
+        return $this;
     }
 
     /**
@@ -225,7 +242,7 @@ final class CookieStore implements StoreInterface
                     // @codeCoverageIgnoreStart
                     if (! defined('AUTH0_TESTS_DIR')) {
                         /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
-                        setcookie($cookieName, $chunk, $setOptions);
+                        setrawcookie($cookieName, $chunk, $setOptions);
                     }
                     // @codeCoverageIgnoreEnd
 
@@ -246,7 +263,7 @@ final class CookieStore implements StoreInterface
             // @codeCoverageIgnoreStart
             if (! defined('AUTH0_TESTS_DIR')) {
                 /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $deleteOptions */
-                setcookie($cookieName, '', $deleteOptions);
+                setrawcookie($cookieName, '', $deleteOptions);
             }
             // @codeCoverageIgnoreEnd
 
@@ -391,42 +408,45 @@ final class CookieStore implements StoreInterface
      * @psalm-suppress TypeDoesNotContainType
      */
     public function encrypt(
-        array $data
+        array $data,
+        array $options = []
     ): string {
-        // @codeCoverageIgnoreStart
-        // @phpstan-ignore-next-line
-        if (! self::USE_CRYPTO) {
-            return base64_encode(json_encode(serialize($data), JSON_THROW_ON_ERROR));
+        if (! $this->encrypt) {
+            return rawurlencode(json_encode($data));
         }
-        // @codeCoverageIgnoreEnd
 
         $secret = $this->configuration->getCookieSecret();
-        $ivLen = openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
+        $ivLen = $options['ivLen'] ?? openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
 
         if ($secret === null) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        // @codeCoverageIgnoreStart
         if ($ivLen === false) {
             return '';
         }
-        // @codeCoverageIgnoreEnd
 
-        $iv = openssl_random_pseudo_bytes($ivLen);
+        $iv = $options['iv'] ?? openssl_random_pseudo_bytes($ivLen);
 
-        // @codeCoverageIgnoreStart
-        // @phpstan-ignore-next-line
         if ($iv === false) {
             return '';
         }
-        // @codeCoverageIgnoreEnd
 
         // Encrypt the serialized PHP array.
-        $encrypted = openssl_encrypt(serialize($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+        $encrypted = $options['encrypted'] ?? openssl_encrypt(json_encode($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+
+        if (! is_string($encrypted)) {
+            return '';
+        }
 
         // Return a JSON encoded object containing the crypto tag and iv, and the encrypted data.
-        return base64_encode(serialize(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]));
+        $encoded = $options['encoded'] ?? json_encode(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]);
+
+        if (is_string($encoded)) {
+            return rawurlencode($encoded);
+        }
+
+        return '';
     }
 
     /**
@@ -441,27 +461,16 @@ final class CookieStore implements StoreInterface
     public function decrypt(
         string $data
     ) {
-        // @codeCoverageIgnoreStart
-        // @phpstan-ignore-next-line
-        if (! self::USE_CRYPTO) {
-            $returns = [];
-            $decoded = base64_decode($data, true);
-
-            if (is_string($decoded)) {
-                $decoded = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
-            }
-
-            if (is_string($decoded)) {
-                $decoded = unserialize($decoded);
-            }
+        if (! $this->encrypt) {
+            $decoded = rawurldecode($data);
+            $decoded = json_decode($decoded, true);
 
             if (is_array($decoded)) {
-                $returns = $decoded;
+                return $decoded;
             }
 
-            return $returns;
+            return [];
         }
-        // @codeCoverageIgnoreEnd
 
         [$data] = Toolkit::filter([$data])->string()->trim();
 
@@ -475,14 +484,11 @@ final class CookieStore implements StoreInterface
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        $data = base64_decode((string) $data, true);
-
-        if (! is_string($data)) {
-            return null;
-        }
+        $decoded = rawurldecode((string) $data);
+        $stripped = stripslashes($decoded);
+        $data = json_decode($stripped, true, 512);
 
         /** @var array{iv?: int|string|null, tag?: int|string|null, data: string} */
-        $data = unserialize($data);
 
         if (! isset($data['iv']) || ! isset($data['tag']) || ! is_string($data['iv']) || ! is_string($data['tag'])) {
             return null;
@@ -491,21 +497,17 @@ final class CookieStore implements StoreInterface
         $iv = base64_decode($data['iv'], true);
         $tag = base64_decode($data['tag'], true);
 
-        // @codeCoverageIgnoreStart
-        if ($iv === false || $tag === false) {
+        if (! is_string($iv) || ! is_string($tag)) {
             return null;
         }
-        // @codeCoverageIgnoreEnd
 
         $data = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
 
-        // @codeCoverageIgnoreStart
-        if ($data === false) {
+        if (! is_string($data)) {
             return null;
         }
-        // @codeCoverageIgnoreEnd
 
-        $data = unserialize($data);
+        $data = json_decode($data, true);
 
         /** @var array<mixed> $data */
         return $data;
