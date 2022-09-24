@@ -495,15 +495,19 @@ final class CookieStore implements StoreInterface
         $iv = base64_decode($data['iv'], true);
         $tag = base64_decode($data['tag'], true);
 
+        // @codeCoverageIgnoreStart
         if ($iv === false || $tag === false) {
             return null;
         }
+        // @codeCoverageIgnoreEnd
 
         $data = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
 
+        // @codeCoverageIgnoreStart
         if ($data === false) {
             return null;
         }
+        // @codeCoverageIgnoreEnd
 
         $data = unserialize($data);
 
