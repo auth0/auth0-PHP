@@ -256,6 +256,11 @@ test('encrypt() returns nothing with invalid crypto properties', function(): voi
 
     expect($this->store->encrypt($state, ['ivLen' => false]))->toEqual('');
     expect($this->store->encrypt($state, ['iv' => false]))->toEqual('');
+    expect($this->store->encrypt($state, ['tag' => false]))->toEqual('');
     expect($this->store->encrypt($state, ['encrypted' => false]))->toEqual('');
-    expect($this->store->encrypt($state, ['encoded' => false]))->toEqual('');
+    expect($this->store->encrypt($state, ['encoded1' => false]))->toEqual('');
+    expect($this->store->encrypt($state, ['encoded2' => false]))->toEqual('');
+
+    $this->store->setEncrypted(false);
+    expect($this->store->encrypt($state, ['encoded1' => false]))->toEqual('');
 });

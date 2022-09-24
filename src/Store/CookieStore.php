@@ -196,6 +196,8 @@ final class CookieStore implements StoreInterface
 
     /**
      * Push our storage state to the source for persistence.
+     *
+     * @psalm-suppress UnusedFunctionCall
      */
     public function setState(
         bool $force = false
@@ -403,7 +405,8 @@ final class CookieStore implements StoreInterface
     /**
      * Encrypt data for safe storage format for a cookie.
      *
-     * @param array<mixed> $data Data to encrypt.
+     * @param array<mixed> $data    Data to encrypt.
+     * @param array<mixed> $options Additional configuration options.
      *
      * @psalm-suppress TypeDoesNotContainType
      */
@@ -412,35 +415,54 @@ final class CookieStore implements StoreInterface
         array $options = []
     ): string {
         if (! $this->encrypt) {
-            return rawurlencode(json_encode($data));
+            $data = $options['encoded1'] ?? json_encode($data);
+
+            if (! is_string($data)) {
+                return '';
+            }
+
+            return rawurlencode($data);
         }
 
         $secret = $this->configuration->getCookieSecret();
         $ivLen = $options['ivLen'] ?? openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
+        $tag = null;
 
         if ($secret === null) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        if ($ivLen === false) {
+        if (! is_int($ivLen)) {
             return '';
         }
 
         $iv = $options['iv'] ?? openssl_random_pseudo_bytes($ivLen);
 
-        if ($iv === false) {
+        if (! is_string($iv)) {
             return '';
         }
 
-        // Encrypt the serialized PHP array.
-        $encrypted = $options['encrypted'] ?? openssl_encrypt(json_encode($data), self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+        $data = $options['encoded1'] ?? json_encode($data);
+
+        if (! is_string($data)) {
+            return '';
+        }
+
+        // Encrypt the PHP array.
+        $encrypted = $options['encrypted'] ?? openssl_encrypt($data, self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+        $iv = $options['iv'] ?? $iv;
+        $tag = $options['tag'] ?? $tag;
 
         if (! is_string($encrypted)) {
             return '';
         }
 
+        if (! is_string($tag)) {
+            return '';
+        }
+
         // Return a JSON encoded object containing the crypto tag and iv, and the encrypted data.
-        $encoded = $options['encoded'] ?? json_encode(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]);
+        $encoded = $options['encoded2'] ?? json_encode(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]);
 
         if (is_string($encoded)) {
             return rawurlencode($encoded);
@@ -488,7 +510,7 @@ final class CookieStore implements StoreInterface
         $stripped = stripslashes($decoded);
         $data = json_decode($stripped, true, 512);
 
-        /** @var array{iv?: int|string|null, tag?: int|string|null, data: string} */
+        /** @var array{iv?: int|string|null, tag?: int|string|null, data: string} $data */
 
         if (! isset($data['iv']) || ! isset($data['tag']) || ! is_string($data['iv']) || ! is_string($data['tag'])) {
             return null;
