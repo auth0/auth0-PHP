@@ -159,7 +159,7 @@ final class CookieStore implements StoreInterface
         }
 
         // If no cookies were found, set an empty state and continue.
-        if (strlen($data) === 0) {
+        if ($data === '') {
             return $this->store = [];
         }
 
@@ -183,10 +183,8 @@ final class CookieStore implements StoreInterface
     public function setState(
         bool $force = false
     ): self {
-        if ($this->dirty === false) {
-            if ($force !== true) {
-                return $this;
-            }
+        if (!$this->dirty && !$force) {
+            return $this;
         }
 
         $setOptions = $this->getCookieOptions();
