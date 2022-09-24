@@ -27,10 +27,6 @@ afterEach(function () {
     $_COOKIE = [];
 });
 
-it('hashes the namespace', function(): void {
-    $this->assertNotEquals($this->namespace, $this->store->getNamespace());
-});
-
 it('calculates a chunking threshold', function(): void {
     expect($this->store->getThreshold())->toBeGreaterThan(0);
 });
@@ -46,7 +42,8 @@ it('populates state from getState() override', function(array $state): void {
 it('populates state from $_COOKIE correctly', function(array $state): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
 
-    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, serialize([$this->exampleKey => $state]));
+    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
+
     $_COOKIE[$cookieNamespace] = $encrypted;
 
     $this->store->getState();
@@ -57,7 +54,7 @@ it('populates state from $_COOKIE correctly', function(array $state): void {
 ]]);
 
 it('populates state from a chunked $_COOKIE correctly', function(array $state): void {
-    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, serialize([$this->exampleKey => $state]));
+    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
     $chunks = str_split($encrypted, 32);
 
     foreach($chunks as $index => $chunk) {
@@ -86,7 +83,7 @@ it('does not populate state from a malformed $_COOKIE', function(array $state): 
 it('does not populate state from an unencrypted $_COOKIE', function(array $state): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
 
-    $_COOKIE[$cookieNamespace] = json_encode(serialize([$this->exampleKey => $state]));
+    $_COOKIE[$cookieNamespace] = json_encode([$this->exampleKey => $state]);
 
     $this->store->getState();
 
@@ -118,14 +115,15 @@ test('set() updates state and $_COOKIE', function(array $states): void {
 test('delete() updates state and $_COOKIE', function(array $state): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
 
-    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, serialize([$this->exampleKey => $state]));
+    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
     $_COOKIE[$cookieNamespace] = $encrypted;
 
     $this->store->getState();
 
     $previousCookieState = $_COOKIE[$cookieNamespace];
 
-    $this->store->setState();
+    // Force the state change. As we didn't use the class methods to mutate the session state, it won't be flagged as dirty internally.
+    $this->store->setState(true);
 
     $this->assertNotEquals($_COOKIE[$cookieNamespace], $previousCookieState);
 
@@ -140,7 +138,7 @@ test('delete() updates state and $_COOKIE', function(array $state): void {
 test('purge() clears state and $_COOKIE', function(array $state): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
 
-    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, serialize([$this->exampleKey => $state]));
+    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
     $_COOKIE[$cookieNamespace] = $encrypted;
 
     $this->store->getState();
@@ -176,7 +174,7 @@ test('decrypt() throws an exception if a cookie secret is not configured', funct
     $this->store = new CookieStore($this->configuration, $this->namespace);
 
     $cookieNamespace = $this->store->getNamespace() . '_0';
-    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, serialize([$this->exampleKey => $state]));
+    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
     $_COOKIE[$cookieNamespace] = $encrypted;
 
     $this->store->getState();
@@ -193,16 +191,16 @@ test('decrypt() returns null if malformed JSON is encoded', function(): void {
 
 test('decrypt() returns null if a malformed cryptographic manifest is encoded', function(): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
-    $_COOKIE[$cookieNamespace] = json_encode(serialize([
+    $_COOKIE[$cookieNamespace] = json_encode([
         'tag' => uniqid()
-    ]));
+    ]);
 
     expect($this->store->getState())->toBeEmpty();
 
-    $_COOKIE[$cookieNamespace] = json_encode(serialize([
+    $_COOKIE[$cookieNamespace] = json_encode([
         'iv' => 'hi 👋 malformed cryptographic manifest here',
         'tag' => (string) uniqid()
-    ]));
+    ]);
 
     expect($this->store->getState())->toBeEmpty();
 });
@@ -212,18 +210,18 @@ test('decrypt() returns null if a malformed data payload is encoded', function()
 
     $ivLength = openssl_cipher_iv_length(CookieStore::VAL_CRYPTO_ALGO);
     $iv = openssl_random_pseudo_bytes($ivLength);
-    $payload = json_encode(serialize([
+    $payload = json_encode([
         'tag' => base64_encode((string) uniqid()),
         'iv' => base64_encode($iv),
         'data' => 'not encrypted :eyes:'
-    ]), JSON_THROW_ON_ERROR);
+    ], JSON_THROW_ON_ERROR);
 
     $_COOKIE[$cookieNamespace] = $payload;
 
     expect($this->store->getState())->toBeEmpty();
 });
 
-test('Configured SameSite() is reflected', function(): void {
+test('configured SameSite() is reflected', function(): void {
     $this->configuration->setCookieSameSite('strict');
 
     $options = $this->store->getCookieOptions();
@@ -231,10 +229,38 @@ test('Configured SameSite() is reflected', function(): void {
     expect($options['samesite'])->toEqual('strict');
 });
 
-test('Unsupported configured SameSite() is overwritten by default of `lax`', function(): void {
+test('unsupported configured SameSite() is overwritten by default of `lax`', function(): void {
     $this->configuration->setCookieSameSite('testing');
 
     $options = $this->store->getCookieOptions();
 
     expect($options['samesite'])->toEqual('Lax');
+});
+
+test('toggling encryption works', function(array $state): void {
+    expect($this->store->getEncrypted())->toEqual(true);
+
+    $this->store->setEncrypted(false);
+    expect($this->store->getEncrypted())->toEqual(false);
+
+    $encrypted = $this->store->encrypt($state);
+    expect($encrypted)->toEqual(rawurlencode(json_encode($state)));
+    expect($this->store->decrypt($encrypted))->toEqual($state);
+    expect($this->store->decrypt(rawurlencode(json_encode('test'))))->toEqual([]);
+})->with(['mocked state' => [
+    fn() => MockDataset::state()
+]]);
+
+test('encrypt() returns nothing with invalid crypto properties', function(): void {
+    $state = MockDataset::state();
+
+    expect($this->store->encrypt($state, ['ivLen' => false]))->toEqual('');
+    expect($this->store->encrypt($state, ['iv' => false]))->toEqual('');
+    expect($this->store->encrypt($state, ['tag' => false]))->toEqual('');
+    expect($this->store->encrypt($state, ['encrypted' => false]))->toEqual('');
+    expect($this->store->encrypt($state, ['encoded1' => false]))->toEqual('');
+    expect($this->store->encrypt($state, ['encoded2' => false]))->toEqual('');
+
+    $this->store->setEncrypted(false);
+    expect($this->store->encrypt($state, ['encoded1' => false]))->toEqual('');
 });
