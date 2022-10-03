@@ -1,7 +1,4 @@
----
-publish: false
-synopsis: Snippets with solutions to frequently asked questions.
-tags:
-  - folder
----
+[← Back to SDK Documentation](../README.md)
+
 # Cookbook
+Snippets and solutions for frequently asked questions.
