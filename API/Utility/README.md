@@ -1,23 +1,17 @@
----
-publish: false
-context: Auth0\\SDK\\Utility\\
-suffix: …
-tags:
-  - folder
----
-# Utility
+# Auth0\\SDK\\Utility
 
-- **Auth0\\SDK\\Utility\\[[Request/README.md|Request…]]**
-- **Auth0\\SDK\\Utility\\[[Toolkit/README.md|Toolkit…]]**
+**[Request →](Request)**  
+**[Toolkit →](Toolkit)**  
+  
+◦ [EventDispatcher](EventDispatcher.md)  
+◦ [HttpClient](HttpClient.md)  
+◦ [HttpRequest](HttpRequest.md)  
+◦ [HttpResponse](HttpResponse.md)  
+◦ [HttpResponsePaginator](HttpResponsePaginator.md)  
+◦ [HttpTelemetry](HttpTelemetry.md)  
+◦ [PKCE](PKCE.md)  
+◦ [Toolkit](Toolkit.md)  
+◦ [TransientStoreHandler](TransientStoreHandler.md)  
 
-- Auth0\\SDK\\Utility\\[[EventDispatcher.md|EventDispatcher]]
-- Auth0\\SDK\\Utility\\[[HttpClient.md|HttpClient]]
-- Auth0\\SDK\\Utility\\[[HttpRequest.md|HttpRequest]]
-- Auth0\\SDK\\Utility\\[[HttpResponse.md|HttpResponse]]
-- Auth0\\SDK\\Utility\\[[HttpResponsePaginator.md|HttpResponsePaginator]]
-- Auth0\\SDK\\Utility\\[[HttpTelemetry.md|HttpTelemetry]]
-- Auth0\\SDK\\Utility\\[[PKCE.md|PKCE]]
-- Auth0\\SDK\\Utility\\[[Toolkit.md|Toolkit]]
-- Auth0\\SDK\\Utility\\[[TransientStoreHandler.md|TransientStoreHandler]]
 
 
