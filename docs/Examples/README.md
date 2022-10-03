@@ -1,8 +1,4 @@
----
-publish: false
-synopsis: Some basic usage samples to get you running.
-tags:
-  - folder
----
-# Examples
+[← Back to SDK Documentation](../README.md)
 
+# Examples
+Some basic usage samples to get you running.
