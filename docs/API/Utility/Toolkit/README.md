@@ -1,14 +1,7 @@
----
-publish: false
-context: Auth0\\SDK\\Utility\\Toolkit\\
-suffix: …
-tags:
-  - folder
----
-# Toolkit
+# Auth0\\SDK\\Utility\\Toolkit\\
 
-- **Auth0\\SDK\\Utility\\Toolkit\\[[Filter/README.md|Filter…]]**
-
-- Auth0\\SDK\\Utility\\Toolkit\\[[Assert.md|Assert]]
-- Auth0\\SDK\\Utility\\Toolkit\\[[Filter.md|Filter]]
+**[Filter →](Filter)**  
+  
+◦ [Assert](Assert.md)  
+◦ [Filter](Filter.md)  
 
