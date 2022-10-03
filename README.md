@@ -1,4 +1,4 @@
-# SDK Documentation Index
+# SDK Documentation
 
 **[API Reference →](API)**  
 A technical reference of the SDK's full public API, documenting all public methods and offering example usage.  
