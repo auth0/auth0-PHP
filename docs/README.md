@@ -7,12 +7,12 @@ tags:
 ---
 # SDK Documentation Index
 
-- **[[API/README.md|API Reference]]**
+- **[API Reference](API/README.md)**
   A technical reference of the SDK's full public API, documenting all public methods and offering example usage.
-- **[[Cookbook/README.md|Cookbook]]**
+- **[Cookbook](Cookbook/README.md)**
   Snippets with solutions to frequently asked questions.
-- **[[Examples/README.md|Examples]]**
+- **[Examples](Examples/README.md)**
   Some basic usage samples to get you running.
-- **[[Getting Started/README.md|Getting Started]]**
+- **[Getting Started](Getting Started/README.md)**
   Everything you need to get up and running with the Auth0 PHP SDK.
 
