@@ -1,9 +1,6 @@
----
-synopsis: A technical reference of the SDK's full public API, documenting all public methods and offering example usage.
----
 # API Reference
 
-## Auth0\\SDK\\
+The Auth0 SDK classes all reside within the `Auth0\SDK` namespace. You can learn more about these classes and methods from the hierarchy below.
 
 **[API →](API)**  
 **[Configuration →](Configuration)**  
