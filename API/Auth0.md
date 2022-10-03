@@ -11,7 +11,7 @@ Consumes a `Auth0\SDK\Configuration\SdkConfiguration` configuration instance. In
 
 Parameters:
 - `configuration` — [SdkConfiguration](Configuration/SdkConfiguration.md) | array  
-  Required. Base configuration options for the SDK.  
+  Base configuration options for the SDK.  
 
 ### authentication
 Create, configure, and return an instance of the [Authentication](API/Authentication.md) class.
@@ -67,8 +67,20 @@ Parameters:
 ### decode
 Verifies and decodes an ID or access token using the properties in this class.
 
-Returns: ([TokenInterface](Token.md))
+Returns: ([TokenInterface](Token.md)) [Token](Token.md) representing a successfully decoded ID or access token.
 
 Parameters:
-- `transient` — bool
-  When true, data in transient storage is also cleared.  
+- `token` — string  
+  Token to verify and decode.  
+- `tokenAudience` — string[]  
+  Optional. An array of allowed values for the `aud` claim. Successful if ANY match.  
+- `tokenOrganization` — string[] | null  
+  Optional. An array of allowed values for the `org_id` claim. Successful if ANY match.  
+- `tokenNonce` — string | null  
+  Optional. The value expected for the `nonce` claim.  
+- `tokenMaxAge` — int | null  
+  Optional. Maximum window of time in seconds since the `auth_time` to accept the token.
+- `tokenLeeway` — int | null  
+  Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
+- `tokenNow` — int | null  
+  Optional. Unix timestamp representing the current point in time to use for time calculations.
