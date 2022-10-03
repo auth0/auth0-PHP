@@ -1,0 +1,1 @@
+The `Auth0\SDK\Auth0` class is
