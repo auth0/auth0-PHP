@@ -13,6 +13,6 @@ tags:
   Snippets with solutions to frequently asked questions.
 - **[Examples](Examples/README.md)**  
   Some basic usage samples to get you running.
-- **[Getting Started](Getting Started/README.md)**  
+- **[Getting Started](Getting%20Started/README.md)**  
   Everything you need to get up and running with the Auth0 PHP SDK.
 
