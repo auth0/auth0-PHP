@@ -12,7 +12,5 @@ Some basic usage samples to get you running.
 **[Cookbook →](Cookbook)**  
 Snippets and solutions for frequently asked questions.  
 
----
-
 **[Auth0 Community →](https://community.auth0.com)**  
 The best resource for Auth0 and community-contributed answers to your questions.  
