@@ -14,7 +14,7 @@ jobs:
     strategy:
       max-parallel: 10
       matrix:
-        php: ["7.4", "8.0", "8.1", "8.2"]
+        php: ["8.0", "8.1", "8.2"]
 
     steps:
       - name: Checkout code
@@ -52,7 +52,7 @@ jobs:
     strategy:
       max-parallel: 10
       matrix:
-        php: ["7.4", "8.0", "8.1", "8.2"]
+        php: ["8.0", "8.1", "8.2"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
@@ -83,9 +83,9 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Execute Pest
-        run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction
+        run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction --order-by random
 
-      - if: (matrix.php == '8.1')
+      - if: (matrix.php == '8.2')
         uses: codecov/codecov-action@v2
         with:
           directory: coverage
@@ -99,7 +99,7 @@ jobs:
       fail-fast: true
       max-parallel: 10
       matrix:
-        php: ["7.4", "8.0", "8.1", "8.2"]
+        php: ["8.0", "8.1", "8.2"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
@@ -141,7 +141,7 @@ jobs:
       fail-fast: true
       max-parallel: 10
       matrix:
-        php: ["7.4", "8.0", "8.1", "8.2"]
+        php: ["8.0", "8.1", "8.2"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
@@ -228,7 +228,7 @@ jobs:
       fail-fast: true
       max-parallel: 10
       matrix:
-        php: ["7.4", "8.0", "8.1", "8.2"]
+        php: ["8.0", "8.1", "8.2"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
