@@ -190,7 +190,7 @@ final class Verifier
 
         $scheme = $jwksUri['scheme'] ?? 'https';
         $path = $jwksUri['path'] ?? '/.well-known/jwks.json';
-        $host = $jwksUri['host'] ?? $this->configuration->getDomain();
+        $host = $jwksUri['host'] ?? $this->configuration->getDomain() ?? '';
 
         $response = [];
 

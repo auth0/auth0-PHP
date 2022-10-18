@@ -33,7 +33,7 @@ test('createProvider() issues valid requests', function(): void {
     $this->endpoint->createProvider($name, $credentials, ['additional' => $additional]);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/emails/provider');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
@@ -52,7 +52,7 @@ test('getProvider() issues valid requests', function(): void {
     $this->endpoint->getProvider();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/emails/provider');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/emails/provider');
 });
 
 test('updateProvider() issues valid requests', function(): void {
@@ -72,7 +72,7 @@ test('updateProvider() issues valid requests', function(): void {
     $this->endpoint->updateProvider($name, $credentials, ['additional' => $additional]);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/emails/provider');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
@@ -91,5 +91,5 @@ test('delete() issues valid requests', function(): void {
     $this->endpoint->deleteProvider();
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/emails/provider');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/emails/provider');
 });

@@ -8,6 +8,7 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
+use Auth0\Tests\Utilities\MockDomain;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -15,7 +16,7 @@ uses()->group('management');
 
 beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([
-        'domain' => 'https://test-domain.auth0.com',
+        'domain' => MockDomain::valid(),
         'cookieSecret' => uniqid(),
         'clientId' => '__test_client_id__',
         'redirectUri' => 'https://some-app.auth0.com',

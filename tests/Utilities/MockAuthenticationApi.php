@@ -22,7 +22,7 @@ class MockAuthenticationApi extends MockApi
     protected function setClient(): void
     {
         $this->client = new Authentication([
-            'domain' => 'api.test.local',
+            'domain' => MockDomain::valid(),
             'clientId' => '__test_client_id__',
             'redirectUri' => uniqid(),
         ]);

@@ -11,13 +11,14 @@ use Auth0\SDK\Utility\HttpResponsePaginator;
 use Auth0\SDK\Utility\Request\PaginatedRequest;
 use Auth0\SDK\Utility\Request\RequestOptions;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
+use Auth0\Tests\Utilities\MockDomain;
 
 uses()->group('management', 'management.generic');
 
 beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([
         'strategy' => 'none',
-        'domain' => 'api.local.test'
+        'domain' => MockDomain::valid()
     ]);
 
     $this->httpClient = new HttpClient($this->configuration,  HttpClient::CONTEXT_GENERIC_CLIENT);

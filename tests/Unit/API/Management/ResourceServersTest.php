@@ -12,7 +12,7 @@ test('create() issues an appropriate request', function(string $identifier, arra
     $this->endpoint->create($identifier, $body);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/resource-servers');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/resource-servers');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $request = $this->api->getRequestBody();
@@ -32,7 +32,7 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/resource-servers');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/resource-servers');
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -40,7 +40,7 @@ test('get() issues an appropriate request', function(string $id): void {
     $this->endpoint->get($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/resource-servers/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/resource-servers/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['mocked id' => [
     fn() => uniqid(),
@@ -50,7 +50,7 @@ test('update() issues an appropriate request', function(string $id, array $body)
     $this->endpoint->update($id, $body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/resource-servers/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/resource-servers/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $request = $this->api->getRequestBody();
@@ -68,7 +68,7 @@ test('delete() issues an appropriate request', function(string $id): void {
     $this->endpoint->delete($id);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/resource-servers/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/resource-servers/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['mocked id' => [
     fn() => uniqid(),

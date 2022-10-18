@@ -12,7 +12,7 @@ test('getAll() issues valid requests', function(): void {
     $this->endpoint->getAll();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/logs');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/logs');
 });
 
 test('get() issues valid requests', function(): void {
@@ -21,5 +21,5 @@ test('get() issues valid requests', function(): void {
     $this->endpoint->get($logId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/logs/' . $logId);
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/logs/' . $logId);
 });

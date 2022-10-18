@@ -3,10 +3,8 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('auth0');
 
@@ -15,7 +13,7 @@ beforeEach(function(): void {
     $_COOKIE = [];
 
     $this->configuration = [
-        'domain' => 'domain.test',
+        'domain' => 'test.auth0.com',
         'clientId' => '__test_client_id__',
         'cookieSecret' => uniqid(),
         'clientSecret' => '__test_client_secret__',
@@ -110,7 +108,7 @@ test('getLoginLink() returns expected default value', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('scope=openid%20profile%20email')
@@ -134,7 +132,7 @@ test('getLoginLink() returns expected value when supplying parameters', function
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('scope=openid%20profile%20email')
@@ -161,7 +159,7 @@ test('getLoginLink() returns expected value when overriding defaults', function(
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('scope=' . $params['scope'])
@@ -178,7 +176,7 @@ test('getLoginLink() assigns a nonce and state', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('state=')
@@ -192,7 +190,7 @@ test('login() assigns a challenge and challenge method when PKCE is enabled', fu
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('code_challenge=')
@@ -208,7 +206,7 @@ test('login() assigns `max_age` from default values', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('max_age=1000');
@@ -225,7 +223,7 @@ test('login() assigns `max_age` from overridden values', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('max_age=1001');
@@ -238,7 +236,7 @@ test('signup() returns a url with a `screen_hint` parameter', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('screen_hint=signup');
@@ -255,7 +253,7 @@ test('handleInvitation() creates a valid login url', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/authorize')
         ->query
             ->toContain('invitation=__test_invitation__')
@@ -280,7 +278,7 @@ test('logout() returns a a valid logout url', function(): void {
 
     expect($url)
         ->scheme->toEqual('https')
-        ->host->toEqual('domain.test')
+        ->host->toEqual($this->configuration['domain'])
         ->path->toEqual('/v2/logout')
         ->query
             ->toContain('returnTo=' . $returnUrl)
@@ -289,7 +287,7 @@ test('logout() returns a a valid logout url', function(): void {
 });
 
 test('decode() uses the configured cache handler', function(): void {
-    $cacheKey = hash('sha256', 'https://test.auth0.com/.well-known/jwks.json');
+    $cacheKey = hash('sha256', $this->configuration['domain'] . '/.well-known/jwks.json');
     $mockJwks = [
         '__test_kid__' => [
             'x5c' => ['123'],
@@ -356,6 +354,7 @@ test('decode() compares `org_id` against `organization` configuration', function
 
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
         'org_id' => $orgId,
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
     ]);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
@@ -369,7 +368,9 @@ test('decode() compares `org_id` against `organization` configuration', function
 });
 
 test('decode() throws an exception when `org_id` claim does not exist, but an `organization` is configured', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
@@ -385,6 +386,7 @@ test('decode() throws an exception when `org_id` does not match `organization` c
 
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
         'org_id' => $tokenOrgId,
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
     ]);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
@@ -396,7 +398,9 @@ test('decode() throws an exception when `org_id` does not match `organization` c
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
 test('decode() can be used with access tokens', function (): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
@@ -462,7 +466,9 @@ test('exchange() throws an exception if no state was found', function(): void {
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
 
 test('exchange() succeeds with a valid id token', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
@@ -540,7 +546,9 @@ test('exchange() succeeds with PKCE disabled', function(): void {
 });
 
 test('exchange() skips hitting userinfo endpoint', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
@@ -648,7 +656,9 @@ test('renew() throws an exception if no access token is returned', function(): v
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
 
 test('renew() succeeds under expected and valid conditions', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
@@ -684,7 +694,7 @@ test('renew() succeeds under expected and valid conditions', function(): void {
     expect($requestBody['client_secret'])->toEqual('__test_client_secret__');
     expect($requestBody['client_id'])->toEqual('__test_client_id__');
     expect($requestBody['refresh_token'])->toEqual('2.3.4');
-    expect($request->getUri()->__toString())->toEqual('https://domain.test/oauth/token');
+    expect($request->getUri()->__toString())->toEqual('https://' . $this->configuration['domain'] . '/oauth/token');
 });
 
 test('getCredentials() returns null when a session is not available', function(): void {
@@ -693,7 +703,9 @@ test('getCredentials() returns null when a session is not available', function()
 });
 
 test('getCredentials() returns the expected object structure when a session is available', function(): void {
-    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256();
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
 
     $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
@@ -839,6 +851,7 @@ test('getBearerToken() successfully finds a candidate token in $_GET', function(
     $_GET[$testParameterName] = $candidate->token;
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'domain' => 'https://domain.test',
         'tokenJwksUri' => $candidate->jwks,
         'tokenCache' => $candidate->cached
     ]));
@@ -859,6 +872,7 @@ test('getBearerToken() successfully finds a candidate token in $_POST', function
     $_POST[$testParameterName] = $candidate->token;
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'domain' => 'https://domain.test',
         'tokenJwksUri' => $candidate->jwks,
         'tokenCache' => $candidate->cached
     ]));
@@ -880,6 +894,7 @@ test('getBearerToken() successfully finds a candidate token in $_SERVER', functi
     $_SERVER[$testParameterName] = 'Bearer ' . $candidate->token;
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'domain' => 'https://domain.test',
         'tokenJwksUri' => $candidate->jwks,
         'tokenCache' => $candidate->cached
     ]));
@@ -901,6 +916,7 @@ test('getBearerToken() successfully finds a candidate token needle in a haystack
     $testParameterName = uniqid();
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'domain' => 'https://domain.test',
         'tokenJwksUri' => $candidate->jwks,
         'tokenCache' => $candidate->cached
     ]));
@@ -1002,7 +1018,6 @@ test('getBearerToken() correctly silently handles token validation exceptions', 
     $_GET[$testParameterName] = $candidate->token;
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
-        'domain' => 'domain.bad',
         'tokenJwksUri' => $candidate->jwks,
         'tokenCache' => $candidate->cached
     ]));

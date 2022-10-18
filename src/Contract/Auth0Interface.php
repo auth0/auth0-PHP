@@ -177,7 +177,7 @@ interface Auth0Interface
     /**
      * Get userinfo from an active session
      *
-     * @return array<string,array<mixed>|int|string>|null
+     * @return array<mixed>|null
      */
     public function getUser(): ?array;
 

@@ -167,9 +167,7 @@ final class CookieStore implements StoreInterface
             }
 
             // A chunked cookie was found; affix it's value to $data for decryption.
-            if (is_string($_COOKIE[$cookieName])) {
-                $data .= $_COOKIE[$cookieName];
-            }
+            $data .= $_COOKIE[$cookieName];
 
             // Increment the index for next loop and look for another chunk.
             $index++;
@@ -394,8 +392,9 @@ final class CookieStore implements StoreInterface
         }
 
         $domain = $this->configuration->getCookieDomain() ?? null;
+        $httpHost = $_SERVER['HTTP_HOST'] ?? 'UNAVAILABLE';
 
-        if ($domain !== null && $domain !== $_SERVER['HTTP_HOST']) {
+        if ($domain !== null && $domain !== $httpHost) {
             $options['domain'] = $domain;
         }
 

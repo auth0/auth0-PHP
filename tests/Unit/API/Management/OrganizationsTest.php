@@ -28,7 +28,7 @@ test('create() issues an appropriate request', function(): void {
     $this->endpoint->create($mock->id, $mock->name, $mock->branding, $mock->metadata, $mock->body);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/organizations');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -82,7 +82,7 @@ test('update() issues an appropriate request', function(): void {
     $this->endpoint->update($mock->id, $mock->name, $mock->displayName, $mock->branding, $mock->metadata, $mock->body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/organizations/' . $mock->id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations/' . $mock->id);
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -119,7 +119,7 @@ test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete('test-organization');
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/organizations/test-organization');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations/test-organization');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -133,14 +133,14 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations');
 });
 
 test('get() issues an appropriate request', function(): void {
     $this->endpoint->get('123');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/123');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/123');
 });
 
 test('get() throws an exception when an invalid `id` is used', function(): void {
@@ -151,7 +151,7 @@ test('getByName() issues an appropriate request', function(): void {
     $this->endpoint->getByName('test-organization');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/name/test-organization');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/name/test-organization');
 });
 
 test('getByName() throws an exception when an invalid `name` is used', function(): void {
@@ -162,7 +162,7 @@ test('getEnabledConnections() issues an appropriate request', function(): void {
     $this->endpoint->getEnabledConnections('test-organization');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/enabled_connections');
 });
 
 test('getEnabledConnections() throws an exception when an invalid `id` is used', function(): void {
@@ -173,7 +173,7 @@ test('getEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->getEnabledConnection('test-organization', 'test-connection');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/enabled_connections/test-connection');
 });
 
 test('getEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
@@ -188,7 +188,7 @@ test('addEnabledConnection() issues an appropriate request', function(): void {
     $this->endpoint->addEnabledConnection('test-organization', 'test-connection', ['assign_membership_on_login' => true]);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/enabled_connections');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('connection_id', $body);
@@ -210,7 +210,7 @@ test('updateEnabledConnection() issues an appropriate request', function(): void
     $this->endpoint->updateEnabledConnection('test-organization', 'test-connection', ['assign_membership_on_login' => true]);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/enabled_connections/test-connection');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -235,7 +235,7 @@ test('removeEnabledConnection() issues an appropriate request', function(): void
     $this->endpoint->removeEnabledConnection('test-organization', 'test-connection');
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/enabled_connections/test-connection');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/enabled_connections/test-connection');
 });
 
 test('removeEnabledConnection() throws an exception when an invalid `id` is used', function(): void {
@@ -250,7 +250,7 @@ test('getMembers() issues an appropriate request', function(): void {
     $this->endpoint->getMembers('test-organization');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/members');
 });
 
 test('getMembers() throws an exception when an invalid `id` is used', function(): void {
@@ -261,7 +261,7 @@ test('addMembers() issues an appropriate request', function(): void {
     $this->endpoint->addMembers('test-organization', ['test-user']);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/members');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -286,7 +286,7 @@ test('removeMembers() issues an appropriate request', function(): void {
     $this->endpoint->removeMembers('test-organization', ['test-user']);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/members');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('members', $body);
@@ -308,7 +308,7 @@ test('getMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->getMemberRoles('test-organization', 'test-user');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/members/test-user/roles');
 });
 
 test('getMemberRoles() throws an exception when an invalid `id` is used', function(): void {
@@ -323,7 +323,7 @@ test('addMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->addMemberRoles('test-organization', 'test-user', ['test-role']);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/members/test-user/roles');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -352,7 +352,7 @@ test('removeMemberRoles() issues an appropriate request', function(): void {
     $this->endpoint->removeMemberRoles('test-organization', 'test-user', ['test-role']);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/members/test-user/roles');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/members/test-user/roles');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('roles', $body);
@@ -378,7 +378,7 @@ test('getInvitations() issues an appropriate request', function(): void {
     $this->endpoint->getInvitations('test-organization');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/invitations');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/invitations');
 });
 
 test('getInvitations() throws an exception when an invalid `id` is used', function(): void {
@@ -389,7 +389,7 @@ test('getInvitation() issues an appropriate request', function(): void {
     $this->endpoint->getInvitation('test-organization', 'test-invitation');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/invitations/test-invitation');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/invitations/test-invitation');
 });
 
 test('getInvitation() throws an exception when an invalid `id` is used', function(): void {
@@ -409,7 +409,7 @@ test('createInvitation() issues an appropriate request', function(): void {
     );
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/invitations');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/invitations');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -456,7 +456,7 @@ test('deleteInvitation() issues an appropriate request', function(): void {
     $this->endpoint->deleteInvitation('test-organization', 'test-invitation');
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/organizations/test-organization/invitations/test-invitation');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/invitations/test-invitation');
 });
 
 test('deleteInvitation() throws an exception when an invalid `id` is used', function(): void {

@@ -12,7 +12,7 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/grants');
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -22,7 +22,7 @@ test('getAllByClientId() issues an appropriate request', function(): void {
     $this->endpoint->getAllByClientId($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/grants');
     expect($this->api->getRequestQuery(null))->toEqual('client_id=' . $id);
 });
 
@@ -32,7 +32,7 @@ test('getAllByAudience() issues an appropriate request', function(): void {
     $this->endpoint->getAllByAudience($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/grants');
     expect($this->api->getRequestQuery(null))->toEqual('audience=' . $id);
 });
 
@@ -42,7 +42,7 @@ test('getAllByUserId() issues an appropriate request', function(): void {
     $this->endpoint->getAllByUserId($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/grants');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/grants');
     expect($this->api->getRequestQuery(null))->toEqual('user_id=' . $id);
 });
 
@@ -52,6 +52,6 @@ test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete($id);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/grants/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/grants/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 });

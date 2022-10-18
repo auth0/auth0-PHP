@@ -14,7 +14,7 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll([ 'strategy' => $strategy ]);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toContain('https://api.test.local/api/v2/connections');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/connections');
     expect($this->api->getRequestQuery())->toContain('&strategy=' . $strategy);
 });
 
@@ -24,7 +24,7 @@ test('get() issues an appropriate request', function(): void {
     $this->endpoint->get($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/connections/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/connections/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -34,7 +34,7 @@ test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete($id);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/connections/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/connections/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -45,7 +45,7 @@ test('deleteUser() issues an appropriate request', function(): void {
     $this->endpoint->deleteUser($id, $email);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toContain('https://api.test.local/api/v2/connections/' . $id . '/users');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/connections/' . $id . '/users');
     expect($this->api->getRequestQuery(null))->toEqual('email=' . rawurlencode($email));
 });
 
@@ -66,7 +66,7 @@ test('create() issues an appropriate request', function(): void {
     expect($request_body['name'])->toEqual($mock->name);
     expect($request_body['strategy'])->toEqual($mock->strategy);
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/connections');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/connections');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $body = $this->api->getRequestBodyAsString();
@@ -83,6 +83,6 @@ test('update() issues an appropriate request', function(): void {
 
     expect($request_body)->toEqual($update_data);
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/connections/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/connections/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 });

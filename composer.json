@@ -28,7 +28,7 @@
   ],
   "homepage": "https://github.com/auth0/auth0-PHP",
   "require": {
-    "php": "^7.4 || ^8.0",
+    "php": "^8.0",
     "ext-filter": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
@@ -45,6 +45,7 @@
   "require-dev": {
     "firebase/php-jwt": "^6.2",
     "hyperf/event": "^2.2",
+    "laravel/pint": "^1.2",
     "mockery/mockery": "^1.4",
     "nyholm/psr7": "^1.5",
     "pestphp/pest": "^1.21",

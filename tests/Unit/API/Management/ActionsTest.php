@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Auth0\Tests\Utilities\MockDomain;
+
 uses()->group('management', 'management.actions');
 
 beforeEach(function(): void {
@@ -12,7 +14,7 @@ test('create() issues valid requests', function(array $body): void {
     $this->endpoint->create($body);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/actions');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     expect($this->api->getRequestBody())
@@ -72,7 +74,7 @@ test('getAll() issues valid requests', function(): void {
     $this->endpoint->getAll();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/actions');
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -80,7 +82,7 @@ test('getAll() issues valid requests using parameters', function(string $trigger
     $this->endpoint->getAll(['triggerId' => $triggerId, 'actionName' => $actionName]);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/actions?');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/actions/actions?');
 
     expect($this->api->getRequestQuery())
         ->toContain('&triggerId=' . $triggerId)
@@ -94,7 +96,7 @@ test('get() issues valid requests', function(string $id): void {
     $this->endpoint->get($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions/'  . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/actions/'  . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid id' => [
     fn() => uniqid()
@@ -108,7 +110,7 @@ test('update() issues valid requests', function(string $id, array $body): void {
     $this->endpoint->update($id, $body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/actions/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     expect($this->api->getRequestBody())
@@ -173,7 +175,7 @@ test('delete() issues valid requests', function(string $id, ?bool $force): void 
     $this->endpoint->delete($id, $force);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/actions/' . $id);
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/actions/actions/' . $id);
 })->with(['valid id' => [
     fn() => uniqid(),
     fn() => null
@@ -183,7 +185,7 @@ test('delete() issues valid requests when using optional ?force parameter', func
     $this->endpoint->delete($id, $force);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/actions/' . $id);
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/actions/actions/' . $id);
     expect($this->api->getRequestQuery())->toContain('&force=false');
 })->with(['valid id and force=false' => [
     fn() => uniqid(),
@@ -201,7 +203,7 @@ test('deploy() issues valid requests', function(string $id): void {
     $this->endpoint->deploy($id);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/' . $id . '/deploy');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/' . $id . '/deploy');
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid id' => [
     fn() => uniqid()
@@ -217,7 +219,7 @@ test('test() issues valid requests', function(string $id, array $body): void {
     $this->endpoint->test($id, $body);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/actions/' . $id . '/test');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/actions/' . $id . '/test');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $request = $this->api->getRequestBody();
@@ -263,7 +265,7 @@ test('getVersion() issues valid requests', function(string $id, string $actionId
     $this->endpoint->getVersion($id, $actionId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id);
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/actions/' . $actionId . '/versions/' . $id);
 })->with(['valid id' => [
     fn() => uniqid(),
     fn() => uniqid()
@@ -287,7 +289,7 @@ test('getVersions() issues valid requests', function(string $actionId): void {
     $this->endpoint->getVersions($actionId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/actions/' . $actionId . '/versions');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/actions/' . $actionId . '/versions');
 })->with(['valid action id' => [
     fn() => uniqid()
 ]]);
@@ -302,7 +304,7 @@ test('rollbackVersion() issues valid requests', function(string $id, string $act
     $this->endpoint->rollbackVersion($id, $actionId);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/' . $actionId . '/versions/' . $id . '/deploy');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/' . $actionId . '/versions/' . $id . '/deploy');
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid request' => [
     fn() => uniqid(),
@@ -327,7 +329,7 @@ test('getTriggers() issues valid requests', function(): void {
     $this->endpoint->getTriggers();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/triggers');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/triggers');
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -335,7 +337,7 @@ test('getTriggerBindings() issues valid requests', function(string $triggerId): 
     $this->endpoint->getTriggerBindings($triggerId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/triggers/' . $triggerId . '/bindings');
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid trigger id' => [
     fn() => uniqid(),
@@ -345,7 +347,7 @@ test('updateTriggerBindings() issues valid requests', function(string $triggerId
     $this->endpoint->updateTriggerBindings($triggerId, $body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/triggers/' . $triggerId . '/bindings');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/triggers/' . $triggerId . '/bindings');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $request = $this->api->getRequestBody();
@@ -413,7 +415,7 @@ test('getExecution() issues valid requests', function(string $id): void {
     $this->endpoint->getExecution($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/actions/executions/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/executions/' . $id);
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid id' => [
     fn() => uniqid()
