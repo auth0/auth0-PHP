@@ -184,7 +184,7 @@ final class Verifier
         $jwksUri = parse_url($this->jwksUri);
 
         // @phpstan-ignore-next-line
-        if (! is_string($jwksCacheKey) || ! is_array($jwksUri)) {
+        if (! $jwksCacheKey || ! is_array($jwksUri)) {
             return [];
         }
 
