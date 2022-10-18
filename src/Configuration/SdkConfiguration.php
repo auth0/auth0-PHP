@@ -1139,7 +1139,7 @@ final class SdkConfiguration implements ConfigurableContract
             $this->setOrganization($this->organization);
         }
 
-        if (true !== $this->usePkce) {
+        if (!$this->usePkce) {
             $this->setUsePkce($this->usePkce);
         }
 
@@ -1183,7 +1183,7 @@ final class SdkConfiguration implements ConfigurableContract
             $this->setHttpClient($this->httpClient);
         }
 
-        if (null !== $this->httpMaxRetries) {
+        if (3 !== $this->httpMaxRetries) {
             $this->setHttpMaxRetries($this->httpMaxRetries);
         }
 
@@ -1199,7 +1199,7 @@ final class SdkConfiguration implements ConfigurableContract
             $this->setHttpStreamFactory($this->httpStreamFactory);
         }
 
-        if (false !== $this->httpTelemetry) {
+        if ($this->httpTelemetry) {
             $this->setHttpTelemetry($this->httpTelemetry);
         }
 
@@ -1227,7 +1227,7 @@ final class SdkConfiguration implements ConfigurableContract
             $this->setCookiePath($this->cookiePath);
         }
 
-        if (false !== $this->cookieSecure) {
+        if ($this->cookieSecure) {
             $this->setCookieSecure($this->cookieSecure);
         }
 
@@ -1235,19 +1235,19 @@ final class SdkConfiguration implements ConfigurableContract
             $this->setCookieSameSite($this->cookieSameSite);
         }
 
-        if (true !== $this->persistUser) {
+        if (!$this->persistUser) {
             $this->setPersistUser($this->persistUser);
         }
 
-        if (true !== $this->persistIdToken) {
+        if (!$this->persistIdToken) {
             $this->setPersistIdToken($this->persistIdToken);
         }
 
-        if (true !== $this->persistAccessToken) {
+        if (!$this->persistAccessToken) {
             $this->setPersistAccessToken($this->persistAccessToken);
         }
 
-        if (true !== $this->persistRefreshToken) {
+        if (!$this->persistRefreshToken) {
             $this->setPersistRefreshToken($this->persistRefreshToken);
         }
 
@@ -1259,7 +1259,7 @@ final class SdkConfiguration implements ConfigurableContract
             $this->setTransientStorageId($this->transientStorageId);
         }
 
-        if (false !== $this->queryUserInfo) {
+        if ($this->queryUserInfo) {
             $this->setQueryUserInfo($this->queryUserInfo);
         }
 
