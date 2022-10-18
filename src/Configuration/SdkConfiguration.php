@@ -1106,7 +1106,8 @@ final class SdkConfiguration implements ConfigurableContract
         }
     }
 
-    private function validateNamedParameters(): void {
+    private function validateNamedParameters(): void
+    {
         if (self::STRATEGY_REGULAR !== $this->strategy) {
             $this->setStrategy($this->strategy);
         }
