@@ -33,6 +33,14 @@ test('authTime() throws an exception when `auth_time` claim is missing', functio
     (new Validator($this->claims))->authTime(100);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_AUTH_TIME_CLAIM);
 
+test('authTime() throws an exception when `auth_time` claim has passed', function(): void {
+    $then = time() - 1000;
+    $now = $then + 2000;
+
+    $this->claims['auth_time'] = $then;
+    (new Validator($this->claims))->authTime(0, 0, $now);
+})->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
+
 test('authorizedParty() throws an exception when `aud` claim is missing', function(): void {
     unset($this->claims['aud']);
     (new Validator($this->claims))->authorizedParty(['missing']);

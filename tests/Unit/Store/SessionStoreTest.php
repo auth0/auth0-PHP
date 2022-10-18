@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Store\SessionStore;
+use Auth0\Tests\Utilities\MockDomain;
 
 uses()->group('storage', 'storage.session');
 
@@ -11,7 +12,7 @@ beforeEach(function(): void {
     $_SESSION = [];
 
     $this->configuration = new SdkConfiguration([
-        'domain' => uniqid(),
+        'domain' => MockDomain::valid(),
         'clientId' => uniqid(),
         'cookieSecret' => uniqid(),
         'clientSecret' => uniqid(),

@@ -15,7 +15,7 @@ test('create() issues an appropriate request', function(): void {
     $this->endpoint->create($jti, $aud);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/blacklists/tokens');
+    expect($this->api->getRequestUrl())->toEqual('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/blacklists/tokens');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $body = $this->api->getRequestBody();
@@ -34,7 +34,7 @@ test('get() issues valid requests', function(): void {
     $this->endpoint->get($aud);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/blacklists/tokens');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/blacklists/tokens');
 
     expect($this->api->getRequestQuery(null))->toEqual('aud=' . $aud);
 });

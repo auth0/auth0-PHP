@@ -24,7 +24,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->rule(TypedPropertyRector::class);
 
-    $rectorConfig->phpVersion(PhpVersion::PHP_74);
+    $rectorConfig->phpVersion(PhpVersion::PHP_80);
 
     $rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon.dist');
 };

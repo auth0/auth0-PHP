@@ -12,7 +12,7 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll(['name_filter' => '__test_name_filter__']);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/roles');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/roles');
 
     $query = $this->api->getRequestQuery();
     expect($query)->toContain('name_filter=__test_name_filter__');
@@ -24,7 +24,7 @@ test('create() issues an appropriate request', function(): void {
     $this->endpoint->create($id, ['description' => '__test_description__']);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/roles');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
@@ -42,7 +42,7 @@ test('get() issues an appropriate request', function(): void {
     $this->endpoint->get($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/roles/' . $id);
 });
 
 test('delete() issues an appropriate request', function(): void {
@@ -51,7 +51,7 @@ test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete($id);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/roles/' . $id);
 });
 
 test('update() issues an appropriate request', function(): void {
@@ -60,7 +60,7 @@ test('update() issues an appropriate request', function(): void {
     $this->endpoint->update($id, ['name' => '__test_new_name__']);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/roles/' . $id);
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
@@ -76,7 +76,7 @@ test('getPermissions() issues an appropriate request', function(): void {
     $this->endpoint->getPermissions($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/roles/' . $id . '/permissions');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/roles/' . $id . '/permissions');
 });
 
 test('addPermissions() issues an appropriate request', function(): void {
@@ -90,7 +90,7 @@ test('addPermissions() issues an appropriate request', function(): void {
     ]);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id . '/permissions');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/roles/' . $id . '/permissions');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('permissions', $body);
@@ -112,7 +112,7 @@ test('removePermissions() issues an appropriate request', function(): void {
     ]);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' . $id . '/permissions');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/roles/' . $id . '/permissions');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('permissions', $body);
@@ -129,7 +129,7 @@ test('getUsers() issues an appropriate request', function(): void {
     $this->endpoint->getUsers($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/roles/' . $id . '/users');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/roles/' . $id . '/users');
 });
 
 test('addUsers() issues an appropriate request', function(): void {
@@ -138,7 +138,7 @@ test('addUsers() issues an appropriate request', function(): void {
     $this->endpoint->addUsers($id, ['strategy|1234567890', 'strategy|0987654321']);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/roles/' .$id . '/users');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/roles/' .$id . '/users');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('users', $body);

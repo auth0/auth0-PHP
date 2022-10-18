@@ -12,7 +12,7 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll(['client_id' => '__test_client_id__', 'app_type' => '__test_app_type__']);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/clients');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/clients');
 
     $query = $this->api->getRequestQuery();
     expect($query)->toContain('&client_id=__test_client_id__&app_type=__test_app_type__');
@@ -22,14 +22,14 @@ test('get() issues an appropriate request', function(): void {
     $this->endpoint->get('__test_id__');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/clients/__test_id__');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/clients/__test_id__');
 });
 
 test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete('__test_id__');
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients/__test_id__');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/clients/__test_id__');
 });
 
 test('create() issues an appropriate request', function(): void {
@@ -43,7 +43,7 @@ test('create() issues an appropriate request', function(): void {
     $this->endpoint->create($mock->name, $mock->body);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/clients');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
@@ -59,7 +59,7 @@ test('update() issues an appropriate request', function(): void {
     $this->endpoint->update('__test_id__', ['name' => '__test_new_name__']);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/clients/__test_id__');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/clients/__test_id__');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);

@@ -7,12 +7,13 @@ use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
+use Auth0\Tests\Utilities\MockDomain;
 
 uses()->group('utility', 'utility.http_client', 'networking');
 
 beforeEach(function(): void {
     $this->config = new SdkConfiguration([
-        'domain' => 'api.local.test',
+        'domain' => MockDomain::valid(),
         'cookieSecret' => uniqid(),
         'clientId' => uniqid(),
         'redirectUri' => uniqid()
@@ -62,6 +63,7 @@ test('a 429 response is not retried more than the hard cap', function(): void {
 
 test('an exponential back-off and jitter are being applied', function(): void {
     $this->config->setHttpMaxRetries(10);
+
     $baseWaits = [0];
     $baseWaitSum = 0;
 

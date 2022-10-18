@@ -12,7 +12,7 @@ test('getBreachedPasswordDetection() issues valid requests', function(): void {
     $this->endpoint->getBreachedPasswordDetection();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/attack-protection/breached-password-detection');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/attack-protection/breached-password-detection');
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -20,7 +20,7 @@ test('getBruteForceProtection() issues valid requests', function(): void {
     $this->endpoint->getBruteForceProtection();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/attack-protection/brute-force-protection');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/attack-protection/brute-force-protection');
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -28,7 +28,7 @@ test('getSuspiciousIpThrottling() issues valid requests', function(): void {
     $this->endpoint->getSuspiciousIpThrottling();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/attack-protection/suspicious-ip-throttling');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/attack-protection/suspicious-ip-throttling');
     expect($this->api->getRequestQuery())->toBeEmpty();
 });
 
@@ -48,7 +48,7 @@ test('updateBreachedPasswordDetection() issues valid requests', function(array $
     $this->endpoint->updateBreachedPasswordDetection($body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/attack-protection/breached-password-detection');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/attack-protection/breached-password-detection');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     expect($this->api->getRequestBody())
@@ -97,7 +97,7 @@ test('updateBruteForceProtection() issues valid requests', function(array $body)
     $this->endpoint->updateBruteForceProtection($body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/attack-protection/brute-force-protection');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/attack-protection/brute-force-protection');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     expect($this->api->getRequestBody())
@@ -150,7 +150,7 @@ test('updateSuspiciousIpThrottling() issues valid requests', function(array $bod
     $this->endpoint->updateSuspiciousIpThrottling($body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/attack-protection/suspicious-ip-throttling');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/attack-protection/suspicious-ip-throttling');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     expect($this->api->getRequestBody())

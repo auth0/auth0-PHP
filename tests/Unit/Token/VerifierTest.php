@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\Verifier;
+use Auth0\Tests\Utilities\MockDomain;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -12,7 +13,7 @@ uses()->group('token', 'token.verifier');
 
 beforeEach(function() {
     $this->configuration = new SdkConfiguration([
-        'domain' => uniqid(),
+        'domain' => MockDomain::valid(),
         'clientId' => uniqid(),
         'cookieSecret' => uniqid(),
         'redirectUri' => uniqid(),

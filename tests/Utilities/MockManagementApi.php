@@ -22,7 +22,7 @@ class MockManagementApi extends MockApi
     protected function setClient(): void
     {
         $this->client = new Management([
-            'domain' => 'api.test.local',
+            'domain' => MockDomain::valid(),
             'clientId' => '__test_client_id__',
             'cookieSecret' => uniqid(),
             'redirectUri' => uniqid(),

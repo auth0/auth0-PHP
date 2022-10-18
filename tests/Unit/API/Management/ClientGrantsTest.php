@@ -24,7 +24,7 @@ test('create() issues an appropriate request', function(): void {
     $this->endpoint->create($clientId, $audience, [$scope]);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/client-grants');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('client_id', $body);
@@ -44,7 +44,7 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll(['example' => $exampleParam]);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/client-grants');
 
     expect($this->api->getRequestQuery(null))->toEqual('example=' . $exampleParam);
 });
@@ -57,7 +57,7 @@ test('getAll() supports field filtering parameters', function(): void {
     $this->endpoint->getAll(null, $this->requestOptions);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/client-grants');
 
     expect($this->api->getRequestQuery())->toContain('&fields=' . rawurlencode($field1 . ',' . $field2));
     expect($this->api->getRequestQuery())->toContain('&include_fields=true');
@@ -69,7 +69,7 @@ test('getAll() supports standard pagination parameters', function(): void {
     $this->endpoint->getAll(null, $this->requestOptions);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/client-grants');
 
     expect($this->api->getRequestQuery())->toContain('&page=1');
     expect($this->api->getRequestQuery())->toContain('&per_page=5');
@@ -82,7 +82,7 @@ test('getAllByAudience() issues an appropriate request', function(): void {
     $this->endpoint->getAllByAudience($audience);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/client-grants');
 
     expect($this->api->getRequestQuery(null))->toEqual('audience=' . $audience);
 });
@@ -93,7 +93,7 @@ test('getAllByClientId() issues an appropriate request', function(): void {
     $this->endpoint->getAllByClientId($clientId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/client-grants');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/client-grants');
 
     expect($this->api->getRequestQuery(null))->toEqual('client_id=' . $clientId);
 });
@@ -105,7 +105,7 @@ test('update() issues an appropriate request', function(): void {
     $this->endpoint->update($grantId, [$scope]);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants/' . $grantId);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/client-grants/' . $grantId);
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('scope', $body);
@@ -121,5 +121,5 @@ test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete($grantId);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/client-grants/' . $grantId);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/client-grants/' . $grantId);
 });

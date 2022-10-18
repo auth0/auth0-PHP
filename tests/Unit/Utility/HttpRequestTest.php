@@ -6,6 +6,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
+use Auth0\Tests\Utilities\MockDomain;
 use Psr\Http\Client\ClientExceptionInterface;
 
 uses()->group('utility', 'utility.http_request', 'networking');
@@ -13,7 +14,7 @@ uses()->group('utility', 'utility.http_request', 'networking');
 beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([
         'strategy' => 'none',
-        'domain' => 'api.local.test',
+        'domain' => MockDomain::valid(),
     ]);
 });
 

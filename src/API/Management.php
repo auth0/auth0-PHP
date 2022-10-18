@@ -168,6 +168,11 @@ final class Management implements ManagementInterface
         return $this->httpClient = new HttpClient($this->configuration, HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
     }
 
+    public function getConfiguration(): ?SdkConfiguration
+    {
+        return $this->configuration;
+    }
+
     public function getLastRequest(): ?HttpRequest
     {
         return $this->getHttpClient()->getLastRequest();

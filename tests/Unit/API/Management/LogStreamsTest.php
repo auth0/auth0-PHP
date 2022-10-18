@@ -12,14 +12,14 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll();
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/log-streams');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/log-streams');
 });
 
 test('get() issues an appropriate request', function(): void {
     $this->endpoint->get('123');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/log-streams/123');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/log-streams/123');
 });
 
 test('create() issues an appropriate request', function(): void {
@@ -37,7 +37,7 @@ test('create() issues an appropriate request', function(): void {
     $this->endpoint->create($mock->type, $mock->sink, $mock->name);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/log-streams');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/log-streams');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -65,7 +65,7 @@ test('update() issues an appropriate request', function(): void {
     $this->endpoint->update($mock->id, $mock->body);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/log-streams/' . $mock->id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/log-streams/' . $mock->id);
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -82,7 +82,7 @@ test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete('123');
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/log-streams/123');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/log-streams/123');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');

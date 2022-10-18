@@ -179,7 +179,7 @@ final class Auth0 implements Auth0Interface
         $this->deferStateSaving(false);
 
         // Reset the internal state.
-        $this->getState()->reset();
+        $this->getState(true);
 
         return $this;
     }
@@ -553,12 +553,14 @@ final class Auth0 implements Auth0Interface
     ): ?string {
         $responseMode = $this->configuration()->getResponseMode();
 
-        if ($responseMode === 'query' && isset($_GET[$parameterName])) {
-            return filter_var(trim((string) $_GET[$parameterName]), $filter, $filterOptions);
+        // @phpstan-ignore-next-line
+        if (isset($_GET) && [] !== $_GET && ($responseMode === 'query' && isset($_GET[$parameterName]) && is_string($_GET[$parameterName]))) {
+            return filter_var(trim($_GET[$parameterName]), $filter, $filterOptions);
         }
 
-        if ($responseMode === 'form_post' && isset($_POST[$parameterName])) {
-            return filter_var(trim((string) $_POST[$parameterName]), $filter, $filterOptions);
+        // @phpstan-ignore-next-line
+        if (isset($_POST) && [] !== $_POST && ($responseMode === 'form_post' && isset($_POST[$parameterName]) && is_string($_POST[$parameterName]))) {
+            return filter_var(trim($_POST[$parameterName]), $filter, $filterOptions);
         }
 
         return null;
@@ -611,9 +613,9 @@ final class Auth0 implements Auth0Interface
     /**
      * Retrieve state from session storage and configure SDK state.
      */
-    private function getState(): SdkState
+    private function getState(bool $reset = false): SdkState
     {
-        if ($this->state === null) {
+        if ($this->state === null || $reset) {
             $state = [];
 
             if ($this->configuration()->hasSessionStorage()) {

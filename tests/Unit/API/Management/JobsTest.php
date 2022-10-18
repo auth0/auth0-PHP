@@ -12,14 +12,14 @@ test('get() issues an appropriate request', function(): void {
     $this->endpoint->get('__test_id__');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/__test_id__');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/jobs/__test_id__');
 });
 
 test('getErrors() issues an appropriate request', function(): void {
     $this->endpoint->getErrors('__test_id__');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/__test_id__/errors');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/jobs/__test_id__/errors');
 });
 
 test('createImportUsers() issues an appropriate request', function(): void {
@@ -41,7 +41,7 @@ test('createImportUsers() issues an appropriate request', function(): void {
     );
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/users-imports');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/jobs/users-imports');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toStartWith('multipart/form-data');
@@ -89,7 +89,7 @@ test('createExportUsers() issues an appropriate request', function(): void {
     $this->endpoint->createExportUsers($mock);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/users-exports');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/jobs/users-exports');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $request_body = $this->api->getRequestBody();
@@ -125,7 +125,7 @@ test('createSendVerificationEmail() issues an appropriate request', function(): 
     $this->endpoint->createSendVerificationEmail($mock->userId, $mock->body);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/jobs/verification-email');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/jobs/verification-email');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $body = $this->api->getRequestBody();

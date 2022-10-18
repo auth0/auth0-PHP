@@ -5,13 +5,14 @@ declare(strict_types=1);
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\Tests\Utilities\MockDomain;
 
 uses()->group('authentication');
 
 beforeEach(function(): void {
 
     $this->configuration = new SdkConfiguration([
-        'domain' => 'https://test-domain.auth0.com',
+        'domain' => MockDomain::valid(),
         'cookieSecret' => uniqid(),
         'clientId' => '__test_client_id__',
         'redirectUri' => 'https://some-app.auth0.com',
@@ -30,7 +31,7 @@ test('__construct() fails without a configuration', function(): void {
 test('__construct() accepts a configuration as an array', function(): void {
     $auth = new Authentication([
         'strategy' => 'api',
-        'domain' => uniqid(),
+        'domain' => MockDomain::valid(),
         'audience' => [uniqid()]
     ]);
 

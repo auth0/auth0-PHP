@@ -213,9 +213,6 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist
 
-      - name: Install Laravel Pint
-        run: composer require laravel/pint:* --dev --with-all-dependencies
-
       - name: Execute Laravel Pint
         run: vendor/bin/pint --test
 

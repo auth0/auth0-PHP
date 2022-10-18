@@ -14,7 +14,7 @@ test('getAll() issues an appropriate request', function(): void {
     $this->endpoint->getAll(['test' => $id]);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/users');
 
     $query = $this->api->getRequestQuery();
     expect($query)->toContain('&test=' . $id);
@@ -26,7 +26,7 @@ test('get() issues an appropriate request', function(): void {
     $this->endpoint->get($id);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $id);
 });
 
 test('update() issues an appropriate request', function(): void {
@@ -43,7 +43,7 @@ test('update() issues an appropriate request', function(): void {
     $this->endpoint->update($mockup->id, $mockup->query);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id);
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -71,7 +71,7 @@ test('create() issues an appropriate request', function(): void {
     $this->endpoint->create($mockup->connection, $mockup->query);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -94,7 +94,7 @@ test('delete() issues an appropriate request', function(): void {
     $this->endpoint->delete($id);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $id);
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -113,7 +113,7 @@ test('linkAccount() issues an appropriate request', function(): void {
     $this->endpoint->linkAccount($mockup->id, $mockup->query);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/identities');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/identities');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -140,7 +140,7 @@ test('unlinkAccount() issues an appropriate request', function(): void {
     $this->endpoint->unlinkAccount($mockup->id, $mockup->provider, $mockup->identity);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/identities/' . $mockup->provider . '/' . $mockup->identity);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/identities/' . $mockup->provider . '/' . $mockup->identity);
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -155,7 +155,7 @@ test('deleteMultifactorProvider() issues an appropriate request', function(): vo
     $this->endpoint->deleteMultifactorProvider($mockup->id, $mockup->provider);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/multifactor/' . $mockup->provider);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/multifactor/' . $mockup->provider);
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -167,7 +167,7 @@ test('getRoles() issues an appropriate request', function(): void {
     $this->endpoint->getRoles($mockupId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/roles');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/users/' . $mockupId . '/roles');
 });
 
 test('removeRoles() issues an appropriate request', function(): void {
@@ -182,7 +182,7 @@ test('removeRoles() issues an appropriate request', function(): void {
     $this->endpoint->removeRoles($mockup->id, $mockup->roles);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/roles');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/roles');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -209,7 +209,7 @@ test('addRoles() issues an appropriate request', function(): void {
     $this->endpoint->addRoles($mockup->id, $mockup->roles);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/roles');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/roles');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -230,7 +230,7 @@ test('getEnrollments() issues an appropriate request', function(): void {
     $this->endpoint->getEnrollments($mockupId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockupId . '/enrollments');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockupId . '/enrollments');
 });
 
 test('getPermissions() issues an appropriate request', function(): void {
@@ -239,7 +239,7 @@ test('getPermissions() issues an appropriate request', function(): void {
     $this->endpoint->getPermissions($mockupId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/permissions');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/users/' . $mockupId . '/permissions');
 });
 
 test('removePermissions() issues an appropriate request', function(): void {
@@ -256,7 +256,7 @@ test('removePermissions() issues an appropriate request', function(): void {
     $this->endpoint->removePermissions($mockup->id, $mockup->permissions);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/permissions');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/permissions');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -287,7 +287,7 @@ test('addPermissions() issues an appropriate request', function(): void {
     $this->endpoint->addPermissions($mockup->id, $mockup->permissions);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockup->id . '/permissions');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/permissions');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -310,7 +310,7 @@ test('getLogs() issues an appropriate request', function(): void {
     $this->endpoint->getLogs($mockupId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/logs');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/users/' . $mockupId . '/logs');
 });
 
 test('getOrganizations() issues an appropriate request', function(): void {
@@ -319,7 +319,7 @@ test('getOrganizations() issues an appropriate request', function(): void {
     $this->endpoint->getOrganizations($mockupId);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/users/' . $mockupId . '/organizations');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/users/' . $mockupId . '/organizations');
 });
 
 test('createRecoveryCode() issues an appropriate request', function(): void {
@@ -328,7 +328,7 @@ test('createRecoveryCode() issues an appropriate request', function(): void {
     $this->endpoint->createRecoveryCode($mockupId);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockupId . '/recovery-code-regeneration');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockupId . '/recovery-code-regeneration');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
@@ -340,7 +340,7 @@ test('invalidateBrowsers() issues an appropriate request', function(): void {
     $this->endpoint->invalidateBrowsers($mockupId);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/users/' . $mockupId . '/multifactor/actions/invalidate-remember-browser');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockupId . '/multifactor/actions/invalidate-remember-browser');
 
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');

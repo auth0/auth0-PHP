@@ -20,7 +20,7 @@ test('createEmailVerification() issues an appropriate request', function(): void
     $this->endpoint->createEmailVerification($mock->userId, ['identity' => $mock->identity]);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/tickets/email-verification');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/tickets/email-verification');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $body = $this->api->getRequestBody();
@@ -49,7 +49,7 @@ test('createPasswordChange() issues an appropriate request', function(): void {
     $this->endpoint->createPasswordChange($mock);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/tickets/password-change');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/tickets/password-change');
     expect($this->api->getRequestQuery())->toBeEmpty();
 
     $body = $this->api->getRequestBody();

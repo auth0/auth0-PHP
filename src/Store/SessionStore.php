@@ -104,8 +104,8 @@ final class SessionStore implements StoreInterface
 
         if ($session !== []) {
             while ($sessionKey = key($session)) {
-                if (mb_substr((string) $sessionKey, 0, strlen($prefix)) === $prefix) {
-                    unset($_SESSION[(string) $sessionKey]);
+                if (mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
+                    unset($_SESSION[$sessionKey]);
                 }
 
                 next($session);

@@ -42,7 +42,7 @@ test('create() issues valid requests', function(): void {
     $this->endpoint->create($template, $payload, $from, $subject, $syntax, true);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/email-templates');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/email-templates');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('template', $body);
@@ -68,7 +68,7 @@ test('get() issues valid requests', function(): void {
     $this->endpoint->get($templateName);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/email-templates/' . $templateName);
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/email-templates/' . $templateName);
 });
 
 test('update() issues valid requests', function(): void {
@@ -78,7 +78,7 @@ test('update() issues valid requests', function(): void {
     $this->endpoint->update($templateName, ['test' => $payload]);
 
     expect($this->api->getRequestMethod())->toEqual('PUT');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/email-templates/' . $templateName);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/email-templates/' . $templateName);
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('test', $body);
@@ -95,7 +95,7 @@ test('patch() issues valid requests', function(): void {
     $this->endpoint->patch($templateName, ['test' => $payload]);
 
     expect($this->api->getRequestMethod())->toEqual('PATCH');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/email-templates/' . $templateName);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/email-templates/' . $templateName);
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('test', $body);

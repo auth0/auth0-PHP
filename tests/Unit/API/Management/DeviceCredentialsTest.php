@@ -34,7 +34,7 @@ test('create() issues valid requests', function(): void {
     $this->endpoint->create($deviceName, $type, $value, $deviceId, ['additional' => $additional]);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/device-credentials');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/device-credentials');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('device_name', $body);
@@ -60,7 +60,7 @@ test('get() issues valid requests', function(): void {
     $this->endpoint->get($userId, $clientId, $type);
 
     expect($this->api->getRequestMethod())->toEqual('GET');
-    expect($this->api->getRequestUrl())->toStartWith('https://api.test.local/api/v2/device-credentials');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/device-credentials');
 
     expect($this->api->getRequestQuery())->toContain('&user_id=' . $userId);
     expect($this->api->getRequestQuery())->toContain('&client_id=' . $clientId);
@@ -73,5 +73,5 @@ test('delete() issues valid requests', function(): void {
     $this->endpoint->delete($id);
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
-    expect($this->api->getRequestUrl())->toEqual('https://api.test.local/api/v2/device-credentials/' . $id);
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/device-credentials/' . $id);
 });
