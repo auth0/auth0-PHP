@@ -38,7 +38,7 @@ test('__construct() overrides arguments with configuration array', function(): v
         'cookieSecret' => $cookieSecret,
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
-    ], $domain2);
+    ], SdkConfiguration::STRATEGY_REGULAR, $domain2);
 
     expect($sdk->getDomain())->toEqual(parse_url($domain, PHP_URL_HOST));
 });
