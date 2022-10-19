@@ -2,7 +2,7 @@
 
 # Auth0 PHP
 
-Easily add authentication with Auth0 to your PHP applications.
+Add authentication with Auth0 to your PHP applications.
 
 [![Packagist](https://img.shields.io/packagist/dt/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-php)
 [![Checks](https://img.shields.io/github/workflow/status/auth0/auth0-php/Analysis)](https://github.com/auth0/auth0-PHP/actions/workflows/analysis.yml?query=branch%3Amain)
