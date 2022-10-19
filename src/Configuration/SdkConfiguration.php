@@ -133,9 +133,12 @@ final class SdkConfiguration implements ConfigurableContract
         private ?CacheItemPoolInterface $managementTokenCache = null,
         private ?ListenerProviderInterface $eventListenerProvider = null
     ) {
-        $configuration = $this->filterArrayMixed($configuration, true) ?? [];
-        $this->applyConfigurationState($configuration);
+        if (null !== $configuration && [] !== $configuration) {
+            $configuration = $this->filterArrayMixed($configuration, true) ?? [];
+            $this->applyConfigurationState($configuration);
+        }
 
+        $this->validateNamedParameters();
         $this->setupStateCookies();
         $this->setupStateFactories();
 
@@ -1100,6 +1103,177 @@ final class SdkConfiguration implements ConfigurableContract
 
         if (! $this->getTransientStorage() instanceof StoreInterface) {
             $this->setTransientStorage(new CookieStore($this, $this->getTransientStorageId()));
+        }
+    }
+
+    private function validateNamedParameters(): void
+    {
+        if (self::STRATEGY_REGULAR !== $this->strategy) {
+            $this->setStrategy($this->strategy);
+        }
+
+        if (null !== $this->domain) {
+            $this->setDomain($this->domain);
+        }
+
+        if (null !== $this->customDomain) {
+            $this->setCustomDomain($this->customDomain);
+        }
+
+        if (null !== $this->clientId) {
+            $this->setClientId($this->clientId);
+        }
+
+        if (null !== $this->redirectUri) {
+            $this->setRedirectUri($this->redirectUri);
+        }
+
+        if (null !== $this->clientSecret) {
+            $this->setClientSecret($this->clientSecret);
+        }
+
+        if (null !== $this->audience) {
+            $this->setAudience($this->audience);
+        }
+
+        if (null !== $this->organization) {
+            $this->setOrganization($this->organization);
+        }
+
+        if (!$this->usePkce) {
+            $this->setUsePkce($this->usePkce);
+        }
+
+        if (['openid', 'profile', 'email'] !== $this->scope) {
+            $this->setScope($this->scope);
+        }
+
+        if ('query' !== $this->responseMode) {
+            $this->setResponseMode($this->responseMode);
+        }
+
+        if ('code' !== $this->responseType) {
+            $this->setResponseType($this->responseType);
+        }
+
+        if ('RS256' !== $this->tokenAlgorithm) {
+            $this->setTokenAlgorithm($this->tokenAlgorithm);
+        }
+
+        if (null !== $this->tokenJwksUri) {
+            $this->setTokenJwksUri($this->tokenJwksUri);
+        }
+
+        if (null !== $this->tokenMaxAge) {
+            $this->setTokenMaxAge($this->tokenMaxAge);
+        }
+
+        if (60 !== $this->tokenLeeway) {
+            $this->setTokenLeeway($this->tokenLeeway);
+        }
+
+        if (null !== $this->tokenCache) {
+            $this->setTokenCache($this->tokenCache);
+        }
+
+        if (60 !== $this->tokenCacheTtl) {
+            $this->setTokenCacheTtl($this->tokenCacheTtl);
+        }
+
+        if (null !== $this->httpClient) {
+            $this->setHttpClient($this->httpClient);
+        }
+
+        if (3 !== $this->httpMaxRetries) {
+            $this->setHttpMaxRetries($this->httpMaxRetries);
+        }
+
+        if (null !== $this->httpRequestFactory) {
+            $this->setHttpRequestFactory($this->httpRequestFactory);
+        }
+
+        if (null !== $this->httpResponseFactory) {
+            $this->setHttpResponseFactory($this->httpResponseFactory);
+        }
+
+        if (null !== $this->httpStreamFactory) {
+            $this->setHttpStreamFactory($this->httpStreamFactory);
+        }
+
+        if ($this->httpTelemetry) {
+            $this->setHttpTelemetry($this->httpTelemetry);
+        }
+
+        if (null !== $this->sessionStorage) {
+            $this->setSessionStorage($this->sessionStorage);
+        }
+
+        if ('auth0_session' !== $this->sessionStorageId) {
+            $this->setSessionStorageId($this->sessionStorageId);
+        }
+
+        if (null !== $this->cookieSecret) {
+            $this->setCookieSecret($this->cookieSecret);
+        }
+
+        if (null !== $this->cookieDomain) {
+            $this->setCookieDomain($this->cookieDomain);
+        }
+
+        if (0 !== $this->cookieExpires) {
+            $this->setCookieExpires($this->cookieExpires);
+        }
+
+        if ('/' !== $this->cookiePath) {
+            $this->setCookiePath($this->cookiePath);
+        }
+
+        if ($this->cookieSecure) {
+            $this->setCookieSecure($this->cookieSecure);
+        }
+
+        if (null !== $this->cookieSameSite) {
+            $this->setCookieSameSite($this->cookieSameSite);
+        }
+
+        if (!$this->persistUser) {
+            $this->setPersistUser($this->persistUser);
+        }
+
+        if (!$this->persistIdToken) {
+            $this->setPersistIdToken($this->persistIdToken);
+        }
+
+        if (!$this->persistAccessToken) {
+            $this->setPersistAccessToken($this->persistAccessToken);
+        }
+
+        if (!$this->persistRefreshToken) {
+            $this->setPersistRefreshToken($this->persistRefreshToken);
+        }
+
+        if (null !== $this->transientStorage) {
+            $this->setTransientStorage($this->transientStorage);
+        }
+
+        if ('auth0_transient' !== $this->transientStorageId) {
+            $this->setTransientStorageId($this->transientStorageId);
+        }
+
+        if ($this->queryUserInfo) {
+            $this->setQueryUserInfo($this->queryUserInfo);
+        }
+
+        if (null !== $this->managementToken) {
+            $this->setManagementToken($this->managementToken);
+        }
+
+        if (null !== $this->managementTokenCache) {
+            $this->setManagementTokenCache($this->managementTokenCache);
+        }
+
+        if (null !== $this->eventListenerProvider) {
+            $this->setEventListenerProvider($this->eventListenerProvider);
         }
     }
 
