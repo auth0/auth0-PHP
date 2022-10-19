@@ -36,7 +36,7 @@ PHP 8.0 or above. Your application will also need [PSR-17](https://packagist.org
 Add the dependency to your application with [Composer](https://getcomposer.org/):
 
 ```
-comoser require auth0/auth0-php
+composer require auth0/auth0-php
 ```
 
 ### Configure Auth0
