@@ -1,4 +1,4 @@
-<p><img src="./assets/header.png" /></p>
+<p><img src=".github/header.png?sanitize=true&raw=true" /></p>
 
 # Auth0 PHP
 
