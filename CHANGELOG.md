@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.3.2](https://github.com/auth0/auth0-PHP/tree/8.3.2) (2022-10-18)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.1...8.3.2)
+
+**Fixed**
+- [SDK-3719] Fix PHP 8.0+ SdkConfiguration named arguments usage [\#654](https://github.com/auth0/auth0-PHP/pull/654) ([evansims](https://github.com/evansims))
+
 ## [8.3.1](https://github.com/auth0/auth0-PHP/tree/8.3.1) (2022-09-24)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.0...8.3.1)
 
