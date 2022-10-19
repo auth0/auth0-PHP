@@ -2026,6 +2026,11 @@ Search.appendIndex(
             "summary": "Setup\u0020SDK\u0020storage\u0020state.",
             "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method_setupStateStorage"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AvalidateNamedParameters\u0028\u0029",
+            "name": "validateNamedParameters",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method_validateNamedParameters"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AvalidateState\u0028\u0029",
             "name": "validateState",
             "summary": "Setup\u0020SDK\u0020validators\u0020based\u0020on\u0020strategy\u0020type.",
