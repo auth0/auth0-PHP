@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Store\MemoryStore;
 use Auth0\SDK\Utility\TransientStoreHandler;
+use Auth0\Tests\Utilities\MockDomain;
 
 uses()->group('utility', 'utility.transient_store_handler');
 
@@ -12,7 +13,7 @@ beforeEach(function(): void {
     $this->namespace = uniqid();
 
     $this->configuration = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
     ]);
 
     $this->store = new MemoryStore($this->configuration, $this->namespace);

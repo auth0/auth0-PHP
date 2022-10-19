@@ -102,7 +102,7 @@ final class SdkConfiguration implements ConfigurableContract
         private array $scope = ['openid', 'profile', 'email'],
         private string $responseMode = 'query',
         private string $responseType = 'code',
-        private string $tokenAlgorithm = 'RS256',
+        private string $tokenAlgorithm = Token::ALGO_RS256,
         private ?string $tokenJwksUri = null,
         private ?int $tokenMaxAge = null,
         private int $tokenLeeway = 60,
@@ -134,11 +134,10 @@ final class SdkConfiguration implements ConfigurableContract
         private ?ListenerProviderInterface $eventListenerProvider = null
     ) {
         if (null !== $configuration && [] !== $configuration) {
-            $configuration = $this->filterArrayMixed($configuration, true) ?? [];
-            $this->applyConfigurationState($configuration);
+            $this->applyConfiguration($configuration);
         }
 
-        $this->validateNamedParameters();
+        $this->validateProperties();
         $this->setupStateCookies();
         $this->setupStateFactories();
 
@@ -190,6 +189,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCookieDomain(?string $cookieDomain): self
     {
+        if (null !== $cookieDomain && '' === trim($cookieDomain)) {
+            $cookieDomain = null;
+        }
+
         $this->cookieDomain = $cookieDomain;
         return $this;
     }
@@ -207,6 +210,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCookieExpires(int $cookieExpires = 0): self
     {
+        if ($cookieExpires < 0) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('cookieExpires');
+        }
+
         $this->cookieExpires = $cookieExpires;
         return $this;
     }
@@ -223,6 +230,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCookiePath(string $cookiePath = '/'): self
     {
+        if ('' === trim($cookiePath)) {
+            $cookiePath = '/';
+        }
+
         $this->cookiePath = $cookiePath;
         return $this;
     }
@@ -239,6 +250,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCookieSameSite(?string $cookieSameSite): self
     {
+        if (null !== $cookieSameSite && '' === trim($cookieSameSite)) {
+            $cookieSameSite = null;
+        }
+
         $this->cookieSameSite = $cookieSameSite;
         return $this;
     }
@@ -256,6 +271,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCookieSecret(?string $cookieSecret): self
     {
+        if (null !== $cookieSecret && '' === trim($cookieSecret)) {
+            $cookieSecret = null;
+        }
+
         $this->cookieSecret = $cookieSecret;
         return $this;
     }
@@ -289,6 +308,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setClientId(?string $clientId = null): self
     {
+        if (null !== $clientId && '' === trim($clientId)) {
+            $clientId = null;
+        }
+
         $this->clientId = $clientId;
         return $this;
     }
@@ -306,6 +329,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setClientSecret(?string $clientSecret = null): self
     {
+        if (null !== $clientSecret && '' === trim($clientSecret)) {
+            $clientSecret = null;
+        }
+
         $this->clientSecret = $clientSecret;
         return $this;
     }
@@ -407,6 +434,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setHttpMaxRetries(int $httpMaxRetries = 3): self
     {
+        if ($httpMaxRetries < 0) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('httpMaxRetries');
+        }
+
         $this->httpMaxRetries = $httpMaxRetries;
         return $this;
     }
@@ -490,6 +521,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setManagementToken(?string $managementToken = null): self
     {
+        if (null !== $managementToken && '' === trim($managementToken)) {
+            $managementToken = null;
+        }
+
         $this->managementToken = $managementToken;
         return $this;
     }
@@ -660,6 +695,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setResponseMode(string $responseMode = 'query'): self
     {
+        if ('' === trim($responseMode)) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('responseMode');
+        }
+
         $this->responseMode = $responseMode;
         return $this;
     }
@@ -676,6 +715,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setResponseType(string $responseType = 'code'): self
     {
+        if ('' === trim($responseType)) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('responseMode');
+        }
+
         $this->responseType = $responseType;
         return $this;
     }
@@ -746,6 +789,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setSessionStorageId(string $sessionStorageId = 'auth0_session'): self
     {
+        if ('' === trim($sessionStorageId)) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('sessionStorageId');
+        }
+
         $this->sessionStorageId = $sessionStorageId;
         return $this;
     }
@@ -819,6 +866,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setTokenCacheTtl(int $tokenCacheTtl = 60): self
     {
+        if ($tokenCacheTtl < 0) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('tokenCacheTtl');
+        }
+
         $this->tokenCacheTtl = $tokenCacheTtl;
         return $this;
     }
@@ -835,6 +886,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setTokenJwksUri(?string $tokenJwksUri = null): self
     {
+        if (null !== $tokenJwksUri && '' === trim($tokenJwksUri)) {
+            $tokenJwksUri = null;
+        }
+
         $this->tokenJwksUri = $tokenJwksUri;
         return $this;
     }
@@ -852,6 +907,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setTokenLeeway(int $tokenLeeway = 60): self
     {
+        if ($tokenLeeway < 0) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('tokenLeeway');
+        }
+
         $this->tokenLeeway = $tokenLeeway;
         return $this;
     }
@@ -903,6 +962,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setTransientStorageId(string $transientStorageId = 'auth0_transient'): self
     {
+        if ('' === trim($transientStorageId)) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('transientStorageId');
+        }
+
         $this->transientStorageId = $transientStorageId;
         return $this;
     }
@@ -1106,177 +1169,6 @@ final class SdkConfiguration implements ConfigurableContract
         }
     }
 
-    private function validateNamedParameters(): void
-    {
-        if (self::STRATEGY_REGULAR !== $this->strategy) {
-            $this->setStrategy($this->strategy);
-        }
-
-        if (null !== $this->domain) {
-            $this->setDomain($this->domain);
-        }
-
-        if (null !== $this->customDomain) {
-            $this->setCustomDomain($this->customDomain);
-        }
-
-        if (null !== $this->clientId) {
-            $this->setClientId($this->clientId);
-        }
-
-        if (null !== $this->redirectUri) {
-            $this->setRedirectUri($this->redirectUri);
-        }
-
-        if (null !== $this->clientSecret) {
-            $this->setClientSecret($this->clientSecret);
-        }
-
-        if (null !== $this->audience) {
-            $this->setAudience($this->audience);
-        }
-
-        if (null !== $this->organization) {
-            $this->setOrganization($this->organization);
-        }
-
-        if (!$this->usePkce) {
-            $this->setUsePkce($this->usePkce);
-        }
-
-        if (['openid', 'profile', 'email'] !== $this->scope) {
-            $this->setScope($this->scope);
-        }
-
-        if ('query' !== $this->responseMode) {
-            $this->setResponseMode($this->responseMode);
-        }
-
-        if ('code' !== $this->responseType) {
-            $this->setResponseType($this->responseType);
-        }
-
-        if ('RS256' !== $this->tokenAlgorithm) {
-            $this->setTokenAlgorithm($this->tokenAlgorithm);
-        }
-
-        if (null !== $this->tokenJwksUri) {
-            $this->setTokenJwksUri($this->tokenJwksUri);
-        }
-
-        if (null !== $this->tokenMaxAge) {
-            $this->setTokenMaxAge($this->tokenMaxAge);
-        }
-
-        if (60 !== $this->tokenLeeway) {
-            $this->setTokenLeeway($this->tokenLeeway);
-        }
-
-        if (null !== $this->tokenCache) {
-            $this->setTokenCache($this->tokenCache);
-        }
-
-        if (60 !== $this->tokenCacheTtl) {
-            $this->setTokenCacheTtl($this->tokenCacheTtl);
-        }
-
-        if (null !== $this->httpClient) {
-            $this->setHttpClient($this->httpClient);
-        }
-
-        if (3 !== $this->httpMaxRetries) {
-            $this->setHttpMaxRetries($this->httpMaxRetries);
-        }
-
-        if (null !== $this->httpRequestFactory) {
-            $this->setHttpRequestFactory($this->httpRequestFactory);
-        }
-
-        if (null !== $this->httpResponseFactory) {
-            $this->setHttpResponseFactory($this->httpResponseFactory);
-        }
-
-        if (null !== $this->httpStreamFactory) {
-            $this->setHttpStreamFactory($this->httpStreamFactory);
-        }
-
-        if ($this->httpTelemetry) {
-            $this->setHttpTelemetry($this->httpTelemetry);
-        }
-
-        if (null !== $this->sessionStorage) {
-            $this->setSessionStorage($this->sessionStorage);
-        }
-
-        if ('auth0_session' !== $this->sessionStorageId) {
-            $this->setSessionStorageId($this->sessionStorageId);
-        }
-
-        if (null !== $this->cookieSecret) {
-            $this->setCookieSecret($this->cookieSecret);
-        }
-
-        if (null !== $this->cookieDomain) {
-            $this->setCookieDomain($this->cookieDomain);
-        }
-
-        if (0 !== $this->cookieExpires) {
-            $this->setCookieExpires($this->cookieExpires);
-        }
-
-        if ('/' !== $this->cookiePath) {
-            $this->setCookiePath($this->cookiePath);
-        }
-
-        if ($this->cookieSecure) {
-            $this->setCookieSecure($this->cookieSecure);
-        }
-
-        if (null !== $this->cookieSameSite) {
-            $this->setCookieSameSite($this->cookieSameSite);
-        }
-
-        if (!$this->persistUser) {
-            $this->setPersistUser($this->persistUser);
-        }
-
-        if (!$this->persistIdToken) {
-            $this->setPersistIdToken($this->persistIdToken);
-        }
-
-        if (!$this->persistAccessToken) {
-            $this->setPersistAccessToken($this->persistAccessToken);
-        }
-
-        if (!$this->persistRefreshToken) {
-            $this->setPersistRefreshToken($this->persistRefreshToken);
-        }
-
-        if (null !== $this->transientStorage) {
-            $this->setTransientStorage($this->transientStorage);
-        }
-
-        if ('auth0_transient' !== $this->transientStorageId) {
-            $this->setTransientStorageId($this->transientStorageId);
-        }
-
-        if ($this->queryUserInfo) {
-            $this->setQueryUserInfo($this->queryUserInfo);
-        }
-
-        if (null !== $this->managementToken) {
-            $this->setManagementToken($this->managementToken);
-        }
-
-        if (null !== $this->managementTokenCache) {
-            $this->setManagementTokenCache($this->managementTokenCache);
-        }
-
-        if (null !== $this->eventListenerProvider) {
-            $this->setEventListenerProvider($this->eventListenerProvider);
-        }
-    }
-
     /**
      * Setup SDK validators based on strategy type.
      */
@@ -1352,5 +1244,109 @@ final class SdkConfiguration implements ConfigurableContract
         if (! $this->hasCookieSecret()) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
+    }
+
+    /**
+     * @return array<callable>
+     *
+     * @psalm-suppress MissingClosureParamType
+     */
+    private function getPropertyValidators(): array
+    {
+        return [
+            'strategy' => fn ($value) => is_string($value),
+            'domain' => fn ($value) => is_string($value) || null === $value,
+            'customDomain' => fn ($value) => is_string($value) || null === $value,
+            'clientId' => fn ($value) => is_string($value) || null === $value,
+            'redirectUri' => fn ($value) => is_string($value) || null === $value,
+            'clientSecret' => fn ($value) => is_string($value) || null === $value,
+            'audience' => fn ($value) => is_array($value) || null === $value,
+            'organization' => fn ($value) => is_array($value) || null === $value,
+            'usePkce' => fn ($value) => is_bool($value),
+            'scope' => fn ($value) => is_array($value),
+            'responseMode' => fn ($value) => is_string($value),
+            'responseType' => fn ($value) => is_string($value),
+            'tokenAlgorithm' => fn ($value) => is_string($value),
+            'tokenJwksUri' => fn ($value) => is_string($value) || null === $value,
+            'tokenMaxAge' => fn ($value) => is_int($value) || null === $value,
+            'tokenLeeway' => fn ($value) => is_int($value),
+            'tokenCache' => fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'tokenCacheTtl' => fn ($value) => is_int($value),
+            'httpClient' => fn ($value) => $value instanceof ClientInterface || null === $value,
+            'httpMaxRetries' => fn ($value) => is_int($value),
+            'httpRequestFactory' => fn ($value) => $value instanceof RequestFactoryInterface || null === $value,
+            'httpResponseFactory' => fn ($value) => $value instanceof ResponseFactoryInterface || null === $value,
+            'httpStreamFactory' => fn ($value) => $value instanceof StreamFactoryInterface || null === $value,
+            'httpTelemetry' => fn ($value) => is_bool($value),
+            'sessionStorage' => fn ($value) => $value instanceof StoreInterface || null === $value,
+            'sessionStorageId' => fn ($value) => is_string($value),
+            'cookieSecret' => fn ($value) => is_string($value) || null === $value,
+            'cookieDomain' => fn ($value) => is_string($value) || null === $value,
+            'cookieExpires' => fn ($value) => is_int($value),
+            'cookiePath' => fn ($value) => is_string($value),
+            'cookieSecure' => fn ($value) => is_string($value),
+            'cookieSameSite' => fn ($value) => is_string($value) || null === $value,
+            'persistUser' => fn ($value) => is_bool($value),
+            'persistIdToken' => fn ($value) => is_bool($value),
+            'persistAccessToken' => fn ($value) => is_bool($value),
+            'persistRefreshToken' => fn ($value) => is_bool($value),
+            'transientStorage' => fn ($value) => $value instanceof StoreInterface || null === $value,
+            'transientStorageId' => fn ($value) => is_string($value),
+            'queryUserInfo' => fn ($value) => is_bool($value),
+            'managementToken' => fn ($value) => is_string($value) || null === $value,
+            'managementTokenCache' => fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'eventListenerProvider' => fn ($value) => $value instanceof ListenerProviderInterface || null === $value,
+        ];
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getPropertyDefaults(): array
+    {
+        return [
+            'strategy' => self::STRATEGY_REGULAR,
+            'domain' => null,
+            'customDomain' => null,
+            'clientId' => null,
+            'redirectUri' => null,
+            'clientSecret' => null,
+            'audience' => null,
+            'organization' => null,
+            'usePkce' => true,
+            'scope' => ['openid', 'profile', 'email'],
+            'responseMode' => 'query',
+            'responseType' => 'code',
+            'tokenAlgorithm' => Token::ALGO_RS256,
+            'tokenJwksUri' => null,
+            'tokenMaxAge' => null,
+            'tokenLeeway' => 60,
+            'tokenCache' => null,
+            'tokenCacheTtl' => 60,
+            'httpClient' => null,
+            'httpMaxRetries' => 3,
+            'httpRequestFactory' => null,
+            'httpResponseFactory' => null,
+            'httpStreamFactory' => null,
+            'httpTelemetry' => true,
+            'sessionStorage' => null,
+            'sessionStorageId' => 'auth0_session',
+            'cookieSecret' => null,
+            'cookieDomain' => null,
+            'cookieExpires' => 0,
+            'cookiePath' => '/',
+            'cookieSecure' => false,
+            'cookieSameSite' => null,
+            'persistUser' => true,
+            'persistIdToken' => true,
+            'persistAccessToken' => true,
+            'persistRefreshToken' => true,
+            'transientStorage' => null,
+            'transientStorageId' => 'auth0_transient',
+            'queryUserInfo' => false,
+            'managementToken' => null,
+            'managementTokenCache' => null,
+            'eventListenerProvider' => null,
+        ];
     }
 }

@@ -18,7 +18,7 @@ beforeEach(function(): void {
     $this->listener = new MockPsr14StoreListener();
 
     $this->configuration = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
         'eventListenerProvider' => $this->listener->setup()
     ]);
 });

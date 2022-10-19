@@ -27,7 +27,7 @@ test('dispatch() functions as expected', function(): void {
     });
 
     $configuration = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
         'eventListenerProvider' => $listener
     ]);
 

@@ -46,7 +46,7 @@ test('__construct() overrides arguments with configuration array', function(): v
 test('__construct() does not accept invalid types from configuration array', function(): void
 {
     $config = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
         'domain' => MockDomain::invalid(),
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
@@ -74,7 +74,7 @@ test('__construct() throws an exception if domain is an empty string', function(
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
 
 test('__construct() throws an exception if domain is an invalid uri', function(): void {
     $cookieSecret = uniqid();
@@ -143,7 +143,7 @@ test('__construct() throws an exception if an invalid token leeway is specified'
         'redirectUri' => $redirectUri,
         'tokenLeeway' => 'TEST'
     ]);
-})->throws(\TypeError::class);
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'tokenLeeway'));
 
 test('successfully updates values', function(): void
 {
@@ -192,7 +192,7 @@ test('an invalid strategy throws an exception', function(): void
 test('a non-existent array value is ignored', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
         'domain' => MockDomain::valid(),
         'clientId' => uniqid(),
         'organization' => [],
@@ -214,15 +214,12 @@ test('a `webapp` strategy is used by default', function(): void
 
 test('a `webapp` strategy requires a domain', function(): void
 {
-    $sdk = new SdkConfiguration([
-        'strategy' => 'webapp',
-    ]);
+    $sdk = new SdkConfiguration();
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `webapp` strategy requires a client id', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'webapp',
         'domain' => MockDomain::valid()
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
@@ -230,7 +227,6 @@ test('a `webapp` strategy requires a client id', function(): void
 test('a `webapp` strategy requires a client secret when HS256 is used', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'webapp',
         'domain' => MockDomain::valid(),
         'clientId' => uniqid(),
         'tokenAlgorithm' => 'HS256'
@@ -240,14 +236,14 @@ test('a `webapp` strategy requires a client secret when HS256 is used', function
 test('a `api` strategy requires a domain', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'api',
+        'strategy' => SdkConfiguration::STRATEGY_API,
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `api` strategy requires an audience', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'api',
+        'strategy' => SdkConfiguration::STRATEGY_API,
         'domain' => MockDomain::valid()
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_AUDIENCE);
@@ -255,14 +251,14 @@ test('a `api` strategy requires an audience', function(): void
 test('a `management` strategy requires a domain', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'management'
+        'strategy' => SdkConfiguration::STRATEGY_MANAGEMENT_API
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `management` strategy requires a client id if a management token is not provided', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'management',
+        'strategy' => SdkConfiguration::STRATEGY_MANAGEMENT_API,
         'domain' => MockDomain::valid()
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
@@ -270,7 +266,7 @@ test('a `management` strategy requires a client id if a management token is not 
 test('a `management` strategy requires a client secret if a management token is not provided', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'management',
+        'strategy' => SdkConfiguration::STRATEGY_MANAGEMENT_API,
         'domain' => MockDomain::valid(),
         'clientId' => uniqid()
     ]);
@@ -279,7 +275,7 @@ test('a `management` strategy requires a client secret if a management token is 
 test('a `management` strategy does not require a client id or secret if a management token is provided', function(): void
 {
     $sdk = new SdkConfiguration([
-        'strategy' => 'management',
+        'strategy' => SdkConfiguration::STRATEGY_MANAGEMENT_API,
         'domain' => MockDomain::valid(),
         'managementToken' => uniqid()
     ]);
