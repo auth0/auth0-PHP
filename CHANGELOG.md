@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.3.3](https://github.com/auth0/auth0-PHP/tree/8.3.3) (2022-10-19)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.2...8.3.3)
+
+**Fixed**
+- Configuration validator improvements [\#657](https://github.com/auth0/auth0-PHP/pull/657) ([evansims](https://github.com/evansims))
+
 ## [8.3.2](https://github.com/auth0/auth0-PHP/tree/8.3.2) (2022-10-18)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.1...8.3.2)
 
