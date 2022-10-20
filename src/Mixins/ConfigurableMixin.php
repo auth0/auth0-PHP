@@ -13,32 +13,79 @@ trait ConfigurableMixin
      *
      * @psalm-suppress MissingClosureParamType,MissingClosureReturnType
      */
-    private function applyConfigurationState(?array $configuration): self
+    private function applyConfiguration(?array $configuration): self
     {
         if (null === $configuration) {
             return $this;
         }
 
-        foreach ($configuration as $configurationKey => $configurationValue) {
-            if (property_exists($this, $configurationKey)) {
-                $method = 'set' . ucfirst($configurationKey);
+        $validators = $this->getPropertyValidators();
+        $defaults = $this->getPropertyDefaults();
 
-                if (method_exists($this, $method)) {
-                    $callback = function ($configurationValue) use ($method) {
-                        // @phpstan-ignore-next-line
-                        return $this->$method($configurationValue);
-                    };
-
-                    call_user_func($callback, $configurationValue);
-                    continue;
-                }
-
-                // @phpstan-ignore-next-line
-                $this->$configurationKey = $configurationValue;
+        foreach ($configuration as $configKey => $configuredValue) {
+            if (! property_exists($this, $configKey) || ! array_key_exists($configKey, $defaults)) {
+                continue;
             }
+
+            if (! isset($validators[$configKey]) || ! is_callable($validators[$configKey])) {
+                throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($configKey);
+            }
+
+            if ($validators[$configKey]($configuredValue) === false) {
+                throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($configKey);
+            }
+
+            $method = 'set' . ucfirst($configKey);
+
+            if (method_exists($this, $method)) {
+                // @phpstan-ignore-next-line
+                $callback = function ($configuredValue) use ($method) {
+                    // @phpstan-ignore-next-line
+                    return $this->$method($configuredValue);
+                };
+
+                call_user_func($callback, $configuredValue);
+                continue;
+            }
+
+            // @phpstan-ignore-next-line
+            $this->$configKey = $configuredValue;
         }
 
         return $this;
+    }
+
+    /**
+     * @psalm-suppress MissingClosureParamType,MissingClosureReturnType
+     */
+    private function validateProperties(): void
+    {
+        $defaults = $this->getPropertyDefaults();
+
+        foreach ($defaults as $configKey => $defaultValue) {
+            if (! property_exists($this, $configKey)) {
+                continue;
+            }
+
+            // @phpstan-ignore-next-line
+            if ($this->$configKey === $defaultValue) {
+                continue;
+            }
+
+            $method = 'set' . ucfirst($configKey);
+
+            if (method_exists($this, $method)) {
+                // @phpstan-ignore-next-line
+                $callback = function ($value) use ($method) {
+                    // @phpstan-ignore-next-line
+                    return $this->$method($value);
+                };
+
+                // @phpstan-ignore-next-line
+                call_user_func($callback, $this->$configKey);
+                continue;
+            }
+        }
     }
 
     /**

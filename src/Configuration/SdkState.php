@@ -31,12 +31,19 @@ final class SdkState implements ConfigurableContract
         public ?array $user = null,
         public ?int $accessTokenExpiration = null
     ) {
-        $configuration = $configuration ?? [];
-        $this->applyConfigurationState($configuration);
+        if (null !== $configuration && [] !== $configuration) {
+            $this->applyConfiguration($configuration);
+        }
+
+        $this->validateProperties();
     }
 
     public function setIdToken(?string $idToken = null): self
     {
+        if (null !== $idToken && '' === trim($idToken)) {
+            $idToken = null;
+        }
+
         $this->idToken = $idToken;
         return $this;
     }
@@ -54,6 +61,10 @@ final class SdkState implements ConfigurableContract
 
     public function setAccessToken(?string $accessToken = null): self
     {
+        if (null !== $accessToken && '' === trim($accessToken)) {
+            $accessToken = null;
+        }
+
         $this->accessToken = $accessToken;
         return $this;
     }
@@ -74,6 +85,10 @@ final class SdkState implements ConfigurableContract
      */
     public function setAccessTokenScope(?array $accessTokenScope): self
     {
+        if (null !== $accessTokenScope && [] === $accessTokenScope) {
+            $accessTokenScope = null;
+        }
+
         $this->accessTokenScope = $this->filterArray($accessTokenScope);
         return $this;
     }
@@ -110,6 +125,10 @@ final class SdkState implements ConfigurableContract
 
     public function setRefreshToken(?string $refreshToken = null): self
     {
+        if (null !== $refreshToken && '' === trim($refreshToken)) {
+            $refreshToken = null;
+        }
+
         $this->refreshToken = $refreshToken;
         return $this;
     }
@@ -131,6 +150,10 @@ final class SdkState implements ConfigurableContract
      */
     public function setUser(?array $user): self
     {
+        if (null !== $user && [] === $user) {
+            $user = null;
+        }
+
         $this->user = $user;
         return $this;
     }
@@ -151,6 +174,10 @@ final class SdkState implements ConfigurableContract
 
     public function setAccessTokenExpiration(?int $accessTokenExpiration = null): self
     {
+        if (null !== $accessTokenExpiration && $accessTokenExpiration < 0) {
+            $accessTokenExpiration = null;
+        }
+
         $this->accessTokenExpiration = $accessTokenExpiration;
         return $this;
     }
@@ -164,5 +191,37 @@ final class SdkState implements ConfigurableContract
     public function hasAccessTokenExpiration(): bool
     {
         return null !== $this->accessTokenExpiration;
+    }
+
+    /**
+     * @return array<callable>
+     *
+     * @psalm-suppress MissingClosureParamType
+     */
+    private function getPropertyValidators(): array
+    {
+        return [
+            'idToken' => fn ($value) => is_string($value) || null === $value,
+            'accessToken' => fn ($value) => is_string($value) || null === $value,
+            'accessTokenScope' => fn ($value) => is_array($value) || null === $value,
+            'refreshToken' => fn ($value) => is_string($value) || null === $value,
+            'user' => fn ($value) => is_array($value) || null === $value,
+            'accessTokenExpiration' => fn ($value) => is_int($value) || null === $value,
+        ];
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getPropertyDefaults(): array
+    {
+        return [
+            'idToken' => null,
+            'accessToken' => null,
+            'accessTokenScope' => null,
+            'refreshToken' => null,
+            'user' => null,
+            'accessTokenExpiration' => null,
+        ];
     }
 }

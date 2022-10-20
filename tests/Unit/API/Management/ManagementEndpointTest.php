@@ -17,7 +17,7 @@ uses()->group('management', 'management.generic');
 
 beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
         'domain' => MockDomain::valid()
     ]);
 
