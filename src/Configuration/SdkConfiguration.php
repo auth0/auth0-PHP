@@ -153,6 +153,10 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function setAudience(?array $audience): self
     {
+        if (null !== $audience && [] === $audience) {
+            $audience = null;
+        }
+
         $this->audience = $this->filterArray($audience);
         return $this;
     }
@@ -179,7 +183,17 @@ final class SdkConfiguration implements ConfigurableContract
     public function pushAudience(array|string $audiences): ?array
     {
         if (is_string($audiences)) {
+            $audiences = trim($audiences);
+
+            if ('' === $audiences) {
+                return $this->audience;
+            }
+
             $audiences = [$audiences];
+        }
+
+        if ([] === $audiences) {
+            return $this->audience;
         }
 
         $this->setAudience(array_merge($this->audience ?? [], $audiences));
@@ -562,6 +576,10 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function setOrganization(?array $organization = null): self
     {
+        if (null !== $organization && [] === $organization) {
+            $organization = null;
+        }
+
         $this->organization = $this->filterArray($organization);
         return $this;
     }
@@ -588,7 +606,17 @@ final class SdkConfiguration implements ConfigurableContract
     public function pushOrganization(array|string $organizations): ?array
     {
         if (is_string($organizations)) {
+            $organizations = trim($organizations);
+
+            if ('' === $organizations) {
+                return $this->organization;
+            }
+
             $organizations = [$organizations];
+        }
+
+        if ([] === $organizations) {
+            return $this->organization;
         }
 
         $this->setOrganization(array_merge($this->organization ?? [], $organizations));
@@ -678,6 +706,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setRedirectUri(?string $redirectUri = null): self
     {
+        if (null !== $redirectUri && '' === trim($redirectUri)) {
+            $redirectUri = null;
+        }
+
         $this->redirectUri = $redirectUri;
         return $this;
     }
@@ -762,7 +794,17 @@ final class SdkConfiguration implements ConfigurableContract
     public function pushScope(array|string $scopes): ?array
     {
         if (is_string($scopes)) {
+            $scopes = trim($scopes);
+
+            if ('' === $scopes) {
+                return $this->scope;
+            }
+
             $scopes = [$scopes];
+        }
+
+        if ([] === $scopes) {
+            return $this->scope;
         }
 
         $this->setScope(array_merge($this->scope, $scopes));
@@ -928,6 +970,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setTokenMaxAge(?int $tokenMaxAge = null): self
     {
+        if (null !== $tokenMaxAge && $tokenMaxAge < 0) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('tokenMaxAge');
+        }
+
         $this->tokenMaxAge = $tokenMaxAge;
         return $this;
     }
