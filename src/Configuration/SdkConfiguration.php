@@ -1284,7 +1284,7 @@ final class SdkConfiguration implements ConfigurableContract
             'cookieDomain' => fn ($value) => is_string($value) || null === $value,
             'cookieExpires' => fn ($value) => is_int($value),
             'cookiePath' => fn ($value) => is_string($value),
-            'cookieSecure' => fn ($value) => is_string($value),
+            'cookieSecure' => fn ($value) => is_bool($value),
             'cookieSameSite' => fn ($value) => is_string($value) || null === $value,
             'persistUser' => fn ($value) => is_bool($value),
             'persistIdToken' => fn ($value) => is_bool($value),
