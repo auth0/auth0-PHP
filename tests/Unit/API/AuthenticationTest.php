@@ -30,7 +30,7 @@ test('__construct() fails without a configuration', function(): void {
 
 test('__construct() accepts a configuration as an array', function(): void {
     $auth = new Authentication([
-        'strategy' => 'api',
+        'strategy' => SdkConfiguration::STRATEGY_API,
         'domain' => MockDomain::valid(),
         'audience' => [uniqid()]
     ]);

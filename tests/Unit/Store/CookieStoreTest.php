@@ -14,7 +14,7 @@ beforeEach(function(): void {
     $this->cookieSecret = uniqid() . bin2hex(random_bytes(32));
 
     $this->configuration = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
         'cookieSecret' => $this->cookieSecret
     ]);
 
@@ -158,7 +158,7 @@ test('purge() clears state and $_COOKIE', function(array $state): void {
 
 test('encrypt() throws an exception if a cookie secret is not configured', function(): void {
     $this->configuration = new SdkConfiguration([
-        'strategy' => 'none'
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
     ]);
 
     $this->store = new CookieStore($this->configuration, $this->namespace);
@@ -168,7 +168,7 @@ test('encrypt() throws an exception if a cookie secret is not configured', funct
 
 test('decrypt() throws an exception if a cookie secret is not configured', function(array $state): void {
     $this->configuration = new SdkConfiguration([
-        'strategy' => 'none'
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
     ]);
 
     $this->store = new CookieStore($this->configuration, $this->namespace);

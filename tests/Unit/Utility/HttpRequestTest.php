@@ -13,7 +13,7 @@ uses()->group('utility', 'utility.http_request', 'networking');
 
 beforeEach(function(): void {
     $this->configuration = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
         'domain' => MockDomain::valid(),
     ]);
 });

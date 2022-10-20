@@ -14,7 +14,7 @@ beforeEach(function() {
     $this->cache = new ArrayAdapter();
 
     $this->configuration = new SdkConfiguration([
-        'strategy' => 'none',
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
         'tokenCache' => $this->cache
     ]);
 });
