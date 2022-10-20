@@ -151,7 +151,7 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * @param null|array<string> $audience An allowlist array of API identifiers/audiences.
      */
-    public function setAudience(?array $audience): self
+    public function setAudience(?array $audience = null): self
     {
         if (null !== $audience && [] === $audience) {
             $audience = null;
@@ -201,7 +201,7 @@ final class SdkConfiguration implements ConfigurableContract
         return $this->audience;
     }
 
-    public function setCookieDomain(?string $cookieDomain): self
+    public function setCookieDomain(?string $cookieDomain = null): self
     {
         if (null !== $cookieDomain && '' === trim($cookieDomain)) {
             $cookieDomain = null;
@@ -262,7 +262,7 @@ final class SdkConfiguration implements ConfigurableContract
         return true;
     }
 
-    public function setCookieSameSite(?string $cookieSameSite): self
+    public function setCookieSameSite(?string $cookieSameSite = null): self
     {
         if (null !== $cookieSameSite && '' === trim($cookieSameSite)) {
             $cookieSameSite = null;
@@ -283,7 +283,7 @@ final class SdkConfiguration implements ConfigurableContract
         return null !== $this->cookieSameSite;
     }
 
-    public function setCookieSecret(?string $cookieSecret): self
+    public function setCookieSecret(?string $cookieSecret = null): self
     {
         if (null !== $cookieSecret && '' === trim($cookieSecret)) {
             $cookieSecret = null;
@@ -304,7 +304,7 @@ final class SdkConfiguration implements ConfigurableContract
         return null !== $this->cookieSecret;
     }
 
-    public function setCookieSecure(bool $cookieSecure): self
+    public function setCookieSecure(bool $cookieSecure = false): self
     {
         $this->cookieSecure = $cookieSecure;
         return $this;
@@ -766,10 +766,14 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param array<string>|null $scope An array of scopes to request during authentication steps.
+     * @param array<string> $scope An array of scopes to request during authentication steps.
      */
-    public function setScope(array $scope = null): self
+    public function setScope(array $scope = ['openid', 'profile', 'email']): self
     {
+        if ([] === $scope) {
+            $scope = ['openid', 'profile', 'email'];
+        }
+
         $this->scope = $this->filterArray($scope) ?? [];
         return $this;
     }

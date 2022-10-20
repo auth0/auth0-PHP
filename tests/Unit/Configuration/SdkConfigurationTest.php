@@ -359,7 +359,7 @@ test('formatCustomDomain() returns null when a custom domain is not configured',
     expect($sdk->formatCustomDomain())->toBeNull();
 });
 
-test('formatScope() returns an empty string when there are no scopes defined', function(): void
+test('formatScope() returns the default scopes when there are no scopes defined', function(): void
 {
     $sdk = new SdkConfiguration([
         'domain' => MockDomain::valid(),
@@ -369,7 +369,24 @@ test('formatScope() returns an empty string when there are no scopes defined', f
         'scope' => [],
     ]);
 
-    expect($sdk->formatScope())->toEqual('');
+    expect($sdk->formatScope())->toEqual('openid profile email');
+});
+
+test('formatScope() returns the correct string when there scopes are defined', function(): void
+{
+    $scope1 = uniqid();
+    $scope2 = uniqid();
+    $scope3 = uniqid();
+
+    $sdk = new SdkConfiguration([
+        'domain' => MockDomain::valid(),
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+        'scope' => [$scope1, $scope2, $scope3],
+    ]);
+
+    expect($sdk->formatScope())->toEqual(implode(' ', [$scope1, $scope2, $scope3]));
 });
 
 test('scope() successfully converts the array to a string', function(): void
