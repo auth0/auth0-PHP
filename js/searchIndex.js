@@ -2026,11 +2026,6 @@ Search.appendIndex(
             "summary": "Setup\u0020SDK\u0020storage\u0020state.",
             "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method_setupStateStorage"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AvalidateNamedParameters\u0028\u0029",
-            "name": "validateNamedParameters",
-            "summary": "",
-            "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method_validateNamedParameters"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AvalidateState\u0028\u0029",
             "name": "validateState",
             "summary": "Setup\u0020SDK\u0020validators\u0020based\u0020on\u0020strategy\u0020type.",
@@ -2050,6 +2045,16 @@ Search.appendIndex(
             "name": "validateStateWebApp",
             "summary": "Run\u0020validations\u0020for\u0020a\u0020general\u0020webapp\u0020usage\u0020configuration.",
             "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method_validateStateWebApp"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AgetPropertyValidators\u0028\u0029",
+            "name": "getPropertyValidators",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method_getPropertyValidators"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AgetPropertyDefaults\u0028\u0029",
+            "name": "getPropertyDefaults",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method_getPropertyDefaults"
         },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003ASTRATEGY_REGULAR",
             "name": "STRATEGY_REGULAR",
@@ -2395,6 +2400,16 @@ Search.appendIndex(
             "name": "hasAccessTokenExpiration",
             "summary": "",
             "url": "classes/Auth0-SDK-Configuration-SdkState.html#method_hasAccessTokenExpiration"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Configuration\\SdkState\u003A\u003AgetPropertyValidators\u0028\u0029",
+            "name": "getPropertyValidators",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Configuration-SdkState.html#method_getPropertyValidators"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Configuration\\SdkState\u003A\u003AgetPropertyDefaults\u0028\u0029",
+            "name": "getPropertyDefaults",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Configuration-SdkState.html#method_getPropertyDefaults"
         },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkState\u003A\u003A\u0024configuration",
             "name": "configuration",
@@ -4856,10 +4871,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Mixins-ConfigurableMixin.html"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Mixins\\ConfigurableMixin\u003A\u003AapplyConfigurationState\u0028\u0029",
-            "name": "applyConfigurationState",
+            "fqsen": "\\Auth0\\SDK\\Mixins\\ConfigurableMixin\u003A\u003AapplyConfiguration\u0028\u0029",
+            "name": "applyConfiguration",
             "summary": "",
-            "url": "classes/Auth0-SDK-Mixins-ConfigurableMixin.html#method_applyConfigurationState"
+            "url": "classes/Auth0-SDK-Mixins-ConfigurableMixin.html#method_applyConfiguration"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Mixins\\ConfigurableMixin\u003A\u003AvalidateProperties\u0028\u0029",
+            "name": "validateProperties",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Mixins-ConfigurableMixin.html#method_validateProperties"
         },                {
             "fqsen": "\\Auth0\\SDK\\Mixins\\ConfigurableMixin\u003A\u003AexceptionIfNull\u0028\u0029",
             "name": "exceptionIfNull",
