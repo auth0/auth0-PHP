@@ -2011,6 +2011,11 @@ Search.appendIndex(
             "summary": "An\u0020instance\u0020of\u0020the\u0020EventDispatcher\u0020utility.",
             "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#property_eventDispatcher"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AusingStatefulness\u0028\u0029",
+            "name": "usingStatefulness",
+            "summary": "Returns\u0020true\u0020when\u0020the\u0020configured\u0020\u0060strategy\u0060\u0020is\u0020\u0027stateful\u0027,\u0020meaning\u0020it\u0020requires\u0020an\u0020available\u0020and\u0020configured\u0020session.",
+            "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method_usingStatefulness"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AsetupStateCookies\u0028\u0029",
             "name": "setupStateCookies",
             "summary": "Setup\u0020SDK\u0020cookie\u0020state.",
@@ -4251,6 +4256,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Exception-ConfigurationException.html#method_requiresStrategy"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Exception\\ConfigurationException\u003A\u003ArequiresStatefulness\u0028\u0029",
+            "name": "requiresStatefulness",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Exception-ConfigurationException.html#method_requiresStatefulness"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Exception\\ConfigurationException\u003A\u003ArequiresDomain\u0028\u0029",
             "name": "requiresDomain",
             "summary": "",
@@ -4350,6 +4360,11 @@ Search.appendIndex(
             "name": "MSG_STRATEGY_REQUIRED",
             "summary": "",
             "url": "classes/Auth0-SDK-Exception-ConfigurationException.html#constant_MSG_STRATEGY_REQUIRED"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Exception\\ConfigurationException\u003A\u003AMSG_SESSION_REQUIRED",
+            "name": "MSG_SESSION_REQUIRED",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Exception-ConfigurationException.html#constant_MSG_SESSION_REQUIRED"
         },                {
             "fqsen": "\\Auth0\\SDK\\Exception\\ConfigurationException\u003A\u003AMSG_VALUE_REQUIRED",
             "name": "MSG_VALUE_REQUIRED",
