@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.3.5](https://github.com/auth0/auth0-PHP/tree/8.3.5) (2022-10-21)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.4...8.3.5)
+
+**Fixed**
+- [SDK-3722] Fix: Stateless strategies should not invoke stateful session classes [\#662](https://github.com/auth0/auth0-PHP/pull/662) ([evansims](https://github.com/evansims))
+
 ## [8.3.4](https://github.com/auth0/auth0-PHP/tree/8.3.4) (2022-10-19)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.3...8.3.4)
 
