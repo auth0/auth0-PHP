@@ -196,10 +196,10 @@ final class Auth0 implements Auth0Interface
 
             // If state saving had been deferred, disable it and force a update to persistent storage.
             $this->deferStateSaving(false);
-
-            // Reset the internal state.
-            $this->getState(true);
         }
+
+        // Reset the internal state.
+        $this->getState(true);
 
         return $this;
     }
