@@ -12,6 +12,7 @@ use Auth0\SDK\Contract\API\AuthenticationInterface;
 use Auth0\SDK\Contract\API\ManagementInterface;
 use Auth0\SDK\Contract\Auth0Interface;
 use Auth0\SDK\Contract\TokenInterface;
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Utility\HttpResponse;
 use Auth0\SDK\Utility\PKCE;
 use Auth0\SDK\Utility\Toolkit;
@@ -93,11 +94,16 @@ final class Auth0 implements Auth0Interface
         ?string $redirectUrl = null,
         ?array $params = null
     ): string {
+        if (! $this->configuration()->usingStatefulness()) {
+            throw ConfigurationException::requiresStatefulness('Auth0->login()');
+        }
+
         $this->deferStateSaving();
 
+        $store = $this->getTransientStore();
         $params = $params ?? [];
-        $state = $params['state'] ?? $this->getTransientStore()->issue('state');
-        $params['nonce'] = $params['nonce'] ?? $this->getTransientStore()->issue('nonce');
+        $state = $params['state'] ?? $store?->issue('state') ?? uniqid();
+        $params['nonce'] = $params['nonce'] ?? $store?->issue('nonce') ?? uniqid();
         $params['max_age'] = $params['max_age'] ?? $this->configuration()->getTokenMaxAge();
 
         unset($params['state']);
@@ -106,11 +112,11 @@ final class Auth0 implements Auth0Interface
             $codeVerifier = PKCE::generateCodeVerifier(128);
             $params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
             $params['code_challenge_method'] = 'S256';
-            $this->getTransientStore()->store('code_verifier', $codeVerifier);
+            $store?->store('code_verifier', $codeVerifier);
         }
 
         if ($params['max_age'] !== null) {
-            $this->getTransientStore()->store('max_age', (string) $params['max_age']);
+            $store?->store('max_age', (string) $params['max_age']);
         }
 
         $this->deferStateSaving(false);
@@ -122,6 +128,10 @@ final class Auth0 implements Auth0Interface
         ?string $redirectUrl = null,
         ?array $params = null
     ): string {
+        if (! $this->configuration()->usingStatefulness()) {
+            throw ConfigurationException::requiresStatefulness('Auth0->signup()');
+        }
+
         $params = Toolkit::merge([
             'screen_hint' => 'signup',
         ], $params);
@@ -135,6 +145,10 @@ final class Auth0 implements Auth0Interface
         ?string $redirectUrl = null,
         ?array $params = null
     ): ?string {
+        if (! $this->configuration()->usingStatefulness()) {
+            throw ConfigurationException::requiresStatefulness('Auth0->handleInvitation()');
+        }
+
         $invite = $this->getInvitationParameters();
 
         if ($invite !== null) {
@@ -155,6 +169,10 @@ final class Auth0 implements Auth0Interface
         ?string $returnUri = null,
         ?array $params = null
     ): string {
+        if (! $this->configuration()->usingStatefulness()) {
+            throw ConfigurationException::requiresStatefulness('Auth0->logout()');
+        }
+
         $this->clear();
 
         return $this->authentication()->getLogoutLink($returnUri, $params);
@@ -163,20 +181,22 @@ final class Auth0 implements Auth0Interface
     public function clear(
         bool $transient = true
     ): self {
-        $this->deferStateSaving();
+        if ($this->configuration()->usingStatefulness()) {
+            $this->deferStateSaving();
 
-        // Delete all data in the session storage medium.
-        if ($this->configuration()->hasSessionStorage()) {
-            $this->configuration->getSessionStorage()->purge();
+            // Delete all data in the session storage medium.
+            if ($this->configuration()->hasSessionStorage()) {
+                $this->configuration->getSessionStorage()->purge();
+            }
+
+            // Delete all data in the transient storage medium.
+            if ($this->configuration()->hasTransientStorage() && $transient) {
+                $this->configuration->getTransientStorage()->purge();
+            }
+
+            // If state saving had been deferred, disable it and force a update to persistent storage.
+            $this->deferStateSaving(false);
         }
-
-        // Delete all data in the transient storage medium.
-        if ($this->configuration()->hasTransientStorage() && $transient) {
-            $this->configuration->getTransientStorage()->purge();
-        }
-
-        // If state saving had been deferred, disable it and force a update to persistent storage.
-        $this->deferStateSaving(false);
 
         // Reset the internal state.
         $this->getState(true);
@@ -194,9 +214,10 @@ final class Auth0 implements Auth0Interface
         ?int $tokenNow = null,
         ?int $tokenType = null
     ): TokenInterface {
+        $store = $this->getTransientStore();
         $tokenType = $tokenType ?? Token::TYPE_ID_TOKEN;
-        $tokenNonce = $tokenNonce ?? $this->getTransientStore()->getOnce('nonce') ?? null;
-        $tokenMaxAge = $tokenMaxAge ?? $this->getTransientStore()->getOnce('max_age') ?? null;
+        $tokenNonce = $tokenNonce ?? $store?->getOnce('nonce') ?? null;
+        $tokenMaxAge = $tokenMaxAge ?? $store?->getOnce('max_age') ?? null;
         $tokenIssuer = null;
 
         $token = new Token($this->configuration, $token, $tokenType);
@@ -218,8 +239,10 @@ final class Auth0 implements Auth0Interface
         );
 
         // Ensure transient-stored values are cleared, even if overriding values were passed to the  method.
-        $this->getTransientStore()->delete('max_age');
-        $this->getTransientStore()->delete('nonce');
+        if ($this->configuration()->usingStatefulness()) {
+            $store?->delete('max_age');
+            $store?->delete('nonce');
+        }
 
         return $token;
     }
@@ -229,11 +252,24 @@ final class Auth0 implements Auth0Interface
         ?string $code = null,
         ?string $state = null
     ): bool {
+        if (! $this->configuration()->usingStatefulness()) {
+            throw ConfigurationException::requiresStatefulness('Auth0->exchange()');
+        }
+
         [$redirectUri, $code, $state] = Toolkit::filter([$redirectUri, $code, $state])->string()->trim();
 
         $code = $code ?? $this->getRequestParameter('code');
         $state = $state ?? $this->getRequestParameter('state');
-        $codeVerifier = null;
+
+        $store = $this->getTransientStore();
+        $codeVerifier = $store?->getOnce('code_verifier');
+        $nonce = $store?->isset('nonce');
+        $stateVerified = null;
+
+        if (null !== $state) {
+            $stateVerified = $store?->verify('state', $state) ?? false;
+        }
+
         $user = null;
 
         $this->clear(false);
@@ -244,18 +280,14 @@ final class Auth0 implements Auth0Interface
             throw \Auth0\SDK\Exception\StateException::missingCode();
         }
 
-        if ($state === null || ! $this->getTransientStore()->verify('state', $state)) {
+        if ($state === null || ! $stateVerified) {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::invalidState();
         }
 
-        if ($this->configuration()->getUsePkce()) {
-            $codeVerifier = $this->getTransientStore()->getOnce('code_verifier');
-
-            if ($codeVerifier === null) {
-                $this->clear();
-                throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
-            }
+        if ($this->configuration()->getUsePkce() && $codeVerifier === null) {
+            $this->clear();
+            throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
         }
 
         $response = $this->authentication()->codeExchange($code, $redirectUri, $codeVerifier);
@@ -285,7 +317,7 @@ final class Auth0 implements Auth0Interface
         }
 
         if (isset($response['id_token'])) {
-            if (! $this->getTransientStore()->isset('nonce')) {
+            if (null === $nonce || ! $nonce) {
                 $this->clear();
                 throw \Auth0\SDK\Exception\StateException::missingNonce();
             }
@@ -479,7 +511,7 @@ final class Auth0 implements Auth0Interface
     ): self {
         $this->getState()->setIdToken($idToken);
 
-        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistIdToken()) {
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage() && $this->configuration()->getPersistIdToken()) {
             $this->configuration()->getSessionStorage()->set('idToken', $idToken);
         }
 
@@ -491,7 +523,7 @@ final class Auth0 implements Auth0Interface
     ): self {
         $this->getState()->setUser($user);
 
-        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistUser()) {
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage() && $this->configuration()->getPersistUser()) {
             $this->configuration()->getSessionStorage()->set('user', $user);
         }
 
@@ -503,7 +535,7 @@ final class Auth0 implements Auth0Interface
     ): self {
         $this->getState()->setAccessToken($accessToken);
 
-        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
             $this->configuration()->getSessionStorage()->set('accessToken', $accessToken);
         }
 
@@ -515,7 +547,7 @@ final class Auth0 implements Auth0Interface
     ): self {
         $this->getState()->setRefreshToken($refreshToken);
 
-        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistRefreshToken()) {
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage() && $this->configuration()->getPersistRefreshToken()) {
             $this->configuration()->getSessionStorage()->set('refreshToken', $refreshToken);
         }
 
@@ -527,7 +559,7 @@ final class Auth0 implements Auth0Interface
     ): self {
         $this->getState()->setAccessTokenScope($accessTokenScope);
 
-        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
             $this->configuration()->getSessionStorage()->set('accessTokenScope', $accessTokenScope);
         }
 
@@ -538,8 +570,7 @@ final class Auth0 implements Auth0Interface
         int $accessTokenExpiration
     ): self {
         $this->getState()->setAccessTokenExpiration($accessTokenExpiration);
-
-        if ($this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
             $this->configuration()->getSessionStorage()->set('accessTokenExpiration', $accessTokenExpiration);
         }
 
@@ -601,9 +632,9 @@ final class Auth0 implements Auth0Interface
     /**
      * Create a transient storage handler using the configured transientStorage medium.
      */
-    private function getTransientStore(): TransientStoreHandler
+    private function getTransientStore(bool $reset = false): ?TransientStoreHandler
     {
-        if ($this->transient === null) {
+        if (($this->transient === null || $reset) && ($this->configuration()->usingStatefulness() && null !== $this->configuration()->getTransientStorage())) {
             $this->transient = new TransientStoreHandler($this->configuration()->getTransientStorage());
         }
 
@@ -618,7 +649,7 @@ final class Auth0 implements Auth0Interface
         if ($this->state === null || $reset) {
             $state = [];
 
-            if ($this->configuration()->hasSessionStorage()) {
+            if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage()) {
                 if ($this->configuration()->getPersistUser()) {
                     $state['user'] = $this->configuration()->getSessionStorage()->get('user');
                 }
@@ -660,12 +691,14 @@ final class Auth0 implements Auth0Interface
     private function deferStateSaving(
         bool $deferring = true
     ): self {
-        if ($this->configuration()->hasSessionStorage()) {
-            $this->configuration()->getSessionStorage()->defer($deferring);
-        }
+        if ($this->configuration()->usingStatefulness()) {
+            if ($this->configuration()->hasSessionStorage()) {
+                $this->configuration()->getSessionStorage()->defer($deferring);
+            }
 
-        if ($this->configuration()->hasTransientStorage()) {
-            $this->configuration()->getTransientStorage()->defer($deferring);
+            if ($this->configuration()->hasTransientStorage()) {
+                $this->configuration()->getTransientStorage()->defer($deferring);
+            }
         }
 
         return $this;
