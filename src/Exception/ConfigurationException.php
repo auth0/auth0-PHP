@@ -11,6 +11,7 @@ final class ConfigurationException extends \Exception implements Auth0Exception
 {
     public const MSG_CONFIGURATION_REQUIRED = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
     public const MSG_STRATEGY_REQUIRED = 'The Auth0 SDK requires a `strategy` to be configured';
+    public const MSG_SESSION_REQUIRED = 'Method %s requires a stateful `strategy` with sessions configured.';
 
     public const MSG_VALUE_REQUIRED = '`%s` is not configured';
 
@@ -46,6 +47,13 @@ final class ConfigurationException extends \Exception implements Auth0Exception
         ?\Throwable $previous = null
     ): self {
         return new self(self::MSG_STRATEGY_REQUIRED, 0, $previous);
+    }
+
+    public static function requiresStatefulness(
+        string $methodName,
+        ?\Throwable $previous = null
+    ): self {
+        return new self(sprintf(self::MSG_SESSION_REQUIRED, $methodName), 0, $previous);
     }
 
     public static function requiresDomain(
