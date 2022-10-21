@@ -4,10 +4,9 @@
 
 Authentication with Auth0 for your PHP applications.
 
-[![Packagist](https://img.shields.io/packagist/dt/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-php)
-[![Checks](https://img.shields.io/github/workflow/status/auth0/auth0-php/Analysis)](https://github.com/auth0/auth0-PHP/actions/workflows/analysis.yml?query=branch%3Amain)
+[![Package](https://img.shields.io/packagist/dt/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-php)
+[![Build](https://img.shields.io/github/workflow/status/auth0/auth0-php/Checks)](https://github.com/auth0/auth0-PHP/actions/workflows/checks.yml?query=branch%3Amain)
 [![Coverage](https://img.shields.io/codecov/c/github/auth0/auth0-php)](hhttps://app.codecov.io/gh/auth0/auth0-PHP)
-[![Supported PHP](https://img.shields.io/packagist/php-v/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-PHP)
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
 
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :computer: [API Reference](#api-reference) :speech_balloon: [Feedback](#feedback)
