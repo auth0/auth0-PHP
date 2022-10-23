@@ -141,7 +141,7 @@ final class SdkConfiguration implements ConfigurableContract
         $this->setupStateCookies();
         $this->setupStateFactories();
 
-        if (in_array($this->getStrategy(), self::STRATEGIES_USING_SESSIONS, true)) {
+        if ($this->usingStatefulness()) {
             $this->setupStateStorage();
         }
 
@@ -1135,6 +1135,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         return $this->eventDispatcher;
+    }
+
+    /**
+     * Returns true when the configured `strategy` is 'stateful', meaning it requires an available and configured session.
+     */
+    public function usingStatefulness(): bool
+    {
+        return in_array($this->getStrategy(), self::STRATEGIES_USING_SESSIONS, true);
     }
 
     /**
