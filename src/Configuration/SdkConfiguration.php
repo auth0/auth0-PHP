@@ -52,7 +52,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param array<string>|null             $audience              One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
      * @param array<string>|null             $organization          One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
      * @param bool                           $usePkce               Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests. See https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce
-     * @param array<string>                  $scope                 One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
+     * @param array<string>|null             $scope                 One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
      * @param string                         $responseMode          Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
      * @param string                         $responseType          Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow.
      * @param string                         $tokenAlgorithm        Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
@@ -99,7 +99,7 @@ final class SdkConfiguration implements ConfigurableContract
         private ?array $audience = null,
         private ?array $organization = null,
         private bool $usePkce = true,
-        private array $scope = ['openid', 'profile', 'email'],
+        private ?array $scope = ['openid', 'profile', 'email'],
         private string $responseMode = 'query',
         private string $responseType = 'code',
         private string $tokenAlgorithm = Token::ALGO_RS256,
@@ -768,9 +768,9 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * @param array<string> $scope An array of scopes to request during authentication steps.
      */
-    public function setScope(array $scope = ['openid', 'profile', 'email']): self
+    public function setScope(?array $scope = ['openid', 'profile', 'email']): self
     {
-        if ([] === $scope) {
+        if (null === $scope || [] === $scope) {
             $scope = ['openid', 'profile', 'email'];
         }
 
@@ -783,7 +783,7 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function getScope(): array
     {
-        return $this->scope;
+        return $this->scope ?? ['openid', 'profile', 'email'];
     }
 
     public function hasScope(): bool
@@ -811,7 +811,7 @@ final class SdkConfiguration implements ConfigurableContract
             return $this->scope;
         }
 
-        $this->setScope(array_merge($this->scope, $scopes));
+        $this->setScope(array_merge($this->getScope(), $scopes));
 
         return $this->scope;
     }
@@ -1321,7 +1321,7 @@ final class SdkConfiguration implements ConfigurableContract
             'audience' => fn ($value) => is_array($value) || null === $value,
             'organization' => fn ($value) => is_array($value) || null === $value,
             'usePkce' => fn ($value) => is_bool($value),
-            'scope' => fn ($value) => is_array($value),
+            'scope' => fn ($value) => is_array($value) || null === $value,
             'responseMode' => fn ($value) => is_string($value),
             'responseType' => fn ($value) => is_string($value),
             'tokenAlgorithm' => fn ($value) => is_string($value),
