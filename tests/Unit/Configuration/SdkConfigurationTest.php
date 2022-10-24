@@ -402,6 +402,32 @@ test('scope() successfully converts the array to a string', function(): void
     expect($sdk->formatScope())->toEqual('one two three');
 });
 
+test('scope() successfully reverts to the default values when an empty array is provided', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => MockDomain::valid(),
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+        'scope' => [],
+    ]);
+
+    expect($sdk->getScope())->toEqual(['openid', 'profile', 'email']);
+});
+
+test('scope() successfully reverts to the default values when a null value is provided', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => MockDomain::valid(),
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+        'scope' => null,
+    ]);
+
+    expect($sdk->getScope())->toEqual(['openid', 'profile', 'email']);
+});
+
 test('defaultOrganization() successfully returns the first organization', function(): void
 {
     $sdk = new SdkConfiguration([
