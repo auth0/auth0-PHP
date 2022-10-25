@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.3.6](https://github.com/auth0/auth0-PHP/tree/8.3.6) (2022-10-24)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.5...8.3.6)
+
+**Fixed**
+- fix: Restore previous behavior of SdkConfiguration::setScope() being nullable [\#665](https://github.com/auth0/auth0-PHP/pull/665) ([evansims](https://github.com/evansims))
+
 ## [8.3.5](https://github.com/auth0/auth0-PHP/tree/8.3.5) (2022-10-21)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.4...8.3.5)
 
