@@ -1,6 +1,6 @@
 ![auth0-php](.github/header.png)
 
-PHP SDK for Auth0 Authentication and Management APIs.
+PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 [![Package](https://img.shields.io/packagist/dt/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-php)
 [![Build](https://img.shields.io/github/workflow/status/auth0/auth0-php/Checks)](https://github.com/auth0/auth0-PHP/actions/workflows/checks.yml?query=branch%3Amain)
