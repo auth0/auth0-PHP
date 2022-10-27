@@ -1,4 +1,4 @@
-![auth0-php](.github/header.png)
+![auth0-php](https://cdn.auth0.com/website/sdks/banners/auth0-php-banner.png)
 
 PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
