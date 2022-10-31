@@ -129,6 +129,7 @@ if (HttpResponse::wasSuccessful($response)) {
 
 ```PHP
 use Auth0\SDK\Auth0;
+use Auth0\SDK\Token;
 use Auth0\SDK\Configuration\SdkConfiguration;
 
 $configuration = new SdkConfiguration(
