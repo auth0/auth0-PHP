@@ -224,7 +224,6 @@ final class Verifier
             }
 
             if ($response !== [] && $this->cache !== null) {
-                $item = $this->cache->getItem($jwksCacheKey);
                 $item->set($response);
                 $item->expiresAfter($this->cacheExpires ?? 60);
                 $this->cache->save($item);
