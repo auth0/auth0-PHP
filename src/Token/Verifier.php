@@ -191,11 +191,13 @@ final class Verifier
         $scheme = $jwksUri['scheme'] ?? 'https';
         $path = $jwksUri['path'] ?? '/.well-known/jwks.json';
         $host = $jwksUri['host'] ?? $this->configuration->getDomain() ?? '';
+        $item = null;
 
         $response = [];
 
         if ($this->cache !== null) {
             $item = $this->cache->getItem($jwksCacheKey);
+
             if ($item->isHit()) {
                 /** @var array<mixed> $value */
                 $value = $item->get();
@@ -223,7 +225,7 @@ final class Verifier
                 }
             }
 
-            if ($response !== [] && $this->cache !== null) {
+            if ($response !== [] && $this->cache !== null && $item !== null) {
                 $item->set($response);
                 $item->expiresAfter($this->cacheExpires ?? 60);
                 $this->cache->save($item);
