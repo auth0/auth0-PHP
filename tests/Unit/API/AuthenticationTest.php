@@ -200,6 +200,42 @@ test('emailPasswordlessStart() is properly formatted', function(): void {
     expect($requestBody['send'])->toEqual('code');
 });
 
+test('emailPasswordlessStart() returns authParams with default configured scopes when none are provided', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', 'code');
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = json_decode($request->getBody()->__toString(), false);
+
+    expect($requestBody)->toHaveProperties(['authParams']);
+    expect($requestBody->authParams)->toBeObject()->toHaveProperties(['scope']);
+    expect($requestBody->authParams->scope)->toEqual('scope1 scope2 scope3');
+});
+
+test('emailPasswordlessStart() returns authParams with default configured scopes an empty array is configured', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', 'code', []);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = json_decode($request->getBody()->__toString(), false);
+
+    expect($requestBody)->toHaveProperties(['authParams']);
+    expect($requestBody->authParams)->toBeObject()->toHaveProperties(['scope']);
+    expect($requestBody->authParams->scope)->toEqual('scope1 scope2 scope3');
+});
+
+test('emailPasswordlessStart() returns authParams correctly configured when provided', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', 'code', ['scope' => 'test1 test2']);
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = json_decode($request->getBody()->__toString(), false);
+
+    expect($requestBody)->toHaveProperties(['authParams']);
+    expect($requestBody->authParams)->toBeObject()->toHaveProperties(['scope']);
+    expect($requestBody->authParams->scope)->toEqual('test1 test2');
+});
+
 test('smsPasswordlessStart() throws an ArgumentException if `phoneNumber` is empty', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->smsPasswordlessStart('');

@@ -226,6 +226,7 @@ final class Authentication implements AuthenticationInterface
             [$type, \Auth0\SDK\Exception\ArgumentException::missing('type')],
         ])->isString();
 
+        /** @var array{scope: ?string} $params */
         if ((! isset($params['scope']) || '' === $params['scope']) && $this->configuration->hasScope()) {
             $params['scope'] = $this->configuration->formatScope() ?? '';
         }
@@ -239,6 +240,7 @@ final class Authentication implements AuthenticationInterface
             ],
         ])->array()->trim()[0];
 
+        /** @var array{authParams: ?array<string>} $body */
         if (null !== $body['authParams']) {
             $body['authParams'] = (object) $body['authParams'];
         }
