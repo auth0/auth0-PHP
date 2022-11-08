@@ -201,7 +201,7 @@ final class Authentication implements AuthenticationInterface
         return $this->getHttpClient()
             ->method('post')
             ->addPath('passwordless', 'start')
-            ->withBody(Toolkit::merge([
+            ->withBody((object) Toolkit::merge([
                 'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
                 'client_secret' => $this->configuration->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
             ], $body))
@@ -226,6 +226,10 @@ final class Authentication implements AuthenticationInterface
             [$type, \Auth0\SDK\Exception\ArgumentException::missing('type')],
         ])->isString();
 
+        if ((! isset($params['scope']) || '' === $params['scope']) && $this->configuration->hasScope()) {
+            $params['scope'] = $this->configuration->formatScope() ?? '';
+        }
+
         $body = Toolkit::filter([
             [
                 'email' => $email,
@@ -234,6 +238,10 @@ final class Authentication implements AuthenticationInterface
                 'authParams' => $params,
             ],
         ])->array()->trim()[0];
+
+        if (null !== $body['authParams']) {
+            $body['authParams'] = (object) $body['authParams'];
+        }
 
         /** @var array<mixed> $body */
         /** @var array<int|string> $headers */
