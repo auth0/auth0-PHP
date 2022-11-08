@@ -43,20 +43,20 @@
     "psr/http-message-implementation": "^1.0"
   },
   "require-dev": {
-    "firebase/php-jwt": "^6.2",
+    "firebase/php-jwt": "^6.3",
     "hyperf/event": "^2.2",
     "laravel/pint": "^1.2",
-    "mockery/mockery": "^1.4",
+    "mockery/mockery": "^1.5",
     "nyholm/psr7": "^1.5",
     "pestphp/pest": "^1.21",
     "php-http/mock-client": "^1.5",
-    "phpstan/phpstan": "^1.7",
-    "phpstan/phpstan-strict-rules": "1.4.3",
+    "phpstan/phpstan": "^1.9",
+    "phpstan/phpstan-strict-rules": "^1.4.4",
     "phpunit/phpunit": "^9.5",
-    "rector/rector": "^0.13.6",
+    "rector/rector": "^0.14.7",
     "squizlabs/php_codesniffer": "^3.7",
     "symfony/cache": "^4.4 || ^5.4 || ^6.1",
-    "vimeo/psalm": "^4.24",
+    "vimeo/psalm": "^4.30",
     "wikimedia/composer-merge-plugin": "^2.0"
   },
   "autoload": {
