@@ -4,7 +4,7 @@
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.6...8.3.7)
 
 **Fixed**
-- [SDK-3793] fix: emailPasswordlessStart() incorrectly passes `params` as `array` under some conditions [\#670](https://github.com/auth0/auth0-PHP/pull/670) ([evansims](https://github.com/evansims))
+- fix: emailPasswordlessStart() incorrectly passes `params` as `array` under some conditions [\#670](https://github.com/auth0/auth0-PHP/pull/670) ([evansims](https://github.com/evansims))
 - fix: Remove redundant Cache `getItem()` call in `Auth0\SDK\Token\Verifier::getKeySet()` [\#669](https://github.com/auth0/auth0-PHP/pull/669) ([pkivits-litebit](https://github.com/pkivits-litebit))
 
 ## [8.3.6](https://github.com/auth0/auth0-PHP/tree/8.3.6) (2022-10-24)
