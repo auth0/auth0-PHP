@@ -212,7 +212,7 @@ test('emailPasswordlessStart() returns authParams with default configured scopes
     expect($requestBody->authParams->scope)->toEqual('scope1 scope2 scope3');
 });
 
-test('emailPasswordlessStart() returns authParams with default configured scopes an empty array is configured', function(): void {
+test('emailPasswordlessStart() returns authParams with default configured scopes when an empty array is configured', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', 'code', []);
 
