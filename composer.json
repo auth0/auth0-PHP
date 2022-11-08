@@ -1,6 +1,6 @@
 {
   "name": "auth0/auth0-php",
-  "description": "Auth0 PHP SDK. Straight-forward and tested methods for accessing Auth0 Authentication and Management API endpoints.",
+  "description": "PHP SDK for Auth0 Authentication and Management APIs.",
   "license": "MIT",
   "type": "library",
   "keywords": [
