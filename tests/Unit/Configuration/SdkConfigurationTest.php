@@ -214,12 +214,15 @@ test('a `webapp` strategy is used by default', function(): void
 
 test('a `webapp` strategy requires a domain', function(): void
 {
-    $sdk = new SdkConfiguration();
+    $sdk = new SdkConfiguration([
+        'cookieSecret' => uniqid(),
+    ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `webapp` strategy requires a client id', function(): void
 {
     $sdk = new SdkConfiguration([
+        'cookieSecret' => uniqid(),
         'domain' => MockDomain::valid()
     ]);
 })->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
@@ -227,6 +230,7 @@ test('a `webapp` strategy requires a client id', function(): void
 test('a `webapp` strategy requires a client secret when HS256 is used', function(): void
 {
     $sdk = new SdkConfiguration([
+        'cookieSecret' => uniqid(),
         'domain' => MockDomain::valid(),
         'clientId' => uniqid(),
         'tokenAlgorithm' => 'HS256'
