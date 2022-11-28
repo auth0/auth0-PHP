@@ -43,6 +43,7 @@
     "psr/http-message-implementation": "^1.0"
   },
   "require-dev": {
+    "ergebnis/composer-normalize": "^2.28",
     "firebase/php-jwt": "^6.3",
     "hyperf/event": "^2.2",
     "laravel/pint": "^1.2",
@@ -59,6 +60,7 @@
     "vimeo/psalm": "^4.30",
     "wikimedia/composer-merge-plugin": "^2.0"
   },
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "Auth0\\SDK\\": "src/"
@@ -81,5 +83,21 @@
     "optimize-autoloader": true,
     "sort-packages": true
   },
-  "prefer-stable": true
+  "scripts": {
+    "phpstan": "@php vendor/bin/phpstan analyse",
+    "pint": "@php vendor/bin/pint --test",
+    "pint:fix": "@php vendor/bin/pint",
+    "psalm": "@php vendor/bin/psalm",
+    "psalm:fix": "@php vendor/bin/psalter --issues=all",
+    "rector": "@php vendor/bin/rector process src --dry-run",
+    "rector:fix": "@php vendor/bin/rector process src",
+    "pest": "@php vendor/bin/pest --order-by random",
+    "test": [
+      "@phpstan",
+      "@psalm",
+      "@rector",
+      "@pint",
+      "@pest"
+    ]
+  }
 }
