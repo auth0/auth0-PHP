@@ -70,6 +70,10 @@ class TokenGenerator
 
         $privateKeyResource = openssl_pkey_new($config);
 
+        if ($privateKeyResource === false) {
+            throw new RuntimeException("OpenSSL reported an error: " . self::getOpenSslError());
+        }
+
         $export = openssl_pkey_export($privateKeyResource, $privateKey);
 
         if ($export === false) {
@@ -97,6 +101,10 @@ class TokenGenerator
         ];
 
         $privateKeyResource = openssl_pkey_new($config);
+
+        if ($privateKeyResource === false) {
+            throw new RuntimeException("OpenSSL reported an error: " . self::getOpenSslError());
+        }
 
         $export = openssl_pkey_export($privateKeyResource, $privateKey);
 
