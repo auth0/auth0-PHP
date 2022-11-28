@@ -94,30 +94,35 @@ final class Auth0 implements Auth0Interface
         ?string $redirectUrl = null,
         ?array $params = null
     ): string {
-        if (! $this->configuration()->usingStatefulness()) {
+        $this->deferStateSaving();
+
+        $store = $this->getTransientStore(true);
+
+        if (! $this->configuration()->usingStatefulness() || ! $store instanceof TransientStoreHandler) {
             throw ConfigurationException::requiresStatefulness('Auth0->login()');
         }
 
-        $this->deferStateSaving();
-
-        $store = $this->getTransientStore();
-        $params = $params ?? [];
-        $state = $params['state'] ?? $store?->issue('state') ?? uniqid();
-        $params['nonce'] = $params['nonce'] ?? $store?->issue('nonce') ?? uniqid();
-        $params['max_age'] = $params['max_age'] ?? $this->configuration()->getTokenMaxAge();
-
-        unset($params['state']);
+        $params ??= [];
+        $state = $params['state'] ?? $store->getNonce();
+        $params['nonce'] ??= $store->getNonce();
+        $params['max_age'] ??= $this->configuration()->getTokenMaxAge();
 
         if ($this->configuration()->getUsePkce()) {
             $codeVerifier = PKCE::generateCodeVerifier(128);
             $params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
             $params['code_challenge_method'] = 'S256';
-            $store?->store('code_verifier', $codeVerifier);
+
+            $store->store('code_verifier', $codeVerifier);
         }
 
-        if ($params['max_age'] !== null) {
-            $store?->store('max_age', (string) $params['max_age']);
+        $store->store('state', (string) $state);
+        $store->store('nonce', (string) $params['nonce']);
+
+        if (null !== $params['max_age']) {
+            $store->store('max_age', (string) $params['max_age']);
         }
+
+        unset($params['state']);
 
         $this->deferStateSaving(false);
 
@@ -215,9 +220,10 @@ final class Auth0 implements Auth0Interface
         ?int $tokenType = null
     ): TokenInterface {
         $store = $this->getTransientStore();
-        $tokenType = $tokenType ?? Token::TYPE_ID_TOKEN;
-        $tokenNonce = $tokenNonce ?? $store?->getOnce('nonce') ?? null;
-        $tokenMaxAge = $tokenMaxAge ?? $store?->getOnce('max_age') ?? null;
+
+        $tokenType ??= Token::TYPE_ID_TOKEN;
+        $tokenNonce ??= $store?->getOnce('nonce') ?? null;
+        $tokenMaxAge ??= $store?->getOnce('max_age') ?? null;
         $tokenIssuer = null;
 
         $token = new Token($this->configuration, $token, $tokenType);
@@ -239,9 +245,9 @@ final class Auth0 implements Auth0Interface
         );
 
         // Ensure transient-stored values are cleared, even if overriding values were passed to the  method.
-        if ($this->configuration()->usingStatefulness()) {
-            $store?->delete('max_age');
-            $store?->delete('nonce');
+        if ($this->configuration()->usingStatefulness() && $store instanceof TransientStoreHandler) {
+            $store->delete('max_age');
+            $store->delete('nonce');
         }
 
         return $token;
@@ -252,45 +258,41 @@ final class Auth0 implements Auth0Interface
         ?string $code = null,
         ?string $state = null
     ): bool {
-        if (! $this->configuration()->usingStatefulness()) {
+        $store = $this->getTransientStore();
+
+        if (! $this->configuration()->usingStatefulness() || ! $store instanceof TransientStoreHandler) {
             throw ConfigurationException::requiresStatefulness('Auth0->exchange()');
         }
 
         [$redirectUri, $code, $state] = Toolkit::filter([$redirectUri, $code, $state])->string()->trim();
 
-        $code = $code ?? $this->getRequestParameter('code');
-        $state = $state ?? $this->getRequestParameter('state');
-
-        $store = $this->getTransientStore();
-        $codeVerifier = $store?->getOnce('code_verifier');
-        $nonce = $store?->isset('nonce');
-        $stateVerified = null;
-
-        if (null !== $state) {
-            $stateVerified = $store?->verify('state', $state) ?? false;
-        }
+        $code ??= $this->getRequestParameter('code');
+        $state ??= $this->getRequestParameter('state');
+        $pkce = $store->getOnce('code_verifier');
+        $nonce = $store->isset('nonce');
+        $verified = (null !== $state ? $store->verify('state', $state) : false);
 
         $user = null;
 
         $this->clear(false);
         $this->deferStateSaving();
 
-        if ($code === null) {
+        if (null === $code) {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::missingCode();
         }
 
-        if ($state === null || ! $stateVerified) {
+        if (null === $state || ! $verified) {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::invalidState();
         }
 
-        if ($this->configuration()->getUsePkce() && $codeVerifier === null) {
+        if (null === $pkce && $this->configuration()->getUsePkce()) {
             $this->clear();
             throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
         }
 
-        $response = $this->authentication()->codeExchange($code, $redirectUri, $codeVerifier);
+        $response = $this->authentication()->codeExchange($code, $redirectUri, $pkce);
 
         if (! HttpResponse::wasSuccessful($response)) {
             $this->clear();
@@ -300,6 +302,21 @@ final class Auth0 implements Auth0Interface
         $response = HttpResponse::decodeContent($response);
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
+
+        if (isset($response['id_token'])) {
+            if (! $nonce) {
+                $this->clear();
+                throw \Auth0\SDK\Exception\StateException::missingNonce();
+            }
+
+            try {
+                $user = $this->decode($response['id_token'])->toArray();
+                $this->setIdToken($response['id_token']);
+            } catch (\Throwable $tokenException) {
+                $this->clear();
+                throw $tokenException;
+            }
+        }
 
         if (! isset($response['access_token']) || trim($response['access_token']) === '') {
             $this->clear();
@@ -314,16 +331,6 @@ final class Auth0 implements Auth0Interface
 
         if (isset($response['refresh_token'])) {
             $this->setRefreshToken($response['refresh_token']);
-        }
-
-        if (isset($response['id_token'])) {
-            if (null === $nonce || ! $nonce) {
-                $this->clear();
-                throw \Auth0\SDK\Exception\StateException::missingNonce();
-            }
-
-            $this->setIdToken($response['id_token']);
-            $user = $this->decode($response['id_token'])->toArray();
         }
 
         if (isset($response['expires_in']) && is_numeric($response['expires_in'])) {
