@@ -21,12 +21,12 @@ final class MemoryStore implements StoreInterface
     /**
      * Store value in memory.
      *
-     * @param string $key   Session key to set.
-     * @param mixed  $value Value to use.
+     * @param  string  $key  session key to set
+     * @param  mixed  $value  value to use
      */
     public function set(
         string $key,
-        $value
+        $value,
     ): void {
         $this->data[$key] = $value;
     }
@@ -35,14 +35,13 @@ final class MemoryStore implements StoreInterface
      * Return value from memory.
      * If the value is not set, returns $default.
      *
-     * @param string $key     Session key to set.
-     * @param mixed  $default Default to return if nothing was found.
-     *
+     * @param  string  $key  session key to set
+     * @param  mixed  $default  default to return if nothing was found
      * @return mixed
      */
     public function get(
         string $key,
-        $default = null
+        $default = null,
     ) {
         if (\array_key_exists($key, $this->data)) {
             return $this->data[$key];
@@ -54,10 +53,10 @@ final class MemoryStore implements StoreInterface
     /**
      * Removes a value identified by $key from memory.
      *
-     * @param string $key Key of value to remove.
+     * @param  string  $key  key of value to remove
      */
     public function delete(
-        string $key
+        string $key,
     ): void {
         unset($this->data[$key]);
     }
@@ -73,12 +72,12 @@ final class MemoryStore implements StoreInterface
     /**
      * This has no effect when using memory as a storage medium.
      *
-     * @param bool $deferring Whether to defer persisting the storage state.
+     * @param  bool  $deferring  whether to defer persisting the storage state
      *
      * @codeCoverageIgnore
      */
     public function defer(
-        bool $deferring = true
+        bool $deferring = true,
     ): void {
     }
 }

@@ -13,7 +13,7 @@ final class Delete implements Auth0Event
 
     public function __construct(
         private StoreInterface $store,
-        private string $key
+        private string $key,
     ) {
     }
 
@@ -33,9 +33,10 @@ final class Delete implements Auth0Event
     }
 
     public function setSuccess(
-        ?bool $success
+        ?bool $success,
     ): self {
         $this->success = $success;
+
         return $this;
     }
 }

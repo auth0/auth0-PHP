@@ -10,7 +10,7 @@ use Auth0\SDK\Contract\StoreInterface;
 final class Destruct implements Auth0Event
 {
     public function __construct(
-        private StoreInterface $store
+        private StoreInterface $store,
     ) {
     }
 

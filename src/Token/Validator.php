@@ -14,34 +14,34 @@ final class Validator implements ValidatorInterface
     /**
      * Constructor for the Token Validator class.
      *
-     * @param array<string,array<int|string>|int|string> $claims Array representing the claims of a JWT.
+     * @param  array<string,array<int|string>|int|string>  $claims  array representing the claims of a JWT
      */
     public function __construct(
-        private array $claims
+        private array $claims,
     ) {
     }
 
     /**
      * Validate the 'aud' claim.
      *
-     * @param array<string> $expects An array of allowed values for the 'aud' claim. Successful if ANY match.
+     * @param  array<string>  $expects  An array of allowed values for the 'aud' claim. Successful if ANY match.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function audience(
-        array $expects
+        array $expects,
     ): self {
         $audience = $this->getClaim('aud');
 
-        if ($audience === null) {
+        if (null === $audience) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingAudienceClaim();
         }
 
-        if (! is_array($audience)) {
-            $audience = [ $audience ];
+        if (! \is_array($audience)) {
+            $audience = [$audience];
         }
 
-        if (array_intersect($audience, $expects) !== []) {
+        if ([] !== array_intersect($audience, $expects)) {
             return $this;
         }
 
@@ -51,21 +51,21 @@ final class Validator implements ValidatorInterface
     /**
      * Validate the 'auth_time' claim.
      *
-     * @param int      $maxAge Maximum window of time in seconds since the 'auth_time' to accept the token.
-     * @param int      $leeway Leeway in seconds to allow during time calculations.
-     * @param int|null $now    Optional. Unix timestamp representing the current point in time to use for time calculations.
+     * @param  int  $maxAge  maximum window of time in seconds since the 'auth_time' to accept the token
+     * @param  int  $leeway  leeway in seconds to allow during time calculations
+     * @param  int|null  $now  Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function authTime(
         int $maxAge,
         int $leeway = 60,
-        ?int $now = null
+        ?int $now = null,
     ): self {
         $authTime = $this->getClaim('auth_time');
         $now ??= time();
 
-        if ($authTime === null || ! is_numeric($authTime)) {
+        if (null === $authTime || ! is_numeric($authTime)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingAuthTimeClaim();
         }
 
@@ -81,27 +81,27 @@ final class Validator implements ValidatorInterface
     /**
      * Validate the 'azp' claim.
      *
-     * @param array<string> $expects An array of allowed values for the 'azp' claim. Successful if ANY match.
+     * @param  array<string>  $expects  An array of allowed values for the 'azp' claim. Successful if ANY match.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function authorizedParty(
-        array $expects
+        array $expects,
     ): self {
         $audience = $this->getClaim('aud');
 
-        if ($audience === null) {
+        if (null === $audience) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingAudienceClaim();
         }
 
-        if (is_array($audience)) {
+        if (\is_array($audience)) {
             $azp = $this->getClaim('azp');
 
-            if ($azp === null || ! is_string($azp)) {
+            if (null === $azp || ! \is_string($azp)) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::missingAzpClaim();
             }
 
-            if (! in_array($azp, $expects, true)) {
+            if (! \in_array($azp, $expects, true)) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedAzpClaim(implode(', ', $expects), $azp);
             }
         }
@@ -112,19 +112,19 @@ final class Validator implements ValidatorInterface
     /**
      * Validate the 'exp' claim.
      *
-     * @param int      $leeway Leeway in seconds to allow during time calculations.
-     * @param int|null $now    Optional. Unix timestamp representing the current point in time to use for time calculations.
+     * @param  int  $leeway  leeway in seconds to allow during time calculations
+     * @param  int|null  $now  Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function expiration(
         int $leeway = 60,
-        ?int $now = null
+        ?int $now = null,
     ): self {
         $expires = $this->getClaim('exp');
-        $now = $now ?? time();
+        $now ??= time();
 
-        if ($expires === null || ! is_numeric($expires)) {
+        if (null === $expires || ! is_numeric($expires)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingExpClaim();
         }
 
@@ -140,13 +140,13 @@ final class Validator implements ValidatorInterface
     /**
      * Validate the 'iat' claim is present.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function issued(): self
     {
         $issued = $this->getClaim('iat');
 
-        if ($issued === null) {
+        if (null === $issued) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingIatClaim();
         }
 
@@ -156,16 +156,16 @@ final class Validator implements ValidatorInterface
     /**
      * Validate the 'iss' claim.
      *
-     * @param string $expects The value to compare with the claim.
+     * @param  string  $expects  the value to compare with the claim
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function issuer(
-        string $expects
+        string $expects,
     ): self {
         $claim = $this->getClaim('iss');
 
-        if ($claim === null || ! is_string($claim)) {
+        if (null === $claim || ! \is_string($claim)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingIssClaim();
         }
 
@@ -179,16 +179,16 @@ final class Validator implements ValidatorInterface
     /**
      * Validate the 'nonce' claim.
      *
-     * @param string $expects The value to compare with the claim.
+     * @param  string  $expects  the value to compare with the claim
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function nonce(
-        string $expects
+        string $expects,
     ): self {
         $claim = $this->getClaim('nonce');
 
-        if ($claim === null || ! is_string($claim)) {
+        if (null === $claim || ! \is_string($claim)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingNonceClaim();
         }
 
@@ -202,20 +202,20 @@ final class Validator implements ValidatorInterface
     /**
      * Validate the 'org_id' claim.
      *
-     * @param array<string> $expects An array of allowed values for the 'org_id' claim. Successful if ANY match.
+     * @param  array<string>  $expects  An array of allowed values for the 'org_id' claim. Successful if ANY match.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function organization(
-        array $expects
+        array $expects,
     ): self {
         $claim = $this->getClaim('org_id');
 
-        if ($claim === null || ! is_string($claim)) {
+        if (null === $claim || ! \is_string($claim)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingOrgIdClaim();
         }
 
-        if (! in_array($claim, $expects, true)) {
+        if (! \in_array($claim, $expects, true)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::mismatchedOrgIdClaim(implode(', ', $expects), $claim);
         }
 
@@ -225,13 +225,13 @@ final class Validator implements ValidatorInterface
     /**
      * Validate the 'sub' claim is present.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When claim validation fails.
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
      */
     public function subject(): self
     {
         $claim = $this->getClaim('sub');
 
-        if ($claim === null) {
+        if (null === $claim) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingSubClaim();
         }
 
@@ -241,12 +241,11 @@ final class Validator implements ValidatorInterface
     /**
      * Return a claim by it's key. Null if not present.
      *
-     * @param string $key The claim key to search for.
-     *
+     * @param  string  $key  the claim key to search for
      * @return array<mixed>|int|string|null
      */
     private function getClaim(
-        string $key
+        string $key,
     ) {
         if (! isset($this->claims[$key])) {
             return null;

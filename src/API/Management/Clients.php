@@ -13,14 +13,14 @@ use Psr\Http\Message\ResponseInterface;
  * Class Clients.
  * Handles requests to the Clients endpoint of the v2 Management API.
  *
- * @link https://auth0.com/docs/api/management/v2#!/Clients
+ * @see https://auth0.com/docs/api/management/v2#!/Clients
  */
 final class Clients extends ManagementEndpoint implements ClientsInterface
 {
     public function create(
         string $name,
         ?array $body = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$name] = Toolkit::filter([$name])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -29,39 +29,39 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
             [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
         ])->isString();
 
-        /** @var array<mixed> $body */
+        /* @var array<mixed> $body */
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('clients')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('clients')->
+            withBody(
                 (object) Toolkit::merge([
                     'name' => $name,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
+                ], $body),
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function getAll(
         ?array $parameters = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        /** @var array<int|string|null> $parameters */
+        /* @var array<int|string|null> $parameters */
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('clients')
-            ->withParams($parameters)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('clients')->
+            withParams($parameters)->
+            withOptions($options)->
+            call();
     }
 
     public function get(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -69,17 +69,17 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('clients', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('clients', $id)->
+            withOptions($options)->
+            call();
     }
 
     public function update(
         string $id,
         ?array $body = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -88,17 +88,17 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('clients', $id)
-            ->withBody($body ?? [])
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('patch')->
+            addPath('clients', $id)->
+            withBody($body ?? [])->
+            withOptions($options)->
+            call();
     }
 
     public function delete(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -106,10 +106,10 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('clients', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('clients', $id)->
+            withOptions($options)->
+            call();
     }
 }

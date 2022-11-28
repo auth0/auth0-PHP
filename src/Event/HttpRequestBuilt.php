@@ -10,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
 final class HttpRequestBuilt implements Auth0Event
 {
     public function __construct(
-        private RequestInterface $httpRequest
+        private RequestInterface $httpRequest,
     ) {
     }
 
@@ -20,9 +20,10 @@ final class HttpRequestBuilt implements Auth0Event
     }
 
     public function set(
-        RequestInterface $httpRequest
+        RequestInterface $httpRequest,
     ): self {
         $this->httpRequest = $httpRequest;
+
         return $this;
     }
 }

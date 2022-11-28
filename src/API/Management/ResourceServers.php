@@ -13,14 +13,14 @@ use Psr\Http\Message\ResponseInterface;
  * Class ResourceServers.
  * Handles requests to the Resource Servers endpoint of the v2 Management API.
  *
- * @link https://auth0.com/docs/api/management/v2#!/Resource_Servers
+ * @see https://auth0.com/docs/api/management/v2#!/Resource_Servers
  */
 final class ResourceServers extends ManagementEndpoint implements ResourceServersInterface
 {
     public function create(
         string $identifier,
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$identifier] = Toolkit::filter([$identifier])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -33,33 +33,33 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        /** @var array<mixed> $body */
+        /* @var array<mixed> $body */
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('resource-servers')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('resource-servers')->
+            withBody(
                 (object) Toolkit::merge([
                     'identifier' => $identifier,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
+                ], $body),
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function getAll(
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('resource-servers')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('resource-servers')->
+            withOptions($options)->
+            call();
     }
 
     public function get(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -67,17 +67,17 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('resource-servers', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('resource-servers', $id)->
+            withOptions($options)->
+            call();
     }
 
     public function update(
         string $id,
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -90,17 +90,17 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('resource-servers', $id)
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('patch')->
+            addPath('resource-servers', $id)->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
     }
 
     public function delete(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -108,10 +108,10 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('resource-servers', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('resource-servers', $id)->
+            withOptions($options)->
+            call();
     }
 }

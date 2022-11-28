@@ -12,7 +12,7 @@ final class Clear implements Auth0Event
     private ?bool $success = null;
 
     public function __construct(
-        private StoreInterface $store
+        private StoreInterface $store,
     ) {
     }
 
@@ -27,9 +27,10 @@ final class Clear implements Auth0Event
     }
 
     public function setSuccess(
-        ?bool $success
+        ?bool $success,
     ): self {
         $this->success = $success;
+
         return $this;
     }
 }

@@ -13,13 +13,13 @@ use Psr\Http\Message\ResponseInterface;
  * Class Actions.
  * Handles requests to the Actions endpoint of the v2 Management API.
  *
- * @link https://auth0.com/docs/api/management/v2#!/Actions
+ * @see https://auth0.com/docs/api/management/v2#!/Actions
  */
 final class Actions extends ManagementEndpoint implements ActionsInterface
 {
     public function create(
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$body] = Toolkit::filter([$body])->array()->trim();
 
@@ -27,33 +27,33 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('actions', 'actions')
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('actions', 'actions')->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
     }
 
     public function getAll(
         ?array $parameters = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        /** @var array<int|string|null> $parameters */
+        /* @var array<int|string|null> $parameters */
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'actions')
-            ->withParams($parameters)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('actions', 'actions')->
+            withParams($parameters)->
+            withOptions($options)->
+            call();
     }
 
     public function get(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -61,17 +61,17 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'actions', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('actions', 'actions', $id)->
+            withOptions($options)->
+            call();
     }
 
     public function update(
         string $id,
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -84,18 +84,18 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('actions', 'actions', $id)
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('patch')->
+            addPath('actions', 'actions', $id)->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
     }
 
     public function delete(
         string $id,
         ?bool $force = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -109,19 +109,19 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             ],
         ])->array()->trim()[0];
 
-        /** @var array<int|string|null> $params */
+        /* @var array<int|string|null> $params */
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('actions', 'actions', $id)
-            ->withParams($params)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('actions', 'actions', $id)->
+            withParams($params)->
+            withOptions($options)->
+            call();
     }
 
     public function deploy(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -129,17 +129,17 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('actions', $id, 'deploy')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('actions', $id, 'deploy')->
+            withOptions($options)->
+            call();
     }
 
     public function test(
         string $id,
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -152,18 +152,18 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('actions', 'actions', $id, 'test')
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('actions', 'actions', $id, 'test')->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
     }
 
     public function getVersion(
         string $id,
         string $actionId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $actionId] = Toolkit::filter([$id, $actionId])->string()->trim();
 
@@ -172,16 +172,16 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$actionId, \Auth0\SDK\Exception\ArgumentException::missing('actionId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', $actionId, 'versions', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('actions', $actionId, 'versions', $id)->
+            withOptions($options)->
+            call();
     }
 
     public function getVersions(
         string $actionId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$actionId] = Toolkit::filter([$actionId])->string()->trim();
 
@@ -189,17 +189,17 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$actionId, \Auth0\SDK\Exception\ArgumentException::missing('actionId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', $actionId, 'versions')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('actions', $actionId, 'versions')->
+            withOptions($options)->
+            call();
     }
 
     public function rollbackVersion(
         string $id,
         string $actionId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$actionId, $id] = Toolkit::filter([$actionId, $id])->string()->trim();
 
@@ -208,26 +208,26 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('actions', $actionId, 'versions', $id, 'deploy')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('actions', $actionId, 'versions', $id, 'deploy')->
+            withOptions($options)->
+            call();
     }
 
     public function getTriggers(
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'triggers')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('actions', 'triggers')->
+            withOptions($options)->
+            call();
     }
 
     public function getTriggerBindings(
         string $triggerId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$triggerId] = Toolkit::filter([$triggerId])->string()->trim();
 
@@ -235,17 +235,17 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$triggerId, \Auth0\SDK\Exception\ArgumentException::missing('triggerId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'triggers', $triggerId, 'bindings')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('actions', 'triggers', $triggerId, 'bindings')->
+            withOptions($options)->
+            call();
     }
 
     public function updateTriggerBindings(
         string $triggerId,
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$triggerId] = Toolkit::filter([$triggerId])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -258,17 +258,17 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('actions', 'triggers', $triggerId, 'bindings')
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('patch')->
+            addPath('actions', 'triggers', $triggerId, 'bindings')->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
     }
 
     public function getExecution(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -276,10 +276,10 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'executions', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('actions', 'executions', $id)->
+            withOptions($options)->
+            call();
     }
 }

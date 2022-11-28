@@ -17,25 +17,25 @@ final class PaginatedRequest
     /**
      * PaginatedRequest constructor.
      *
-     * @param int|null  $page          Page index of the results to return. First page is 0.
-     * @param int|null  $perPage       Number of results per page. Paging is disabled if parameter not set.
-     * @param bool|null $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+     * @param  int|null  $page  Page index of the results to return. First page is 0.
+     * @param  int|null  $perPage  Number of results per page. Paging is disabled if parameter not set.
+     * @param  bool|null  $includeTotals  return results inside an object that contains the total result count (true) or as a direct array of results (false, default)
      */
     public function __construct(
         private ?int $page = null,
         private ?int $perPage = null,
         private ?bool $includeTotals = null,
-        private ?string $from = null
+        private ?string $from = null,
     ) {
     }
 
     /**
      * Set the `page` for the paginated request.
      *
-     * @param int $page Value of `page` parameter for the paginated request.
+     * @param  int  $page  value of `page` parameter for the paginated request
      */
     public function setPage(
-        int $page
+        int $page,
     ): self {
         $this->page = $page;
 
@@ -53,10 +53,10 @@ final class PaginatedRequest
     /**
      * Set the `per_page` for the paginated request.
      *
-     * @param int $perPage Value of `per_page` parameter for the paginated request.
+     * @param  int  $perPage  value of `per_page` parameter for the paginated request
      */
     public function setPerPage(
-        int $perPage
+        int $perPage,
     ): self {
         $this->perPage = $perPage;
 
@@ -74,10 +74,10 @@ final class PaginatedRequest
     /**
      * Set the `from` for the checkpoint-paginated request.
      *
-     * @param string $from Value of `from` parameter for the checkpoint-paginated request.
+     * @param  string  $from  value of `from` parameter for the checkpoint-paginated request
      */
     public function setFrom(
-        string $from
+        string $from,
     ): self {
         $this->from = $from;
 
@@ -95,10 +95,10 @@ final class PaginatedRequest
     /**
      * Set the `take` for the paginated request.
      *
-     * @param int $take Value of `take` parameter for the checkpoint-paginated request.
+     * @param  int  $take  value of `take` parameter for the checkpoint-paginated request
      */
     public function setTake(
-        int $take
+        int $take,
     ): self {
         $this->take = $take;
 
@@ -116,10 +116,10 @@ final class PaginatedRequest
     /**
      * Set the `include_totals` for the paginated request.
      *
-     * @param ?bool $includeTotals Value of `include_totals` parameter for the paginated request.
+     * @param  ?bool  $includeTotals  value of `include_totals` parameter for the paginated request
      */
     public function setIncludeTotals(
-        ?bool $includeTotals
+        ?bool $includeTotals,
     ): self {
         $this->includeTotals = $includeTotals;
 
@@ -144,26 +144,26 @@ final class PaginatedRequest
         $response = [];
 
         // Are we using checkpoint pagination's ?take param?
-        if ($this->take !== null) {
+        if (null !== $this->take) {
             $response['take'] = $this->take;
         }
 
         // Are we using checkpoint pagination's ?from param?
-        if ($this->from !== null) {
+        if (null !== $this->from) {
             $response['from'] = $this->from;
 
             // Treat per_page as take for checkpoint pagination when a 'take' value isn't provided.
-            if ($this->take === null && $this->perPage !== null) {
+            if (null === $this->take && null !== $this->perPage) {
                 $response['take'] = $this->perPage;
             }
         }
 
         // If we aren't using checkpoint pagination, and have set per_page ...
-        if ($this->take === null && $this->from === null && $this->perPage !== null) {
+        if (null === $this->take && null === $this->from && null !== $this->perPage) {
             $response['page'] = $this->page ?? 0;
             $response['per_page'] = $this->perPage;
 
-            if ($this->includeTotals !== null) {
+            if (null !== $this->includeTotals) {
                 $response['include_totals'] = $this->includeTotals ? 'true' : 'false';
             }
         }

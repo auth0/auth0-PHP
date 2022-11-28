@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  * Organizations
  * Handles requests to the Organizations endpoints of the v2 Management API.
  *
- * @link https://auth0.com/docs/api/management/v2#!/Organizations
+ * @see https://auth0.com/docs/api/management/v2#!/Organizations
  */
 final class Organizations extends ManagementEndpoint implements OrganizationsInterface
 {
@@ -23,7 +23,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?array $branding = null,
         ?array $metadata = null,
         ?array $body = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$name, $displayName] = Toolkit::filter([$name, $displayName])->string()->trim();
         [$branding, $metadata, $body] = Toolkit::filter([$branding, $metadata, $body])->array()->trim();
@@ -34,36 +34,36 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$displayName, \Auth0\SDK\Exception\ArgumentException::missing('displayName')],
         ])->isString();
 
-        /** @var array<mixed> $body */
+        /* @var array<mixed> $body */
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('organizations')->
+            withBody(
                 (object) Toolkit::merge([
-                    'name' => $name,
+                    'name'         => $name,
                     'display_name' => $displayName,
-                    'branding' => $branding,
-                    'metadata' => $metadata,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
+                    'branding'     => $branding,
+                    'metadata'     => $metadata,
+                ], $body),
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function getAll(
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations')->
+            withOptions($options)->
+            call();
     }
 
     public function get(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -71,16 +71,16 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations', $id)->
+            withOptions($options)->
+            call();
     }
 
     public function getByName(
         string $name,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$name] = Toolkit::filter([$name])->string()->trim();
 
@@ -88,11 +88,11 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', 'name', $name)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations', 'name', $name)->
+            withOptions($options)->
+            call();
     }
 
     public function update(
@@ -102,7 +102,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?array $branding = null,
         ?array $metadata = null,
         ?array $body = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $name, $displayName] = Toolkit::filter([$id, $name, $displayName])->string()->trim();
         [$branding, $metadata, $body] = Toolkit::filter([$branding, $metadata, $body])->array()->trim();
@@ -113,26 +113,26 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$displayName, \Auth0\SDK\Exception\ArgumentException::missing('displayName')],
         ])->isString();
 
-        /** @var array<mixed> $body */
+        /* @var array<mixed> $body */
 
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('organizations', $id)
-            ->withBody(
+        return $this->getHttpClient()->
+            method('patch')->
+            addPath('organizations', $id)->
+            withBody(
                 (object) Toolkit::merge([
-                    'name' => $name,
+                    'name'         => $name,
                     'display_name' => $displayName,
-                    'branding' => $branding,
-                    'metadata' => $metadata,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
+                    'branding'     => $branding,
+                    'metadata'     => $metadata,
+                ], $body),
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function delete(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -140,18 +140,18 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('organizations', $id)->
+            withOptions($options)->
+            call();
     }
 
     public function addEnabledConnection(
         string $id,
         string $connectionId,
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $connectionId] = Toolkit::filter([$id, $connectionId])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -165,23 +165,23 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        /** @var array<mixed> $body */
+        /* @var array<mixed> $body */
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations', $id, 'enabled_connections')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('organizations', $id, 'enabled_connections')->
+            withBody(
                 (object) Toolkit::merge([
                     'connection_id' => $connectionId,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
+                ], $body),
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function getEnabledConnections(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -189,17 +189,17 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'enabled_connections')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations', $id, 'enabled_connections')->
+            withOptions($options)->
+            call();
     }
 
     public function getEnabledConnection(
         string $id,
         string $connectionId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $connectionId] = Toolkit::filter([$id, $connectionId])->string()->trim();
 
@@ -208,18 +208,18 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$connectionId, \Auth0\SDK\Exception\ArgumentException::missing('connectionId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations', $id, 'enabled_connections', $connectionId)->
+            withOptions($options)->
+            call();
     }
 
     public function updateEnabledConnection(
         string $id,
         string $connectionId,
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $connectionId] = Toolkit::filter([$id, $connectionId])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -229,18 +229,18 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$connectionId, \Auth0\SDK\Exception\ArgumentException::missing('connectionId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('patch')->
+            addPath('organizations', $id, 'enabled_connections', $connectionId)->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
     }
 
     public function removeEnabledConnection(
         string $id,
         string $connectionId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $connectionId] = Toolkit::filter([$id, $connectionId])->string()->trim();
 
@@ -249,17 +249,17 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$connectionId, \Auth0\SDK\Exception\ArgumentException::missing('connectionId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('organizations', $id, 'enabled_connections', $connectionId)->
+            withOptions($options)->
+            call();
     }
 
     public function addMembers(
         string $id,
         array $members,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
         [$members] = Toolkit::filter([$members])->array()->trim();
@@ -272,21 +272,21 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$members, \Auth0\SDK\Exception\ArgumentException::missing('members')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations', $id, 'members')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('organizations', $id, 'members')->
+            withBody(
                 (object) [
                     'members' => $members,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
+                ],
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function getMembers(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -294,17 +294,17 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'members')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations', $id, 'members')->
+            withOptions($options)->
+            call();
     }
 
     public function removeMembers(
         string $id,
         array $members,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
         [$members] = Toolkit::filter([$members])->array()->trim();
@@ -317,23 +317,23 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$members, \Auth0\SDK\Exception\ArgumentException::missing('members')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id, 'members')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('organizations', $id, 'members')->
+            withBody(
                 (object) [
                     'members' => $members,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
+                ],
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function addMemberRoles(
         string $id,
         string $userId,
         array $roles,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $userId] = Toolkit::filter([$id, $userId])->string()->trim();
         [$roles] = Toolkit::filter([$roles])->array()->trim();
@@ -347,22 +347,22 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$roles, \Auth0\SDK\Exception\ArgumentException::missing('roles')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations', $id, 'members', $userId, 'roles')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('organizations', $id, 'members', $userId, 'roles')->
+            withBody(
                 (object) [
                     'roles' => $roles,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
+                ],
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function getMemberRoles(
         string $id,
         string $userId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $userId] = Toolkit::filter([$id, $userId])->string()->trim();
 
@@ -371,18 +371,18 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'members', $userId, 'roles')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations', $id, 'members', $userId, 'roles')->
+            withOptions($options)->
+            call();
     }
 
     public function removeMemberRoles(
         string $id,
         string $userId,
         array $roles,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $userId] = Toolkit::filter([$id, $userId])->string()->trim();
         [$roles] = Toolkit::filter([$roles])->array()->trim();
@@ -396,16 +396,16 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$roles, \Auth0\SDK\Exception\ArgumentException::missing('roles')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id, 'members', $userId, 'roles')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('organizations', $id, 'members', $userId, 'roles')->
+            withBody(
                 (object) [
                     'roles' => $roles,
-                ]
-            )
-            ->withOptions($options)
-            ->call();
+                ],
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function createInvitation(
@@ -414,13 +414,13 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         array $inviter,
         array $invitee,
         ?array $body = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $clientId] = Toolkit::filter([$id, $clientId])->string()->trim();
         [$inviter, $invitee, $body] = Toolkit::filter([$inviter, $invitee, $body])->array()->trim();
 
-        /** @var array{name?: string} $inviter */
-        /** @var array{email?: string} $invitee */
+        /* @var array{name?: string} $inviter */
+        /* @var array{email?: string} $invitee */
 
         Toolkit::assert([
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
@@ -440,25 +440,25 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             throw \Auth0\SDK\Exception\ArgumentException::missing('invitee.email');
         }
 
-        /** @var array<mixed> $body */
+        /* @var array<mixed> $body */
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations', $id, 'invitations')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('organizations', $id, 'invitations')->
+            withBody(
                 (object) Toolkit::merge([
                     'client_id' => $clientId,
-                    'inviter' => (object) $inviter,
-                    'invitee' => (object) $invitee,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
+                    'inviter'   => (object) $inviter,
+                    'invitee'   => (object) $invitee,
+                ], $body),
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function getInvitations(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -466,17 +466,17 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'invitations')
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations', $id, 'invitations')->
+            withOptions($options)->
+            call();
     }
 
     public function getInvitation(
         string $id,
         string $invitationId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $invitationId] = Toolkit::filter([$id, $invitationId])->string()->trim();
 
@@ -485,17 +485,17 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$invitationId, \Auth0\SDK\Exception\ArgumentException::missing('invitationId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'invitations', $invitationId)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('organizations', $id, 'invitations', $invitationId)->
+            withOptions($options)->
+            call();
     }
 
     public function deleteInvitation(
         string $id,
         string $invitationId,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $invitationId] = Toolkit::filter([$id, $invitationId])->string()->trim();
 
@@ -504,10 +504,10 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$invitationId, \Auth0\SDK\Exception\ArgumentException::missing('invitationId')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id, 'invitations', $invitationId)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('organizations', $id, 'invitations', $invitationId)->
+            withOptions($options)->
+            call();
     }
 }

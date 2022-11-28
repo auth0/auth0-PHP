@@ -10,6 +10,7 @@ use Auth0\SDK\Contract\StoreInterface;
 final class Get implements Auth0Event
 {
     private ?bool $missed = null;
+
     private ?bool $success = null;
 
     /**
@@ -19,7 +20,7 @@ final class Get implements Auth0Event
 
     public function __construct(
         private StoreInterface $store,
-        private string $key
+        private string $key,
     ) {
     }
 
@@ -42,12 +43,13 @@ final class Get implements Auth0Event
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function setValue(
-        $value
+        $value,
     ): self {
         $this->value = $value;
+
         return $this;
     }
 
@@ -57,9 +59,10 @@ final class Get implements Auth0Event
     }
 
     public function setMissed(
-        bool $missed
+        bool $missed,
     ): self {
         $this->missed = $missed;
+
         return $this;
     }
 
@@ -69,9 +72,10 @@ final class Get implements Auth0Event
     }
 
     public function setSuccess(
-        bool $success
+        bool $success,
     ): self {
         $this->success = $success;
+
         return $this;
     }
 }
