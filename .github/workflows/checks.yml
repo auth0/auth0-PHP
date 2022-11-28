@@ -77,6 +77,9 @@ jobs:
           key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
           restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
 
+      - name: PHP debug
+        run: php -i
+
       - name: Install dependencies with composer
         run: composer install --prefer-dist
 
