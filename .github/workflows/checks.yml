@@ -9,7 +9,7 @@ on:
 jobs:
   dependencies:
     name: Dependencies
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       max-parallel: 10
@@ -45,7 +45,7 @@ jobs:
 
   pest:
     name: Pest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     needs: ["dependencies"]
 
@@ -92,7 +92,7 @@ jobs:
 
   phpstan:
     name: PHPStan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["dependencies"]
 
     strategy:
@@ -134,7 +134,7 @@ jobs:
 
   psalm:
     name: Psalm
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["dependencies"]
 
     strategy:
@@ -176,7 +176,7 @@ jobs:
 
   pint:
     name: Laravel Pint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["dependencies"]
 
     strategy:
@@ -218,7 +218,7 @@ jobs:
 
   rector:
     name: Rector
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["dependencies"]
 
     strategy:
