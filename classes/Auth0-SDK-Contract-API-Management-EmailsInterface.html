@@ -121,7 +121,7 @@
 
     </aside>
 
-            <p class="phpdocumentor-summary">Interface EmailsInterface</p>
+            <p class="phpdocumentor-summary">Interface EmailsInterface.</p>
 
 
 
@@ -199,7 +199,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">createProvider</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$credentials</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:email_provider</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:email_provider</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -209,7 +209,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Name of the email provider to use.</p>
+                    <section class="phpdocumentor-description"><p>name of the email provider to use</p>
 </section>
 
             </dd>
@@ -218,7 +218,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Credentials required to use the provider. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Credentials required to use the provider. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -227,7 +227,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional body content to pass with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional body content to pass with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -236,7 +236,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -254,7 +254,7 @@
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ArgumentException.html"><abbr title="\Auth0\SDK\Exception\ArgumentException">ArgumentException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When an invalid <code class="prettyprint">name</code> or <code class="prettyprint">credentials</code> are provided.</p>
+                                                 <section class="phpdocumentor-description"><p>when an invalid <code class="prettyprint">name</code> or <code class="prettyprint">credentials</code> are provided</p>
 </section>
 
                                     </dd>
@@ -264,16 +264,17 @@
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When the API request fails due to a network error.</p>
+                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Emails/post_provider"> https://auth0.com/docs/api/management/v2#!/Emails/post_provider </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Emails/post_provider"><abbr title="https://auth0.com/docs/api/management/v2#!/Emails/post_provider">https://auth0.com/docs/api/management/v2#!/Emails/post_provider</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -306,7 +307,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">deleteProvider</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:email_provider</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:email_provider</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -316,7 +317,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -334,16 +335,17 @@
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When the API request fails due to a network error.</p>
+                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Emails/delete_provider"> https://auth0.com/docs/api/management/v2#!/Emails/delete_provider </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Emails/delete_provider"><abbr title="https://auth0.com/docs/api/management/v2#!/Emails/delete_provider">https://auth0.com/docs/api/management/v2#!/Emails/delete_provider</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -376,7 +378,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getProvider</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:email_provider</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:email_provider</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -386,7 +388,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -404,16 +406,17 @@
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When the API request fails due to a network error.</p>
+                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Emails/get_provider"> https://auth0.com/docs/api/management/v2#!/Emails/get_provider </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Emails/get_provider"><abbr title="https://auth0.com/docs/api/management/v2#!/Emails/get_provider">https://auth0.com/docs/api/management/v2#!/Emails/get_provider</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -446,7 +449,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">updateProvider</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$credentials</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:email_provider</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:email_provider</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -456,7 +459,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Name of the email provider to use.</p>
+                    <section class="phpdocumentor-description"><p>name of the email provider to use</p>
 </section>
 
             </dd>
@@ -465,7 +468,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Credentials required to use the provider. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Credentials required to use the provider. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -474,7 +477,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Additional body content to pass with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Additional body content to pass with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -483,7 +486,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -501,7 +504,7 @@
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ArgumentException.html"><abbr title="\Auth0\SDK\Exception\ArgumentException">ArgumentException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When an invalid <code class="prettyprint">name</code> or <code class="prettyprint">credentials</code> are provided.</p>
+                                                 <section class="phpdocumentor-description"><p>when an invalid <code class="prettyprint">name</code> or <code class="prettyprint">credentials</code> are provided</p>
 </section>
 
                                     </dd>
@@ -511,16 +514,17 @@
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When the API request fails due to a network error.</p>
+                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Emails/patch_provider"> https://auth0.com/docs/api/management/v2#!/Emails/patch_provider </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Emails/patch_provider"><abbr title="https://auth0.com/docs/api/management/v2#!/Emails/patch_provider">https://auth0.com/docs/api/management/v2#!/Emails/patch_provider</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 

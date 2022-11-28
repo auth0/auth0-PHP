@@ -3,7 +3,7 @@ Search.appendIndex(
                 {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication",
             "name": "Authentication",
-            "summary": "Class\u0020Authentication",
+            "summary": "Class\u0020Authentication.",
             "url": "classes/Auth0-SDK-API-Authentication.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003A__construct\u0028\u0029",
@@ -33,12 +33,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AgetWsfedLink\u0028\u0029",
             "name": "getWsfedLink",
-            "summary": "Build\u0020and\u0020return\u0020a\u0020WS\u002DFederation\u0020link",
+            "summary": "Build\u0020and\u0020return\u0020a\u0020WS\u002DFederation\u0020link.",
             "url": "classes/Auth0-SDK-API-Authentication.html#method_getWsfedLink"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AgetWsfedMetadataLink\u0028\u0029",
             "name": "getWsfedMetadataLink",
-            "summary": "Build\u0020and\u0020return\u0020a\u0020WS\u002DFederation\u0020metadata\u0020link",
+            "summary": "Build\u0020and\u0020return\u0020a\u0020WS\u002DFederation\u0020metadata\u0020link.",
             "url": "classes/Auth0-SDK-API-Authentication.html#method_getWsfedMetadataLink"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AgetLoginLink\u0028\u0029",
@@ -58,7 +58,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AemailPasswordlessStart\u0028\u0029",
             "name": "emailPasswordlessStart",
-            "summary": "Start\u0020passwordless\u0020login\u0020process\u0020for\u0020email",
+            "summary": "Start\u0020passwordless\u0020login\u0020process\u0020for\u0020email.",
             "url": "classes/Auth0-SDK-API-Authentication.html#method_emailPasswordlessStart"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AsmsPasswordlessStart\u0028\u0029",
@@ -78,7 +78,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AcodeExchange\u0028\u0029",
             "name": "codeExchange",
-            "summary": "Makes\u0020a\u0020call\u0020to\u0020the\u0020\u0060oauth\/token\u0060\u0020endpoint\u0020with\u0020\u0060authorization_code\u0060\u0020grant\u0020type",
+            "summary": "Makes\u0020a\u0020call\u0020to\u0020the\u0020\u0060oauth\/token\u0060\u0020endpoint\u0020with\u0020\u0060authorization_code\u0060\u0020grant\u0020type.",
             "url": "classes/Auth0-SDK-API-Authentication.html#method_codeExchange"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003Alogin\u0028\u0029",
@@ -88,7 +88,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AloginWithDefaultDirectory\u0028\u0029",
             "name": "loginWithDefaultDirectory",
-            "summary": "Makes\u0020a\u0020call\u0020to\u0020the\u0020\u0060oauth\/token\u0060\u0020endpoint\u0020with\u0020\u0060password\u0060\u0020grant\u0020type",
+            "summary": "Makes\u0020a\u0020call\u0020to\u0020the\u0020\u0060oauth\/token\u0060\u0020endpoint\u0020with\u0020\u0060password\u0060\u0020grant\u0020type.",
             "url": "classes/Auth0-SDK-API-Authentication.html#method_loginWithDefaultDirectory"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AclientCredentials\u0028\u0029",
@@ -368,7 +368,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\DeviceCredentials\u003A\u003Adelete\u0028\u0029",
             "name": "delete",
-            "summary": "Delete\u0020a\u0020device\u0020credential\nRequired\u0020scope\u003A\u0020\u0060delete\u003Adevice_credentials\u0060",
+            "summary": "Delete\u0020a\u0020device\u0020credential\nRequired\u0020scope\u003A\u0020\u0060delete\u003Adevice_credentials\u0060.",
             "url": "classes/Auth0-SDK-API-Management-DeviceCredentials.html#method_delete"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Emails",
@@ -551,6 +551,11 @@ Search.appendIndex(
             "summary": "Class\u0020ManagementEndpoint.",
             "url": "classes/Auth0-SDK-API-Management-ManagementEndpoint.html"
         },                {
+            "fqsen": "\\Auth0\\SDK\\API\\Management\\ManagementEndpoint\u003A\u003Ainstance\u0028\u0029",
+            "name": "instance",
+            "summary": "",
+            "url": "classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_instance"
+        },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\ManagementEndpoint\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
             "summary": "ManagementEndpoint\u0020constructor.",
@@ -643,7 +648,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Organizations\u003A\u003AgetMembers\u0028\u0029",
             "name": "getMembers",
-            "summary": "List\u0020the\u0020members\u0020\u0028users\u0029\u0020belonging\u0020to\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_members\u0060",
+            "summary": "List\u0020the\u0020members\u0020\u0028users\u0029\u0020belonging\u0020to\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_members\u0060.",
             "url": "classes/Auth0-SDK-API-Management-Organizations.html#method_getMembers"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Organizations\u003A\u003AremoveMembers\u0028\u0029",
@@ -668,22 +673,22 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Organizations\u003A\u003AcreateInvitation\u0028\u0029",
             "name": "createInvitation",
-            "summary": "Create\u0020an\u0020invitation\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060create\u003Aorganization_invitations\u0060",
+            "summary": "Create\u0020an\u0020invitation\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060create\u003Aorganization_invitations\u0060.",
             "url": "classes/Auth0-SDK-API-Management-Organizations.html#method_createInvitation"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Organizations\u003A\u003AgetInvitations\u0028\u0029",
             "name": "getInvitations",
-            "summary": "List\u0020invitations\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_invitations\u0060",
+            "summary": "List\u0020invitations\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_invitations\u0060.",
             "url": "classes/Auth0-SDK-API-Management-Organizations.html#method_getInvitations"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Organizations\u003A\u003AgetInvitation\u0028\u0029",
             "name": "getInvitation",
-            "summary": "Get\u0020an\u0020invitation\u0020\u0028by\u0020ID\u0029\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_invitations\u0060",
+            "summary": "Get\u0020an\u0020invitation\u0020\u0028by\u0020ID\u0029\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_invitations\u0060.",
             "url": "classes/Auth0-SDK-API-Management-Organizations.html#method_getInvitation"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Organizations\u003A\u003AdeleteInvitation\u0028\u0029",
             "name": "deleteInvitation",
-            "summary": "Delete\u0020an\u0020invitation\u0020\u0028by\u0020ID\u0029\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060delete\u003Aorganization_invitations\u0060",
+            "summary": "Delete\u0020an\u0020invitation\u0020\u0028by\u0020ID\u0029\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060delete\u003Aorganization_invitations\u0060.",
             "url": "classes/Auth0-SDK-API-Management-Organizations.html#method_deleteInvitation"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\ResourceServers",
@@ -728,7 +733,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Roles\u003A\u003AgetAll\u0028\u0029",
             "name": "getAll",
-            "summary": "Get\u0020all\u0020Roles\nRequired\u0020scope\u003A\u0020\u0060read\u003Aroles\u0060",
+            "summary": "Get\u0020all\u0020Roles\nRequired\u0020scope\u003A\u0020\u0060read\u003Aroles\u0060.",
             "url": "classes/Auth0-SDK-API-Management-Roles.html#method_getAll"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Roles\u003A\u003Aget\u0028\u0029",
@@ -983,7 +988,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management",
             "name": "Management",
-            "summary": "Class\u0020Management",
+            "summary": "Class\u0020Management.",
             "url": "classes/Auth0-SDK-API-Management.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003A__construct\u0028\u0029",
@@ -1131,11 +1136,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-API-Management.html#method_usersByEmail"
         },                {
-            "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003AgetClassInstance\u0028\u0029",
-            "name": "getClassInstance",
-            "summary": "Return\u0020an\u0020instance\u0020of\u0020Api\u0020Management\u0020Class.",
-            "url": "classes/Auth0-SDK-API-Management.html#method_getClassInstance"
-        },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003A\u0024validatedConfiguration",
             "name": "validatedConfiguration",
             "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
@@ -1145,11 +1145,6 @@ Search.appendIndex(
             "name": "httpClient",
             "summary": "Instance\u0020of\u0020Auth0\\SDK\\API\\Utility\\HttpClient.",
             "url": "classes/Auth0-SDK-API-Management.html#property_httpClient"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003A\u0024instances",
-            "name": "instances",
-            "summary": "Cache\u0020of\u0020Management\u0020singletons.",
-            "url": "classes/Auth0-SDK-API-Management.html#property_instances"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003A\u0024configuration",
             "name": "configuration",
@@ -1228,32 +1223,32 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetIdToken\u0028\u0029",
             "name": "getIdToken",
-            "summary": "Get\u0020ID\u0020token\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020ID\u0020token\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Auth0.html#method_getIdToken"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetUser\u0028\u0029",
             "name": "getUser",
-            "summary": "Get\u0020userinfo\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020userinfo\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Auth0.html#method_getUser"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetAccessToken\u0028\u0029",
             "name": "getAccessToken",
-            "summary": "Get\u0020access\u0020token\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020access\u0020token\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Auth0.html#method_getAccessToken"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetRefreshToken\u0028\u0029",
             "name": "getRefreshToken",
-            "summary": "Get\u0020refresh\u0020token\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020refresh\u0020token\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Auth0.html#method_getRefreshToken"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetAccessTokenScope\u0028\u0029",
             "name": "getAccessTokenScope",
-            "summary": "Get\u0020token\u0020scopes\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020token\u0020scopes\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Auth0.html#method_getAccessTokenScope"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetAccessTokenExpiration\u0028\u0029",
             "name": "getAccessTokenExpiration",
-            "summary": "Get\u0020token\u0020expiration\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020token\u0020expiration\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Auth0.html#method_getAccessTokenExpiration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetBearerToken\u0028\u0029",
@@ -1268,7 +1263,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AsetUser\u0028\u0029",
             "name": "setUser",
-            "summary": "Set\u0020the\u0020user\u0020property\u0020to\u0020a\u0020userinfo\u0020array\u0020and,\u0020if\u0020configured,\u0020persist",
+            "summary": "Set\u0020the\u0020user\u0020property\u0020to\u0020a\u0020userinfo\u0020array\u0020and,\u0020if\u0020configured,\u0020persist.",
             "url": "classes/Auth0-SDK-Auth0.html#method_setUser"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AsetAccessToken\u0028\u0029",
@@ -1298,12 +1293,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetExchangeParameters\u0028\u0029",
             "name": "getExchangeParameters",
-            "summary": "Get\u0020the\u0020code\u0020exchange\u0020details\u0020from\u0020the\u0020GET\u0020request",
+            "summary": "Get\u0020the\u0020code\u0020exchange\u0020details\u0020from\u0020the\u0020GET\u0020request.",
             "url": "classes/Auth0-SDK-Auth0.html#method_getExchangeParameters"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetInvitationParameters\u0028\u0029",
             "name": "getInvitationParameters",
-            "summary": "Get\u0020the\u0020invitation\u0020details\u0020from\u0020the\u0020GET\u0020request",
+            "summary": "Get\u0020the\u0020invitation\u0020details\u0020from\u0020the\u0020GET\u0020request.",
             "url": "classes/Auth0-SDK-Auth0.html#method_getInvitationParameters"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AgetTransientStore\u0028\u0029",
@@ -1348,12 +1343,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration",
             "name": "SdkConfiguration",
-            "summary": "Configuration\u0020container\u0020for\u0020use\u0020with\u0020Auth0\\SDK",
+            "summary": "Configuration\u0020container\u0020for\u0020use\u0020with\u0020Auth0\\SDK.",
             "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "SdkConfiguration\u0020Constructor",
+            "summary": "SdkConfiguration\u0020Constructor.",
             "url": "classes/Auth0-SDK-Configuration-SdkConfiguration.html#method___construct"
         },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkConfiguration\u003A\u003AsetAudience\u0028\u0029",
@@ -2328,7 +2323,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkState\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "SdkState\u0020Constructor",
+            "summary": "SdkState\u0020Constructor.",
             "url": "classes/Auth0-SDK-Configuration-SdkState.html#method___construct"
         },                {
             "fqsen": "\\Auth0\\SDK\\Configuration\\SdkState\u003A\u003AsetIdToken\u0028\u0029",
@@ -2473,7 +2468,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface",
             "name": "AuthenticationInterface",
-            "summary": "Interface\u0020AuthenticationInterface",
+            "summary": "Interface\u0020AuthenticationInterface.",
             "url": "classes/Auth0-SDK-Contract-API-AuthenticationInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AgetHttpClient\u0028\u0029",
@@ -2493,12 +2488,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AgetWsfedLink\u0028\u0029",
             "name": "getWsfedLink",
-            "summary": "Build\u0020and\u0020return\u0020a\u0020WS\u002DFederation\u0020link",
+            "summary": "Build\u0020and\u0020return\u0020a\u0020WS\u002DFederation\u0020link.",
             "url": "classes/Auth0-SDK-Contract-API-AuthenticationInterface.html#method_getWsfedLink"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AgetWsfedMetadataLink\u0028\u0029",
             "name": "getWsfedMetadataLink",
-            "summary": "Build\u0020and\u0020return\u0020a\u0020WS\u002DFederation\u0020metadata\u0020link",
+            "summary": "Build\u0020and\u0020return\u0020a\u0020WS\u002DFederation\u0020metadata\u0020link.",
             "url": "classes/Auth0-SDK-Contract-API-AuthenticationInterface.html#method_getWsfedMetadataLink"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AgetLoginLink\u0028\u0029",
@@ -2518,7 +2513,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AemailPasswordlessStart\u0028\u0029",
             "name": "emailPasswordlessStart",
-            "summary": "Start\u0020passwordless\u0020login\u0020process\u0020for\u0020email",
+            "summary": "Start\u0020passwordless\u0020login\u0020process\u0020for\u0020email.",
             "url": "classes/Auth0-SDK-Contract-API-AuthenticationInterface.html#method_emailPasswordlessStart"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AsmsPasswordlessStart\u0028\u0029",
@@ -2538,7 +2533,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AcodeExchange\u0028\u0029",
             "name": "codeExchange",
-            "summary": "Makes\u0020a\u0020call\u0020to\u0020the\u0020\u0060oauth\/token\u0060\u0020endpoint\u0020with\u0020\u0060authorization_code\u0060\u0020grant\u0020type",
+            "summary": "Makes\u0020a\u0020call\u0020to\u0020the\u0020\u0060oauth\/token\u0060\u0020endpoint\u0020with\u0020\u0060authorization_code\u0060\u0020grant\u0020type.",
             "url": "classes/Auth0-SDK-Contract-API-AuthenticationInterface.html#method_codeExchange"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003Alogin\u0028\u0029",
@@ -2548,7 +2543,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AloginWithDefaultDirectory\u0028\u0029",
             "name": "loginWithDefaultDirectory",
-            "summary": "Makes\u0020a\u0020call\u0020to\u0020the\u0020\u0060oauth\/token\u0060\u0020endpoint\u0020with\u0020\u0060password\u0060\u0020grant\u0020type",
+            "summary": "Makes\u0020a\u0020call\u0020to\u0020the\u0020\u0060oauth\/token\u0060\u0020endpoint\u0020with\u0020\u0060password\u0060\u0020grant\u0020type.",
             "url": "classes/Auth0-SDK-Contract-API-AuthenticationInterface.html#method_loginWithDefaultDirectory"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\AuthenticationInterface\u003A\u003AclientCredentials\u0028\u0029",
@@ -2573,7 +2568,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ActionsInterface",
             "name": "ActionsInterface",
-            "summary": "Interface\u0020ActionsInterface",
+            "summary": "Interface\u0020ActionsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-ActionsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ActionsInterface\u003A\u003Acreate\u0028\u0029",
@@ -2648,7 +2643,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\AttackProtectionInterface",
             "name": "AttackProtectionInterface",
-            "summary": "Interface\u0020AttackProtectionInterface",
+            "summary": "Interface\u0020AttackProtectionInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-AttackProtectionInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\AttackProtectionInterface\u003A\u003AgetBreachedPasswordDetection\u0028\u0029",
@@ -2683,7 +2678,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\BlacklistsInterface",
             "name": "BlacklistsInterface",
-            "summary": "Interface\u0020BlacklistsInterface",
+            "summary": "Interface\u0020BlacklistsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-BlacklistsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\BlacklistsInterface\u003A\u003Acreate\u0028\u0029",
@@ -2698,7 +2693,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ClientGrantsInterface",
             "name": "ClientGrantsInterface",
-            "summary": "Interface\u0020ClientGrantsInterface",
+            "summary": "Interface\u0020ClientGrantsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-ClientGrantsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ClientGrantsInterface\u003A\u003Acreate\u0028\u0029",
@@ -2733,7 +2728,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ClientsInterface",
             "name": "ClientsInterface",
-            "summary": "Interface\u0020ClientsInterface",
+            "summary": "Interface\u0020ClientsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-ClientsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ClientsInterface\u003A\u003Acreate\u0028\u0029",
@@ -2763,7 +2758,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ConnectionsInterface",
             "name": "ConnectionsInterface",
-            "summary": "Interface\u0020ConnectionsInterface",
+            "summary": "Interface\u0020ConnectionsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-ConnectionsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ConnectionsInterface\u003A\u003Acreate\u0028\u0029",
@@ -2798,7 +2793,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\DeviceCredentialsInterface",
             "name": "DeviceCredentialsInterface",
-            "summary": "Interface\u0020DeviceCredentialsInterface",
+            "summary": "Interface\u0020DeviceCredentialsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-DeviceCredentialsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\DeviceCredentialsInterface\u003A\u003Acreate\u0028\u0029",
@@ -2813,12 +2808,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\DeviceCredentialsInterface\u003A\u003Adelete\u0028\u0029",
             "name": "delete",
-            "summary": "Delete\u0020a\u0020device\u0020credential\nRequired\u0020scope\u003A\u0020\u0060delete\u003Adevice_credentials\u0060",
+            "summary": "Delete\u0020a\u0020device\u0020credential\nRequired\u0020scope\u003A\u0020\u0060delete\u003Adevice_credentials\u0060.",
             "url": "classes/Auth0-SDK-Contract-API-Management-DeviceCredentialsInterface.html#method_delete"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\EmailsInterface",
             "name": "EmailsInterface",
-            "summary": "Interface\u0020EmailsInterface",
+            "summary": "Interface\u0020EmailsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-EmailsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\EmailsInterface\u003A\u003AcreateProvider\u0028\u0029",
@@ -2843,7 +2838,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\EmailTemplatesInterface",
             "name": "EmailTemplatesInterface",
-            "summary": "Interface\u0020EmailTemplatesInterface",
+            "summary": "Interface\u0020EmailTemplatesInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-EmailTemplatesInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\EmailTemplatesInterface\u003A\u003Acreate\u0028\u0029",
@@ -2868,7 +2863,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\GrantsInterface",
             "name": "GrantsInterface",
-            "summary": "Interface\u0020GrantsInterface",
+            "summary": "Interface\u0020GrantsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-GrantsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\GrantsInterface\u003A\u003AgetAll\u0028\u0029",
@@ -2898,7 +2893,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\GuardianInterface",
             "name": "GuardianInterface",
-            "summary": "Interface\u0020GuardianInterface",
+            "summary": "Interface\u0020GuardianInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-GuardianInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\GuardianInterface\u003A\u003AgetFactors\u0028\u0029",
@@ -2918,7 +2913,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\JobsInterface",
             "name": "JobsInterface",
-            "summary": "Interface\u0020JobsInterface",
+            "summary": "Interface\u0020JobsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-JobsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\JobsInterface\u003A\u003AcreateImportUsers\u0028\u0029",
@@ -2948,7 +2943,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\LogsInterface",
             "name": "LogsInterface",
-            "summary": "Interface\u0020LogsInterface",
+            "summary": "Interface\u0020LogsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-LogsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\LogsInterface\u003A\u003AgetAll\u0028\u0029",
@@ -2963,7 +2958,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\LogStreamsInterface",
             "name": "LogStreamsInterface",
-            "summary": "Interface\u0020LogStreamsInterface",
+            "summary": "Interface\u0020LogStreamsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-LogStreamsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\LogStreamsInterface\u003A\u003Acreate\u0028\u0029",
@@ -2993,7 +2988,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\OrganizationsInterface",
             "name": "OrganizationsInterface",
-            "summary": "Interface\u0020OrganizationsInterface",
+            "summary": "Interface\u0020OrganizationsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-OrganizationsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\OrganizationsInterface\u003A\u003Acreate\u0028\u0029",
@@ -3058,7 +3053,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\OrganizationsInterface\u003A\u003AgetMembers\u0028\u0029",
             "name": "getMembers",
-            "summary": "List\u0020the\u0020members\u0020\u0028users\u0029\u0020belonging\u0020to\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_members\u0060",
+            "summary": "List\u0020the\u0020members\u0020\u0028users\u0029\u0020belonging\u0020to\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_members\u0060.",
             "url": "classes/Auth0-SDK-Contract-API-Management-OrganizationsInterface.html#method_getMembers"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\OrganizationsInterface\u003A\u003AremoveMembers\u0028\u0029",
@@ -3083,27 +3078,27 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\OrganizationsInterface\u003A\u003AcreateInvitation\u0028\u0029",
             "name": "createInvitation",
-            "summary": "Create\u0020an\u0020invitation\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060create\u003Aorganization_invitations\u0060",
+            "summary": "Create\u0020an\u0020invitation\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060create\u003Aorganization_invitations\u0060.",
             "url": "classes/Auth0-SDK-Contract-API-Management-OrganizationsInterface.html#method_createInvitation"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\OrganizationsInterface\u003A\u003AgetInvitations\u0028\u0029",
             "name": "getInvitations",
-            "summary": "List\u0020invitations\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_invitations\u0060",
+            "summary": "List\u0020invitations\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_invitations\u0060.",
             "url": "classes/Auth0-SDK-Contract-API-Management-OrganizationsInterface.html#method_getInvitations"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\OrganizationsInterface\u003A\u003AgetInvitation\u0028\u0029",
             "name": "getInvitation",
-            "summary": "Get\u0020an\u0020invitation\u0020\u0028by\u0020ID\u0029\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_invitations\u0060",
+            "summary": "Get\u0020an\u0020invitation\u0020\u0028by\u0020ID\u0029\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060read\u003Aorganization_invitations\u0060.",
             "url": "classes/Auth0-SDK-Contract-API-Management-OrganizationsInterface.html#method_getInvitation"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\OrganizationsInterface\u003A\u003AdeleteInvitation\u0028\u0029",
             "name": "deleteInvitation",
-            "summary": "Delete\u0020an\u0020invitation\u0020\u0028by\u0020ID\u0029\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060delete\u003Aorganization_invitations\u0060",
+            "summary": "Delete\u0020an\u0020invitation\u0020\u0028by\u0020ID\u0029\u0020for\u0020an\u0020organization\nRequired\u0020scope\u003A\u0020\u0060delete\u003Aorganization_invitations\u0060.",
             "url": "classes/Auth0-SDK-Contract-API-Management-OrganizationsInterface.html#method_deleteInvitation"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ResourceServersInterface",
             "name": "ResourceServersInterface",
-            "summary": "Interface\u0020ResourceServersInterface",
+            "summary": "Interface\u0020ResourceServersInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-ResourceServersInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\ResourceServersInterface\u003A\u003Acreate\u0028\u0029",
@@ -3133,7 +3128,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\RolesInterface",
             "name": "RolesInterface",
-            "summary": "Interface\u0020RolesInterface",
+            "summary": "Interface\u0020RolesInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-RolesInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\RolesInterface\u003A\u003Acreate\u0028\u0029",
@@ -3143,7 +3138,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\RolesInterface\u003A\u003AgetAll\u0028\u0029",
             "name": "getAll",
-            "summary": "Get\u0020all\u0020Roles\nRequired\u0020scope\u003A\u0020\u0060read\u003Aroles\u0060",
+            "summary": "Get\u0020all\u0020Roles\nRequired\u0020scope\u003A\u0020\u0060read\u003Aroles\u0060.",
             "url": "classes/Auth0-SDK-Contract-API-Management-RolesInterface.html#method_getAll"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\RolesInterface\u003A\u003Aget\u0028\u0029",
@@ -3188,7 +3183,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\RulesInterface",
             "name": "RulesInterface",
-            "summary": "Interface\u0020RulesInterface",
+            "summary": "Interface\u0020RulesInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-RulesInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\RulesInterface\u003A\u003Acreate\u0028\u0029",
@@ -3218,7 +3213,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\StatsInterface",
             "name": "StatsInterface",
-            "summary": "Interface\u0020StatsInterface",
+            "summary": "Interface\u0020StatsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-StatsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\StatsInterface\u003A\u003AgetActiveUsers\u0028\u0029",
@@ -3233,7 +3228,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\TenantsInterface",
             "name": "TenantsInterface",
-            "summary": "Interface\u0020TenantsInterface",
+            "summary": "Interface\u0020TenantsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-TenantsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\TenantsInterface\u003A\u003AgetSettings\u0028\u0029",
@@ -3248,7 +3243,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\TicketsInterface",
             "name": "TicketsInterface",
-            "summary": "Interface\u0020TicketsInterface",
+            "summary": "Interface\u0020TicketsInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-TicketsInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\TicketsInterface\u003A\u003AcreateEmailVerification\u0028\u0029",
@@ -3263,7 +3258,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\UserBlocksInterface",
             "name": "UserBlocksInterface",
-            "summary": "Interface\u0020UserBlocksInterface",
+            "summary": "Interface\u0020UserBlocksInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-UserBlocksInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\UserBlocksInterface\u003A\u003Aget\u0028\u0029",
@@ -3288,7 +3283,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\UsersByEmailInterface",
             "name": "UsersByEmailInterface",
-            "summary": "Interface\u0020UsersByEmailInterface",
+            "summary": "Interface\u0020UsersByEmailInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-UsersByEmailInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\UsersByEmailInterface\u003A\u003Aget\u0028\u0029",
@@ -3298,7 +3293,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\UsersInterface",
             "name": "UsersInterface",
-            "summary": "Interface\u0020UsersInterface",
+            "summary": "Interface\u0020UsersInterface.",
             "url": "classes/Auth0-SDK-Contract-API-Management-UsersInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\Management\\UsersInterface\u003A\u003Acreate\u0028\u0029",
@@ -3398,7 +3393,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\ManagementInterface",
             "name": "ManagementInterface",
-            "summary": "Interface\u0020ManagementInterface",
+            "summary": "Interface\u0020ManagementInterface.",
             "url": "classes/Auth0-SDK-Contract-API-ManagementInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\API\\ManagementInterface\u003A\u003AgetHttpClient\u0028\u0029",
@@ -3533,12 +3528,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Event",
             "name": "Auth0Event",
-            "summary": "Interface\u0020Auth0Event",
+            "summary": "Interface\u0020Auth0Event.",
             "url": "classes/Auth0-SDK-Contract-Auth0Event.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface",
             "name": "Auth0Interface",
-            "summary": "Interface\u0020Auth0Interface",
+            "summary": "Interface\u0020Auth0Interface.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003Aauthentication\u0028\u0029",
@@ -3603,32 +3598,32 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AgetIdToken\u0028\u0029",
             "name": "getIdToken",
-            "summary": "Get\u0020ID\u0020token\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020ID\u0020token\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_getIdToken"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AgetUser\u0028\u0029",
             "name": "getUser",
-            "summary": "Get\u0020userinfo\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020userinfo\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_getUser"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AgetAccessToken\u0028\u0029",
             "name": "getAccessToken",
-            "summary": "Get\u0020access\u0020token\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020access\u0020token\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessToken"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AgetRefreshToken\u0028\u0029",
             "name": "getRefreshToken",
-            "summary": "Get\u0020refresh\u0020token\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020refresh\u0020token\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRefreshToken"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AgetAccessTokenScope\u0028\u0029",
             "name": "getAccessTokenScope",
-            "summary": "Get\u0020token\u0020scopes\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020token\u0020scopes\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenScope"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AgetAccessTokenExpiration\u0028\u0029",
             "name": "getAccessTokenExpiration",
-            "summary": "Get\u0020token\u0020expiration\u0020from\u0020an\u0020active\u0020session",
+            "summary": "Get\u0020token\u0020expiration\u0020from\u0020an\u0020active\u0020session.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenExpiration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AsetIdToken\u0028\u0029",
@@ -3638,7 +3633,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AsetUser\u0028\u0029",
             "name": "setUser",
-            "summary": "Set\u0020the\u0020user\u0020property\u0020to\u0020a\u0020userinfo\u0020array\u0020and,\u0020if\u0020configured,\u0020persist",
+            "summary": "Set\u0020the\u0020user\u0020property\u0020to\u0020a\u0020userinfo\u0020array\u0020and,\u0020if\u0020configured,\u0020persist.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_setUser"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AsetAccessToken\u0028\u0029",
@@ -3673,12 +3668,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AgetExchangeParameters\u0028\u0029",
             "name": "getExchangeParameters",
-            "summary": "Get\u0020the\u0020code\u0020exchange\u0020details\u0020from\u0020the\u0020GET\u0020request",
+            "summary": "Get\u0020the\u0020code\u0020exchange\u0020details\u0020from\u0020the\u0020GET\u0020request.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_getExchangeParameters"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AgetInvitationParameters\u0028\u0029",
             "name": "getInvitationParameters",
-            "summary": "Get\u0020the\u0020invitation\u0020details\u0020from\u0020the\u0020GET\u0020request",
+            "summary": "Get\u0020the\u0020invitation\u0020details\u0020from\u0020the\u0020GET\u0020request.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_getInvitationParameters"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\ConfigurableContract",
@@ -3688,12 +3683,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\StoreInterface",
             "name": "StoreInterface",
-            "summary": "Interface\u0020StoreInterface",
+            "summary": "Interface\u0020StoreInterface.",
             "url": "classes/Auth0-SDK-Contract-StoreInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\StoreInterface\u003A\u003Aset\u0028\u0029",
             "name": "set",
-            "summary": "Set\u0020a\u0020value\u0020on\u0020the\u0020store",
+            "summary": "Set\u0020a\u0020value\u0020on\u0020the\u0020store.",
             "url": "classes/Auth0-SDK-Contract-StoreInterface.html#method_set"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\StoreInterface\u003A\u003Aget\u0028\u0029",
@@ -3703,12 +3698,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\StoreInterface\u003A\u003Adelete\u0028\u0029",
             "name": "delete",
-            "summary": "Remove\u0020a\u0020value\u0020from\u0020the\u0020store",
+            "summary": "Remove\u0020a\u0020value\u0020from\u0020the\u0020store.",
             "url": "classes/Auth0-SDK-Contract-StoreInterface.html#method_delete"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\StoreInterface\u003A\u003Apurge\u0028\u0029",
             "name": "purge",
-            "summary": "Remove\u0020all\u0020stored\u0020values",
+            "summary": "Remove\u0020all\u0020stored\u0020values.",
             "url": "classes/Auth0-SDK-Contract-StoreInterface.html#method_purge"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\StoreInterface\u003A\u003Adefer\u0028\u0029",
@@ -3718,7 +3713,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Token\\ValidatorInterface",
             "name": "ValidatorInterface",
-            "summary": "Interface\u0020ValidatorInterface",
+            "summary": "Interface\u0020ValidatorInterface.",
             "url": "classes/Auth0-SDK-Contract-Token-ValidatorInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Token\\ValidatorInterface\u003A\u003Aaudience\u0028\u0029",
@@ -3768,7 +3763,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\TokenInterface",
             "name": "TokenInterface",
-            "summary": "Interface\u0020TokenInterface",
+            "summary": "Interface\u0020TokenInterface.",
             "url": "classes/Auth0-SDK-Contract-TokenInterface.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\TokenInterface\u003A\u003Aparse\u0028\u0029",
@@ -4971,19 +4966,14 @@ Search.appendIndex(
             "summary": "Returns\u0020the\u0020current\u0020namespace\u0020identifier.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getNamespace"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AgetThreshold\u0028\u0029",
-            "name": "getThreshold",
-            "summary": "Returns\u0020the\u0020current\u0020threshold\u0020for\u0020chunk\u0020size\u0020calculations.",
-            "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getThreshold"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AgetEncrypted\u0028\u0029",
             "name": "getEncrypted",
-            "summary": "Returns\u0020the\u0020current\u0020encryption\u0020state",
+            "summary": "Returns\u0020the\u0020current\u0020encryption\u0020state.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getEncrypted"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AsetEncrypted\u0028\u0029",
             "name": "setEncrypted",
-            "summary": "Toggle\u0020the\u0020encryption\u0020state",
+            "summary": "Toggle\u0020the\u0020encryption\u0020state.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_setEncrypted"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003Adefer\u0028\u0029",
@@ -5023,7 +5013,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003AgetCookieOptions\u0028\u0029",
             "name": "getCookieOptions",
-            "summary": "Build\u0020options\u0020array\u0020for\u0020use\u0020with\u0020setcookie\u0028\u0029",
+            "summary": "Build\u0020options\u0020array\u0020for\u0020use\u0020with\u0020setcookie\u0028\u0029.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024encrypt",
@@ -5055,11 +5045,6 @@ Search.appendIndex(
             "name": "VAL_CRYPTO_ALGO",
             "summary": "",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024threshold",
-            "name": "threshold",
-            "summary": "The\u0020threshold\u0020\u0028in\u0020bytes\u0029\u0020in\u0020which\u0020chunking\/splitting\u0020occurs.",
-            "url": "classes/Auth0-SDK-Store-CookieStore.html#property_threshold"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024store",
             "name": "store",
@@ -5413,7 +5398,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Parser\u003A\u003A\u0024parsed",
             "name": "parsed",
-            "summary": "State",
+            "summary": "State.",
             "url": "classes/Auth0-SDK-Token-Parser.html#property_parsed"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Parser\u003A\u003A\u0024configuration",
@@ -5723,7 +5708,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient",
             "name": "HttpClient",
-            "summary": "Class\u0020HttpClient",
+            "summary": "Class\u0020HttpClient.",
             "url": "classes/Auth0-SDK-Utility-HttpClient.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A__construct\u0028\u0029",
@@ -5768,7 +5753,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024lastRequest",
             "name": "lastRequest",
-            "summary": "Instance\u0020of\u0020most\u0020recent\u0020HttpRequest",
+            "summary": "Instance\u0020of\u0020most\u0020recent\u0020HttpRequest.",
             "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_lastRequest"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024mockedResponses",
@@ -5798,7 +5783,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest",
             "name": "HttpRequest",
-            "summary": "Class\u0020HttpRequest",
+            "summary": "Class\u0020HttpRequest.",
             "url": "classes/Auth0-SDK-Utility-HttpRequest.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A__construct\u0028\u0029",
@@ -6018,7 +6003,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpResponse",
             "name": "HttpResponse",
-            "summary": "Class\u0020HttpResponse",
+            "summary": "Class\u0020HttpResponse.",
             "url": "classes/Auth0-SDK-Utility-HttpResponse.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpResponse\u003A\u003AwasSuccessful\u0028\u0029",
@@ -6243,7 +6228,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\FilteredRequest\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "FilteredRequest\u0020constructor",
+            "summary": "FilteredRequest\u0020constructor.",
             "url": "classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method___construct"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\FilteredRequest\u003A\u003AsetFields\u0028\u0029",
@@ -6383,7 +6368,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\RequestOptions\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "RequestOptions\u0020constructor",
+            "summary": "RequestOptions\u0020constructor.",
             "url": "classes/Auth0-SDK-Utility-Request-RequestOptions.html#method___construct"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\RequestOptions\u003A\u003AsetFields\u0028\u0029",
@@ -6428,7 +6413,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Assert\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "ArrayProcessor\u0020Constructor",
+            "summary": "ArrayProcessor\u0020Constructor.",
             "url": "classes/Auth0-SDK-Utility-Toolkit-Assert.html#method___construct"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Assert\u003A\u003AisPermissions\u0028\u0029",
@@ -6523,7 +6508,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Filter\u003A\u003A__construct\u0028\u0029",
             "name": "__construct",
-            "summary": "Filter\u0020Constructor",
+            "summary": "Filter\u0020Constructor.",
             "url": "classes/Auth0-SDK-Utility-Toolkit-Filter.html#method___construct"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Filter\u003A\u003Aarray\u0028\u0029",
@@ -6583,7 +6568,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\TransientStoreHandler",
             "name": "TransientStoreHandler",
-            "summary": "Class\u0020TransientStoreHandler",
+            "summary": "Class\u0020TransientStoreHandler.",
             "url": "classes/Auth0-SDK-Utility-TransientStoreHandler.html"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\TransientStoreHandler\u003A\u003A__construct\u0028\u0029",

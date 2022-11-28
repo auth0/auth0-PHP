@@ -142,11 +142,12 @@
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Users"> https://auth0.com/docs/api/management/v2#!/Users </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Users"><abbr title="https://auth0.com/docs/api/management/v2#!/Users">https://auth0.com/docs/api/management/v2#!/Users</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -160,7 +161,7 @@
 
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Auth0-SDK-Contract-API-Management-UsersInterface.html"><abbr title="\Auth0\SDK\Contract\API\Management\UsersInterface">UsersInterface</abbr></a></dt>
-        <dd>Interface UsersInterface</dd>
+        <dd>Interface UsersInterface.</dd>
     
     
     
@@ -300,6 +301,13 @@
 <dd>Get all roles assigned to a specific user.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_instance">instance()</a>
+    <span>
+                                &nbsp;: static    </span>
+</dt>
+<dd></dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Auth0-SDK-API-Management-Users.html#method_invalidateBrowsers">invalidateBrowsers()</a>
     <span>
                                 &nbsp;: <abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr>    </span>
@@ -369,7 +377,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">23</span>
+    <span class="phpdocumentor-element-found-in__line">29</span>
 
     </aside>
 
@@ -398,7 +406,7 @@
         class="phpdocumentor-element
             -method
             -public
-                                                        "
+                                                -final        "
 >
     <h4 class="phpdocumentor-element__name" id="method___construct">
         __construct()
@@ -407,7 +415,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">22</span>
+    <span class="phpdocumentor-element-found-in__line">28</span>
 
     </aside>
 
@@ -415,7 +423,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+        <span class="phpdocumentor-signature__final">final</span>            <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -425,7 +433,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>HttpClient instance to use.</p>
+                    <section class="phpdocumentor-description"><p>httpClient instance to use</p>
 </section>
 
             </dd>
@@ -462,7 +470,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">addPermissions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissions</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -472,7 +480,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to add permissions to.</p>
+                    <section class="phpdocumentor-description"><p>user ID to add permissions to</p>
 </section>
 
             </dd>
@@ -489,7 +497,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -532,8 +540,7 @@
 <code class="prettyprint">update:users</code>
 </li>
 <li>
-<code class="prettyprint">read:roles</code>
-</li>
+<code class="prettyprint">read:roles</code>.</li>
 </ul>
 </section>
 
@@ -544,7 +551,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to add roles to.</p>
+                    <section class="phpdocumentor-description"><p>user ID to add roles to</p>
 </section>
 
             </dd>
@@ -553,7 +560,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Array of roles to add.</p>
+                    <section class="phpdocumentor-description"><p>array of roles to add</p>
 </section>
 
             </dd>
@@ -562,7 +569,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -599,7 +606,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">create</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$connection</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -609,7 +616,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Connection (by ID) to use for the new User.</p>
+                    <section class="phpdocumentor-description"><p>connection (by ID) to use for the new User</p>
 </section>
 
             </dd>
@@ -618,7 +625,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Configuration for the new User. Some parameters are dependent upon the type of connection. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Configuration for the new User. Some parameters are dependent upon the type of connection. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -627,7 +634,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -664,7 +671,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">createRecoveryCode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -674,7 +681,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID of the user to regenerate a multi-factor authentication recovery code for.</p>
+                    <section class="phpdocumentor-description"><p>user ID of the user to regenerate a multi-factor authentication recovery code for</p>
 </section>
 
             </dd>
@@ -683,7 +690,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -720,7 +727,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">delete</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -730,7 +737,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to delete.</p>
+                    <section class="phpdocumentor-description"><p>user ID to delete</p>
 </section>
 
             </dd>
@@ -739,7 +746,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -777,7 +784,7 @@
                     <span class="phpdocumentor-signature__name">deleteMultifactorProvider</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$provider</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
         <section class="phpdocumentor-description"><p>This will force user to re-configure the multifactor provider.
-Required scope: <code class="prettyprint">update:users</code></p>
+Required scope: <code class="prettyprint">update:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -787,7 +794,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID with the multifactor provider to delete.</p>
+                    <section class="phpdocumentor-description"><p>user ID with the multifactor provider to delete</p>
 </section>
 
             </dd>
@@ -796,7 +803,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Multifactor provider to delete.</p>
+                    <section class="phpdocumentor-description"><p>multifactor provider to delete</p>
 </section>
 
             </dd>
@@ -805,7 +812,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -858,7 +865,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User (by their ID) to query.</p>
+                    <section class="phpdocumentor-description"><p>user (by their ID) to query</p>
 </section>
 
             </dd>
@@ -867,7 +874,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -920,7 +927,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Query parameters to pass with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Query parameters to pass with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -929,7 +936,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -966,7 +973,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getEnrollments</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -976,7 +983,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to query.</p>
+                    <section class="phpdocumentor-description"><p>user ID to query</p>
 </section>
 
             </dd>
@@ -985,7 +992,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1012,7 +1019,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">30</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
@@ -1045,7 +1052,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
     </aside>
 
@@ -1088,7 +1095,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getLogs</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:logs</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:logs</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1098,7 +1105,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to get logs entries for.</p>
+                    <section class="phpdocumentor-description"><p>user ID to get logs entries for</p>
 </section>
 
             </dd>
@@ -1107,7 +1114,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1144,7 +1151,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getOrganizations</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organizations</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organizations</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1154,7 +1161,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to get organization entries for.</p>
+                    <section class="phpdocumentor-description"><p>user ID to get organization entries for</p>
 </section>
 
             </dd>
@@ -1163,7 +1170,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1200,7 +1207,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getPermissions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1210,7 +1217,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to get permissions for.</p>
+                    <section class="phpdocumentor-description"><p>user ID to get permissions for</p>
 </section>
 
             </dd>
@@ -1219,7 +1226,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1246,7 +1253,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
     </aside>
 
@@ -1295,8 +1302,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
 <code class="prettyprint">read:users</code>
 </li>
 <li>
-<code class="prettyprint">read:roles</code>
-</li>
+<code class="prettyprint">read:roles</code>.</li>
 </ul>
 </section>
 
@@ -1307,7 +1313,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to get roles for.</p>
+                    <section class="phpdocumentor-description"><p>user ID to get roles for</p>
 </section>
 
             </dd>
@@ -1316,7 +1322,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1326,6 +1332,50 @@ Required scope: <code class="prettyprint">update:users</code></p>
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
     <span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span>
+            &mdash;
+        
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_instance">
+        instance()
+        <a href="classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_instance" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">17</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">instance</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">static</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$httpClient</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"></section>
+
+            </dd>
+            </dl>
+
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">static</span>
             &mdash;
         
     
@@ -1353,7 +1403,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">invalidateBrowsers</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1363,7 +1413,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID of the user to invalidate all remembered browsers and authentication factors for.</p>
+                    <section class="phpdocumentor-description"><p>user ID of the user to invalidate all remembered browsers and authentication factors for</p>
 </section>
 
             </dd>
@@ -1372,7 +1422,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1409,7 +1459,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">linkAccount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1419,7 +1469,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID of the primary account.</p>
+                    <section class="phpdocumentor-description"><p>user ID of the primary account</p>
 </section>
 
             </dd>
@@ -1428,7 +1478,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Additional body content to send with the API request.</p>
+                    <section class="phpdocumentor-description"><p>additional body content to send with the API request</p>
 </section>
 
             </dd>
@@ -1437,7 +1487,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1474,7 +1524,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">removePermissions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$permissions</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1484,7 +1534,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to remove permissions from.</p>
+                    <section class="phpdocumentor-description"><p>user ID to remove permissions from</p>
 </section>
 
             </dd>
@@ -1501,7 +1551,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1538,7 +1588,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">removeRoles</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$roles</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1548,7 +1598,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID to remove roles from.</p>
+                    <section class="phpdocumentor-description"><p>user ID to remove roles from</p>
 </section>
 
             </dd>
@@ -1557,7 +1607,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Array of permissions to remove.</p>
+                    <section class="phpdocumentor-description"><p>array of permissions to remove</p>
 </section>
 
             </dd>
@@ -1566,7 +1616,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1603,7 +1653,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">unlinkAccount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$provider</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$identityId</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1613,7 +1663,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User ID of the primary user account.</p>
+                    <section class="phpdocumentor-description"><p>user ID of the primary user account</p>
 </section>
 
             </dd>
@@ -1640,7 +1690,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1693,7 +1743,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User (by their ID) to update.</p>
+                    <section class="phpdocumentor-description"><p>user (by their ID) to update</p>
 </section>
 
             </dd>
@@ -1702,7 +1752,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User data to update. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>User data to update. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -1711,7 +1761,7 @@ Required scope: <code class="prettyprint">update:users</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>

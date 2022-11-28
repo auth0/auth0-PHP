@@ -142,11 +142,12 @@
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Users_By_Email"> https://auth0.com/docs/api/management/v2#!/Users_By_Email </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Users_By_Email"><abbr title="https://auth0.com/docs/api/management/v2#!/Users_By_Email">https://auth0.com/docs/api/management/v2#!/Users_By_Email</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -160,7 +161,7 @@
 
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Auth0-SDK-Contract-API-Management-UsersByEmailInterface.html"><abbr title="\Auth0\SDK\Contract\API\Management\UsersByEmailInterface">UsersByEmailInterface</abbr></a></dt>
-        <dd>Interface UsersByEmailInterface</dd>
+        <dd>Interface UsersByEmailInterface.</dd>
     
     
     
@@ -215,6 +216,13 @@
 </dt>
 <dd>Return a ResponsePaginator instance configured for the last HttpRequest.</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_instance">instance()</a>
+    <span>
+                                &nbsp;: static    </span>
+</dt>
+<dd></dd>
+
         </dl>
 
 
@@ -243,7 +251,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">23</span>
+    <span class="phpdocumentor-element-found-in__line">29</span>
 
     </aside>
 
@@ -272,7 +280,7 @@
         class="phpdocumentor-element
             -method
             -public
-                                                        "
+                                                -final        "
 >
     <h4 class="phpdocumentor-element__name" id="method___construct">
         __construct()
@@ -281,7 +289,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">22</span>
+    <span class="phpdocumentor-element-found-in__line">28</span>
 
     </aside>
 
@@ -289,7 +297,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+        <span class="phpdocumentor-signature__final">final</span>            <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -299,7 +307,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>HttpClient instance to use.</p>
+                    <section class="phpdocumentor-description"><p>httpClient instance to use</p>
 </section>
 
             </dd>
@@ -336,7 +344,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$email</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:users</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:users</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -346,7 +354,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Email address to search for (case-sensitive).</p>
+                    <section class="phpdocumentor-description"><p>email address to search for (case-sensitive)</p>
 </section>
 
             </dd>
@@ -355,7 +363,7 @@
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -382,7 +390,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">30</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
@@ -415,7 +423,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
     </aside>
 
@@ -448,7 +456,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
     </aside>
 
@@ -464,6 +472,50 @@
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
     <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Utility-HttpResponsePaginator.html"><abbr title="\Auth0\SDK\Utility\HttpResponsePaginator">HttpResponsePaginator</abbr></a></span>
+            &mdash;
+        
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_instance">
+        instance()
+        <a href="classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_instance" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">17</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">instance</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">static</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$httpClient</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"></section>
+
+            </dd>
+            </dl>
+
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">static</span>
             &mdash;
         
     

@@ -141,11 +141,12 @@ Handles requests to the Organizations endpoints of the v2 Management API.</p>
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Organizations"> https://auth0.com/docs/api/management/v2#!/Organizations </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Organizations"><abbr title="https://auth0.com/docs/api/management/v2#!/Organizations">https://auth0.com/docs/api/management/v2#!/Organizations</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -159,7 +160,7 @@ Handles requests to the Organizations endpoints of the v2 Management API.</p>
 
 <dl class="phpdocumentor-table-of-contents">
             <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Auth0-SDK-Contract-API-Management-OrganizationsInterface.html"><abbr title="\Auth0\SDK\Contract\API\Management\OrganizationsInterface">OrganizationsInterface</abbr></a></dt>
-        <dd>Interface OrganizationsInterface</dd>
+        <dd>Interface OrganizationsInterface.</dd>
     
     
     
@@ -220,7 +221,7 @@ Handles requests to the Organizations endpoints of the v2 Management API.</p>
                                 &nbsp;: <abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr>    </span>
 </dt>
 <dd>Create an invitation for an organization
-Required scope: `create:organization_invitations`</dd>
+Required scope: `create:organization_invitations`.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Auth0-SDK-API-Management-Organizations.html#method_delete">delete()</a>
@@ -235,7 +236,7 @@ Required scope: `create:organization_invitations`</dd>
                                 &nbsp;: <abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr>    </span>
 </dt>
 <dd>Delete an invitation (by ID) for an organization
-Required scope: `delete:organization_invitations`</dd>
+Required scope: `delete:organization_invitations`.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Auth0-SDK-API-Management-Organizations.html#method_get">get()</a>
@@ -285,7 +286,7 @@ Required scope: `delete:organization_invitations`</dd>
                                 &nbsp;: <abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr>    </span>
 </dt>
 <dd>Get an invitation (by ID) for an organization
-Required scope: `read:organization_invitations`</dd>
+Required scope: `read:organization_invitations`.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Auth0-SDK-API-Management-Organizations.html#method_getInvitations">getInvitations()</a>
@@ -293,7 +294,7 @@ Required scope: `read:organization_invitations`</dd>
                                 &nbsp;: <abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr>    </span>
 </dt>
 <dd>List invitations for an organization
-Required scope: `read:organization_invitations`</dd>
+Required scope: `read:organization_invitations`.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_getLastRequest">getLastRequest()</a>
@@ -315,7 +316,7 @@ Required scope: `read:organization_invitations`</dd>
                                 &nbsp;: <abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr>    </span>
 </dt>
 <dd>List the members (users) belonging to an organization
-Required scope: `read:organization_members`</dd>
+Required scope: `read:organization_members`.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_getResponsePaginator">getResponsePaginator()</a>
@@ -323,6 +324,13 @@ Required scope: `read:organization_members`</dd>
                                 &nbsp;: <a href="classes/Auth0-SDK-Utility-HttpResponsePaginator.html"><abbr title="\Auth0\SDK\Utility\HttpResponsePaginator">HttpResponsePaginator</abbr></a>    </span>
 </dt>
 <dd>Return a ResponsePaginator instance configured for the last HttpRequest.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a href="classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_instance">instance()</a>
+    <span>
+                                &nbsp;: static    </span>
+</dt>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Auth0-SDK-API-Management-Organizations.html#method_removeEnabledConnection">removeEnabledConnection()</a>
@@ -387,7 +395,7 @@ Required scope: `read:organization_members`</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">23</span>
+    <span class="phpdocumentor-element-found-in__line">29</span>
 
     </aside>
 
@@ -416,7 +424,7 @@ Required scope: `read:organization_members`</dd>
         class="phpdocumentor-element
             -method
             -public
-                                                        "
+                                                -final        "
 >
     <h4 class="phpdocumentor-element__name" id="method___construct">
         __construct()
@@ -425,7 +433,7 @@ Required scope: `read:organization_members`</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">22</span>
+    <span class="phpdocumentor-element-found-in__line">28</span>
 
     </aside>
 
@@ -433,7 +441,7 @@ Required scope: `read:organization_members`</dd>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+        <span class="phpdocumentor-signature__final">final</span>            <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -443,7 +451,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>HttpClient instance to use.</p>
+                    <section class="phpdocumentor-description"><p>httpClient instance to use</p>
 </section>
 
             </dd>
@@ -480,7 +488,7 @@ Required scope: `read:organization_members`</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">addEnabledConnection</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$connectionId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:organization_connections</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:organization_connections</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -490,7 +498,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to add a connection to.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to add a connection to</p>
 </section>
 
             </dd>
@@ -499,7 +507,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Connection (by ID) to add to organization.</p>
+                    <section class="phpdocumentor-description"><p>connection (by ID) to add to organization</p>
 </section>
 
             </dd>
@@ -508,7 +516,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Additional body content to send with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Additional body content to send with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -517,7 +525,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -554,7 +562,7 @@ Required scope: `read:organization_members`</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">addMemberRoles</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$roles</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:organization_member_roles</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:organization_member_roles</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -564,7 +572,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) user belongs to.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) user belongs to</p>
 </section>
 
             </dd>
@@ -573,7 +581,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User (by ID) to add roles to.</p>
+                    <section class="phpdocumentor-description"><p>user (by ID) to add roles to</p>
 </section>
 
             </dd>
@@ -582,7 +590,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>One or more roles (by ID) to add to the user.</p>
+                    <section class="phpdocumentor-description"><p>one or more roles (by ID) to add to the user</p>
 </section>
 
             </dd>
@@ -591,7 +599,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -628,7 +636,7 @@ Required scope: `read:organization_members`</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">addMembers</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$members</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:organization_members</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:organization_members</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -638,7 +646,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to add new members to.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to add new members to</p>
 </section>
 
             </dd>
@@ -647,7 +655,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>One or more users (by ID) to add from the organization.</p>
+                    <section class="phpdocumentor-description"><p>one or more users (by ID) to add from the organization</p>
 </section>
 
             </dd>
@@ -656,7 +664,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -693,7 +701,7 @@ Required scope: `read:organization_members`</dd>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">create</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$displayName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$branding</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$metadata</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:organizations</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">create:organizations</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -703,7 +711,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The name of the Organization.</p>
+                    <section class="phpdocumentor-description"><p>the name of the Organization</p>
 </section>
 
             </dd>
@@ -712,7 +720,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The displayed name of the Organization.</p>
+                    <section class="phpdocumentor-description"><p>the displayed name of the Organization</p>
 </section>
 
             </dd>
@@ -739,7 +747,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional body content to pass with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional body content to pass with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -748,7 +756,7 @@ Required scope: `read:organization_members`</dd>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -780,7 +788,7 @@ Required scope: `read:organization_members`</dd>
     </aside>
 
         <p class="phpdocumentor-summary">Create an invitation for an organization
-Required scope: `create:organization_invitations`</p>
+Required scope: `create:organization_invitations`.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -794,7 +802,7 @@ Required scope: `create:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to create the invitation for.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to create the invitation for</p>
 </section>
 
             </dd>
@@ -836,7 +844,7 @@ Required scope: `create:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional body content to pass with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional body content to pass with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -845,7 +853,7 @@ Required scope: `create:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -882,7 +890,7 @@ Required scope: `create:organization_invitations`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">delete</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:organizations</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:organizations</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -892,7 +900,7 @@ Required scope: `create:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to delete.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to delete</p>
 </section>
 
             </dd>
@@ -901,7 +909,7 @@ Required scope: `create:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -933,7 +941,7 @@ Required scope: `create:organization_invitations`</p>
     </aside>
 
         <p class="phpdocumentor-summary">Delete an invitation (by ID) for an organization
-Required scope: `delete:organization_invitations`</p>
+Required scope: `delete:organization_invitations`.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -947,7 +955,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to request.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to request</p>
 </section>
 
             </dd>
@@ -956,7 +964,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Invitation (by ID) to request.</p>
+                    <section class="phpdocumentor-description"><p>invitation (by ID) to request</p>
 </section>
 
             </dd>
@@ -965,7 +973,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1002,7 +1010,7 @@ Required scope: `delete:organization_invitations`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organizations</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organizations</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1012,7 +1020,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to retrieve details for.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to retrieve details for</p>
 </section>
 
             </dd>
@@ -1021,7 +1029,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1058,7 +1066,7 @@ Required scope: `delete:organization_invitations`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getAll</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organizations</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organizations</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1068,7 +1076,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1105,7 +1113,7 @@ Required scope: `delete:organization_invitations`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getByName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organizations</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organizations</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1115,7 +1123,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by name parameter provided during creation) to retrieve details for.</p>
+                    <section class="phpdocumentor-description"><p>organization (by name parameter provided during creation) to retrieve details for</p>
 </section>
 
             </dd>
@@ -1124,7 +1132,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1161,7 +1169,7 @@ Required scope: `delete:organization_invitations`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getEnabledConnection</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$connectionId</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organization_connections</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organization_connections</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1171,7 +1179,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) that the connection is associated with.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) that the connection is associated with</p>
 </section>
 
             </dd>
@@ -1180,7 +1188,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Connection (by ID) to retrieve details for.</p>
+                    <section class="phpdocumentor-description"><p>connection (by ID) to retrieve details for</p>
 </section>
 
             </dd>
@@ -1189,7 +1197,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1226,7 +1234,7 @@ Required scope: `delete:organization_invitations`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getEnabledConnections</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organization_connections</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organization_connections</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1236,7 +1244,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to list connections of.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to list connections of</p>
 </section>
 
             </dd>
@@ -1245,7 +1253,7 @@ Required scope: `delete:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1272,7 +1280,7 @@ Required scope: `delete:organization_invitations`</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">30</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
@@ -1310,7 +1318,7 @@ Required scope: `delete:organization_invitations`</p>
     </aside>
 
         <p class="phpdocumentor-summary">Get an invitation (by ID) for an organization
-Required scope: `read:organization_invitations`</p>
+Required scope: `read:organization_invitations`.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -1324,7 +1332,7 @@ Required scope: `read:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to request.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to request</p>
 </section>
 
             </dd>
@@ -1333,7 +1341,7 @@ Required scope: `read:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Invitation (by ID) to request.</p>
+                    <section class="phpdocumentor-description"><p>invitation (by ID) to request</p>
 </section>
 
             </dd>
@@ -1342,7 +1350,7 @@ Required scope: `read:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1374,7 +1382,7 @@ Required scope: `read:organization_invitations`</p>
     </aside>
 
         <p class="phpdocumentor-summary">List invitations for an organization
-Required scope: `read:organization_invitations`</p>
+Required scope: `read:organization_invitations`.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -1388,7 +1396,7 @@ Required scope: `read:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to list invitations for.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to list invitations for</p>
 </section>
 
             </dd>
@@ -1397,7 +1405,7 @@ Required scope: `read:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1424,7 +1432,7 @@ Required scope: `read:organization_invitations`</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">38</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
     </aside>
 
@@ -1467,7 +1475,7 @@ Required scope: `read:organization_invitations`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getMemberRoles</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organization_member_roles</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">read:organization_member_roles</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1477,7 +1485,7 @@ Required scope: `read:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) user belongs to.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) user belongs to</p>
 </section>
 
             </dd>
@@ -1486,7 +1494,7 @@ Required scope: `read:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User (by ID) to add role to.</p>
+                    <section class="phpdocumentor-description"><p>user (by ID) to add role to</p>
 </section>
 
             </dd>
@@ -1495,7 +1503,7 @@ Required scope: `read:organization_invitations`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1527,7 +1535,7 @@ Required scope: `read:organization_invitations`</p>
     </aside>
 
         <p class="phpdocumentor-summary">List the members (users) belonging to an organization
-Required scope: `read:organization_members`</p>
+Required scope: `read:organization_members`.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -1541,7 +1549,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to list members of.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to list members of</p>
 </section>
 
             </dd>
@@ -1550,7 +1558,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1577,7 +1585,7 @@ Required scope: `read:organization_members`</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">46</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
     </aside>
 
@@ -1593,6 +1601,50 @@ Required scope: `read:organization_members`</p>
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
     <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Utility-HttpResponsePaginator.html"><abbr title="\Auth0\SDK\Utility\HttpResponsePaginator">HttpResponsePaginator</abbr></a></span>
+            &mdash;
+        
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                    -static                    "
+>
+    <h4 class="phpdocumentor-element__name" id="method_instance">
+        instance()
+        <a href="classes/Auth0-SDK-API-Management-ManagementEndpoint.html#method_instance" class="headerlink"><i class="fas fa-link"></i></a>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/API/Management/ManagementEndpoint.php"><a href="files/src-api-management-managementendpoint.html"><abbr title="src/API/Management/ManagementEndpoint.php">ManagementEndpoint.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">17</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">instance</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$httpClient</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">static</span></code>
+
+        <section class="phpdocumentor-description"></section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$httpClient</span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-HttpClient.html"><abbr title="\Auth0\SDK\Utility\HttpClient">HttpClient</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"></section>
+
+            </dd>
+            </dl>
+
+    
+
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+    <span class="phpdocumentor-signature__response_type">static</span>
             &mdash;
         
     
@@ -1620,7 +1672,7 @@ Required scope: `read:organization_members`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">removeEnabledConnection</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$connectionId</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:organization_connections</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:organization_connections</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1630,7 +1682,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to remove connection from.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to remove connection from</p>
 </section>
 
             </dd>
@@ -1639,7 +1691,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Connection (by ID) to remove from organization.</p>
+                    <section class="phpdocumentor-description"><p>connection (by ID) to remove from organization</p>
 </section>
 
             </dd>
@@ -1648,7 +1700,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1685,7 +1737,7 @@ Required scope: `read:organization_members`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">removeMemberRoles</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$userId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$roles</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:organization_member_roles</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:organization_member_roles</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1695,7 +1747,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) user belongs to.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) user belongs to</p>
 </section>
 
             </dd>
@@ -1704,7 +1756,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>User (by ID) to remove roles from.</p>
+                    <section class="phpdocumentor-description"><p>user (by ID) to remove roles from</p>
 </section>
 
             </dd>
@@ -1713,7 +1765,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>One or more roles (by ID) to remove from the user.</p>
+                    <section class="phpdocumentor-description"><p>one or more roles (by ID) to remove from the user</p>
 </section>
 
             </dd>
@@ -1722,7 +1774,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1759,7 +1811,7 @@ Required scope: `read:organization_members`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">removeMembers</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$members</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:organization_members</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">delete:organization_members</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1769,7 +1821,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) users belong to.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) users belong to</p>
 </section>
 
             </dd>
@@ -1778,7 +1830,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>One or more users (by ID) to remove from the organization.</p>
+                    <section class="phpdocumentor-description"><p>one or more users (by ID) to remove from the organization</p>
 </section>
 
             </dd>
@@ -1787,7 +1839,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1824,7 +1876,7 @@ Required scope: `read:organization_members`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">update</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$name</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$displayName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$branding</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$metadata</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:organizations</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:organizations</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1834,7 +1886,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to update.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to update</p>
 </section>
 
             </dd>
@@ -1843,7 +1895,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The name of the Organization.</p>
+                    <section class="phpdocumentor-description"><p>the name of the Organization</p>
 </section>
 
             </dd>
@@ -1852,7 +1904,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The displayed name of the Organization.</p>
+                    <section class="phpdocumentor-description"><p>the displayed name of the Organization</p>
 </section>
 
             </dd>
@@ -1879,7 +1931,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional body content to pass with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional body content to pass with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -1888,7 +1940,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -1925,7 +1977,7 @@ Required scope: `read:organization_members`</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">updateEnabledConnection</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$connectionId</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:organization_connections</code></p>
+        <section class="phpdocumentor-description"><p>Required scope: <code class="prettyprint">update:organization_connections</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1935,7 +1987,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Organization (by ID) to add a connection to.</p>
+                    <section class="phpdocumentor-description"><p>organization (by ID) to add a connection to</p>
 </section>
 
             </dd>
@@ -1944,7 +1996,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Connection (by ID) to add to organization.</p>
+                    <section class="phpdocumentor-description"><p>connection (by ID) to add to organization</p>
 </section>
 
             </dd>
@@ -1953,7 +2005,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Additional body content to pass with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Additional body content to pass with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -1962,7 +2014,7 @@ Required scope: `read:organization_members`</p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>

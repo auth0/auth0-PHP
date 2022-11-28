@@ -121,7 +121,7 @@
 
     </aside>
 
-            <p class="phpdocumentor-summary">Interface EmailTemplatesInterface</p>
+            <p class="phpdocumentor-summary">Interface EmailTemplatesInterface.</p>
 
 
 
@@ -199,8 +199,8 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">create</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$template</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$from</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$subject</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$syntax</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$enabled</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$additional</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>See docs @link below for valid names and fields.
-Required scope: <code class="prettyprint">create:email_templates</code></p>
+        <section class="phpdocumentor-description"><p>See docs @see below for valid names and fields.
+Required scope: <code class="prettyprint">create:email_templates</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -210,7 +210,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The template name. See the @link for a list of templates available.</p>
+                    <section class="phpdocumentor-description"><p>The template name. See the @see for a list of templates available.</p>
 </section>
 
             </dd>
@@ -219,7 +219,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Body of the email template.</p>
+                    <section class="phpdocumentor-description"><p>body of the email template</p>
 </section>
 
             </dd>
@@ -228,7 +228,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Senders from email address.</p>
+                    <section class="phpdocumentor-description"><p>senders from email address</p>
 </section>
 
             </dd>
@@ -237,7 +237,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Subject line of the email.</p>
+                    <section class="phpdocumentor-description"><p>subject line of the email</p>
 </section>
 
             </dd>
@@ -246,7 +246,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Syntax of the template body.</p>
+                    <section class="phpdocumentor-description"><p>syntax of the template body</p>
 </section>
 
             </dd>
@@ -255,7 +255,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">bool</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Whether the template is enabled (true) or disabled (false).</p>
+                    <section class="phpdocumentor-description"><p>whether the template is enabled (true) or disabled (false)</p>
 </section>
 
             </dd>
@@ -264,7 +264,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Additional body content to pass with the API request. See @link for supported options.</p>
+                    <section class="phpdocumentor-description"><p>Additional body content to pass with the API request. See @see for supported options.</p>
 </section>
 
             </dd>
@@ -273,7 +273,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -291,7 +291,7 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ArgumentException.html"><abbr title="\Auth0\SDK\Exception\ArgumentException">ArgumentException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When an invalid <code class="prettyprint">template</code>, <code class="prettyprint">body</code>, <code class="prettyprint">from</code>, <code class="prettyprint">subject</code>, or <code class="prettyprint">syntax</code> are provided.</p>
+                                                 <section class="phpdocumentor-description"><p>when an invalid <code class="prettyprint">template</code>, <code class="prettyprint">body</code>, <code class="prettyprint">from</code>, <code class="prettyprint">subject</code>, or <code class="prettyprint">syntax</code> are provided</p>
 </section>
 
                                     </dd>
@@ -301,16 +301,17 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When the API request fails due to a network error.</p>
+                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates"> https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates"><abbr title="https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates">https://auth0.com/docs/api/management/v2#!/Email_Templates/post_email_templates</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -343,8 +344,8 @@ Required scope: <code class="prettyprint">create:email_templates</code></p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
-        <section class="phpdocumentor-description"><p>See docs @link below for valid names and fields.
-Required scope: <code class="prettyprint">read:email_templates</code></p>
+        <section class="phpdocumentor-description"><p>See docs @see below for valid names and fields.
+Required scope: <code class="prettyprint">read:email_templates</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -354,7 +355,7 @@ Required scope: <code class="prettyprint">read:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The email template name. See the @link for a list of templates available.</p>
+                    <section class="phpdocumentor-description"><p>The email template name. See the @see for a list of templates available.</p>
 </section>
 
             </dd>
@@ -363,7 +364,7 @@ Required scope: <code class="prettyprint">read:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -381,7 +382,7 @@ Required scope: <code class="prettyprint">read:email_templates</code></p>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ArgumentException.html"><abbr title="\Auth0\SDK\Exception\ArgumentException">ArgumentException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When an invalid <code class="prettyprint">templateName</code> is provided.</p>
+                                                 <section class="phpdocumentor-description"><p>when an invalid <code class="prettyprint">templateName</code> is provided</p>
 </section>
 
                                     </dd>
@@ -391,16 +392,17 @@ Required scope: <code class="prettyprint">read:email_templates</code></p>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When the API request fails due to a network error.</p>
+                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName"> https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName"><abbr title="https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName">https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -434,8 +436,8 @@ Required scope: <code class="prettyprint">read:email_templates</code></p>
                     <span class="phpdocumentor-signature__name">patch</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
         <section class="phpdocumentor-description"><p>This will update only the email template data fields provided (see HTTP PATCH).
-See docs @link below for valid names, fields, and possible responses.
-Required scope: <code class="prettyprint">update:email_templates</code></p>
+See docs @see below for valid names, fields, and possible responses.
+Required scope: <code class="prettyprint">update:email_templates</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -445,7 +447,7 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The email template name. See the @link for a list of templates available.</p>
+                    <section class="phpdocumentor-description"><p>The email template name. See the @see for a list of templates available.</p>
 </section>
 
             </dd>
@@ -454,7 +456,7 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Update existing template fields with this data.</p>
+                    <section class="phpdocumentor-description"><p>update existing template fields with this data</p>
 </section>
 
             </dd>
@@ -463,7 +465,7 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -481,7 +483,7 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ArgumentException.html"><abbr title="\Auth0\SDK\Exception\ArgumentException">ArgumentException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When an invalid <code class="prettyprint">templateName</code> or <code class="prettyprint">body</code> are provided.</p>
+                                                 <section class="phpdocumentor-description"><p>when an invalid <code class="prettyprint">templateName</code> or <code class="prettyprint">body</code> are provided</p>
 </section>
 
                                     </dd>
@@ -491,16 +493,17 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When the API request fails due to a network error.</p>
+                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName"> https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName"><abbr title="https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName">https://auth0.com/docs/api/management/v2#!/Email_Templates/patch_email_templates_by_templateName</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
@@ -534,8 +537,8 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                     <span class="phpdocumentor-signature__name">update</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$templateName</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$body</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\Psr\Http\Message\ResponseInterface">ResponseInterface</abbr></span></code>
 
         <section class="phpdocumentor-description"><p>This will replace the email template data.
-See docs @link below for valid names, fields, and possible responses.
-Required scope: <code class="prettyprint">update:email_templates</code></p>
+See docs @see below for valid names, fields, and possible responses.
+Required scope: <code class="prettyprint">update:email_templates</code>.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -545,7 +548,7 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>The email template name. See the @link for a list of templates available.</p>
+                    <section class="phpdocumentor-description"><p>The email template name. See the @see for a list of templates available.</p>
 </section>
 
             </dd>
@@ -554,7 +557,7 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Replace existing template with this data.</p>
+                    <section class="phpdocumentor-description"><p>replace existing template with this data</p>
 </section>
 
             </dd>
@@ -563,7 +566,7 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Utility-Request-RequestOptions.html"><abbr title="\Auth0\SDK\Utility\Request\RequestOptions">RequestOptions</abbr></a>|null</span>
                  = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @link for supported options.)</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)</p>
 </section>
 
             </dd>
@@ -581,7 +584,7 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ArgumentException.html"><abbr title="\Auth0\SDK\Exception\ArgumentException">ArgumentException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When an invalid <code class="prettyprint">templateName</code> or <code class="prettyprint">body</code> are provided.</p>
+                                                 <section class="phpdocumentor-description"><p>when an invalid <code class="prettyprint">templateName</code> or <code class="prettyprint">body</code> are provided</p>
 </section>
 
                                     </dd>
@@ -591,16 +594,17 @@ Required scope: <code class="prettyprint">update:email_templates</code></p>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
                                                             
-                                                 <section class="phpdocumentor-description"><p>When the API request fails due to a network error.</p>
+                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">link</span>
+                    <span class="phpdocumentor-tag__name">see</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
-                                                                                                        <a class="phpdocumentor-tag-link" href="https://auth0.com/docs/api/management/v2#!/Email_Templates/put_email_templates_by_templateName"> https://auth0.com/docs/api/management/v2#!/Email_Templates/put_email_templates_by_templateName </a>
-                    
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/management/v2#!/Email_Templates/put_email_templates_by_templateName"><abbr title="https://auth0.com/docs/api/management/v2#!/Email_Templates/put_email_templates_by_templateName">https://auth0.com/docs/api/management/v2#!/Email_Templates/put_email_templates_by_templateName</abbr></a></span>
+                                        
+                                             
                                     </dd>
                         </dl>
 
