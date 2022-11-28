@@ -51,7 +51,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        /* @var array<int|string|null> $parameters */
+        /** @var array<int|string|null> $parameters */
 
         return $this->getHttpClient()->
             method('get')->
@@ -78,7 +78,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             'audience' => $audience,
         ], $parameters);
 
-        /* @var array<int|string|null> $params */
+        /** @var array<int|string|null> $params */
 
         return $this->getAll($params, $options);
     }
@@ -100,7 +100,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             'client_id' => $clientId,
         ], $parameters);
 
-        /* @var array<int|string|null> $params */
+        /** @var array<int|string|null> $params */
 
         return $this->getAll($params, $options);
     }

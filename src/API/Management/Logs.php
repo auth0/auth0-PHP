@@ -23,7 +23,7 @@ final class Logs extends ManagementEndpoint implements LogsInterface
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        /* @var array<int|string|null> $parameters */
+        /** @var array<int|string|null> $parameters */
 
         return $this->getHttpClient()->
             method('get')->

@@ -391,7 +391,7 @@ final class HttpRequest
             $body = json_encode($body, JSON_THROW_ON_ERROR);
         }
 
-        /* @var int|string $body */
+        /** @var int|string $body */
         $this->body = (string) $body;
 
         return $this;

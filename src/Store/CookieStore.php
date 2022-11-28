@@ -23,11 +23,6 @@ final class CookieStore implements StoreInterface
     public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
 
     /**
-     * The threshold (in bytes) in which chunking/splitting occurs.
-     */
-    private int $threshold;
-
-    /**
      * Internal cache of the storage state.
      *
      * @var array<mixed>
@@ -61,8 +56,6 @@ final class CookieStore implements StoreInterface
         private SdkConfiguration $configuration,
         private string $namespace = 'auth0',
     ) {
-        $this->threshold = self::KEY_CHUNKING_THRESHOLD - \mb_strlen($this->namespace);
-
         $this->getState();
     }
 
@@ -72,14 +65,6 @@ final class CookieStore implements StoreInterface
     public function getNamespace(): string
     {
         return $this->namespace;
-    }
-
-    /**
-     * Returns the current threshold for chunk size calculations.
-     */
-    public function getThreshold(): int
-    {
-        return $this->threshold;
     }
 
     /**
@@ -213,10 +198,11 @@ final class CookieStore implements StoreInterface
              *
              * @phpstan-ignore-next-line
              */
-            $chunks = mb_str_split($encrypted, $this->threshold);
+            $threshold = self::KEY_CHUNKING_THRESHOLD - \mb_strlen($this->namespace);
 
-            // @phpstan-ignore-next-line
-            if (false !== $chunks) {
+            if ($threshold > 0) {
+                $chunks = mb_str_split($encrypted, $threshold);
+
                 // Store each "chunk" as a separate cookie on the host device.
                 foreach ($chunks as $index => $chunk) {
                     // Add a '_X' index suffix to each chunked cookie; we'll use this to iterate over all when we rejoin the cookie for decryption.
@@ -228,7 +214,7 @@ final class CookieStore implements StoreInterface
                     // Push the updated cookie to the host device for persistence.
                     // @codeCoverageIgnoreStart
                     if (! \defined('AUTH0_TESTS_DIR')) {
-                        /* @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
+                        /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
                         setrawcookie($cookieName, $chunk, $setOptions);
                     }
                     // @codeCoverageIgnoreEnd
@@ -249,7 +235,7 @@ final class CookieStore implements StoreInterface
             // Push the cookie deletion command to the host device.
             // @codeCoverageIgnoreStart
             if (! \defined('AUTH0_TESTS_DIR')) {
-                /* @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $deleteOptions */
+                /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $deleteOptions */
                 setrawcookie($cookieName, '', $deleteOptions);
             }
             // @codeCoverageIgnoreEnd
@@ -510,7 +496,8 @@ final class CookieStore implements StoreInterface
             return null;
         }
 
-        return json_decode($data, true);
-        /* @var array<mixed> $data */
+        $data = json_decode($data, true);
+        /** @var array<mixed> $data */
+        return $data;
     }
 }

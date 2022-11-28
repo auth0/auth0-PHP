@@ -31,7 +31,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
             [$strategy, \Auth0\SDK\Exception\ArgumentException::missing('strategy')],
         ])->isString();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->
@@ -52,7 +52,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        /* @var array<int|string|null> $parameters */
+        /** @var array<int|string|null> $parameters */
 
         return $this->getHttpClient()->
             method('get')->

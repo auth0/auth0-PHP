@@ -89,7 +89,8 @@ final class Toolkit
         }
 
         /** @var array<mixed> $response */
-        return self::filter([$result])->array()->trim()[0];
+        $response = self::filter([$result])->array()->trim()[0];
+        return $response;
     }
 
     /**

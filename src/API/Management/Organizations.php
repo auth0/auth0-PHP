@@ -34,7 +34,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$displayName, \Auth0\SDK\Exception\ArgumentException::missing('displayName')],
         ])->isString();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->
@@ -113,7 +113,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$displayName, \Auth0\SDK\Exception\ArgumentException::missing('displayName')],
         ])->isString();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('patch')->
@@ -165,7 +165,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->
@@ -419,8 +419,8 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         [$id, $clientId] = Toolkit::filter([$id, $clientId])->string()->trim();
         [$inviter, $invitee, $body] = Toolkit::filter([$inviter, $invitee, $body])->array()->trim();
 
-        /* @var array{name?: string} $inviter */
-        /* @var array{email?: string} $invitee */
+        /** @var array{name?: string} $inviter */
+        /** @var array{email?: string} $invitee */
 
         Toolkit::assert([
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
@@ -440,7 +440,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             throw \Auth0\SDK\Exception\ArgumentException::missing('invitee.email');
         }
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->

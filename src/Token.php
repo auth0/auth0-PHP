@@ -130,14 +130,15 @@ final class Token implements TokenInterface
             $claim = [$claim];
         }
 
-        /* @var array<string>|null $claim */
+        /** @var array<string>|null $claim */
         return $claim;
     }
 
     public function getAuthorizedParty(): ?string
     {
-        return $this->getParser()->getClaim('azp');
-        /* @var string|null $claim */
+        $claim = $this->getParser()->getClaim('azp');
+        /** @var string|null $claim */
+        return $claim;
     }
 
     public function getAuthTime(): ?int
@@ -166,26 +167,30 @@ final class Token implements TokenInterface
 
     public function getIssuer(): ?string
     {
-        return $this->getParser()->getClaim('iss');
-        /* @var string|null $claim */
+        $claim = $this->getParser()->getClaim('iss');
+        /** @var string|null $claim */
+        return $claim;
     }
 
     public function getNonce(): ?string
     {
-        return $this->getParser()->getClaim('nonce');
-        /* @var string|null $claim */
+        $claim = $this->getParser()->getClaim('nonce');
+        /** @var string|null $claim */
+        return $claim;
     }
 
     public function getOrganization(): ?string
     {
-        return $this->getParser()->getClaim('org_id');
-        /* @var string|null $claim */
+        $claim = $this->getParser()->getClaim('org_id');
+        /** @var string|null $claim */
+        return $claim;
     }
 
     public function getSubject(): ?string
     {
-        return $this->getParser()->getClaim('sub');
-        /* @var string|null $claim */
+        $claim = $this->getParser()->getClaim('sub');
+        /** @var string|null $claim */
+        return $claim;
     }
 
     public function toArray(): array

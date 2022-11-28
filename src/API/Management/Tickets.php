@@ -29,7 +29,7 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
             [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
         ])->isString();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->

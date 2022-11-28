@@ -333,7 +333,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                         /** @var mixed $result */
                         $resultCount = \is_array($result) ? \count($result) : 0;
 
-                        /* @var array<array<mixed>> $result */
+                        /** @var array<array<mixed>> $result */
                         for ($i = 0; $i < $resultCount; ++$i) {
                             $hadResults = true;
 

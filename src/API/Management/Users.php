@@ -33,7 +33,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->
@@ -53,7 +53,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        /* @var array<int|string|null> $parameters */
+        /** @var array<int|string|null> $parameters */
 
         return $this->getHttpClient()->
             method('get')->

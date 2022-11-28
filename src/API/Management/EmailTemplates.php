@@ -38,7 +38,7 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
             [$syntax, \Auth0\SDK\Exception\ArgumentException::missing('syntax')],
         ])->isString();
 
-        /* @var array<mixed> $additional */
+        /** @var array<mixed> $additional */
 
         return $this->getHttpClient()->
             method('post')->

@@ -25,7 +25,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         [$name] = Toolkit::filter([$name])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         Toolkit::assert([
             [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
@@ -49,7 +49,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        /* @var array<int|string|null> $parameters */
+        /** @var array<int|string|null> $parameters */
 
         return $this->getHttpClient()->
             method('get')->

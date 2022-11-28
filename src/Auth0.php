@@ -142,7 +142,7 @@ final class Auth0 implements Auth0Interface
             'screen_hint' => 'signup',
         ], $params);
 
-        /* @var array<int|string|null>|null $params */
+        /** @var array<int|string|null>|null $params */
 
         return $this->login($redirectUrl, $params);
     }
@@ -163,7 +163,7 @@ final class Auth0 implements Auth0Interface
                 'organization' => $invite['organization'],
             ], $params);
 
-            /* @var array<int|string|null>|null $params */
+            /** @var array<int|string|null>|null $params */
 
             return $this->login($redirectUrl, $params);
         }
@@ -354,7 +354,7 @@ final class Auth0 implements Auth0Interface
             }
         }
 
-        /* @var array<array<mixed>|int|string>|null $user */
+        /** @var array<array<mixed>|int|string>|null $user */
 
         $this->setUser($user ?? []);
         $this->deferStateSaving(false);

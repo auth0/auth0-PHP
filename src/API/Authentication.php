@@ -197,8 +197,8 @@ final class Authentication implements AuthenticationInterface
     ): ResponseInterface {
         [$body, $headers] = Toolkit::filter([$body, $headers])->array()->trim();
 
-        /* @var array<mixed> $body */
-        /* @var array<int|string> $headers */
+        /** @var array<mixed> $body */
+        /** @var array<int|string> $headers */
 
         return $this->getHttpClient()->
             method('post')->
@@ -247,8 +247,8 @@ final class Authentication implements AuthenticationInterface
             $body['authParams'] = (object) $body['authParams'];
         }
 
-        /* @var array<mixed> $body */
-        /* @var array<int|string> $headers */
+        /** @var array<mixed> $body */
+        /** @var array<int|string> $headers */
 
         return $this->passwordlessStart($body, $headers);
     }
@@ -271,8 +271,8 @@ final class Authentication implements AuthenticationInterface
             ],
         ])->array()->trim()[0];
 
-        /* @var array<mixed> $body */
-        /* @var array<int|string> $headers */
+        /** @var array<mixed> $body */
+        /** @var array<int|string> $headers */
 
         return $this->passwordlessStart($body, $headers);
     }
@@ -312,8 +312,8 @@ final class Authentication implements AuthenticationInterface
             'client_secret' => $this->getConfiguration()->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
         ], $params);
 
-        /* @var array<bool|int|string> $parameters */
-        /* @var array<int|string> $headers */
+        /** @var array<bool|int|string> $parameters */
+        /** @var array<int|string> $headers */
 
         return $this->getHttpClient()->
             method('post')->
@@ -346,7 +346,7 @@ final class Authentication implements AuthenticationInterface
             ],
         ])->array()->trim()[0];
 
-        /* @var array<int|string|null> $params */
+        /** @var array<int|string|null> $params */
 
         return $this->oauthToken('authorization_code', $params);
     }
@@ -374,8 +374,8 @@ final class Authentication implements AuthenticationInterface
             'realm'    => $realm,
         ], $params);
 
-        /* @var array<int|string|null> $parameters */
-        /* @var array<int|string> $headers */
+        /** @var array<int|string|null> $parameters */
+        /** @var array<int|string> $headers */
 
         return $this->oauthToken('http://auth0.com/oauth/grant-type/password-realm', $parameters, $headers);
     }
@@ -400,8 +400,8 @@ final class Authentication implements AuthenticationInterface
             'password' => $password,
         ], $params);
 
-        /* @var array<int|string|null> $parameters */
-        /* @var array<int|string> $headers */
+        /** @var array<int|string|null> $parameters */
+        /** @var array<int|string> $headers */
 
         return $this->oauthToken('password', $parameters, $headers);
     }
@@ -417,8 +417,8 @@ final class Authentication implements AuthenticationInterface
             'audience' => $this->getConfiguration()->defaultAudience(),
         ], $params);
 
-        /* @var array<int|string|null> $parameters */
-        /* @var array<int|string> $headers */
+        /** @var array<int|string|null> $parameters */
+        /** @var array<int|string> $headers */
 
         return $this->oauthToken('client_credentials', $parameters, $headers);
     }
@@ -440,8 +440,8 @@ final class Authentication implements AuthenticationInterface
             'refresh_token' => $refreshToken,
         ], $params);
 
-        /* @var array<int|string|null> $parameters */
-        /* @var array<int|string> $headers */
+        /** @var array<int|string|null> $parameters */
+        /** @var array<int|string> $headers */
 
         return $this->oauthToken('refresh_token', $parameters, $headers);
     }
@@ -462,8 +462,8 @@ final class Authentication implements AuthenticationInterface
             [$connection, \Auth0\SDK\Exception\ArgumentException::missing('connection')],
         ])->isString();
 
-        /* @var array<mixed> $body */
-        /* @var array<int|string> $headers */
+        /** @var array<mixed> $body */
+        /** @var array<int|string> $headers */
 
         return $this->getHttpClient()->
             method('post')->
@@ -492,8 +492,8 @@ final class Authentication implements AuthenticationInterface
             [$connection, \Auth0\SDK\Exception\ArgumentException::missing('connection')],
         ])->isString();
 
-        /* @var array<mixed> $body */
-        /* @var array<int|string> $headers */
+        /** @var array<mixed> $body */
+        /** @var array<int|string> $headers */
 
         return $this->getHttpClient()->
             method('post')->

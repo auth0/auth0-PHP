@@ -29,7 +29,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
             [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
         ])->isString();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->
@@ -49,7 +49,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
     ): ResponseInterface {
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
-        /* @var array<int|string|null> $parameters */
+        /** @var array<int|string|null> $parameters */
 
         return $this->getHttpClient()->
             method('get')->

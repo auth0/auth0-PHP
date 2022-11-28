@@ -34,7 +34,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
             [$credentials, \Auth0\SDK\Exception\ArgumentException::missing('credentials')],
         ])->isArray();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->
@@ -76,7 +76,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
             [$credentials, \Auth0\SDK\Exception\ArgumentException::missing('credentials')],
         ])->isArray();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('patch')->

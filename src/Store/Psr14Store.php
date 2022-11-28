@@ -126,9 +126,7 @@ final class Psr14Store implements StoreInterface
         if (! $this->booted) {
             $event = $this->configuration->eventDispatcher()->dispatch(new Boot($this, $this->sessionPrefix));
 
-            /*
-             * @var Boot $event
-             */
+            /** @var Boot $event */
 
             $this->sessionPrefix = $event->getPrefix();
             $this->booted = true;

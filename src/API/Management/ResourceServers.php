@@ -33,7 +33,7 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->

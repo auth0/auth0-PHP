@@ -35,7 +35,7 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
             [$deviceId, \Auth0\SDK\Exception\ArgumentException::missing('deviceId')],
         ])->isString();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->
@@ -74,7 +74,7 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
             ],
         ])->array()->trim()[0];
 
-        /* @var array<int|string|null> $params */
+        /** @var array<int|string|null> $params */
 
         return $this->getHttpClient()->
             method('get')->

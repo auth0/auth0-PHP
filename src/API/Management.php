@@ -75,13 +75,6 @@ final class Management implements ManagementInterface
     private ?HttpClient $httpClient = null;
 
     /**
-     * Cache of Management singletons.
-     *
-     * @var array<object>
-     */
-    private array $instances = [];
-
-    /**
      * Management constructor.
      *
      * @param  array<mixed>|SdkConfiguration  $configuration  Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
@@ -128,7 +121,7 @@ final class Management implements ManagementInterface
 
             if ($item->isHit()) {
                 $managementToken = $item->get();
-                /* @var int|string|null $managementToken */
+                /** @var int|string|null $managementToken */
             }
         }
 
@@ -138,7 +131,7 @@ final class Management implements ManagementInterface
             $response = $authentication->clientCredentials(['audience' => $this->getConfiguration()->formatDomain(true) . '/api/v2/']);
             $decoded = HttpResponse::decodeContent($response);
 
-            /* @var array{access_token?: (string|null), expires_in?: (int|string), error?: int|string, error_description?: int|string} $decoded */
+            /** @var array{access_token?: (string|null), expires_in?: (int|string), error?: int|string, error_description?: int|string} $decoded */
 
             if (HttpResponse::wasSuccessful($response)) {
                 if (isset($decoded['access_token'])) {
@@ -185,160 +178,121 @@ final class Management implements ManagementInterface
 
     public function actions(): ActionsInterface
     {
-        return $this->getClassInstance(Actions::class);
-        /* @var ActionsInterface $class */
+        return Actions::instance($this->getHttpClient());
     }
 
     public function attackProtection(): AttackProtectionInterface
     {
-        return $this->getClassInstance(AttackProtection::class);
-        /* @var AttackProtectionInterface $class */
+        return AttackProtection::instance($this->getHttpClient());
     }
 
     public function blacklists(): BlacklistsInterface
     {
-        return $this->getClassInstance(Blacklists::class);
-        /* @var BlacklistsInterface $class */
+        return Blacklists::instance($this->getHttpClient());
     }
 
     public function clients(): ClientsInterface
     {
-        return $this->getClassInstance(Clients::class);
-        /* @var ClientsInterface $class */
+        return Clients::instance($this->getHttpClient());
     }
 
     public function connections(): ConnectionsInterface
     {
-        return $this->getClassInstance(Connections::class);
-        /* @var ConnectionsInterface $class */
+        return Connections::instance($this->getHttpClient());
     }
 
     public function clientGrants(): ClientGrantsInterface
     {
-        return $this->getClassInstance(ClientGrants::class);
-        /* @var ClientGrantsInterface $class */
+        return ClientGrants::instance($this->getHttpClient());
     }
 
     public function deviceCredentials(): DeviceCredentialsInterface
     {
-        return $this->getClassInstance(DeviceCredentials::class);
-        /* @var DeviceCredentialsInterface $class */
+        return DeviceCredentials::instance($this->getHttpClient());
     }
 
     public function emails(): EmailsInterface
     {
-        return $this->getClassInstance(Emails::class);
-        /* @var EmailsInterface $class */
+        return Emails::instance($this->getHttpClient());
     }
 
     public function emailTemplates(): EmailTemplatesInterface
     {
-        return $this->getClassInstance(EmailTemplates::class);
-        /* @var EmailTemplatesInterface $class */
+        return EmailTemplates::instance($this->getHttpClient());
     }
 
     public function grants(): GrantsInterface
     {
-        return $this->getClassInstance(Grants::class);
-        /* @var GrantsInterface $class */
+        return Grants::instance($this->getHttpClient());
     }
 
     public function guardian(): GuardianInterface
     {
-        return $this->getClassInstance(Guardian::class);
-        /* @var GuardianInterface $class */
+        return Guardian::instance($this->getHttpClient());
     }
 
     public function jobs(): JobsInterface
     {
-        return $this->getClassInstance(Jobs::class);
-        /* @var JobsInterface $class */
+        return Jobs::instance($this->getHttpClient());
     }
 
     public function logs(): LogsInterface
     {
-        return $this->getClassInstance(Logs::class);
-        /* @var LogsInterface $class */
+        return Logs::instance($this->getHttpClient());
     }
 
     public function logStreams(): LogStreamsInterface
     {
-        return $this->getClassInstance(LogStreams::class);
-        /* @var LogStreamsInterface $class */
+        return LogStreams::instance($this->getHttpClient());
     }
 
     public function organizations(): OrganizationsInterface
     {
-        return $this->getClassInstance(Organizations::class);
-        /* @var OrganizationsInterface $class */
+        return Organizations::instance($this->getHttpClient());
     }
 
     public function roles(): RolesInterface
     {
-        return $this->getClassInstance(Roles::class);
-        /* @var RolesInterface $class */
+        return Roles::instance($this->getHttpClient());
     }
 
     public function rules(): RulesInterface
     {
-        return $this->getClassInstance(Rules::class);
-        /* @var RulesInterface $class */
+        return Rules::instance($this->getHttpClient());
     }
 
     public function resourceServers(): ResourceServersInterface
     {
-        return $this->getClassInstance(ResourceServers::class);
-        /* @var ResourceServersInterface $class */
+        return ResourceServers::instance($this->getHttpClient());
     }
 
     public function stats(): StatsInterface
     {
-        return $this->getClassInstance(Stats::class);
-        /* @var StatsInterface $class */
+        return Stats::instance($this->getHttpClient());
     }
 
     public function tenants(): TenantsInterface
     {
-        return $this->getClassInstance(Tenants::class);
-        /* @var TenantsInterface $class */
+        return Tenants::instance($this->getHttpClient());
     }
 
     public function tickets(): TicketsInterface
     {
-        return $this->getClassInstance(Tickets::class);
-        /* @var TicketsInterface $class */
+        return Tickets::instance($this->getHttpClient());
     }
 
     public function userBlocks(): UserBlocksInterface
     {
-        return $this->getClassInstance(UserBlocks::class);
-        /* @var UserBlocksInterface $class */
+        return UserBlocks::instance($this->getHttpClient());
     }
 
     public function users(): UsersInterface
     {
-        return $this->getClassInstance(Users::class);
-        /* @var UsersInterface $class */
+        return Users::instance($this->getHttpClient());
     }
 
     public function usersByEmail(): UsersByEmailInterface
     {
-        return $this->getClassInstance(UsersByEmail::class);
-        /* @var UsersByEmailInterface $class */
-    }
-
-    /**
-     * Return an instance of Api Management Class.
-     *
-     * @return object
-     */
-    private function getClassInstance(
-        string $className,
-    ) {
-        if (! isset($this->instances[$className])) {
-            $this->instances[$className] = new $className($this->getHttpClient());
-        }
-
-        return $this->instances[$className];
+        return UsersByEmail::instance($this->getHttpClient());
     }
 }

@@ -93,13 +93,15 @@ final class HttpTelemetry
         }
 
         /** @var array<mixed> $response */
-        return Toolkit::filter([
+        $response = Toolkit::filter([
             [
                 'name'    => self::$packageName,
                 'version' => self::$packageVersion,
                 'env'     => self::$environment,
             ],
         ])->array()->trim()[0];
+
+        return $response;
     }
 
     /**

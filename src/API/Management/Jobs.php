@@ -31,7 +31,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
             [$connectionId, \Auth0\SDK\Exception\ArgumentException::missing('connectionId')],
         ])->isString();
 
-        /* @var array<bool|int|string> $parameters */
+        /** @var array<bool|int|string> $parameters */
 
         return $this->getHttpClient()->
             method('post')->
@@ -73,7 +73,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
             [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
         ])->isString();
 
-        /* @var array<mixed> $body */
+        /** @var array<mixed> $body */
 
         return $this->getHttpClient()->
             method('post')->
