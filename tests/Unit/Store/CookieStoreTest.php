@@ -27,10 +27,6 @@ afterEach(function () {
     $_COOKIE = [];
 });
 
-it('calculates a chunking threshold', function(): void {
-    expect($this->store->getThreshold())->toBeGreaterThan(0);
-});
-
 it('populates state from getState() override', function(array $state): void {
     $this->store->getState([$this->exampleKey => $state]);
 

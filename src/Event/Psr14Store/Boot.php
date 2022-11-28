@@ -11,7 +11,7 @@ final class Boot implements Auth0Event
 {
     public function __construct(
         private StoreInterface $store,
-        private string $prefix
+        private string $prefix,
     ) {
     }
 
@@ -26,9 +26,10 @@ final class Boot implements Auth0Event
     }
 
     public function setPrefix(
-        string $prefix
+        string $prefix,
     ): self {
         $this->prefix = $prefix;
+
         return $this;
     }
 }

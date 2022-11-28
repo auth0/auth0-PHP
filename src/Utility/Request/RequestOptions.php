@@ -10,26 +10,27 @@ namespace Auth0\SDK\Utility\Request;
 final class RequestOptions
 {
     /**
-     * RequestOptions constructor
+     * RequestOptions constructor.
      *
-     * @param FilteredRequest|null  $fields     An instance of FilteredRequest, for managing field-filtered requests.
-     * @param PaginatedRequest|null $pagination An instance of PaginatedRequest, for managing paginated requests.
+     * @param  FilteredRequest|null  $fields  an instance of FilteredRequest, for managing field-filtered requests
+     * @param  PaginatedRequest|null  $pagination  an instance of PaginatedRequest, for managing paginated requests
      */
     public function __construct(
         private ?FilteredRequest $fields = null,
-        private ?PaginatedRequest $pagination = null
+        private ?PaginatedRequest $pagination = null,
     ) {
     }
 
     /**
      * Assign a PaginatedRequest object, defining field filtering conditions for the API response.
      *
-     * @param FilteredRequest|null $fields Request fields be included or excluded from the API response using a FilteredRequest object.
+     * @param  FilteredRequest|null  $fields  request fields be included or excluded from the API response using a FilteredRequest object
      */
     public function setFields(
-        ?FilteredRequest $fields
+        ?FilteredRequest $fields,
     ): self {
         $this->fields = $fields;
+
         return $this;
     }
 
@@ -44,12 +45,13 @@ final class RequestOptions
     /**
      * Assign a PaginatedRequest object, defining paginated conditions for the API response.
      *
-     * @param PaginatedRequest|null $pagination Request paged results using a PaginatedRequest object.
+     * @param  PaginatedRequest|null  $pagination  request paged results using a PaginatedRequest object
      */
     public function setPagination(
-        ?PaginatedRequest $pagination
+        ?PaginatedRequest $pagination,
     ): self {
         $this->pagination = $pagination;
+
         return $this;
     }
 
@@ -70,11 +72,11 @@ final class RequestOptions
     {
         $response = [];
 
-        if ($this->fields !== null) {
+        if (null !== $this->fields) {
             $response += $this->fields->build();
         }
 
-        if ($this->pagination !== null) {
+        if (null !== $this->pagination) {
             $response += $this->pagination->build();
         }
 

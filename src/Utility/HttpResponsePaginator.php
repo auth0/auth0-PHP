@@ -64,12 +64,12 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     /**
      * HttpResponsePaginator constructor.
      *
-     * @param HttpClient $httpClient An instance of HttpClient to use for paginated network requests.
+     * @param  HttpClient  $httpClient  an instance of HttpClient to use for paginated network requests
      *
-     * @throws \Auth0\SDK\Exception\PaginatorException When an unsupported request type is provided.
+     * @throws \Auth0\SDK\Exception\PaginatorException when an unsupported request type is provided
      */
     public function __construct(
-        private HttpClient $httpClient
+        private HttpClient $httpClient,
     ) {
         $lastRequest = $this->lastRequest();
         $lastResponse = $this->lastResponse();
@@ -80,7 +80,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         }
 
         // Was the last request a GET request?
-        if (! $lastRequest instanceof \Psr\Http\Message\RequestInterface || mb_strtolower($lastRequest->getMethod()) !== 'get') {
+        if (! $lastRequest instanceof \Psr\Http\Message\RequestInterface || 'get' !== mb_strtolower($lastRequest->getMethod())) {
             throw \Auth0\SDK\Exception\PaginatorException::httpMethodUnsupported();
         }
 
@@ -90,14 +90,15 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         // Get the last request query to check for checkpoint pagination params.
         $requestQuery = '&' . $lastRequest->getUri()->getQuery();
 
-        if (mb_strpos($requestQuery, '&take=') !== false || mb_strpos($requestQuery, '&from=') !== false) {
+        if (false !== mb_strpos($requestQuery, '&take=') || false !== mb_strpos($requestQuery, '&from=')) {
             $endpointSupported = false;
 
             // Iterate through SUPPORTED_ENDPOINTS to check if this endpoint will work for pagination.
             foreach (self::SUPPORTED_ENDPOINTS_WITH_CHECKPOINT as $endpoint) {
-                if (mb_substr($endpoint, 0, 1) === '^' && preg_match('/' . $endpoint . '/', $requestPath) === 1) {
+                if ('^' === mb_substr($endpoint, 0, 1) && 1 === preg_match('/' . $endpoint . '/', $requestPath)) {
                     // Match! Break out of loop and give this paginator a green light for processing.
                     $endpointSupported = true;
+
                     break;
                 }
             }
@@ -174,14 +175,14 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     public function valid(): bool
     {
         // A cached result is available.
-        if ($this->result() !== null) {
+        if (null !== $this->result()) {
             return true;
         }
 
         // When using checkpoint-based pagination, we don't have a 'total' API response to work with.
         if ($this->usingCheckpointPagination) {
             // If we have a next checkpoint to query, do that.
-            if ($this->nextCheckpoint !== null) {
+            if (null !== $this->nextCheckpoint) {
                 return $this->getNextResults();
             }
 
@@ -224,11 +225,11 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         // Retrieve the active HttpRequest instance to repeat the request.
         $lastBuilder = $this->lastBuilder();
 
-        if ($lastBuilder !== null && $this->lastResponse() !== null) {
+        if (null !== $lastBuilder && null !== $this->lastResponse()) {
             // Ensure basic pagination details are included in the request.
             if ($this->usingCheckpointPagination) {
                 // @codeCoverageIgnoreStart
-                if ($this->nextCheckpoint === null) {
+                if (null === $this->nextCheckpoint) {
                     return false;
                 }
                 // @codeCoverageIgnoreEnd
@@ -269,7 +270,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         $lastRequest = $this->lastRequest();
         $lastResponse = $this->lastResponse();
 
-        if ($lastRequest !== null && $lastResponse !== null) {
+        if (null !== $lastRequest && null !== $lastResponse) {
             // Was the HTTP request successful?
             if (HttpResponse::wasSuccessful($lastResponse)) {
                 // Decode the response.
@@ -280,23 +281,23 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                 }
 
                 // No results, abort processing.
-                if (! is_array($results) || $results === []) {
+                if (! \is_array($results) || [] === $results) {
                     // @codeCoverageIgnoreStart
                     return false;
                     // @codeCoverageIgnoreEnd
                 }
 
-                /** @var array{start?: string|int|null, limit?: string|int|null, total?: string|int|null, length?: string|int|null, next?: string|null} $results */
+                /** @var array{start?: int|string|null, limit?: int|string|null, total?: int|string|null, length?: int|string|null, next?: string|null} $results */
 
                 // If not using checkpoint pagination, grab the 'start' value.
                 $start = $results['start'] ?? null;
 
                 // There is no 'start' key, the request was probably made without the include_totals param.
-                if ($start === null && ! $this->usingCheckpointPagination) {
+                if (null === $start && ! $this->usingCheckpointPagination) {
                     throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
                 }
 
-                if ($start === null) {
+                if (null === $start) {
                     $start = $this->position;
                 }
 
@@ -307,32 +308,38 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
                 foreach ($results as $resultKey => $result) {
                     if (! $this->usingCheckpointPagination) {
-                        if ($resultKey === 'limit') {
+                        if ('limit' === $resultKey) {
                             $this->requestLimit = (int) $result;
+
                             continue;
                         }
-                        if ($resultKey === 'total') {
+
+                        if ('total' === $resultKey) {
                             $this->requestTotal = (int) $result;
+
                             continue;
                         }
-                        if ($resultKey === 'length') {
+
+                        if ('length' === $resultKey) {
                             continue;
                         }
-                    } elseif ($resultKey === 'next') {
+                    } elseif ('next' === $resultKey) {
                         $nextCheckpoint = (string) $result;
+
                         continue;
                     }
 
-                    if ($resultKey !== 'start') {
+                    if ('start' !== $resultKey) {
                         /** @var mixed $result */
-                        $resultCount = is_array($result) ? count($result) : 0;
+                        $resultCount = \is_array($result) ? \count($result) : 0;
 
                         /** @var array<array<mixed>> $result */
-                        for ($i = 0; $i < $resultCount; $i++) {
+                        for ($i = 0; $i < $resultCount; ++$i) {
                             $hadResults = true;
 
                             if (! $this->usingCheckpointPagination) {
                                 $this->results[$start + $i] = $result[$i];
+
                                 continue;
                             }
 
@@ -375,7 +382,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     {
         $lastBuilder = $this->lastBuilder();
 
-        if ($lastBuilder !== null) {
+        if (null !== $lastBuilder) {
             return $lastBuilder->getLastRequest();
         }
 
@@ -389,7 +396,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     {
         $lastBuilder = $this->lastBuilder();
 
-        if ($lastBuilder !== null) {
+        if (null !== $lastBuilder) {
             return $lastBuilder->getLastResponse();
         }
 

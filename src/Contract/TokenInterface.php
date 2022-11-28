@@ -7,7 +7,7 @@ namespace Auth0\SDK\Contract;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * Interface TokenInterface
+ * Interface TokenInterface.
  */
 interface TokenInterface
 {
@@ -22,11 +22,11 @@ interface TokenInterface
     /**
      * Verify the signature of the Token using either RS256 or HS256.
      *
-     * @param string|null                 $tokenAlgorithm Optional. Algorithm to use for verification. Expects either RS256 or HS256.
-     * @param string|null                 $tokenJwksUri   Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null                 $clientSecret   Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null                    $tokenCacheTtl  Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheItemPoolInterface|null $tokenCache     Optional. A PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
+     * @param  string|null  $tokenAlgorithm  Optional. Algorithm to use for verification. Expects either RS256 or HS256.
+     * @param  string|null  $tokenJwksUri  Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param  string|null  $clientSecret  Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param  int|null  $tokenCacheTtl  Optional. Time in seconds to keep JWKS records cached.
+     * @param  CacheItemPoolInterface|null  $tokenCache  Optional. A PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
@@ -35,19 +35,19 @@ interface TokenInterface
         ?string $tokenJwksUri = null,
         ?string $clientSecret = null,
         ?int $tokenCacheTtl = null,
-        ?CacheItemPoolInterface $tokenCache = null
+        ?CacheItemPoolInterface $tokenCache = null,
     ): self;
 
     /**
      * Validate the claims of the token.
      *
-     * @param string|null        $tokenIssuer       Optional. The value expected for the 'iss' claim.
-     * @param array<string>|null $tokenAudience     Optional. An array of allowed values for the 'aud' claim. Successful if ANY match.
-     * @param array<string>|null $tokenOrganization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
-     * @param string|null        $tokenNonce        Optional. The value expected for the 'nonce' claim.
-     * @param int|null           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
-     * @param int|null           $tokenLeeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
-     * @param int|null           $tokenNow          Optional. Unix timestamp representing the current point in time to use for time calculations.
+     * @param  string|null  $tokenIssuer  Optional. The value expected for the 'iss' claim.
+     * @param  array<string>|null  $tokenAudience  Optional. An array of allowed values for the 'aud' claim. Successful if ANY match.
+     * @param  array<string>|null  $tokenOrganization  Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
+     * @param  string|null  $tokenNonce  Optional. The value expected for the 'nonce' claim.
+     * @param  int|null  $tokenMaxAge  Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
+     * @param  int|null  $tokenLeeway  Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
+     * @param  int|null  $tokenNow  Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token validation fails. See the exception message for further details.
      */
@@ -58,7 +58,7 @@ interface TokenInterface
         ?string $tokenNonce = null,
         ?int $tokenMaxAge = null,
         ?int $tokenLeeway = null,
-        ?int $tokenNow = null
+        ?int $tokenNow = null,
     ): self;
 
     /**

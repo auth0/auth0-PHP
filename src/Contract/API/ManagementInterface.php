@@ -33,19 +33,19 @@ use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponsePaginator;
 
 /**
- * Interface ManagementInterface
+ * Interface ManagementInterface.
  */
 interface ManagementInterface
 {
     /**
      * Return the HttpClient instance being used for management API requests.
      *
-     * @param Authentication|null $authentication Optional. An Instance of Authentication for use during client credential exchange. One will be created, when necessary, if not provided.
+     * @param  Authentication|null  $authentication  Optional. An Instance of Authentication for use during client credential exchange. One will be created, when necessary, if not provided.
      *
-     * @throws \Auth0\SDK\Exception\ConfigurationException When a Management Token is not able to be obtained.
+     * @throws \Auth0\SDK\Exception\ConfigurationException when a Management Token is not able to be obtained
      */
     public function getHttpClient(
-        ?Authentication $authentication = null
+        ?Authentication $authentication = null,
     ): HttpClient;
 
     /**

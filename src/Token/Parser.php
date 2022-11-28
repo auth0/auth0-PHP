@@ -45,22 +45,21 @@ final class Parser
     private ?string $tokenSignature = null;
 
     /**
-     * State
-     * @var bool
+     * State.
      */
     private bool $parsed = false;
 
     /**
      * Constructor for Token Parser class.
      *
-     * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param string $token JSON Web Token to work with.
+     * @param  SdkConfiguration  $configuration  Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param  string  $token  JSON Web Token to work with
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
         private SdkConfiguration $configuration,
-        private string $token
+        private string $token,
     ) {
         $this->parse();
     }
@@ -75,7 +74,7 @@ final class Parser
         if (! $this->parsed) {
             $parts = explode('.', $this->token);
 
-            if (count($parts) !== 3) {
+            if (3 !== \count($parts)) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::badSeparators();
             }
 
@@ -108,17 +107,18 @@ final class Parser
     public function validate(): Validator
     {
         $this->parse();
+
         return new Validator($this->getClaims());
     }
 
     /**
      * Verify the signature of the Token using either RS256 or HS256.
      *
-     * @param string|null                 $algorithm    Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
-     * @param string|null                 $jwksUri      Optional. URI to the JWKS when verifying RS256 tokens.
-     * @param string|null                 $clientSecret Optional. Client Secret found in the Application settings for verifying HS256 tokens.
-     * @param int|null                    $cacheExpires Optional. Time in seconds to keep JWKS records cached.
-     * @param CacheItemPoolInterface|null $cache        Optional. A PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
+     * @param  string|null  $algorithm  Optional. Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
+     * @param  string|null  $jwksUri  Optional. URI to the JWKS when verifying RS256 tokens.
+     * @param  string|null  $clientSecret  Optional. Client Secret found in the Application settings for verifying HS256 tokens.
+     * @param  int|null  $cacheExpires  Optional. Time in seconds to keep JWKS records cached.
+     * @param  CacheItemPoolInterface|null  $cache  Optional. A PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token signature verification fails. See the exception message for further details.
      */
@@ -127,7 +127,7 @@ final class Parser
         ?string $jwksUri = null,
         ?string $clientSecret = null,
         ?int $cacheExpires = null,
-        ?CacheItemPoolInterface $cache = null
+        ?CacheItemPoolInterface $cache = null,
     ): self {
         $this->parse();
 
@@ -165,25 +165,25 @@ final class Parser
     /**
      * Returns whether a claim is present on a Token.
      *
-     * @param string $key Claim key to search for.
+     * @param  string  $key  claim key to search for
      */
     public function hasClaim(
-        string $key
+        string $key,
     ): bool {
-        return $this->getClaim($key) !== null;
+        return null !== $this->getClaim($key);
     }
 
     /**
      * Return the value of a claim on a Token, or null if it is not present.
      *
-     * @param string $key Claim key to search for.
-     *
+     * @param  string  $key  claim key to search for
      * @return mixed
      */
     public function getClaim(
-        string $key
+        string $key,
     ) {
         $claims = $this->getClaims();
+
         return $claims[$key] ?? null;
     }
 
@@ -200,7 +200,7 @@ final class Parser
 
         // @codeCoverageIgnoreStart
         // This is not currently testable using our JWT encoding test libraries.
-        if (! is_array($claims)) {
+        if (! \is_array($claims)) {
             return [];
         }
         // @codeCoverageIgnoreEnd
@@ -211,21 +211,21 @@ final class Parser
     /**
      * Returns whether a header is present on a Token.
      *
-     * @param string $key Header key to search for.
+     * @param  string  $key  header key to search for
      */
     public function hasHeader(
-        string $key
+        string $key,
     ): bool {
-        return $this->getHeader($key) !== null;
+        return null !== $this->getHeader($key);
     }
 
     /**
      * Return the value of a header on a Token, or null if it is not present.
      *
-     * @param string $key Header key to search for.
+     * @param  string  $key  header key to search for
      */
     public function getHeader(
-        string $key
+        string $key,
     ): ?string {
         $headers = $this->getHeaders();
 
@@ -283,21 +283,20 @@ final class Parser
     /**
      * Decodes and returns the claims portion of a JWT as an array.
      *
-     * @param string $claims String representing the claims portion of the JWT.
-     *
+     * @param  string  $claims  string representing the claims portion of the JWT
      * @return array<array<int|string>|int|string>|null
      *
-     * @throws \JsonException When claims portion cannot be decoded properly.
+     * @throws \JsonException when claims portion cannot be decoded properly
      *
      * @codeCoverageIgnore
      */
     private function decodeClaims(
-        string $claims
+        string $claims,
     ): ?array {
         $decoded = base64_decode(strtr($claims, '-_', '+/'), true);
         $response = null;
 
-        if ($decoded !== false) {
+        if (false !== $decoded) {
             /** @var array<array<int|string>|int|string>|null $response */
             $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
         }
@@ -308,21 +307,20 @@ final class Parser
     /**
      * Decodes and returns the headers portion of a JWT as an array.
      *
-     * @param string $headers String representing the headers portion of the JWT.
-     *
+     * @param  string  $headers  string representing the headers portion of the JWT
      * @return array<int|string>|null
      *
-     * @throws \JsonException When headers portion cannot be decoded properly.
+     * @throws \JsonException when headers portion cannot be decoded properly
      *
      * @codeCoverageIgnore
      */
     private function decodeHeaders(
-        string $headers
+        string $headers,
     ): ?array {
         $decoded = base64_decode(strtr($headers, '-_', '+/'), true);
         $response = null;
 
-        if ($decoded !== false) {
+        if (false !== $decoded) {
             /** @var array<int|string>|null $response */
             $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
         }
@@ -333,16 +331,16 @@ final class Parser
     /**
      * Decodes and returns the signature portion of a JWT as a string.
      *
-     * @param string $signature String representing the signature portion of the JWT.
+     * @param  string  $signature  string representing the signature portion of the JWT
      *
      * @codeCoverageIgnore
      */
     private function decodeSignature(
-        string $signature
+        string $signature,
     ): ?string {
         $decoded = base64_decode(strtr($signature, '-_', '+/'), true);
 
-        if ($decoded !== false) {
+        if (false !== $decoded) {
             return $decoded;
         }
 

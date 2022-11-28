@@ -19,31 +19,31 @@ final class Psr6Store implements StoreInterface
     /**
      * Psr6Store constructor.
      *
-     * @param StoreInterface         $publicStore  An instance of StoreInterface to use for 'public' storage.
-     * @param CacheItemPoolInterface $privateStore An instance of CacheItemPoolInterface to use for 'private' storage.
-     * @param string                 $storageKey   A string representing the key/namespace under which to store values.
+     * @param  StoreInterface  $publicStore  an instance of StoreInterface to use for 'public' storage
+     * @param  CacheItemPoolInterface  $privateStore  an instance of CacheItemPoolInterface to use for 'private' storage
+     * @param  string  $storageKey  a string representing the key/namespace under which to store values
      */
     public function __construct(
         private StoreInterface $publicStore,
         private CacheItemPoolInterface $privateStore,
-        private string $storageKey = 'storage_key'
+        private string $storageKey = 'storage_key',
     ) {
     }
 
     /**
      * Persists $value on $_SESSION, identified by $key.
      *
-     * @param string $key   Session key to set.
-     * @param mixed  $value Value to use.
+     * @param  string  $key  session key to set
+     * @param  mixed  $value  value to use
      */
     public function set(
         string $key,
-        $value
+        $value,
     ): void {
         $item = $this->privateStore->getItem($this->getCacheKey());
         $data = $item->get();
 
-        if (! is_array($data)) {
+        if (! \is_array($data)) {
             $data = [];
         }
 
@@ -56,23 +56,22 @@ final class Psr6Store implements StoreInterface
      * Gets persisted values identified by $key.
      * If the value is not set, returns $default.
      *
-     * @param string $key     Session key to set.
-     * @param mixed  $default Default to return if nothing was found.
-     *
+     * @param  string  $key  session key to set
+     * @param  mixed  $default  default to return if nothing was found
      * @return mixed
      */
     public function get(
         string $key,
-        $default = null
+        $default = null,
     ) {
         $item = $this->privateStore->getItem($this->getCacheKey());
         $data = $item->get();
 
-        if (! is_array($data)) {
+        if (! \is_array($data)) {
             $data = [];
         }
 
-        if (array_key_exists($key, $data)) {
+        if (\array_key_exists($key, $data)) {
             return $data[$key];
         }
 
@@ -82,15 +81,15 @@ final class Psr6Store implements StoreInterface
     /**
      * Removes a value identified by $key.
      *
-     * @param string $key Session key to delete.
+     * @param  string  $key  session key to delete
      */
     public function delete(
-        string $key
+        string $key,
     ): void {
         $item = $this->privateStore->getItem($this->getCacheKey());
         $data = $item->get();
 
-        if (! is_array($data)) {
+        if (! \is_array($data)) {
             $data = [];
         }
 
@@ -111,14 +110,13 @@ final class Psr6Store implements StoreInterface
     /**
      * This has no effect when using PSR-6 as the storage medium.
      *
-     * @param bool $deferring Whether to defer persisting the storage state.
+     * @param  bool  $deferring  whether to defer persisting the storage state
      *
      * @codeCoverageIgnore
      */
     public function defer(
-        bool $deferring
+        bool $deferring,
     ): void {
-        return;
     }
 
     /**
@@ -146,7 +144,7 @@ final class Psr6Store implements StoreInterface
     {
         $key = $this->publicStore->get($this->storageKey);
 
-        if (! is_string($key)) {
+        if (! \is_string($key)) {
             $key = $this->generateKey();
             $this->publicStore->set($this->storageKey, $key);
         }

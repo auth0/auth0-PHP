@@ -18,8 +18,8 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         CompleteDynamicPropertiesRector::class => [
             // Breaks PEST
-            __DIR__ . '/tests/Utilities/MockApi.php'
-        ]
+            __DIR__ . '/tests/Utilities/MockApi.php',
+        ],
     ]);
 
     $rectorConfig->rule(TypedPropertyRector::class);
