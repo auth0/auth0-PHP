@@ -132,7 +132,7 @@ final class TransientStoreHandler
      *
      * @codeCoverageIgnore
      */
-    private function getNonce(
+    public function getNonce(
         int $length = 16
     ): string {
         $length = $length >= 1 ? $length : 1;
