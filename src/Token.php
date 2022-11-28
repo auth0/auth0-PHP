@@ -20,20 +20,7 @@ final class Token implements TokenInterface
     public const ALGO_RS256 = 'RS256';
     public const ALGO_HS256 = 'HS256';
 
-    /**
-     * A representation of the type of Token, to customize claim validations. See TYPE_ consts for options.
-     */
-    private int $type;
-
-    /**
-     * A unique, internal instance of \Auth0\SDK\Token\Parser
-     */
-    private Parser $parser;
-
-    /**
-     * Instance of SdkConfiguration
-     */
-    private SdkConfiguration $configuration;
+    private ?Parser $parser = null;
 
     /**
      * Constructor for Token handling class.
@@ -45,24 +32,15 @@ final class Token implements TokenInterface
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
-        SdkConfiguration $configuration,
-        string $jwt,
-        int $type = self::TYPE_ID_TOKEN
+        private SdkConfiguration $configuration,
+        private string $jwt,
+        private int $type = self::TYPE_ID_TOKEN
     ) {
-        // Store the type of token we're working with.
-        $this->type = $type;
-
-        // Store the configuration internally.
-        $this->configuration = $configuration;
-
-        // Begin parsing the token.
-        $this->parse($jwt);
     }
 
     public function parse(
-        string $jwt
     ): self {
-        $this->parser = new Parser($jwt, $this->configuration);
+        $this->getParser();
         return $this;
     }
 
@@ -73,17 +51,17 @@ final class Token implements TokenInterface
         ?int $tokenCacheTtl = null,
         ?CacheItemPoolInterface $tokenCache = null
     ): self {
-        $tokenAlgorithm = $tokenAlgorithm ?? $this->configuration->getTokenAlgorithm();
-        $tokenJwksUri = $tokenJwksUri ?? $this->configuration->getTokenJwksUri() ?? null;
-        $clientSecret = $clientSecret ?? $this->configuration->getClientSecret() ?? null;
-        $tokenCacheTtl = $tokenCacheTtl ?? $this->configuration->getTokenCacheTtl();
-        $tokenCache = $tokenCache ?? $this->configuration->getTokenCache() ?? null;
+        $tokenAlgorithm ??= $this->configuration->getTokenAlgorithm();
+        $tokenJwksUri ??= $this->configuration->getTokenJwksUri() ?? null;
+        $clientSecret ??= $this->configuration->getClientSecret() ?? null;
+        $tokenCacheTtl ??= $this->configuration->getTokenCacheTtl();
+        $tokenCache ??= $this->configuration->getTokenCache() ?? null;
 
         if ($tokenJwksUri === null) {
             $tokenJwksUri = $this->configuration->formatDomain() . '/.well-known/jwks.json';
         }
 
-        $this->parser->verify(
+        $this->getParser()->verify(
             $tokenAlgorithm,
             $tokenJwksUri,
             $clientSecret,
@@ -103,22 +81,21 @@ final class Token implements TokenInterface
         ?int $tokenLeeway = null,
         ?int $tokenNow = null
     ): self {
-        $tokenIssuer = $tokenIssuer ?? $this->configuration->formatDomain() . '/';
-        $tokenAudience = $tokenAudience ?? $this->configuration->getAudience() ?? [];
-        $tokenOrganization = $tokenOrganization ?? $this->configuration->getOrganization() ?? null;
-        $tokenNonce = $tokenNonce ?? null;
-        $tokenMaxAge = $tokenMaxAge ?? $this->configuration->getTokenMaxAge() ?? null;
-        $tokenLeeway = $tokenLeeway ?? $this->configuration->getTokenLeeway() ?? 60;
+        $tokenIssuer ??= $this->configuration->formatDomain() . '/';
+        $tokenAudience ??= $this->configuration->getAudience() ?? [];
+        $tokenOrganization ??= $this->configuration->getOrganization() ?? null;
+        $tokenMaxAge ??= $this->configuration->getTokenMaxAge() ?? null;
+        $tokenLeeway ??= $this->configuration->getTokenLeeway() ?? 60;
         $tokenAudience[] = (string) $this->configuration->getClientId();
         $tokenAudience = array_unique($tokenAudience);
 
-        $validator = $this->parser->validate();
-        $now = $tokenNow ?? time();
+        $validator = $this->getParser()->validate();
+        $tokenNow ??= time();
 
         $validator
             ->issuer($tokenIssuer)
             ->audience($tokenAudience)
-            ->expiration($tokenLeeway, $now);
+            ->expiration($tokenLeeway, $tokenNow);
 
         if ($this->type === self::TYPE_ID_TOKEN) {
             $validator
@@ -132,7 +109,7 @@ final class Token implements TokenInterface
         }
 
         if ($tokenMaxAge !== null) {
-            $validator->authTime($tokenMaxAge, $tokenLeeway, $now);
+            $validator->authTime($tokenMaxAge, $tokenLeeway, $tokenNow);
         }
 
         if ($tokenOrganization !== null) {
@@ -144,7 +121,7 @@ final class Token implements TokenInterface
 
     public function getAudience(): ?array
     {
-        $claim = $this->parser->getClaim('aud');
+        $claim = $this->getParser()->getClaim('aud');
 
         if (is_string($claim)) {
             $claim = [ $claim ];
@@ -156,7 +133,7 @@ final class Token implements TokenInterface
 
     public function getAuthorizedParty(): ?string
     {
-        $claim = $this->parser->getClaim('azp');
+        $claim = $this->getParser()->getClaim('azp');
 
         /** @var string|null $claim */
         return $claim;
@@ -165,27 +142,27 @@ final class Token implements TokenInterface
     public function getAuthTime(): ?int
     {
         /** @var int|string|null $response */
-        $response = $this->parser->getClaim('auth_time');
+        $response = $this->getParser()->getClaim('auth_time');
         return $response === null ? null : (int) $response;
     }
 
     public function getExpiration(): ?int
     {
         /** @var int|string|null $response */
-        $response = $this->parser->getClaim('exp');
+        $response = $this->getParser()->getClaim('exp');
         return $response === null ? null : (int) $response;
     }
 
     public function getIssued(): ?int
     {
         /** @var int|string|null $response */
-        $response = $this->parser->getClaim('iat');
+        $response = $this->getParser()->getClaim('iat');
         return $response === null ? null : (int) $response;
     }
 
     public function getIssuer(): ?string
     {
-        $claim = $this->parser->getClaim('iss');
+        $claim = $this->getParser()->getClaim('iss');
 
         /** @var string|null $claim */
         return $claim;
@@ -193,7 +170,7 @@ final class Token implements TokenInterface
 
     public function getNonce(): ?string
     {
-        $claim = $this->parser->getClaim('nonce');
+        $claim = $this->getParser()->getClaim('nonce');
 
         /** @var string|null $claim */
         return $claim;
@@ -201,7 +178,7 @@ final class Token implements TokenInterface
 
     public function getOrganization(): ?string
     {
-        $claim = $this->parser->getClaim('org_id');
+        $claim = $this->getParser()->getClaim('org_id');
 
         /** @var string|null $claim */
         return $claim;
@@ -209,7 +186,7 @@ final class Token implements TokenInterface
 
     public function getSubject(): ?string
     {
-        $claim = $this->parser->getClaim('sub');
+        $claim = $this->getParser()->getClaim('sub');
 
         /** @var string|null $claim */
         return $claim;
@@ -217,11 +194,20 @@ final class Token implements TokenInterface
 
     public function toArray(): array
     {
-        return $this->parser->export();
+        return $this->getParser()->export();
     }
 
     public function toJson(): string
     {
         return json_encode($this->toArray(), JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+    }
+
+    private function getParser(): Parser
+    {
+        if (null === $this->parser) {
+            $this->parser = new Parser($this->configuration, $this->jwt);
+        }
+
+        return $this->parser;
     }
 }

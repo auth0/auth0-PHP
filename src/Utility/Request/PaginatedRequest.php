@@ -10,29 +10,9 @@ namespace Auth0\SDK\Utility\Request;
 final class PaginatedRequest
 {
     /**
-     * Page index of the results to return. First page is 0.
-     */
-    private ?int $page = null;
-
-    /**
-     * Number of results per page. Paging is disabled if parameter not set.
-     */
-    private ?int $perPage = null;
-
-    /**
-     * Optional ID from which to start selection. If not specified, checkpoint pagination is disabled.
-     */
-    private ?string $from = null;
-
-    /**
      * Number of results per page for checkpoint pagination.
      */
     private ?int $take = null;
-
-    /**
-     * Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
-     */
-    private ?bool $includeTotals = null;
 
     /**
      * PaginatedRequest constructor.
@@ -42,15 +22,11 @@ final class PaginatedRequest
      * @param bool|null $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
      */
     public function __construct(
-        ?int $page = null,
-        ?int $perPage = null,
-        ?bool $includeTotals = null,
-        ?string $from = null
+        private ?int $page = null,
+        private ?int $perPage = null,
+        private ?bool $includeTotals = null,
+        private ?string $from = null
     ) {
-        $this->page = $page;
-        $this->perPage = $perPage;
-        $this->includeTotals = $includeTotals;
-        $this->from = $from;
     }
 
     /**

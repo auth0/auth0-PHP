@@ -24,10 +24,6 @@ beforeEach(function(): void {
     $this->sdk = new Auth0($this->configuration);
 });
 
-test('__construct() fails without a configuration', function(): void {
-    new Authentication(null);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_CONFIGURATION_REQUIRED);
-
 test('__construct() accepts a configuration as an array', function(): void {
     $auth = new Authentication([
         'strategy' => SdkConfiguration::STRATEGY_API,

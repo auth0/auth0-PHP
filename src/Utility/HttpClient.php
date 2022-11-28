@@ -22,33 +22,11 @@ final class HttpClient
     private ?HttpRequest $lastRequest = null;
 
     /**
-     * Shared configuration data.
-     */
-    private SdkConfiguration $configuration;
-
-    /**
-     * Base API path.
-     */
-    private string $basePath;
-
-    /**
-     * Headers to set for all calls.
-     *
-     * @var array<string,int|string>
-     */
-    private array $headers = [];
-
-    /**
      * Mocked responses to pass to HttpRequest instances for testing.
      *
      * @var array<object>
      */
     private array $mockedResponses = [];
-
-    /**
-     * The context in which this client was created, for defining special behaviors.
-     */
-    private int $context = self::CONTEXT_AUTHENTICATION_CLIENT;
 
     /**
      * HttpClient constructor.
@@ -59,15 +37,11 @@ final class HttpClient
      * @param array<int|string> $headers         Optional. Additional headers to send with the HTTP request.
      */
     public function __construct(
-        SdkConfiguration $configuration,
-        int $context = self::CONTEXT_AUTHENTICATION_CLIENT,
-        string $basePath = '/',
-        array $headers = []
+        private SdkConfiguration $configuration,
+        private int $context = self::CONTEXT_AUTHENTICATION_CLIENT,
+        private string $basePath = '/',
+        private array $headers = []
     ) {
-        $this->configuration = $configuration;
-        $this->basePath = $basePath;
-        $this->headers = $headers;
-        $this->context = $context;
     }
 
     /**

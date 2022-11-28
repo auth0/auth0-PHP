@@ -17,60 +17,6 @@ use Psr\Cache\CacheItemPoolInterface;
 final class Verifier
 {
     /**
-     * A string representing the headers and claims portions of a JWT.
-     */
-    private string $payload;
-
-    /**
-     * A string representing the signature portion of a JWT.
-     */
-    private string $signature;
-
-    /**
-     * An array of the headers for the JWT. Expects an 'alg' header, and in the case of RS256, a 'kid' header.
-     *
-     * @var array<int|string>
-     */
-    private array $headers;
-
-    /**
-     * Client Secret found in the Application settings for verifying HS256 tokens.
-     */
-    private ?string $clientSecret = null;
-
-    /**
-     * Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.
-     */
-    private ?string $algorithm = null;
-
-    /**
-     * URI to the JWKS when verifying RS256 tokens.
-     */
-    private ?string $jwksUri = null;
-
-    /**
-     * Time in seconds to keep JWKS records cached. Defaults to 60.
-     */
-    private ?int $cacheExpires = null;
-
-    /**
-     * An PSR-6 CacheItemPoolInterface instance to cache JWKS results within.
-     */
-    private ?CacheItemPoolInterface $cache = null;
-
-    /**
-     * Instance of SdkConfiguration, for shared configuration across classes.
-     */
-    private SdkConfiguration $configuration;
-
-    /**
-     * Mocked responses for HTTP requests; only used in unit tests.
-     *
-     * @var array<object>
-     */
-    private ?array $mockedHttpResponses = null;
-
-    /**
      * Constructor for the Token Verifier class.
      *
      * @param string                      $payload             A string representing the headers and claims portions of a JWT.
@@ -84,28 +30,17 @@ final class Verifier
      * @param array<object>|null          $mockedHttpResponses Optional. Only intended for unit testing purposes.
      */
     public function __construct(
-        SdkConfiguration $configuration,
-        string $payload,
-        string $signature,
-        array $headers,
-        ?string $algorithm = null,
-        ?string $jwksUri = null,
-        ?string $clientSecret = null,
-        ?int $cacheExpires = null,
-        ?CacheItemPoolInterface $cache = null,
-        ?array & $mockedHttpResponses = null
+        private SdkConfiguration $configuration,
+        private string $payload,
+        private string $signature,
+        private array $headers,
+        private ?string $algorithm = null,
+        private ?string $jwksUri = null,
+        private ?string $clientSecret = null,
+        private ?int $cacheExpires = null,
+        private ?CacheItemPoolInterface $cache = null,
+        private ?array & $mockedHttpResponses = null
     ) {
-        $this->configuration = $configuration;
-        $this->payload = $payload;
-        $this->signature = $signature;
-        $this->headers = $headers;
-        $this->algorithm = $algorithm;
-        $this->jwksUri = $jwksUri;
-        $this->clientSecret = $clientSecret;
-        $this->cacheExpires = $cacheExpires;
-        $this->cache = $cache;
-        $this->mockedHttpResponses = & $mockedHttpResponses;
-
         $this->verify();
     }
 

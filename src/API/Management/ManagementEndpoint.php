@@ -15,19 +15,13 @@ use Auth0\SDK\Utility\HttpResponsePaginator;
 abstract class ManagementEndpoint
 {
     /**
-     * Injected HttpClient instance to use.
-     */
-    private HttpClient $httpClient;
-
-    /**
      * ManagementEndpoint constructor.
      *
      * @param HttpClient $httpClient HttpClient instance to use.
      */
     public function __construct(
-        HttpClient $httpClient
+        private HttpClient $httpClient
     ) {
-        $this->httpClient = $httpClient;
     }
 
     /**

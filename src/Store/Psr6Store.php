@@ -17,21 +17,6 @@ use Psr\Cache\CacheItemPoolInterface;
 final class Psr6Store implements StoreInterface
 {
     /**
-     * The storage key to store data under.
-     */
-    private string $storageKey;
-
-    /**
-     * An instance of StoreInterface to use for 'public' storage.
-     */
-    private StoreInterface $publicStore;
-
-    /**
-     * An instance of CacheItemPoolInterface to use for 'private' storage.
-     */
-    private CacheItemPoolInterface $privateStore;
-
-    /**
      * Psr6Store constructor.
      *
      * @param StoreInterface         $publicStore  An instance of StoreInterface to use for 'public' storage.
@@ -39,13 +24,10 @@ final class Psr6Store implements StoreInterface
      * @param string                 $storageKey   A string representing the key/namespace under which to store values.
      */
     public function __construct(
-        StoreInterface $publicStore,
-        CacheItemPoolInterface $privateStore,
-        string $storageKey = 'storage_key'
+        private StoreInterface $publicStore,
+        private CacheItemPoolInterface $privateStore,
+        private string $storageKey = 'storage_key'
     ) {
-        $this->publicStore = $publicStore;
-        $this->privateStore = $privateStore;
-        $this->storageKey = $storageKey;
     }
 
     /**

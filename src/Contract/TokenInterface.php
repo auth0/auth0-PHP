@@ -14,12 +14,9 @@ interface TokenInterface
     /**
      * Parses a provided JWT string and prepare for verification and validation.
      *
-     * @param string $jwt The JWT string to process.
-     *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function parse(
-        string $jwt
     ): self;
 
     /**

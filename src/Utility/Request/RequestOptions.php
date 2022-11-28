@@ -10,27 +10,15 @@ namespace Auth0\SDK\Utility\Request;
 final class RequestOptions
 {
     /**
-     * An instance of FilteredRequest or null, for managing field-filtered requests.
-     */
-    private ?FilteredRequest $fields = null;
-
-    /**
-     * An instance of PaginatedRequest or null, for managing paginated requests.
-     */
-    private ?PaginatedRequest $pagination = null;
-
-    /**
      * RequestOptions constructor
      *
      * @param FilteredRequest|null  $fields     An instance of FilteredRequest, for managing field-filtered requests.
      * @param PaginatedRequest|null $pagination An instance of PaginatedRequest, for managing paginated requests.
      */
     public function __construct(
-        ?FilteredRequest $fields = null,
-        ?PaginatedRequest $pagination = null
+        private ?FilteredRequest $fields = null,
+        private ?PaginatedRequest $pagination = null
     ) {
-        $this->fields = $fields;
-        $this->pagination = $pagination;
     }
 
     /**

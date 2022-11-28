@@ -27,38 +27,11 @@ final class HttpRequest
     public const MIN_REQUEST_RETRY_DELAY = 100;
 
     /**
-     * Shared configuration data.
-     */
-    private SdkConfiguration $configuration;
-
-    /**
-     * Base API path for the request.
-     */
-    private string $basePath = '/';
-
-    /**
      * Path to request.
      *
      * @var array<string>
      */
     private array $path = [];
-
-    /**
-     * HTTP method to use for the request.
-     */
-    private string $method = '';
-
-    /**
-     * Headers to include for the request.
-     *
-     * @var array<string,mixed>
-     */
-    private array $headers = [];
-
-    /**
-     * Domain to use for request.
-     */
-    private ?string $domain = null;
 
     /**
      * URL parameters for the request.
@@ -109,18 +82,6 @@ final class HttpRequest
     private ?ResponseInterface $lastResponse = null;
 
     /**
-     * Mocked response.
-     *
-     * @var array<object>
-     */
-    private ?array $mockedResponses = null;
-
-    /**
-     * The context in which this client was created, for defining special behaviors.
-     */
-    private int $context = HttpClient::CONTEXT_AUTHENTICATION_CLIENT;
-
-    /**
      * HttpRequest constructor.
      *
      * @param SdkConfiguration   $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
@@ -132,21 +93,14 @@ final class HttpRequest
      * @param array<object>|null $mockedResponses Optional. Only intended for unit testing purposes.
      */
     public function __construct(
-        SdkConfiguration $configuration,
-        int $context,
-        string $method,
-        string $basePath = '/',
-        array $headers = [],
-        ?string $domain = null,
-        ?array & $mockedResponses = null
+        private SdkConfiguration $configuration,
+        private int $context,
+        private string $method,
+        private string $basePath = '/',
+        private array $headers = [],
+        private ?string $domain = null,
+        private ?array & $mockedResponses = null
     ) {
-        $this->configuration = $configuration;
-        $this->context = $context;
-        $this->method = mb_strtoupper($method);
-        $this->basePath = $basePath;
-        $this->headers = $headers;
-        $this->domain = $domain;
-        $this->mockedResponses = & $mockedResponses;
     }
 
     /**
@@ -288,7 +242,7 @@ final class HttpRequest
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();
         $configuredRetries = $this->configuration->getHttpMaxRetries();
-        $httpRequest = $httpRequestFactory->createRequest($this->method, $uri);
+        $httpRequest = $httpRequestFactory->createRequest(mb_strtoupper($this->method), $uri);
         $headers = $this->headers;
         $mockedResponse = null;
 
@@ -313,7 +267,6 @@ final class HttpRequest
 
         // Add headers to request payload.
         foreach ($headers as $headerName => $headerValue) {
-            /** @var string|int $headerValue */
             $httpRequest = $httpRequest->withHeader($headerName, (string) $headerValue);
         }
 

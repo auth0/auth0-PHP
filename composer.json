@@ -93,10 +93,10 @@
     "rector:fix": "@php vendor/bin/rector process src",
     "pest": "@php vendor/bin/pest --order-by random",
     "test": [
+      "@pint",
       "@phpstan",
       "@psalm",
       "@rector",
-      "@pint",
       "@pest"
     ]
   }

@@ -12,21 +12,13 @@ use Auth0\SDK\Contract\Token\ValidatorInterface;
 final class Validator implements ValidatorInterface
 {
     /**
-     * Array representing the claims of a JWT.
-     *
-     * @var array<string,array<int|string>|int|string>
-     */
-    private array $claims;
-
-    /**
      * Constructor for the Token Validator class.
      *
      * @param array<string,array<int|string>|int|string> $claims Array representing the claims of a JWT.
      */
     public function __construct(
-        array $claims
+        private array $claims
     ) {
-        $this->claims = $claims;
     }
 
     /**
@@ -71,7 +63,7 @@ final class Validator implements ValidatorInterface
         ?int $now = null
     ): self {
         $authTime = $this->getClaim('auth_time');
-        $now = $now ?? time();
+        $now ??= time();
 
         if ($authTime === null || ! is_numeric($authTime)) {
             throw \Auth0\SDK\Exception\InvalidTokenException::missingAuthTimeClaim();

@@ -25,11 +25,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     ];
 
     /**
-     * An instance of the current HttpClient to use for network requests.
-     */
-    private HttpClient $httpClient;
-
-    /**
      * The current position in use by the Iterator, for tracking our index while looping.
      */
     private int $position = 0;
@@ -74,9 +69,8 @@ final class HttpResponsePaginator implements \Countable, \Iterator
      * @throws \Auth0\SDK\Exception\PaginatorException When an unsupported request type is provided.
      */
     public function __construct(
-        HttpClient $httpClient
+        private HttpClient $httpClient
     ) {
-        $this->httpClient = $httpClient;
         $lastRequest = $this->lastRequest();
         $lastResponse = $this->lastResponse();
 

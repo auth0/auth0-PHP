@@ -12,21 +12,13 @@ use Auth0\SDK\Utility\Toolkit;
 final class ArrayFilter
 {
     /**
-     * Values to process.
-     *
-     * @var array<array<mixed>>
-     */
-    private array $subjects;
-
-    /**
      * StringFilter constructor.
      *
      * @param array<array<mixed>> $subjects An array of arrays to filter.
      */
     public function __construct(
-        array $subjects
+        private array $subjects
     ) {
-        $this->subjects = $subjects;
     }
 
     /**

@@ -9,13 +9,11 @@ use Auth0\SDK\Contract\StoreInterface;
 
 final class Clear implements Auth0Event
 {
-    private StoreInterface $store;
     private ?bool $success = null;
 
     public function __construct(
-        StoreInterface $store
+        private StoreInterface $store
     ) {
-        $this->store = $store;
     }
 
     public function getStore(): StoreInterface

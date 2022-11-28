@@ -28,7 +28,7 @@ final class Auth0 implements Auth0Interface
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    private SdkConfiguration $configuration;
+    private ?SdkConfiguration $validatedConfiguration = null;
 
     /**
      * Instance of SdkState, for shared state across classes.
@@ -56,21 +56,14 @@ final class Auth0 implements Auth0Interface
      * @param SdkConfiguration|array<mixed> $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      */
     public function __construct(
-        $configuration
+        private SdkConfiguration|array $configuration
     ) {
-        // If we're passed an array, construct a new SdkConfiguration from that structure.
-        if (is_array($configuration)) {
-            $configuration = new SdkConfiguration($configuration);
-        }
-
-        // Store the configuration internally.
-        $this->configuration = $configuration;
     }
 
     public function authentication(): AuthenticationInterface
     {
         if ($this->authentication === null) {
-            $this->authentication = new Authentication($this->configuration);
+            $this->authentication = new Authentication($this->configuration());
         }
 
         return $this->authentication;
@@ -79,7 +72,7 @@ final class Auth0 implements Auth0Interface
     public function management(): ManagementInterface
     {
         if ($this->management === null) {
-            $this->management = new Management($this->configuration);
+            $this->management = new Management($this->configuration());
         }
 
         return $this->management;
@@ -87,7 +80,15 @@ final class Auth0 implements Auth0Interface
 
     public function configuration(): SdkConfiguration
     {
-        return $this->configuration;
+        if (null === $this->validatedConfiguration) {
+            if (is_array($this->configuration)) {
+                return $this->validatedConfiguration = new SdkConfiguration($this->configuration);
+            }
+
+            return $this->validatedConfiguration = $this->configuration;
+        }
+
+        return $this->validatedConfiguration;
     }
 
     public function login(
@@ -191,12 +192,12 @@ final class Auth0 implements Auth0Interface
 
             // Delete all data in the session storage medium.
             if ($this->configuration()->hasSessionStorage()) {
-                $this->configuration->getSessionStorage()->purge();
+                $this->configuration()->getSessionStorage()->purge();
             }
 
             // Delete all data in the transient storage medium.
             if ($this->configuration()->hasTransientStorage() && $transient) {
-                $this->configuration->getTransientStorage()->purge();
+                $this->configuration()->getTransientStorage()->purge();
             }
 
             // If state saving had been deferred, disable it and force a update to persistent storage.
@@ -226,23 +227,24 @@ final class Auth0 implements Auth0Interface
         $tokenMaxAge ??= $store?->getOnce('max_age') ?? null;
         $tokenIssuer = null;
 
-        $token = new Token($this->configuration, $token, $tokenType);
-        $token->verify();
-
         // If pulled from transient storage, $tokenMaxAge might be a string.
         if ($tokenMaxAge !== null) {
             $tokenMaxAge = (int) $tokenMaxAge;
         }
 
-        $token->validate(
-            $tokenIssuer,
-            $tokenAudience,
-            $tokenOrganization,
-            $tokenNonce,
-            $tokenMaxAge,
-            $tokenLeeway,
-            $tokenNow
-        );
+        $token = new Token($this->configuration(), $token, $tokenType);
+
+        $token
+            ->verify()
+            ->validate(
+                $tokenIssuer,
+                $tokenAudience,
+                $tokenOrganization,
+                $tokenNonce,
+                $tokenMaxAge,
+                $tokenLeeway,
+                $tokenNow
+            );
 
         // Ensure transient-stored values are cleared, even if overriding values were passed to the  method.
         if ($this->configuration()->usingStatefulness() && $store instanceof TransientStoreHandler) {
