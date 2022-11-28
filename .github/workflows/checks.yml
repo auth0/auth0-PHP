@@ -28,7 +28,7 @@ jobs:
           extensions: mbstring, openssl
         env:
           update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get composer cache directory
         id: composer-cache
@@ -63,7 +63,7 @@ jobs:
           extensions: mbstring, openssl
         env:
           update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -110,7 +110,7 @@ jobs:
           extensions: mbstring, openssl
         env:
           update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -152,7 +152,7 @@ jobs:
           extensions: mbstring, openssl
         env:
           update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -194,7 +194,7 @@ jobs:
           extensions: mbstring, openssl
         env:
           update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -236,7 +236,7 @@ jobs:
           extensions: mbstring, openssl
         env:
           update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
