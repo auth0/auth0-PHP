@@ -9,7 +9,7 @@ use Throwable;
 trait ConfigurableMixin
 {
     /**
-     * @param null|array<mixed> $configuration
+     * @param  array<mixed>|null  $configuration
      *
      * @psalm-suppress MissingClosureParamType,MissingClosureReturnType
      */
@@ -23,11 +23,11 @@ trait ConfigurableMixin
         $defaults = $this->getPropertyDefaults();
 
         foreach ($configuration as $configKey => $configuredValue) {
-            if (! property_exists($this, $configKey) || ! array_key_exists($configKey, $defaults)) {
+            if (! property_exists($this, $configKey) || ! \array_key_exists($configKey, $defaults)) {
                 continue;
             }
 
-            if (! isset($validators[$configKey]) || ! is_callable($validators[$configKey])) {
+            if (! isset($validators[$configKey]) || ! \is_callable($validators[$configKey])) {
                 throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($configKey);
             }
 
@@ -38,18 +38,19 @@ trait ConfigurableMixin
             $method = 'set' . ucfirst($configKey);
 
             if (method_exists($this, $method)) {
-                // @phpstan-ignore-next-line
+                /** @phpstan-ignore-next-line */
                 $callback = function ($configuredValue) use ($method) {
                     // @phpstan-ignore-next-line
-                    return $this->$method($configuredValue);
+                    return $this->{$method}($configuredValue);
                 };
 
-                call_user_func($callback, $configuredValue);
+                $callback($configuredValue);
+
                 continue;
             }
 
             // @phpstan-ignore-next-line
-            $this->$configKey = $configuredValue;
+            $this->{$configKey} = $configuredValue;
         }
 
         return $this;
@@ -68,31 +69,32 @@ trait ConfigurableMixin
             }
 
             // @phpstan-ignore-next-line
-            if ($this->$configKey === $defaultValue) {
+            if ($this->{$configKey} === $defaultValue) {
                 continue;
             }
 
             $method = 'set' . ucfirst($configKey);
 
             if (method_exists($this, $method)) {
-                // @phpstan-ignore-next-line
+                /** @phpstan-ignore-next-line */
                 $callback = function ($value) use ($method) {
                     // @phpstan-ignore-next-line
-                    return $this->$method($value);
+                    return $this->{$method}($value);
                 };
 
                 // @phpstan-ignore-next-line
-                call_user_func($callback, $this->$configKey);
+                $callback($this->{$configKey});
+
                 continue;
             }
         }
     }
 
     /**
-     * @param mixed $value A value to compare against NULL.
-     * @param null|Throwable $throwable Optional. A Throwable exception to raise if $value is NULL.
+     * @param  mixed  $value  a value to compare against NULL
+     * @param  Throwable|null  $throwable  Optional. A Throwable exception to raise if $value is NULL.
      */
-    private function exceptionIfNull($value, ?\Throwable $throwable = null): void
+    private function exceptionIfNull($value, ?Throwable $throwable = null): void
     {
         if (null === $value && null !== $throwable) {
             throw $throwable;
@@ -100,14 +102,13 @@ trait ConfigurableMixin
     }
 
     /**
-     * @param null|array<string> $filtering An array of strings to filter, or NULL.
-     * @param bool $keepKeys Optional. Whether to keep array keys or reindex the array appropriately.
-     *
-     * @return null|array<string>
+     * @param  array<string>|null  $filtering  an array of strings to filter, or NULL
+     * @param  bool  $keepKeys  Optional. Whether to keep array keys or reindex the array appropriately.
+     * @return array<string>|null
      */
     private function filterArray(?array $filtering, bool $keepKeys = false): ?array
     {
-        if (! is_array($filtering) || [] === $filtering) {
+        if (! \is_array($filtering) || [] === $filtering) {
             return null;
         }
 
@@ -116,7 +117,7 @@ trait ConfigurableMixin
         foreach ($filtering as $i => $s) {
             $s = trim($s);
 
-            if ('' !== $s && ! in_array($s, $filtered, true)) {
+            if ('' !== $s && ! \in_array($s, $filtered, true)) {
                 $filtered[$i] = $s;
             }
         }
@@ -125,7 +126,7 @@ trait ConfigurableMixin
             return null;
         }
 
-        if (!$keepKeys) {
+        if (! $keepKeys) {
             return array_values($filtered);
         }
 
@@ -133,25 +134,24 @@ trait ConfigurableMixin
     }
 
     /**
-     * @param null|array<mixed> $filtering An array to filter, or NULL.
-     * @param bool $keepKeys Optional. Whether to keep array keys or reindex the array appropriately.
-     *
-     * @return null|array<mixed>
+     * @param  array<mixed>|null  $filtering  an array to filter, or NULL
+     * @param  bool  $keepKeys  Optional. Whether to keep array keys or reindex the array appropriately.
+     * @return array<mixed>|null
      */
     private function filterArrayMixed(?array $filtering, bool $keepKeys = false): ?array
     {
-        if (! is_array($filtering) || [] === $filtering) {
+        if (! \is_array($filtering) || [] === $filtering) {
             return null;
         }
 
         $filtered = [];
 
         foreach ($filtering as $i => $s) {
-            if (is_string($s)) {
+            if (\is_string($s)) {
                 $s = trim($s);
             }
 
-            if ('' !== $s && (is_int($i) && ! in_array($s, $filtered, true) || is_string($i) && ! array_key_exists($i, $filtered))) {
+            if ('' !== $s && (\is_int($i) && ! \in_array($s, $filtered, true) || \is_string($i) && ! \array_key_exists($i, $filtered))) {
                 $filtered[$i] = $s;
             }
         }
@@ -160,7 +160,7 @@ trait ConfigurableMixin
             return null;
         }
 
-        if (!$keepKeys) {
+        if (! $keepKeys) {
             return array_values($filtered);
         }
 
@@ -174,29 +174,29 @@ trait ConfigurableMixin
         if ('' !== $domain) {
             $scheme = parse_url($domain, PHP_URL_SCHEME);
 
-            if (! is_string($scheme) || '' === $scheme) {
+            if (! \is_string($scheme) || '' === $scheme) {
                 return $this->filterDomain('https://' . $domain);
             }
 
             $host = parse_url($domain, PHP_URL_HOST);
 
-            if (! is_string($host)) {
+            if (! \is_string($host)) {
                 return null;
             }
 
-            if ($host === '') {
+            if ('' === $host) {
                 return null;
             }
 
             $parts = explode('.', $host);
 
-            if (count($parts) < 2) {
+            if (\count($parts) < 2) {
                 return null;
             }
 
             $tld = end($parts);
 
-            if (strlen($tld) < 2) {
+            if (\mb_strlen($tld) < 2) {
                 return null;
             }
 
@@ -210,11 +210,12 @@ trait ConfigurableMixin
     {
         $filtered = $this->filterStringUtf8($str);
 
-        if (strpos($filtered, '<') !== false) {
+        if (str_contains($filtered, '<')) {
             $filtered = preg_replace_callback('%<[^>]*?((?=<)|>|$)%', function ($matches) {
-                if (false !== strpos($matches[0], '>')) {
+                if (str_contains($matches[0], '>')) {
                     return $this->filterHtml($matches[0]);
                 }
+
                 return $matches[0];
             }, $filtered) ?? '';
             $filtered = $this->filterStringTags($filtered, false);
@@ -236,19 +237,19 @@ trait ConfigurableMixin
         if ($found) {
             $filtered = preg_replace('/ +/', ' ', $filtered);
 
-            if ($filtered !== null) {
+            if (null !== $filtered) {
                 $filtered = trim($filtered);
             }
         }
 
-        if (! is_string($filtered)) {
+        if (! \is_string($filtered)) {
             return '';
         }
 
         return $filtered;
     }
 
-    private function filterHtml(string $str, int $flags = ENT_QUOTES|ENT_SUBSTITUTE): string
+    private function filterHtml(string $str, int $flags = ENT_QUOTES | ENT_SUBSTITUTE): string
     {
         if ('' === $str) {
             return '';
@@ -284,13 +285,13 @@ trait ConfigurableMixin
 
     private function filterStringUtf8(string $str, bool $strip = false): string
     {
-        if ($str === '') {
+        if ('' === $str) {
             return '';
         }
 
         static $pcreSupported = null;
 
-        if ($pcreSupported === null) {
+        if (null === $pcreSupported) {
             try {
                 $pcreSupported = preg_match('/^./u', 'a');
             } catch (\Throwable $th) {
@@ -306,10 +307,10 @@ trait ConfigurableMixin
             return $str;
         }
 
-        if ($strip && function_exists('iconv')) {
+        if ($strip && \function_exists('iconv')) {
             $response = iconv('utf-8', 'utf-8', $str);
 
-            if (is_string($response)) {
+            if (\is_string($response)) {
                 return $response;
             }
         }

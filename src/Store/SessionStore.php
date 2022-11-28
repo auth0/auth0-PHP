@@ -17,37 +17,36 @@ final class SessionStore implements StoreInterface
     /**
      * SessionStore constructor.
      *
-     * @param SdkConfiguration $configuration Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param string           $sessionPrefix A string to prefix session keys with.
+     * @param  SdkConfiguration  $configuration  Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param  string  $sessionPrefix  a string to prefix session keys with
      */
     public function __construct(
         private SdkConfiguration $configuration,
-        private string $sessionPrefix = 'auth0'
+        private string $sessionPrefix = 'auth0',
     ) {
     }
 
     /**
      * This has no effect when using sessions as the storage medium.
      *
-     * @param bool $deferring Whether to defer persisting the storage state.
+     * @param  bool  $deferring  whether to defer persisting the storage state
      *
      * @codeCoverageIgnore
      */
     public function defer(
-        bool $deferring
+        bool $deferring,
     ): void {
-        return;
     }
 
     /**
      * Persists $value on $_SESSION, identified by $key.
      *
-     * @param string $key   Session key to set.
-     * @param mixed  $value Value to use.
+     * @param  string  $key  session key to set
+     * @param  mixed  $value  value to use
      */
     public function set(
         string $key,
-        $value
+        $value,
     ): void {
         $this->start();
 
@@ -58,14 +57,13 @@ final class SessionStore implements StoreInterface
      * Gets persisted values identified by $key.
      * If the value is not set, returns $default.
      *
-     * @param string $key     Session key to set.
-     * @param mixed  $default Default to return if nothing was found.
-     *
+     * @param  string  $key  session key to set
+     * @param  mixed  $default  default to return if nothing was found
      * @return mixed
      */
     public function get(
         string $key,
-        $default = null
+        $default = null,
     ) {
         $this->start();
 
@@ -88,9 +86,9 @@ final class SessionStore implements StoreInterface
         $session = $_SESSION ?? [];
         $prefix = $this->sessionPrefix . '_';
 
-        if ($session !== []) {
+        if ([] !== $session) {
             while ($sessionKey = key($session)) {
-                if (mb_substr($sessionKey, 0, strlen($prefix)) === $prefix) {
+                if (mb_substr($sessionKey, 0, \mb_strlen($prefix)) === $prefix) {
                     unset($_SESSION[$sessionKey]);
                 }
 
@@ -102,10 +100,10 @@ final class SessionStore implements StoreInterface
     /**
      * Removes a persisted value identified by $key.
      *
-     * @param string $key Session key to delete.
+     * @param  string  $key  session key to delete
      */
     public function delete(
-        string $key
+        string $key,
     ): void {
         $this->start();
 
@@ -115,10 +113,10 @@ final class SessionStore implements StoreInterface
     /**
      * Constructs a session key name.
      *
-     * @param string $key Session key name to prefix and return.
+     * @param  string  $key  session key name to prefix and return
      */
     public function getSessionName(
-        string $key
+        string $key,
     ): string {
         [$key] = Toolkit::filter([$key])->string()->trim();
 
@@ -136,16 +134,16 @@ final class SessionStore implements StoreInterface
     {
         $sessionId = session_id();
 
-        if ($sessionId === '' || $sessionId === false) {
+        if ('' === $sessionId || false === $sessionId) {
             // @codeCoverageIgnoreStart
-            if (! defined('AUTH0_TESTS_DIR')) {
+            if (! \defined('AUTH0_TESTS_DIR')) {
                 session_set_cookie_params([
                     'lifetime' => $this->configuration->getCookieExpires(),
-                    'domain' => $this->configuration->getCookieDomain(),
-                    'path' => $this->configuration->getCookiePath(),
-                    'secure' => $this->configuration->getCookieSecure(),
+                    'domain'   => $this->configuration->getCookieDomain(),
+                    'path'     => $this->configuration->getCookiePath(),
+                    'secure'   => $this->configuration->getCookieSecure(),
                     'httponly' => true,
-                    'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax',
+                    'samesite' => 'form_post' === $this->configuration->getResponseMode() ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax',
                 ]);
             }
             // @codeCoverageIgnoreEnd

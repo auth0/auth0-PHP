@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
  * Class DeviceCredentials.
  * Handles requests to the Device Credentials endpoint of the v2 Management API.
  *
- * @link https://auth0.com/docs/api/management/v2#!/Device_Credentials
+ * @see https://auth0.com/docs/api/management/v2#!/Device_Credentials
  */
 final class DeviceCredentials extends ManagementEndpoint implements DeviceCredentialsInterface
 {
@@ -23,7 +23,7 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
         string $value,
         string $deviceId,
         ?array $body = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$deviceName, $type, $value, $deviceId] = Toolkit::filter([$deviceName, $type, $value, $deviceId])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -35,28 +35,28 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
             [$deviceId, \Auth0\SDK\Exception\ArgumentException::missing('deviceId')],
         ])->isString();
 
-        /** @var array<mixed> $body */
+        /* @var array<mixed> $body */
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('device-credentials')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('device-credentials')->
+            withBody(
                 (object) Toolkit::merge([
                     'device_name' => $deviceName,
-                    'type' => $type,
-                    'value' => $value,
-                    'device_id' => $deviceId,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
+                    'type'        => $type,
+                    'value'       => $value,
+                    'device_id'   => $deviceId,
+                ], $body),
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function get(
         string $userId,
         ?string $clientId = null,
         ?string $type = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$userId, $clientId, $type] = Toolkit::filter([$userId, $clientId, $type])->string()->trim();
 
@@ -68,25 +68,25 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
 
         $params = Toolkit::filter([
             [
-                'user_id' => $userId,
+                'user_id'   => $userId,
                 'client_id' => $clientId,
-                'type' => $type,
+                'type'      => $type,
             ],
         ])->array()->trim()[0];
 
-        /** @var array<int|string|null> $params */
+        /* @var array<int|string|null> $params */
 
-        return $this->getHttpClient()
-            ->method('get')
-            ->addPath('device-credentials')
-            ->withParams($params)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('device-credentials')->
+            withParams($params)->
+            withOptions($options)->
+            call();
     }
 
     public function delete(
         string $id,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
@@ -94,10 +94,10 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('device-credentials', $id)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('device-credentials', $id)->
+            withOptions($options)->
+            call();
     }
 }

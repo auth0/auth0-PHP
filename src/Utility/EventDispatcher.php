@@ -17,28 +17,29 @@ final class EventDispatcher implements EventDispatcherInterface
     /**
      * EventDispatcher constructor.
      *
-     * @param SdkConfiguration   $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param  SdkConfiguration  $configuration  Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      */
     public function __construct(
-        private SdkConfiguration $configuration
+        private SdkConfiguration $configuration,
     ) {
     }
 
     public function getListenerProvider(): ?ListenerProviderInterface
     {
         $listenerProvider = $this->configuration->getEventListenerProvider();
+
         return $listenerProvider instanceof ListenerProviderInterface ? $listenerProvider : null;
     }
 
     /**
      * Dispatch an event to any subscribed listeners.
      *
-     * @param object $event The event to be dispatched to listeners.
+     * @param  object  $event  the event to be dispatched to listeners
      *
      * @psalm-suppress MixedFunctionCall
      */
     public function dispatch(
-        object $event
+        object $event,
     ): object {
         $listenerProvider = $this->getListenerProvider();
 

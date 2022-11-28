@@ -14,12 +14,12 @@ final class PKCE
      * letters, numbers and "-", ".", "_", "~", as defined in the RFC 7636
      * specification.
      *
-     * @param int $length Code verifier length
+     * @param  int  $length  Code verifier length
      *
-     * @link https://tools.ietf.org/html/rfc7636
+     * @see https://tools.ietf.org/html/rfc7636
      */
     public static function generateCodeVerifier(
-        int $length = 43
+        int $length = 43,
     ): string {
         if ($length < 43 || $length > 128) {
             throw \Auth0\SDK\Exception\ArgumentException::codeVerifierLength();
@@ -52,12 +52,12 @@ final class PKCE
      * and no line breaks, whitespace, or other additional characters should be
      * present.
      *
-     * @param string $codeVerifier String to generate code challenge from.
+     * @param  string  $codeVerifier  string to generate code challenge from
      *
-     * @link https://auth0.com/docs/flows/concepts/auth-code-pkce
+     * @see https://auth0.com/docs/flows/concepts/auth-code-pkce
      */
     public static function generateCodeChallenge(
-        string $codeVerifier
+        string $codeVerifier,
     ): string {
         $encoded = base64_encode(hash('sha256', $codeVerifier, true));
 

@@ -21,15 +21,18 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
 /**
- * Configuration container for use with Auth0\SDK
+ * Configuration container for use with Auth0\SDK.
  */
 final class SdkConfiguration implements ConfigurableContract
 {
     use ConfigurableMixin;
 
     public const STRATEGY_REGULAR = 'webapp';
+
     public const STRATEGY_API = 'api';
+
     public const STRATEGY_MANAGEMENT_API = 'management';
+
     public const STRATEGY_NONE = 'none';
 
     public const STRATEGIES_USING_SESSIONS = [self::STRATEGY_REGULAR];
@@ -40,53 +43,53 @@ final class SdkConfiguration implements ConfigurableContract
     private ?EventDispatcher $eventDispatcher = null;
 
     /**
-     * SdkConfiguration Constructor
+     * SdkConfiguration Constructor.
      *
-     * @param array<mixed>|null              $configuration         An key-value array matching this constructor's arguments. Overrides any other passed arguments with the same key name.
-     * @param string                         $strategy              Defaults to 'webapp'. Should be assigned either 'api', 'management', or 'webapp' to specify the type of application the SDK is being applied to. Determines what configuration options will be required at initialization.
-     * @param string|null                    $domain                Auth0 domain for your tenant, found in your Auth0 Application settings.
-     * @param string|null                    $customDomain          If you have configured Auth0 to use a custom domain, configure it here.
-     * @param string|null                    $clientId              Client ID, found in the Auth0 Application settings.
-     * @param string|null                    $redirectUri           Authentication callback URI, as defined in your Auth0 Application settings.
-     * @param string|null                    $clientSecret          Client Secret, found in the Auth0 Application settings.
-     * @param array<string>|null             $audience              One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
-     * @param array<string>|null             $organization          One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
-     * @param bool                           $usePkce               Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests. See https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce
-     * @param array<string>|null             $scope                 One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
-     * @param string                         $responseMode          Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
-     * @param string                         $responseType          Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow.
-     * @param string                         $tokenAlgorithm        Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
-     * @param string|null                    $tokenJwksUri          URI to the JWKS when verifying RS256 tokens.
-     * @param int|null                       $tokenMaxAge           The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation.
-     * @param int                            $tokenLeeway           Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
-     * @param CacheItemPoolInterface|null    $tokenCache            A PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS).
-     * @param int                            $tokenCacheTtl         How long (in seconds) to keep a JWKS cached.
-     * @param ClientInterface|null           $httpClient            A PSR-18 compatible HTTP client to use for API requests.
-     * @param int                            $httpMaxRetries        When a rate-limit (429 status code) response is returned from the Auth0 API, automatically retry the request up to this many times.
-     * @param RequestFactoryInterface|null   $httpRequestFactory    A PSR-17 compatible request factory to generate HTTP requests.
-     * @param ResponseFactoryInterface|null  $httpResponseFactory   A PSR-17 compatible response factory to generate HTTP responses.
-     * @param StreamFactoryInterface|null    $httpStreamFactory     A PSR-17 compatible stream factory to create request body streams.
-     * @param bool                           $httpTelemetry         Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
-     * @param StoreInterface|null            $sessionStorage        Defaults to use cookies. A StoreInterface-compatible class for storing Token state.
-     * @param string                         $sessionStorageId      Defaults to 'auth0_session'. The namespace to prefix session items under.
-     * @param string|null                    $cookieSecret          The secret used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback.
-     * @param string|null                    $cookieDomain          Defaults to value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
-     * @param int                            $cookieExpires         Defaults to 0. How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
-     * @param string                         $cookiePath            Defaults to '/'. Specifies path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
-     * @param string|null                    $cookieSameSite        Defaults to 'lax'. Specifies whether cookies should be restricted to first-party or same-site context.
-     * @param bool                           $cookieSecure          Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
-     * @param bool                           $persistUser           Defaults to true. If true, the user data will persist in session storage.
-     * @param bool                           $persistIdToken        Defaults to true. If true, the Id Token will persist in session storage.
-     * @param bool                           $persistAccessToken    Defaults to true. If true, the Access Token will persist in session storage.
-     * @param bool                           $persistRefreshToken   Defaults to true. If true, the Refresh Token will persist in session storage.
-     * @param StoreInterface|null            $transientStorage      Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as nonces.
-     * @param string                         $transientStorageId    Defaults to 'auth0_transient'. The namespace to prefix transient items under.
-     * @param bool                           $queryUserInfo         Defaults to false. If true, query the /userinfo endpoint during an authorization code exchange.
-     * @param string|null                    $managementToken       An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
-     * @param CacheItemPoolInterface|null    $managementTokenCache  A PSR-6 compatible cache adapter for storing generated management access tokens.
-     * @param ListenerProviderInterface|null $eventListenerProvider A PSR-14 compatible event listener provider, for interfacing with events triggered by the SDK.
+     * @param  array<mixed>|null  $configuration  An key-value array matching this constructor's arguments. Overrides any other passed arguments with the same key name.
+     * @param  string  $strategy  Defaults to 'webapp'. Should be assigned either 'api', 'management', or 'webapp' to specify the type of application the SDK is being applied to. Determines what configuration options will be required at initialization.
+     * @param  string|null  $domain  auth0 domain for your tenant, found in your Auth0 Application settings
+     * @param  string|null  $customDomain  if you have configured Auth0 to use a custom domain, configure it here
+     * @param  string|null  $clientId  client ID, found in the Auth0 Application settings
+     * @param  string|null  $redirectUri  authentication callback URI, as defined in your Auth0 Application settings
+     * @param  string|null  $clientSecret  client Secret, found in the Auth0 Application settings
+     * @param  array<string>|null  $audience  One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
+     * @param  array<string>|null  $organization  One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
+     * @param  bool  $usePkce  Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests. See https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce
+     * @param  array<string>|null  $scope  One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
+     * @param  string  $responseMode  Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
+     * @param  string  $responseType  Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow.
+     * @param  string  $tokenAlgorithm  Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
+     * @param  string|null  $tokenJwksUri  URI to the JWKS when verifying RS256 tokens
+     * @param  int|null  $tokenMaxAge  the maximum window of time (in seconds) since the 'auth_time' to accept during Token validation
+     * @param  int  $tokenLeeway  Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
+     * @param  CacheItemPoolInterface|null  $tokenCache  a PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS)
+     * @param  int  $tokenCacheTtl  how long (in seconds) to keep a JWKS cached
+     * @param  ClientInterface|null  $httpClient  a PSR-18 compatible HTTP client to use for API requests
+     * @param  int  $httpMaxRetries  when a rate-limit (429 status code) response is returned from the Auth0 API, automatically retry the request up to this many times
+     * @param  RequestFactoryInterface|null  $httpRequestFactory  a PSR-17 compatible request factory to generate HTTP requests
+     * @param  ResponseFactoryInterface|null  $httpResponseFactory  a PSR-17 compatible response factory to generate HTTP responses
+     * @param  StreamFactoryInterface|null  $httpStreamFactory  a PSR-17 compatible stream factory to create request body streams
+     * @param  bool  $httpTelemetry  Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
+     * @param  StoreInterface|null  $sessionStorage  Defaults to use cookies. A StoreInterface-compatible class for storing Token state.
+     * @param  string  $sessionStorageId  Defaults to 'auth0_session'. The namespace to prefix session items under.
+     * @param  string|null  $cookieSecret  the secret used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback
+     * @param  string|null  $cookieDomain  Defaults to value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
+     * @param  int  $cookieExpires  Defaults to 0. How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
+     * @param  string  $cookiePath  Defaults to '/'. Specifies path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
+     * @param  string|null  $cookieSameSite  Defaults to 'lax'. Specifies whether cookies should be restricted to first-party or same-site context.
+     * @param  bool  $cookieSecure  Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
+     * @param  bool  $persistUser  Defaults to true. If true, the user data will persist in session storage.
+     * @param  bool  $persistIdToken  Defaults to true. If true, the Id Token will persist in session storage.
+     * @param  bool  $persistAccessToken  Defaults to true. If true, the Access Token will persist in session storage.
+     * @param  bool  $persistRefreshToken  Defaults to true. If true, the Refresh Token will persist in session storage.
+     * @param  StoreInterface|null  $transientStorage  Defaults to use cookies. A StoreInterface-compatible class for storing ephemeral state data, such as nonces.
+     * @param  string  $transientStorageId  Defaults to 'auth0_transient'. The namespace to prefix transient items under.
+     * @param  bool  $queryUserInfo  Defaults to false. If true, query the /userinfo endpoint during an authorization code exchange.
+     * @param  string|null  $managementToken  An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
+     * @param  CacheItemPoolInterface|null  $managementTokenCache  a PSR-6 compatible cache adapter for storing generated management access tokens
+     * @param  ListenerProviderInterface|null  $eventListenerProvider  a PSR-14 compatible event listener provider, for interfacing with events triggered by the SDK
      *
-     * @throws \Auth0\SDK\Exception\ConfigurationException When a valid `$strategy` is not specified.
+     * @throws \Auth0\SDK\Exception\ConfigurationException when a valid `$strategy` is not specified
      */
     public function __construct(
         private ?array $configuration = null,
@@ -131,7 +134,7 @@ final class SdkConfiguration implements ConfigurableContract
         private bool $queryUserInfo = false,
         private ?string $managementToken = null,
         private ?CacheItemPoolInterface $managementTokenCache = null,
-        private ?ListenerProviderInterface $eventListenerProvider = null
+        private ?ListenerProviderInterface $eventListenerProvider = null,
     ) {
         if (null !== $configuration && [] !== $configuration) {
             $this->applyConfiguration($configuration);
@@ -149,7 +152,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param null|array<string> $audience An allowlist array of API identifiers/audiences.
+     * @param  array<string>|null  $audience  an allowlist array of API identifiers/audiences
      */
     public function setAudience(?array $audience = null): self
     {
@@ -158,15 +161,17 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->audience = $this->filterArray($audience);
+
         return $this;
     }
 
     /**
-     * @return null|array<string>
+     * @return array<string>|null
      */
     public function getAudience(?\Throwable $exceptionIfNull = null): ?array
     {
         $this->exceptionIfNull($this->audience, $exceptionIfNull);
+
         return $this->audience;
     }
 
@@ -176,13 +181,12 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param array<string>|string $audiences A string or array of strings to add to the API identifiers/audiences allowlist.
-     *
-     * @return null|array<string> The updated allowlist.
+     * @param  array<string>|string  $audiences  a string or array of strings to add to the API identifiers/audiences allowlist
+     * @return array<string>|null the updated allowlist
      */
     public function pushAudience(array|string $audiences): ?array
     {
-        if (is_string($audiences)) {
+        if (\is_string($audiences)) {
             $audiences = trim($audiences);
 
             if ('' === $audiences) {
@@ -208,12 +212,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->cookieDomain = $cookieDomain;
+
         return $this;
     }
 
     public function getCookieDomain(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->cookieDomain, $exceptionIfNull);
+
         return $this->cookieDomain;
     }
 
@@ -229,6 +235,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->cookieExpires = $cookieExpires;
+
         return $this;
     }
 
@@ -249,6 +256,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->cookiePath = $cookiePath;
+
         return $this;
     }
 
@@ -269,12 +277,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->cookieSameSite = $cookieSameSite;
+
         return $this;
     }
 
     public function getCookieSameSite(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->cookieSameSite, $exceptionIfNull);
+
         return $this->cookieSameSite;
     }
 
@@ -290,12 +300,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->cookieSecret = $cookieSecret;
+
         return $this;
     }
 
     public function getCookieSecret(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->cookieSecret, $exceptionIfNull);
+
         return $this->cookieSecret;
     }
 
@@ -307,6 +319,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setCookieSecure(bool $cookieSecure = false): self
     {
         $this->cookieSecure = $cookieSecure;
+
         return $this;
     }
 
@@ -327,12 +340,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->clientId = $clientId;
+
         return $this;
     }
 
     public function getClientId(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->clientId, $exceptionIfNull);
+
         return $this->clientId;
     }
 
@@ -348,12 +363,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->clientSecret = $clientSecret;
+
         return $this;
     }
 
     public function getClientSecret(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->clientSecret, $exceptionIfNull);
+
         return $this->clientSecret;
     }
 
@@ -364,7 +381,7 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setDomain(?string $domain = null): self
     {
-        if (is_string($domain)) {
+        if (\is_string($domain)) {
             $domain = $this->filterDomain($domain);
 
             if (null === $domain) {
@@ -373,12 +390,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->domain = $domain;
+
         return $this;
     }
 
     public function getDomain(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->domain, $exceptionIfNull);
+
         return $this->domain;
     }
 
@@ -389,7 +408,7 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCustomDomain(?string $customDomain = null): self
     {
-        if (is_string($customDomain)) {
+        if (\is_string($customDomain)) {
             $customDomain = $this->filterDomain($customDomain);
 
             if (null === $customDomain) {
@@ -398,12 +417,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->customDomain = $customDomain;
+
         return $this;
     }
 
     public function getCustomDomain(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->customDomain, $exceptionIfNull);
+
         return $this->customDomain;
     }
 
@@ -415,12 +436,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setEventListenerProvider(?ListenerProviderInterface $eventListenerProvider = null): self
     {
         $this->eventListenerProvider = $eventListenerProvider;
+
         return $this;
     }
 
     public function getEventListenerProvider(?\Throwable $exceptionIfNull = null): ?ListenerProviderInterface
     {
         $this->exceptionIfNull($this->eventListenerProvider, $exceptionIfNull);
+
         return $this->eventListenerProvider;
     }
 
@@ -432,12 +455,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setHttpClient(?ClientInterface $httpClient = null): self
     {
         $this->httpClient = $httpClient;
+
         return $this;
     }
 
     public function getHttpClient(?\Throwable $exceptionIfNull = null): ?ClientInterface
     {
         $this->exceptionIfNull($this->httpClient, $exceptionIfNull);
+
         return $this->httpClient;
     }
 
@@ -453,6 +478,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->httpMaxRetries = $httpMaxRetries;
+
         return $this;
     }
 
@@ -469,12 +495,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setHttpRequestFactory(?RequestFactoryInterface $httpRequestFactory = null): self
     {
         $this->httpRequestFactory = $httpRequestFactory;
+
         return $this;
     }
 
     public function getHttpRequestFactory(?\Throwable $exceptionIfNull = null): ?RequestFactoryInterface
     {
         $this->exceptionIfNull($this->httpRequestFactory, $exceptionIfNull);
+
         return $this->httpRequestFactory;
     }
 
@@ -486,12 +514,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setHttpResponseFactory(?ResponseFactoryInterface $httpResponseFactory = null): self
     {
         $this->httpResponseFactory = $httpResponseFactory;
+
         return $this;
     }
 
     public function getHttpResponseFactory(?\Throwable $exceptionIfNull = null): ?ResponseFactoryInterface
     {
         $this->exceptionIfNull($this->httpResponseFactory, $exceptionIfNull);
+
         return $this->httpResponseFactory;
     }
 
@@ -503,12 +533,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setHttpStreamFactory(?StreamFactoryInterface $httpStreamFactory = null): self
     {
         $this->httpStreamFactory = $httpStreamFactory;
+
         return $this;
     }
 
     public function getHttpStreamFactory(?\Throwable $exceptionIfNull = null): ?StreamFactoryInterface
     {
         $this->exceptionIfNull($this->httpStreamFactory, $exceptionIfNull);
+
         return $this->httpStreamFactory;
     }
 
@@ -520,6 +552,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setHttpTelemetry(bool $httpTelemetry = true): self
     {
         $this->httpTelemetry = $httpTelemetry;
+
         return $this;
     }
 
@@ -540,12 +573,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->managementToken = $managementToken;
+
         return $this;
     }
 
     public function getManagementToken(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->managementToken, $exceptionIfNull);
+
         return $this->managementToken;
     }
 
@@ -557,12 +592,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setManagementTokenCache(?CacheItemPoolInterface $managementTokenCache = null): self
     {
         $this->managementTokenCache = $managementTokenCache;
+
         return $this;
     }
 
     public function getManagementTokenCache(?\Throwable $exceptionIfNull = null): ?CacheItemPoolInterface
     {
         $this->exceptionIfNull($this->managementTokenCache, $exceptionIfNull);
+
         return $this->managementTokenCache;
     }
 
@@ -572,7 +609,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param null|array<string> $organization An allowlist of Organization IDs.
+     * @param  array<string>|null  $organization  an allowlist of Organization IDs
      */
     public function setOrganization(?array $organization = null): self
     {
@@ -581,15 +618,17 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->organization = $this->filterArray($organization);
+
         return $this;
     }
 
     /**
-     * @return null|array<string> The allowlist of Organization IDs.
+     * @return array<string>|null the allowlist of Organization IDs
      */
     public function getOrganization(?\Throwable $exceptionIfNull = null): ?array
     {
         $this->exceptionIfNull($this->organization, $exceptionIfNull);
+
         return $this->organization;
     }
 
@@ -599,13 +638,12 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param array<string>|string $organizations A string or array of strings representing Organization IDs to add to the allowlist.
-     *
-     * @return null|array<string>
+     * @param  array<string>|string  $organizations  a string or array of strings representing Organization IDs to add to the allowlist
+     * @return array<string>|null
      */
     public function pushOrganization(array|string $organizations): ?array
     {
-        if (is_string($organizations)) {
+        if (\is_string($organizations)) {
             $organizations = trim($organizations);
 
             if ('' === $organizations) {
@@ -627,6 +665,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setPersistAccessToken(bool $persistAccessToken = true): self
     {
         $this->persistAccessToken = $persistAccessToken;
+
         return $this;
     }
 
@@ -643,6 +682,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setPersistIdToken(bool $persistIdToken = true): self
     {
         $this->persistIdToken = $persistIdToken;
+
         return $this;
     }
 
@@ -659,6 +699,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setPersistRefreshToken(bool $persistRefreshToken = true): self
     {
         $this->persistRefreshToken = $persistRefreshToken;
+
         return $this;
     }
 
@@ -675,6 +716,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setPersistUser(bool $persistUser = true): self
     {
         $this->persistUser = $persistUser;
+
         return $this;
     }
 
@@ -691,6 +733,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setQueryUserInfo(bool $queryUserInfo = false): self
     {
         $this->queryUserInfo = $queryUserInfo;
+
         return $this;
     }
 
@@ -711,12 +754,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->redirectUri = $redirectUri;
+
         return $this;
     }
 
     public function getRedirectUri(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->redirectUri, $exceptionIfNull);
+
         return $this->redirectUri;
     }
 
@@ -732,6 +777,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->responseMode = $responseMode;
+
         return $this;
     }
 
@@ -752,6 +798,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->responseType = $responseType;
+
         return $this;
     }
 
@@ -766,7 +813,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param array<string> $scope An array of scopes to request during authentication steps.
+     * @param  array<string>  $scope  an array of scopes to request during authentication steps
      */
     public function setScope(?array $scope = ['openid', 'profile', 'email']): self
     {
@@ -775,11 +822,12 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->scope = $this->filterArray($scope) ?? [];
+
         return $this;
     }
 
     /**
-     * @return array<string> The array of scopes that will be requested during authentication steps.
+     * @return array<string> the array of scopes that will be requested during authentication steps
      */
     public function getScope(): array
     {
@@ -792,12 +840,12 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param array<string>|string $scopes One or more scopes to add to the list requested during authentication steps.
-     * @return null|array<string>
+     * @param  array<string>|string  $scopes  one or more scopes to add to the list requested during authentication steps
+     * @return array<string>|null
      */
     public function pushScope(array|string $scopes): ?array
     {
-        if (is_string($scopes)) {
+        if (\is_string($scopes)) {
             $scopes = trim($scopes);
 
             if ('' === $scopes) {
@@ -819,12 +867,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setSessionStorage(?StoreInterface $sessionStorage = null): self
     {
         $this->sessionStorage = $sessionStorage;
+
         return $this;
     }
 
     public function getSessionStorage(?\Throwable $exceptionIfNull = null): ?StoreInterface
     {
         $this->exceptionIfNull($this->sessionStorage, $exceptionIfNull);
+
         return $this->sessionStorage;
     }
 
@@ -840,6 +890,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->sessionStorageId = $sessionStorageId;
+
         return $this;
     }
 
@@ -855,11 +906,12 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setStrategy(string $strategy = self::STRATEGY_REGULAR): self
     {
-        if (! in_array($strategy, [self::STRATEGY_REGULAR, self::STRATEGY_API, self::STRATEGY_MANAGEMENT_API, self::STRATEGY_NONE], true)) {
+        if (! \in_array($strategy, [self::STRATEGY_REGULAR, self::STRATEGY_API, self::STRATEGY_MANAGEMENT_API, self::STRATEGY_NONE], true)) {
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('strategy');
         }
 
         $this->strategy = $strategy;
+
         return $this;
     }
 
@@ -875,11 +927,12 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setTokenAlgorithm(string $tokenAlgorithm = Token::ALGO_RS256): self
     {
-        if (! in_array($tokenAlgorithm, [Token::ALGO_RS256, Token::ALGO_HS256], true)) {
+        if (! \in_array($tokenAlgorithm, [Token::ALGO_RS256, Token::ALGO_HS256], true)) {
             throw \Auth0\SDK\Exception\ConfigurationException::invalidAlgorithm();
         }
 
         $this->tokenAlgorithm = $tokenAlgorithm;
+
         return $this;
     }
 
@@ -896,12 +949,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setTokenCache(?CacheItemPoolInterface $tokenCache = null): self
     {
         $this->tokenCache = $tokenCache;
+
         return $this;
     }
 
     public function getTokenCache(?\Throwable $exceptionIfNull = null): ?CacheItemPoolInterface
     {
         $this->exceptionIfNull($this->tokenCache, $exceptionIfNull);
+
         return $this->tokenCache;
     }
 
@@ -917,6 +972,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->tokenCacheTtl = $tokenCacheTtl;
+
         return $this;
     }
 
@@ -937,12 +993,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->tokenJwksUri = $tokenJwksUri;
+
         return $this;
     }
 
     public function getTokenJwksUri(?\Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->tokenJwksUri, $exceptionIfNull);
+
         return $this->tokenJwksUri;
     }
 
@@ -958,12 +1016,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->tokenLeeway = $tokenLeeway;
+
         return $this;
     }
 
     public function getTokenLeeway(?\Throwable $exceptionIfNull = null): ?int
     {
         $this->exceptionIfNull($this->tokenLeeway, $exceptionIfNull);
+
         return $this->tokenLeeway;
     }
 
@@ -979,12 +1039,14 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->tokenMaxAge = $tokenMaxAge;
+
         return $this;
     }
 
     public function getTokenMaxAge(?\Throwable $exceptionIfNull = null): ?int
     {
         $this->exceptionIfNull($this->tokenMaxAge, $exceptionIfNull);
+
         return $this->tokenMaxAge;
     }
 
@@ -996,12 +1058,14 @@ final class SdkConfiguration implements ConfigurableContract
     public function setTransientStorage(?StoreInterface $transientStorage = null): self
     {
         $this->transientStorage = $transientStorage;
+
         return $this;
     }
 
     public function getTransientStorage(?\Throwable $exceptionIfNull = null): ?StoreInterface
     {
         $this->exceptionIfNull($this->transientStorage, $exceptionIfNull);
+
         return $this->transientStorage;
     }
 
@@ -1017,6 +1081,7 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->transientStorageId = $transientStorageId;
+
         return $this;
     }
 
@@ -1033,6 +1098,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setUsePkce(bool $usePkce): self
     {
         $this->usePkce = $usePkce;
+
         return $this;
     }
 
@@ -1049,10 +1115,10 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * Return the configured custom or tenant domain, formatted with protocol.
      *
-     * @param bool $forceTenantDomain Force the return of the tenant domain even if a custom domain is configured.
+     * @param  bool  $forceTenantDomain  force the return of the tenant domain even if a custom domain is configured
      */
     public function formatDomain(
-        bool $forceTenantDomain = false
+        bool $forceTenantDomain = false,
     ): string {
         if ($this->hasCustomDomain() && ! $forceTenantDomain) {
             return 'https://' . ($this->getCustomDomain() ?? '');
@@ -1081,7 +1147,7 @@ final class SdkConfiguration implements ConfigurableContract
         if ($this->hasScope()) {
             $scope = $this->getScope();
 
-            if ($scope !== []) {
+            if ([] !== $scope) {
                 return implode(' ', $scope);
             }
         }
@@ -1098,8 +1164,9 @@ final class SdkConfiguration implements ConfigurableContract
         if ($this->hasOrganization()) {
             $organization = $this->getOrganization();
 
-            if ($organization !== null && $organization !== []) {
+            if (null !== $organization && [] !== $organization) {
                 $organizations = array_values($organization);
+
                 return array_shift($organizations);
             }
         }
@@ -1116,8 +1183,9 @@ final class SdkConfiguration implements ConfigurableContract
         if ($this->hasAudience()) {
             $audience = $this->getAudience();
 
-            if ($audience !== null && $audience !== []) {
+            if (null !== $audience && [] !== $audience) {
                 $audiences = array_values($audience);
+
                 return array_shift($audiences);
             }
         }
@@ -1130,7 +1198,7 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function eventDispatcher(): EventDispatcher
     {
-        if ($this->eventDispatcher === null) {
+        if (null === $this->eventDispatcher) {
             $this->eventDispatcher = new EventDispatcher($this);
         }
 
@@ -1142,7 +1210,7 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function usingStatefulness(): bool
     {
-        return in_array($this->getStrategy(), self::STRATEGIES_USING_SESSIONS, true);
+        return \in_array($this->getStrategy(), self::STRATEGIES_USING_SESSIONS, true);
     }
 
     /**
@@ -1153,10 +1221,10 @@ final class SdkConfiguration implements ConfigurableContract
         if (! $this->hasCookieDomain()) {
             $domain = $_SERVER['HTTP_HOST'] ?? $this->getRedirectUri();
 
-            if ($domain !== null) {
+            if (null !== $domain) {
                 $parsed = parse_url($domain, PHP_URL_HOST);
 
-                if (is_string($parsed)) {
+                if (\is_string($parsed)) {
                     $domain = $parsed;
                 }
 
@@ -1170,7 +1238,7 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * Setup SDK factories.
      *
-     * @throws NotFoundException When a PSR-18 or PSR-17 are not configured, and cannot be discovered.
+     * @throws NotFoundException when a PSR-18 or PSR-17 are not configured, and cannot be discovered
      *
      * @codeCoverageIgnore
      */
@@ -1231,19 +1299,19 @@ final class SdkConfiguration implements ConfigurableContract
      * Setup SDK validators based on strategy type.
      */
     private function validateState(
-        ?string $strategy = null
+        ?string $strategy = null,
     ): void {
-        $strategy = $strategy ?? $this->getStrategy();
+        $strategy ??= $this->getStrategy();
 
-        if ($strategy === self::STRATEGY_REGULAR) {
+        if (self::STRATEGY_REGULAR === $strategy) {
             $this->validateStateWebApp();
         }
 
-        if ($strategy === self::STRATEGY_API) {
+        if (self::STRATEGY_API === $strategy) {
             $this->validateStateApi();
         }
 
-        if ($strategy === self::STRATEGY_MANAGEMENT_API) {
+        if (self::STRATEGY_MANAGEMENT_API === $strategy) {
             $this->validateStateManagement();
         }
     }
@@ -1295,7 +1363,7 @@ final class SdkConfiguration implements ConfigurableContract
             throw \Auth0\SDK\Exception\ConfigurationException::requiresClientId();
         }
 
-        if ($this->getTokenAlgorithm() === 'HS256' && ! $this->hasClientSecret()) {
+        if ('HS256' === $this->getTokenAlgorithm() && ! $this->hasClientSecret()) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresClientSecret();
         }
 
@@ -1312,48 +1380,48 @@ final class SdkConfiguration implements ConfigurableContract
     private function getPropertyValidators(): array
     {
         return [
-            'strategy' => fn ($value) => is_string($value),
-            'domain' => fn ($value) => is_string($value) || null === $value,
-            'customDomain' => fn ($value) => is_string($value) || null === $value,
-            'clientId' => fn ($value) => is_string($value) || null === $value,
-            'redirectUri' => fn ($value) => is_string($value) || null === $value,
-            'clientSecret' => fn ($value) => is_string($value) || null === $value,
-            'audience' => fn ($value) => is_array($value) || null === $value,
-            'organization' => fn ($value) => is_array($value) || null === $value,
-            'usePkce' => fn ($value) => is_bool($value),
-            'scope' => fn ($value) => is_array($value) || null === $value,
-            'responseMode' => fn ($value) => is_string($value),
-            'responseType' => fn ($value) => is_string($value),
-            'tokenAlgorithm' => fn ($value) => is_string($value),
-            'tokenJwksUri' => fn ($value) => is_string($value) || null === $value,
-            'tokenMaxAge' => fn ($value) => is_int($value) || null === $value,
-            'tokenLeeway' => fn ($value) => is_int($value),
-            'tokenCache' => fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
-            'tokenCacheTtl' => fn ($value) => is_int($value),
-            'httpClient' => fn ($value) => $value instanceof ClientInterface || null === $value,
-            'httpMaxRetries' => fn ($value) => is_int($value),
-            'httpRequestFactory' => fn ($value) => $value instanceof RequestFactoryInterface || null === $value,
-            'httpResponseFactory' => fn ($value) => $value instanceof ResponseFactoryInterface || null === $value,
-            'httpStreamFactory' => fn ($value) => $value instanceof StreamFactoryInterface || null === $value,
-            'httpTelemetry' => fn ($value) => is_bool($value),
-            'sessionStorage' => fn ($value) => $value instanceof StoreInterface || null === $value,
-            'sessionStorageId' => fn ($value) => is_string($value),
-            'cookieSecret' => fn ($value) => is_string($value) || null === $value,
-            'cookieDomain' => fn ($value) => is_string($value) || null === $value,
-            'cookieExpires' => fn ($value) => is_int($value),
-            'cookiePath' => fn ($value) => is_string($value),
-            'cookieSecure' => fn ($value) => is_bool($value),
-            'cookieSameSite' => fn ($value) => is_string($value) || null === $value,
-            'persistUser' => fn ($value) => is_bool($value),
-            'persistIdToken' => fn ($value) => is_bool($value),
-            'persistAccessToken' => fn ($value) => is_bool($value),
-            'persistRefreshToken' => fn ($value) => is_bool($value),
-            'transientStorage' => fn ($value) => $value instanceof StoreInterface || null === $value,
-            'transientStorageId' => fn ($value) => is_string($value),
-            'queryUserInfo' => fn ($value) => is_bool($value),
-            'managementToken' => fn ($value) => is_string($value) || null === $value,
-            'managementTokenCache' => fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
-            'eventListenerProvider' => fn ($value) => $value instanceof ListenerProviderInterface || null === $value,
+            'strategy'              => static fn ($value) => \is_string($value),
+            'domain'                => static fn ($value) => \is_string($value) || null === $value,
+            'customDomain'          => static fn ($value) => \is_string($value) || null === $value,
+            'clientId'              => static fn ($value) => \is_string($value) || null === $value,
+            'redirectUri'           => static fn ($value) => \is_string($value) || null === $value,
+            'clientSecret'          => static fn ($value) => \is_string($value) || null === $value,
+            'audience'              => static fn ($value) => \is_array($value) || null === $value,
+            'organization'          => static fn ($value) => \is_array($value) || null === $value,
+            'usePkce'               => static fn ($value) => \is_bool($value),
+            'scope'                 => static fn ($value) => \is_array($value) || null === $value,
+            'responseMode'          => static fn ($value) => \is_string($value),
+            'responseType'          => static fn ($value) => \is_string($value),
+            'tokenAlgorithm'        => static fn ($value) => \is_string($value),
+            'tokenJwksUri'          => static fn ($value) => \is_string($value) || null === $value,
+            'tokenMaxAge'           => static fn ($value) => \is_int($value) || null === $value,
+            'tokenLeeway'           => static fn ($value) => \is_int($value),
+            'tokenCache'            => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'tokenCacheTtl'         => static fn ($value) => \is_int($value),
+            'httpClient'            => static fn ($value) => $value instanceof ClientInterface || null === $value,
+            'httpMaxRetries'        => static fn ($value) => \is_int($value),
+            'httpRequestFactory'    => static fn ($value) => $value instanceof RequestFactoryInterface || null === $value,
+            'httpResponseFactory'   => static fn ($value) => $value instanceof ResponseFactoryInterface || null === $value,
+            'httpStreamFactory'     => static fn ($value) => $value instanceof StreamFactoryInterface || null === $value,
+            'httpTelemetry'         => static fn ($value) => \is_bool($value),
+            'sessionStorage'        => static fn ($value) => $value instanceof StoreInterface || null === $value,
+            'sessionStorageId'      => static fn ($value) => \is_string($value),
+            'cookieSecret'          => static fn ($value) => \is_string($value) || null === $value,
+            'cookieDomain'          => static fn ($value) => \is_string($value) || null === $value,
+            'cookieExpires'         => static fn ($value) => \is_int($value),
+            'cookiePath'            => static fn ($value) => \is_string($value),
+            'cookieSecure'          => static fn ($value) => \is_bool($value),
+            'cookieSameSite'        => static fn ($value) => \is_string($value) || null === $value,
+            'persistUser'           => static fn ($value) => \is_bool($value),
+            'persistIdToken'        => static fn ($value) => \is_bool($value),
+            'persistAccessToken'    => static fn ($value) => \is_bool($value),
+            'persistRefreshToken'   => static fn ($value) => \is_bool($value),
+            'transientStorage'      => static fn ($value) => $value instanceof StoreInterface || null === $value,
+            'transientStorageId'    => static fn ($value) => \is_string($value),
+            'queryUserInfo'         => static fn ($value) => \is_bool($value),
+            'managementToken'       => static fn ($value) => \is_string($value) || null === $value,
+            'managementTokenCache'  => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'eventListenerProvider' => static fn ($value) => $value instanceof ListenerProviderInterface || null === $value,
         ];
     }
 
@@ -1363,47 +1431,47 @@ final class SdkConfiguration implements ConfigurableContract
     private function getPropertyDefaults(): array
     {
         return [
-            'strategy' => self::STRATEGY_REGULAR,
-            'domain' => null,
-            'customDomain' => null,
-            'clientId' => null,
-            'redirectUri' => null,
-            'clientSecret' => null,
-            'audience' => null,
-            'organization' => null,
-            'usePkce' => true,
-            'scope' => ['openid', 'profile', 'email'],
-            'responseMode' => 'query',
-            'responseType' => 'code',
-            'tokenAlgorithm' => Token::ALGO_RS256,
-            'tokenJwksUri' => null,
-            'tokenMaxAge' => null,
-            'tokenLeeway' => 60,
-            'tokenCache' => null,
-            'tokenCacheTtl' => 60,
-            'httpClient' => null,
-            'httpMaxRetries' => 3,
-            'httpRequestFactory' => null,
-            'httpResponseFactory' => null,
-            'httpStreamFactory' => null,
-            'httpTelemetry' => true,
-            'sessionStorage' => null,
-            'sessionStorageId' => 'auth0_session',
-            'cookieSecret' => null,
-            'cookieDomain' => null,
-            'cookieExpires' => 0,
-            'cookiePath' => '/',
-            'cookieSecure' => false,
-            'cookieSameSite' => null,
-            'persistUser' => true,
-            'persistIdToken' => true,
-            'persistAccessToken' => true,
-            'persistRefreshToken' => true,
-            'transientStorage' => null,
-            'transientStorageId' => 'auth0_transient',
-            'queryUserInfo' => false,
-            'managementToken' => null,
-            'managementTokenCache' => null,
+            'strategy'              => self::STRATEGY_REGULAR,
+            'domain'                => null,
+            'customDomain'          => null,
+            'clientId'              => null,
+            'redirectUri'           => null,
+            'clientSecret'          => null,
+            'audience'              => null,
+            'organization'          => null,
+            'usePkce'               => true,
+            'scope'                 => ['openid', 'profile', 'email'],
+            'responseMode'          => 'query',
+            'responseType'          => 'code',
+            'tokenAlgorithm'        => Token::ALGO_RS256,
+            'tokenJwksUri'          => null,
+            'tokenMaxAge'           => null,
+            'tokenLeeway'           => 60,
+            'tokenCache'            => null,
+            'tokenCacheTtl'         => 60,
+            'httpClient'            => null,
+            'httpMaxRetries'        => 3,
+            'httpRequestFactory'    => null,
+            'httpResponseFactory'   => null,
+            'httpStreamFactory'     => null,
+            'httpTelemetry'         => true,
+            'sessionStorage'        => null,
+            'sessionStorageId'      => 'auth0_session',
+            'cookieSecret'          => null,
+            'cookieDomain'          => null,
+            'cookieExpires'         => 0,
+            'cookiePath'            => '/',
+            'cookieSecure'          => false,
+            'cookieSameSite'        => null,
+            'persistUser'           => true,
+            'persistIdToken'        => true,
+            'persistAccessToken'    => true,
+            'persistRefreshToken'   => true,
+            'transientStorage'      => null,
+            'transientStorageId'    => 'auth0_transient',
+            'queryUserInfo'         => false,
+            'managementToken'       => null,
+            'managementTokenCache'  => null,
             'eventListenerProvider' => null,
         ];
     }

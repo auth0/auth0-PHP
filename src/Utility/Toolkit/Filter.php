@@ -13,12 +13,12 @@ use Auth0\SDK\Utility\Toolkit\Filter\StringFilter;
 final class Filter
 {
     /**
-     * Filter Constructor
+     * Filter Constructor.
      *
-     * @param array<mixed> $subjects An array of values to process.
+     * @param  array<mixed>  $subjects  an array of values to process
      */
     public function __construct(
-        private array $subjects
+        private array $subjects,
     ) {
     }
 

@@ -11,7 +11,7 @@ final class Defer implements Auth0Event
 {
     public function __construct(
         private StoreInterface $store,
-        private bool $state
+        private bool $state,
     ) {
     }
 

@@ -12,14 +12,14 @@ final class Set implements Auth0Event
     private ?bool $success = null;
 
     /**
-     * @param StoreInterface $store
-     * @param string $key
-     * @param mixed $value
+     * @param  StoreInterface  $store
+     * @param  string  $key
+     * @param  mixed  $value
      */
     public function __construct(
         private StoreInterface $store,
         private string $key,
-        private mixed $value
+        private mixed $value,
     ) {
     }
 
@@ -47,9 +47,10 @@ final class Set implements Auth0Event
     }
 
     public function setSuccess(
-        ?bool $success
+        ?bool $success,
     ): self {
         $this->success = $success;
+
         return $this;
     }
 }

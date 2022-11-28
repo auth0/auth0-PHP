@@ -15,8 +15,11 @@ use Auth0\SDK\Utility\Toolkit;
 final class CookieStore implements StoreInterface
 {
     public const KEY_HASHING_ALGO = 'sha256';
+
     public const KEY_CHUNKING_THRESHOLD = 2048;
+
     public const KEY_SEPARATOR = '_';
+
     public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
 
     /**
@@ -49,16 +52,16 @@ final class CookieStore implements StoreInterface
     /**
      * CookieStore constructor.
      *
-     * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param string           $namespace       A string in which to store cookies under on devices.
+     * @param  SdkConfiguration  $configuration  Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param  string  $namespace  a string in which to store cookies under on devices
      *
      * @psalm-suppress RedundantCondition
      */
     public function __construct(
         private SdkConfiguration $configuration,
-        private string $namespace = 'auth0'
+        private string $namespace = 'auth0',
     ) {
-        $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace);
+        $this->threshold = self::KEY_CHUNKING_THRESHOLD - \mb_strlen($this->namespace);
 
         $this->getState();
     }
@@ -80,7 +83,7 @@ final class CookieStore implements StoreInterface
     }
 
     /**
-     * Returns the current encryption state
+     * Returns the current encryption state.
      */
     public function getEncrypted(): bool
     {
@@ -88,23 +91,24 @@ final class CookieStore implements StoreInterface
     }
 
     /**
-     * Toggle the encryption state
+     * Toggle the encryption state.
      *
-     * @param bool $encrypt Enable or disable cookie encryption.
+     * @param  bool  $encrypt  enable or disable cookie encryption
      */
     public function setEncrypted(bool $encrypt = true): self
     {
         $this->encrypt = $encrypt;
+
         return $this;
     }
 
     /**
      * Defer saving state changes to destination to improve performance during blocks of changes.
      *
-     * @param bool $deferring Whether to defer persisting the storage state.
+     * @param  bool  $deferring  whether to defer persisting the storage state
      */
     public function defer(
-        bool $deferring
+        bool $deferring,
     ): void {
         $this->deferring = $deferring;
 
@@ -118,15 +122,14 @@ final class CookieStore implements StoreInterface
     /**
      * Setup our storage state by pulling from persistence source.
      *
-     * @param array<mixed> $state Skip loading any persistent source state and inject a custom state.
-     *
+     * @param  array<mixed>  $state  skip loading any persistent source state and inject a custom state
      * @return array<mixed>
      */
     public function getState(
-        ?array $state = null
+        ?array $state = null,
     ): array {
         // Overwrite our internal state with one passed (presumably during unit tests.)
-        if ($state !== null) {
+        if (null !== $state) {
             if ($this->store !== $state) {
                 $this->dirty = true;
             }
@@ -151,11 +154,11 @@ final class CookieStore implements StoreInterface
             $data .= $_COOKIE[$cookieName];
 
             // Increment the index for next loop and look for another chunk.
-            $index++;
+            ++$index;
         }
 
         // If no cookies were found, set an empty state and continue.
-        if ($data === '') {
+        if ('' === $data) {
             return $this->store = [];
         }
 
@@ -166,7 +169,7 @@ final class CookieStore implements StoreInterface
         $this->store = $data ?? [];
 
         // If cookies were undecryptable, push the updated empty state to the browser.
-        if ($data === null) {
+        if (null === $data) {
             $this->setState();
         }
 
@@ -179,9 +182,9 @@ final class CookieStore implements StoreInterface
      * @psalm-suppress UnusedFunctionCall
      */
     public function setState(
-        bool $force = false
+        bool $force = false,
     ): self {
-        if (!$this->dirty && !$force) {
+        if (! $this->dirty && ! $force) {
             return $this;
         }
 
@@ -194,23 +197,26 @@ final class CookieStore implements StoreInterface
         foreach (array_keys($_COOKIE) as $cookieName) {
             $cookieBeginsWith = $this->namespace . self::KEY_SEPARATOR;
 
-            if (strlen($cookieName) >= strlen($cookieBeginsWith) &&
-                mb_substr($cookieName, 0, strlen($cookieBeginsWith)) === $cookieBeginsWith) {
+            if (\mb_strlen($cookieName) >= \mb_strlen($cookieBeginsWith) &&
+                mb_substr($cookieName, 0, \mb_strlen($cookieBeginsWith)) === $cookieBeginsWith) {
                 $existing[] = $cookieName;
             }
         }
 
         // Check if we have anything in memory to encrypt and store on the host device.
-        if ($this->store !== []) {
+        if ([] !== $this->store) {
             // Return an encrypted string representing our memory state.
             $encrypted = $this->encrypt($this->store);
 
-            // Cookies have a finite size limit. If ours is too large, "chunk" it (split it into multiple cookies.)
-            // @phpstan-ignore-next-line
-            $chunks = str_split($encrypted, $this->threshold);
+            /**
+             * Cookies have a finite size limit. If ours is too large, "chunk" it (split it into multiple cookies.).
+             *
+             * @phpstan-ignore-next-line
+             */
+            $chunks = mb_str_split($encrypted, $this->threshold);
 
             // @phpstan-ignore-next-line
-            if ($chunks !== false) {
+            if (false !== $chunks) {
                 // Store each "chunk" as a separate cookie on the host device.
                 foreach ($chunks as $index => $chunk) {
                     // Add a '_X' index suffix to each chunked cookie; we'll use this to iterate over all when we rejoin the cookie for decryption.
@@ -221,8 +227,8 @@ final class CookieStore implements StoreInterface
 
                     // Push the updated cookie to the host device for persistence.
                     // @codeCoverageIgnoreStart
-                    if (! defined('AUTH0_TESTS_DIR')) {
-                        /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
+                    if (! \defined('AUTH0_TESTS_DIR')) {
+                        /* @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
                         setrawcookie($cookieName, $chunk, $setOptions);
                     }
                     // @codeCoverageIgnoreEnd
@@ -242,8 +248,8 @@ final class CookieStore implements StoreInterface
         foreach ($orphaned as $cookieName) {
             // Push the cookie deletion command to the host device.
             // @codeCoverageIgnoreStart
-            if (! defined('AUTH0_TESTS_DIR')) {
-                /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $deleteOptions */
+            if (! \defined('AUTH0_TESTS_DIR')) {
+                /* @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $deleteOptions */
                 setrawcookie($cookieName, '', $deleteOptions);
             }
             // @codeCoverageIgnoreEnd
@@ -253,18 +259,19 @@ final class CookieStore implements StoreInterface
         }
 
         $this->dirty = false;
+
         return $this;
     }
 
     /**
      * Persists $value on cookies, identified by $key.
      *
-     * @param string $key   Cookie to set.
-     * @param mixed  $value Value to use.
+     * @param  string  $key  cookie to set
+     * @param  mixed  $value  value to use
      */
     public function set(
         string $key,
-        $value
+        $value,
     ): void {
         [$key] = Toolkit::filter([$key])->string()->trim();
 
@@ -286,14 +293,13 @@ final class CookieStore implements StoreInterface
      * Gets persisted values identified by $key.
      * If the value is not set, returns $default.
      *
-     * @param string $key     Cookie to set.
-     * @param mixed  $default Default to return if nothing was found.
-     *
+     * @param  string  $key  cookie to set
+     * @param  mixed  $default  default to return if nothing was found
      * @return mixed
      */
     public function get(
         string $key,
-        $default = null
+        $default = null,
     ) {
         [$key] = Toolkit::filter([$key])->string()->trim();
 
@@ -307,10 +313,10 @@ final class CookieStore implements StoreInterface
     /**
      * Removes a persisted value identified by $key.
      *
-     * @param string $key Cookie to delete.
+     * @param  string  $key  cookie to delete
      */
     public function delete(
-        string $key
+        string $key,
     ): void {
         [$key] = Toolkit::filter([$key])->string()->trim();
 
@@ -333,7 +339,7 @@ final class CookieStore implements StoreInterface
      */
     public function purge(): void
     {
-        if ($this->store !== []) {
+        if ([] !== $this->store) {
             $this->store = [];
             $this->dirty = true;
         }
@@ -343,39 +349,36 @@ final class CookieStore implements StoreInterface
         }
     }
 
-
     /**
-     * Build options array for use with setcookie()
-     *
-     * @param int|null $expires
+     * Build options array for use with setcookie().
      *
      * @return array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: string, url_encode?: int}
      */
     public function getCookieOptions(
-        ?int $expires = null
+        ?int $expires = null,
     ): array {
         $expires ??= $this->configuration->getCookieExpires();
 
-        if ($expires !== 0) {
+        if (0 !== $expires) {
             $expires = time() + $expires;
         }
 
         $options = [
-            'expires' => $expires,
-            'path' => $this->configuration->getCookiePath(),
-            'secure' => $this->configuration->getCookieSecure(),
+            'expires'  => $expires,
+            'path'     => $this->configuration->getCookiePath(),
+            'secure'   => $this->configuration->getCookieSecure(),
             'httponly' => true,
-            'samesite' => $this->configuration->getResponseMode() === 'form_post' ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax'
+            'samesite' => 'form_post' === $this->configuration->getResponseMode() ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax',
         ];
 
-        if (! in_array(strtolower($options['samesite']), ['lax', 'none', 'strict'], true)) {
+        if (! \in_array(mb_strtolower($options['samesite']), ['lax', 'none', 'strict'], true)) {
             $options['samesite'] = 'Lax';
         }
 
         $domain = $this->configuration->getCookieDomain() ?? null;
         $httpHost = $_SERVER['HTTP_HOST'] ?? 'UNAVAILABLE';
 
-        if ($domain !== null && $domain !== $httpHost) {
+        if (null !== $domain && $domain !== $httpHost) {
             $options['domain'] = $domain;
         }
 
@@ -385,19 +388,19 @@ final class CookieStore implements StoreInterface
     /**
      * Encrypt data for safe storage format for a cookie.
      *
-     * @param array<mixed> $data    Data to encrypt.
-     * @param array<mixed> $options Additional configuration options.
+     * @param  array<mixed>  $data  data to encrypt
+     * @param  array<mixed>  $options  additional configuration options
      *
      * @psalm-suppress TypeDoesNotContainType
      */
     public function encrypt(
         array $data,
-        array $options = []
+        array $options = [],
     ): string {
         if (! $this->encrypt) {
             $data = $options['encoded1'] ?? json_encode($data);
 
-            if (! is_string($data)) {
+            if (! \is_string($data)) {
                 return '';
             }
 
@@ -408,23 +411,23 @@ final class CookieStore implements StoreInterface
         $ivLen = $options['ivLen'] ?? openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
         $tag = null;
 
-        if ($secret === null) {
+        if (null === $secret) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        if (! is_int($ivLen)) {
+        if (! \is_int($ivLen)) {
             return '';
         }
 
         $iv = $options['iv'] ?? openssl_random_pseudo_bytes($ivLen);
 
-        if (! is_string($iv)) {
+        if (! \is_string($iv)) {
             return '';
         }
 
         $data = $options['encoded1'] ?? json_encode($data);
 
-        if (! is_string($data)) {
+        if (! \is_string($data)) {
             return '';
         }
 
@@ -433,18 +436,18 @@ final class CookieStore implements StoreInterface
         $iv = $options['iv'] ?? $iv;
         $tag = $options['tag'] ?? $tag;
 
-        if (! is_string($encrypted)) {
+        if (! \is_string($encrypted)) {
             return '';
         }
 
-        if (! is_string($tag)) {
+        if (! \is_string($tag)) {
             return '';
         }
 
         // Return a JSON encoded object containing the crypto tag and iv, and the encrypted data.
         $encoded = $options['encoded2'] ?? json_encode(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]);
 
-        if (is_string($encoded)) {
+        if (\is_string($encoded)) {
             return rawurlencode($encoded);
         }
 
@@ -454,20 +457,19 @@ final class CookieStore implements StoreInterface
     /**
      * Decrypt data from a stored cookie string.
      *
-     * @param string $data String representing an encrypted data structure.
-     *
+     * @param  string  $data  string representing an encrypted data structure
      * @return array<mixed>|null
      *
      * @psalm-suppress TypeDoesNotContainType
      */
     public function decrypt(
-        string $data
+        string $data,
     ) {
         if (! $this->encrypt) {
             $decoded = rawurldecode($data);
             $decoded = json_decode($decoded, true);
 
-            if (is_array($decoded)) {
+            if (\is_array($decoded)) {
                 return $decoded;
             }
 
@@ -482,7 +484,7 @@ final class CookieStore implements StoreInterface
 
         $secret = $this->configuration->getCookieSecret();
 
-        if ($secret === null) {
+        if (null === $secret) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
@@ -491,27 +493,24 @@ final class CookieStore implements StoreInterface
         $data = json_decode($stripped, true, 512);
 
         /** @var array{iv?: int|string|null, tag?: int|string|null, data: string} $data */
-
-        if (! isset($data['iv']) || ! isset($data['tag']) || ! is_string($data['iv']) || ! is_string($data['tag'])) {
+        if (! isset($data['iv']) || ! isset($data['tag']) || ! \is_string($data['iv']) || ! \is_string($data['tag'])) {
             return null;
         }
 
         $iv = base64_decode($data['iv'], true);
         $tag = base64_decode($data['tag'], true);
 
-        if (! is_string($iv) || ! is_string($tag)) {
+        if (! \is_string($iv) || ! \is_string($tag)) {
             return null;
         }
 
         $data = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
 
-        if (! is_string($data)) {
+        if (! \is_string($data)) {
             return null;
         }
 
-        $data = json_decode($data, true);
-
-        /** @var array<mixed> $data */
-        return $data;
+        return json_decode($data, true);
+        /* @var array<mixed> $data */
     }
 }

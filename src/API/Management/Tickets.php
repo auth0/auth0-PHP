@@ -13,14 +13,14 @@ use Psr\Http\Message\ResponseInterface;
  * Class Tickets.
  * Handles requests to the Tickets endpoint of the v2 Management API.
  *
- * @link https://auth0.com/docs/api/management/v2#!/Tickets
+ * @see https://auth0.com/docs/api/management/v2#!/Tickets
  */
 final class Tickets extends ManagementEndpoint implements TicketsInterface
 {
     public function createEmailVerification(
         string $userId,
         ?array $body = null,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$userId] = Toolkit::filter([$userId])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
@@ -29,23 +29,23 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
             [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
         ])->isString();
 
-        /** @var array<mixed> $body */
+        /* @var array<mixed> $body */
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('tickets', 'email-verification')
-            ->withBody(
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('tickets', 'email-verification')->
+            withBody(
                 (object) Toolkit::merge([
                     'user_id' => $userId,
-                ], $body)
-            )
-            ->withOptions($options)
-            ->call();
+                ], $body),
+            )->
+            withOptions($options)->
+            call();
     }
 
     public function createPasswordChange(
         array $body,
-        ?RequestOptions $options = null
+        ?RequestOptions $options = null,
     ): ResponseInterface {
         [$body] = Toolkit::filter([$body])->array()->trim();
 
@@ -53,11 +53,11 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()
-            ->method('post')
-            ->addPath('tickets', 'password-change')
-            ->withBody((object) $body)
-            ->withOptions($options)
-            ->call();
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('tickets', 'password-change')->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
     }
 }
