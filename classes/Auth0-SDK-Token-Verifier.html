@@ -144,70 +144,70 @@
     <span>
                         &nbsp;: string|null            </span>
 </dt>
-<dd>Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_cache">$cache</a>
     <span>
                         &nbsp;: <abbr title="\Psr\Cache\CacheItemPoolInterface">CacheItemPoolInterface</abbr>|null            </span>
 </dt>
-<dd>An PSR-6 CacheItemPoolInterface instance to cache JWKS results within.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_cacheExpires">$cacheExpires</a>
     <span>
                         &nbsp;: int|null            </span>
 </dt>
-<dd>Time in seconds to keep JWKS records cached. Defaults to 60.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_clientSecret">$clientSecret</a>
     <span>
                         &nbsp;: string|null            </span>
 </dt>
-<dd>Client Secret found in the Application settings for verifying HS256 tokens.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_configuration">$configuration</a>
     <span>
                         &nbsp;: <a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>            </span>
 </dt>
-<dd>Instance of SdkConfiguration, for shared configuration across classes.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_headers">$headers</a>
     <span>
                         &nbsp;: array&lt;string|int, mixed&gt;            </span>
 </dt>
-<dd>An array of the headers for the JWT. Expects an &#039;alg&#039; header, and in the case of RS256, a &#039;kid&#039; header.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_jwksUri">$jwksUri</a>
     <span>
                         &nbsp;: string|null            </span>
 </dt>
-<dd>URI to the JWKS when verifying RS256 tokens.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_mockedHttpResponses">$mockedHttpResponses</a>
     <span>
                         &nbsp;: array&lt;string|int, mixed&gt;|null            </span>
 </dt>
-<dd>Mocked responses for HTTP requests; only used in unit tests.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_payload">$payload</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
-<dd>A string representing the headers and claims portions of a JWT.</dd>
+<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a href="classes/Auth0-SDK-Token-Verifier.html#property_signature">$signature</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
-<dd>A string representing the signature portion of a JWT.</dd>
+<dd></dd>
 
                 <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/Auth0-SDK-Token-Verifier.html#method___construct">__construct()</a>
@@ -272,19 +272,19 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Algorithm to use for verification. Expects either RS256 or HS256. Defaults to RS256.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string|null</span>
     <span class="phpdocumentor-signature__name">$algorithm</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <section class="phpdocumentor-description"></section>
 
     
@@ -306,19 +306,19 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">An PSR-6 CacheItemPoolInterface instance to cache JWKS results within.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type"><abbr title="\Psr\Cache\CacheItemPoolInterface">CacheItemPoolInterface</abbr>|null</span>
     <span class="phpdocumentor-signature__name">$cache</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <section class="phpdocumentor-description"></section>
 
     
@@ -340,19 +340,19 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">40</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Time in seconds to keep JWKS records cached. Defaults to 60.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">int|null</span>
     <span class="phpdocumentor-signature__name">$cacheExpires</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <section class="phpdocumentor-description"></section>
 
     
@@ -378,15 +378,15 @@
 
     </aside>
 
-        <p class="phpdocumentor-summary">Client Secret found in the Application settings for verifying HS256 tokens.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string|null</span>
     <span class="phpdocumentor-signature__name">$clientSecret</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <section class="phpdocumentor-description"></section>
 
     
@@ -408,19 +408,19 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">33</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Instance of SdkConfiguration, for shared configuration across classes.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
     <span class="phpdocumentor-signature__name">$configuration</span>
     </code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <section class="phpdocumentor-description"></section>
 
     
@@ -442,20 +442,21 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">34</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">An array of the headers for the JWT. Expects an &#039;alg&#039; header, and in the case of RS256, a &#039;kid&#039; header.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
     <span class="phpdocumentor-signature__name">$headers</span>
     </code>
 
-    
-    
+        <section class="phpdocumentor-description"></section>
+
+        <section class="phpdocumentor-description"></section>
+
     
 
 </article>
@@ -475,19 +476,19 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">49</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">URI to the JWKS when verifying RS256 tokens.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string|null</span>
     <span class="phpdocumentor-signature__name">$jwksUri</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <section class="phpdocumentor-description"></section>
 
     
@@ -509,20 +510,21 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">71</span>
+    <span class="phpdocumentor-element-found-in__line">42</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Mocked responses for HTTP requests; only used in unit tests.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;|null</span>
     <span class="phpdocumentor-signature__name">$mockedHttpResponses</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
-    
-    
+        <section class="phpdocumentor-description"></section>
+
+        <section class="phpdocumentor-description"></section>
+
     
 
 </article>
@@ -542,19 +544,19 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">22</span>
+    <span class="phpdocumentor-element-found-in__line">34</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">A string representing the headers and claims portions of a JWT.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$payload</span>
     </code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <section class="phpdocumentor-description"></section>
 
     
@@ -576,19 +578,19 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">27</span>
+    <span class="phpdocumentor-element-found-in__line">35</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">A string representing the signature portion of a JWT.</p>
-
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$signature</span>
     </code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <section class="phpdocumentor-description"></section>
 
     
@@ -614,7 +616,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">32</span>
 
     </aside>
 
@@ -739,7 +741,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">54</span>
 
     </aside>
 
@@ -797,7 +799,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">281</span>
+    <span class="phpdocumentor-element-found-in__line">216</span>
 
     </aside>
 
@@ -855,7 +857,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">249</span>
+    <span class="phpdocumentor-element-found-in__line">184</span>
 
     </aside>
 
@@ -925,7 +927,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Token/Verifier.php"><a href="files/src-token-verifier.html"><abbr title="src/Token/Verifier.php">Verifier.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">176</span>
+    <span class="phpdocumentor-element-found-in__line">111</span>
 
     </aside>
 

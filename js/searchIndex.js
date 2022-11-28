@@ -11,6 +11,11 @@ Search.appendIndex(
             "summary": "Authentication\u0020constructor.",
             "url": "classes/Auth0-SDK-API-Authentication.html#method___construct"
         },                {
+            "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AgetConfiguration\u0028\u0029",
+            "name": "getConfiguration",
+            "summary": "",
+            "url": "classes/Auth0-SDK-API-Authentication.html#method_getConfiguration"
+        },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003AgetHttpClient\u0028\u0029",
             "name": "getHttpClient",
             "summary": "Return\u0020the\u0020HttpClient\u0020instance\u0020being\u0020used\u0020for\u0020authentication\u0020\u0020API\u0020requests.",
@@ -111,9 +116,14 @@ Search.appendIndex(
             "summary": "Instance\u0020of\u0020Auth0\\SDK\\API\\Utility\\HttpClient.",
             "url": "classes/Auth0-SDK-API-Authentication.html#property_httpClient"
         },                {
+            "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003A\u0024validatedConfiguration",
+            "name": "validatedConfiguration",
+            "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
+            "url": "classes/Auth0-SDK-API-Authentication.html#property_validatedConfiguration"
+        },                {
             "fqsen": "\\Auth0\\SDK\\API\\Authentication\u003A\u003A\u0024configuration",
             "name": "configuration",
-            "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
+            "summary": "",
             "url": "classes/Auth0-SDK-API-Authentication.html#property_configuration"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Actions",
@@ -563,7 +573,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\ManagementEndpoint\u003A\u003A\u0024httpClient",
             "name": "httpClient",
-            "summary": "Injected\u0020HttpClient\u0020instance\u0020to\u0020use.",
+            "summary": "",
             "url": "classes/Auth0-SDK-API-Management-ManagementEndpoint.html#property_httpClient"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\\Organizations",
@@ -981,15 +991,15 @@ Search.appendIndex(
             "summary": "Management\u0020constructor.",
             "url": "classes/Auth0-SDK-API-Management.html#method___construct"
         },                {
-            "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003AgetHttpClient\u0028\u0029",
-            "name": "getHttpClient",
-            "summary": "Return\u0020the\u0020HttpClient\u0020instance\u0020being\u0020used\u0020for\u0020management\u0020API\u0020requests.",
-            "url": "classes/Auth0-SDK-API-Management.html#method_getHttpClient"
-        },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003AgetConfiguration\u0028\u0029",
             "name": "getConfiguration",
             "summary": "",
             "url": "classes/Auth0-SDK-API-Management.html#method_getConfiguration"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003AgetHttpClient\u0028\u0029",
+            "name": "getHttpClient",
+            "summary": "Return\u0020the\u0020HttpClient\u0020instance\u0020being\u0020used\u0020for\u0020management\u0020API\u0020requests.",
+            "url": "classes/Auth0-SDK-API-Management.html#method_getHttpClient"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003AgetLastRequest\u0028\u0029",
             "name": "getLastRequest",
@@ -1126,10 +1136,10 @@ Search.appendIndex(
             "summary": "Return\u0020an\u0020instance\u0020of\u0020Api\u0020Management\u0020Class.",
             "url": "classes/Auth0-SDK-API-Management.html#method_getClassInstance"
         },                {
-            "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003A\u0024configuration",
-            "name": "configuration",
+            "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003A\u0024validatedConfiguration",
+            "name": "validatedConfiguration",
             "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
-            "url": "classes/Auth0-SDK-API-Management.html#property_configuration"
+            "url": "classes/Auth0-SDK-API-Management.html#property_validatedConfiguration"
         },                {
             "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003A\u0024httpClient",
             "name": "httpClient",
@@ -1140,6 +1150,11 @@ Search.appendIndex(
             "name": "instances",
             "summary": "Cache\u0020of\u0020Management\u0020singletons.",
             "url": "classes/Auth0-SDK-API-Management.html#property_instances"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\API\\Management\u003A\u003A\u0024configuration",
+            "name": "configuration",
+            "summary": "",
+            "url": "classes/Auth0-SDK-API-Management.html#property_configuration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0",
             "name": "Auth0",
@@ -1163,7 +1178,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003A\u0024configuration",
             "name": "configuration",
-            "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Auth0.html#property_configuration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003Alogin\u0028\u0029",
@@ -1315,6 +1330,11 @@ Search.appendIndex(
             "name": "VERSION",
             "summary": "",
             "url": "classes/Auth0-SDK-Auth0.html#constant_VERSION"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003A\u0024validatedConfiguration",
+            "name": "validatedConfiguration",
+            "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
+            "url": "classes/Auth0-SDK-Auth0.html#property_validatedConfiguration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003A\u0024state",
             "name": "state",
@@ -3941,15 +3961,15 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Clear.html#method_setSuccess"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Clear\u003A\u003A\u0024store",
-            "name": "store",
-            "summary": "",
-            "url": "classes/Auth0-SDK-Event-Psr14Store-Clear.html#property_store"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Clear\u003A\u003A\u0024success",
             "name": "success",
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Clear.html#property_success"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Clear\u003A\u003A\u0024store",
+            "name": "store",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Event-Psr14Store-Clear.html#property_store"
         },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Defer",
             "name": "Defer",
@@ -4011,6 +4031,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Delete.html#method_setSuccess"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Delete\u003A\u003A\u0024success",
+            "name": "success",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Event-Psr14Store-Delete.html#property_success"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Delete\u003A\u003A\u0024store",
             "name": "store",
             "summary": "",
@@ -4020,11 +4045,6 @@ Search.appendIndex(
             "name": "key",
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Delete.html#property_key"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Delete\u003A\u003A\u0024success",
-            "name": "success",
-            "summary": "",
-            "url": "classes/Auth0-SDK-Event-Psr14Store-Delete.html#property_success"
         },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Destruct",
             "name": "Destruct",
@@ -4096,11 +4116,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Get.html#method_setSuccess"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Get\u003A\u003A\u0024store",
-            "name": "store",
-            "summary": "",
-            "url": "classes/Auth0-SDK-Event-Psr14Store-Get.html#property_store"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Get\u003A\u003A\u0024missed",
             "name": "missed",
             "summary": "",
@@ -4111,15 +4126,20 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Get.html#property_success"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Get\u003A\u003A\u0024key",
-            "name": "key",
-            "summary": "",
-            "url": "classes/Auth0-SDK-Event-Psr14Store-Get.html#property_key"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Get\u003A\u003A\u0024value",
             "name": "value",
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Get.html#property_value"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Get\u003A\u003A\u0024store",
+            "name": "store",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Event-Psr14Store-Get.html#property_store"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Get\u003A\u003A\u0024key",
+            "name": "key",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Event-Psr14Store-Get.html#property_key"
         },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Set",
             "name": "Set",
@@ -4156,6 +4176,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Set.html#method_setSuccess"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Set\u003A\u003A\u0024success",
+            "name": "success",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Event-Psr14Store-Set.html#property_success"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Set\u003A\u003A\u0024store",
             "name": "store",
             "summary": "",
@@ -4165,11 +4190,6 @@ Search.appendIndex(
             "name": "key",
             "summary": "",
             "url": "classes/Auth0-SDK-Event-Psr14Store-Set.html#property_key"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Set\u003A\u003A\u0024success",
-            "name": "success",
-            "summary": "",
-            "url": "classes/Auth0-SDK-Event-Psr14Store-Set.html#property_success"
         },                {
             "fqsen": "\\Auth0\\SDK\\Event\\Psr14Store\\Set\u003A\u003A\u0024value",
             "name": "value",
@@ -5036,16 +5056,6 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024configuration",
-            "name": "configuration",
-            "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
-            "url": "classes/Auth0-SDK-Store-CookieStore.html#property_configuration"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024namespace",
-            "name": "namespace",
-            "summary": "Cookie\u0020base\u0020name.",
-            "url": "classes/Auth0-SDK-Store-CookieStore.html#property_namespace"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024threshold",
             "name": "threshold",
             "summary": "The\u0020threshold\u0020\u0028in\u0020bytes\u0029\u0020in\u0020which\u0020chunking\/splitting\u0020occurs.",
@@ -5065,6 +5075,16 @@ Search.appendIndex(
             "name": "dirty",
             "summary": "Determine\u0020if\u0020changes\u0020have\u0020been\u0020made\u0020since\u0020the\u0020last\u0020setState.",
             "url": "classes/Auth0-SDK-Store-CookieStore.html#property_dirty"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024configuration",
+            "name": "configuration",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Store-CookieStore.html#property_configuration"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\CookieStore\u003A\u003A\u0024namespace",
+            "name": "namespace",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Store-CookieStore.html#property_namespace"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\MemoryStore",
             "name": "MemoryStore",
@@ -5146,20 +5166,20 @@ Search.appendIndex(
             "summary": "Dispatch\u0020event\u0020to\u0020alert\u0020that\u0020a\u0020session\u0020should\u0020be\u0020prepared\u0020for\u0020an\u0020incoming\u0020request.",
             "url": "classes/Auth0-SDK-Store-Psr14Store.html#method_boot"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\Psr14Store\u003A\u003A\u0024configuration",
-            "name": "configuration",
-            "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
-            "url": "classes/Auth0-SDK-Store-Psr14Store.html#property_configuration"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\Psr14Store\u003A\u003A\u0024sessionPrefix",
-            "name": "sessionPrefix",
-            "summary": "Session\u0020base\u0020name,\u0020configurable\u0020on\u0020instantiation.",
-            "url": "classes/Auth0-SDK-Store-Psr14Store.html#property_sessionPrefix"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Store\\Psr14Store\u003A\u003A\u0024booted",
             "name": "booted",
             "summary": "Track\u0020if\u0020a\u0020bootup\u0020event\u0020has\u0020been\u0020sent\u0020out\u0020yet.",
             "url": "classes/Auth0-SDK-Store-Psr14Store.html#property_booted"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\Psr14Store\u003A\u003A\u0024configuration",
+            "name": "configuration",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Store-Psr14Store.html#property_configuration"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\Psr14Store\u003A\u003A\u0024sessionPrefix",
+            "name": "sessionPrefix",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Store-Psr14Store.html#property_sessionPrefix"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\Psr6Store",
             "name": "Psr6Store",
@@ -5206,20 +5226,20 @@ Search.appendIndex(
             "summary": "Generate\u0020a\u0020cryptographically\u002Dsecure\u0020random\u0020string.",
             "url": "classes/Auth0-SDK-Store-Psr6Store.html#method_getCacheKey"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Store\\Psr6Store\u003A\u003A\u0024storageKey",
-            "name": "storageKey",
-            "summary": "The\u0020storage\u0020key\u0020to\u0020store\u0020data\u0020under.",
-            "url": "classes/Auth0-SDK-Store-Psr6Store.html#property_storageKey"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Store\\Psr6Store\u003A\u003A\u0024publicStore",
             "name": "publicStore",
-            "summary": "An\u0020instance\u0020of\u0020StoreInterface\u0020to\u0020use\u0020for\u0020\u0027public\u0027\u0020storage.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Store-Psr6Store.html#property_publicStore"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\Psr6Store\u003A\u003A\u0024privateStore",
             "name": "privateStore",
-            "summary": "An\u0020instance\u0020of\u0020CacheItemPoolInterface\u0020to\u0020use\u0020for\u0020\u0027private\u0027\u0020storage.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Store-Psr6Store.html#property_privateStore"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Store\\Psr6Store\u003A\u003A\u0024storageKey",
+            "name": "storageKey",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Store-Psr6Store.html#property_storageKey"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\SessionStore",
             "name": "SessionStore",
@@ -5268,12 +5288,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\SessionStore\u003A\u003A\u0024configuration",
             "name": "configuration",
-            "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Store-SessionStore.html#property_configuration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Store\\SessionStore\u003A\u003A\u0024sessionPrefix",
             "name": "sessionPrefix",
-            "summary": "Session\u0020base\u0020name,\u0020configurable\u0020on\u0020instantiation.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Store-SessionStore.html#property_sessionPrefix"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Parser",
@@ -5366,11 +5386,6 @@ Search.appendIndex(
             "summary": "Decodes\u0020and\u0020returns\u0020the\u0020signature\u0020portion\u0020of\u0020a\u0020JWT\u0020as\u0020a\u0020string.",
             "url": "classes/Auth0-SDK-Token-Parser.html#method_decodeSignature"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Token\\Parser\u003A\u003A\u0024configuration",
-            "name": "configuration",
-            "summary": "Instance\u0020of\u0020SdkConfiguration",
-            "url": "classes/Auth0-SDK-Token-Parser.html#property_configuration"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Parser\u003A\u003A\u0024tokenRaw",
             "name": "tokenRaw",
             "summary": "The\u0020unaltered\u0020JWT\u0020string\u0020that\u0020was\u0020passed\u0020to\u0020the\u0020class\u0020constructor.",
@@ -5395,6 +5410,21 @@ Search.appendIndex(
             "name": "tokenSignature",
             "summary": "The\u0020decoded\u0020signature\u0020hash\u0020for\u0020the\u0020JWT.",
             "url": "classes/Auth0-SDK-Token-Parser.html#property_tokenSignature"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Token\\Parser\u003A\u003A\u0024parsed",
+            "name": "parsed",
+            "summary": "State",
+            "url": "classes/Auth0-SDK-Token-Parser.html#property_parsed"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Token\\Parser\u003A\u003A\u0024configuration",
+            "name": "configuration",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Token-Parser.html#property_configuration"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Token\\Parser\u003A\u003A\u0024token",
+            "name": "token",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Token-Parser.html#property_token"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Validator",
             "name": "Validator",
@@ -5458,7 +5488,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Validator\u003A\u003A\u0024claims",
             "name": "claims",
-            "summary": "Array\u0020representing\u0020the\u0020claims\u0020of\u0020a\u0020JWT.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Validator.html#property_claims"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier",
@@ -5491,54 +5521,54 @@ Search.appendIndex(
             "summary": "Free\u0020key\u0020resource\u0020in\u0020PHP\u0020\u003C8.0.",
             "url": "classes/Auth0-SDK-Token-Verifier.html#method_freeKey"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024configuration",
+            "name": "configuration",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Token-Verifier.html#property_configuration"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024payload",
             "name": "payload",
-            "summary": "A\u0020string\u0020representing\u0020the\u0020headers\u0020and\u0020claims\u0020portions\u0020of\u0020a\u0020JWT.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Verifier.html#property_payload"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024signature",
             "name": "signature",
-            "summary": "A\u0020string\u0020representing\u0020the\u0020signature\u0020portion\u0020of\u0020a\u0020JWT.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Verifier.html#property_signature"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024headers",
             "name": "headers",
-            "summary": "An\u0020array\u0020of\u0020the\u0020headers\u0020for\u0020the\u0020JWT.\u0020Expects\u0020an\u0020\u0027alg\u0027\u0020header,\u0020and\u0020in\u0020the\u0020case\u0020of\u0020RS256,\u0020a\u0020\u0027kid\u0027\u0020header.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Verifier.html#property_headers"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024clientSecret",
-            "name": "clientSecret",
-            "summary": "Client\u0020Secret\u0020found\u0020in\u0020the\u0020Application\u0020settings\u0020for\u0020verifying\u0020HS256\u0020tokens.",
-            "url": "classes/Auth0-SDK-Token-Verifier.html#property_clientSecret"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024algorithm",
             "name": "algorithm",
-            "summary": "Algorithm\u0020to\u0020use\u0020for\u0020verification.\u0020Expects\u0020either\u0020RS256\u0020or\u0020HS256.\u0020Defaults\u0020to\u0020RS256.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Verifier.html#property_algorithm"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024jwksUri",
             "name": "jwksUri",
-            "summary": "URI\u0020to\u0020the\u0020JWKS\u0020when\u0020verifying\u0020RS256\u0020tokens.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Verifier.html#property_jwksUri"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024clientSecret",
+            "name": "clientSecret",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Token-Verifier.html#property_clientSecret"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024cacheExpires",
             "name": "cacheExpires",
-            "summary": "Time\u0020in\u0020seconds\u0020to\u0020keep\u0020JWKS\u0020records\u0020cached.\u0020Defaults\u0020to\u002060.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Verifier.html#property_cacheExpires"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024cache",
             "name": "cache",
-            "summary": "An\u0020PSR\u002D6\u0020CacheItemPoolInterface\u0020instance\u0020to\u0020cache\u0020JWKS\u0020results\u0020within.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Verifier.html#property_cache"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024configuration",
-            "name": "configuration",
-            "summary": "Instance\u0020of\u0020SdkConfiguration,\u0020for\u0020shared\u0020configuration\u0020across\u0020classes.",
-            "url": "classes/Auth0-SDK-Token-Verifier.html#property_configuration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\\Verifier\u003A\u003A\u0024mockedHttpResponses",
             "name": "mockedHttpResponses",
-            "summary": "Mocked\u0020responses\u0020for\u0020HTTP\u0020requests\u003B\u0020only\u0020used\u0020in\u0020unit\u0020tests.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token-Verifier.html#property_mockedHttpResponses"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token",
@@ -5621,6 +5651,11 @@ Search.appendIndex(
             "summary": "Export\u0020a\u0020JSON\u0020encoded\u0020object\u0020\u0028as\u0020a\u0020string\u0029\u0020representing\u0020the\u0020state\u0020of\u0020the\u0020Token\u0020object.\u0020Note\u0020that\u0020this\u0020is\u0020not\u0020itself\u0020an\u0020ID\u0020Token,\u0020but\u0020is\u0020useful\u0020for\u0020debugging\u0020your\u0020user\u0020state.",
             "url": "classes/Auth0-SDK-Token.html#method_toJson"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Token\u003A\u003AgetParser\u0028\u0029",
+            "name": "getParser",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Token.html#method_getParser"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Token\u003A\u003ATYPE_ID_TOKEN",
             "name": "TYPE_ID_TOKEN",
             "summary": "",
@@ -5641,20 +5676,25 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Token.html#constant_ALGO_HS256"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Token\u003A\u003A\u0024type",
-            "name": "type",
-            "summary": "A\u0020representation\u0020of\u0020the\u0020type\u0020of\u0020Token,\u0020to\u0020customize\u0020claim\u0020validations.\u0020See\u0020TYPE_\u0020consts\u0020for\u0020options.",
-            "url": "classes/Auth0-SDK-Token.html#property_type"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Token\u003A\u003A\u0024parser",
             "name": "parser",
-            "summary": "A\u0020unique,\u0020internal\u0020instance\u0020of\u0020\\Auth0\\SDK\\Token\\Parser",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token.html#property_parser"
         },                {
             "fqsen": "\\Auth0\\SDK\\Token\u003A\u003A\u0024configuration",
             "name": "configuration",
-            "summary": "Instance\u0020of\u0020SdkConfiguration",
+            "summary": "",
             "url": "classes/Auth0-SDK-Token.html#property_configuration"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Token\u003A\u003A\u0024jwt",
+            "name": "jwt",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Token.html#property_jwt"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Token\u003A\u003A\u0024type",
+            "name": "type",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Token.html#property_type"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\EventDispatcher",
             "name": "EventDispatcher",
@@ -5678,7 +5718,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\EventDispatcher\u003A\u003A\u0024configuration",
             "name": "configuration",
-            "summary": "Shared\u0020configuration\u0020data.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-EventDispatcher.html#property_configuration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient",
@@ -5731,30 +5771,30 @@ Search.appendIndex(
             "summary": "Instance\u0020of\u0020most\u0020recent\u0020HttpRequest",
             "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_lastRequest"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024configuration",
-            "name": "configuration",
-            "summary": "Shared\u0020configuration\u0020data.",
-            "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_configuration"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024basePath",
-            "name": "basePath",
-            "summary": "Base\u0020API\u0020path.",
-            "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_basePath"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024headers",
-            "name": "headers",
-            "summary": "Headers\u0020to\u0020set\u0020for\u0020all\u0020calls.",
-            "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_headers"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024mockedResponses",
             "name": "mockedResponses",
             "summary": "Mocked\u0020responses\u0020to\u0020pass\u0020to\u0020HttpRequest\u0020instances\u0020for\u0020testing.",
             "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_mockedResponses"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024configuration",
+            "name": "configuration",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_configuration"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024context",
             "name": "context",
-            "summary": "The\u0020context\u0020in\u0020which\u0020this\u0020client\u0020was\u0020created,\u0020for\u0020defining\u0020special\u0020behaviors.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_context"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024basePath",
+            "name": "basePath",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_basePath"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpClient\u003A\u003A\u0024headers",
+            "name": "headers",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpClient.html#property_headers"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest",
             "name": "HttpRequest",
@@ -5896,35 +5936,10 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Utility-HttpRequest.html#constant_MIN_REQUEST_RETRY_DELAY"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024configuration",
-            "name": "configuration",
-            "summary": "Shared\u0020configuration\u0020data.",
-            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_configuration"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024basePath",
-            "name": "basePath",
-            "summary": "Base\u0020API\u0020path\u0020for\u0020the\u0020request.",
-            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_basePath"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024path",
             "name": "path",
             "summary": "Path\u0020to\u0020request.",
             "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_path"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024method",
-            "name": "method",
-            "summary": "HTTP\u0020method\u0020to\u0020use\u0020for\u0020the\u0020request.",
-            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_method"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024headers",
-            "name": "headers",
-            "summary": "Headers\u0020to\u0020include\u0020for\u0020the\u0020request.",
-            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_headers"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024domain",
-            "name": "domain",
-            "summary": "Domain\u0020to\u0020use\u0020for\u0020request.",
-            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_domain"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024params",
             "name": "params",
@@ -5966,15 +5981,40 @@ Search.appendIndex(
             "summary": "Stored\u0020instance\u0020of\u0020last\u0020received\u0020response.",
             "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_lastResponse"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024mockedResponses",
-            "name": "mockedResponses",
-            "summary": "Mocked\u0020response.",
-            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_mockedResponses"
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024configuration",
+            "name": "configuration",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_configuration"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024context",
             "name": "context",
-            "summary": "The\u0020context\u0020in\u0020which\u0020this\u0020client\u0020was\u0020created,\u0020for\u0020defining\u0020special\u0020behaviors.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_context"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024method",
+            "name": "method",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_method"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024basePath",
+            "name": "basePath",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_basePath"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024headers",
+            "name": "headers",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_headers"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024domain",
+            "name": "domain",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_domain"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpRequest\u003A\u003A\u0024mockedResponses",
+            "name": "mockedResponses",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpRequest.html#property_mockedResponses"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpResponse",
             "name": "HttpResponse",
@@ -6086,11 +6126,6 @@ Search.appendIndex(
             "summary": "These\u0020endpoints\u0020support\u0020checkpoint\u002Dbased\u0020pagination\u0020\u0028from,\u0020take\u0029.\u0020A\u0020\u0027next\u0027\u0020value\u0020will\u0020be\u0020present\u0020in\u0020responses\u0020if\u0020more\u0020results\u0020are\u0020available.",
             "url": "classes/Auth0-SDK-Utility-HttpResponsePaginator.html#constant_SUPPORTED_ENDPOINTS_WITH_CHECKPOINT"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\HttpResponsePaginator\u003A\u003A\u0024httpClient",
-            "name": "httpClient",
-            "summary": "An\u0020instance\u0020of\u0020the\u0020current\u0020HttpClient\u0020to\u0020use\u0020for\u0020network\u0020requests.",
-            "url": "classes/Auth0-SDK-Utility-HttpResponsePaginator.html#property_httpClient"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpResponsePaginator\u003A\u003A\u0024position",
             "name": "position",
             "summary": "The\u0020current\u0020position\u0020in\u0020use\u0020by\u0020the\u0020Iterator,\u0020for\u0020tracking\u0020our\u0020index\u0020while\u0020looping.",
@@ -6125,6 +6160,11 @@ Search.appendIndex(
             "name": "nextCheckpoint",
             "summary": "The\u0020\u0027next\u0027\u0020value\u0020pulled\u0020from\u0020checkpoint\u002Dpaginated\u0020results\u0020to\u0020indicate\u0020next\u0020page\u0020query\u0020id.",
             "url": "classes/Auth0-SDK-Utility-HttpResponsePaginator.html#property_nextCheckpoint"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\HttpResponsePaginator\u003A\u003A\u0024httpClient",
+            "name": "httpClient",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-HttpResponsePaginator.html#property_httpClient"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\HttpTelemetry",
             "name": "HttpTelemetry",
@@ -6238,12 +6278,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\FilteredRequest\u003A\u003A\u0024fields",
             "name": "fields",
-            "summary": "Fields\u0020to\u0020include\u0020or\u0020exclude\u0020from\u0020API\u0020responses.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_fields"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\FilteredRequest\u003A\u003A\u0024includeFields",
             "name": "includeFields",
-            "summary": "True\u0020to\u0020include\u0020\u0024fields,\u0020false\u0020to\u0020exclude\u0020\u0024fields.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_includeFields"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest",
@@ -6311,30 +6351,30 @@ Search.appendIndex(
             "summary": "Return\u0020an\u0020array\u0020representing\u0020the\u0020paginated\u0020request.",
             "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#method_build"
         },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest\u003A\u003A\u0024page",
-            "name": "page",
-            "summary": "Page\u0020index\u0020of\u0020the\u0020results\u0020to\u0020return.\u0020First\u0020page\u0020is\u00200.",
-            "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#property_page"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest\u003A\u003A\u0024perPage",
-            "name": "perPage",
-            "summary": "Number\u0020of\u0020results\u0020per\u0020page.\u0020Paging\u0020is\u0020disabled\u0020if\u0020parameter\u0020not\u0020set.",
-            "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#property_perPage"
-        },                {
-            "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest\u003A\u003A\u0024from",
-            "name": "from",
-            "summary": "Optional\u0020ID\u0020from\u0020which\u0020to\u0020start\u0020selection.\u0020If\u0020not\u0020specified,\u0020checkpoint\u0020pagination\u0020is\u0020disabled.",
-            "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#property_from"
-        },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest\u003A\u003A\u0024take",
             "name": "take",
             "summary": "Number\u0020of\u0020results\u0020per\u0020page\u0020for\u0020checkpoint\u0020pagination.",
             "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#property_take"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest\u003A\u003A\u0024page",
+            "name": "page",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#property_page"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest\u003A\u003A\u0024perPage",
+            "name": "perPage",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#property_perPage"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest\u003A\u003A\u0024includeTotals",
             "name": "includeTotals",
-            "summary": "Return\u0020results\u0020inside\u0020an\u0020object\u0020that\u0020contains\u0020the\u0020total\u0020result\u0020count\u0020\u0028true\u0029\u0020or\u0020as\u0020a\u0020direct\u0020array\u0020of\u0020results\u0020\u0028false,\u0020default\u0029.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#property_includeTotals"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Utility\\Request\\PaginatedRequest\u003A\u003A\u0024from",
+            "name": "from",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Utility-Request-PaginatedRequest.html#property_from"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\RequestOptions",
             "name": "RequestOptions",
@@ -6373,12 +6413,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\RequestOptions\u003A\u003A\u0024fields",
             "name": "fields",
-            "summary": "An\u0020instance\u0020of\u0020FilteredRequest\u0020or\u0020null,\u0020for\u0020managing\u0020field\u002Dfiltered\u0020requests.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Request-RequestOptions.html#property_fields"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Request\\RequestOptions\u003A\u003A\u0024pagination",
             "name": "pagination",
-            "summary": "An\u0020instance\u0020of\u0020PaginatedRequest\u0020or\u0020null,\u0020for\u0020managing\u0020paginated\u0020requests.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Request-RequestOptions.html#property_pagination"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Assert",
@@ -6413,7 +6453,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Assert\u003A\u003A\u0024subjects",
             "name": "subjects",
-            "summary": "Values\u0020to\u0020process.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Toolkit-Assert.html#property_subjects"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Filter\\ArrayFilter",
@@ -6453,7 +6493,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Filter\\ArrayFilter\u003A\u003A\u0024subjects",
             "name": "subjects",
-            "summary": "Values\u0020to\u0020process.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Toolkit-Filter-ArrayFilter.html#property_subjects"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Filter\\StringFilter",
@@ -6473,7 +6513,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Filter\\StringFilter\u003A\u003A\u0024subjects",
             "name": "subjects",
-            "summary": "Values\u0020to\u0020process.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Toolkit-Filter-StringFilter.html#property_subjects"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Filter",
@@ -6498,7 +6538,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit\\Filter\u003A\u003A\u0024subjects",
             "name": "subjects",
-            "summary": "Values\u0020to\u0020process.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-Toolkit-Filter.html#property_subjects"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\Toolkit",
@@ -6563,7 +6603,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\TransientStoreHandler\u003A\u003A\u0024store",
             "name": "store",
-            "summary": "Storage\u0020method\u0020to\u0020use.",
+            "summary": "",
             "url": "classes/Auth0-SDK-Utility-TransientStoreHandler.html#property_store"
         },                {
             "fqsen": "\\Auth0\\SDK\\Utility\\TransientStoreHandler\u003A\u003Aissue\u0028\u0029",
