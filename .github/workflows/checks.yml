@@ -25,7 +25,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
           update: true
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,7 +60,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: pcov
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
           update: true
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -107,7 +107,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
           update: true
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -149,7 +149,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
           update: true
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -191,7 +191,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
           update: true
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -233,7 +233,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
           update: true
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
