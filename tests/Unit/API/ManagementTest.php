@@ -29,10 +29,6 @@ beforeEach(function(): void {
     $this->sdk = new Auth0($this->configuration);
 });
 
-test('__construct() fails without a configuration', function(): void {
-    new Management(null);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_CONFIGURATION_REQUIRED);
-
 test('getHttpClient() fails without a managementToken, if client id and secret are not configured', function(): void {
     $this->configuration->setManagementToken(null);
     $this->sdk->management()->blacklists();

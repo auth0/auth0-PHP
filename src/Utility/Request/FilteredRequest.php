@@ -10,29 +10,15 @@ namespace Auth0\SDK\Utility\Request;
 final class FilteredRequest
 {
     /**
-     * Fields to include or exclude from API responses.
-     *
-     * @var array<string>
-     */
-    private ?array $fields = null;
-
-    /**
-     * True to include $fields, false to exclude $fields.
-     */
-    private ?bool $includeFields = null;
-
-    /**
      * FilteredRequest constructor
      *
      * @param array<string>|null $fields        Fields to include or exclude from API responses.
      * @param bool|null          $includeFields True to include $fields, false to exclude $fields.
      */
     public function __construct(
-        ?array $fields = null,
-        ?bool $includeFields = null
+        private ?array $fields = null,
+        private ?bool $includeFields = null
     ) {
-        $this->fields = $fields;
-        $this->includeFields = $includeFields;
     }
 
     /**

@@ -12,19 +12,13 @@ use Auth0\SDK\Contract\StoreInterface;
 final class TransientStoreHandler
 {
     /**
-     * Storage method to use.
-     */
-    private StoreInterface $store;
-
-    /**
      * TransientStoreHandler constructor.
      *
      * @param StoreInterface $store Storage method to use.
      */
     public function __construct(
-        StoreInterface $store
+        private StoreInterface $store
     ) {
-        $this->store = $store;
     }
 
     /**

@@ -9,10 +9,8 @@ use Auth0\SDK\Contract\StoreInterface;
 
 final class Get implements Auth0Event
 {
-    private StoreInterface $store;
     private ?bool $missed = null;
     private ?bool $success = null;
-    private string $key;
 
     /**
      * @var mixed
@@ -20,11 +18,9 @@ final class Get implements Auth0Event
     private $value;
 
     public function __construct(
-        StoreInterface $store,
-        string $key
+        private StoreInterface $store,
+        private string $key
     ) {
-        $this->store = $store;
-        $this->key = $key;
     }
 
     public function getStore(): StoreInterface

@@ -67,7 +67,7 @@ final class Management implements ManagementInterface
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    private SdkConfiguration $configuration;
+    private ?SdkConfiguration $validatedConfiguration = null;
 
     /**
      * Instance of Auth0\SDK\API\Utility\HttpClient.
@@ -91,20 +91,22 @@ final class Management implements ManagementInterface
      * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(
-        $configuration
+        private SdkConfiguration|array $configuration
     ) {
-        // If we're passed an array, construct a new SdkConfiguration from that structure.
-        if (is_array($configuration)) {
-            $configuration = new SdkConfiguration($configuration);
+        $this->getConfiguration();
+    }
+
+    public function getConfiguration(): SdkConfiguration
+    {
+        if (null === $this->validatedConfiguration) {
+            if (is_array($this->configuration)) {
+                return $this->validatedConfiguration = new SdkConfiguration($this->configuration);
+            }
+
+            return $this->validatedConfiguration = $this->configuration;
         }
 
-        // We only accept an SdkConfiguration type.
-        if (! $configuration instanceof SdkConfiguration) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
-        }
-
-        // Store the configuration internally.
-        $this->configuration = $configuration;
+        return $this->validatedConfiguration;
     }
 
     public function getHttpClient(
@@ -115,10 +117,10 @@ final class Management implements ManagementInterface
         }
 
         // Retrieve any configured management token.
-        $managementToken = $this->configuration->getManagementToken();
+        $managementToken = $this->getConfiguration()->getManagementToken();
 
         // PSR-6 cache to use for management access token caching.
-        $cache = $this->configuration->getManagementTokenCache();
+        $cache = $this->getConfiguration()->getManagementTokenCache();
 
         // If no token was provided, try to get one from cache.
         if ($managementToken === null && $cache !== null) {
@@ -130,9 +132,9 @@ final class Management implements ManagementInterface
         }
 
         // If no token was provided or available from cache, try to get one.
-        if ($managementToken === null && $this->configuration->hasClientSecret()) {
-            $authentication = $authentication ?? new Authentication($this->configuration);
-            $response = $authentication->clientCredentials(['audience' => $this->configuration->formatDomain(true) . '/api/v2/']);
+        if ($managementToken === null && $this->getConfiguration()->hasClientSecret()) {
+            $authentication = $authentication ?? new Authentication($this->getConfiguration());
+            $response = $authentication->clientCredentials(['audience' => $this->getConfiguration()->formatDomain(true) . '/api/v2/']);
             $decoded = HttpResponse::decodeContent($response);
 
             /** @var array{access_token?: (string|null), expires_in?: (int|string), error?: int|string, error_description?: int|string} $decoded */
@@ -165,12 +167,7 @@ final class Management implements ManagementInterface
         }
 
         // Build the API client using the management token.
-        return $this->httpClient = new HttpClient($this->configuration, HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
-    }
-
-    public function getConfiguration(): ?SdkConfiguration
-    {
-        return $this->configuration;
+        return $this->httpClient = new HttpClient($this->getConfiguration(), HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
     }
 
     public function getLastRequest(): ?HttpRequest

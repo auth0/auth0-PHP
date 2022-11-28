@@ -22,9 +22,7 @@ beforeEach(function() {
 it('throws an exception with json error on decoding headers', function(
     SdkConfiguration $configuration
 ): void {
-    $jwt = sprintf('1234567879.%s.%s', uniqid(), uniqid());
-
-    $token = new Parser($jwt, $configuration);
+    new Parser($configuration, sprintf('1234567879.%s.%s', uniqid(), uniqid()));
 })->with(['mocked configured' => [
     fn() => $this->configuration
 ]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, 'Malformed UTF-8 characters, possibly incorrectly encoded');
@@ -32,9 +30,7 @@ it('throws an exception with json error on decoding headers', function(
 it('throws an exception with json error on decoding claims', function(
     SdkConfiguration $configuration
 ): void {
-    $jwt = sprintf('%s.1234567879.%s', uniqid(), uniqid());
-
-    $token = new Parser($jwt, $configuration);
+     new Parser($configuration, sprintf('%s.1234567879.%s', uniqid(), uniqid()));
 })->with(['mocked configured' => [
     fn() => $this->configuration
 ]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, 'Malformed UTF-8 characters, possibly incorrectly encoded');
@@ -42,9 +38,7 @@ it('throws an exception with json error on decoding claims', function(
 it('throws an exception with malformed token separators', function(
     SdkConfiguration $configuration
 ): void {
-    $jwt = uniqid() . uniqid();
-
-    $token = new Parser($jwt, $configuration);
+    $token = new Parser($configuration, uniqid() . uniqid());
 })->with(['mocked configured' => [
     fn() => $this->configuration
 ]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SEPARATORS);
@@ -53,7 +47,7 @@ it('accepts and successfully parses a valid RS256 ID Token', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
 ): void {
-    $token = new Parser($jwt->token, $configuration);
+    $token = new Parser($configuration, $jwt->token);
 
     expect($token)
         ->toBeObject()
@@ -80,7 +74,7 @@ it('defaults to a `jwt` `typ` header if none was present', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
 ): void {
-    $token = new Parser($jwt->token, $configuration);
+    $token = new Parser($configuration, $jwt->token);
 
     expect($token)
         ->toBeObject()
@@ -95,7 +89,7 @@ test('hasClaim() returns expected values', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
 ): void {
-    $token = new Parser($jwt->token, $configuration);
+    $token = new Parser($configuration, $jwt->token);
     expect($token->hasClaim('aud'))->toBeTrue();
     expect($token->hasClaim('xyz'))->toBeFalse();
 })->with(['mocked rs256 id token' => [
@@ -107,7 +101,7 @@ test('hasHeader() returns expected values', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
 ): void {
-    $token = new Parser($jwt->token, $configuration);
+    $token = new Parser($configuration, $jwt->token);
     expect($token->hasHeader('typ'))->toBeTrue();
     expect($token->hasHeader('xyz'))->toBeFalse();
 })->with(['mocked rs256 id token' => [
@@ -119,7 +113,7 @@ test('getRaw() returns a raw token string', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
 ): void {
-    $token = new Parser($jwt->token, $configuration);
+    $token = new Parser($configuration, $jwt->token);
     expect($token->getRaw())->toEqual($jwt->token);
 })->with(['mocked rs256 id token' => [
     fn() => $this->configuration,

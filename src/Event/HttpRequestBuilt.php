@@ -9,12 +9,9 @@ use Psr\Http\Message\RequestInterface;
 
 final class HttpRequestBuilt implements Auth0Event
 {
-    private RequestInterface $httpRequest;
-
     public function __construct(
-        RequestInterface $httpRequest
+        private RequestInterface $httpRequest
     ) {
-        $this->httpRequest = $httpRequest;
     }
 
     public function get(): RequestInterface

@@ -10,21 +10,13 @@ namespace Auth0\SDK\Utility\Toolkit;
 final class Assert
 {
     /**
-     * Values to process.
-     *
-     * @var array<array{0: mixed, 1: \Throwable}>
-     */
-    private array $subjects;
-
-    /**
      * ArrayProcessor Constructor
      *
      * @param array<array{0: mixed, 1: \Throwable}> $subjects Values to process.
      */
     public function __construct(
-        array $subjects
+        private array $subjects
     ) {
-        $this->subjects = $subjects;
     }
 
     /**

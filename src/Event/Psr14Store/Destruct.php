@@ -9,12 +9,9 @@ use Auth0\SDK\Contract\StoreInterface;
 
 final class Destruct implements Auth0Event
 {
-    private StoreInterface $store;
-
     public function __construct(
-        StoreInterface $store
+        private StoreInterface $store
     ) {
-        $this->store = $store;
     }
 
     public function getStore(): StoreInterface

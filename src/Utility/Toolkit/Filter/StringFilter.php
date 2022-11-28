@@ -10,21 +10,13 @@ namespace Auth0\SDK\Utility\Toolkit\Filter;
 final class StringFilter
 {
     /**
-     * Values to process.
-     *
-     * @var array<string|null>
-     */
-    private array $subjects;
-
-    /**
      * StringFilter constructor.
      *
      * @param array<string|null> $subjects An array of string or null values.
      */
     public function __construct(
-        array $subjects
+        private array $subjects
     ) {
-        $this->subjects = $subjects;
     }
 
     /**

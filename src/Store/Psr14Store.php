@@ -13,7 +13,6 @@ use Auth0\SDK\Event\Psr14Store\Delete;
 use Auth0\SDK\Event\Psr14Store\Destruct;
 use Auth0\SDK\Event\Psr14Store\Get;
 use Auth0\SDK\Event\Psr14Store\Set;
-use Auth0\SDK\Utility\Toolkit;
 
 /**
  * Class Psr14Store
@@ -21,16 +20,6 @@ use Auth0\SDK\Utility\Toolkit;
  */
 final class Psr14Store implements StoreInterface
 {
-    /**
-     * Instance of SdkConfiguration, for shared configuration across classes.
-     */
-    private SdkConfiguration $configuration;
-
-    /**
-     * Session base name, configurable on instantiation.
-     */
-    private string $sessionPrefix;
-
     /**
      * Track if a bootup event has been sent out yet.
      */
@@ -43,17 +32,9 @@ final class Psr14Store implements StoreInterface
      * @param string           $sessionPrefix A string to prefix session keys with.
      */
     public function __construct(
-        SdkConfiguration $configuration,
-        string $sessionPrefix = 'auth0'
+        private SdkConfiguration $configuration,
+        private string $sessionPrefix = 'auth0'
     ) {
-        [$sessionPrefix] = Toolkit::filter([$sessionPrefix])->string()->trim();
-
-        Toolkit::assert([
-            [$sessionPrefix, \Auth0\SDK\Exception\ArgumentException::missing('sessionPrefix')],
-        ])->isString();
-
-        $this->configuration = $configuration;
-        $this->sessionPrefix = $sessionPrefix ?? 'auth0';
     }
 
     /**

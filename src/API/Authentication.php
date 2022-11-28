@@ -23,7 +23,7 @@ final class Authentication implements AuthenticationInterface
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
      */
-    private SdkConfiguration $configuration;
+    private ?SdkConfiguration $validatedConfiguration = null;
 
     /**
      * Authentication constructor.
@@ -35,20 +35,22 @@ final class Authentication implements AuthenticationInterface
      * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(
-        $configuration
+        private SdkConfiguration|array $configuration
     ) {
-        // If we're passed an array, construct a new SdkConfiguration from that structure.
-        if (is_array($configuration)) {
-            $configuration = new SdkConfiguration($configuration);
+        $this->getConfiguration();
+    }
+
+    public function getConfiguration(): SdkConfiguration
+    {
+        if (null === $this->validatedConfiguration) {
+            if (is_array($this->configuration)) {
+                return $this->validatedConfiguration = new SdkConfiguration($this->configuration);
+            }
+
+            return $this->validatedConfiguration = $this->configuration;
         }
 
-        // We only accept an SdkConfiguration type.
-        if (! $configuration instanceof SdkConfiguration) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresConfiguration();
-        }
-
-        // Store the configuration internally.
-        $this->configuration = $configuration;
+        return $this->validatedConfiguration;
     }
 
     public function getHttpClient(): HttpClient
@@ -57,7 +59,7 @@ final class Authentication implements AuthenticationInterface
             return $this->httpClient;
         }
 
-        return $this->httpClient = new HttpClient($this->configuration, HttpClient::CONTEXT_AUTHENTICATION_CLIENT);
+        return $this->httpClient = new HttpClient($this->getConfiguration(), HttpClient::CONTEXT_AUTHENTICATION_CLIENT);
     }
 
     public function getSamlpLink(
@@ -68,7 +70,7 @@ final class Authentication implements AuthenticationInterface
 
         /** @var string $clientId */
         [$clientId] = Toolkit::filter([
-            [$clientId, $this->configuration->getClientId()],
+            [$clientId, $this->getConfiguration()->getClientId()],
         ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
 
         /** @var array<string> $query */
@@ -78,7 +80,7 @@ final class Authentication implements AuthenticationInterface
 
         return sprintf(
             '%s/samlp/%s?%s',
-            $this->configuration->formatDomain(),
+            $this->getConfiguration()->formatDomain(),
             $clientId,
             http_build_query($query, '', '&', PHP_QUERY_RFC3986)
         );
@@ -91,12 +93,12 @@ final class Authentication implements AuthenticationInterface
 
         /** @var string $clientId */
         [$clientId] = Toolkit::filter([
-            [$clientId, $this->configuration->getClientId()],
+            [$clientId, $this->getConfiguration()->getClientId()],
         ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
 
         return sprintf(
             '%s/samlp/metadata/%s',
-            $this->configuration->formatDomain(),
+            $this->getConfiguration()->formatDomain(),
             $clientId
         );
     }
@@ -112,12 +114,12 @@ final class Authentication implements AuthenticationInterface
 
         /** @var string $clientId */
         [$clientId] = Toolkit::filter([
-            [$clientId, $this->configuration->getClientId()],
+            [$clientId, $this->getConfiguration()->getClientId()],
         ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
 
         return sprintf(
             '%s/wsfed/%s?%s',
-            $this->configuration->formatDomain(),
+            $this->getConfiguration()->formatDomain(),
             $clientId,
             http_build_query($params, '', '&', PHP_QUERY_RFC3986)
         );
@@ -127,7 +129,7 @@ final class Authentication implements AuthenticationInterface
     {
         return sprintf(
             '%s/wsfed/FederationMetadata/2007-06/FederationMetadata.xml',
-            $this->configuration->formatDomain()
+            $this->getConfiguration()->formatDomain()
         );
     }
 
@@ -146,21 +148,21 @@ final class Authentication implements AuthenticationInterface
         ])->isString();
 
         [$redirectUri] = Toolkit::filter([
-            [$redirectUri, isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null, $this->configuration->getRedirectUri()],
+            [$redirectUri, isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
 
         return sprintf(
             '%s/authorize?%s',
-            $this->configuration->formatDomain(),
+            $this->getConfiguration()->formatDomain(),
             http_build_query(Toolkit::merge([
                 'state' => $state,
-                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-                'audience' => $this->configuration->defaultAudience(),
-                'organization' => $this->configuration->defaultOrganization(),
+                'client_id' => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'audience' => $this->getConfiguration()->defaultAudience(),
+                'organization' => $this->getConfiguration()->defaultOrganization(),
                 'redirect_uri' => $redirectUri,
-                'scope' => $this->configuration->formatScope(),
-                'response_mode' => $this->configuration->getResponseMode(),
-                'response_type' => $this->configuration->getResponseType(),
+                'scope' => $this->getConfiguration()->formatScope(),
+                'response_mode' => $this->getConfiguration()->getResponseMode(),
+                'response_type' => $this->getConfiguration()->getResponseType(),
             ], $params), '', '&', PHP_QUERY_RFC3986)
         );
     }
@@ -176,15 +178,15 @@ final class Authentication implements AuthenticationInterface
 
         /** @var string $returnTo */
         [$returnTo] = Toolkit::filter([
-            [$returnTo, isset($params['returnTo']) ? (string) $params['returnTo'] : null, $this->configuration->getRedirectUri()],
+            [$returnTo, isset($params['returnTo']) ? (string) $params['returnTo'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
 
         return sprintf(
             '%s/v2/logout?%s',
-            $this->configuration->formatDomain(),
+            $this->getConfiguration()->formatDomain(),
             http_build_query(Toolkit::merge([
                 'returnTo' => $returnTo,
-                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_id' => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
             ], $params), '', '&', PHP_QUERY_RFC3986)
         );
     }
@@ -202,8 +204,8 @@ final class Authentication implements AuthenticationInterface
             ->method('post')
             ->addPath('passwordless', 'start')
             ->withBody((object) Toolkit::merge([
-                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-                'client_secret' => $this->configuration->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
+                'client_id' => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_secret' => $this->getConfiguration()->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
             ], $body))
             ->withHeaders($headers)
             ->call();
@@ -227,8 +229,8 @@ final class Authentication implements AuthenticationInterface
         ])->isString();
 
         /** @var array{scope: ?string} $params */
-        if ((! isset($params['scope']) || '' === $params['scope']) && $this->configuration->hasScope()) {
-            $params['scope'] = $this->configuration->formatScope() ?? '';
+        if ((! isset($params['scope']) || '' === $params['scope']) && $this->getConfiguration()->hasScope()) {
+            $params['scope'] = $this->getConfiguration()->formatScope() ?? '';
         }
 
         $body = Toolkit::filter([
@@ -307,8 +309,8 @@ final class Authentication implements AuthenticationInterface
 
         $parameters = Toolkit::merge([
             'grant_type' => $grantType,
-            'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-            'client_secret' => $this->configuration->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
+            'client_id' => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+            'client_secret' => $this->getConfiguration()->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
         ], $params);
 
         /** @var array<bool|int|string> $parameters */
@@ -334,7 +336,7 @@ final class Authentication implements AuthenticationInterface
         ])->isString();
 
         [$redirectUri] = Toolkit::filter([
-            [$redirectUri, $this->configuration->getRedirectUri()],
+            [$redirectUri, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
 
         $params = Toolkit::filter([
@@ -416,7 +418,7 @@ final class Authentication implements AuthenticationInterface
         /** @var array<int|string|null> $params */
 
         $parameters = Toolkit::merge([
-            'audience' => $this->configuration->defaultAudience(),
+            'audience' => $this->getConfiguration()->defaultAudience(),
         ], $params);
 
         /** @var array<int|string|null> $parameters */
@@ -472,7 +474,7 @@ final class Authentication implements AuthenticationInterface
             ->method('post')
             ->addPath('dbconnections', 'signup')
             ->withBody(Toolkit::merge([
-                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_id' => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
                 'email' => $email,
                 'password' => $password,
                 'connection' => $connection,
@@ -502,7 +504,7 @@ final class Authentication implements AuthenticationInterface
             ->method('post')
             ->addPath('dbconnections', 'change_password')
             ->withBody(Toolkit::merge([
-                'client_id' => $this->configuration->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_id' => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
                 'email' => $email,
                 'connection' => $connection,
             ], $body))

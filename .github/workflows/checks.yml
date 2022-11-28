@@ -9,7 +9,7 @@ on:
 jobs:
   dependencies:
     name: Dependencies
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       max-parallel: 10
@@ -25,10 +25,9 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
-          update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get composer cache directory
         id: composer-cache
@@ -45,14 +44,14 @@ jobs:
 
   pest:
     name: Pest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     needs: ["dependencies"]
 
     strategy:
       max-parallel: 10
       matrix:
-        php: ["8.0", "8.1", "8.2"]
+        php: ["8.1", "8.2"]
 
     steps:
       - name: Set up PHP ${{ matrix.php }}
@@ -60,10 +59,9 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: pcov
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
-          update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -79,6 +77,9 @@ jobs:
           key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
           restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
 
+      - name: PHP debug
+        run: php -i
+
       - name: Install dependencies with composer
         run: composer install --prefer-dist
 
@@ -92,7 +93,7 @@ jobs:
 
   phpstan:
     name: PHPStan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["dependencies"]
 
     strategy:
@@ -107,10 +108,9 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
-          update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -134,7 +134,7 @@ jobs:
 
   psalm:
     name: Psalm
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["dependencies"]
 
     strategy:
@@ -149,10 +149,9 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
-          update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -176,7 +175,7 @@ jobs:
 
   pint:
     name: Laravel Pint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["dependencies"]
 
     strategy:
@@ -191,10 +190,9 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
-          update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -218,7 +216,7 @@ jobs:
 
   rector:
     name: Rector
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["dependencies"]
 
     strategy:
@@ -233,10 +231,9 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-          extensions: mbstring
+          extensions: mbstring, openssl
         env:
-          update: true
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v3

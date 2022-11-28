@@ -59,7 +59,7 @@ test('verify() throws an error when token alg claim is not supported', function(
     new Verifier($this->configuration, '', '', ['alg' => uniqid()]);
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
-test('verify() throws an exception signature is incorrect', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
+test('verify() throws an exception when signature is incorrect', function($keyPair, $token, $payload, $signature, $headers, $jwksUri, $jwksCacheKey): void {
     $headers = TokenGenerator::decodePart($headers);
     $cache = new ArrayAdapter();
     $item = $cache->getItem($jwksCacheKey);

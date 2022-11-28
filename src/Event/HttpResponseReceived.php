@@ -10,15 +10,10 @@ use Psr\Http\Message\ResponseInterface;
 
 final class HttpResponseReceived implements Auth0Event
 {
-    private ResponseInterface $httpResponse;
-    private RequestInterface $httpRequest;
-
     public function __construct(
-        ResponseInterface $httpResponse,
-        RequestInterface $httpRequest
+        private ResponseInterface $httpResponse,
+        private RequestInterface $httpRequest
     ) {
-        $this->httpResponse = $httpResponse;
-        $this->httpRequest = $httpRequest;
     }
 
     public function get(): ResponseInterface

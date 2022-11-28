@@ -14,11 +14,6 @@ use Psr\Cache\CacheItemPoolInterface;
 final class Parser
 {
     /**
-     * Instance of SdkConfiguration
-     */
-    private SdkConfiguration $configuration;
-
-    /**
      * The unaltered JWT string that was passed to the class constructor.
      */
     private ?string $tokenRaw = null;
@@ -50,55 +45,61 @@ final class Parser
     private ?string $tokenSignature = null;
 
     /**
+     * State
+     * @var bool
+     */
+    private bool $parsed = false;
+
+    /**
      * Constructor for Token Parser class.
      *
-     * @param string           $jwt             A JWT string to parse.
-     * @param SdkConfiguration $configuration   Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param SdkConfiguration $configuration   Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string $token JSON Web Token to work with.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
-        string $jwt,
-        SdkConfiguration $configuration
+        private SdkConfiguration $configuration,
+        private string $token
     ) {
-        $this->configuration = $configuration;
-        $this->parse($jwt);
+        $this->parse();
     }
 
     /**
      * Process a JWT string, breaking up it's header, claims and signature for processing, and ensures values are properly decoded.
      *
-     * @param string $jwt A JWT string to parse.
-     *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function parse(
-        string $jwt
     ): void {
-        $parts = explode('.', $jwt);
+        if (! $this->parsed) {
+            $parts = explode('.', $this->token);
 
-        if (count($parts) !== 3) {
-            throw \Auth0\SDK\Exception\InvalidTokenException::badSeparators();
+            if (count($parts) !== 3) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::badSeparators();
+            }
+
+            $this->tokenRaw = $this->token;
+            $this->tokenParts = $parts;
+
+            try {
+                $this->tokenHeaders = $this->decodeHeaders($parts[0]);
+                $this->tokenClaims = $this->decodeClaims($parts[1]);
+            } catch (\JsonException $exception) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::jsonError($exception->getMessage());
+            }
+
+            $this->tokenSignature = $this->decodeSignature($parts[2]);
+
+            // @codeCoverageIgnoreStart
+            // This is not currently testable using our JWT encoding test libraries.
+            if (! isset($this->tokenHeaders['typ'])) {
+                $this->tokenHeaders['typ'] = 'JWT';
+            }
+            // @codeCoverageIgnoreEnd
         }
 
-        $this->tokenRaw = $jwt;
-        $this->tokenParts = $parts;
-
-        try {
-            $this->tokenHeaders = $this->decodeHeaders($parts[0]);
-            $this->tokenClaims = $this->decodeClaims($parts[1]);
-        } catch (\JsonException $exception) {
-            throw \Auth0\SDK\Exception\InvalidTokenException::jsonError($exception->getMessage());
-        }
-
-        $this->tokenSignature = $this->decodeSignature($parts[2]);
-
-        // @codeCoverageIgnoreStart
-        // This is not currently testable using our JWT encoding test libraries.
-        if (! isset($this->tokenHeaders['typ'])) {
-            $this->tokenHeaders['typ'] = 'JWT';
-        }
-        // @codeCoverageIgnoreEnd
+        $this->parsed = true;
     }
 
     /**
@@ -106,6 +107,7 @@ final class Parser
      */
     public function validate(): Validator
     {
+        $this->parse();
         return new Validator($this->getClaims());
     }
 
@@ -127,11 +129,13 @@ final class Parser
         ?int $cacheExpires = null,
         ?CacheItemPoolInterface $cache = null
     ): self {
+        $this->parse();
+
         $parts = $this->getParts();
         $signature = $this->getSignature() ?? '';
         $headers = $this->getHeaders();
 
-        new Verifier(
+        $verifier = new Verifier(
             $this->configuration,
             implode('.', [$parts[0], $parts[1]]),
             $signature,
@@ -142,6 +146,8 @@ final class Parser
             $cacheExpires,
             $cache,
         );
+
+        $verifier->verify();
 
         return $this;
     }
@@ -188,6 +194,8 @@ final class Parser
      */
     public function getClaims(): array
     {
+        $this->parse();
+
         $claims = $this->tokenClaims;
 
         // @codeCoverageIgnoreStart
@@ -235,6 +243,8 @@ final class Parser
      */
     public function getHeaders(): array
     {
+        $this->parse();
+
         return $this->tokenHeaders ?? [];
     }
 
@@ -245,6 +255,8 @@ final class Parser
      */
     public function getParts(): array
     {
+        $this->parse();
+
         return $this->tokenParts ?? [];
     }
 
@@ -253,6 +265,8 @@ final class Parser
      */
     public function getRaw(): ?string
     {
+        $this->parse();
+
         return $this->tokenRaw;
     }
 
@@ -261,6 +275,8 @@ final class Parser
      */
     public function getSignature(): ?string
     {
+        $this->parse();
+
         return $this->tokenSignature;
     }
 

@@ -9,16 +9,12 @@ use Auth0\SDK\Contract\StoreInterface;
 
 final class Delete implements Auth0Event
 {
-    private StoreInterface $store;
-    private string $key;
     private ?bool $success = null;
 
     public function __construct(
-        StoreInterface $store,
-        string $key
+        private StoreInterface $store,
+        private string $key
     ) {
-        $this->store = $store;
-        $this->key = $key;
     }
 
     public function getStore(): StoreInterface

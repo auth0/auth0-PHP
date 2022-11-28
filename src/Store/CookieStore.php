@@ -20,17 +20,6 @@ final class CookieStore implements StoreInterface
     public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
 
     /**
-     * Instance of SdkConfiguration, for shared configuration across classes.
-     */
-    private SdkConfiguration $configuration;
-
-    /**
-     * Cookie base name.
-     * Use 'namespace' argument to set this during instantiation.
-     */
-    private string $namespace;
-
-    /**
      * The threshold (in bytes) in which chunking/splitting occurs.
      */
     private int $threshold;
@@ -66,17 +55,9 @@ final class CookieStore implements StoreInterface
      * @psalm-suppress RedundantCondition
      */
     public function __construct(
-        SdkConfiguration $configuration,
-        string $namespace = 'auth0'
+        private SdkConfiguration $configuration,
+        private string $namespace = 'auth0'
     ) {
-        [$namespace] = Toolkit::filter([$namespace])->string()->trim();
-
-        Toolkit::assert([
-            [$namespace, \Auth0\SDK\Exception\ArgumentException::missing('namespace')],
-        ])->isString();
-
-        $this->configuration = $configuration;
-        $this->namespace = (string) $namespace;
         $this->threshold = self::KEY_CHUNKING_THRESHOLD - strlen($this->namespace);
 
         $this->getState();
@@ -373,7 +354,7 @@ final class CookieStore implements StoreInterface
     public function getCookieOptions(
         ?int $expires = null
     ): array {
-        $expires = $expires ?? $this->configuration->getCookieExpires();
+        $expires ??= $this->configuration->getCookieExpires();
 
         if ($expires !== 0) {
             $expires = time() + $expires;

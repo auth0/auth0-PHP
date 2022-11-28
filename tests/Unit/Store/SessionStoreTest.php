@@ -9,7 +9,7 @@ use Auth0\Tests\Utilities\MockDomain;
 uses()->group('storage', 'storage.session');
 
 beforeEach(function(): void {
-    $_SESSION = [];
+    session_destroy();
 
     $this->configuration = new SdkConfiguration([
         'domain' => MockDomain::valid(),
@@ -22,6 +22,7 @@ beforeEach(function(): void {
     $this->namespace = uniqid();
 
     $this->store = new SessionStore($this->configuration, $this->namespace);
+    $this->store->start();
 });
 
 test('set() assigns values as expected', function(string $key, string $value): void {

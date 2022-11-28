@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\Tests\Utilities;
 
 use Firebase\JWT\JWT;
+use RuntimeException;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
@@ -49,14 +50,36 @@ class TokenGenerator
         return array_merge($defaults, $overrides);
     }
 
+    public static function getOpenSslError(): string
+    {
+		$errors = [];
+
+		while ($error = openssl_error_string()) {
+			$errors[] = $error;
+		}
+
+        return implode(', ', $errors);
+    }
+
     public static function generateRsaKeyPair(): array
     {
-        $privateKeyResource = openssl_pkey_new([
+        $config = [
             'digest_alg' => 'sha256',
             'private_key_type' => OPENSSL_KEYTYPE_RSA,
-        ]);
+        ];
 
-        openssl_pkey_export($privateKeyResource, $privateKey);
+        $privateKeyResource = openssl_pkey_new($config);
+
+        if ($privateKeyResource === false) {
+            throw new RuntimeException("OpenSSL reported an error: " . self::getOpenSslError());
+        }
+
+        $export = openssl_pkey_export($privateKeyResource, $privateKey);
+
+        if ($export === false) {
+            throw new RuntimeException("OpenSSL reported an error: " . self::getOpenSslError());
+        }
+
         $publicKey = openssl_pkey_get_details($privateKeyResource);
 
         $resCsr = openssl_csr_new([], $privateKeyResource);
@@ -72,12 +95,23 @@ class TokenGenerator
 
     public static function generateDsaKeyPair(): array
     {
-        $privateKeyResource = openssl_pkey_new([
+        $config = [
             'digest_alg' => 'sha256',
             'private_key_type' => OPENSSL_KEYTYPE_DSA,
-        ]);
+        ];
 
-        openssl_pkey_export($privateKeyResource, $privateKey);
+        $privateKeyResource = openssl_pkey_new($config);
+
+        if ($privateKeyResource === false) {
+            throw new RuntimeException("OpenSSL reported an error: " . self::getOpenSslError());
+        }
+
+        $export = openssl_pkey_export($privateKeyResource, $privateKey);
+
+        if ($export === false) {
+            throw new RuntimeException("OpenSSL reported an error: " . self::getOpenSslError());
+        }
+
         $publicKey = openssl_pkey_get_details($privateKeyResource);
 
         $resCsr = openssl_csr_new([], $privateKeyResource);
