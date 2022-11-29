@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.3.8](https://github.com/auth0/auth0-PHP/tree/8.3.8) (2022-11-28)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.7...8.3.8)
+
+**Fixed**
+- fix: Always store provided state in transient medium [\#674](https://github.com/auth0/auth0-PHP/pull/674) ([evansims](https://github.com/evansims))
+
 ## [8.3.7](https://github.com/auth0/auth0-PHP/tree/8.3.7) (2022-11-07)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.6...8.3.7)
 
