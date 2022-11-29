@@ -11,3 +11,4 @@ phpcs.xml
 .phpunit.result.cache
 .DS_Store
 coverage
+TODO.txt
