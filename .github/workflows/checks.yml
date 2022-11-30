@@ -42,8 +42,61 @@ jobs:
       - name: Install dependencies with composer
         run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
 
+  acceptance:
+    name: Acceptance Tests
+    runs-on: ubuntu-22.04
+    needs: ["dependencies"]
+
+    strategy:
+      fail-fast: true
+      max-parallel: 10
+      matrix:
+        php: ["8.0", "8.1", "8.2"]
+
+    steps:
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring, openssl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+          restore-keys: ${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}-${{ github.run_id }}
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-dev
+
+      - name: Install acceptance test dependencies
+        run: cd tests/Acceptance && composer install && composer require auth0/auth0-php:@dev
+
+      - name: Run acceptance tests (0)
+        run: cd tests/Acceptance && php 00-php.php
+
+      - name: Run acceptance tests (1)
+        run: cd tests/Acceptance && php 01-composer.php
+
+      - name: Run acceptance tests (2)
+        run: cd tests/Acceptance && php 02-configuration.php
+
+      - name: Run acceptance tests (3)
+        run: cd tests/Acceptance && php 03-sdk.php
+
   pest:
-    name: Pest
+    name: Unit Tests
     runs-on: ubuntu-22.04
     continue-on-error: true
     needs: ["dependencies"]
