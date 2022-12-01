@@ -1,4 +1,4 @@
-name: Labels
+name: Contributors
 
 on:
   pull_request_target:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   remove_labels:
+    name: Default Labels
     runs-on: ubuntu-latest
 
     permissions:
