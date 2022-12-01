@@ -23,9 +23,24 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            github.rest.pulls.removeLabel({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: ["Status: 🤞 Run Tests"]
-            })
+            try {
+              const labels = await github.issues.listLabelsOnIssue({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number
+              });
+
+              const labelNames = labels.data.map(label => label.name);
+              const labelNamesToRemove = labelNames.filter(labelName => labelName.startsWith('Status:'));
+
+              if (labelNamesToRemove.length > 0) {
+                await github.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  name: labelNamesToRemove
+                });
+              }
+            } catch (error) {
+              console.log(error);
+            }
