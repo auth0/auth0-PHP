@@ -27,58 +27,60 @@ jobs:
 
             const pattern = /^(\w*)(?:\(([\w$.\-*\/ ]*)\))?: (.*)$/g
             const title = context.payload.pull_request.title
-            const [type, scope, subject] = title.match(pattern)
+            const [type, scope, subject] = title.match(pattern).slice(1)
 
-            if (type === "feat" || type === "refactor" || type === "perf") {
-              github.rest.issues.addLabel({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: ["Type: ⭐ Enhancement"]
-              })
+            if (type !== undefined) {}
+              const labels = {
+                'feat': 'Type: ⭐ Enhancement',
+                'refactor': 'Type: ⭐ Enhancement',
+                'perf': 'Type: ⭐ Enhancement',
+                'build': 'Type: 🔧 Maintenance',
+                'cj': 'Type: 🔧 Maintenance',
+                'style': 'Type: 🔧 Maintenance',
+                'fix': 'Type: 🐞 Bug',
+                'security': 'Type: 🚨 Security',
+                'docs': 'Type: 📖 Documentation',
+                'test': 'Type: 🧪 Tests',
+              }
+
+              if (labels.includes(type)) {
+                github.rest.issues.addLabels({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  labels: [labels[type]]
+                })
+              }
             }
 
-            if (type === "build" || type === "ci" || type === "style") {
-              github.rest.issues.addLabel({
+            if (subject.toLowerCase().includes('wip')) {
+              github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                name: ["Type: 🔧 Maintenance"]
+                labels: ['Status: 🚫 Do Not Merge']
               })
+            } else {
+              if (! context.payload.pull_request.draft) {
+                github.rest.issues.addLabels({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  labels: ['Status: ⏳ Needs Review']
+                })
+              }
             }
 
-            if (type === "fix") {
-              github.rest.issues.addLabel({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: ["Type: 🐞 Bug"]
-              })
-            }
+            const isMember = await github.rest.orgs.checkMembership({
+              org: context.repo.owner,
+              username: context.payload.pull_request.user.login
+            })
 
-            if (type === "security") {
-              github.rest.issues.addLabel({
+            if (! isMember) {
+              github.rest.issues.addAssignees({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                name: ["Type: 🚨 Security"]
-              })
-            }
-
-            if (type === "docs") {
-              github.rest.issues.addLabel({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: ["Type: 📖 Documentation"]
-              })
-            }
-
-            if (type === "test") {
-              github.rest.issues.addLabel({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                name: ["Type: 🧪 Tests"]
+                assignees: ['evansims']
               })
             }
