@@ -22,7 +22,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you've read our [contributing guide](CONTRIBUTING.md).'
+              body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you\'ve read our [contributing guide](CONTRIBUTING.md).'
             })
 
             const pattern = /^(\w*)(?:\(([\w$.\-*/ ]*)\))?: (.*)$/g
