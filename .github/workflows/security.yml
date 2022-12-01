@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   scan-snyk:
-    if: github.event.label.name == "Status:: 🤞 Run Tests"
+    if: github.event.label.name == "Status:\ 🤞 Run Tests"
     name: Snyk
     runs-on: ubuntu-latest
 
@@ -46,7 +46,7 @@ jobs:
           sarif_file: snyk.sarif
 
   scan-semgrep:
-    if: github.event.label.name == "Status:: 🤞 Run Tests"
+    if: github.event.label.name == "Status:\ 🤞 Run Tests"
     name: Semgrep
     runs-on: ubuntu-latest
     container:
