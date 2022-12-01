@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   style-pint:
-    if: github.event.label.name == "Status\: 🤞 Run Tests"
+    if: github.event.label.name == "Status:: 🤞 Run Tests"
     name: Pint
     runs-on: ubuntu-latest
 
@@ -35,7 +35,7 @@ jobs:
       - run: vendor/bin/pint --test
 
   style-rector:
-    if: github.event.label.name == "Status\: 🤞 Run Tests"
+    if: github.event.label.name == "Status:: 🤞 Run Tests"
     name: Rector
     runs-on: ubuntu-latest
 
