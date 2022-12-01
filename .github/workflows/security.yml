@@ -37,7 +37,7 @@ jobs:
         with:
           args: --severity-threshold=high --sarif-file-output=snyk.sarif
       - uses: andstor/file-existence-action@v1
-      id: sarif_file_exists
+        id: sarif_file_exists
         with:
           files: "snyk.sarif"
       - uses: github/codeql-action/upload-sarif@v2
