@@ -5,25 +5,25 @@ on:
     types:
       - labeled
 
-    permissions:
-      contents: write
-      pull-requests: write
+permissions:
+  contents: write
+  pull-requests: write
 
-    jobs:
-      composer-normalize:
-        if: github.event.label.name == "Status:\ 🤞 Run Tests"
-        name: Normalize
-        runs-on: ubuntu-latest
+jobs:
+  composer-normalize:
+    if: github.event.label.name == "Status:\ 🤞 Run Tests"
+    name: Normalize
+    runs-on: ubuntu-latest
 
-        steps:
-          - uses: actions/checkout@v3
-          - uses: docker://ergebnis/composer-normalize-action
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker://ergebnis/composer-normalize-action
 
-      composer-validate:
-        if: github.event.label.name == "Status:\ 🤞 Run Tests"
-        name: Validate
-        runs-on: ubuntu-latest
+  composer-validate:
+    if: github.event.label.name == "Status:\ 🤞 Run Tests"
+    name: Validate
+    runs-on: ubuntu-latest
 
-        steps:
-          - uses: actions/checkout@v3
-          - run: composer validate
+    steps:
+      - uses: actions/checkout@v3
+      - run: composer validate
