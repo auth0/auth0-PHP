@@ -5,14 +5,14 @@ on:
     types:
       - opened
 
-jobs:
-  remove_labels:
-    name: Default Labels
-    runs-on: ubuntu-latest
+permissions:
+  issues: write
+  pull-requests: write
 
-    permissions:
-      issues: write
-      pull-requests: write
+jobs:
+  setup_labels:
+    name: Setup Labels
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/github-script@v6
