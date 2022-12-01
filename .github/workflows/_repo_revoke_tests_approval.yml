@@ -32,5 +32,5 @@ jobs:
               issue_number: issue_num,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              name: ["🧪 Run Tests"]
+              name: ["Status: 🤞 Run Tests"]
             })

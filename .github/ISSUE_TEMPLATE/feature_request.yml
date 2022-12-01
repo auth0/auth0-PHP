@@ -1,6 +1,6 @@
 name: Suggest a Feature
-description: Suggest a new feature or enhancement.
-labels: "⭐ Enhancement"
+description: Help us improve the SDK by suggest new features and improvements.
+labels: ["Type: ⭐ Enhancement", "Status: 👀 Reviewing"]
 
 body:
   - type: markdown

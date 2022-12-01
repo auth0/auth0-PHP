@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   composer-normalize:
-    if: ${{ github.event.label.name == '🤞 Run Tests' }}
+    if: ${{ github.event.label.name == "Status: 🤞 Run Tests" }}
     name: Normalize
     runs-on: ubuntu-latest
 
@@ -19,7 +19,7 @@ jobs:
       - uses: docker://ergebnis/composer-normalize-action
 
   composer-validate:
-    if: ${{ github.event.label.name == '🤞 Run Tests' }}
+    if: ${{ github.event.label.name == "Status: 🤞 Run Tests" }}
     name: Validate
     runs-on: ubuntu-latest
 
