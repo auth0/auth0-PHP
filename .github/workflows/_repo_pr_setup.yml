@@ -10,8 +10,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  setup_labels:
-    name: Setup Labels
+  default-labels:
+    name: Default Labels
     runs-on: ubuntu-latest
 
     steps:

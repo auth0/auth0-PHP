@@ -12,7 +12,7 @@ on:
       - synchronize
 
 jobs:
-  remove_labels:
+  cleanup-labels:
     name: Cleanup Labels
     runs-on: ubuntu-latest
 
