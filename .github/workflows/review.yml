@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   review-phpstan:
-    if: github.event.label.name == 'Status: 🤞 Run Tests'
+    if: github.event.label.name == "Status\: 🤞 Run Tests"
     name: PHPStan
     runs-on: ubuntu-latest
 
@@ -34,7 +34,7 @@ jobs:
       - run: vendor/bin/phpstan analyze --no-progress
 
   review-psalm:
-    if: github.event.label.name == 'Status: 🤞 Run Tests'
+    if: github.event.label.name == "Status\: 🤞 Run Tests"
     name: Psalm
     runs-on: ubuntu-latest
 
