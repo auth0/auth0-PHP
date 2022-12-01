@@ -96,7 +96,6 @@ That's it! You have authenticated the user with Auth0. More examples can be foun
 
 - [API Reference](https://auth0.github.io/auth0-PHP/)
 
-
 ## Feedback
 
 ### Contributing
@@ -107,9 +106,11 @@ We appreciate feedback and contribution to this repo! Before you get started, pl
 - [Auth0's code of conduct guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 
 ### Raise an issue
+
 To provide feedback or report a bug, [please raise an issue on our issue tracker](https://github.com/auth0/auth0-PHP/issues).
 
 ### Vulnerability Reporting
+
 Please do not report security vulnerabilities on the public Github issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ---

@@ -1,10 +1,12 @@
 name: Suggest a Feature
-description: Suggest an idea or a feature for this project.
-labels: [triage]
+description: Help us improve the SDK by suggest new features and improvements.
+labels: ["Type: ⭐ Enhancement", "Status: 👀 Reviewing"]
+
 body:
   - type: markdown
     attributes:
-      value: Thanks for taking the time to help us improve this project!
+      value: Thanks for taking the time to help us improve this SDK!
+
   - type: textarea
     id: feature-description
     attributes:

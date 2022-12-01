@@ -1,0 +1,74 @@
+name: Test
+
+on:
+  pull_request_target:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test-acceptance:
+    if: github.event.label.name == 'Status: 🤞 Run Tests'
+    name: Acceptance
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      max-parallel: 10
+      matrix:
+        php: ["8.0", "8.1", "8.2"]
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring, openssl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v3
+
+      - run: composer install --prefer-dist --no-dev
+      - run: composer require auth0/auth0-php:@dev
+        working-directory: tests/Acceptance
+      - run: php 00-php.php
+        working-directory: tests/Acceptance
+      - run: php 01-composer.php
+        working-directory: tests/Acceptance
+      - run: php 02-configuration.php
+        working-directory: tests/Acceptance
+      - run: php 03-sdk.php
+        working-directory: tests/Acceptance
+
+  test-pest:
+    if: github.event.label.name == 'Status: 🤞 Run Tests'
+    name: Unit
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    strategy:
+      max-parallel: 10
+      matrix:
+        php: ["8.1", "8.2"]
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: pcov
+          extensions: mbstring, openssl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v3
+
+      - run: composer install --prefer-dist --no-dev
+      - run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction --order-by random
+
+      - if: (matrix.php == '8.2')
+        uses: codecov/codecov-action@v2
+        with:
+          directory: coverage
