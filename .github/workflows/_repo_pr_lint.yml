@@ -1,4 +1,4 @@
-name: Conventional Commits
+name: Contributors
 
 on:
   pull_request_target:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   validate-title:
+    name: Validate Title
     runs-on: ubuntu-latest
 
     steps:
