@@ -26,7 +26,7 @@ jobs:
             })
 
             const pattern = /^(\w*)(?:\(([\w$.\-*/ ]*)\))?: (.*)$/g
-            const title = github.event.pull_request.title
+            const title = context.payload.pull_request.title
             const [type, scope, subject] = title.match(pattern)
 
             if (type === "feat" || type === "refactor" || type === "perf") {
