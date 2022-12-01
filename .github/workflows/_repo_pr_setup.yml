@@ -10,8 +10,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  setup_labels:
-    name: Setup Labels
+  default-labels:
+    name: Default Labels
     runs-on: ubuntu-latest
 
     steps:
@@ -22,11 +22,11 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you've read our [contributing guide](CONTRIBUTING.md).'
+              body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you\'ve read our [contributing guide](CONTRIBUTING.md).'
             })
 
             const pattern = /^(\w*)(?:\(([\w$.\-*/ ]*)\))?: (.*)$/g
-            const title = github.event.pull_request.title
+            const title = context.payload.pull_request.title
             const [type, scope, subject] = title.match(pattern)
 
             if (type === "feat" || type === "refactor" || type === "perf") {
