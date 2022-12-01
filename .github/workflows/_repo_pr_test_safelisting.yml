@@ -1,0 +1,31 @@
+name: Labels
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - closed
+      - reopened
+      - converted_to_draft
+      - review_requested
+      - review_request_removed
+      - synchronize
+
+jobs:
+  remove_labels:
+    runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.pulls.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: ["Status: 🤞 Run Tests"]
+            })

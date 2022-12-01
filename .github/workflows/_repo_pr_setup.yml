@@ -1,0 +1,83 @@
+name: Labels
+
+on:
+  pull_request_target:
+    types:
+      - opened
+
+jobs:
+  remove_labels:
+    runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you've read our [contributing guide](CONTRIBUTING.md).'
+            })
+
+            const pattern = /^(\w*)(?:\(([\w$.\-*/ ]*)\))?: (.*)$/g
+            const title = github.event.pull_request.title
+            const [type, scope, subject] = title.match(pattern)
+
+            if (type === "feat" || type === "refactor" || type === "perf") {
+              github.rest.pulls.addLabel({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: ["Type: ⭐ Enhancement"]
+              })
+            }
+
+            if (type === "build" || type === "ci" || type === "style") {
+              github.rest.pulls.addLabel({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: ["Type: 🔧 Maintenance"]
+              })
+            }
+
+            if (type === "fix") {
+              github.rest.pulls.addLabel({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: ["Type: 🐞 Bug"]
+              })
+            }
+
+            if (type === "security") {
+              github.rest.pulls.addLabel({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: ["Type: 🚨 Security"]
+              })
+            }
+
+            if (type === "docs") {
+              github.rest.pulls.addLabel({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: ["Type: 📖 Documentation"]
+              })
+            }
+
+            if (type === "test") {
+              github.rest.pulls.addLabel({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: ["Type: 🧪 Tests"]
+              })
+            }

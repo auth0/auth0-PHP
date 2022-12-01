@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   test-acceptance:
-    if: ${{ github.event.label.name == "Status: 🤞 Run Tests" }}
+    if: github.event.label.name == 'Status: 🤞 Run Tests'
     name: Acceptance
     runs-on: ubuntu-latest
 
@@ -44,7 +44,7 @@ jobs:
         working-directory: tests/Acceptance
 
   test-pest:
-    if: ${{ github.event.label.name == "Status: 🤞 Run Tests" }}
+    if: github.event.label.name == 'Status: 🤞 Run Tests'
     name: Unit
     runs-on: ubuntu-latest
     continue-on-error: true
