@@ -30,7 +30,7 @@ jobs:
             const [type, scope, subject] = title.match(pattern)
 
             if (type === "feat" || type === "refactor" || type === "perf") {
-              github.rest.pulls.addLabel({
+              github.rest.issues.addLabel({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -39,7 +39,7 @@ jobs:
             }
 
             if (type === "build" || type === "ci" || type === "style") {
-              github.rest.pulls.addLabel({
+              github.rest.issues.addLabel({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -48,7 +48,7 @@ jobs:
             }
 
             if (type === "fix") {
-              github.rest.pulls.addLabel({
+              github.rest.issues.addLabel({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -57,7 +57,7 @@ jobs:
             }
 
             if (type === "security") {
-              github.rest.pulls.addLabel({
+              github.rest.issues.addLabel({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -66,7 +66,7 @@ jobs:
             }
 
             if (type === "docs") {
-              github.rest.pulls.addLabel({
+              github.rest.issues.addLabel({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -75,7 +75,7 @@ jobs:
             }
 
             if (type === "test") {
-              github.rest.pulls.addLabel({
+              github.rest.issues.addLabel({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
