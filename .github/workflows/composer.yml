@@ -14,11 +14,11 @@ jobs:
     name: Configuration
     runs-on: ubuntu-latest
     outputs:
-      allow-label: null
+      allow-label: ${{ env.ALLOW_LABEL }}
     steps:
-      - shell: bash
+      - name: Save state
         run: |
-          echo "::set-output name=allow-label::'Status: 🤞 Run Tests'"
+          echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
 
   composer-normalize:
     name: Normalize
