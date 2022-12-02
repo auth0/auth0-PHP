@@ -9,9 +9,12 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  LABEL_ALLOW_TESTS: ${{ secrets.LABEL_ALLOW_TESTS }}
+
 jobs:
   composer-normalize:
-    if: contains(github.event.label.name, 'Status:: 🤞 Run Tests')
+    if: contains(github.event.label.name, env.LABEL_ALLOW_TESTS)
     name: Normalize
     runs-on: ubuntu-latest
 
@@ -22,7 +25,7 @@ jobs:
       - uses: docker://ergebnis/composer-normalize-action
 
   composer-validate:
-    if: contains(github.event.label.name, 'Status:: 🤞 Run Tests')
+    if: contains(github.event.label.name, env.LABEL_ALLOW_TESTS)
     name: Validate
     runs-on: ubuntu-latest
 
