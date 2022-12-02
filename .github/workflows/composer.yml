@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   configuration:
-    name: Configuration
+    name: Configure
     runs-on: ubuntu-latest
     outputs:
       allow-label: ${{ env.ALLOW_LABEL }}
@@ -30,8 +30,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: github.event.pull_request.head.sha
       - uses: docker://ergebnis/composer-normalize-action
 
   composer-validate:
@@ -44,6 +42,4 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: github.event.pull_request.head.sha
       - run: composer validate

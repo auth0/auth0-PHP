@@ -9,10 +9,23 @@ permissions:
   pull-requests: write
 
 jobs:
-  review-phpstan:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
-    name: PHPStan
+  configuration:
+    name: Configure
     runs-on: ubuntu-latest
+    outputs:
+      allow-label: ${{ env.ALLOW_LABEL }}
+    steps:
+      - name: Save state
+        run: |
+          echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
+
+  review-phpstan:
+    name: PHPStan
+    needs: configuration
+    runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     strategy:
       fail-fast: true
@@ -36,9 +49,12 @@ jobs:
       - run: vendor/bin/phpstan analyze --no-progress
 
   review-psalm:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
     name: Psalm
+    needs: configuration
     runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     strategy:
       fail-fast: true
