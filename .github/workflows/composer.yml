@@ -11,19 +11,23 @@ permissions:
 
 jobs:
   composer-normalize:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
+    if: contains(github.event.pull_request.labels.*.name, 'Status:\ 🤞 Run Tests')
     name: Normalize
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: github.event.pull_request.head.sha
       - uses: docker://ergebnis/composer-normalize-action
 
   composer-validate:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
+    if: contains(github.event.pull_request.labels.*.name, 'Status:\ 🤞 Run Tests')
     name: Validate
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: github.event.pull_request.head.sha
       - run: composer validate

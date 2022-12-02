@@ -30,6 +30,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v3
+        with:
+          ref: github.event.pull_request.head.sha
 
       - run: composer install --prefer-dist --no-dev
       - run: composer require auth0/auth0-php:@dev
@@ -64,6 +66,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v3
+        with:
+          ref: github.event.pull_request.head.sha
 
       - run: composer install --prefer-dist --no-dev
       - run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction --order-by random
