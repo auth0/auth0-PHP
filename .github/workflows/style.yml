@@ -9,10 +9,23 @@ permissions:
   pull-requests: write
 
 jobs:
-  style-pint:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
-    name: Pint
+  configuration:
+    name: Configure
     runs-on: ubuntu-latest
+    outputs:
+      allow-label: ${{ env.ALLOW_LABEL }}
+    steps:
+      - name: Save state
+        run: |
+          echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
+
+  style-pint:
+    name: Pint
+    needs: configuration
+    runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     strategy:
       fail-fast: true
@@ -35,9 +48,12 @@ jobs:
       - run: vendor/bin/pint --test
 
   style-rector:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
     name: Rector
+    needs: configuration
     runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     strategy:
       fail-fast: true

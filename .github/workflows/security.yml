@@ -9,10 +9,23 @@ permissions:
   pull-requests: write
 
 jobs:
-  scan-snyk:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
-    name: Snyk
+  configuration:
+    name: Configure
     runs-on: ubuntu-latest
+    outputs:
+      allow-label: ${{ env.ALLOW_LABEL }}
+    steps:
+      - name: Save state
+        run: |
+          echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
+
+  scan-snyk:
+    name: Snyk
+    needs: configuration
+    runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     strategy:
       fail-fast: true
@@ -48,11 +61,14 @@ jobs:
           sarif_file: snyk.sarif
 
   scan-semgrep:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
     name: Semgrep
+    needs: configuration
     runs-on: ubuntu-latest
     container:
       image: returntocorp/semgrep
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     steps:
       - uses: actions/checkout@v3

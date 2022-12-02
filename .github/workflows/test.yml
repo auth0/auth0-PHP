@@ -9,10 +9,23 @@ permissions:
   pull-requests: write
 
 jobs:
-  test-acceptance:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
-    name: Acceptance
+  configuration:
+    name: Configure
     runs-on: ubuntu-latest
+    outputs:
+      allow-label: ${{ env.ALLOW_LABEL }}
+    steps:
+      - name: Save state
+        run: |
+          echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
+
+  test-acceptance:
+    name: Acceptance
+    needs: configuration
+    runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     strategy:
       fail-fast: true
@@ -46,10 +59,13 @@ jobs:
         working-directory: tests/Acceptance
 
   test-pest:
-    if: github.event.label.name == "Status:\ 🤞 Run Tests"
     name: Unit
+    needs: configuration
     runs-on: ubuntu-latest
     continue-on-error: true
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     strategy:
       max-parallel: 10
