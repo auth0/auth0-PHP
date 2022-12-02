@@ -24,23 +24,9 @@ jobs:
         with:
           script: |
             try {
-              const labels = await github.issues.listLabelsOnIssue({
+              github.issues.removeLabel({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: context.issue.number
+                issue_number: context.issue.number,
+                name: 'Status: 🤞 Run Tests'
               });
-
-              const labelNames = labels.data.map(label => label.name);
-              const labelNamesToRemove = labelNames.filter(labelName => labelName.startsWith('Status:'));
-
-              if (labelNamesToRemove.length > 0) {
-                await github.issues.removeLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.issue.number,
-                  name: labelNamesToRemove
-                });
-              }
-            } catch (error) {
-              console.log(error);
-            }
