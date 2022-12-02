@@ -31,7 +31,7 @@ jobs:
 
             console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
 
-            if (type !== undefined) {
+            if (type in labels) {
               const labels = {
                 'feat': 'Type: ⭐ Enhancement',
                 'refactor': 'Type: ⭐ Enhancement',
