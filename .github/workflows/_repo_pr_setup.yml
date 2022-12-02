@@ -29,7 +29,7 @@ jobs:
             const title = context.payload.pull_request.title
             const [type, scope, subject] = title.match(pattern).slice(1)
 
-            if (type !== undefined) {}
+            if (type !== undefined) {
               const labels = {
                 'feat': 'Type: ⭐ Enhancement',
                 'refactor': 'Type: ⭐ Enhancement',
