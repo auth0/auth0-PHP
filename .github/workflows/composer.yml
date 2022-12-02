@@ -9,14 +9,23 @@ permissions:
   contents: write
   pull-requests: write
 
-env:
-  LABEL_ALLOW_TESTS: ${{ secrets.LABEL_ALLOW_TESTS }}
-
 jobs:
-  composer-normalize:
-    if: contains(github.event.label.name, env.LABEL_ALLOW_TESTS)
-    name: Normalize
+  configuration:
+    name: Configuration
     runs-on: ubuntu-latest
+    outputs:
+      allow-label: null
+    - shell: bash
+      run: |
+        echo "::set-output name=allow-label::'Status: 🤞 Run Tests'"
+
+  composer-normalize:
+    name: Normalize
+    needs: configuration
+    runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name === needs.configuration.outputs.allow-label
 
     steps:
       - uses: actions/checkout@v3
@@ -25,9 +34,12 @@ jobs:
       - uses: docker://ergebnis/composer-normalize-action
 
   composer-validate:
-    if: contains(github.event.label.name, env.LABEL_ALLOW_TESTS)
     name: Validate
+    needs: configuration
     runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name === needs.configuration.outputs.allow-label
 
     steps:
       - uses: actions/checkout@v3
