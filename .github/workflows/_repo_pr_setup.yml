@@ -53,7 +53,7 @@ jobs:
               }
             }
 
-            if (subject.toLowerCase().includes('wip')) {
+            if (title.toLowerCase().includes('wip')) {
               github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
