@@ -31,7 +31,7 @@ jobs:
 
             console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
 
-            if (type in labels) {
+            if (type !== undefined) {
               const labels = {
                 'feat': 'Type: ⭐ Enhancement',
                 'refactor': 'Type: ⭐ Enhancement',
@@ -45,7 +45,7 @@ jobs:
                 'test': 'Type: 🧪 Tests',
               }
 
-              if (labels.includes(type)) {
+              if (type in labels) {
                 github.rest.issues.addLabels({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
