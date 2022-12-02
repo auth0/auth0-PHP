@@ -15,9 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       allow-label: null
-    - shell: bash
-      run: |
-        echo "::set-output name=allow-label::'Status: 🤞 Run Tests'"
+    steps:
+      - shell: bash
+        run: |
+          echo "::set-output name=allow-label::'Status: 🤞 Run Tests'"
 
   composer-normalize:
     name: Normalize
