@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Determine if the label is present.
-    if: github.event.label.name === needs.configuration.outputs.allow-label
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     steps:
       - uses: actions/checkout@v3
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Determine if the label is present.
-    if: github.event.label.name === needs.configuration.outputs.allow-label
+    if: github.event.label.name == needs.configuration.outputs.allow-label
 
     steps:
       - uses: actions/checkout@v3
