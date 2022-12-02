@@ -29,7 +29,7 @@ jobs:
             const title = context.payload.pull_request.title
             const [type, scope, subject] = title.match(pattern).slice(1)
 
-            if (type !== undefined) {}
+            if (type !== undefined) {
               const labels = {
                 'feat': 'Type: ⭐ Enhancement',
                 'refactor': 'Type: ⭐ Enhancement',
@@ -53,7 +53,7 @@ jobs:
               }
             }
 
-            if (subject.toLowerCase().includes('wip')) {
+            if (title.toLowerCase().includes('wip')) {
               github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
