@@ -29,6 +29,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v3
+        with:
+          ref: github.event.pull_request.head.sha
       - run: composer update --no-interaction --no-progress
       - uses: snyk/actions/php@master
         continue-on-error: true
@@ -54,6 +56,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: github.event.pull_request.head.sha
       - run: semgrep scan --sarif --output=semgrep.sarif
         env:
           SEMGREP_RULES: >-

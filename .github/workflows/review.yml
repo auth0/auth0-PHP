@@ -30,6 +30,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v3
+        with:
+          ref: github.event.pull_request.head.sha
       - run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
       - run: vendor/bin/phpstan analyze --no-progress
 
@@ -54,5 +56,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v3
+        with:
+          ref: github.event.pull_request.head.sha
       - run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
       - run: vendor/bin/psalm --no-progress
