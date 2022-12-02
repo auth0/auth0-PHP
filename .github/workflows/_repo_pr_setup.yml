@@ -25,9 +25,9 @@ jobs:
               body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you\'ve read our [contributing guide](CONTRIBUTING.md).'
             })
 
-            const pattern = /^(\w*)(?:\(([\w$.\-*\/ ]*)\))?: (.*)$/g
+            const pattern = /^(\w*)(?:\(([\w]*)\))?: (.*)$/;
             const title = context.payload.pull_request.title
-            const [type, scope, subject] = title.match(pattern).slice(1)
+            const [type, scope, subject] = title.match(pattern).slice(1);
 
             console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
 
@@ -55,7 +55,7 @@ jobs:
               }
             }
 
-            if (title.toLowerCase().includes('wip')) {
+            if (subject !== undefined && subject.toLowerCase().includes('wip')) {
               github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
