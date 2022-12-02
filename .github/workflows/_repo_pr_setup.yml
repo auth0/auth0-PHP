@@ -29,6 +29,8 @@ jobs:
             const title = context.payload.pull_request.title
             const [type, scope, subject] = title.match(pattern).slice(1)
 
+            console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
+
             if (type !== undefined) {
               const labels = {
                 'feat': 'Type: ⭐ Enhancement',
@@ -71,7 +73,7 @@ jobs:
               }
             }
 
-            const isMember = await github.rest.orgs.checkMembership({
+            const isMember = await github.rest.orgs.checkMembershipForUser({
               org: context.repo.owner,
               username: context.payload.pull_request.user.login
             })
