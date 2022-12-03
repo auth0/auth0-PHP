@@ -14,12 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/stale@v5
+      - uses: actions/stale@v6
         with:
-          days-before-issue-stale: 7
-          days-before-issue-close: 14
-          # stale-issue-message: "This issue is stale because it has been open for 7 days with no activity."
-          # close-issue-message: "This issue was closed because it has been inactive for 14 days since being marked as stale."
-          days-before-pr-stale: 7
-          days-before-pr-close: 14
+          days-before-stale: 7
+          days-before-close: 14
           repo-token: ${{ secrets.GITHUB_TOKEN }}
