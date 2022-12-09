@@ -102,7 +102,7 @@ That's it! You have authenticated the user with Auth0. More examples can be foun
 
 Our support lifecycle mirrors the [PHP release support schedule](https://www.php.net/supported-versions.php). Our support for PHP versions end when they stop receiving security fixes.
 
-| SDK Version | PHP Version² | Support Ends³ |
+| SDK Version | PHP Version  | Support Ends  |
 |-------------|--------------|---------------|
 | 8           | 8.2          | Dec 2025      |
 |             | 8.1          | Nov 2024      |
