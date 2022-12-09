@@ -104,7 +104,9 @@ Our support lifecycle mirrors the [PHP release support schedule](https://www.php
 
 | SDK Version | PHP Version² | Support Ends³ |
 |-------------|--------------|---------------|
-| 8           | 8.1          | Feb 2024      |
+| 8           | 8.2          | Dec 2025      |
+|             | 8.1          | Nov 2024      |
+|             | 8.0          | Nov 2023      |
 
 Deprecations of EOL'd versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP environment always remains up to date, particularly in production.
 
