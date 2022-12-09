@@ -24,9 +24,11 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ### Requirements
 
-PHP 8.0 or above. Your application will also need [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) (HTTP factory) and [PSR-18](https://packagist.org/providers/psr/http-client-implementation) (HTTP client) compatible libraries installed.
+- PHP 8.0+
+- A [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) (HTTP factory) library
+- A [PSR-18](https://packagist.org/providers/psr/http-client-implementation) (HTTP client) library
 
-> This library follows the [PHP release support schedule](https://www.php.net/supported-versions.php). We do not support PHP versions that have reached end of life and no longer receive security updates.
+> Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
 
 ### Installation
 
@@ -95,6 +97,16 @@ That's it! You have authenticated the user with Auth0. More examples can be foun
 ## API Reference
 
 - [API Reference](https://auth0.github.io/auth0-PHP/)
+
+## Support Policy
+
+Our support lifecycle mirrors the [PHP release support schedule](https://www.php.net/supported-versions.php). Our support for PHP versions end when they stop receiving security fixes.
+
+| SDK Version | PHP Version² | Support Ends³ |
+|-------------|--------------|---------------|
+| 8           | 8.1          | Feb 2024      |
+
+Deprecations of EOL'd versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP environment always remains up to date, particularly in production.
 
 ## Feedback
 
