@@ -1,8 +1,10 @@
-name: Test
+name: Code Styling
 
 on:
   pull_request_target:
     types: [labeled]
+  push:
+    branches: [main]
 
 permissions:
   contents: write
@@ -19,13 +21,13 @@ jobs:
         run: |
           echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
 
-  test-acceptance:
-    name: Acceptance
+  style-pint:
+    name: Pint
     needs: configuration
     runs-on: ubuntu-latest
 
     # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label
+    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
 
     strategy:
       fail-fast: true
@@ -44,47 +46,33 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - run: composer install --prefer-dist --no-dev
-      - run: composer require auth0/auth0-php:@dev
-        working-directory: tests/Acceptance
-      - run: php 00-php.php
-        working-directory: tests/Acceptance
-      - run: php 01-composer.php
-        working-directory: tests/Acceptance
-      - run: php 02-configuration.php
-        working-directory: tests/Acceptance
-      - run: php 03-sdk.php
-        working-directory: tests/Acceptance
+      - run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
+      - run: vendor/bin/pint --test
 
-  test-pest:
-    name: Unit
+  style-rector:
+    name: Rector
     needs: configuration
     runs-on: ubuntu-latest
-    continue-on-error: true
 
     # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label
+    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
 
     strategy:
+      fail-fast: true
       max-parallel: 10
       matrix:
-        php: ["8.1", "8.2"]
+        php: ["8.0", "8.1", "8.2"]
 
     steps:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: pcov
+          coverage: none
           extensions: mbstring, openssl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v3
 
-      - run: composer install --prefer-dist
-      - run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction --order-by random
-
-      - if: (matrix.php == '8.2')
-        uses: codecov/codecov-action@v2
-        with:
-          directory: coverage
+      - run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
+      - run: vendor/bin/rector process src --dry-run

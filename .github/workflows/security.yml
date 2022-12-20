@@ -1,8 +1,10 @@
-name: Scan
+name: Security
 
 on:
   pull_request_target:
     types: [labeled]
+  push:
+    branches: [main]
 
 permissions:
   contents: write
@@ -25,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label
+    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
 
     strategy:
       fail-fast: true
@@ -66,7 +68,7 @@ jobs:
       image: returntocorp/semgrep
 
     # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label
+    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
 
     steps:
       - uses: actions/checkout@v3

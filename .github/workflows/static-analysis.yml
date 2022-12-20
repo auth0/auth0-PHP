@@ -1,8 +1,10 @@
-name: Review
+name: Static Analysis
 
 on:
   pull_request_target:
     types: [labeled]
+  push:
+    branches: [main]
 
 permissions:
   contents: write
@@ -25,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label
+    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
 
     strategy:
       fail-fast: true
@@ -52,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label
+    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
 
     strategy:
       fail-fast: true

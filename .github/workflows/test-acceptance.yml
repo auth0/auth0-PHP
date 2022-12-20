@@ -1,0 +1,59 @@
+name: Acceptance Tests
+
+on:
+  pull_request_target:
+    types: [labeled]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  configuration:
+    name: Configure
+    runs-on: ubuntu-latest
+    outputs:
+      allow-label: ${{ env.ALLOW_LABEL }}
+    steps:
+      - name: Save state
+        run: |
+          echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
+
+  test-acceptance:
+    name: Acceptance
+    needs: configuration
+    runs-on: ubuntu-latest
+
+    # Determine if the label is present.
+    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
+
+    strategy:
+      fail-fast: true
+      max-parallel: 10
+      matrix:
+        php: ["8.0", "8.1", "8.2"]
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: mbstring, openssl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v3
+
+      - run: composer install --prefer-dist --no-dev
+      - run: composer require auth0/auth0-php:@dev
+        working-directory: tests/Acceptance
+      - run: php 00-php.php
+        working-directory: tests/Acceptance
+      - run: php 01-composer.php
+        working-directory: tests/Acceptance
+      - run: php 02-configuration.php
+        working-directory: tests/Acceptance
+      - run: php 03-sdk.php
+        working-directory: tests/Acceptance
