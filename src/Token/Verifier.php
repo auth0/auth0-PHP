@@ -159,7 +159,7 @@ final class Verifier
                 }
             }
 
-            if ([] !== $response && null !== $this->cache && null !== $item) {
+            if ([] !== $response && null !== $item) {
                 $item->set($response);
                 $item->expiresAfter($this->cacheExpires ?? 60);
                 $this->cache->save($item);

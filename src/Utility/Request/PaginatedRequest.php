@@ -161,7 +161,7 @@ final class PaginatedRequest
         // If we aren't using checkpoint pagination, and have set per_page ...
         if (null === $this->take && null === $this->from && null !== $this->perPage) {
             $response['page'] = $this->page ?? 0;
-            $response['per_page'] = $this->perPage;
+            $response['per_page'] = $this->perPage ?? 0;
 
             if (null !== $this->includeTotals) {
                 $response['include_totals'] = $this->includeTotals ? 'true' : 'false';
