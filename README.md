@@ -3,7 +3,8 @@
 PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 [![Package](https://img.shields.io/packagist/dt/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-php)
-[![Build](https://img.shields.io/github/workflow/status/auth0/auth0-php/Checks)](https://github.com/auth0/auth0-PHP/actions/workflows/checks.yml?query=branch%3Amain)
+[![Unit Tests](https://github.com/auth0/auth0-PHP/actions/workflows/test-unit.yml/badge.svg)](https://github.com/auth0/auth0-PHP/actions/workflows/test-unit.yml)
+[![Acceptance Tests](https://github.com/auth0/auth0-PHP/actions/workflows/test-acceptance.yml/badge.svg)](https://github.com/auth0/auth0-PHP/actions/workflows/test-acceptance.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/auth0/auth0-php)](hhttps://app.codecov.io/gh/auth0/auth0-PHP)
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
 
