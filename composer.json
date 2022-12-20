@@ -92,6 +92,7 @@
     "rector": "@php vendor/bin/rector process src --dry-run",
     "rector:fix": "@php vendor/bin/rector process src",
     "pest": "@php vendor/bin/pest --order-by random",
+    "pest:coverage": "@php vendor/bin/pest --order-by random --coverage",
     "test": [
       "@pint",
       "@phpstan",

@@ -72,7 +72,6 @@ final class Verifier
 
             $key = $this->getKey((string) $kid);
             $valid = openssl_verify($this->payload, $this->signature, $key, OPENSSL_ALGO_SHA256);
-            $this->freeKey($key);
 
             if (1 !== $valid) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
@@ -202,32 +201,5 @@ final class Verifier
         }
 
         return $key;
-    }
-
-    /**
-     * Free key resource in PHP <8.0.
-     *
-     * @param  mixed  $key  An instance of OpenSSLAsymmetricKey (PHP 8.0+) or 'resource' (PHP <8.0).
-     *
-     * @codeCoverageIgnore
-     */
-    private function freeKey(
-        $key,
-    ): void {
-        /*
-         * openssl_free_key is deprecated in PHP 8.0, so avoid calling it there:
-         *
-         * @psalm-suppress UndefinedClass
-         */
-        if ($key instanceof \OpenSSLAsymmetricKey) {
-            return;
-        }
-
-        /*
-         * TODO: Remove when PHP 7.x support is EOL
-         *
-         * @psalm-suppress MixedArgument
-         */
-        openssl_free_key($key); // phpcs:ignore
     }
 }

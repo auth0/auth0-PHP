@@ -143,28 +143,34 @@ final class PaginatedRequest
     {
         $response = [];
 
+        $page = $this->page ?? 0;
+        $take = $this->take;
+        $from = $this->from;
+        $perPage = $this->perPage;
+        $includeTotals = $this->includeTotals;
+
         // Are we using checkpoint pagination's ?take param?
-        if (null !== $this->take) {
-            $response['take'] = $this->take;
+        if (null !== $take) {
+            $response['take'] = $take;
         }
 
         // Are we using checkpoint pagination's ?from param?
-        if (null !== $this->from) {
-            $response['from'] = $this->from;
+        if (null !== $from) {
+            $response['from'] = $from;
 
             // Treat per_page as take for checkpoint pagination when a 'take' value isn't provided.
-            if (null === $this->take && null !== $this->perPage) {
-                $response['take'] = $this->perPage;
+            if (null === $take && null !== $perPage) {
+                $response['take'] = $perPage;
             }
         }
 
         // If we aren't using checkpoint pagination, and have set per_page ...
-        if (null === $this->take && null === $this->from && null !== $this->perPage) {
-            $response['page'] = $this->page ?? 0;
-            $response['per_page'] = $this->perPage ?? 0;
+        if (null === $take && null === $from && null !== $perPage) {
+            $response['page'] = $page;
+            $response['per_page'] = $perPage;
 
-            if (null !== $this->includeTotals) {
-                $response['include_totals'] = $this->includeTotals ? 'true' : 'false';
+            if (null !== $includeTotals) {
+                $response['include_totals'] = $includeTotals ? 'true' : 'false';
             }
         }
 
