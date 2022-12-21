@@ -1,13 +1,15 @@
 # Contribution Guide
 
-Before submitting your contribution, please make sure to take a moment and read through the following guidelines:
+## Table of Contents
 
-- [General Contribution Guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
-- [Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
-
-- [Bug Reports](#bug-reports)
-- [Pull Request Guidelines](#pull-request-guidelines)
-- [Development Setup](#development-setup)
+- [Getting Involved](#getting-involved)
+- [Support Questions](#support-questions)
+- [Code Contributions](#code-contributions)
+- [Security Vulnerabilities](#security-vulnerabilities)
+- [Coding Style](#coding-style)
+  - [PHPDoc](#phpdoc)
+  - [Pint](#pint)
+- [Code of Conduct](#code-of-conduct)
 
 ## Getting Involved
 
