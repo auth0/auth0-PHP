@@ -5,7 +5,7 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 [![Package](https://img.shields.io/packagist/dt/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-php)
 [![Unit Tests](https://github.com/auth0/auth0-PHP/actions/workflows/test-unit.yml/badge.svg)](https://github.com/auth0/auth0-PHP/actions/workflows/test-unit.yml)
 [![Acceptance Tests](https://github.com/auth0/auth0-PHP/actions/workflows/test-acceptance.yml/badge.svg)](https://github.com/auth0/auth0-PHP/actions/workflows/test-acceptance.yml)
-[![Coverage](https://img.shields.io/codecov/c/github/auth0/auth0-php)](hhttps://app.codecov.io/gh/auth0/auth0-PHP)
+[![Coverage](https://codecov.io/gh/auth0/auth0-PHP/branch/main/graph/badge.svg?token=PtrLf5j8JK)](https://codecov.io/gh/auth0/auth0-PHP)
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
 
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :computer: [API Reference](#api-reference) :speech_balloon: [Feedback](#feedback)
@@ -103,11 +103,11 @@ That's it! You have authenticated the user with Auth0. More examples can be foun
 
 Our support lifecycle mirrors the [PHP release support schedule](https://www.php.net/supported-versions.php). Our support for PHP versions end when they stop receiving security fixes.
 
-| SDK Version | PHP Version  | Support Ends  |
-|-------------|--------------|---------------|
-| 8           | 8.2          | Dec 2025      |
-|             | 8.1          | Nov 2024      |
-|             | 8.0          | Nov 2023      |
+| SDK Version | PHP Version | Support Ends |
+| ----------- | ----------- | ------------ |
+| 8           | 8.2         | Dec 2025     |
+|             | 8.1         | Nov 2024     |
+|             | 8.0         | Nov 2023     |
 
 Deprecations of EOL'd versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP environment always remains up to date, particularly in production.
 
