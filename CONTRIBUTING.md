@@ -73,7 +73,7 @@ public function bind($abstract, $concrete = null, $shared = false)
 
 ### Pint
 
-You should focus on the content of your contribution and not on the code styling. To this end, we use Pint to automatically check and fix the code styling.
+You should focus on the content of your contribution and not on the code styling. To this end, we use [Laravel Pint](https://github.com/laravel/pint) to automatically check and fix the code styling.
 
 Before creating a pull request, please run `composer pint` to review any necessary styling changes. `composer pint:fix` will attempt to automatically fix the issues.
 
