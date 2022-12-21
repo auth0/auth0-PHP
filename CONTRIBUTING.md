@@ -19,7 +19,7 @@ Remember, bug reports are created in the hope that others with the same problem 
 
 ## Support Questions
 
-Auth0's GitHub issue trackers are not intended to provide integration support. Instead, use the [Auth0 Community](https://community.auth0.com)
+Auth0's GitHub issue trackers are not intended to provide integration support. Instead, please refer your questions to the [Auth0 Community](https://community.auth0.com).
 
 ## Code Contributions
 
