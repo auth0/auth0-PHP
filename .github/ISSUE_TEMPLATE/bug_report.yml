@@ -6,11 +6,6 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to help us improve this SDK!
-
-  - type: markdown
-    attributes:
-      value: |
         **Please do not report security vulnerabilities here**. The [Responsible Disclosure Program](https://auth0.com/responsible-disclosure-policy) details the procedure for disclosing security issues.
 
   - type: checkboxes
