@@ -1,7 +1,5 @@
 # Contribution Guide
 
-## Table of Contents
-
 - [Getting Involved](#getting-involved)
 - [Support Questions](#support-questions)
 - [Code Contributions](#code-contributions)
