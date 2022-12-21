@@ -33,7 +33,7 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ### Installation
 
-Add the dependency to your application with [Composer](https://getcomposer.org/):
+After installing the [required dependencies](#requirements), add the SDK to your application with [Composer](https://getcomposer.org/):
 
 ```
 composer require auth0/auth0-php
