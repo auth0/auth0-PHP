@@ -1,37 +1,27 @@
-<!--
-  Please only send a pull request to branches that are currently supported.
+### Description
 
-  Pull requests without a descriptive title, clear description, or inadequate test coverage will be closed.
+<!-- Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
 
-  When proposing enhancements, please ensure you have created an issue and given the maintainers time to review your suggestion  prior to committing work. Pull requests without a linked issue labeled '👍 Accepted' by a maintainer may be closed.
--->
+Fixes # (issue)
 
-### Changes
+### Type of change
 
-<!--
-  Please describe what is being changed and why it is relevant.
--->
+<!-- Please delete options that are not relevant. -->
 
-### References
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] This change requires a documentation update
 
-<!--
-  Reference the associated issue labeled '👍 Accepted' by a maintainer.
--->
+### Checklist
 
-Resolves #
+<!-- This checklist MUST be completed for your pull request to be considered. -->
 
-### Testing
-
-<!--
-  How can we best test these changes? Please provide a step-by-step guide.
-  Tests should be added for new functionality and existing tests should complete without errors.
-  Run `composer test` to run the test suite before submitting changes.
--->
-
-- [ ] This adds test coverage for new/changed/fixed functionality
-- [ ] This has been tested on the latest version of PHP
-
-### Contributor Checklist
-
+- [ ] My code follows the [contributing guidelines of this repo](./CONTRIBUTING.md)
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] I have made corresponding changes to the documentation
+- [ ] My changes generate no new warnings
+- [ ] I have added tests that prove my fix is effective or that my feature works
+- [ ] New and existing unit tests pass with my changes
 - [ ] I have read the [Auth0 general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
 - [ ] I have read the [Auth0 code of conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)

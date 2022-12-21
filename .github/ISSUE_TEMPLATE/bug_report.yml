@@ -5,7 +5,33 @@ labels: ["Type: 🐞 Bug (Unconfirmed)", "Status: 👀 Reviewing"]
 body:
   - type: markdown
     attributes:
-      value: Thanks for taking the time to help us improve this SDK!
+      value: |
+        Thanks for taking the time to help us improve this SDK!
+
+  - type: markdown
+    attributes:
+      value: |
+        **Please do not report security vulnerabilities here**. The [Responsible Disclosure Program](https://auth0.com/responsible-disclosure-policy) details the procedure for disclosing security issues.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: The issue can be reproduced in a a sample app (either [webapp](https://github.com/auth0-samples/auth0-php-web-app) or [api](https://github.com/auth0-samples/auth0-php-api-samples)) (or N/A).
+          required: true
+        - label: I have looked into the [README](https://github.com/auth0/auth0-PHP#readme) and have not found a suitable solution or answer.
+          required: true
+        - label: I have looked into the [examples](https://github.com/auth0/auth0-PHP/blob/main/EXAMPLES.md) and have not found a suitable solution or answer.
+          required: true
+        - label: I have looked into the [API documentation](https://auth0.github.io/auth0-PHP/) and have not found a suitable solution or answer.
+          required: true
+        - label: I have searched the [issues](https://github.com/auth0/auth0-PHP/issues) and have not found a suitable solution or answer.
+          required: true
+        - label: I have searched the [Auth0 Community](https://community.auth0.com/tag/auth0-php) forums and have not found a suitable solution or answer.
+          required: true
+        - label: I agree to the terms within the [Auth0 Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md).
+          required: true
 
   - type: dropdown
     id: sdk
@@ -17,7 +43,7 @@ body:
         - 8.2
         - 8.1
         - 8.0
-        - Other (specify in 'additional context')
+        - Other (specify below)
     validations:
       required: true
 
@@ -30,15 +56,15 @@ body:
         - PHP 8.2
         - PHP 8.1
         - PHP 8.0
-        - Other (specify in 'additional context')
+        - Other (specify below)
     validations:
       required: true
 
   - type: textarea
     id: bug-description
     attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
+      label: Description
+      description: Provide a description of the issue, including what you expected to happen.
     validations:
       required: true
 
@@ -46,12 +72,6 @@ body:
     id: bug-reproduction
     attributes:
       label: How can we reproduce this issue?
-      description: Detail the steps taken to reproduce this error, and whether this can be reproduced consistently or if it is intermittent.
+      description: Detail the steps taken to reproduce this error. If possible, please provide a GitHub repository to demonstrate the issue.
     validations:
       required: true
-
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: Add any other context about the problem here.
