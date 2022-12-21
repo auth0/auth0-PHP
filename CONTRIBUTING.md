@@ -54,21 +54,22 @@ This SDK follows the [PSR-2](https://github.com/php-fig/fig-standards/blob/maste
 
 Below is an example of a valid documentation block. Note that the @param attribute is followed by two spaces, the argument type, two more spaces, and finally the variable name:
 
-/\*\*
-
-- Register a binding with the container.
--
-- @param string|array $abstract
-- @param \Closure|string|null $concrete
-- @param bool $shared
-- @return void
--
-- @throws \Exception
-  \*/
-  public function bind($abstract, $concrete = null, $shared = false)
-  {
-  //
-  }
+```php
+/**
+ * Register a binding with the container.
+ *
+ * @param  string|array  $abstract
+ * @param  \Closure|string|null  $concrete
+ * @param  bool  $shared
+ * @return void
+ *
+ * @throws \Exception
+ */
+public function bind($abstract, $concrete = null, $shared = false)
+{
+    //
+}
+```
 
 ### Pint
 
