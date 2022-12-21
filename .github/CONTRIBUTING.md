@@ -44,7 +44,7 @@ The following types are allowed:
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within the SDK, please do **not** report it in the issue tracker. Auth0's [Responsible Disclosure Program](https://auth0.com/responsible-disclosure-policy) details the procedure for disclosing security issues.
+If you discover a security vulnerability within this SDK, please review Auth0's [Responsible Disclosure Program](https://auth0.com/responsible-disclosure-policy) details the procedure for disclosing security issues. All security vulnerabilities will be promptly addressed.
 
 ## Coding Style
 
