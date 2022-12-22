@@ -240,7 +240,7 @@ Open the `routes/index.php` file. This will display profile information for auth
 ```php
 <?php
 
-// Returns an array of user information, or null if not authenticated
+// Returns an object containing session information, or null when not authenticated
 $session = $auth0->getCredentials();
 
 // When not authenticated, offer a login link
