@@ -19,8 +19,6 @@ A skeleton application template is available that includes the necessary boilerp
 composer create-project auth0/auth0-php:demo-skeleton auth0-php-demo
 ```
 
-Copy (or rename) the `.env.sample` file to `.env`.
-
 </details>
 
 <details>
