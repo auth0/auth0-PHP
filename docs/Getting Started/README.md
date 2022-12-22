@@ -16,8 +16,10 @@ You will need a project directory set up to work on the demo application. This g
 A skeleton application template is available that includes the necessary boilerplate and helper dependencies to get started.
 
 ```bash
-composer require auth0/auth0-php:demo-skeleton auth0-php-demo
+composer create-project auth0/auth0-php:demo-skeleton auth0-php-demo
 ```
+
+Copy (or rename) the `.env.sample` file to `.env`.
 
 </details>
 
