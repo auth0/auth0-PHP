@@ -130,8 +130,8 @@ composer require auth0/auth0-php:demo-skeleton auth0-php-demo
 
 ## Requirements
 
-- Please ensure you have [a supported version of PHP](../../README.md#requirements) installed.
-- You must have a [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) (HTTP factory) and [PSR-18](https://packagist.org/providers/psr/http-client-implementation) (HTTP client) library in your project before installing the SDK.
+- Have [a supported version of PHP](../../README.md#requirements) installed.
+- Have a [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) (HTTP factory) and [PSR-18](https://packagist.org/providers/psr/http-client-implementation) (HTTP client) library installed.
 
 ## Install the SDK
 
