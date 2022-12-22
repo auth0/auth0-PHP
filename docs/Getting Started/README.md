@@ -138,7 +138,7 @@ composer create-project auth0/auth0-php:demo-skeleton auth0-php-demo
 From your project root, use Composer to install the Auth0 SDK:
 
 ```bash
-composer require auth0/auth0-php --no-dev
+composer require auth0/auth0-php
 ```
 
 ## Configure Auth0
