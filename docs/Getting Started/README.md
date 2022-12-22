@@ -131,6 +131,7 @@ composer create-project auth0/auth0-php:demo-skeleton auth0-php-demo
 ## Requirements
 
 - Have [a supported version of PHP](../../README.md#requirements) installed.
+- Have the [mbstring extension](https://www.php.net/manual/en/book.mbstring.php) installed.
 - Have a [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) (HTTP factory) and [PSR-18](https://packagist.org/providers/psr/http-client-implementation) (HTTP client) library installed.
 
 ## Install the SDK
