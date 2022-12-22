@@ -2,40 +2,143 @@
 
 # Getting Started
 
-This guide will guide you through creating an example PHP application that uses Auth0's PHP SDK to authenticate users.
+This guide will guide you through creating a simple PHP application that uses Auth0's PHP SDK to authenticate users. You could also adapt these instructions toward integrating an existing PHP application.
 
 ## Pre-requisites
 
 [Composer](https://getcomposer.org/) must be installed before continuing. If you don't have it, [follow this installation guide](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos).
 
-This example will use a skeleton template to setup the example application's file structure. If you already have a project, you can skip this step.
+You will need a project directory set up to work on the demo application. This guide assumes your project is already set up with the necessary boilerplate and helper dependencies. Follow one of the following processes to get set up:
+
+<details>
+<summary><b>Setup using a template (recommended)</b></summary>
+
+A skeleton application template is available that includes the necessary boilerplate and helper dependencies to get started.
 
 ```bash
 composer require auth0/auth0-php:demo-skeleton auth0-php-demo
 ```
 
-Now `cd` into the new `auth0-php-demo` directory.
+</details>
 
-This example application will include dotenv and routing libraries to simplify it's structure:
+<details>
+<summary><b>Setup manually</b></summary>
 
-```bash
-composer require vlucas/phpdotenv nikic/fast-route
-```
+1. Create a directory called `auth0-php-demo` and open a shell in that directory.
+2. Run `composer init` and follow the prompts to create a `composer.json` file.
+3. Import a dotenv and routing library into the project to simplify the demo application:
+
+   ```bash
+   composer require vlucas/phpdotenv nikic/fast-route
+   ```
+
+4. Import a PSR-17 and PSR-18 library. Any implementations will work, but this guide will use these:
+
+   ```bash
+   composer require nyholm/psr7 kriswallsmith/buzz
+   ```
+
+5. Create the following file structure:
+
+   ```
+   .env
+   auth0.php
+   public/bootstrap.php
+   routes/index.php
+   routes/login.php
+   routes/callback.php
+   routes/logout.php
+   ```
+
+6. Paste the following into `bootstrap.php`:
+
+   ```php
+   <?php
+
+   // Import the Composer autoloader
+   require __DIR__ . '/vendor/autoload.php';
+
+   // Load the .env environment file
+   $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+   $dotenv->load();
+
+   // Configure and instantiate the SDK
+   require __DIR__ . '/../auth0.php';
+
+   if (getenv('HTTP_HOST') !== 'localhost') {
+        die('Please invoke this application from `localhost`.');
+   }
+
+   // Setup the routes for the application
+   $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
+       $r->addRoute('GET', '/', 'index');
+       $r->addRoute('GET', '/login', 'login');
+       $r->addRoute('GET', '/callback', 'callback');
+       $r->addRoute('GET', '/logout', 'logout');
+   });
+
+   // Fetch method and URI of the incoming request
+   $httpMethod = $_SERVER['REQUEST_METHOD'];
+   $uri = $_SERVER['REQUEST_URI'];
+
+   // Strip query string (?foo=bar) and decode URI
+   if (false !== $pos = strpos($uri, '?')) {
+       $uri = substr($uri, 0, $pos);
+   }
+   $uri = rawurldecode($uri);
+
+   // Match the incoming request against the routes
+   $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+   switch ($routeInfo[0]) {
+       case FastRoute\Dispatcher::NOT_FOUND:
+           // ... 404 Not Found
+           break;
+       case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+           $allowedMethods = $routeInfo[1];
+           // ... 405 Method Not Allowed
+           break;
+       case FastRoute\Dispatcher::FOUND:
+           $handler = $routeInfo[1];
+           $vars = $routeInfo[2];
+
+           // Include the route's matching PHP file
+           require __DIR__ . '/routes/' . $handler . '.php';
+           break;
+   }
+   ```
+
+7. Run the following command and make note of the returned string:
+
+   ```bash
+   openssl rand -hex 32
+   ```
+
+8. Paste the following into `.env`:
+
+   ```
+   AUTH0_DOMAIN=
+   AUTH0_CLIENT_ID=
+   AUTH0_CLIENT_SECRET=
+   AUTH0_COOKIE_SECRET=
+   ```
+
+   Set `AUTH0_COOKIE_SECRET` to the string returned from the previous step.
+
+</details>
+
+> **Note:** Throughout this guide we will refer to the `auth0-php-demo` directory as the "project root".
 
 ## Requirements
 
-The SDK requires [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) (HTTP factory) and [PSR-18](https://packagist.org/providers/psr/http-client-implementation) (HTTP client) libraries to be available in a host project. These handle the network messaging for the SDK. Any compatible libraries will work, but our example application will use these:
-
-```bash
-composer require nyholm/psr7 kriswallsmith/buzz
-```
+- Please ensure you have [a supported version of PHP](../README.md#requirements) installed.
+- You must have a [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) (HTTP factory) and [PSR-18](https://packagist.org/providers/psr/http-client-implementation) (HTTP client) library in your project prior to installing the SDK.
 
 ## Install the SDK
 
-You may now install the Auth0-PHP SDK:
+From your project root, use Composer to install the Auth0 SDK:
 
 ```bash
-composer require auth0/auth0-php
+composer require auth0/auth0-php --no-dev
 ```
 
 ## Configure Auth0
@@ -60,23 +163,14 @@ You'll need to update the following application settings:
   - Allowed Callback URLs — set to the URL of your application where Auth0 will redirect to during authentication, e.g., `http://localhost:3000/callback`.
   - Allowed Logout URLs — set to the URL of your application where Auth0 will redirect to after the user logs out, e.g., `http://localhost:3000/login`.
 
-> **Warning:** Ensure you use `localhost` in the callback and logout URLs, and only access the example application from that hostname. You'll get an error when Auth0 redirects back to the application if the hostname changes, due to cookie restrictions.
+## Configure the environment
 
-## Configure the application
-
-Open the `.env` file. This file will hold the example application's configuration. Fill in the blanks with the values you noted earlier.
-
-You'll also need to generate a cookie secret for your application's sessions.
+Open the `.env` file, which will hold the demo application's configuration. Fill in each line with your Auth0 application details, which were noted in the previous step.
 
 ```ini
-# Fill in the following values from the Auth0 application details
-AUTH0_DOMAIN=...
-AUTH0_CLIENT_ID=...
-AUTH0_CLIENT_SECRET=...
-
-# A sufficiently long, random string used to encrypt user sessions
-# e.g. use `openssl rand -hex 32` to generate a 32-character random string
-AUTH0_COOKIE_SECRET=...
+AUTH0_DOMAIN=
+AUTH0_CLIENT_ID=
+AUTH0_CLIENT_SECRET=…
 ```
 
 ## Instantiate the SDK
@@ -101,11 +195,11 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-Later, the bootstrap file will import this file and scope the `$auth0` variable, so that it's available within all our application route files.
+Our bootstrap imports this file and ensures the `$auth0` variable is available to the rest of the application.
 
-## Create a login route
+## Logging in
 
-Open the `app/login.php` file. You'll use this file to create a login route to start a session and redirect the user to Auth0's Universal Login Page.
+Open the `routes/login.php` file. This route will start an app session and redirect the user to Auth0's Universal Login Page for authentication.
 
 ```php
 <?php
@@ -114,37 +208,34 @@ Open the `app/login.php` file. You'll use this file to create a login route to s
 header('Location: ' . $auth0->login());
 ```
 
-## Create a callback route
+### Handling the callback
 
-Open the `app/callback.php` file. You'll use this file to create a callback route that will handle the response from Auth0 and log the user in.
+Open the `routes/callback.php` file. After authenticating with Auth0, users will be returned to the demo application at this route. The SDK handles the response and completes the authentication flow for the demo application.
 
 ```php
 <?php
 
-// Handle the returning user and log them in
+// Complete the authentication flow
 $auth0->exchange()
 
 // Redirect to the index route
 header('Location: /');
 ```
 
-## Create a logout route
+## Logging out
 
-Open the `app/logout.php` file. You'll use this file to create a logout route that will log the user out of our application.
+Open the `routes/logout.php` file. This will clear the app session, and redirect to [Auth0's logout endpoint](https://auth0.com/docs/authenticate/login/logout). After, users are returned to the demo application.
 
 ```php
 <?php
 
-// End the user's local session and return the Auth0 logout URL
-$logout = $auth0->logout();
-
-// Redirect to Auth0's logout endpoint to complete the logout
-header('Location: ' . $logout);
+// Redirect to Auth0's logout endpoint to complete the deauthentication
+header('Location: ' . $auth0->logout());
 ```
 
-## Create the index route
+## Accessing session information
 
-Open the `app/index.php` file. You'll use this file to create a profile route displaying the user's profile information.
+Open the `routes/index.php` file. This will display profile information for authenticated users, or offer a login link for those who are not.
 
 ```php
 <?php
@@ -165,69 +256,12 @@ echo '<p><pre>' . print_r($session->getUser(), true) . '</pre></p>';
 echo '<p><a href="/logout">Logout</a></p>';
 ```
 
-## Configure the application bootstrap
+## Run the demo application
 
-Open the `bootstrap.php` file. This file will define the example application's routes, handle incoming requests, import dependencies, and ensure the SDK is available to all the application's PHP files.
-
-Note that this file is not required for the SDK to work. It's simply a convenience to make the example application easier to manage.
-
-```php
-<?php
-
-// Import the Composer autoloader
-require __DIR__ . '/vendor/autoload.php';
-
-// Load the .env environment file
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
-// Configure and instantiate the SDK
-require __DIR__ . '/auth0.php';
-
-// Setup the routes for the application
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-    $r->addRoute('GET', '/', 'index');
-    $r->addRoute('GET', '/login', 'login');
-    $r->addRoute('GET', '/callback', 'callback');
-    $r->addRoute('GET', '/logout', 'logout');
-});
-
-// Fetch method and URI of the incoming request
-$httpMethod = $_SERVER['REQUEST_METHOD'];
-$uri = $_SERVER['REQUEST_URI'];
-
-// Strip query string (?foo=bar) and decode URI
-if (false !== $pos = strpos($uri, '?')) {
-    $uri = substr($uri, 0, $pos);
-}
-$uri = rawurldecode($uri);
-
-// Match the incoming request against the routes
-$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
-switch ($routeInfo[0]) {
-    case FastRoute\Dispatcher::NOT_FOUND:
-        // ... 404 Not Found
-        break;
-    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-        $allowedMethods = $routeInfo[1];
-        // ... 405 Method Not Allowed
-        break;
-    case FastRoute\Dispatcher::FOUND:
-        $handler = $routeInfo[1];
-        $vars = $routeInfo[2];
-
-        // Include the route's matching PHP file
-        require __DIR__ . '/app/' . $handler . '.php';
-        break;
-}
-```
-
-## Run the application
-
-You can now run the application and try it out. Start the PHP development server:
+Start the PHP local development server:
 
 ```bash
 php -S localhost:3000 -t public/bootstrap.php
 ```
 
-The example application will now be accessible to you at `http://localhost:3000`.
+Point your browser to `http://localhost:3000` to try the demo application.
