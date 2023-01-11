@@ -135,6 +135,7 @@ final class SdkConfiguration implements ConfigurableContract
         private ?string $managementToken = null,
         private ?CacheItemPoolInterface $managementTokenCache = null,
         private ?ListenerProviderInterface $eventListenerProvider = null,
+        private ?CacheItemPoolInterface $backchannelLogoutCache = null,
     ) {
         if (null !== $configuration && [] !== $configuration) {
             $this->applyConfiguration($configuration);
@@ -203,6 +204,25 @@ final class SdkConfiguration implements ConfigurableContract
         $this->setAudience(array_merge($this->audience ?? [], $audiences));
 
         return $this->audience;
+    }
+
+    public function setBackchannelTokenCache(?CacheItemPoolInterface $backchannelLogoutCache = null): self
+    {
+        $this->backchannelLogoutCache = $backchannelLogoutCache;
+
+        return $this;
+    }
+
+    public function getBackchannelLogoutCache(?\Throwable $exceptionIfNull = null): ?CacheItemPoolInterface
+    {
+        $this->exceptionIfNull($this->backchannelLogoutCache, $exceptionIfNull);
+
+        return $this->backchannelLogoutCache;
+    }
+
+    public function hasBackchannelLogoutCache(): bool
+    {
+        return null !== $this->backchannelLogoutCache;
     }
 
     public function setCookieDomain(?string $cookieDomain = null): self
@@ -1380,48 +1400,49 @@ final class SdkConfiguration implements ConfigurableContract
     private function getPropertyValidators(): array
     {
         return [
-            'strategy'              => static fn ($value) => \is_string($value),
-            'domain'                => static fn ($value) => \is_string($value) || null === $value,
-            'customDomain'          => static fn ($value) => \is_string($value) || null === $value,
-            'clientId'              => static fn ($value) => \is_string($value) || null === $value,
-            'redirectUri'           => static fn ($value) => \is_string($value) || null === $value,
-            'clientSecret'          => static fn ($value) => \is_string($value) || null === $value,
-            'audience'              => static fn ($value) => \is_array($value) || null === $value,
-            'organization'          => static fn ($value) => \is_array($value) || null === $value,
-            'usePkce'               => static fn ($value) => \is_bool($value),
-            'scope'                 => static fn ($value) => \is_array($value) || null === $value,
-            'responseMode'          => static fn ($value) => \is_string($value),
-            'responseType'          => static fn ($value) => \is_string($value),
-            'tokenAlgorithm'        => static fn ($value) => \is_string($value),
-            'tokenJwksUri'          => static fn ($value) => \is_string($value) || null === $value,
-            'tokenMaxAge'           => static fn ($value) => \is_int($value) || null === $value,
-            'tokenLeeway'           => static fn ($value) => \is_int($value),
-            'tokenCache'            => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
-            'tokenCacheTtl'         => static fn ($value) => \is_int($value),
-            'httpClient'            => static fn ($value) => $value instanceof ClientInterface || null === $value,
-            'httpMaxRetries'        => static fn ($value) => \is_int($value),
-            'httpRequestFactory'    => static fn ($value) => $value instanceof RequestFactoryInterface || null === $value,
-            'httpResponseFactory'   => static fn ($value) => $value instanceof ResponseFactoryInterface || null === $value,
-            'httpStreamFactory'     => static fn ($value) => $value instanceof StreamFactoryInterface || null === $value,
-            'httpTelemetry'         => static fn ($value) => \is_bool($value),
-            'sessionStorage'        => static fn ($value) => $value instanceof StoreInterface || null === $value,
-            'sessionStorageId'      => static fn ($value) => \is_string($value),
-            'cookieSecret'          => static fn ($value) => \is_string($value) || null === $value,
-            'cookieDomain'          => static fn ($value) => \is_string($value) || null === $value,
-            'cookieExpires'         => static fn ($value) => \is_int($value),
-            'cookiePath'            => static fn ($value) => \is_string($value),
-            'cookieSecure'          => static fn ($value) => \is_bool($value),
-            'cookieSameSite'        => static fn ($value) => \is_string($value) || null === $value,
-            'persistUser'           => static fn ($value) => \is_bool($value),
-            'persistIdToken'        => static fn ($value) => \is_bool($value),
-            'persistAccessToken'    => static fn ($value) => \is_bool($value),
-            'persistRefreshToken'   => static fn ($value) => \is_bool($value),
-            'transientStorage'      => static fn ($value) => $value instanceof StoreInterface || null === $value,
-            'transientStorageId'    => static fn ($value) => \is_string($value),
-            'queryUserInfo'         => static fn ($value) => \is_bool($value),
-            'managementToken'       => static fn ($value) => \is_string($value) || null === $value,
-            'managementTokenCache'  => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
-            'eventListenerProvider' => static fn ($value) => $value instanceof ListenerProviderInterface || null === $value,
+            'strategy'               => static fn ($value) => \is_string($value),
+            'domain'                 => static fn ($value) => \is_string($value) || null === $value,
+            'customDomain'           => static fn ($value) => \is_string($value) || null === $value,
+            'clientId'               => static fn ($value) => \is_string($value) || null === $value,
+            'redirectUri'            => static fn ($value) => \is_string($value) || null === $value,
+            'clientSecret'           => static fn ($value) => \is_string($value) || null === $value,
+            'audience'               => static fn ($value) => \is_array($value) || null === $value,
+            'organization'           => static fn ($value) => \is_array($value) || null === $value,
+            'usePkce'                => static fn ($value) => \is_bool($value),
+            'scope'                  => static fn ($value) => \is_array($value) || null === $value,
+            'responseMode'           => static fn ($value) => \is_string($value),
+            'responseType'           => static fn ($value) => \is_string($value),
+            'tokenAlgorithm'         => static fn ($value) => \is_string($value),
+            'tokenJwksUri'           => static fn ($value) => \is_string($value) || null === $value,
+            'tokenMaxAge'            => static fn ($value) => \is_int($value) || null === $value,
+            'tokenLeeway'            => static fn ($value) => \is_int($value),
+            'tokenCache'             => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'tokenCacheTtl'          => static fn ($value) => \is_int($value),
+            'httpClient'             => static fn ($value) => $value instanceof ClientInterface || null === $value,
+            'httpMaxRetries'         => static fn ($value) => \is_int($value),
+            'httpRequestFactory'     => static fn ($value) => $value instanceof RequestFactoryInterface || null === $value,
+            'httpResponseFactory'    => static fn ($value) => $value instanceof ResponseFactoryInterface || null === $value,
+            'httpStreamFactory'      => static fn ($value) => $value instanceof StreamFactoryInterface || null === $value,
+            'httpTelemetry'          => static fn ($value) => \is_bool($value),
+            'sessionStorage'         => static fn ($value) => $value instanceof StoreInterface || null === $value,
+            'sessionStorageId'       => static fn ($value) => \is_string($value),
+            'cookieSecret'           => static fn ($value) => \is_string($value) || null === $value,
+            'cookieDomain'           => static fn ($value) => \is_string($value) || null === $value,
+            'cookieExpires'          => static fn ($value) => \is_int($value),
+            'cookiePath'             => static fn ($value) => \is_string($value),
+            'cookieSecure'           => static fn ($value) => \is_bool($value),
+            'cookieSameSite'         => static fn ($value) => \is_string($value) || null === $value,
+            'persistUser'            => static fn ($value) => \is_bool($value),
+            'persistIdToken'         => static fn ($value) => \is_bool($value),
+            'persistAccessToken'     => static fn ($value) => \is_bool($value),
+            'persistRefreshToken'    => static fn ($value) => \is_bool($value),
+            'transientStorage'       => static fn ($value) => $value instanceof StoreInterface || null === $value,
+            'transientStorageId'     => static fn ($value) => \is_string($value),
+            'queryUserInfo'          => static fn ($value) => \is_bool($value),
+            'managementToken'        => static fn ($value) => \is_string($value) || null === $value,
+            'managementTokenCache'   => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'eventListenerProvider'  => static fn ($value) => $value instanceof ListenerProviderInterface || null === $value,
+            'backchannelLogoutCache' => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
         ];
     }
 
@@ -1431,48 +1452,49 @@ final class SdkConfiguration implements ConfigurableContract
     private function getPropertyDefaults(): array
     {
         return [
-            'strategy'              => self::STRATEGY_REGULAR,
-            'domain'                => null,
-            'customDomain'          => null,
-            'clientId'              => null,
-            'redirectUri'           => null,
-            'clientSecret'          => null,
-            'audience'              => null,
-            'organization'          => null,
-            'usePkce'               => true,
-            'scope'                 => ['openid', 'profile', 'email'],
-            'responseMode'          => 'query',
-            'responseType'          => 'code',
-            'tokenAlgorithm'        => Token::ALGO_RS256,
-            'tokenJwksUri'          => null,
-            'tokenMaxAge'           => null,
-            'tokenLeeway'           => 60,
-            'tokenCache'            => null,
-            'tokenCacheTtl'         => 60,
-            'httpClient'            => null,
-            'httpMaxRetries'        => 3,
-            'httpRequestFactory'    => null,
-            'httpResponseFactory'   => null,
-            'httpStreamFactory'     => null,
-            'httpTelemetry'         => true,
-            'sessionStorage'        => null,
-            'sessionStorageId'      => 'auth0_session',
-            'cookieSecret'          => null,
-            'cookieDomain'          => null,
-            'cookieExpires'         => 0,
-            'cookiePath'            => '/',
-            'cookieSecure'          => false,
-            'cookieSameSite'        => null,
-            'persistUser'           => true,
-            'persistIdToken'        => true,
-            'persistAccessToken'    => true,
-            'persistRefreshToken'   => true,
-            'transientStorage'      => null,
-            'transientStorageId'    => 'auth0_transient',
-            'queryUserInfo'         => false,
-            'managementToken'       => null,
-            'managementTokenCache'  => null,
-            'eventListenerProvider' => null,
+            'strategy'               => self::STRATEGY_REGULAR,
+            'domain'                 => null,
+            'customDomain'           => null,
+            'clientId'               => null,
+            'redirectUri'            => null,
+            'clientSecret'           => null,
+            'audience'               => null,
+            'organization'           => null,
+            'usePkce'                => true,
+            'scope'                  => ['openid', 'profile', 'email'],
+            'responseMode'           => 'query',
+            'responseType'           => 'code',
+            'tokenAlgorithm'         => Token::ALGO_RS256,
+            'tokenJwksUri'           => null,
+            'tokenMaxAge'            => null,
+            'tokenLeeway'            => 60,
+            'tokenCache'             => null,
+            'tokenCacheTtl'          => 60,
+            'httpClient'             => null,
+            'httpMaxRetries'         => 3,
+            'httpRequestFactory'     => null,
+            'httpResponseFactory'    => null,
+            'httpStreamFactory'      => null,
+            'httpTelemetry'          => true,
+            'sessionStorage'         => null,
+            'sessionStorageId'       => 'auth0_session',
+            'cookieSecret'           => null,
+            'cookieDomain'           => null,
+            'cookieExpires'          => 0,
+            'cookiePath'             => '/',
+            'cookieSecure'           => false,
+            'cookieSameSite'         => null,
+            'persistUser'            => true,
+            'persistIdToken'         => true,
+            'persistAccessToken'     => true,
+            'persistRefreshToken'    => true,
+            'transientStorage'       => null,
+            'transientStorageId'     => 'auth0_transient',
+            'queryUserInfo'          => false,
+            'managementToken'        => null,
+            'managementTokenCache'   => null,
+            'eventListenerProvider'  => null,
+            'backchannelLogoutCache' => null,
         ];
     }
 }

@@ -95,6 +95,18 @@ interface Auth0Interface
     ): string;
 
     /**
+     * Store a OIDC Backchannel Logout request in the cache. Matching sessions will be invalidated on future requests when getCredentials() is called.
+     *
+     * @param  string  $logoutToken  An encoded logout token to validate and process.
+     *
+     * @throws \Auth0\SDK\Exception\ConfigurationException when used without statefulness being configured
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when token validation fails. See the exception message for further details.
+     */
+    public function handleBackchannelLogout(
+        string $logoutToken,
+    ): TokenInterface;
+
+    /**
      * Delete any persistent data and clear out all stored properties.
      *
      * @param  bool  $transient  when true, data in transient storage is also cleared
@@ -204,6 +216,11 @@ interface Auth0Interface
     public function getAccessTokenExpiration(): ?int;
 
     /**
+     * Get the OIDC backchannel logout key generated during exchange(). This is used for session matching with getCredentials() calls, for comparison against cached requests from handleBackchannelLogout().
+     */
+    public function getBackchannel(): ?string;
+
+    /**
      * Updates the active session's stored Id Token.
      *
      * @param  string  $idToken  id token returned from the code exchange
@@ -255,6 +272,15 @@ interface Auth0Interface
      */
     public function setAccessTokenExpiration(
         int $accessTokenExpiration,
+    ): self;
+
+    /**
+     * Sets and persists an identifier used for OIDC backchannel logout requests.
+     *
+     * @param  string  $backchannel  an OIDC backchannel logout identifier composed of the sub, iss and sid claims from the source ID Token.
+     */
+    public function setBackchannel(
+        string $backchannel,
     ): self;
 
     /**

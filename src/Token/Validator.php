@@ -138,6 +138,22 @@ final class Validator implements ValidatorInterface
     }
 
     /**
+     * Validate the 'sid' claim is present.
+     *
+     * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails
+     */
+    public function identifier(): self
+    {
+        $issued = $this->getClaim('sid');
+
+        if (null === $issued) {
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingSidClaim();
+        }
+
+        return $this;
+    }
+
+    /**
      * Validate the 'iat' claim is present.
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException when claim validation fails

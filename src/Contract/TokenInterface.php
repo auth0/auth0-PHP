@@ -84,6 +84,11 @@ interface TokenInterface
     public function getExpiration(): ?int;
 
     /**
+     * Get the contents of the 'sid' claim. Null if not present.
+     */
+    public function getIdentifier(): ?string;
+
+    /**
      * Get the contents of the 'iat' claim. Null if not present.
      */
     public function getIssued(): ?int;

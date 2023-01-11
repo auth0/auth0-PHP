@@ -15,11 +15,15 @@ use Psr\Cache\CacheItemPoolInterface;
 final class Token implements TokenInterface
 {
     public const TYPE_ID_TOKEN = 1;
+    public const TYPE_ACCESS_TOKEN = 2;
+    public const TYPE_LOGOUT_TOKEN = 3;
 
+    /**
+     * @deprecated Use TYPE_ACCESS_TOKEN instead.
+     */
     public const TYPE_TOKEN = 2;
 
     public const ALGO_RS256 = 'RS256';
-
     public const ALGO_HS256 = 'HS256';
 
     private ?Parser $parser = null;
@@ -95,6 +99,16 @@ final class Token implements TokenInterface
         $validator = $this->getParser()->validate();
         $tokenNow ??= time();
 
+        if (self::TYPE_LOGOUT_TOKEN === $this->type) {
+            if (null !== $this->getParser()->getClaim('nonce')) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::logoutTokenNoncePresent();
+            }
+
+            if (null !== $this->getParser()->getClaim('events')) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::logoutTokenEventsPresent();
+            }
+        }
+
         $validator->
             issuer($tokenIssuer)->
             audience($tokenAudience)->
@@ -155,6 +169,13 @@ final class Token implements TokenInterface
         $response = $this->getParser()->getClaim('exp');
 
         return null === $response ? null : (int) $response;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        $claim = $this->getParser()->getClaim('sid');
+        /** @var string|null $claim */
+        return $claim;
     }
 
     public function getIssued(): ?int

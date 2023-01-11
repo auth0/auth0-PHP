@@ -30,6 +30,7 @@ final class SdkState implements ConfigurableContract
         public ?string $refreshToken = null,
         public ?array $user = null,
         public ?int $accessTokenExpiration = null,
+        public ?string $backchannel = null,
     ) {
         if (null !== $configuration && [] !== $configuration) {
             $this->applyConfiguration($configuration);
@@ -201,6 +202,29 @@ final class SdkState implements ConfigurableContract
     public function hasAccessTokenExpiration(): bool
     {
         return null !== $this->accessTokenExpiration;
+    }
+
+    public function setBackchannel(?string $backchannel = null): self
+    {
+        if (null !== $backchannel && '' === trim($backchannel)) {
+            $backchannel = null;
+        }
+
+        $this->backchannel = $backchannel;
+
+        return $this;
+    }
+
+    public function getBackchannel(?\Throwable $exceptionIfNull = null): ?string
+    {
+        $this->exceptionIfNull($this->backchannel, $exceptionIfNull);
+
+        return $this->backchannel;
+    }
+
+    public function hasBackchannel(): bool
+    {
+        return null !== $this->backchannel;
     }
 
     /**

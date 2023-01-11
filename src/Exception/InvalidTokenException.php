@@ -41,6 +41,8 @@ final class InvalidTokenException extends \Exception implements Auth0Exception
 
     public const MSG_MISSING_ORG_ID_CLAIM = 'Organization Id (org_id) claim must be a string present in the token';
 
+    public const MSG_MISSING_SID_CLAIM = 'Identifier (sid) claim must be a number present in the token';
+
     public const MSG_MISSING_SUB_CLAIM = 'Subject (sub) claim must be a string present in the token';
 
     public const MSG_MISSING_ALG_HEADER = 'Provided token is missing a alg header';
@@ -60,6 +62,10 @@ final class InvalidTokenException extends \Exception implements Auth0Exception
     public const MSG_MISMATCHED_NONCE_CLAIM = 'Nonce (nonce) claim mismatch in the token; expected "%s", found "%s"';
 
     public const MSG_MISMATCHED_ORG_ID_CLAIM = 'Organization Id (org_id) claim value mismatch in the token; expected "%s", found "%s"';
+
+    public const MSG_LOGOUT_TOKEN_EVENTS_PRESENT = 'Valid logout tokens cannot include `events` claims';
+
+    public const MSG_LOGOUT_TOKEN_NONCE_PRESENT = 'Valid logout tokens cannot include `nonce` claims';
 
     public static function badSeparators(
         ?\Throwable $previous = null,
@@ -160,6 +166,12 @@ final class InvalidTokenException extends \Exception implements Auth0Exception
         return new self(self::MSG_MISSING_ORG_ID_CLAIM, 0, $previous);
     }
 
+    public static function missingSidClaim(
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_MISSING_SID_CLAIM, 0, $previous);
+    }
+
     public static function missingSubClaim(
         ?\Throwable $previous = null,
     ): self {
@@ -232,6 +244,18 @@ final class InvalidTokenException extends \Exception implements Auth0Exception
         ?\Throwable $previous = null,
     ): self {
         return new self(sprintf(self::MSG_MISMATCHED_ORG_ID_CLAIM, $expected, $found), 0, $previous);
+    }
+
+    public static function logoutTokenEventsPresent(
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_LOGOUT_TOKEN_EVENTS_PRESENT, 0, $previous);
+    }
+
+    public static function logoutTokenNoncePresent(
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_LOGOUT_TOKEN_NONCE_PRESENT, 0, $previous);
     }
 
     public static function jsonError(

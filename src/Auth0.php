@@ -184,6 +184,46 @@ final class Auth0 implements Auth0Interface
         return $this->authentication()->getLogoutLink($returnUri, $params);
     }
 
+    public function handleBackchannelLogout(
+        string $logoutToken,
+    ): TokenInterface {
+        $cache = $this->configuration()->getBackchannelLogoutCache();
+
+        // The SDK must be configured for authentication (statefulness) to invoke this method.
+        if (! $this->configuration()->usingStatefulness() || ! $cache instanceof \Psr\Cache\CacheItemPoolInterface) {
+            throw ConfigurationException::requiresStatefulness('Auth0->handleBackchannelLogout()');
+        }
+
+        // Decode the logout token. If this ste fails, an exception will be thrown.
+        $token = $this->decode(
+            token: $logoutToken,
+            tokenType: \Auth0\SDK\Token::TYPE_LOGOUT_TOKEN,
+        );
+
+        // Create a reference key for comparison against future requests.
+        $backchannel = hash('sha256', implode('|', [$token->getSubject() ?? '', $token->getIssuer() ?? '', $token->getIdentifier() ?? '']));
+
+        // Retrieve any existing reference, or silently create a new one.
+        $request = $cache->getItem($backchannel);
+
+        // Setup the backchannel logout request record:
+        $request->set(json_encode([
+            'sub' => $token->getSubject(),
+            'iss' => $token->getIssuer(),
+            'sid' => $token->getIdentifier(),
+            'iat' => $token->getIssued(),
+        ]));
+
+        // Let the backchannel logout request fall off after a reasonable amount of time.
+        $request->expiresAfter(time() + (86400 * 30));
+
+        // Finally, add this to the Backchannel Logout cache.
+        $cache->save($request);
+
+        // Inform the host application everything we successful.
+        return $token;
+    }
+
     public function clear(
         bool $transient = true,
     ): self {
@@ -306,6 +346,7 @@ final class Auth0 implements Auth0Interface
         }
 
         $response = HttpResponse::decodeContent($response);
+        $token = null;
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
         if (isset($response['id_token'])) {
@@ -316,7 +357,14 @@ final class Auth0 implements Auth0Interface
             }
 
             try {
-                $user = $this->decode($response['id_token'])->toArray();
+                $token = $this->decode($response['id_token']);
+
+                $sub = $token->getSubject() ?? '';
+                $iss = $token->getIssuer() ?? '';
+                $sid = $token->getIdentifier() ?? '';
+                $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
+
+                $user = $token->toArray();
                 $this->setIdToken($response['id_token']);
             } catch (\Throwable $tokenException) {
                 $this->clear();
@@ -410,27 +458,47 @@ final class Auth0 implements Auth0Interface
 
     public function getCredentials(): ?object
     {
-        $user = $this->getState()->getUser();
+        // Retrieve the session state using the configured `sessionStore`:
+        $state = $this->getState();
 
-        if (null === $user) {
+        if (null === $state->getUser()) {
             return null;
         }
 
-        $idToken = $this->getState()->getIdToken();
-        $accessToken = $this->getState()->getAccessToken();
-        $accessTokenScope = $this->getState()->getAccessTokenScope();
-        $accessTokenExpiration = (int) $this->getState()->getAccessTokenExpiration();
+        $idToken = $state->getIdToken();
+
+        // If this is an authenticated pseudo-stateful session (i.e. not authorizing an access token) ...
+        if (null !== $idToken) {
+            $cache = $this->configuration()->getBackchannelLogoutCache();
+
+            // Does the session have a backchannel key available for lookup?
+            $backchannel = $state->getBackchannel();
+
+            // Is there a pending logout?
+            if (null !== $backchannel && $cache instanceof \Psr\Cache\CacheItemPoolInterface && $cache->getItem($backchannel)->isHit()) {
+                // Reset the client-side session state
+                $this->clear(true);
+
+                // Cleanup the server-side session state:
+                $this->getState(true);
+
+                // Return NULL, indicating a session was not available, to the host app.
+                return null;
+            }
+        }
+
+        $accessTokenExpiration = (int) $state->getAccessTokenExpiration();
         $accessTokenExpired = time() >= $accessTokenExpiration;
-        $refreshToken = $this->getState()->getRefreshToken();
 
         return (object) [
-            'user'                  => $user,
+            'user'                  => $state->getUser(),
             'idToken'               => $idToken,
-            'accessToken'           => $accessToken,
-            'accessTokenScope'      => $accessTokenScope ?? [],
+            'accessToken'           => $state->getAccessToken(),
+            'accessTokenScope'      => $state->getAccessTokenScope() ?? [],
             'accessTokenExpiration' => $accessTokenExpiration,
             'accessTokenExpired'    => $accessTokenExpired,
-            'refreshToken'          => $refreshToken,
+            'refreshToken'          => $state->getRefreshToken(),
+            'backchannel'           => $state->getBackchannel(),
         ];
     }
 
@@ -462,6 +530,11 @@ final class Auth0 implements Auth0Interface
     public function getAccessTokenExpiration(): ?int
     {
         return $this->getState()->getAccessTokenExpiration();
+    }
+
+    public function getBackchannel(): ?string
+    {
+        return $this->getState()->getBackchannel();
     }
 
     public function getBearerToken(
@@ -589,6 +662,18 @@ final class Auth0 implements Auth0Interface
 
         if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage() && $this->configuration()->getPersistAccessToken()) {
             $this->configuration()->getSessionStorage()->set('accessTokenExpiration', $accessTokenExpiration);
+        }
+
+        return $this;
+    }
+
+    public function setBackchannel(
+        string $backchannel,
+    ): self {
+        $this->getState()->setBackchannel($backchannel);
+
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage()) {
+            $this->configuration()->getSessionStorage()->set('backchannel', $backchannel);
         }
 
         return $this;
@@ -728,7 +813,7 @@ final class Auth0 implements Auth0Interface
 
         if ('' !== $token) {
             try {
-                return $this->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN);
+                return $this->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_ACCESS_TOKEN);
             } catch (\Auth0\SDK\Exception\InvalidTokenException $exception) {
                 return null;
             }

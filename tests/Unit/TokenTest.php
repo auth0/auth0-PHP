@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
@@ -65,7 +66,7 @@ it('accepts and successfully parses a valid RS256 Access Token', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
 ): void {
-    $token = new Token($configuration, $jwt->token, Token::TYPE_TOKEN);
+    $token = new Token($configuration, $jwt->token, Token::TYPE_ACCESS_TOKEN);
 
     expect($token)->toBeObject();
     expect($token->getAudience()[0] ?? null)->toEqual($jwt->claims['aud'] ?? null);
@@ -86,7 +87,7 @@ it('accepts and successfully parses a valid HS256 Access Token', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
 ): void {
-    $token = new Token($configuration, $jwt->token, Token::TYPE_TOKEN);
+    $token = new Token($configuration, $jwt->token, Token::TYPE_ACCESS_TOKEN);
 
     expect($token)->toBeObject();
     expect($token->getAudience()[0] ?? null)->toEqual($jwt->claims['aud'] ?? null);
@@ -102,6 +103,114 @@ it('accepts and successfully parses a valid HS256 Access Token', function(
     fn() => $this->configuration,
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_HS256)
 ]]);
+
+it('accepts and successfully parses a valid RS256 Logout Token', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+
+    expect($token)->toBeObject();
+    expect($token->getAudience()[0] ?? null)->toEqual($jwt->claims['aud'] ?? null);
+    expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
+    expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
+    expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
+    expect($token->getIssued())->toEqual($jwt->claims['iat'] ?? null);
+    expect($token->getIssuer())->toEqual($jwt->claims['iss'] ?? null);
+    expect($token->getOrganization())->toEqual($jwt->claims['org_id'] ?? null);
+    expect($token->getSubject())->toEqual($jwt->claims['sub'] ?? null);
+})->with(['mocked rs256 id token' => [
+    fn() => $this->configuration,
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_RS256)
+]]);
+
+it('accepts and successfully parses a valid HS256 Logout Token', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+
+    expect($token)->toBeObject();
+    expect($token->getAudience()[0] ?? null)->toEqual($jwt->claims['aud'] ?? null);
+    expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
+    expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
+    expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
+    expect($token->getIssued())->toEqual($jwt->claims['iat'] ?? null);
+    expect($token->getIssuer())->toEqual($jwt->claims['iss'] ?? null);
+    expect($token->getOrganization())->toEqual($jwt->claims['org_id'] ?? null);
+    expect($token->getSubject())->toEqual($jwt->claims['sub'] ?? null);
+})->with(['mocked hs256 id token' => [
+    fn() => $this->configuration,
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256)
+]]);
+
+it('fails validating an otherwise valid Id Token as a Logout Token', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+    $token->validate();
+})->with(['mocked hs256 access token' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256)
+]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_LOGOUT_TOKEN_NONCE_PRESENT);
+
+it('fails validating an otherwise valid Access Token as a Logout Token', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+    $token->validate();
+})->with(['mocked hs256 access token' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_HS256)
+]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_LOGOUT_TOKEN_NONCE_PRESENT);
+
+it('fails validating a Logout Token with a `nonce` claim', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+    $token->validate();
+})->with(['mocked hs256 access token' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256, ['nonce' => '__test_nonce__'])
+]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_LOGOUT_TOKEN_NONCE_PRESENT);
+
+it('fails validating a Logout Token with an `events` claim', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+    $token->validate();
+})->with(['mocked hs256 access token' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256, ['events' => ['__test_event_1', '__test_event_2']])
+]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_LOGOUT_TOKEN_EVENTS_PRESENT);
 
 test('verify() returns a fluent interface', function(
     SdkConfiguration $configuration,

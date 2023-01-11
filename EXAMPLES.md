@@ -100,6 +100,7 @@ $api->emailPasswordlessStart(
   email: 'someone@somewhere.com',
 );
 ```
+
 ## Management API
 
 Use `Auth0->management()` to retrieve endpoint classes for interacting with the Management API.
@@ -143,7 +144,7 @@ $auth0 = new Auth0($configuration);
 
 $token = $auth0->decode(
   token: '...',
-  tokenType: Token::TYPE_TOKEN,
+  tokenType: Token::TYPE_ACCESS_TOKEN,
 );
 
 print_r($token);
@@ -227,7 +228,7 @@ $auth0 = new Auth0($configuration);
 
 The following options must also be configured to use a `CookieStore`:
 
--  [`strategy`](#strategy-configuration) must be `SdkConfiguration::STRATEGY_REGULAR`.
+- [`strategy`](#strategy-configuration) must be `SdkConfiguration::STRATEGY_REGULAR`.
 - `cookieSecret` — an encryption key for the session cookie.
 - `cookieDomain` — when sharing session cookies across multiple subdomains, use your FQDN with a dot in front, e.g. `.yourdomain.com`.
 - `cookieExpires` — the expiration time (in seconds) for the session cookie.

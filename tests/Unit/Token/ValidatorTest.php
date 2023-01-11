@@ -14,6 +14,7 @@ beforeEach(function() {
     $this->claims = [
         'sub' => uniqid(),
         'iss' => uniqid(),
+        'sid' => uniqid(),
         'aud' => uniqid(),
         'nonce' => uniqid(),
         'auth_time' => time() - 100,
@@ -67,6 +68,11 @@ test('expiration() throws an exception when `exp` claim is less than present tim
     $this->claims['exp'] = time() - 1000;
     (new Validator($this->claims))->expiration();
 })->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
+
+test('issued() throws an exception when `sid` claim is missing', function(): void {
+    unset($this->claims['sid']);
+    (new Validator($this->claims))->identifier();
+})->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_SID_CLAIM);
 
 test('issued() throws an exception when `iat` claim is missing', function(): void {
     unset($this->claims['iat']);

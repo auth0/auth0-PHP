@@ -286,6 +286,51 @@ test('logout() returns a a valid logout url', function(): void {
             ->toContain('rand=' . $randomParam);
 });
 
+test('handleBackchannelLogout() requires statefulness', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+    $auth0->handleBackchannelLogout(uniqid());
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SESSION_REQUIRED, 'Auth0->handleBackchannelLogout()'));
+
+test('handleBackchannelLogout() handles a valid request', function(): void {
+    $sub = 'SUB' . uniqid();
+    $iss = 'https://' . uniqid() . '.ISS';
+    $sid = 'SID' . uniqid();
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_RS256,
+        claims: [
+            'sub' => $sub,
+            'iss' => $iss . '/',
+            'sid' => $sid
+        ],
+    );
+
+    $backchannel = hash('sha256', implode('|', [$sub, $iss . '/', $sid]));
+
+    $pool = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'strategy' => \Auth0\SDK\Configuration\SdkConfiguration::STRATEGY_REGULAR,
+        'domain' => $iss,
+        'tokenJwksUri' => $logoutToken->jwks,
+        'tokenCache' => $logoutToken->cached,
+        'backchannelLogoutCache' => $pool,
+    ]));
+
+    $item = $pool->getItem($backchannel);
+    expect($item->isHit())->toBeFalse();
+
+    $decoded = $auth0->handleBackchannelLogout($logoutToken->token);
+
+    expect($decoded->getSubject())->toEqual($sub);
+    expect($decoded->getIdentifier())->toEqual($sid);
+    expect($decoded->getIssuer())->toEqual($iss . '/');
+
+    $item = $pool->getItem($backchannel);
+    expect($item->isHit())->toBeTrue();
+});
+
 test('decode() uses the configured cache handler', function(): void {
     $cacheKey = hash('sha256', $this->configuration['domain'] . '/.well-known/jwks.json');
     $mockJwks = [
@@ -413,7 +458,24 @@ test('decode() can be used with access tokens', function (): void {
         null,
         null,
         null,
-        \Auth0\SDK\Token::TYPE_TOKEN,
+        \Auth0\SDK\Token::TYPE_ACCESS_TOKEN,
+    );
+
+    expect($decoded->getAudience())->toContain('__test_client_id__');
+});
+
+test('decode() can be used with logout tokens', function (): void {
+    $mockLogoutToken = TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256, [
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $decoded = $auth0->decode(
+        token: $mockLogoutToken->token,
+        tokenType: \Auth0\SDK\Token::TYPE_LOGOUT_TOKEN,
     );
 
     expect($decoded->getAudience())->toContain('__test_client_id__');
@@ -738,8 +800,63 @@ test('getCredentials() returns the expected object structure when a session is a
     $this->assertObjectHasAttribute('accessTokenExpiration', $credentials);
     $this->assertObjectHasAttribute('accessTokenExpired', $credentials);
     $this->assertObjectHasAttribute('refreshToken', $credentials);
+    $this->assertObjectHasAttribute('backchannel', $credentials);
 
     expect($credentials->user)->toBeArray();
+});
+
+test('getCredentials() returns null when matching backchannel request is queued', function(): void {
+    $issuer = 'https://' . $this->configuration['domain'] . '/';
+    $sid = uniqid();
+
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'sid' => $sid,
+        'iss' => $issuer,
+    ]);
+
+    $pool = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'tokenAlgorithm' => 'HS256',
+        'backchannelLogoutCache' => $pool,
+    ]));
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"test:part1,test:part2,test:part3","expires_in":300}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $credentials = $auth0->getCredentials();
+    expect($credentials)
+        ->toBeObject()
+        ->toHaveProperty('backchannel')
+            ->not()->toBeEmpty();
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_HS256,
+        claims: [
+            'sub' => '__test_sub__',
+            'iss' => $issuer,
+            'sid' => $sid,
+        ],
+    );
+
+    $auth0->handleBackchannelLogout($logoutToken->token);
+
+    $credentials = $auth0->getCredentials();
+    expect($credentials)->toBeNull();
 });
 
 test('setIdToken() properly stores data', function(): void {
@@ -1022,6 +1139,7 @@ test('getBearerToken() correctly silently handles token validation exceptions', 
         'tokenCache' => $candidate->cached
     ]));
 
+    // This SHOULD fail because the configured domain will not match the iss claim of the mock token.
     $this->assertEquals($auth0->getBearerToken(
         [$testParameterName],
     ), null);

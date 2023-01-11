@@ -18,11 +18,30 @@ class TokenGenerator
 
     public const TOKEN_ID = 1;
     public const TOKEN_ACCESS = 2;
+    public const TOKEN_LOGOUT = 3;
 
-    protected static function getAccessTokenClaims(
-        array $overrides
+    protected static function getIdTokenClaims(
+        array $overrides = []
     ): array {
         $defaults = [
+            'sub' => '__test_sub__',
+            'iss' => 'https://domain.test/',
+            'aud' => '__test_client_id__',
+            'nonce' => '__test_nonce__',
+            'auth_time' => time() - 100,
+            'exp' => time() + 1000,
+            'iat' => time() - 1000,
+            'azp' => '__test_azp__'
+        ];
+
+        return array_merge($defaults, $overrides);
+    }
+
+    protected static function getAccessTokenClaims(
+        array $overrides = []
+    ): array {
+        $defaults = [
+            'iss' => 'https://domain.test/',
             'aud' => '__test_client_id__',
             'nonce' => '__test_nonce__',
             'auth_time' => time() - 100,
@@ -33,14 +52,13 @@ class TokenGenerator
         return array_merge($defaults, $overrides);
     }
 
-    protected static function getIdTokenClaims(
-        array $overrides
+    protected static function getLogoutTokenClaims(
+        array $overrides = []
     ): array {
         $defaults = [
             'sub' => '__test_sub__',
             'iss' => 'https://domain.test/',
             'aud' => '__test_client_id__',
-            'nonce' => '__test_nonce__',
             'auth_time' => time() - 100,
             'exp' => time() + 1000,
             'iat' => time() - 1000,
@@ -128,18 +146,41 @@ class TokenGenerator
     public static function withHs256(
         array $claims = [],
         string $key = '__test_client_secret__',
-        $headers = []
+        $headers = [],
+        ?int $tokenType = self::TOKEN_ID
     ): string {
-        $claims = self::getIdTokenClaims($claims);
+        if ($tokenType === self::TOKEN_ACCESS) {
+            $claims = self::getAccessTokenClaims($claims);
+        }
+
+        if ($tokenType === self::TOKEN_ID) {
+            $claims = self::getIdTokenClaims($claims);
+        }
+
+        if ($tokenType === self::TOKEN_LOGOUT) {
+            $claims = self::getLogoutTokenClaims($claims);
+        }
+
         return JWT::encode($claims, $key, 'HS256', null, $headers + ['alg' => 'HS256']);
     }
 
     public static function withRs256(
         array $claims = [],
         ?string $privateKey = null,
-        $headers = []
+        array $headers = [],
+        ?int $tokenType = self::TOKEN_ID
     ): string {
-        $claims = self::getIdTokenClaims($claims);
+        if ($tokenType === self::TOKEN_ACCESS) {
+            $claims = self::getAccessTokenClaims($claims);
+        }
+
+        if ($tokenType === self::TOKEN_ID) {
+            $claims = self::getIdTokenClaims($claims);
+        }
+
+        if ($tokenType === self::TOKEN_LOGOUT) {
+            $claims = self::getLogoutTokenClaims($claims);
+        }
 
         if ($privateKey === null) {
             $rsaKeyPair = self::generateRsaKeyPair();
@@ -170,24 +211,16 @@ class TokenGenerator
     ): TokenGeneratorResponse {
         $keys = null;
 
-        if ($tokenType === self::TOKEN_ACCESS) {
-            $claims = self::getAccessTokenClaims($claims);
-        }
-
-        if ($tokenType === self::TOKEN_ID) {
-            $claims = self::getIdTokenClaims($claims);
-        }
-
         if ($algorithm === self::ALG_RS256) {
             $keys = self::generateRsaKeyPair();
             $headers = array_merge(['kid' => '__test_kid__'], $headers);
-            $token = self::withRs256($claims, $keys['private'], $headers);
+            $token = self::withRs256($claims, $keys['private'], $headers, $tokenType);
             $keys['cert'] = trim(mb_substr($keys['cert'], strpos($keys['cert'], "\n")+1));
             $keys['cert'] = str_replace("\n", '', mb_substr($keys['cert'], 0, strrpos($keys['cert'], "\n")));
         }
 
         if ($algorithm === self::ALG_HS256) {
-            $token = self::withHs256($claims, '__test_client_secret__', $headers);
+            $token = self::withHs256($claims, '__test_client_secret__', $headers, $tokenType);
         }
 
         [$headers, $claims, $signature] = explode('.', $token);
