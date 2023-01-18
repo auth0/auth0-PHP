@@ -141,7 +141,6 @@ final class SdkConfiguration implements ConfigurableContract
         }
 
         $this->validateProperties();
-        $this->setupStateCookies();
         $this->setupStateFactories();
 
         if ($this->usingStatefulness()) {
@@ -156,11 +155,13 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function setAudience(?array $audience = null): self
     {
-        if (null !== $audience && [] === $audience) {
+        $audience = $this->filterArray($audience);
+
+        if ([] === $audience) {
             $audience = null;
         }
 
-        $this->audience = $this->filterArray($audience);
+        $this->audience = $audience;
 
         return $this;
     }
@@ -207,7 +208,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCookieDomain(?string $cookieDomain = null): self
     {
-        if (null !== $cookieDomain && '' === trim($cookieDomain)) {
+        $cookieDomain = trim($cookieDomain ?? '');
+
+        if ('' === trim($cookieDomain)) {
             $cookieDomain = null;
         }
 
@@ -216,16 +219,35 @@ final class SdkConfiguration implements ConfigurableContract
         return $this;
     }
 
-    public function getCookieDomain(?\Throwable $exceptionIfNull = null): ?string
+    public function getCookieDomain(): ?string
     {
-        $this->exceptionIfNull($this->cookieDomain, $exceptionIfNull);
+        if (null !== $this->cookieDomain) {
+            return $this->cookieDomain;
+        }
 
-        return $this->cookieDomain;
+        $domain = (isset($_SERVER['HTTP_HOST']) && trim($_SERVER['HTTP_HOST']) !== '') ? $_SERVER['HTTP_HOST'] : null;
+        $domain ??= $this->getRedirectUri();
+        $domain ??= (isset($_SERVER['SERVER_NAME']) && trim($_SERVER['SERVER_NAME']) !== '') ? $_SERVER['SERVER_NAME'] : null;
+        $domain = trim($domain ?? '');
+
+        if (mb_strlen($domain) > 0) {
+            $parsed = parse_url($domain, PHP_URL_HOST);
+
+            if (\is_string($parsed)) {
+                $domain = $parsed;
+            }
+
+            if (is_string($domain) && '' !== trim($domain)) {
+                return $domain;
+            }
+        }
+
+        return null;
     }
 
     public function hasCookieDomain(): bool
     {
-        return null !== $this->cookieDomain;
+        return null !== $this->getCookieDomain();
     }
 
     public function setCookieExpires(int $cookieExpires = 0): self
@@ -251,8 +273,16 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCookiePath(string $cookiePath = '/'): self
     {
-        if ('' === trim($cookiePath)) {
+        $cookiePath = trim($cookiePath);
+
+        // Cookie path cannot be empty.
+        if ('' === $cookiePath) {
             $cookiePath = '/';
+        }
+
+        // Cookie path must open with a slash.
+        if (substr($cookiePath, 0, 1) !== '/') {
+            $cookiePath = '/' . $cookiePath;
         }
 
         $this->cookiePath = $cookiePath;
@@ -272,7 +302,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCookieSameSite(?string $cookieSameSite = null): self
     {
-        if (null !== $cookieSameSite && '' === trim($cookieSameSite)) {
+        $cookieSameSite = trim($cookieSameSite ?? '');
+
+        if ('' === $cookieSameSite) {
             $cookieSameSite = null;
         }
 
@@ -335,7 +367,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setClientId(?string $clientId = null): self
     {
-        if (null !== $clientId && '' === trim($clientId)) {
+        $clientId = trim($clientId ?? '');
+
+        if ('' === $clientId) {
             $clientId = null;
         }
 
@@ -358,7 +392,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setClientSecret(?string $clientSecret = null): self
     {
-        if (null !== $clientSecret && '' === trim($clientSecret)) {
+        $clientSecret = trim($clientSecret ?? '');
+
+        if ('' === $clientSecret) {
             $clientSecret = null;
         }
 
@@ -408,12 +444,18 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setCustomDomain(?string $customDomain = null): self
     {
-        if (\is_string($customDomain)) {
+        $customDomain = trim($customDomain ?? '');
+
+        if ('' !== $customDomain) {
             $customDomain = $this->filterDomain($customDomain);
 
             if (null === $customDomain) {
                 throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('customDomain');
             }
+        }
+
+        if ('' === $customDomain) {
+            $customDomain = null;
         }
 
         $this->customDomain = $customDomain;
@@ -568,7 +610,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setManagementToken(?string $managementToken = null): self
     {
-        if (null !== $managementToken && '' === trim($managementToken)) {
+        $managementToken = trim($managementToken ?? '');
+
+        if ('' === $managementToken) {
             $managementToken = null;
         }
 
@@ -613,11 +657,13 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function setOrganization(?array $organization = null): self
     {
-        if (null !== $organization && [] === $organization) {
+        $organization = $this->filterArray($organization);
+
+        if ([] === $organization) {
             $organization = null;
         }
 
-        $this->organization = $this->filterArray($organization);
+        $this->organization = $organization;
 
         return $this;
     }
@@ -749,7 +795,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setRedirectUri(?string $redirectUri = null): self
     {
-        if (null !== $redirectUri && '' === trim($redirectUri)) {
+        $redirectUri = trim($redirectUri ?? '');
+
+        if ('' === $redirectUri) {
             $redirectUri = null;
         }
 
@@ -772,7 +820,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setResponseMode(string $responseMode = 'query'): self
     {
-        if ('' === trim($responseMode)) {
+        $responseMode = trim($responseMode);
+
+        if ('' === $responseMode) {
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('responseMode');
         }
 
@@ -793,8 +843,10 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setResponseType(string $responseType = 'code'): self
     {
-        if ('' === trim($responseType)) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('responseMode');
+        $responseType = trim($responseType);
+
+        if ('' === $responseType) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('responseType');
         }
 
         $this->responseType = $responseType;
@@ -817,11 +869,13 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function setScope(?array $scope = ['openid', 'profile', 'email']): self
     {
-        if (null === $scope || [] === $scope) {
+        $scope = $this->filterArray($scope) ?? [];
+
+        if ([] === $scope) {
             $scope = ['openid', 'profile', 'email'];
         }
 
-        $this->scope = $this->filterArray($scope) ?? [];
+        $this->scope = $scope;
 
         return $this;
     }
@@ -885,7 +939,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setSessionStorageId(string $sessionStorageId = 'auth0_session'): self
     {
-        if ('' === trim($sessionStorageId)) {
+        $sessionStorageId = trim($sessionStorageId);
+
+        if ('' === $sessionStorageId) {
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('sessionStorageId');
         }
 
@@ -988,7 +1044,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setTokenJwksUri(?string $tokenJwksUri = null): self
     {
-        if (null !== $tokenJwksUri && '' === trim($tokenJwksUri)) {
+        $tokenJwksUri = trim($tokenJwksUri ?? '');
+
+        if ('' === $tokenJwksUri) {
             $tokenJwksUri = null;
         }
 
@@ -1076,7 +1134,9 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function setTransientStorageId(string $transientStorageId = 'auth0_transient'): self
     {
-        if ('' === trim($transientStorageId)) {
+        $transientStorageId = trim($transientStorageId);
+
+        if ('' === $transientStorageId) {
             throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('transientStorageId');
         }
 
@@ -1144,15 +1204,7 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function formatScope(): ?string
     {
-        if ($this->hasScope()) {
-            $scope = $this->getScope();
-
-            if ([] !== $scope) {
-                return implode(' ', $scope);
-            }
-        }
-
-        return null;
+        return implode(' ', $this->getScope());
     }
 
     /**
@@ -1211,28 +1263,6 @@ final class SdkConfiguration implements ConfigurableContract
     public function usingStatefulness(): bool
     {
         return \in_array($this->getStrategy(), self::STRATEGIES_USING_SESSIONS, true);
-    }
-
-    /**
-     * Setup SDK cookie state.
-     */
-    private function setupStateCookies(): void
-    {
-        if (! $this->hasCookieDomain()) {
-            $domain = $_SERVER['HTTP_HOST'] ?? $this->getRedirectUri();
-
-            if (null !== $domain) {
-                $parsed = parse_url($domain, PHP_URL_HOST);
-
-                if (\is_string($parsed)) {
-                    $domain = $parsed;
-                }
-
-                if ($domain) {
-                    $this->setCookieDomain($domain);
-                }
-            }
-        }
     }
 
     /**
