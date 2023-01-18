@@ -24,12 +24,20 @@ jobs:
         with:
           script: |
             try {
-              github.rest.issues.removeLabel({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
+              labels = await github.rest.issues.listLabelsOnIssue({
                 issue_number: context.issue.number,
-                name: 'Status: 🤞 Run Tests'
-              });
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              })
+
+              if (labels.data.some(label => label.name === 'Status: 🤞 Run Tests')) {
+                github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  name: 'Status: 🤞 Run Tests'
+                });
+              }
             } catch (error) {
-              console.log(error);
+              console.error(error);
             }
