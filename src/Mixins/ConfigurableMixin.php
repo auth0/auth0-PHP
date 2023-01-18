@@ -104,7 +104,10 @@ trait ConfigurableMixin
     /**
      * @param  array<string>|null  $filtering  an array of strings to filter, or NULL
      * @param  bool  $keepKeys  Optional. Whether to keep array keys or reindex the array appropriately.
+     *
      * @return array<string>|null
+     *
+     * @psalm-suppress DocblockTypeContradiction,RedundantCastGivenDocblockType
      */
     private function filterArray(?array $filtering, bool $keepKeys = false): ?array
     {
@@ -115,6 +118,7 @@ trait ConfigurableMixin
         $filtered = [];
 
         foreach ($filtering as $i => $s) {
+            // @phpstan-ignore-next-line
             if (! is_scalar($s)) {
                 continue;
             }
@@ -208,11 +212,17 @@ trait ConfigurableMixin
         return null;
     }
 
-    private function filterString(string $str, bool $allowLineBreaks = false): string
+    /**
+     * @param string  $string  A string to apply sanitization filtering to.
+     * @return string
+     *
+     * @psalm-suppress UnusedFunctionCall
+     */
+    private function filterString(string $string): string
     {
         mb_regex_encoding('UTF-8');
 
-        $processed = trim($str);
+        $processed = trim($string);
         $processed = trim(\htmlspecialchars_decode($processed, \ENT_QUOTES | \ENT_SUBSTITUTE));
         $processed = trim(\strip_tags($processed));
         $processed = trim(\htmlspecialchars($processed, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8', false));
