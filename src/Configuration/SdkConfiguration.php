@@ -237,7 +237,7 @@ final class SdkConfiguration implements ConfigurableContract
                 $domain = $parsed;
             }
 
-            if (is_string($domain) && '' !== trim($domain)) {
+            if ('' !== trim($domain)) {
                 return $domain;
             }
         }
