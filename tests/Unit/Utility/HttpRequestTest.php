@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\NetworkException;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
+use Auth0\SDK\Utility\Request\FilteredRequest;
+use Auth0\SDK\Utility\Request\PaginatedRequest;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\MockDomain;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -31,7 +34,7 @@ it('adds field filtering params when configured', function(HttpRequest $client):
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
-        $client->withFields(new \Auth0\SDK\Utility\Request\FilteredRequest(['a', 'b', 123], true));
+        $client->withFields(new FilteredRequest(['a', 'b', 123], true));
         return $client;
     }
 ]]);
@@ -41,7 +44,7 @@ it('adds classic pagination params when configured', function(HttpRequest $clien
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
-        $client->withPagination(new \Auth0\SDK\Utility\Request\PaginatedRequest(5, 10, true));
+        $client->withPagination(new PaginatedRequest(5, 10, true));
         return $client;
     }
 ]]);
@@ -51,7 +54,7 @@ it('adds checkpoints pagination params when configured', function(HttpRequest $c
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
-        $client->withPagination(new \Auth0\SDK\Utility\Request\PaginatedRequest(null, 25, null, '123456'));
+        $client->withPagination(new PaginatedRequest(null, 25, null, '123456'));
         return $client;
     }
 ]]);
@@ -183,4 +186,4 @@ it('throws a NetworkException when the underlying client raises a ClientExceptio
 
         return new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid(), [], null, $responses);
     }
-]])->throws(\Auth0\SDK\Exception\NetworkException::class);
+]])->throws(NetworkException::class);

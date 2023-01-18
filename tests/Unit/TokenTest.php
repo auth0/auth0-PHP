@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
@@ -146,7 +147,7 @@ test('verify() overrides globally configured algorithm', function(
         return $this->configuration;
     },
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256)
-]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_UNEXPECTED_SIGNING_ALGORITHM, 'RS256', 'HS256'));
+]])->throws(InvalidTokenException::class, sprintf(InvalidTokenException::MSG_UNEXPECTED_SIGNING_ALGORITHM, 'RS256', 'HS256'));
 
 test('validate() returns a fluent interface', function(
     SdkConfiguration $configuration,
@@ -183,7 +184,7 @@ test('validate() overrides globally configured algorithm', function(
     },
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256),
     fn() => ['aud' => uniqid()]
-]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
+]])->throws(InvalidTokenException::class);
 
 test('toArray() returns an array', function(
     SdkConfiguration $configuration,

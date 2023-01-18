@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkState;
 use Auth0\SDK\Exception\ConfigurationException;
-use Auth0\Tests\Utilities\MockDomain;
 
 uses()->group('configuration');
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Auth0\SDK\API\Management\ManagementEndpoint;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\PaginatorException;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponsePaginator;
@@ -57,4 +58,4 @@ test('getResponsePaginator() returns an HttpResponsePaginator instance', functio
 
 test('getResponsePaginator() throws an exception when a request has not been made', function(): void {
     expect($this->endpoint->getResponsePaginator())->toBeInstanceOf(HttpResponsePaginator::class);
-})->throws(\Auth0\SDK\Exception\PaginatorException::class, \Auth0\SDK\Exception\PaginatorException::MSG_HTTP_BAD_RESPONSE);
+})->throws(PaginatorException::class, PaginatorException::MSG_HTTP_BAD_RESPONSE);

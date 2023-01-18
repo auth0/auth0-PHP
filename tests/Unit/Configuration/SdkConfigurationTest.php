@@ -8,6 +8,10 @@ use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\MockDomain;
 use Auth0\Tests\Utilities\MockPsr14StoreListener;
 use Auth0\Tests\Utilities\MockStore;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('configuration');
@@ -54,7 +58,7 @@ test('__construct() does not accept invalid types from configuration array', fun
         'strategy' => SdkConfiguration::STRATEGY_NONE,
         'domain' => MockDomain::invalid(),
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
 
 test('__construct() successfully only stores the host when passed a full uri as `domain`', function(): void
 {
@@ -79,7 +83,7 @@ test('__construct() throws an exception if domain is an empty string', function(
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
 
 test('__construct() throws an exception if domain is an invalid uri', function(): void {
     $cookieSecret = uniqid();
@@ -92,7 +96,7 @@ test('__construct() throws an exception if domain is an invalid uri', function()
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_VALIDATION_FAILED, 'domain'));
 
 test('__construct() throws an exception if cookieSecret is undefined', function(): void {
     $domain = MockDomain::valid();
@@ -105,7 +109,7 @@ test('__construct() throws an exception if cookieSecret is undefined', function(
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
 
 test('__construct() throws an exception if cookieSecret is an empty string', function(): void {
     $domain = MockDomain::valid();
@@ -118,7 +122,7 @@ test('__construct() throws an exception if cookieSecret is an empty string', fun
         'clientId' => $clientId,
         'redirectUri' => $redirectUri,
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
 
 test('__construct() throws an exception if an invalid token algorithm is specified', function(): void {
     $domain = MockDomain::valid();
@@ -133,7 +137,7 @@ test('__construct() throws an exception if an invalid token algorithm is specifi
         'redirectUri' => $redirectUri,
         'tokenAlgorithm' => 'X8675309'
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_INVALID_TOKEN_ALGORITHM);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_INVALID_TOKEN_ALGORITHM);
 
 test('__construct() throws an exception if an invalid token leeway is specified', function(): void {
     $domain = MockDomain::valid();
@@ -148,7 +152,7 @@ test('__construct() throws an exception if an invalid token leeway is specified'
         'redirectUri' => $redirectUri,
         'tokenLeeway' => 'TEST'
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'tokenLeeway'));
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_VALIDATION_FAILED, 'tokenLeeway'));
 
 test('successfully updates values', function(): void
 {
@@ -192,7 +196,7 @@ test('an invalid strategy throws an exception', function(): void
         'clientId' => uniqid(),
         'strategy' => uniqid(),
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_VALIDATION_FAILED, 'strategy'));
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_VALIDATION_FAILED, 'strategy'));
 
 test('a non-existent array value is ignored', function(): void
 {
@@ -222,7 +226,7 @@ test('a `webapp` strategy requires a domain', function(): void
     $sdk = new SdkConfiguration([
         'cookieSecret' => uniqid(),
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `webapp` strategy requires a client id', function(): void
 {
@@ -230,7 +234,7 @@ test('a `webapp` strategy requires a client id', function(): void
         'cookieSecret' => uniqid(),
         'domain' => MockDomain::valid()
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_CLIENT_ID);
 
 test('a `webapp` strategy requires a client secret when HS256 is used', function(): void
 {
@@ -240,14 +244,14 @@ test('a `webapp` strategy requires a client secret when HS256 is used', function
         'clientId' => uniqid(),
         'tokenAlgorithm' => 'HS256'
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
 
 test('a `api` strategy requires a domain', function(): void
 {
     $sdk = new SdkConfiguration([
         'strategy' => SdkConfiguration::STRATEGY_API,
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `api` strategy requires an audience', function(): void
 {
@@ -255,14 +259,14 @@ test('a `api` strategy requires an audience', function(): void
         'strategy' => SdkConfiguration::STRATEGY_API,
         'domain' => MockDomain::valid()
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_AUDIENCE);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_AUDIENCE);
 
 test('a `management` strategy requires a domain', function(): void
 {
     $sdk = new SdkConfiguration([
         'strategy' => SdkConfiguration::STRATEGY_MANAGEMENT_API
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_DOMAIN);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_DOMAIN);
 
 test('a `management` strategy requires a client id if a management token is not provided', function(): void
 {
@@ -270,7 +274,7 @@ test('a `management` strategy requires a client id if a management token is not 
         'strategy' => SdkConfiguration::STRATEGY_MANAGEMENT_API,
         'domain' => MockDomain::valid()
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_CLIENT_ID);
 
 test('a `management` strategy requires a client secret if a management token is not provided', function(): void
 {
@@ -279,7 +283,7 @@ test('a `management` strategy requires a client secret if a management token is 
         'domain' => MockDomain::valid(),
         'clientId' => uniqid()
     ]);
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
 
 test('a `management` strategy does not require a client id or secret if a management token is provided', function(): void
 {
@@ -824,9 +828,9 @@ test('HttpClient methods function as expected', function(): void
 
     // The test suite includes a mock client, so this will be true initially here.
     expect($config->hasHttpClient())->toBeTrue();
-    expect($config->getHttpClient())->toBeInstanceOf(\Psr\Http\Client\ClientInterface::class);
+    expect($config->getHttpClient())->toBeInstanceOf(ClientInterface::class);
 
-    $client = Mockery::mock(\Psr\Http\Client\ClientInterface::class);
+    $client = Mockery::mock(ClientInterface::class);
 
     $config->setHttpClient($client);
     expect($config->hasHttpClient())->toBeTrue();
@@ -883,9 +887,9 @@ test('HttpRequestFactory methods function as expected', function(): void
 
     // The test suite includes a mock factory, so this will be true initially here.
     expect($config->hasHttpRequestFactory())->toBeTrue();
-    expect($config->getHttpRequestFactory())->toBeInstanceOf(\Psr\Http\Message\RequestFactoryInterface::class);
+    expect($config->getHttpRequestFactory())->toBeInstanceOf(RequestFactoryInterface::class);
 
-    $factory = Mockery::mock(\Psr\Http\Message\RequestFactoryInterface::class);
+    $factory = Mockery::mock(RequestFactoryInterface::class);
 
     $config->setHttpRequestFactory($factory);
     expect($config->hasHttpRequestFactory())->toBeTrue();
@@ -914,9 +918,9 @@ test('HttpResponseFactory methods function as expected', function(): void
 
     // The test suite includes a mock factory, so this will be true initially here.
     expect($config->hasHttpResponseFactory())->toBeTrue();
-    expect($config->getHttpResponseFactory())->toBeInstanceOf(\Psr\Http\Message\ResponseFactoryInterface::class);
+    expect($config->getHttpResponseFactory())->toBeInstanceOf(ResponseFactoryInterface::class);
 
-    $factory = Mockery::mock(\Psr\Http\Message\ResponseFactoryInterface::class);
+    $factory = Mockery::mock(ResponseFactoryInterface::class);
 
     $config->setHttpResponseFactory($factory);
     expect($config->hasHttpResponseFactory())->toBeTrue();
@@ -945,9 +949,9 @@ test('HttpStreamFactory methods function as expected', function(): void
 
     // The test suite includes a mock factory, so this will be true initially here.
     expect($config->hasHttpStreamFactory())->toBeTrue();
-    expect($config->getHttpStreamFactory())->toBeInstanceOf(\Psr\Http\Message\StreamFactoryInterface::class);
+    expect($config->getHttpStreamFactory())->toBeInstanceOf(StreamFactoryInterface::class);
 
-    $factory = Mockery::mock(\Psr\Http\Message\StreamFactoryInterface::class);
+    $factory = Mockery::mock(StreamFactoryInterface::class);
 
     $config->setHttpStreamFactory($factory);
     expect($config->hasHttpStreamFactory())->toBeTrue();

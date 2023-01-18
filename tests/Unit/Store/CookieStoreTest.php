@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\Tests\Utilities\MockCrypto;
 use Auth0\Tests\Utilities\MockDataset;
@@ -160,7 +161,7 @@ test('encrypt() throws an exception if a cookie secret is not configured', funct
     $this->store = new CookieStore($this->configuration, $this->namespace);
 
     $this->store->set('testing', 'this should throw an error');
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
 
 test('decrypt() throws an exception if a cookie secret is not configured', function(array $state): void {
     $this->configuration = new SdkConfiguration([
@@ -176,7 +177,7 @@ test('decrypt() throws an exception if a cookie secret is not configured', funct
     $this->store->getState();
 })->with(['mocked state' => [
     fn() => MockDataset::state()
-]])->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
+]])->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
 
 test('decrypt() returns null if malformed JSON is encoded', function(): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';

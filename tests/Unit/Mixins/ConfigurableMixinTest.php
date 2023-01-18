@@ -247,13 +247,6 @@ test('filterString() behaves as expected', function(): void {
             ]
         );
 
-        // if ($response === $test) {
-        //     echo 'Line ' . $i . ' was unchanged' . PHP_EOL;
-        //     var_dump($test);
-        //     var_dump($response);
-        //     exit;
-        // }
-
         expect($response)
             ->not()->toEqual($test);
     }

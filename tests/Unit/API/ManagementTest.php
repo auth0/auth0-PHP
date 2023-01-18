@@ -6,6 +6,8 @@ use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\SDK\Exception\NetworkException;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\MockDomain;
@@ -32,7 +34,7 @@ beforeEach(function(): void {
 test('getHttpClient() fails without a managementToken, if client id and secret are not configured', function(): void {
     $this->configuration->setManagementToken(null);
     $this->sdk->management()->blacklists();
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_MANAGEMENT_KEY);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_MANAGEMENT_KEY);
 
 test('getHttpClient() fails if tenant is not configured with required scope(s)', function(): void {
     $this->configuration->setClientSecret(uniqid());
@@ -44,7 +46,7 @@ test('getHttpClient() fails if tenant is not configured with required scope(s)',
     );
 
     $this->sdk->management()->getHttpClient($authentication);
-})->throws(\Auth0\SDK\Exception\NetworkException::class, sprintf(\Auth0\SDK\Exception\NetworkException::MSG_NETWORK_REQUEST_REJECTED, ''));
+})->throws(NetworkException::class, sprintf(NetworkException::MSG_NETWORK_REQUEST_REJECTED, ''));
 
 test('blacklists() returns an instance of Auth0\SDK\API\Management\Blacklists', function(): void {
     $class = $this->sdk->management()->blacklists();
