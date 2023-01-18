@@ -19,6 +19,21 @@ beforeEach(function() {
     ]);
 });
 
+test('parse() returns a static reference to the Token class', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+    expect($token)->toBeObject();
+
+    $parsed = $token->parse();
+    expect($parsed)->toBeInstanceOf(Token::class);
+    expect($parsed)->toEqual($token);
+})->with(['mocked rs256 id token' => [
+    fn() => $this->configuration,
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_RS256)
+]]);
+
 it('accepts and successfully parses a valid RS256 ID Token', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt

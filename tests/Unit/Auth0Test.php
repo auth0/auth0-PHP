@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
 
@@ -183,6 +184,14 @@ test('getLoginLink() assigns a nonce and state', function(): void {
             ->toContain('nonce=');
 });
 
+test('login() throws a ConfigurationException if the SDK is not configured with a stateful strategy', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'audience' => [uniqid()],
+        'strategy' => SdkConfiguration::STRATEGY_API
+    ]));
+    $auth0->login();
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SESSION_REQUIRED, 'Auth0->login()'));
+
 test('login() assigns a challenge and challenge method when PKCE is enabled', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
@@ -229,6 +238,14 @@ test('login() assigns `max_age` from overridden values', function(): void {
             ->toContain('max_age=1001');
 });
 
+test('signup() throws a ConfigurationException if the SDK is not configured with a stateful strategy', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'audience' => [uniqid()],
+        'strategy' => SdkConfiguration::STRATEGY_API
+    ]));
+    $auth0->signup();
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SESSION_REQUIRED, 'Auth0->signup()'));
+
 test('signup() returns a url with a `screen_hint` parameter', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
 
@@ -241,6 +258,14 @@ test('signup() returns a url with a `screen_hint` parameter', function(): void {
         ->query
             ->toContain('screen_hint=signup');
 });
+
+test('handleInvitation() throws a ConfigurationException if the SDK is not configured with a stateful strategy', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'audience' => [uniqid()],
+        'strategy' => SdkConfiguration::STRATEGY_API
+    ]));
+    $auth0->handleInvitation();
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SESSION_REQUIRED, 'Auth0->handleInvitation()'));
 
 test('handleInvitation() creates a valid login url', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
@@ -265,6 +290,14 @@ test('handleInvitation() returns null if organization invite parameters are not 
 
     expect($auth0->handleInvitation())->toBeNull();
 });
+
+test('logout() throws a ConfigurationException if the SDK is not configured with a stateful strategy', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'audience' => [uniqid()],
+        'strategy' => SdkConfiguration::STRATEGY_API
+    ]));
+    $auth0->logout();
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SESSION_REQUIRED, 'Auth0->logout()'));
 
 test('logout() returns a a valid logout url', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
@@ -419,6 +452,14 @@ test('decode() can be used with access tokens', function (): void {
     expect($decoded->getAudience())->toContain('__test_client_id__');
 });
 
+test('exchange() throws a ConfigurationException if the SDK is not configured with a stateful strategy', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'audience' => [uniqid()],
+        'strategy' => SdkConfiguration::STRATEGY_API
+    ]));
+    $auth0->exchange();
+})->throws(\Auth0\SDK\Exception\ConfigurationException::class, sprintf(\Auth0\SDK\Exception\ConfigurationException::MSG_SESSION_REQUIRED, 'Auth0->exchange()'));
+
 test('exchange() throws an exception if no code is present', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
     $auth0->exchange();
@@ -464,6 +505,32 @@ test('exchange() throws an exception if no state was found', function(): void {
 
     $auth0->exchange();
 })->throws(\Auth0\SDK\Exception\StateException::class, \Auth0\SDK\Exception\StateException::MSG_INVALID_STATE);
+
+test('exchange() throws an exception with a bad id token', function(): void {
+    $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"BAD' . $token . '","refresh_token":"4.5.6","scope":"test:part1 test:part2 test:part3","expires_in":300}'),
+        \Auth0\Tests\Utilities\HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $auth0->exchange();
+})->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
 
 test('exchange() succeeds with a valid id token', function(): void {
     $token = (new \Auth0\Tests\Utilities\TokenGenerator())->withHs256([
