@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\ArgumentException;
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\Tests\Utilities\MockDomain;
 
 uses()->group('authentication');
@@ -136,12 +138,12 @@ test('getLogoutLink() is properly formatted', function(): void {
 
 test('passwordlessStart() throws a ConfigurationException if client secret is not configured', function(): void {
     $this->sdk->authentication()->passwordlessStart();
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_CLIENT_SECRET);
 
 test('passwordlessStart() throws a ConfigurationException if client id is not configured', function(): void {
     $this->configuration->setClientId(null);
     $this->sdk->authentication()->passwordlessStart();
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_CLIENT_ID);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_CLIENT_ID);
 
 test('passwordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());
@@ -162,17 +164,17 @@ test('passwordlessStart() is properly formatted', function(): void {
 test('emailPasswordlessStart() throws an ArgumentException if `email` is empty', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->emailPasswordlessStart('', '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'email'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'email'));
 
 test('emailPasswordlessStart() throws an ArgumentException if `email` is not a valid email address', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->emailPasswordlessStart(uniqid(), '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'email'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'email'));
 
 test('emailPasswordlessStart() throws an ArgumentException if `type` is empty', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'type'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'type'));
 
 test('emailPasswordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());
@@ -235,7 +237,7 @@ test('emailPasswordlessStart() returns authParams correctly configured when prov
 test('smsPasswordlessStart() throws an ArgumentException if `phoneNumber` is empty', function(): void {
     $this->configuration->setClientSecret(uniqid());
     $this->sdk->authentication()->smsPasswordlessStart('');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'phoneNumber'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'phoneNumber'));
 
 test('smsPasswordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());

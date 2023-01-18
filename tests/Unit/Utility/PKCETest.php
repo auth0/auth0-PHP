@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
+use Auth0\SDK\Exception\ArgumentException;
 use Auth0\SDK\Utility\PKCE;
 
 uses()->group('utility', 'utility.pkce');
 
 test('generateCodeVerifier() throws an exception when an invalid length is used', function(): void {
     PKCE::generateCodeVerifier(10);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, \Auth0\SDK\Exception\ArgumentException::MSG_PKCE_CODE_VERIFIER_LENGTH);
+})->throws(ArgumentException::class, ArgumentException::MSG_PKCE_CODE_VERIFIER_LENGTH);
 
 test('generateCodeVerifier() generates a value of an expected length', function(): void {
     $code_verifier = PKCE::generateCodeVerifier(43);

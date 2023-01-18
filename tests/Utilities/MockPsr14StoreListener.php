@@ -18,7 +18,7 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 class MockPsr14StoreListener
 {
-    public ListenerProvider $listener;
+    public ?ListenerProvider $listener = null;
     public bool $booted = false;
     public bool $destructed = false;
     public bool $deferred = false;
@@ -27,39 +27,43 @@ class MockPsr14StoreListener
     public ?string $prefix = null;
     public ?StoreInterface $store = null;
 
-    public function setup(): ListenerProviderInterface
+    public function getProvider(): ListenerProviderInterface
     {
-        $listener = new ListenerProvider();
+        if (null !== $this->listener) {
+            return $this->listener;
+        }
 
-        $listener->on(Boot::class, function (Boot $event): MockPsr14StoreListener {
+        $this->listener = new ListenerProvider();
+
+        $this->listener->on(Boot::class, function (Boot $event): MockPsr14StoreListener {
             return $this->onBoot($event);
         });
 
-        $listener->on(Destruct::class, function (Destruct $event): MockPsr14StoreListener {
+        $this->listener->on(Destruct::class, function (Destruct $event): MockPsr14StoreListener {
             return $this->onDestruct($event);
         });
 
-        $listener->on(Defer::class, function (Defer $event): MockPsr14StoreListener {
+        $this->listener->on(Defer::class, function (Defer $event): MockPsr14StoreListener {
             return $this->onDefer($event);
         });
 
-        $listener->on(Get::class, function (Get $event): Auth0Event {
+        $this->listener->on(Get::class, function (Get $event): Auth0Event {
             return $this->onGet($event);
         });
 
-        $listener->on(Set::class, function (Set $event): Auth0Event {
+        $this->listener->on(Set::class, function (Set $event): Auth0Event {
             return $this->onSet($event);
         });
 
-        $listener->on(Delete::class, function (Delete $event): Auth0Event {
+        $this->listener->on(Delete::class, function (Delete $event): Auth0Event {
             return $this->onDelete($event);
         });
 
-        $listener->on(Clear::class, function (Clear $event): Auth0Event {
+        $this->listener->on(Clear::class, function (Clear $event): Auth0Event {
             return $this->onClear($event);
         });
 
-        return $listener;
+        return $this->listener;
     }
 
     public function succeed(): self

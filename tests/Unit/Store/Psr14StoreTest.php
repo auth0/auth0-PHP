@@ -19,7 +19,7 @@ beforeEach(function(): void {
 
     $this->configuration = new SdkConfiguration([
         'strategy' => SdkConfiguration::STRATEGY_NONE,
-        'eventListenerProvider' => $this->listener->setup()
+        'eventListenerProvider' => $this->listener->getProvider()
     ]);
 });
 

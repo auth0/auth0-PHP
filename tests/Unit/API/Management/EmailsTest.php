@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Auth0\SDK\Exception\ArgumentException;
+
 uses()->group('management', 'management.emails');
 
 beforeEach(function(): void {
@@ -10,11 +12,11 @@ beforeEach(function(): void {
 
 test('createProvider() throws an error when missing `name`', function(): void {
     $this->endpoint->createProvider('', []);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'name'));
 
 test('createProvider() throws an error when missing `credentials`', function(): void {
     $this->endpoint->createProvider(uniqid(), []);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'credentials'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'credentials'));
 
 test('createProvider() issues valid requests', function(): void {
     $name = uniqid();

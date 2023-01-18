@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Auth0\SDK\Exception\ArgumentException;
+
 uses()->group('management', 'management.device_credentials');
 
 beforeEach(function(): void {
@@ -10,19 +12,19 @@ beforeEach(function(): void {
 
 test('create() throws an error when missing deviceName', function(): void {
     $this->endpoint->create('', '', '', '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'deviceName'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'deviceName'));
 
 test('create() throws an error when missing type', function(): void {
     $this->endpoint->create(uniqid(), '', '', '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'type'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'type'));
 
 test('create() throws an error when missing value', function(): void {
     $this->endpoint->create(uniqid(), uniqid(), '', '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'value'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'value'));
 
 test('create() throws an error when missing deviceId', function(): void {
     $this->endpoint->create(uniqid(), uniqid(), uniqid(), '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'deviceId'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'deviceId'));
 
 test('create() issues valid requests', function(): void {
     $deviceName = uniqid();
