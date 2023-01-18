@@ -40,7 +40,9 @@ final class SdkState implements ConfigurableContract
 
     public function setIdToken(?string $idToken = null): self
     {
-        if (null !== $idToken && '' === trim($idToken)) {
+        $idToken = trim($idToken ?? '');
+
+        if ('' === $idToken) {
             $idToken = null;
         }
 
@@ -63,7 +65,9 @@ final class SdkState implements ConfigurableContract
 
     public function setAccessToken(?string $accessToken = null): self
     {
-        if (null !== $accessToken && '' === trim($accessToken)) {
+        $accessToken = trim($accessToken ?? '');
+
+        if ('' === $accessToken) {
             $accessToken = null;
         }
 
@@ -89,11 +93,13 @@ final class SdkState implements ConfigurableContract
      */
     public function setAccessTokenScope(?array $accessTokenScope): self
     {
-        if (null !== $accessTokenScope && [] === $accessTokenScope) {
+        $accessTokenScope = $this->filterArray($accessTokenScope);
+
+        if ([] === $accessTokenScope) {
             $accessTokenScope = null;
         }
 
-        $this->accessTokenScope = $this->filterArray($accessTokenScope);
+        $this->accessTokenScope = $accessTokenScope;
 
         return $this;
     }
@@ -130,7 +136,9 @@ final class SdkState implements ConfigurableContract
 
     public function setRefreshToken(?string $refreshToken = null): self
     {
-        if (null !== $refreshToken && '' === trim($refreshToken)) {
+        $refreshToken = trim($refreshToken ?? '');
+
+        if ('' === $refreshToken) {
             $refreshToken = null;
         }
 
@@ -183,7 +191,7 @@ final class SdkState implements ConfigurableContract
     public function setAccessTokenExpiration(?int $accessTokenExpiration = null): self
     {
         if (null !== $accessTokenExpiration && $accessTokenExpiration < 0) {
-            $accessTokenExpiration = null;
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('accessTokenExpiration');
         }
 
         $this->accessTokenExpiration = $accessTokenExpiration;
