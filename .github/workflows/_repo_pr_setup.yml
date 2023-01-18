@@ -73,8 +73,10 @@ jobs:
               }
             }
 
+            let isMember = false;
+
             try {
-              const isMember = await github.rest.orgs.checkMembershipForUser({
+              isMember = await github.rest.orgs.checkMembershipForUser({
                 org: context.repo.owner,
                 username: context.payload.pull_request.user.login
               });
