@@ -34,7 +34,7 @@ it('throws an error when attempting to initiate pagination on a failed network r
 
     try {
         $sdk->users()->getAll();
-    } catch (\Throwable $th) { // phpcs:ignore
+    } catch (Throwable $th) { // phpcs:ignore
         // Ignore the mocked network error.
     }
 

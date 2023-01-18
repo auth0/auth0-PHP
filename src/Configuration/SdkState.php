@@ -93,14 +93,7 @@ final class SdkState implements ConfigurableContract
      */
     public function setAccessTokenScope(?array $accessTokenScope): self
     {
-        $accessTokenScope = $this->filterArray($accessTokenScope);
-
-        if ([] === $accessTokenScope) {
-            $accessTokenScope = null;
-        }
-
-        $this->accessTokenScope = $accessTokenScope;
-
+        $this->accessTokenScope = $this->filterArray($accessTokenScope);
         return $this;
     }
 

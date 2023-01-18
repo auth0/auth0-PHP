@@ -50,7 +50,7 @@ test('applyConfiguration() skips invalid properties', function(): void {
 
     try {
         $propNonexistent = ObjectMutator::getProperty($this->configuration, 'nonexistentProperty');
-    } catch (\Throwable $th) {
+    } catch (Throwable $th) {
         $propNonexistent = true;
     }
 

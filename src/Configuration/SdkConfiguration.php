@@ -155,14 +155,7 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function setAudience(?array $audience = null): self
     {
-        $audience = $this->filterArray($audience);
-
-        if ([] === $audience) {
-            $audience = null;
-        }
-
-        $this->audience = $audience;
-
+        $this->audience = $this->filterArray($audience);
         return $this;
     }
 
@@ -657,14 +650,7 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function setOrganization(?array $organization = null): self
     {
-        $organization = $this->filterArray($organization);
-
-        if ([] === $organization) {
-            $organization = null;
-        }
-
-        $this->organization = $organization;
-
+        $this->organization = $this->filterArray($organization);
         return $this;
     }
 

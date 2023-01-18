@@ -10,17 +10,17 @@ test('isPermissions() throws an exception if value is not an array', function():
     $permissions = true;
 
     Toolkit::assert([
-        [$permissions, new \Exception('foobar')],
+        [$permissions, new Exception('foobar')],
     ])->isPermissions();
-})->throws(\Exception::class, 'foobar');
+})->throws(Exception::class, 'foobar');
 
 test('isPermissions() throws an exception if value is an empty array', function(): void {
     $permissions = [];
 
     Toolkit::assert([
-        [$permissions, new \Exception('foobar')],
+        [$permissions, new Exception('foobar')],
     ])->isPermissions();
-})->throws(\Exception::class, 'foobar');
+})->throws(Exception::class, 'foobar');
 
 test('isPermissions() throws an exception if a value does not have `permission_name`', function(): void {
     $permissions = [
@@ -34,9 +34,9 @@ test('isPermissions() throws an exception if a value does not have `permission_n
     ];
 
     Toolkit::assert([
-        [$permissions, new \Exception('foobar')],
+        [$permissions, new Exception('foobar')],
     ])->isPermissions();
-})->throws(\Exception::class, 'foobar');
+})->throws(Exception::class, 'foobar');
 
 test('isPermissions() throws an exception if a value does not have `resource_server_identifier`', function(): void {
     $permissions = [
@@ -50,30 +50,30 @@ test('isPermissions() throws an exception if a value does not have `resource_ser
     ];
 
     Toolkit::assert([
-        [$permissions, new \Exception('foobar')],
+        [$permissions, new Exception('foobar')],
     ])->isPermissions();
-})->throws(\Exception::class, 'foobar');
+})->throws(Exception::class, 'foobar');
 
 test('isString() throws an exception if value is not a string', function(): void {
     Toolkit::assert([
-        [true, new \Exception('foobar')],
+        [true, new Exception('foobar')],
     ])->isString();
-})->throws(\Exception::class, 'foobar');
+})->throws(Exception::class, 'foobar');
 
 test('isString() throws an exception if value is an empty string', function(): void {
     Toolkit::assert([
-        ['', new \Exception('foobar')],
+        ['', new Exception('foobar')],
     ])->isString();
-})->throws(\Exception::class, 'foobar');
+})->throws(Exception::class, 'foobar');
 
 test('isArray() throws an exception if value is not an array', function(): void {
     Toolkit::assert([
-        [true, new \Exception('foobar')],
+        [true, new Exception('foobar')],
     ])->isArray();
-})->throws(\Exception::class, 'foobar');
+})->throws(Exception::class, 'foobar');
 
 test('isArray() throws an exception if value is an empty array', function(): void {
     Toolkit::assert([
-        [[], new \Exception('foobar')],
+        [[], new Exception('foobar')],
     ])->isArray();
-})->throws(\Exception::class, 'foobar');
+})->throws(Exception::class, 'foobar');

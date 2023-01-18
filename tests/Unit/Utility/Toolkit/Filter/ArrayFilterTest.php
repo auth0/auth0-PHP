@@ -9,7 +9,7 @@ uses()->group('utility', 'utility.toolkit', 'utility.toolkit.filter', 'utility.t
 test('first() skips non-array values', function(): void {
     $items = [[], null, [true]];
 
-    $result = Toolkit::filter($items)->array()->first(new \Exception('foo'));
+    $result = Toolkit::filter($items)->array()->first(new Exception('foo'));
 
     expect($result)->toEqual([true]);
 });

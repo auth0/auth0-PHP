@@ -14,6 +14,7 @@ use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('auth0');
 
@@ -335,7 +336,7 @@ test('decode() uses the configured cache handler', function(): void {
         ],
     ];
 
-    $pool = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
+    $pool = new ArrayAdapter();
     $item = $pool->getItem($cacheKey);
     $item->set($mockJwks);
     $pool->save($item);

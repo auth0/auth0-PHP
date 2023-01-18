@@ -178,7 +178,7 @@ it('throws a NetworkException when the underlying client raises a ClientExceptio
     function(): HttpRequest {
         $responses = [
             (object) [
-                'exception' => new class () extends \Exception implements ClientExceptionInterface {},
+                'exception' => new class () extends Exception implements ClientExceptionInterface {},
                 'response' => HttpResponseGenerator::create('', 500)
 
             ]

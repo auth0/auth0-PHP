@@ -12,7 +12,7 @@ test('assert() returns an instance of Assert', function(): void {
     expect(Toolkit::assert([1,2,3]))->toBeInstanceOf(Assert::class);
 });
 
-test('filter() returns an instance of \Filter', function(): void {
+test('filter() returns an instance of Filter', function(): void {
     expect(Toolkit::filter([1,2,3]))->toBeInstanceOf(Filter::class);
 });
 
@@ -67,8 +67,8 @@ test('every() returns true if no value is false', function(): void {
 test('every() throws an error if any value is null', function(): void {
     $items = ['Testing', 123, null];
 
-    Toolkit::every(new \Exception('foobar'), $items);
-})->throws(\Exception::class, 'foobar');
+    Toolkit::every(new Exception('foobar'), $items);
+})->throws(Exception::class, 'foobar');
 
 test('every() returns false if any value is null when no exception is provided', function(): void {
     $items = ['Testing', 123, null];
@@ -82,7 +82,7 @@ test('some() does not throw an error if some values are null, and removes keys w
     $items = ['Testing', 123, null];
     $expected = ['Testing', 123];
 
-    $result = Toolkit::some(new \Exception('foobar'), $items);
+    $result = Toolkit::some(new Exception('foobar'), $items);
 
     expect($result)->toEqual($expected);
 });
@@ -98,5 +98,5 @@ test('some() returns false if all values are null when no exception is provided'
 test('some() throws an error if all values are null', function(): void {
     $items = [null, null, null];
 
-    Toolkit::some(new \Exception('foobar'), $items);
-})->throws(\Exception::class, 'foobar');
+    Toolkit::some(new Exception('foobar'), $items);
+})->throws(Exception::class, 'foobar');
