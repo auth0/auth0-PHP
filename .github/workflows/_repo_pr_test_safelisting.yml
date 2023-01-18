@@ -23,8 +23,6 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            let hadAllowedTests = false;
-
             try {
               labels = await github.rest.issues.listLabelsOnIssue({
                 issue_number: context.issue.number,
@@ -33,14 +31,6 @@ jobs:
               })
 
               if (labels.data.some(label => label.name === 'Status: 🤞 Run Tests')) {
-                hadAllowedTests = true;
-              }
-            } catch (error) {
-              console.error(error);
-            }
-
-            try {
-              if (hadAllowedTests) {
                 github.rest.issues.removeLabel({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -49,5 +39,5 @@ jobs:
                 });
               }
             } catch (error) {
-              console.log(error);
+              console.error(error);
             }
