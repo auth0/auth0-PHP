@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Utilities;
 
+use Auth0\SDK\Token;
+use Auth0\SDK\Token\Generator;
 use Firebase\JWT\JWT;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -61,11 +63,14 @@ class TokenGenerator
         return implode(', ', $errors);
     }
 
-    public static function generateRsaKeyPair(): array
+    public static function generateRsaKeyPair(
+        string $digestAlg = 'sha256',
+        int $keyType = OPENSSL_KEYTYPE_RSA
+    ): array
     {
         $config = [
-            'digest_alg' => 'sha256',
-            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            'digest_alg' => $digestAlg,
+            'private_key_type' => $keyType
         ];
 
         $privateKeyResource = openssl_pkey_new($config);
@@ -90,14 +95,18 @@ class TokenGenerator
             'private' => $privateKey,
             'public' => $publicKey['key'],
             'cert' => $x509,
+            'resource' => $privateKeyResource,
         ];
     }
 
-    public static function generateDsaKeyPair(): array
+    public static function generateDsaKeyPair(
+        string $digestAlg = 'sha256',
+        int $keyType = OPENSSL_KEYTYPE_DSA
+    ): array
     {
         $config = [
-            'digest_alg' => 'sha256',
-            'private_key_type' => OPENSSL_KEYTYPE_DSA,
+            'digest_alg' => $digestAlg,
+            'private_key_type' => $keyType
         ];
 
         $privateKeyResource = openssl_pkey_new($config);
@@ -122,6 +131,7 @@ class TokenGenerator
             'private' => $privateKey,
             'public' => $publicKey['key'],
             'cert' => $x509,
+            'resource' => $privateKeyResource,
         ];
     }
 
@@ -131,7 +141,13 @@ class TokenGenerator
         $headers = []
     ): string {
         $claims = self::getIdTokenClaims($claims);
-        return JWT::encode($claims, $key, 'HS256', null, $headers + ['alg' => 'HS256']);
+
+        return (string) Generator::create(
+            signingKey: $key,
+            algorithm: Token::ALGO_HS256,
+            claims: $claims,
+            headers: $headers
+        );
     }
 
     public static function withRs256(
@@ -146,7 +162,12 @@ class TokenGenerator
             $privateKey = $rsaKeyPair['private'];
         }
 
-        return JWT::encode($claims, $privateKey, 'RS256', null, $headers + ['alg' => 'RS256']);
+        return (string) Generator::create(
+            signingKey: $privateKey,
+            algorithm: Token::ALGO_RS256,
+            claims: $claims,
+            headers: $headers
+        );
     }
 
     public static function decodePart(
@@ -155,7 +176,7 @@ class TokenGenerator
     ) {
         $decoded = base64_decode(strtr($part, '-_', '+/'), true);
 
-        if ($json) {
+        if ($json && $decoded) {
             return json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
         }
 

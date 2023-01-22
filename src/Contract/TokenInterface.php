@@ -7,7 +7,9 @@ namespace Auth0\SDK\Contract;
 use Psr\Cache\CacheItemPoolInterface;
 
 /**
- * Interface TokenInterface.
+ *
+ * @codeCoverageIgnore
+ *
  */
 interface TokenInterface
 {
