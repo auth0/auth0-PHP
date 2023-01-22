@@ -47,8 +47,7 @@ final class Generator implements GeneratorInterface
 
     public function toArray(
         $encodeSegments = true
-    ): array
-    {
+    ): array {
         // Build token from headers and claims.
         $segments = [
             static::encode(data: $this->headers, segment: 'headers', skip: !$encodeSegments),
@@ -122,7 +121,8 @@ final class Generator implements GeneratorInterface
      *
      * @throws TokenException When a configuration issue in the host environment is detected.
      */
-    private function checkEnvironment(): void {
+    private function checkEnvironment(): void
+    {
         if (! extension_loaded('openssl')) {
             throw TokenException::openSslMissing();
         }
@@ -151,7 +151,8 @@ final class Generator implements GeneratorInterface
      * @throws TokenException When a string $signingKey is used with RS256.
      * @throws TokenException When using RS256 and openssl_pkey_get_private() is unable to load the provided signing key.
      */
-    private function loadSigningKey(OpenSSLAsymmetricKey|string $signingKey, null|string $signingKeyPassphrase = null): OpenSSLAsymmetricKey|string {
+    private function loadSigningKey(OpenSSLAsymmetricKey|string $signingKey, null|string $signingKeyPassphrase = null): OpenSSLAsymmetricKey|string
+    {
         // Ensure the provided algorithm is supported.
         if (! \in_array($this->algorithm, static::CONST_SUPPORTED_ALGOS, true)) {
             throw TokenException::unsupportedAlgorithm($this->algorithm, implode(',', static::CONST_SUPPORTED_ALGOS));
@@ -233,7 +234,7 @@ final class Generator implements GeneratorInterface
                     value: $data,
                     flags: \JSON_UNESCAPED_SLASHES | \JSON_THROW_ON_ERROR
                 );
-            // @codeCoverageIgnoreStart
+                // @codeCoverageIgnoreStart
             } catch (\Throwable $th) {
                 throw TokenException::unableToEncodeSegment($segment, $th->getMessage());
             }
@@ -289,7 +290,7 @@ final class Generator implements GeneratorInterface
                 private_key: $this->signingKey,
                 algorithm: \OPENSSL_ALGO_SHA256
             );
-        // @codeCoverageIgnoreStart
+            // @codeCoverageIgnoreStart
         } catch (\Throwable $th) {
             $failure = $th;
         }
@@ -314,7 +315,8 @@ final class Generator implements GeneratorInterface
      *
      * @return array<string> The OpenSSL error stack.
      */
-    private function getOpenSslErrorStack(): array {
+    private function getOpenSslErrorStack(): array
+    {
         $openSslErrorStack = [];
 
         while ($error = openssl_error_string()) {
