@@ -8,9 +8,6 @@ use Auth0\SDK\Exception\TokenException;
 use Auth0\SDK\Token;
 use OpenSSLAsymmetricKey;
 
-/**
- * @codeCoverageIgnore
- */
 interface GeneratorInterface
 {
     /**
@@ -18,8 +15,8 @@ interface GeneratorInterface
      *
      * @param OpenSSLAsymmetricKey|string $signingKey Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
      * @param string $algorithm Algorithm to use for signing the token. Defaults to RS256.
-     * @param array $claims Claims to include in the token. Defaults to an empty array.
-     * @param array $headers Headers to include in the token. Defaults to an empty array. The the "alg" header will be set to represent $algorithm appropriately.
+     * @param array<mixed> $claims Claims to include in the token. Defaults to an empty array.
+     * @param array<string> $headers Headers to include in the token. Defaults to an empty array. The the "alg" header will be set to represent $algorithm appropriately.
      * @param null|string $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
      *
      * @throws TokenException When an unsupported algorithm is provided.
@@ -39,6 +36,8 @@ interface GeneratorInterface
      * Generate a new token and return it as an array.
      *
      * @param bool $encodeSegments Whether to encode the segments or not. Defaults to true.
+     *
+     * @return array<mixed>
      *
      * @throws TokenException If an error occurs while generating the token.
      */

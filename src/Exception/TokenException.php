@@ -23,49 +23,49 @@ final class TokenException extends \Exception implements Auth0Exception
     public static function unableToProcessSigningKey(
         string $message,
         ?\Throwable $previous = null,
-    ): static {
-        return new static(sprintf(static::MSG_SIGNING_KEY_PROCESSING_ERROR, $message), 0, $previous);
+    ): self {
+        return new self(sprintf(static::MSG_SIGNING_KEY_PROCESSING_ERROR, $message), 0, $previous);
     }
 
     public static function unableToEncodeSegment(
         string $segment,
         string $message,
         ?\Throwable $previous = null,
-    ): static {
-        return new static(sprintf(static::MSG_UNABLE_TO_ENCODE_SEGMENT, $segment, $message), 0, $previous);
+    ): self {
+        return new self(sprintf(static::MSG_UNABLE_TO_ENCODE_SEGMENT, $segment, $message), 0, $previous);
     }
 
     public static function unableToSignData(
         string $message,
         ?\Throwable $previous = null,
-    ): static {
-        return new static(sprintf(static::MSG_UNABLE_TO_SIGN_DATA, $message), 0, $previous);
+    ): self {
+        return new self(sprintf(static::MSG_UNABLE_TO_SIGN_DATA, $message), 0, $previous);
     }
 
     public static function unsupportedAlgorithm(
         string $algorithm,
         string $supported,
         ?\Throwable $previous = null,
-    ): static {
-        return new static(sprintf(static::MSG_UNSUPPORTED_ALGORITHM, $algorithm, $supported), 0, $previous);
+    ): self {
+        return new self(sprintf(static::MSG_UNSUPPORTED_ALGORITHM, $algorithm, $supported), 0, $previous);
     }
 
     public static function requireKeyAsStringHs256(
         ?\Throwable $previous = null,
-    ): static {
-        return new static(static::MSG_HS256_REQUIRES_KEY_AS_STRING, 0, $previous);
+    ): self {
+        return new self(static::MSG_HS256_REQUIRES_KEY_AS_STRING, 0, $previous);
     }
 
     public static function openSslMissing(
         ?\Throwable $previous = null,
-    ): static {
-        return new static(static::MSG_LIB_OPENSSL_MISSING, 0, $previous);
+    ): self {
+        return new self(static::MSG_LIB_OPENSSL_MISSING, 0, $previous);
     }
 
     public static function openSslMissingAlgo(
         string $algorithm,
         ?\Throwable $previous = null,
-    ): static {
-        return new static(sprintf(static::MSG_LIB_OPENSSL_MISSING_ALGO, $algorithm), 0, $previous);
+    ): self {
+        return new self(sprintf(static::MSG_LIB_OPENSSL_MISSING_ALGO, $algorithm), 0, $previous);
     }
 }

@@ -37,12 +37,14 @@ it('throws an error when an incompatible signing key is used with HS256', functi
 
 it('throws an error when an malformed signing key is used with RS256', function(): void {
     $mockSigningKey = TokenGenerator::generateRsaKeyPair()['private'];
-    $corruptedSigningKey = Chaos::corruptString($mockSigningKey, 12);
 
-    Generator::create(
-        signingKey: $corruptedSigningKey,
-        algorithm: Token::ALGO_RS256
-    );
+    for ($i = 0; $i < 128; $i++) {
+        $corruptedSigningKey = Chaos::corruptString($mockSigningKey, random_int(0, 256));
+
+        Generator::create(
+            signingKey: $corruptedSigningKey
+        );
+    }
 })->throws(TokenException::class);
 
 it('throws an error when an incompatible algorithm is specified', function(): void {

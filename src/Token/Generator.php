@@ -8,6 +8,7 @@ use Auth0\SDK\Contract\Token\GeneratorInterface;
 use Auth0\SDK\Exception\TokenException;
 use Auth0\SDK\Token;
 use OpenSSLAsymmetricKey;
+use Throwable;
 
 final class Generator implements GeneratorInterface
 {
@@ -36,7 +37,7 @@ final class Generator implements GeneratorInterface
         array $headers = [],
         null|string $signingKeyPassphrase = null
     ): static {
-        return new static(
+        return new self(
             signingKey: $signingKey,
             algorithm: $algorithm,
             claims: $claims,
@@ -89,8 +90,8 @@ final class Generator implements GeneratorInterface
      *
      * @param OpenSSLAsymmetricKey|string $signingKey Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
      * @param string $algorithm Algorithm to use for signing the token. Defaults to RS256.
-     * @param array $claims Claims to include in the token. Defaults to an empty array.
-     * @param array $headers Headers to include in the token. Defaults to an empty array. The the "alg" header will be set to represent $algorithm appropriately.
+     * @param array<mixed> $claims Claims to include in the token. Defaults to an empty array.
+     * @param array<string> $headers Headers to include in the token. Defaults to an empty array. The the "alg" header will be set to represent $algorithm appropriately.
      * @param null|string $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
      *
      * @throws TokenException When an unsupported algorithm is provided.
@@ -112,7 +113,7 @@ final class Generator implements GeneratorInterface
         $this->headers = array_merge($this->headers, ['type' => 'JWT', 'alg' => $this->algorithm]);
 
         // Convert the provided signing key to the appropriate type.
-        $this->signingKey = $this->loadSigningKey($signingKey, $signingKeyPassphrase);
+        $this->signingKey = $this->loadSigningKey($this->signingKey, $this->signingKeyPassphrase);
     }
 
     // @codeCoverageIgnoreStart
@@ -179,17 +180,21 @@ final class Generator implements GeneratorInterface
             );
 
             // Get the details of the key.
-            $details = openssl_pkey_get_details($signingKey);
-        } catch (\Throwable $th) {
+            if ($signingKey instanceof OpenSSLAsymmetricKey) {
+                $details = openssl_pkey_get_details($signingKey);
+            }
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $th) {
             $failure = $th;
         }
 
         // If we were unable to load the key, throw an exception.
-        if (! $signingKey || ! $details) {
-            $message = implode(', ', $this->getOpenSslErrorStack());
-            $message = (($failure instanceof \Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) .  ' (' . $message . ')';
+        if (! $signingKey instanceof OpenSSLAsymmetricKey || $details === false) {
+            $message = implode(', ', $this->openSslErrors());
+            $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) .  ' (' . $message . ')';
             throw TokenException::unableToProcessSigningKey($message, $failure);
         }
+        // @codeCoverageIgnoreEnd
 
         // If the key is not an RSA key, throw an exception.
         if (! isset($details['type']) || $details['type'] !== OPENSSL_KEYTYPE_RSA || ! isset($details['rsa'])) {
@@ -201,6 +206,8 @@ final class Generator implements GeneratorInterface
 
     /**
      * Glue the provided data segments together with a period, to produce a formatted token.
+     *
+     * @param array<mixed> $data Data segments to glue together.
      */
     private function glue(array $data): string
     {
@@ -213,7 +220,7 @@ final class Generator implements GeneratorInterface
     /**
      * Encode the provided data segment as a base64-encoded string. Optionally, encode the data as JSON.
      *
-     * @param string|array $data Data to encode.
+     * @param string|array<mixed> $data Data to encode.
      * @param string $segment Segment name to use for error messages.
      * @param bool $json Whether to encode the data as JSON. Defaults to true.
      * @param bool $skip Whether to skip encoding the data. Defaults to false.
@@ -224,18 +231,26 @@ final class Generator implements GeneratorInterface
     {
         // If $skip is true, return the data as-is.
         if ($skip) {
-            return json_encode($data) ?? 'JSON_ENCODING_ERROR';
+            $data = json_encode($data);
+
+            if ($data !== false) {
+                return $data;
+            }
+
+            // @codeCoverageIgnoreStart
+            return 'JSON_ENCODING_ERROR';
+            // @codeCoverageIgnoreEnd
         }
 
         // If the data is an array, or $json is true, encode it as JSON.
-        if ($json === true || ! is_string($data)) {
+        if ($json || ! is_string($data)) {
             try {
                 $data = json_encode(
                     value: $data,
                     flags: \JSON_UNESCAPED_SLASHES | \JSON_THROW_ON_ERROR
                 );
                 // @codeCoverageIgnoreStart
-            } catch (\Throwable $th) {
+            } catch (Throwable $th) {
                 throw TokenException::unableToEncodeSegment($segment, $th->getMessage());
             }
             // @codeCoverageIgnoreEnd
@@ -245,11 +260,7 @@ final class Generator implements GeneratorInterface
         return str_replace(
             search: '=',
             replace: '',
-            subject: strtr(
-                string: base64_encode($data),
-                from: '+/',
-                to: '-_'
-            )
+            subject: strtr(base64_encode($data), '+/', '-_')
         );
     }
 
@@ -266,6 +277,12 @@ final class Generator implements GeneratorInterface
     {
         // For HS256, use hash_hmac() to sign the data.
         if ($this->algorithm === Token::ALGO_HS256) {
+            // @codeCoverageIgnoreStart
+            if (! is_string($this->signingKey)) {
+                throw TokenException::unableToSignData(TokenException::MSG_UNKNOWN_ERROR);
+            }
+            // @codeCoverageIgnoreEnd
+
             return $this->encode(
                 data: hash_hmac(
                     algo: 'sha256',
@@ -284,21 +301,16 @@ final class Generator implements GeneratorInterface
         $failure = null;
 
         try {
-            $success = openssl_sign(
-                data: $data,
-                signature: $signature,
-                private_key: $this->signingKey,
-                algorithm: \OPENSSL_ALGO_SHA256
-            );
+            $success = openssl_sign($data, $signature, $this->signingKey, OPENSSL_ALGO_SHA256);
             // @codeCoverageIgnoreStart
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $failure = $th;
         }
 
         // If we were unable to sign the data, throw an exception.
         if (! $success) {
-            $message = implode(', ', $this->getOpenSslErrorStack());
-            $message = (($failure instanceof \Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) .  ' (' . $message . ')';
+            $message = implode(', ', $this->openSslErrors());
+            $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) .  ' (' . $message . ')';
             throw TokenException::unableToSignData($message, $failure);
         }
         // @codeCoverageIgnoreEnd
@@ -315,7 +327,7 @@ final class Generator implements GeneratorInterface
      *
      * @return array<string> The OpenSSL error stack.
      */
-    private function getOpenSslErrorStack(): array
+    private function openSslErrors(): array
     {
         $openSslErrorStack = [];
 

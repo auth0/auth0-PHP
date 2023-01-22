@@ -4,6 +4,10 @@
     <include>
       <directory suffix=".php">./src/</directory>
     </include>
+    <exclude>
+      <directory suffix=".php">./src/Contract/</directory>
+      <directory suffix=".php">./src/Exception/</directory>
+    </exclude>
   </coverage>
   <testsuites>
     <testsuite name="unit">
