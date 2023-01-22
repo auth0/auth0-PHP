@@ -112,4 +112,86 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
             withOptions($options)->
             call();
     }
+
+    public function createCredentials(
+        string $clientId,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
+
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+        ])->isString();
+
+        /** @var array<mixed> $body */
+
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('clients', $clientId, 'credentials')->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
+    }
+
+    public function getCredentials(
+        string $clientId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+        ])->isString();
+
+        /** @var array<int|string|null> $parameters */
+
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('clients', $clientId, 'credentials')->
+            withParams($parameters)->
+            withOptions($options)->
+            call();
+    }
+
+    public function getCredential(
+        string $clientId,
+        string $credentialId,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$clientId, $credentialId] = Toolkit::filter([$clientId, $credentialId])->string()->trim();
+
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+            [$credentialId, \Auth0\SDK\Exception\ArgumentException::missing('credentialId')],
+        ])->isString();
+
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('clients', $clientId, 'credentials', $credentialId)->
+            withOptions($options)->
+            call();
+    }
+
+    public function deleteCredential(
+        string $clientId,
+        string $credentialId,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$clientId, $credentialId] = Toolkit::filter([$clientId, $credentialId])->string()->trim();
+
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+            [$credentialId, \Auth0\SDK\Exception\ArgumentException::missing('credentialId')],
+        ])->isString();
+
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('clients', $clientId, 'credentials', $credentialId)->
+            withOptions($options)->
+            call();
+    }
 }
