@@ -21,6 +21,22 @@ final class Generator implements GeneratorInterface
     ];
 
     /**
+     * Minimum signing key lengths for token generation.
+     */
+    public const CONST_ALGO_MIN_LENGTHS = [
+        Token::ALGO_RS256 => 2048,
+        Token::ALGO_HS256 => 2048
+    ];
+
+    /**
+     * Maximum signing key lengths for token generation.
+     */
+    public const CONST_ALGO_MAX_LENGTHS = [
+        Token::ALGO_RS256 => 4096,
+        Token::ALGO_HS256 => 4096
+    ];
+
+    /**
      * Supported key types for token generation.
      */
     public const CONST_SUPPORTED_KEY_TYPES = [
@@ -199,6 +215,10 @@ final class Generator implements GeneratorInterface
         // If the key is not an RSA key, throw an exception.
         if (! isset($details['type']) || $details['type'] !== OPENSSL_KEYTYPE_RSA || ! isset($details['rsa'])) {
             throw TokenException::unableToProcessSigningKey(sprintf(TokenException::MSG_KEY_TYPE_NOT_SUPPORTED, $details['type'] ?? 'unknown'));
+        }
+
+        if (! isset($details['bits']) || intval($details['bits']) < self::CONST_ALGO_MIN_LENGTHS[$this->algorithm] || intval($details['bits']) > self::CONST_ALGO_MAX_LENGTHS[$this->algorithm]) {
+            throw TokenException::keyLengthNotSupported((string) $details['bits'] ?? 'unknown', $this->algorithm);
         }
 
         return $signingKey;

@@ -19,6 +19,7 @@ final class TokenException extends \Exception implements Auth0Exception
     public const MSG_HS256_REQUIRES_KEY_AS_STRING = 'HS256 algorithm requires a key in string format.';
     public const MSG_LIB_OPENSSL_MISSING = 'The OpenSSL extension is required to generate tokens';
     public const MSG_LIB_OPENSSL_MISSING_ALGO = 'The OpenSSL extension must support %s algorithm to generate tokens';
+    public const MSG_KEY_LENGTH_NOT_SUPPORTED = 'Key length "%s" is not supported for the %s algorithm';
 
     public static function unableToProcessSigningKey(
         string $message,
@@ -67,5 +68,13 @@ final class TokenException extends \Exception implements Auth0Exception
         ?\Throwable $previous = null,
     ): self {
         return new self(sprintf(static::MSG_LIB_OPENSSL_MISSING_ALGO, $algorithm), 0, $previous);
+    }
+
+    public static function keyLengthNotSupported(
+        string $length,
+        string $algorithm,
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(sprintf(static::MSG_KEY_LENGTH_NOT_SUPPORTED, $length, $algorithm), 0, $previous);
     }
 }

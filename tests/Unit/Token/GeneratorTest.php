@@ -54,6 +54,28 @@ it('throws an error when an incompatible algorithm is specified', function(): vo
     );
 })->throws(TokenException::class);
 
+it('throws an error when too small a bit length is used by a configured signing key', function(): void {
+    $mockSigningKey = TokenGenerator::generateRsaKeyPair(
+        bitLength: 1024 / 2
+    );
+
+    Generator::create(
+        signingKey: $mockSigningKey['resource'],
+        algorithm: Token::ALGO_RS256
+    );
+})->throws(TokenException::class);
+
+it('throws an error when too large bit length is used by a configured signing key', function(): void {
+    $mockSigningKey = TokenGenerator::generateRsaKeyPair(
+        bitLength: 1024 * 5
+    );
+
+    Generator::create(
+        signingKey: $mockSigningKey['resource'],
+        algorithm: Token::ALGO_RS256
+    );
+})->throws(TokenException::class);
+
 it('returns an instance of the Generator class', function(): void {
     $mockSigningKey = TokenGenerator::generateRsaKeyPair();
 

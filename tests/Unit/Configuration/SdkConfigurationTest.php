@@ -8,6 +8,7 @@ use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\MockDomain;
 use Auth0\Tests\Utilities\MockPsr14StoreListener;
 use Auth0\Tests\Utilities\MockStore;
+use Auth0\Tests\Utilities\TokenGenerator;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -1629,3 +1630,39 @@ test('Pkce methods function as expected', function(): void
     $config->setUsePkce(true);
     expect($config->getUsePkce())->toBeTrue();
 });
+
+test('Client assertions methods function as expected', function(): void
+{
+    $mockSigningKey = TokenGenerator::generateRsaKeyPair();
+
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    expect($config->hasClientAssertionSigningAlgorithm())->toBeTrue();
+    expect($config->getClientAssertionSigningAlgorithm())->toEqual(Token::ALGO_RS256);
+
+    expect($config->hasClientAssertionSigningKey())->toBeFalse();
+    expect($config->getClientAssertionSigningKey())->toBeNull();
+
+    $config->setClientAssertionSigningKey($mockSigningKey['private']);
+    expect($config->hasClientAssertionSigningKey())->toBeTrue();
+    expect($config->getClientAssertionSigningKey())->toEqual($mockSigningKey['private']);
+
+    $config->setClientAssertionSigningKey(null);
+    expect($config->hasClientAssertionSigningKey())->toBeFalse();
+    expect($config->getClientAssertionSigningKey())->toBeNull();
+
+    $config->setClientAssertionSigningAlgorithm(Token::ALGO_RS256);
+    expect($config->hasClientAssertionSigningAlgorithm())->toBeTrue();
+    expect($config->getClientAssertionSigningAlgorithm())->toEqual(Token::ALGO_RS256);
+});
+
+test('setClientAssertionSigningKey() throws an exception when an invalid algorithm is configured', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $config->setClientAssertionSigningAlgorithm(Token::ALGO_HS256);
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_INCOMPATIBLE_SIGNING_ALGORITHM, 'HS256'));
