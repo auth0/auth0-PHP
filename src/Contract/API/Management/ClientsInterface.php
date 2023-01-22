@@ -107,17 +107,13 @@ interface ClientsInterface
     ): ResponseInterface;
 
     /**
-     * Create a new Client.
-     * Required scope: `create:clients`.
+     * Add new credentials to the specified Client.
      *
-     * @param  string  $clientId  client  to create credentials for
+     * @param  string  $clientId Client to add credentials to
      * @param  array<mixed>  $body  Additional body content to pass with the API request. See @see for supported options.
      * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `name` is provided
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Clients/post_clients
      */
     public function createCredentials(
         string $clientId,
@@ -126,18 +122,14 @@ interface ClientsInterface
     ): ResponseInterface;
 
     /**
-     * Get all Clients.
-     * Required scopes:
-     * - `read:clients` for any call to this endpoint.
-     * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
+     * Get all credentials from the specified Client.
      *
-     * @param  string  $clientId  client to retrieve credentials for
+     * @param  string  $clientId  Client to retrieve credentials for
      * @param  array<int|string|null>|null  $parameters  Optional. Additional query parameters to pass with the API request. See @see for supported options.
      * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `clientId` is provided
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Clients/get_clients
      */
     public function getCredentials(
         string $clientId,
@@ -146,19 +138,14 @@ interface ClientsInterface
     ): ResponseInterface;
 
     /**
-     * Get a Client.
-     * Required scopes:
-     * - `read:clients` for any call to this endpoint.
-     * - `read:client_keys` to retrieve "client_secret" and "encryption_key" attributes.
+     * Get a specific credential from the specified Client.
      *
-     * @param  string  $clientId  client to retrieve credential for
+     * @param  string  $clientId  Client to retrieve credential for
      * @param  string  $credentialId  credential to retrieve
      * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `clientId` or `credentialId` are provided
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Clients/get_clients_by_id
      */
     public function getCredential(
         string $clientId,
@@ -167,14 +154,13 @@ interface ClientsInterface
     ): ResponseInterface;
 
     /**
-     * Delete a Client.
-     * Required scope: `delete:clients".
+     * Delete a credential from the specified Client.
      *
      * @param  string  $clientId  client to delete credential for
      * @param  string  $credentialId  credential to delete
      * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `clientId` or `credentialId` are provided
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      */
     public function deleteCredential(
