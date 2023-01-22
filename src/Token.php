@@ -16,6 +16,7 @@ final class Token implements TokenInterface
 {
     public const TYPE_ID_TOKEN = 1;
 
+    public const TYPE_ACCESS_TOKEN = 2;
     public const TYPE_TOKEN = 2;
 
     public const ALGO_RS256 = 'RS256';
