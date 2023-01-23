@@ -6,7 +6,6 @@ namespace Auth0\Tests\Utilities;
 
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\Generator;
-use Firebase\JWT\JWT;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 

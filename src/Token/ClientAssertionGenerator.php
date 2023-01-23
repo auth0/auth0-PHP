@@ -18,6 +18,7 @@ final class ClientAssertionGenerator
      */
     public const CONST_SUPPORTED_ALGORITHMS = [
         Token::ALGO_RS256,
+        Token::ALGO_RS384
     ];
 
     /**
@@ -28,7 +29,7 @@ final class ClientAssertionGenerator
      * @param OpenSSLAsymmetricKey|string $signingKey The signing key to use.
      * @param string $signingAlgorithm The signing algorithm to use.
      *
-     * @return string The generated JWT.
+     * @return Generator A configured instance of the Token Generator.
      *
      * @throws InvalidArgumentException If an invalid signing algorithm is provided.
      * @throws TokenException If an error occurs during signing.
@@ -38,7 +39,7 @@ final class ClientAssertionGenerator
         string $clientId,
         OpenSSLAsymmetricKey|string $signingKey,
         string $signingAlgorithm = Token::ALGO_RS256,
-    ): string {
+    ): Generator {
         if (! in_array($signingAlgorithm, self::CONST_SUPPORTED_ALGORITHMS, true)) {
             throw TokenException::unsupportedAlgorithm($signingAlgorithm, implode(',', self::CONST_SUPPORTED_ALGORITHMS));
         }
@@ -54,7 +55,7 @@ final class ClientAssertionGenerator
             'jti' => hash('sha256', implode(':', [uniqid(microtime(), true), bin2hex(random_bytes(32))]))
         ];
 
-        return (string) Generator::create(
+        return Generator::create(
             signingKey: $signingKey,
             algorithm: $signingAlgorithm,
             claims: $claims,

@@ -525,16 +525,17 @@ final class Authentication implements AuthenticationInterface
      */
     private function addClientAuthentication(array $requestBody): array
     {
+        $clientId = $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()) ?? '';
         $clientAssertionSigningKey = $this->getConfiguration()->getClientAssertionSigningKey();
         $clientAssertionSigningAlgorithm = $this->getConfiguration()->getClientAssertionSigningAlgorithm();
 
-        $requestBody['client_id'] = $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()) ?? '';
+        $requestBody['client_id'] = $clientId;
 
         if (null !== $clientAssertionSigningKey) {
             $requestBody['client_assertion_type'] = self::CONST_CLIENT_ASSERTION_TYPE;
-            $requestBody['client_assertion'] = ClientAssertionGenerator::create(
+            $requestBody['client_assertion'] = (string) ClientAssertionGenerator::create(
                 domain: $this->getConfiguration()->formatDomain(true) . '/',
-                clientId: $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()) ?? '',
+                clientId: $clientId,
                 signingKey: $clientAssertionSigningKey,
                 signingAlgorithm: $clientAssertionSigningAlgorithm
             );
@@ -542,8 +543,7 @@ final class Authentication implements AuthenticationInterface
             return $requestBody;
         }
 
-        $clientSecret = $this->getConfiguration()->getClientSecret(ConfigurationException::requiresClientSecret()) ?? '';
-        $requestBody['client_secret'] = $clientSecret;
+        $requestBody['client_secret'] = $this->getConfiguration()->getClientSecret(ConfigurationException::requiresClientSecret()) ?? '';
 
         return $requestBody;
     }

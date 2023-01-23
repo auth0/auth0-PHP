@@ -11,7 +11,7 @@ final class TokenException extends \Exception implements Auth0Exception
 {
     public const MSG_UNKNOWN_ERROR = 'An unknown error occurred.';
     public const MSG_KEY_TYPE_UNKNOWN = 'Key type could not be determined';
-    public const MSG_KEY_TYPE_NOT_SUPPORTED = 'Key type "%s" is not supported for the $s algorithm';
+    public const MSG_KEY_TYPE_NOT_SUPPORTED = 'Key type "%s" is not supported for the %s algorithm';
     public const MSG_SIGNING_KEY_PROCESSING_ERROR = 'An exception occurred while attempting to process the configured signing key: %s';
     public const MSG_UNABLE_TO_ENCODE_SEGMENT = 'An exception occurred while attempting to encode segment "%s" during token generation: %s';
     public const MSG_UNABLE_TO_SIGN_DATA = 'An exception occurred while attempting to produce signature during token generation: %s';
@@ -19,7 +19,26 @@ final class TokenException extends \Exception implements Auth0Exception
     public const MSG_HS256_REQUIRES_KEY_AS_STRING = 'HS256 algorithm requires a key in string format.';
     public const MSG_LIB_OPENSSL_MISSING = 'The OpenSSL extension is required to generate tokens';
     public const MSG_LIB_OPENSSL_MISSING_ALGO = 'The OpenSSL extension must support %s algorithm to generate tokens';
-    public const MSG_KEY_LENGTH_NOT_SUPPORTED = 'Key length "%s" is not supported for the %s algorithm';
+
+    public static function unknown(
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(static::MSG_UNKNOWN_ERROR, 0, $previous);
+    }
+
+    public static function unidentifiableKeyType(
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(static::MSG_KEY_TYPE_UNKNOWN, 0, $previous);
+    }
+
+    public static function keyTypeMismatch(
+        string $keyType,
+        string $algorithm,
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(sprintf(static::MSG_KEY_TYPE_NOT_SUPPORTED, $keyType, $algorithm), 0, $previous);
+    }
 
     public static function unableToProcessSigningKey(
         string $message,
@@ -68,13 +87,5 @@ final class TokenException extends \Exception implements Auth0Exception
         ?\Throwable $previous = null,
     ): self {
         return new self(sprintf(static::MSG_LIB_OPENSSL_MISSING_ALGO, $algorithm), 0, $previous);
-    }
-
-    public static function keyLengthNotSupported(
-        string $length,
-        string $algorithm,
-        ?\Throwable $previous = null,
-    ): self {
-        return new self(sprintf(static::MSG_KEY_LENGTH_NOT_SUPPORTED, $length, $algorithm), 0, $previous);
     }
 }

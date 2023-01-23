@@ -63,7 +63,46 @@ final class Verifier
             throw \Auth0\SDK\Exception\InvalidTokenException::unexpectedSigningAlgorithm($this->algorithm, (string) $alg);
         }
 
-        if (Token::ALGO_RS256 === $alg) {
+        $usesHmac = match ($alg) {
+            Token::ALGO_HS256, Token::ALGO_HS384, Token::ALGO_HS512 => true,
+            default => false,
+        };
+
+        if ($usesHmac) {
+            if (null === $this->clientSecret) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::requiresClientSecret();
+            }
+
+            $digest = match ($alg) {
+                Token::ALGO_HS256 => 'sha256',
+                Token::ALGO_HS384 => 'sha384',
+                Token::ALGO_HS512 => 'sha512',
+                default => throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg),
+            };
+
+            $hash = hash_hmac($digest, $this->payload, $this->clientSecret, true);
+            $valid = hash_equals($this->signature, $hash);
+
+            if (! $valid) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
+            }
+
+            return $this;
+        }
+
+        $usesRsa = match ($alg) {
+            Token::ALGO_RS256, Token::ALGO_RS384, Token::ALGO_RS512 => true,
+            default => false,
+        };
+
+        if ($usesRsa) {
+            $digest = match ($alg) {
+                Token::ALGO_RS256 => \OPENSSL_ALGO_SHA256,
+                Token::ALGO_RS384 => \OPENSSL_ALGO_SHA384,
+                Token::ALGO_RS512 => \OPENSSL_ALGO_SHA512,
+                default => throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg),
+            };
+
             $kid = $this->headers['kid'] ?? null;
 
             if (null === $kid) {
@@ -71,24 +110,9 @@ final class Verifier
             }
 
             $key = $this->getKey((string) $kid);
-            $valid = openssl_verify($this->payload, $this->signature, $key, OPENSSL_ALGO_SHA256);
+            $valid = openssl_verify($this->payload, $this->signature, $key, $digest);
 
             if (1 !== $valid) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
-            }
-
-            return $this;
-        }
-
-        if (Token::ALGO_HS256 === $alg) {
-            if (null === $this->clientSecret) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::requiresClientSecret();
-            }
-
-            $hash = hash_hmac('sha256', $this->payload, $this->clientSecret, true);
-            $valid = hash_equals($this->signature, $hash);
-
-            if (! $valid) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
             }
 
@@ -169,10 +193,10 @@ final class Verifier
     }
 
     /**
-     * Query a JWKS endpoint for a matching key. Parse and return a OpenSSLAsymmetricKey (PHP 8.0+) or resource (PHP < 8.0) suitable for verification.
+     * Query a JWKS endpoint for a matching key. Parse and return a OpenSSLAsymmetricKey (PHP 8.0+) suitable for verification.
      *
      * @param  string  $kid  the 'kid' header value to use for key lookup
-     * @return \OpenSSLAsymmetricKey|resource
+     * @return \OpenSSLAsymmetricKey
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When unable to retrieve key. See error message for details.
      *
@@ -180,7 +204,7 @@ final class Verifier
      */
     private function getKey(
         string $kid,
-    ) {
+    ): \OpenSSLAsymmetricKey {
         /** @var array<array{x5c: array<int|string>}> $keys */
         $keys = $this->getKeySet($kid);
 
