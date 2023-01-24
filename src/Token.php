@@ -14,14 +14,18 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 final class Token implements TokenInterface
 {
+    // TODO: Replace these with an enum when PHP 8.1 is our min supported version.
     public const TYPE_ID_TOKEN = 1;
-
     public const TYPE_ACCESS_TOKEN = 2;
     public const TYPE_TOKEN = 2;
 
-    public const ALGO_RS256 = 'RS256';
-
+    // TODO: Replace these with an enum when PHP 8.1 is our min supported version.
     public const ALGO_HS256 = 'HS256';
+    public const ALGO_RS256 = 'RS256';
+    public const ALGO_HS384 = 'HS384';
+    public const ALGO_RS384 = 'RS384';
+    public const ALGO_HS512 = 'HS512';
+    public const ALGO_RS512 = 'RS512';
 
     private ?Parser $parser = null;
 

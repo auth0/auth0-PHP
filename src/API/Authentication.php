@@ -6,6 +6,9 @@ namespace Auth0\SDK\API;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\AuthenticationInterface;
+use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\SDK\Exception\TokenException;
+use Auth0\SDK\Token\ClientAssertionGenerator;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
@@ -15,6 +18,8 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class Authentication implements AuthenticationInterface
 {
+    public const CONST_CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
+
     /**
      * Instance of Auth0\SDK\API\Utility\HttpClient.
      */
@@ -30,7 +35,7 @@ final class Authentication implements AuthenticationInterface
      *
      * @param  array<mixed>|SdkConfiguration  $configuration  Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      *
-     * @throws \Auth0\SDK\Exception\ConfigurationException when an invalidation `configuration` is provided
+     * @throws ConfigurationException when an invalidation `configuration` is provided
      *
      * @psalm-suppress DocblockTypeContradiction
      */
@@ -71,7 +76,7 @@ final class Authentication implements AuthenticationInterface
         /** @var string $clientId */
         [$clientId] = Toolkit::filter([
             [$clientId, $this->getConfiguration()->getClientId()],
-        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
+        ])->array()->first(ConfigurationException::requiresClientId());
 
         /** @var array<string> $query */
         $query = Toolkit::filter([
@@ -94,7 +99,7 @@ final class Authentication implements AuthenticationInterface
         /** @var string $clientId */
         [$clientId] = Toolkit::filter([
             [$clientId, $this->getConfiguration()->getClientId()],
-        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
+        ])->array()->first(ConfigurationException::requiresClientId());
 
         return sprintf(
             '%s/samlp/metadata/%s',
@@ -115,7 +120,7 @@ final class Authentication implements AuthenticationInterface
         /** @var string $clientId */
         [$clientId] = Toolkit::filter([
             [$clientId, $this->getConfiguration()->getClientId()],
-        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresClientId());
+        ])->array()->first(ConfigurationException::requiresClientId());
 
         return sprintf(
             '%s/wsfed/%s?%s',
@@ -149,14 +154,14 @@ final class Authentication implements AuthenticationInterface
 
         [$redirectUri] = Toolkit::filter([
             [$redirectUri, isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null, $this->getConfiguration()->getRedirectUri()],
-        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
+        ])->array()->first(ConfigurationException::requiresRedirectUri());
 
         return sprintf(
             '%s/authorize?%s',
             $this->getConfiguration()->formatDomain(),
             http_build_query(Toolkit::merge([
                 'state'         => $state,
-                'client_id'     => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_id'     => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'audience'      => $this->getConfiguration()->defaultAudience(),
                 'organization'  => $this->getConfiguration()->defaultOrganization(),
                 'redirect_uri'  => $redirectUri,
@@ -179,14 +184,14 @@ final class Authentication implements AuthenticationInterface
         /** @var string $returnTo */
         [$returnTo] = Toolkit::filter([
             [$returnTo, isset($params['returnTo']) ? (string) $params['returnTo'] : null, $this->getConfiguration()->getRedirectUri()],
-        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
+        ])->array()->first(ConfigurationException::requiresRedirectUri());
 
         return sprintf(
             '%s/v2/logout?%s',
             $this->getConfiguration()->formatDomain(),
             http_build_query(Toolkit::merge([
                 'returnTo'  => $returnTo,
-                'client_id' => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_id' => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
             ], $params), '', '&', PHP_QUERY_RFC3986),
         );
     }
@@ -195,18 +200,17 @@ final class Authentication implements AuthenticationInterface
         ?array $body = null,
         ?array $headers = null,
     ): ResponseInterface {
+        /** @var array<int|string> $headers */
+        /** @var array<string> $body */
+
         [$body, $headers] = Toolkit::filter([$body, $headers])->array()->trim();
 
-        /** @var array<mixed> $body */
-        /** @var array<int|string> $headers */
+        $body = $this->addClientAuthentication($body);
 
         return $this->getHttpClient()->
             method('post')->
             addPath('passwordless', 'start')->
-            withBody((object) Toolkit::merge([
-                'client_id'     => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-                'client_secret' => $this->getConfiguration()->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
-            ], $body))->
+            withBody((object) $body)->
             withHeaders($headers)->
             call();
     }
@@ -299,27 +303,29 @@ final class Authentication implements AuthenticationInterface
         ?array $headers = null,
     ): ResponseInterface {
         [$grantType] = Toolkit::filter([$grantType])->string()->trim();
+
+        /** @var array<int|string> $headers */
+        /** @var array<bool|int|string> $params */
+
         [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
 
         Toolkit::assert([
             [$grantType, \Auth0\SDK\Exception\ArgumentException::missing('grantType')],
         ])->isString();
 
-        /** @var array<bool|int|string> $params */
-        $parameters = Toolkit::merge([
-            'grant_type'    => $grantType,
-            'client_id'     => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
-            'client_secret' => $this->getConfiguration()->getClientSecret(\Auth0\SDK\Exception\ConfigurationException::requiresClientSecret()),
+        $params = Toolkit::merge([
+            'grant_type' => $grantType,
         ], $params);
 
-        /** @var array<bool|int|string> $parameters */
-        /** @var array<int|string> $headers */
+        $params = $this->addClientAuthentication($params);
+
+        /** @var array<bool|int|string> $params */
 
         return $this->getHttpClient()->
             method('post')->
             addPath('oauth', 'token')->
             withHeaders($headers)->
-            withFormParams($parameters)->
+            withFormParams($params)->
             call();
     }
 
@@ -336,7 +342,7 @@ final class Authentication implements AuthenticationInterface
 
         [$redirectUri] = Toolkit::filter([
             [$redirectUri, $this->getConfiguration()->getRedirectUri()],
-        ])->array()->first(\Auth0\SDK\Exception\ConfigurationException::requiresRedirectUri());
+        ])->array()->first(ConfigurationException::requiresRedirectUri());
 
         $params = Toolkit::filter([
             [
@@ -469,7 +475,7 @@ final class Authentication implements AuthenticationInterface
             method('post')->
             addPath('dbconnections', 'signup')->
             withBody(Toolkit::merge([
-                'client_id'  => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_id'  => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'email'      => $email,
                 'password'   => $password,
                 'connection' => $connection,
@@ -499,11 +505,46 @@ final class Authentication implements AuthenticationInterface
             method('post')->
             addPath('dbconnections', 'change_password')->
             withBody(Toolkit::merge([
-                'client_id'  => $this->getConfiguration()->getClientId(\Auth0\SDK\Exception\ConfigurationException::requiresClientId()),
+                'client_id'  => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'email'      => $email,
                 'connection' => $connection,
             ], $body))->
             withHeaders($headers)->
             call();
+    }
+
+    /**
+     * Add client authentication to a request body.
+     *
+     * @param array<mixed> $requestBody Request body being sent to the endpoint.
+     *
+     * @return array<mixed> Request body with client authentication added.
+     *
+     * @throws TokenException If client assertion signing key or algorithm is invalid.
+     * @throws ConfigurationException If client ID or secret are invalid.
+     */
+    private function addClientAuthentication(array $requestBody): array
+    {
+        $clientId = $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()) ?? '';
+        $clientAssertionSigningKey = $this->getConfiguration()->getClientAssertionSigningKey();
+        $clientAssertionSigningAlgorithm = $this->getConfiguration()->getClientAssertionSigningAlgorithm();
+
+        $requestBody['client_id'] = $clientId;
+
+        if (null !== $clientAssertionSigningKey) {
+            $requestBody['client_assertion_type'] = self::CONST_CLIENT_ASSERTION_TYPE;
+            $requestBody['client_assertion'] = (string) ClientAssertionGenerator::create(
+                domain: $this->getConfiguration()->formatDomain(true) . '/',
+                clientId: $clientId,
+                signingKey: $clientAssertionSigningKey,
+                signingAlgorithm: $clientAssertionSigningAlgorithm
+            );
+
+            return $requestBody;
+        }
+
+        $requestBody['client_secret'] = $this->getConfiguration()->getClientSecret(ConfigurationException::requiresClientSecret()) ?? '';
+
+        return $requestBody;
     }
 }

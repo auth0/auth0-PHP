@@ -47,9 +47,11 @@ final class ConfigurationException extends \Exception implements Auth0Exception
 
     public const MSG_INVALID_TOKEN_ALGORITHM = 'Invalid token algorithm; must be "HS256" or "RS256"';
 
-    public const MSG_NO_PSR18_LIBRARY = 'No compatible PSR-18 library was configured, and one could not be auto-discovered.';
+    public const MSG_NO_PSR18_LIBRARY = 'No compatible PSR-18 library was configured, and one could not be auto-discovered';
 
-    public const MSG_NO_PSR17_LIBRARY = 'No compatible PSR-17 library was configured, and one could not be auto-discovered.';
+    public const MSG_NO_PSR17_LIBRARY = 'No compatible PSR-17 library was configured, and one could not be auto-discovered';
+
+    public const MSG_INCOMPATIBLE_SIGNING_ALGORITHM = '%s it not a compatible signing algorithm';
 
     public static function requiresConfiguration(
         ?\Throwable $previous = null,
@@ -186,5 +188,12 @@ final class ConfigurationException extends \Exception implements Auth0Exception
         ?\Throwable $previous = null,
     ): self {
         return new self(self::MSG_NO_PSR17_LIBRARY, 0, $previous);
+    }
+
+    public static function incompatibleClientAssertionSigningAlgorithm(
+        string $algorithm,
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(sprintf(self::MSG_INCOMPATIBLE_SIGNING_ALGORITHM, $algorithm), 0, $previous);
     }
 }
