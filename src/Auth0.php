@@ -23,7 +23,7 @@ use Auth0\SDK\Utility\TransientStoreHandler;
  */
 final class Auth0 implements Auth0Interface
 {
-    public const VERSION = '8.3.8';
+    public const VERSION = '8.4.0';
 
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.

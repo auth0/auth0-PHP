@@ -1,64 +1,99 @@
 # Change Log
 
+## [8.4.0](https://github.com/auth0/auth0-PHP/tree/8.4.0) (2023-01-24)
+
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.8...8.4.0)
+
+**Added**
+
+- Client Assertion ([private_key_jwt](https://oauth.net/private-key-jwt/)) support [\#699](https://github.com/auth0/auth0-PHP/pull/699) ([evansims](https://github.com/evansims))
+- Client Credentials management endpoints [\#700](https://github.com/auth0/auth0-PHP/pull/700) ([evansims](https://github.com/evansims))
+- JSON Web Token generator classes, `Auth0\SDK\Token\Generator` and `Auth0\SDK\Token\ClientAssertionGenerator`. [\#698](https://github.com/auth0/auth0-PHP/pull/698) ([evansims](https://github.com/evansims))
+
+**Changed**
+
+- Restore test coverage to 100% [\#697](https://github.com/auth0/auth0-PHP/pull/697) ([evansims](https://github.com/evansims))
+- Exclude unnecessary files from distribution package [\#696](https://github.com/auth0/auth0-PHP/pull/696) ([ramsey](https://github.com/ramsey))
+
 ## [8.3.8](https://github.com/auth0/auth0-PHP/tree/8.3.8) (2022-11-28)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.7...8.3.8)
 
 **Fixed**
+
 - fix: Always store provided state in transient medium [\#674](https://github.com/auth0/auth0-PHP/pull/674) ([evansims](https://github.com/evansims))
 
 ## [8.3.7](https://github.com/auth0/auth0-PHP/tree/8.3.7) (2022-11-07)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.6...8.3.7)
 
 **Fixed**
+
 - fix: emailPasswordlessStart() incorrectly passes `params` as `array` under some conditions [\#670](https://github.com/auth0/auth0-PHP/pull/670) ([evansims](https://github.com/evansims))
 - fix: Remove redundant Cache `getItem()` call in `Auth0\SDK\Token\Verifier::getKeySet()` [\#669](https://github.com/auth0/auth0-PHP/pull/669) ([pkivits-litebit](https://github.com/pkivits-litebit))
 
 ## [8.3.6](https://github.com/auth0/auth0-PHP/tree/8.3.6) (2022-10-24)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.5...8.3.6)
 
 **Fixed**
+
 - fix: Restore previous behavior of SdkConfiguration::setScope() being nullable [\#665](https://github.com/auth0/auth0-PHP/pull/665) ([evansims](https://github.com/evansims))
 
 ## [8.3.5](https://github.com/auth0/auth0-PHP/tree/8.3.5) (2022-10-21)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.4...8.3.5)
 
 **Fixed**
+
 - [SDK-3722] Fix: Stateless strategies should not invoke stateful session classes [\#662](https://github.com/auth0/auth0-PHP/pull/662) ([evansims](https://github.com/evansims))
 
 ## [8.3.4](https://github.com/auth0/auth0-PHP/tree/8.3.4) (2022-10-19)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.3...8.3.4)
 
 **Fixed**
+
 - Fix `SdkConfiguration::setScope()` not assigning default values when an empty array is passed [\#659](https://github.com/auth0/auth0-PHP/pull/659) ([evansims](https://github.com/evansims))
 
 ## [8.3.3](https://github.com/auth0/auth0-PHP/tree/8.3.3) (2022-10-19)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.2...8.3.3)
 
 **Fixed**
+
 - Configuration validator improvements [\#657](https://github.com/auth0/auth0-PHP/pull/657) ([evansims](https://github.com/evansims))
 
 ## [8.3.2](https://github.com/auth0/auth0-PHP/tree/8.3.2) (2022-10-18)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.1...8.3.2)
 
 **Fixed**
+
 - [SDK-3719] Fix PHP 8.0+ SdkConfiguration named arguments usage [\#654](https://github.com/auth0/auth0-PHP/pull/654) ([evansims](https://github.com/evansims))
 
 ## [8.3.1](https://github.com/auth0/auth0-PHP/tree/8.3.1) (2022-09-24)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.3.0...8.3.1)
 
 **Changed**
+
 - [SDK-3647] Add PHP 8.2.0-dev to test matrix [\#650](https://github.com/auth0/auth0-PHP/pull/650) ([evansims](https://github.com/evansims))
 
 **Fixed**
+
 - [SDK-3646] Reliability and performance improvements to CookieStore [\#649](https://github.com/auth0/auth0-PHP/pull/649) ([evansims](https://github.com/evansims))
 
 ## [8.3.0](https://github.com/auth0/auth0-PHP/tree/8.3.0) (2022-09-22)
+
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.2.1...8.3.0)
 
 **Added**
+
 - [SDK-3636] Add PSR-14 Event Dispatcher, for ultra customizable session storage purposes [\#646](https://github.com/auth0/auth0-PHP/pull/646) ([evansims](https://github.com/evansims))
 
 **Changed**
+
 - [SDK-3633] Treat passing an empty string to SdkConfiguration as the default undefined value type of NULL [\#643](https://github.com/auth0/auth0-PHP/pull/643) ([evansims](https://github.com/evansims))
 - [SDK-3635] Enable configuration of SessionStore and CookieStore `samesite` property [\#645](https://github.com/auth0/auth0-PHP/pull/645) ([evansims](https://github.com/evansims))
 - [SDK-3634] Add hardcoded debugging flag to CookieStore to disable encryption of session cookies [\#644](https://github.com/auth0/auth0-PHP/pull/644) ([evansims](https://github.com/evansims))
@@ -140,6 +175,7 @@ Many thanks to our community contributors for this release: [elbebass](https://g
 - Require `domain` configuration for `management` strategy [#589](https://github.com/auth0/auth0-PHP/pull/589) ([evansims](https://github.com/evansims))
 
 **Documentation**
+
 - Update UPGRADE.md with additional notes about `Auth0::login()` changes from v7. [#585](https://github.com/auth0/auth0-PHP/pull/585) ([BGehrels](https://github.com/BGehrels))
 - Update UPGRADE.md with additional notes about `Auth0::exchange()` changes from v7. [#584](https://github.com/auth0/auth0-PHP/pull/584) ([BGehrels](https://github.com/BGehrels))
 
