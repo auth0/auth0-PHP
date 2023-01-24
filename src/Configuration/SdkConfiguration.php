@@ -6,13 +6,16 @@ namespace Auth0\SDK\Configuration;
 
 use Auth0\SDK\Contract\ConfigurableContract;
 use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Mixins\ConfigurableMixin;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Token;
+use Auth0\SDK\Token\ClientAssertionGenerator;
 use Auth0\SDK\Utility\EventDispatcher;
 use Http\Discovery\Exception\NotFoundException;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Discovery\Psr18ClientDiscovery;
+use OpenSSLAsymmetricKey;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\Http\Client\ClientInterface;
@@ -88,8 +91,10 @@ final class SdkConfiguration implements ConfigurableContract
      * @param  string|null  $managementToken  An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
      * @param  CacheItemPoolInterface|null  $managementTokenCache  a PSR-6 compatible cache adapter for storing generated management access tokens
      * @param  ListenerProviderInterface|null  $eventListenerProvider  a PSR-14 compatible event listener provider, for interfacing with events triggered by the SDK
+     * @param  OpenSSLAsymmetricKey|string|null  $clientAssertionSigningKey  An OpenSSLAsymmetricKey (or string representing equivalent, such as a PEM) to use for signing the client assertion. If not specified, the SDK will attempt to use the $clientSecret.
+     * @param  string  $clientAssertionSigningAlgorithm  Defaults to RS256. Algorithm to use for signing the client assertion.
      *
-     * @throws \Auth0\SDK\Exception\ConfigurationException when a valid `$strategy` is not specified
+     * @throws ConfigurationException when a valid `$strategy` is not specified
      */
     public function __construct(
         private ?array $configuration = null,
@@ -135,6 +140,8 @@ final class SdkConfiguration implements ConfigurableContract
         private ?string $managementToken = null,
         private ?CacheItemPoolInterface $managementTokenCache = null,
         private ?ListenerProviderInterface $eventListenerProvider = null,
+        private OpenSSLAsymmetricKey|string|null $clientAssertionSigningKey = null,
+        private string $clientAssertionSigningAlgorithm = Token::ALGO_RS256,
     ) {
         if (null !== $configuration && [] !== $configuration) {
             $this->applyConfiguration($configuration);
@@ -246,7 +253,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setCookieExpires(int $cookieExpires = 0): self
     {
         if ($cookieExpires < 0) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('cookieExpires');
+            throw ConfigurationException::validationFailed('cookieExpires');
         }
 
         $this->cookieExpires = $cookieExpires;
@@ -414,7 +421,7 @@ final class SdkConfiguration implements ConfigurableContract
             $domain = $this->filterDomain($domain);
 
             if (null === $domain) {
-                throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('domain');
+                throw ConfigurationException::validationFailed('domain');
             }
         }
 
@@ -443,7 +450,7 @@ final class SdkConfiguration implements ConfigurableContract
             $customDomain = $this->filterDomain($customDomain);
 
             if (null === $customDomain) {
-                throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('customDomain');
+                throw ConfigurationException::validationFailed('customDomain');
             }
         }
 
@@ -509,7 +516,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setHttpMaxRetries(int $httpMaxRetries = 3): self
     {
         if ($httpMaxRetries < 0) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('httpMaxRetries');
+            throw ConfigurationException::validationFailed('httpMaxRetries');
         }
 
         $this->httpMaxRetries = $httpMaxRetries;
@@ -809,7 +816,7 @@ final class SdkConfiguration implements ConfigurableContract
         $responseMode = trim($responseMode);
 
         if ('' === $responseMode) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('responseMode');
+            throw ConfigurationException::validationFailed('responseMode');
         }
 
         $this->responseMode = $responseMode;
@@ -832,7 +839,7 @@ final class SdkConfiguration implements ConfigurableContract
         $responseType = trim($responseType);
 
         if ('' === $responseType) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('responseType');
+            throw ConfigurationException::validationFailed('responseType');
         }
 
         $this->responseType = $responseType;
@@ -928,7 +935,7 @@ final class SdkConfiguration implements ConfigurableContract
         $sessionStorageId = trim($sessionStorageId);
 
         if ('' === $sessionStorageId) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('sessionStorageId');
+            throw ConfigurationException::validationFailed('sessionStorageId');
         }
 
         $this->sessionStorageId = $sessionStorageId;
@@ -949,7 +956,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setStrategy(string $strategy = self::STRATEGY_REGULAR): self
     {
         if (! \in_array($strategy, [self::STRATEGY_REGULAR, self::STRATEGY_API, self::STRATEGY_MANAGEMENT_API, self::STRATEGY_NONE], true)) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('strategy');
+            throw ConfigurationException::validationFailed('strategy');
         }
 
         $this->strategy = $strategy;
@@ -970,7 +977,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setTokenAlgorithm(string $tokenAlgorithm = Token::ALGO_RS256): self
     {
         if (! \in_array($tokenAlgorithm, [Token::ALGO_RS256, Token::ALGO_HS256], true)) {
-            throw \Auth0\SDK\Exception\ConfigurationException::invalidAlgorithm();
+            throw ConfigurationException::invalidAlgorithm();
         }
 
         $this->tokenAlgorithm = $tokenAlgorithm;
@@ -1010,7 +1017,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setTokenCacheTtl(int $tokenCacheTtl = 60): self
     {
         if ($tokenCacheTtl < 0) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('tokenCacheTtl');
+            throw ConfigurationException::validationFailed('tokenCacheTtl');
         }
 
         $this->tokenCacheTtl = $tokenCacheTtl;
@@ -1056,7 +1063,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setTokenLeeway(int $tokenLeeway = 60): self
     {
         if ($tokenLeeway < 0) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('tokenLeeway');
+            throw ConfigurationException::validationFailed('tokenLeeway');
         }
 
         $this->tokenLeeway = $tokenLeeway;
@@ -1079,7 +1086,7 @@ final class SdkConfiguration implements ConfigurableContract
     public function setTokenMaxAge(?int $tokenMaxAge = null): self
     {
         if (null !== $tokenMaxAge && $tokenMaxAge < 0) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('tokenMaxAge');
+            throw ConfigurationException::validationFailed('tokenMaxAge');
         }
 
         $this->tokenMaxAge = $tokenMaxAge;
@@ -1123,7 +1130,7 @@ final class SdkConfiguration implements ConfigurableContract
         $transientStorageId = trim($transientStorageId);
 
         if ('' === $transientStorageId) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('transientStorageId');
+            throw ConfigurationException::validationFailed('transientStorageId');
         }
 
         $this->transientStorageId = $transientStorageId;
@@ -1154,6 +1161,44 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     public function hasUsePkce(): bool
+    {
+        return true;
+    }
+
+    public function setClientAssertionSigningKey(OpenSSLAsymmetricKey|string|null $clientAssertionSigningKey): self
+    {
+        $this->clientAssertionSigningKey = $clientAssertionSigningKey;
+
+        return $this;
+    }
+
+    public function getClientAssertionSigningKey(): OpenSSLAsymmetricKey|string|null
+    {
+        return $this->clientAssertionSigningKey;
+    }
+
+    public function hasClientAssertionSigningKey(): bool
+    {
+        return $this->getClientAssertionSigningKey() !== null;
+    }
+
+    public function setClientAssertionSigningAlgorithm(string $clientAssertionSigningAlgorithm = Token::ALGO_RS256): self
+    {
+        if (! in_array($clientAssertionSigningAlgorithm, ClientAssertionGenerator::CONST_SUPPORTED_ALGORITHMS, true)) {
+            throw ConfigurationException::incompatibleClientAssertionSigningAlgorithm($clientAssertionSigningAlgorithm);
+        }
+
+        $this->clientAssertionSigningAlgorithm = $clientAssertionSigningAlgorithm;
+
+        return $this;
+    }
+
+    public function getClientAssertionSigningAlgorithm(): string
+    {
+        return $this->clientAssertionSigningAlgorithm;
+    }
+
+    public function hasClientAssertionSigningAlgorithm(): bool
     {
         return true;
     }
@@ -1265,7 +1310,7 @@ final class SdkConfiguration implements ConfigurableContract
             try {
                 $this->setHttpClient(Psr18ClientDiscovery::find());
             } catch (\Throwable $th) {
-                throw \Auth0\SDK\Exception\ConfigurationException::missingPsr18Library();
+                throw ConfigurationException::missingPsr18Library();
             }
         }
 
@@ -1274,7 +1319,7 @@ final class SdkConfiguration implements ConfigurableContract
             try {
                 $this->setHttpRequestFactory(Psr17FactoryDiscovery::findRequestFactory());
             } catch (NotFoundException $exception) {
-                throw \Auth0\SDK\Exception\ConfigurationException::missingPsr17Library();
+                throw ConfigurationException::missingPsr17Library();
             }
         }
 
@@ -1283,7 +1328,7 @@ final class SdkConfiguration implements ConfigurableContract
             try {
                 $this->setHttpResponseFactory(Psr17FactoryDiscovery::findResponseFactory());
             } catch (NotFoundException $exception) {
-                throw \Auth0\SDK\Exception\ConfigurationException::missingPsr17Library();
+                throw ConfigurationException::missingPsr17Library();
             }
         }
 
@@ -1292,7 +1337,7 @@ final class SdkConfiguration implements ConfigurableContract
             try {
                 $this->setHttpStreamFactory(Psr17FactoryDiscovery::findStreamFactory());
             } catch (NotFoundException $exception) {
-                throw \Auth0\SDK\Exception\ConfigurationException::missingPsr17Library();
+                throw ConfigurationException::missingPsr17Library();
             }
         }
     }
@@ -1338,11 +1383,11 @@ final class SdkConfiguration implements ConfigurableContract
     private function validateStateApi(): void
     {
         if (! $this->hasDomain()) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresDomain();
+            throw ConfigurationException::requiresDomain();
         }
 
         if (! $this->hasAudience()) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresAudience();
+            throw ConfigurationException::requiresAudience();
         }
     }
 
@@ -1352,16 +1397,16 @@ final class SdkConfiguration implements ConfigurableContract
     private function validateStateManagement(): void
     {
         if (! $this->hasDomain()) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresDomain();
+            throw ConfigurationException::requiresDomain();
         }
 
         if (! $this->hasManagementToken()) {
             if (! $this->hasClientId()) {
-                throw \Auth0\SDK\Exception\ConfigurationException::requiresClientId();
+                throw ConfigurationException::requiresClientId();
             }
 
-            if (! $this->hasClientSecret()) {
-                throw \Auth0\SDK\Exception\ConfigurationException::requiresClientSecret();
+            if (! $this->hasClientSecret() && ! $this->hasClientAssertionSigningKey()) {
+                throw ConfigurationException::requiresClientSecret();
             }
         }
     }
@@ -1372,19 +1417,19 @@ final class SdkConfiguration implements ConfigurableContract
     private function validateStateWebApp(): void
     {
         if (! $this->hasDomain()) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresDomain();
+            throw ConfigurationException::requiresDomain();
         }
 
         if (! $this->hasClientId()) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresClientId();
+            throw ConfigurationException::requiresClientId();
         }
 
         if ('HS256' === $this->getTokenAlgorithm() && ! $this->hasClientSecret()) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresClientSecret();
+            throw ConfigurationException::requiresClientSecret();
         }
 
         if (! $this->hasCookieSecret()) {
-            throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
+            throw ConfigurationException::requiresCookieSecret();
         }
     }
 
@@ -1396,48 +1441,50 @@ final class SdkConfiguration implements ConfigurableContract
     private function getPropertyValidators(): array
     {
         return [
-            'strategy'              => static fn ($value) => \is_string($value),
-            'domain'                => static fn ($value) => \is_string($value) || null === $value,
-            'customDomain'          => static fn ($value) => \is_string($value) || null === $value,
-            'clientId'              => static fn ($value) => \is_string($value) || null === $value,
-            'redirectUri'           => static fn ($value) => \is_string($value) || null === $value,
-            'clientSecret'          => static fn ($value) => \is_string($value) || null === $value,
-            'audience'              => static fn ($value) => \is_array($value) || null === $value,
-            'organization'          => static fn ($value) => \is_array($value) || null === $value,
-            'usePkce'               => static fn ($value) => \is_bool($value),
-            'scope'                 => static fn ($value) => \is_array($value) || null === $value,
-            'responseMode'          => static fn ($value) => \is_string($value),
-            'responseType'          => static fn ($value) => \is_string($value),
-            'tokenAlgorithm'        => static fn ($value) => \is_string($value),
-            'tokenJwksUri'          => static fn ($value) => \is_string($value) || null === $value,
-            'tokenMaxAge'           => static fn ($value) => \is_int($value) || null === $value,
-            'tokenLeeway'           => static fn ($value) => \is_int($value),
-            'tokenCache'            => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
-            'tokenCacheTtl'         => static fn ($value) => \is_int($value),
-            'httpClient'            => static fn ($value) => $value instanceof ClientInterface || null === $value,
-            'httpMaxRetries'        => static fn ($value) => \is_int($value),
-            'httpRequestFactory'    => static fn ($value) => $value instanceof RequestFactoryInterface || null === $value,
-            'httpResponseFactory'   => static fn ($value) => $value instanceof ResponseFactoryInterface || null === $value,
-            'httpStreamFactory'     => static fn ($value) => $value instanceof StreamFactoryInterface || null === $value,
-            'httpTelemetry'         => static fn ($value) => \is_bool($value),
-            'sessionStorage'        => static fn ($value) => $value instanceof StoreInterface || null === $value,
-            'sessionStorageId'      => static fn ($value) => \is_string($value),
-            'cookieSecret'          => static fn ($value) => \is_string($value) || null === $value,
-            'cookieDomain'          => static fn ($value) => \is_string($value) || null === $value,
-            'cookieExpires'         => static fn ($value) => \is_int($value),
-            'cookiePath'            => static fn ($value) => \is_string($value),
-            'cookieSecure'          => static fn ($value) => \is_bool($value),
-            'cookieSameSite'        => static fn ($value) => \is_string($value) || null === $value,
-            'persistUser'           => static fn ($value) => \is_bool($value),
-            'persistIdToken'        => static fn ($value) => \is_bool($value),
-            'persistAccessToken'    => static fn ($value) => \is_bool($value),
-            'persistRefreshToken'   => static fn ($value) => \is_bool($value),
-            'transientStorage'      => static fn ($value) => $value instanceof StoreInterface || null === $value,
-            'transientStorageId'    => static fn ($value) => \is_string($value),
-            'queryUserInfo'         => static fn ($value) => \is_bool($value),
-            'managementToken'       => static fn ($value) => \is_string($value) || null === $value,
-            'managementTokenCache'  => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
-            'eventListenerProvider' => static fn ($value) => $value instanceof ListenerProviderInterface || null === $value,
+            'strategy'                        => static fn ($value) => \is_string($value),
+            'domain'                          => static fn ($value) => \is_string($value) || null === $value,
+            'customDomain'                    => static fn ($value) => \is_string($value) || null === $value,
+            'clientId'                        => static fn ($value) => \is_string($value) || null === $value,
+            'redirectUri'                     => static fn ($value) => \is_string($value) || null === $value,
+            'clientSecret'                    => static fn ($value) => \is_string($value) || null === $value,
+            'audience'                        => static fn ($value) => \is_array($value) || null === $value,
+            'organization'                    => static fn ($value) => \is_array($value) || null === $value,
+            'usePkce'                         => static fn ($value) => \is_bool($value),
+            'scope'                           => static fn ($value) => \is_array($value) || null === $value,
+            'responseMode'                    => static fn ($value) => \is_string($value),
+            'responseType'                    => static fn ($value) => \is_string($value),
+            'tokenAlgorithm'                  => static fn ($value) => \is_string($value),
+            'tokenJwksUri'                    => static fn ($value) => \is_string($value) || null === $value,
+            'tokenMaxAge'                     => static fn ($value) => \is_int($value) || null === $value,
+            'tokenLeeway'                     => static fn ($value) => \is_int($value),
+            'tokenCache'                      => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'tokenCacheTtl'                   => static fn ($value) => \is_int($value),
+            'httpClient'                      => static fn ($value) => $value instanceof ClientInterface || null === $value,
+            'httpMaxRetries'                  => static fn ($value) => \is_int($value),
+            'httpRequestFactory'              => static fn ($value) => $value instanceof RequestFactoryInterface || null === $value,
+            'httpResponseFactory'             => static fn ($value) => $value instanceof ResponseFactoryInterface || null === $value,
+            'httpStreamFactory'               => static fn ($value) => $value instanceof StreamFactoryInterface || null === $value,
+            'httpTelemetry'                   => static fn ($value) => \is_bool($value),
+            'sessionStorage'                  => static fn ($value) => $value instanceof StoreInterface || null === $value,
+            'sessionStorageId'                => static fn ($value) => \is_string($value),
+            'cookieSecret'                    => static fn ($value) => \is_string($value) || null === $value,
+            'cookieDomain'                    => static fn ($value) => \is_string($value) || null === $value,
+            'cookieExpires'                   => static fn ($value) => \is_int($value),
+            'cookiePath'                      => static fn ($value) => \is_string($value),
+            'cookieSecure'                    => static fn ($value) => \is_bool($value),
+            'cookieSameSite'                  => static fn ($value) => \is_string($value) || null === $value,
+            'persistUser'                     => static fn ($value) => \is_bool($value),
+            'persistIdToken'                  => static fn ($value) => \is_bool($value),
+            'persistAccessToken'              => static fn ($value) => \is_bool($value),
+            'persistRefreshToken'             => static fn ($value) => \is_bool($value),
+            'transientStorage'                => static fn ($value) => $value instanceof StoreInterface || null === $value,
+            'transientStorageId'              => static fn ($value) => \is_string($value),
+            'queryUserInfo'                   => static fn ($value) => \is_bool($value),
+            'managementToken'                 => static fn ($value) => \is_string($value) || null === $value,
+            'managementTokenCache'            => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'eventListenerProvider'           => static fn ($value) => $value instanceof ListenerProviderInterface || null === $value,
+            'clientAssertionSigningKey'       => static fn ($value) => $value instanceof OpenSSLAsymmetricKey || \is_string($value) || null === $value,
+            'clientAssertionSigningAlgorithm' => static fn ($value) => \is_string($value),
         ];
     }
 
@@ -1447,48 +1494,50 @@ final class SdkConfiguration implements ConfigurableContract
     private function getPropertyDefaults(): array
     {
         return [
-            'strategy'              => self::STRATEGY_REGULAR,
-            'domain'                => null,
-            'customDomain'          => null,
-            'clientId'              => null,
-            'redirectUri'           => null,
-            'clientSecret'          => null,
-            'audience'              => null,
-            'organization'          => null,
-            'usePkce'               => true,
-            'scope'                 => ['openid', 'profile', 'email'],
-            'responseMode'          => 'query',
-            'responseType'          => 'code',
-            'tokenAlgorithm'        => Token::ALGO_RS256,
-            'tokenJwksUri'          => null,
-            'tokenMaxAge'           => null,
-            'tokenLeeway'           => 60,
-            'tokenCache'            => null,
-            'tokenCacheTtl'         => 60,
-            'httpClient'            => null,
-            'httpMaxRetries'        => 3,
-            'httpRequestFactory'    => null,
-            'httpResponseFactory'   => null,
-            'httpStreamFactory'     => null,
-            'httpTelemetry'         => true,
-            'sessionStorage'        => null,
-            'sessionStorageId'      => 'auth0_session',
-            'cookieSecret'          => null,
-            'cookieDomain'          => null,
-            'cookieExpires'         => 0,
-            'cookiePath'            => '/',
-            'cookieSecure'          => false,
-            'cookieSameSite'        => null,
-            'persistUser'           => true,
-            'persistIdToken'        => true,
-            'persistAccessToken'    => true,
-            'persistRefreshToken'   => true,
-            'transientStorage'      => null,
-            'transientStorageId'    => 'auth0_transient',
-            'queryUserInfo'         => false,
-            'managementToken'       => null,
-            'managementTokenCache'  => null,
-            'eventListenerProvider' => null,
+            'strategy'                        => self::STRATEGY_REGULAR,
+            'domain'                          => null,
+            'customDomain'                    => null,
+            'clientId'                        => null,
+            'redirectUri'                     => null,
+            'clientSecret'                    => null,
+            'audience'                        => null,
+            'organization'                    => null,
+            'usePkce'                         => true,
+            'scope'                           => ['openid', 'profile', 'email'],
+            'responseMode'                    => 'query',
+            'responseType'                    => 'code',
+            'tokenAlgorithm'                  => Token::ALGO_RS256,
+            'tokenJwksUri'                    => null,
+            'tokenMaxAge'                     => null,
+            'tokenLeeway'                     => 60,
+            'tokenCache'                      => null,
+            'tokenCacheTtl'                   => 60,
+            'httpClient'                      => null,
+            'httpMaxRetries'                  => 3,
+            'httpRequestFactory'              => null,
+            'httpResponseFactory'             => null,
+            'httpStreamFactory'               => null,
+            'httpTelemetry'                   => true,
+            'sessionStorage'                  => null,
+            'sessionStorageId'                => 'auth0_session',
+            'cookieSecret'                    => null,
+            'cookieDomain'                    => null,
+            'cookieExpires'                   => 0,
+            'cookiePath'                      => '/',
+            'cookieSecure'                    => false,
+            'cookieSameSite'                  => null,
+            'persistUser'                     => true,
+            'persistIdToken'                  => true,
+            'persistAccessToken'              => true,
+            'persistRefreshToken'             => true,
+            'transientStorage'                => null,
+            'transientStorageId'              => 'auth0_transient',
+            'queryUserInfo'                   => false,
+            'managementToken'                 => null,
+            'managementTokenCache'            => null,
+            'eventListenerProvider'           => null,
+            'clientAssertionSigningKey'       => null,
+            'clientAssertionSigningAlgorithm' => Token::ALGO_RS256,
         ];
     }
 }

@@ -6,7 +6,6 @@ namespace Auth0\Tests\Utilities;
 
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\Generator;
-use Firebase\JWT\JWT;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -65,12 +64,14 @@ class TokenGenerator
 
     public static function generateRsaKeyPair(
         string $digestAlg = 'sha256',
-        int $keyType = OPENSSL_KEYTYPE_RSA
+        int $keyType = OPENSSL_KEYTYPE_RSA,
+        int $bitLength = 2048
     ): array
     {
         $config = [
             'digest_alg' => $digestAlg,
-            'private_key_type' => $keyType
+            'private_key_type' => $keyType,
+            'private_key_bits' => $bitLength,
         ];
 
         $privateKeyResource = openssl_pkey_new($config);
@@ -101,12 +102,14 @@ class TokenGenerator
 
     public static function generateDsaKeyPair(
         string $digestAlg = 'sha256',
-        int $keyType = OPENSSL_KEYTYPE_DSA
+        int $keyType = OPENSSL_KEYTYPE_DSA,
+        int $bitLength = 2048
     ): array
     {
         $config = [
             'digest_alg' => $digestAlg,
-            'private_key_type' => $keyType
+            'private_key_type' => $keyType,
+            'private_key_bits' => $bitLength,
         ];
 
         $privateKeyResource = openssl_pkey_new($config);

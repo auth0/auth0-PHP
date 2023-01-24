@@ -8,6 +8,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Exception\ArgumentException;
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\Tests\Utilities\MockDomain;
+use Auth0\Tests\Utilities\TokenGenerator;
 
 uses()->group('authentication');
 
@@ -48,6 +49,41 @@ test('__construct() successfully loads a direct configuration', function(): void
     $uri = $class->getLoginLink(uniqid());
 
     expect($uri)->toContain($this->configuration->getDomain());
+});
+
+test('addClientAuthentication() inserts `client_id` and `client_secret` properties when configured', function(): void {
+    $secret = uniqid();
+
+    $this->configuration->setClientSecret($secret);
+    $this->sdk->authentication()->passwordlessStart();
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+
+    expect($requestBody)
+        ->toBeArray()
+        ->toHaveKeys(['client_id', 'client_secret'])
+        ->client_id->toEqual($this->configuration->getClientId())
+        ->client_secret->toEqual($secret)
+        ->not()->toHaveKeys(['client_assertion', 'client_assertion_type']);
+});
+
+test('addClientAuthentication() inserts correct client assertion properties when configured', function(): void {
+    $secret = TokenGenerator::generateRsaKeyPair();
+
+    $this->configuration->setClientAssertionSigningKey($secret['private']);
+    $this->sdk->authentication()->passwordlessStart();
+
+    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+
+    expect($requestBody)
+        ->toBeArray()
+        ->toHaveKeys(['client_id', 'client_assertion_type', 'client_assertion'])
+        ->client_id->toEqual($this->configuration->getClientId())
+        ->client_assertion_type->toEqual(Authentication::CONST_CLIENT_ASSERTION_TYPE)
+        ->client_assertion->not->toBeEmpty()
+        ->not()->toHaveKey('client_secret');
 });
 
 test('getLoginLink() is properly formatted', function(): void {

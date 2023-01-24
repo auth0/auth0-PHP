@@ -12,22 +12,26 @@ use Throwable;
 
 final class Generator implements GeneratorInterface
 {
-    /**
-     * Supported algorithms for token generation.
-     */
-    public const CONST_SUPPORTED_ALGOS = [
-        Token::ALGO_RS256,
-        Token::ALGO_HS256,
+    // Lookup table for supported digest algorithms as strings.
+    public const CONST_DIGEST_STRING = [
+        \OPENSSL_ALGO_SHA256 => 'sha256',
+        \OPENSSL_ALGO_SHA384 => 'sha384',
+        \OPENSSL_ALGO_SHA512 => 'sha512',
     ];
 
-    /**
-     * Supported key types for token generation.
-     */
-    public const CONST_SUPPORTED_KEY_TYPES = [
-        OPENSSL_KEYTYPE_RSA => 'RSA',
-        OPENSSL_KEYTYPE_DSA => 'DSA',
-        OPENSSL_KEYTYPE_DH => 'DH',
-        OPENSSL_KEYTYPE_EC => 'EC',
+    // Lookup table for supported key types as strings.
+    public const CONST_KEYTYPE_STRING = [
+        \OPENSSL_KEYTYPE_RSA => 'RSA',
+    ];
+
+    // Supported algorithms for token generation.
+    public const CONST_SUPPORTED_ALGORITHMS = [
+        Token::ALGO_HS256,
+        Token::ALGO_HS384,
+        Token::ALGO_HS512,
+        Token::ALGO_RS256,
+        Token::ALGO_RS384,
+        Token::ALGO_RS512,
     ];
 
     public static function create(
@@ -106,8 +110,16 @@ final class Generator implements GeneratorInterface
         private array $headers = [],
         private null|string $signingKeyPassphrase = null
     ) {
-        // Ensure the environment is configured with the necessary OpenSSL extension support.
-        $this->checkEnvironment();
+        // @codeCoverageIgnoreStart
+        if (! extension_loaded('openssl')) {
+            throw TokenException::openSslMissing();
+        }
+        // @codeCoverageIgnoreEnd
+
+        // Ensure the provided algorithm is supported.
+        if (! \in_array($this->algorithm, static::CONST_SUPPORTED_ALGORITHMS, true)) {
+            throw TokenException::unsupportedAlgorithm($this->algorithm, implode(',', static::CONST_SUPPORTED_ALGORITHMS));
+        }
 
         // Merge any provided headers with the defaults.
         $this->headers = array_merge($this->headers, ['type' => 'JWT', 'alg' => $this->algorithm]);
@@ -116,51 +128,19 @@ final class Generator implements GeneratorInterface
         $this->signingKey = $this->loadSigningKey($this->signingKey, $this->signingKeyPassphrase);
     }
 
-    // @codeCoverageIgnoreStart
-    /**
-     * Ensure the environment is configured with the necessary OpenSSL extension support.
-     *
-     * @throws TokenException When a configuration issue in the host environment is detected.
-     */
-    private function checkEnvironment(): void
-    {
-        if (! extension_loaded('openssl')) {
-            throw TokenException::openSslMissing();
-        }
-
-        $envSupportsDigestMethods = openssl_get_md_methods(true);
-        $sdkRequiredDigestMethods = ['sha256', 'sha384', 'sha512'];
-
-        foreach ($sdkRequiredDigestMethods as $method) {
-            if (! in_array($method, $envSupportsDigestMethods, true)) {
-                throw TokenException::openSslMissingAlgo($method);
-            }
-        }
-
-        // $envSupportsCurveMethods = openssl_get_curve_names();
-    }
-    // @codeCoverageIgnoreEnd
-
     /**
      * Load the provided signing key and return as an appropriate object type.
      *
      * @param OpenSSLAsymmetricKey|string $signingKey Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
      * @param null|string $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
      *
-     * @throws TokenException When an unsupported algorithm is provided.
      * @throws TokenException When a non-string $signingKey is provided for HS256.
      * @throws TokenException When a string $signingKey is used with RS256.
      * @throws TokenException When using RS256 and openssl_pkey_get_private() is unable to load the provided signing key.
      */
     private function loadSigningKey(OpenSSLAsymmetricKey|string $signingKey, null|string $signingKeyPassphrase = null): OpenSSLAsymmetricKey|string
     {
-        // Ensure the provided algorithm is supported.
-        if (! \in_array($this->algorithm, static::CONST_SUPPORTED_ALGOS, true)) {
-            throw TokenException::unsupportedAlgorithm($this->algorithm, implode(',', static::CONST_SUPPORTED_ALGOS));
-        }
-
-        // For HS256, if signing key is a string, use it.
-        if ($this->algorithm === Token::ALGO_HS256) {
+        if (null === $this->getOpenSslKeyType()) {
             if (! is_string($signingKey)) {
                 throw TokenException::requireKeyAsStringHs256();
             }
@@ -168,18 +148,18 @@ final class Generator implements GeneratorInterface
             return $signingKey;
         }
 
-        // Otherwise, process as the default RS256 algorithm...
+        // Otherwise, process with OpenSSL...
         $failure = null;
         $details = null;
 
         try {
-            // Attempt to load it with openssl_pkey_get_private() and return an OpenSSLAsymmetricKey.
+            // Attempt to load signing key with openssl_pkey_get_private(). This returns an OpenSSLAsymmetricKey.
             $signingKey = openssl_pkey_get_private(
                 private_key: $signingKey,
                 passphrase: $signingKeyPassphrase
             );
 
-            // Get the details of the key.
+            // Get the key details from the OpenSSLAsymmetricKey.
             if ($signingKey instanceof OpenSSLAsymmetricKey) {
                 $details = openssl_pkey_get_details($signingKey);
             }
@@ -190,16 +170,26 @@ final class Generator implements GeneratorInterface
 
         // If we were unable to load the key, throw an exception.
         if (! $signingKey instanceof OpenSSLAsymmetricKey || $details === false) {
-            $message = implode(', ', $this->openSslErrors());
-            $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) .  ' (' . $message . ')';
+            $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) . $this->openSslErrors();
             throw TokenException::unableToProcessSigningKey($message, $failure);
+        }
+
+        if (! is_array($details) || ! isset($details['type'])) {
+            throw TokenException::unidentifiableKeyType();
         }
         // @codeCoverageIgnoreEnd
 
-        // If the key is not an RSA key, throw an exception.
-        if (! isset($details['type']) || $details['type'] !== OPENSSL_KEYTYPE_RSA || ! isset($details['rsa'])) {
-            throw TokenException::unableToProcessSigningKey(sprintf(TokenException::MSG_KEY_TYPE_NOT_SUPPORTED, $details['type'] ?? 'unknown'));
+        $keyType = $details['type'];
+
+        if ($keyType !== $this->getOpenSslKeyType()) {
+            throw TokenException::keyTypeMismatch((string) $keyType, $this->algorithm);
         }
+
+        // @codeCoverageIgnoreStart
+        if ($keyType === OPENSSL_KEYTYPE_RSA && ! isset($details['rsa'])) {
+            throw TokenException::unidentifiableKeyType();
+        }
+        // @codeCoverageIgnoreEnd
 
         return $signingKey;
     }
@@ -275,8 +265,7 @@ final class Generator implements GeneratorInterface
      */
     private function sign(string $data): string
     {
-        // For HS256, use hash_hmac() to sign the data.
-        if ($this->algorithm === Token::ALGO_HS256) {
+        if (null === $this->getOpenSslKeyType()) {
             // @codeCoverageIgnoreStart
             if (! is_string($this->signingKey)) {
                 throw TokenException::unableToSignData(TokenException::MSG_UNKNOWN_ERROR);
@@ -285,7 +274,7 @@ final class Generator implements GeneratorInterface
 
             return $this->encode(
                 data: hash_hmac(
-                    algo: 'sha256',
+                    algo: self::CONST_DIGEST_STRING[$this->getDigestAlgorithm()],
                     data: $data,
                     key: $this->signingKey,
                     binary: true
@@ -301,7 +290,7 @@ final class Generator implements GeneratorInterface
         $failure = null;
 
         try {
-            $success = openssl_sign($data, $signature, $this->signingKey, OPENSSL_ALGO_SHA256);
+            $success = openssl_sign($data, $signature, $this->signingKey, $this->getDigestAlgorithm());
             // @codeCoverageIgnoreStart
         } catch (Throwable $th) {
             $failure = $th;
@@ -309,8 +298,8 @@ final class Generator implements GeneratorInterface
 
         // If we were unable to sign the data, throw an exception.
         if (! $success) {
-            $message = implode(', ', $this->openSslErrors());
-            $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) .  ' (' . $message . ')';
+            $message = $this->openSslErrors();
+            $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) .  $message;
             throw TokenException::unableToSignData($message, $failure);
         }
         // @codeCoverageIgnoreEnd
@@ -323,18 +312,52 @@ final class Generator implements GeneratorInterface
     }
 
     /**
-     * Get the OpenSSL error stack.
+     * Get the OpenSSL key type to use for the provided algorithm.
      *
-     * @return array<string> The OpenSSL error stack.
+     * @return int|null The OpenSSL key type to use.
      */
-    private function openSslErrors(): array
+    private function getOpenSslKeyType(): ?int
     {
-        $openSslErrorStack = [];
+        return match ($this->algorithm) {
+            Token::ALGO_RS256, Token::ALGO_RS384, Token::ALGO_RS512 => \OPENSSL_KEYTYPE_RSA,
+            default => null
+        };
+    }
+
+    /**
+     * Get the digest algorithm to use for the provided algorithm.
+     *
+     * @return int The digest algorithm to use.
+     */
+    private function getDigestAlgorithm(): int
+    {
+        return match ($this->algorithm) {
+            Token::ALGO_HS256, Token::ALGO_RS256 => \OPENSSL_ALGO_SHA256,
+            Token::ALGO_HS384, Token::ALGO_RS384 => \OPENSSL_ALGO_SHA384,
+            Token::ALGO_HS512, Token::ALGO_RS512 => \OPENSSL_ALGO_SHA512,
+            default => throw TokenException::unsupportedAlgorithm($this->algorithm, implode(', ', self::CONST_SUPPORTED_ALGORITHMS))
+        };
+    }
+
+    /**
+     * Retrieve and format the OpenSSL error stack as a string suitable for logging.
+     *
+     * @return string The OpenSSL error stack.
+     *
+     * @codeCoverageIgnore
+     */
+    private function openSslErrors(): string
+    {
+        $errors = [];
 
         while ($error = openssl_error_string()) {
-            $openSslErrorStack[] = $error;
+            $errors[] = $error;
         }
 
-        return $openSslErrorStack;
+        if ([] !== $errors) {
+            return "\n" . implode("\n* ", $errors);
+        }
+
+        return '';
     }
 }
