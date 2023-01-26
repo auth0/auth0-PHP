@@ -161,6 +161,19 @@ test('deleteMultifactorProvider() issues an appropriate request', function(): vo
     expect($headers['Content-Type'][0])->toEqual('application/json');
 });
 
+test('deleteAllAuthenticators() issues an appropriate request', function(): void {
+    $id = uniqid();
+
+    $this->endpoint->deleteAllAuthenticators($id);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $id . '/authenticators');
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
+
+
 test('getRoles() issues an appropriate request', function(): void {
     $mockupId = uniqid();
 

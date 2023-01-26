@@ -411,4 +411,21 @@ final class Users extends ManagementEndpoint implements UsersInterface
             withOptions($options)->
             call();
     }
+
+    public function deleteAllAuthenticators(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('users', $id, 'authenticators')->
+            withOptions($options)->
+            call();
+    }
 }
