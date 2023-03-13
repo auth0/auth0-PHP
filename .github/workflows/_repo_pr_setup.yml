@@ -18,13 +18,6 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you\'ve read our [contributing guide](CONTRIBUTING.md).'
-            })
-
             const pattern = /^(\w*)(?:\(([\w]*)\))?: (.*)$/;
             const title = context.payload.pull_request.title
             const [type, scope, subject] = title.match(pattern).slice(1);
@@ -33,16 +26,17 @@ jobs:
 
             if (type !== undefined) {
               const labels = {
-                'feat': 'Type: ⭐ Enhancement',
-                'refactor': 'Type: ⭐ Enhancement',
-                'perf': 'Type: ⭐ Enhancement',
-                'build': 'Type: 🔧 Maintenance',
-                'cj': 'Type: 🔧 Maintenance',
-                'style': 'Type: 🔧 Maintenance',
-                'fix': 'Type: 🐞 Bug',
-                'security': 'Type: 🚨 Security',
-                'docs': 'Type: 📖 Documentation',
-                'test': 'Type: 🧪 Tests',
+                'feat': 'type-improvement',
+                'refactor': 'type-improvement',
+                'perf': 'type-improvement',
+                'build': 'type-chore',
+                'cj': 'type-chore',
+                'style': 'type-chore',
+                'fix': 'type-bug',
+                'security': 'type-security',
+                'docs': 'type-documentation',
+                'test': 'type-tests',
+                'release': 'type-release',
               }
 
               if (type in labels) {
@@ -51,24 +45,6 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   labels: [labels[type]]
-                })
-              }
-            }
-
-            if (subject !== undefined && subject.toLowerCase().includes('wip')) {
-              github.rest.issues.addLabels({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                labels: ['Status: 🚫 Do Not Merge']
-              })
-            } else {
-              if (! context.payload.pull_request.draft) {
-                github.rest.issues.addLabels({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  labels: ['Status: ⏳ Needs Review']
                 })
               }
             }
@@ -85,10 +61,10 @@ jobs:
             }
 
             if (! isMember) {
-              github.rest.issues.addAssignees({
+              github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                assignees: ['evansims']
+                body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you\'ve read our [contributing guide](CONTRIBUTING.md).'
               })
             }
