@@ -805,15 +805,9 @@ test('getCredentials() returns the expected object structure when a session is a
 
     $credentials = $auth0->getCredentials();
 
-    expect($credentials)->toBeObject();
-
-    $this->assertObjectHasAttribute('user', $credentials);
-    $this->assertObjectHasAttribute('idToken', $credentials);
-    $this->assertObjectHasAttribute('accessToken', $credentials);
-    $this->assertObjectHasAttribute('accessTokenScope', $credentials);
-    $this->assertObjectHasAttribute('accessTokenExpiration', $credentials);
-    $this->assertObjectHasAttribute('accessTokenExpired', $credentials);
-    $this->assertObjectHasAttribute('refreshToken', $credentials);
+    expect($credentials)
+        ->toBeObject()
+        ->toHaveProperties(['user', 'idToken', 'accessToken', 'accessTokenScope', 'accessTokenExpiration', 'accessTokenExpired', 'refreshToken']);
 
     expect($credentials->user)->toBeArray();
 });
@@ -894,13 +888,10 @@ test('getExchangeParameters() returns request parameters when valid', function()
 
     $extracted = $auth0->getExchangeParameters();
 
-    $this->assertIsObject($extracted, 'Invitation parameters were not extracted from the $_GET (environment variable seeded with query parameters during a GET request) successfully.');
-
-    $this->assertObjectHasAttribute('code', $extracted);
-    $this->assertObjectHasAttribute('state', $extracted);
-
-    expect($extracted->code)->toEqual($_GET['code']);
-    expect($extracted->state)->toEqual($_GET['state']);
+    expect($extracted)
+        ->toBeObject()
+        ->toHaveProperty('code', $_GET['code'])
+        ->toHaveProperty('state', $_GET['state']);
 });
 
 test('getExchangeParameters() does not return invalid request parameters', function(): void {
