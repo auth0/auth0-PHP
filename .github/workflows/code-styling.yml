@@ -11,23 +11,12 @@ permissions:
   pull-requests: write
 
 jobs:
-  configuration:
-    name: Configure
-    runs-on: ubuntu-latest
-    outputs:
-      allow-label: ${{ env.ALLOW_LABEL }}
-    steps:
-      - name: Save state
-        run: |
-          echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
-
   style-pint:
     name: Pint
-    needs: configuration
     runs-on: ubuntu-latest
 
     # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     strategy:
       fail-fast: true
@@ -51,11 +40,10 @@ jobs:
 
   style-rector:
     name: Rector
-    needs: configuration
     runs-on: ubuntu-latest
 
     # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     strategy:
       fail-fast: true
@@ -73,6 +61,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v3
-
       - run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
       - run: vendor/bin/rector process src --dry-run
