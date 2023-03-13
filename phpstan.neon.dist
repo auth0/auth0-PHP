@@ -52,3 +52,4 @@ parameters:
             path: src\Utility\HttpRequest.php
 
     reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
