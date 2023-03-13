@@ -428,4 +428,150 @@ final class Users extends ManagementEndpoint implements UsersInterface
             withOptions($options)->
             call();
     }
+
+    public function getAuthenticationMethods(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user] = Toolkit::filter([$user])->string()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+        ])->isString();
+
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('users', $user, 'authentication-methods')->
+            withOptions($options)->
+            call();
+    }
+
+    public function replaceAuthenticationMethods(
+        string $user,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user] = Toolkit::filter([$user])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()->
+            method('put')->
+            addPath('users', $user, 'authentication-methods')->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
+    }
+
+    public function deleteAuthenticationMethods(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user] = Toolkit::filter([$user])->string()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+        ])->isString();
+
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('users', $user, 'authentication-methods')->
+            withOptions($options)->
+            call();
+    }
+
+    public function createAuthenticationMethod(
+        string $user,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user] = Toolkit::filter([$user])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()->
+            method('post')->
+            addPath('users', $user, 'authentication-methods')->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
+    }
+
+    public function getAuthenticationMethod(
+        string $user,
+        string $method,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user, $method] = Toolkit::filter([$user, $method])->string()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+            [$method, \Auth0\SDK\Exception\ArgumentException::missing('method')],
+        ])->isString();
+
+        return $this->getHttpClient()->
+            method('get')->
+            addPath('users', $user, 'authentication-methods', $method)->
+            withOptions($options)->
+            call();
+    }
+
+    public function updateAuthenticationMethod(
+        string $user,
+        string $method,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user, $method] = Toolkit::filter([$user, $method])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+            [$method, \Auth0\SDK\Exception\ArgumentException::missing('method')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()->
+            method('patch')->
+            addPath('users', $user, 'authentication-methods', $method)->
+            withBody((object) $body)->
+            withOptions($options)->
+            call();
+    }
+
+    public function deleteAuthenticationMethod(
+        string $user,
+        string $method,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user, $method] = Toolkit::filter([$user, $method])->string()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+            [$method, \Auth0\SDK\Exception\ArgumentException::missing('method')],
+        ])->isString();
+
+        return $this->getHttpClient()->
+            method('delete')->
+            addPath('users', $user, 'authentication-methods', $method)->
+            withOptions($options)->
+            call();
+    }
 }

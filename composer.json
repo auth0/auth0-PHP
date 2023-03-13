@@ -77,7 +77,8 @@
       "ergebnis/composer-normalize": true,
       "wikimedia/composer-merge-plugin": true,
       "symfony/flex": true,
-      "phpstan/extension-installer": true
+      "phpstan/extension-installer": true,
+      "php-http/discovery": false
     },
     "optimize-autoloader": true,
     "sort-packages": true
