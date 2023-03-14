@@ -13,8 +13,7 @@ jobs:
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     strategy:
-      fail-fast: true
-      max-parallel: 10
+      fail-fast: false
       matrix:
         operating-systems:
           - ubuntu-latest
