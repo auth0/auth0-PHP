@@ -3,8 +3,7 @@
 PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 [![Package](https://img.shields.io/packagist/dt/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-php)
-[![Unit Tests](https://github.com/auth0/auth0-PHP/actions/workflows/test-unit.yml/badge.svg)](https://github.com/auth0/auth0-PHP/actions/workflows/test-unit.yml)
-[![Acceptance Tests](https://github.com/auth0/auth0-PHP/actions/workflows/test-acceptance.yml/badge.svg)](https://github.com/auth0/auth0-PHP/actions/workflows/test-acceptance.yml)
+![Build Status](https://img.shields.io/github/checks-status/auth0/auth0-PHP/main)
 [![Coverage](https://codecov.io/gh/auth0/auth0-PHP/branch/main/graph/badge.svg?token=PtrLf5j8JK)](https://codecov.io/gh/auth0/auth0-PHP)
 [![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
 
@@ -12,28 +11,32 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ## Documentation
 
-- Stateful Applications
-  - [Quickstart](https://auth0.com/docs/quickstart/webapp/php) — add login, logout and user information to a PHP application using Auth0.
-  - [Sample Application](https://github.com/auth0-samples/auth0-php-web-app) — a sample PHP web application integrated with Auth0.
-- Stateless Applications
-  - [Quickstart](https://auth0.com/docs/quickstart/backend/php) — add access token handling and route authorization to a backend PHP application using Auth0.
-  - [Sample Application](https://github.com/auth0-samples/auth0-php-api-samples) — a sample PHP backend application integrated with Auth0.
-- [Examples](./EXAMPLES.md) — code samples for common scenarios.
-- [Docs site](https://www.auth0.com/docs) — explore our docs site and learn more about Auth0.
+We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0), [Symfony](https://github.com/auth0/symfony), and [WordPress](https://github.com/auth0/wordpress). If you using one of these frameworks, use the tailored SDK for the best integration experience.
+
+- Quickstarts
+  - [Application using Sessions (Stateful)](https://auth0.com/docs/quickstart/webapp/php) — Demonstrates a traditional web application that uses sessions and supports logging in, logging out, and querying user profiles. [The completed source code is also available.](https://github.com/auth0-samples/auth0-php-web-app)
+  - [API using Access Tokens (Stateless)](https://auth0.com/docs/quickstart/backend/php) — Demonstrates a backend API that authorizes endpoints using access tokens provided by a frontend client and returns JSON. [The completed source code is also available.](https://github.com/auth0-samples/auth0-php-api-samples)
+- [PHP Examples](./EXAMPLES.md) — Code samples for common scenarios.
+- [Documentation Hub](https://www.auth0.com/docs) — Learn more about integrating Auth0 with your application.
 
 ## Getting Started
 
 ### Requirements
 
 - PHP 8.0+
-- A [PSR-17](https://packagist.org/providers/psr/http-factory-implementation) (HTTP factory) library
-- A [PSR-18](https://packagist.org/providers/psr/http-client-implementation) (HTTP client) library
+- [Composer](https://getcomposer.org/)
+- PHP Extensions:
+  - [mbstring](https://www.php.net/manual/en/book.mbstring.php)
+- Dependencies:
+  - [PSR-18 HTTP Client implementation](./FAQ.md#what-is-psr-18)
+  - [PSR-17 HTTP Factory implementation](./FAQ.md#what-is-psr-17)
+  - [PSR-7 HTTP Messages implementation](./FAQ.md#what-is-psr-7)
 
-> Please review our [support policy](#support-policy) to learn when language and framework versions will exit support in the future.
+> Please review our [support policy](#support-policy) for details on our PHP version support.
 
 ### Installation
 
-After installing the [required dependencies](#requirements), add the SDK to your application with [Composer](https://getcomposer.org/):
+After installing the [required dependencies](#requirements), add the SDK to your application using [Composer](https://getcomposer.org/):
 
 ```
 composer require auth0/auth0-php
@@ -68,18 +71,20 @@ $configuration = new SdkConfiguration(
 $auth0 = new Auth0($configuration);
 ```
 
-Use `getCredentials()` to check if a user is signed in. Redirect guests to sign in using the Auth0 login page with `login()`:
+Use the `getCredentials()` method to check if a user is authenticated.
 
 ```php
+// getCredentials() returns null if the user is not authenticated.
 $session = $auth0->getCredentials();
 
-if (null === $session || $session->accessTokenExpired) {
+if (null === $session || $session->accessTokenExpired()) {
+    // Redirect to Auth0 to authenticate the user.
     header('Location: ' . $auth0->login());
     exit;
 }
 ```
 
-Complete the authentication and obtain the tokens by calling `exchange()`:
+Complete the authentication flow and obtain the tokens by calling `exchange()`:
 
 ```php
 if (null !== $auth0->getExchangeParameters()) {
@@ -87,13 +92,15 @@ if (null !== $auth0->getExchangeParameters()) {
 }
 ```
 
-Use `getUser()` to retrieve information about our authenticated user:
+Finally, you can use `getCredentials()?->user` to retrieve information about our authenticated user:
 
 ```php
-print_r($auth0->getUser());
+print_r($auth0->getCredentials()?->user);
 ```
 
-That's it! You have authenticated the user with Auth0. More examples can be found in [EXAMPLES.md](./EXAMPLES.md).
+**That's it! You have successfully authenticated your first user with Auth0!** From here, you may want to try following along with [one of our quickstarts](#documentation) or browse through [our examples](./EXAMPLES.md) for additional insight and guidance.
+
+If you have questions, the [Auth0 Community](https://community.auth0.com/) is a fantastic resource to ask questions and get help.
 
 ## API Reference
 
@@ -101,7 +108,7 @@ That's it! You have authenticated the user with Auth0. More examples can be foun
 
 ## Support Policy
 
-Our support lifecycle mirrors the [PHP release support schedule](https://www.php.net/supported-versions.php). Our support for PHP versions end when they stop receiving security fixes.
+Our support lifecycle mirrors the [PHP release support schedule](https://www.php.net/supported-versions.php).
 
 | SDK Version | PHP Version | Support Ends |
 | ----------- | ----------- | ------------ |
@@ -109,7 +116,7 @@ Our support lifecycle mirrors the [PHP release support schedule](https://www.php
 |             | 8.1         | Nov 2024     |
 |             | 8.0         | Nov 2023     |
 
-Deprecations of EOL'd versions are not considered a breaking change, as Composer handles these scenarios elegantly. Legacy applications will stop receiving updates from us, but will continue to function on those unsupported SDK versions. Please ensure your PHP environment always remains up to date, particularly in production.
+We drop support for PHP versions when they reach end-of-life and cease receiving security fixes from the PHP Foundation. Please ensure your environment remains up to date so you can continue receiving updates for PHP and this SDK.
 
 ## Feedback
 
@@ -127,7 +134,7 @@ To provide feedback or report a bug, [please raise an issue on our issue tracker
 
 ### Vulnerability Reporting
 
-Please do not report security vulnerabilities on the public Github issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
 
 ---
 
@@ -139,6 +146,6 @@ Please do not report security vulnerabilities on the public Github issue tracker
   </picture>
 </p>
 
-<p align="center">Auth0 is an easy to implement, adaptable authentication and authorization platform.<br />To learn more checkout <a href="https://auth0.com/why-auth0">Why Auth0?</a></p>
+<p align="center">Auth0 is an easy-to-implement, adaptable authentication and authorization platform.<br />To learn more check out <a href="https://auth0.com/why-auth0">"Why Auth0?"</a></p>
 
-<p align="center">This project is licensed under the MIT license. See the <a href="./LICENSE.md"> LICENSE</a> file for more info.</p>
+<p align="center">This project is licensed under the MIT license. See the <a href="./LICENSE.md">LICENSE file</a> for more info.</p>
