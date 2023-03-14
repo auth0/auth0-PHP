@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   rep-opened:
-    name: PR/Issue Configuration
+    name: PR/Issue Setup
     runs-on: ubuntu-latest
 
     steps:
