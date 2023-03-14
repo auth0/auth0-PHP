@@ -9,7 +9,7 @@ on:
 jobs:
   validate:
     name: Composer Validate
-    runs-on: ${{ matrix.operating-systems }}
+    runs-on: ubuntu-latest
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     steps:
