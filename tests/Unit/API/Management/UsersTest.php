@@ -358,3 +358,121 @@ test('invalidateBrowsers() issues an appropriate request', function(): void {
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
 });
+
+test('getAuthenticationMethods() issues an appropriate request', function(): void {
+    $userId = uniqid();
+
+    $this->endpoint->getAuthenticationMethods($userId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods');
+});
+
+test('replaceAuthenticationMethods() issues an appropriate request', function(): void {
+    $userId = uniqid();
+    $body = [[
+        'type' => 'email',
+        'name' => uniqid(),
+        'email' => 'someone@somewhere.somehow',
+    ]];
+
+    $this->endpoint->replaceAuthenticationMethods($userId, $body);
+
+    expect($this->api->getRequestMethod())->toEqual('PUT');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods');
+
+    $body = $this->api->getRequestBody();
+
+    expect($body)->toHaveCount(1);
+    expect($body[0])
+        ->type->toEqual($body[0]['type'])
+        ->name->toEqual($body[0]['name'])
+        ->email->toEqual($body[0]['email']);
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
+
+test('deleteAuthenticationMethods() issues an appropriate request', function(): void {
+    $userId = uniqid();
+
+    $this->endpoint->deleteAuthenticationMethods($userId);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods');
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
+
+test('createAuthenticationMethod() issues an appropriate request', function(): void {
+    $userId = uniqid();
+    $body = [
+        'type' => 'email',
+        'name' => uniqid(),
+        'email' => 'someone@somewhere.somehow',
+    ];
+
+    $this->endpoint->createAuthenticationMethod($userId, $body);
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods');
+
+    $body = $this->api->getRequestBody();
+
+    expect($body)
+        ->type->toEqual($body['type'])
+        ->name->toEqual($body['name'])
+        ->email->toEqual($body['email']);
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
+
+test('getAuthenticationMethod() issues an appropriate request', function(): void {
+    $userId = uniqid();
+    $methodId = uniqid();
+
+    $this->endpoint->getAuthenticationMethod($userId, $methodId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods/' . $methodId);
+});
+
+test('updateAuthenticationMethod() issues an appropriate request', function(): void {
+    $userId = uniqid();
+    $methodId = uniqid();
+    $body = [
+        'type' => 'email',
+        'name' => uniqid(),
+        'email' => 'someone@somewhere.somehow',
+    ];
+
+    $this->endpoint->updateAuthenticationMethod($userId, $methodId, $body);
+
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods/' . $methodId);
+
+    $body = $this->api->getRequestBody();
+
+    expect($body)
+        ->type->toEqual($body['type'])
+        ->name->toEqual($body['name'])
+        ->email->toEqual($body['email']);
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
+
+test('deleteAuthenticationMethod() issues an appropriate request', function(): void {
+    $userId = uniqid();
+    $methodId = uniqid();
+
+    $this->endpoint->deleteAuthenticationMethod($userId, $methodId);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods/' . $methodId);
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
