@@ -1,44 +1,31 @@
-name: Acceptance Tests
-
 on:
   pull_request_target:
-    types: [labeled]
+    types:
+      - labeled
   push:
-    branches: [main]
-
-permissions:
-  contents: write
-  pull-requests: write
+    branches:
+      - main
 
 jobs:
-  configuration:
-    name: Configure
-    runs-on: ubuntu-latest
-    outputs:
-      allow-label: ${{ env.ALLOW_LABEL }}
-    steps:
-      - name: Save state
-        run: |
-          echo "ALLOW_LABEL=Status: 🤞 Run Tests" >> $GITHUB_ENV
-
-  test-acceptance:
-    name: Acceptance
-    needs: configuration
-    runs-on: ubuntu-latest
-
-    # Determine if the label is present.
-    if: github.event.label.name == needs.configuration.outputs.allow-label || github.ref_name == 'main'
+  acceptance:
+    name: Acceptance Tests
+    runs-on: ${{ matrix.operating-systems }}
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     strategy:
-      fail-fast: true
-      max-parallel: 10
+      fail-fast: false
       matrix:
-        php: ["8.0", "8.1", "8.2"]
+        operating-systems:
+          - ubuntu-latest
+        php-versions:
+          - 8.0
+          - 8.1
+          - 8.2
 
     steps:
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: ${{ matrix.php-versions }}
           coverage: none
           extensions: mbstring, openssl
         env:

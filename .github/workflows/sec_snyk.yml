@@ -1,0 +1,54 @@
+on:
+  pull_request_target:
+    types:
+      - labeled
+  push:
+    branches:
+      - main
+
+permissions:
+  security-events: write
+
+jobs:
+  snyk:
+    name: Snyk
+    runs-on: ${{ matrix.operating-systems }}
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-systems:
+          - ubuntu-latest
+        php-versions:
+          - 8.0
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+          extensions: mbstring
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - uses: actions/checkout@v3
+      
+      - run: composer update --no-interaction --no-progress
+      
+      - uses: snyk/actions/php@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --sarif-file-output=snyk.sarif
+          
+      - uses: andstor/file-existence-action@v1
+        id: sarif_file_exists
+        with:
+          files: "snyk.sarif"
+          
+      - uses: github/codeql-action/upload-sarif@v2
+        if: steps.sarif_file_exists.outputs.files_exists == 'true'
+        with:
+          sarif_file: snyk.sarif
