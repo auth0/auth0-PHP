@@ -1,5 +1,3 @@
-name: Contributors
-
 on:
   schedule:
     - cron: "30 1 * * *"
