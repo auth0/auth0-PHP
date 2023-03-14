@@ -15,7 +15,6 @@ jobs:
     name: Acceptance
     runs-on: ubuntu-latest
 
-    # Determine if the label is present.
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     strategy:
