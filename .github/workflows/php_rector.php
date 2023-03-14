@@ -27,8 +27,8 @@ jobs:
     steps:
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
-          coverage: none
+          php-version: ${{ matrix.php-versions }}
+          coverage: pcov
           extensions: mbstring, openssl
 
       - uses: actions/checkout@v3
