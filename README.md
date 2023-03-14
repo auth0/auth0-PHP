@@ -11,7 +11,7 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ## Documentation
 
-We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0), [Symfony](https://github.com/auth0/symfony), and [WordPress](https://github.com/auth0/wordpress). If you using one of these frameworks, use the tailored SDK for the best integration experience.
+We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0), [Symfony](https://github.com/auth0/symfony), and [WordPress](https://github.com/auth0/wordpress). If you are using one of these frameworks, use the tailored SDK for the best integration experience.
 
 - Quickstarts
   - [Application using Sessions (Stateful)](https://auth0.com/docs/quickstart/webapp/php) — Demonstrates a traditional web application that uses sessions and supports logging in, logging out, and querying user profiles. [The completed source code is also available.](https://github.com/auth0-samples/auth0-php-web-app)
