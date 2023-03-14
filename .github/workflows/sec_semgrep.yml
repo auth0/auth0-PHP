@@ -12,19 +12,11 @@ permissions:
 jobs:
   snyk:
     name: Snyk
-    runs-on: ${{ matrix.operating-systems }}
+    runs-on: ubuntu-latest
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     container:
       image: returntocorp/semgrep
-
-    strategy:
-      fail-fast: false
-      matrix:
-        operating-systems:
-          - ubuntu-latest
-        php-versions:
-          - 8.0
 
     steps:
       - uses: actions/checkout@v3
