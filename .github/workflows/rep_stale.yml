@@ -9,8 +9,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  close-issues:
-    name: Close Issues
+  rep-stale:
+    name: Issue/PR Maintenance
     runs-on: ubuntu-latest
 
     steps:
