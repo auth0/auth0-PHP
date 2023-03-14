@@ -8,7 +8,7 @@ on:
 
 jobs:
   pint:
-    name: Pint
+    name: PEST
     runs-on: ${{ matrix.operating-systems }}
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
