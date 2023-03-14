@@ -6,7 +6,7 @@
 
 - **Management API**
   - `Auth0\APIs\Management\Users`
-    - `DELETE /users/:id/authenticators` → `deleteAllAuthenticators()` ([#702](https://github.com/auth0/auth0-PHP/pull/702)). ([Documentation](https://auth0.github.io/auth0-PHP/API/Management/Management.html#method-deleteAllAuthenticators))
+    - `DELETE /users/:id/authenticators` → `deleteAllAuthenticators()` ([#702](https://github.com/auth0/auth0-PHP/pull/702)) ([Documentation](https://auth0.github.io/auth0-PHP/API/Management/Management.html#method-deleteAllAuthenticators))
   - Support for Authentication Method endpoints: ([#707](https://github.com/auth0/auth0-PHP/pull/707)):
     - `GET /api/v2/users/:user/authentication-methods` → `getAuthenticationMethods()` ([Documentation](https://auth0.com/docs/api/management/v2#!/Users/get_authentication_methods))
     - `PUT /api/v2/users/:user/authentication-methods` → `replaceAuthenticationMethods()` ([Documentation](https://auth0.com/docs/api/management/v2#!/Users/put_authentication_methods))
