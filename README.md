@@ -4,8 +4,8 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 [![Package](https://img.shields.io/packagist/dt/auth0/auth0-php)](https://packagist.org/packages/auth0/auth0-php)
 ![Build Status](https://img.shields.io/github/checks-status/auth0/auth0-PHP/main)
-[![Coverage](https://codecov.io/gh/auth0/auth0-PHP/branch/main/graph/badge.svg?token=PtrLf5j8JK)](https://codecov.io/gh/auth0/auth0-PHP)
-[![License](https://img.shields.io/packagist/l/auth0/auth0-php)](https://doge.mit-license.org/)
+[![Coverage](https://img.shields.io/codecov/c/github/auth0/auth0-PHP/main)](https://codecov.io/gh/auth0/auth0-PHP)
+[![License](https://img.shields.io/github/license/auth0/auth0-PHP)](https://doge.mit-license.org/)
 
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :computer: [API Reference](#api-reference) :speech_balloon: [Feedback](#feedback)
 
@@ -36,7 +36,7 @@ We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0)
 
 ### Installation
 
-After installing the [required dependencies](#requirements), add the SDK to your application using [Composer](https://getcomposer.org/):
+Ensure you have [the necessary dependencies](#requirements) installed, then add the SDK to your application using [Composer](https://getcomposer.org/):
 
 ```
 composer require auth0/auth0-php
