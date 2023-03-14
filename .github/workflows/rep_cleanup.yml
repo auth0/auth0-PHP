@@ -10,7 +10,7 @@ on:
 
 jobs:
   rep-cleanup:
-    name: Cleanup Labels
+    name: Issue/PR Cleanup
     runs-on: ubuntu-latest
 
     permissions:
