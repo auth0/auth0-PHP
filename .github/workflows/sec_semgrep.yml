@@ -10,8 +10,8 @@ permissions:
   security-events: write
 
 jobs:
-  snyk:
-    name: Snyk
+  semgrep:
+    name: Semgrep
     runs-on: ubuntu-latest
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
