@@ -10,8 +10,6 @@ jobs:
   style-pint:
     name: Pint
     runs-on: ubuntu-latest
-
-    # Determine if the label is present.
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     strategy:
@@ -38,7 +36,6 @@ jobs:
     name: Rector
     runs-on: ubuntu-latest
 
-    # Determine if the label is present.
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     strategy:
