@@ -1,6 +1,6 @@
 {
-  "name": "auth0-samples/php-lock-app",
-  "description": "This example demonstrates using Auth0's PHP and Lock.JS SDKs to authenticate users in a web application.",
+  "name": "auth0-samples/playground",
+  "description": "A playground for experimenting with Auth0-PHP's various features.",
   "repositories": [
     {
       "type": "path",
@@ -52,7 +52,7 @@
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
     "symlink-package": [
-      "mkdir -p vendor/auth0 && rm -f vendor/auth0/auth0-php && ln -s -f ../../../../../ vendor/auth0/auth0-php"
+      "mkdir -p vendor/auth0 && rm -f vendor/auth0/auth0-php && ln -s -f ../../../../ vendor/auth0/auth0-php"
     ],
     "pre-install-cmd": "@symlink-package"
   }
