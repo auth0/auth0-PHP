@@ -1,0 +1,19 @@
+{*
+    This is a login interstitial.
+    The user will see this upon after authenticating with Auth0.
+    The application uses this opportunity to fetch the returned authentication state.
+    The SDK uses this information to finish setting up the user's session for the application.
+*}
+
+{layout '_layout.latte'}
+
+{block javascript}
+    <script>
+        window.history.pushState( {} , '', '/' );
+        location.reload();
+    </script>
+{/block}
+
+{block content}
+    <p>One moment please ...</p>
+{/block}

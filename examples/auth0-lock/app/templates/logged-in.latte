@@ -1,0 +1,11 @@
+{block content}
+
+    <pre style="white-space: pre-wrap;" n:if="$session->user">
+        <code>
+        {foreach $session->user as $property}
+            {$property}
+        {/foreach}
+        </code>
+    </pre>
+
+{/block}

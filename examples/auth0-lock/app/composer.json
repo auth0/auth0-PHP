@@ -1,0 +1,60 @@
+{
+  "name": "auth0-samples/php-lock-app",
+  "description": "This example demonstrates using Auth0's PHP and Lock.JS SDKs to authenticate users in a web application.",
+  "repositories": [
+    {
+      "type": "path",
+      "url": "vendor/auth0/auth0-php",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "auth0/auth0-php": "@dev",
+    "latte/latte": "^3.0",
+    "nyholm/psr7": "^1.5",
+    "symfony/http-client": "^6.2",
+    "vlucas/phpdotenv": "^5.5"
+  },
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "process-timeout": 0,
+    "allow-plugins": {
+      "php-http/discovery": false
+    }
+  },
+  "extra": {
+    "merge-plugin": {
+      "include": [
+        "composer.local.json"
+      ],
+      "recurse": true,
+      "replace": true,
+      "ignore-duplicates": false,
+      "merge-dev": true,
+      "merge-extra": false,
+      "merge-extra-deep": false,
+      "merge-scripts": false
+    }
+  },
+  "scripts": {
+    "start": [
+      "chmod +x setup.sh",
+      "bash setup.sh",
+      "php -S 127.0.0.1:3000 src/index.php"
+    ],
+    "pre-update-cmd": [
+      "@symlink-package",
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "symlink-package": [
+      "mkdir -p vendor/auth0 && rm -f vendor/auth0/auth0-php && ln -s -f ../../../../../ vendor/auth0/auth0-php"
+    ],
+    "pre-install-cmd": "@symlink-package"
+  }
+}

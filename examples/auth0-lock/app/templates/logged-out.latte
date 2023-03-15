@@ -1,0 +1,33 @@
+{layout '_layout.latte'}
+
+{block javascript}
+    <script>
+        window.addEventListener('load', function() {
+            const lock = new Auth0Lock({$clientId}, {$domain}, {
+                auth: {
+                    redirectUrl: {$redirectUrl},
+                    responseType: 'code',
+                }
+            });
+
+            lock.on('authenticated', function(result) {
+                console.log(result);
+            });
+
+            lock.show({
+                auth: {
+                    params: {
+                        state: {$state},
+                        nonce: {$nonce},
+                        code_challenge: {$challenge},
+                        code_challenge_method: 'S256',
+                    }
+                }
+            });
+        }, false);
+    </script>
+{/block}
+
+{block content}
+    <p>In a moment you should see the Lock.js embedded login dialog.</p>
+{/block}
