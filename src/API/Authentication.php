@@ -207,14 +207,12 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
 
         $body = $this->addClientAuthentication($body);
 
-        $response = $this->getHttpClient()->
+        return $this->getHttpClient()->
             method('post')->
             addPath('passwordless', 'start')->
             withBody((object) $body)->
             withHeaders($headers)->
             call();
-
-        return $response;
     }
 
     public function emailPasswordlessStart(

@@ -454,7 +454,9 @@ final class Assert
         static::reportInvalidArgument(\sprintf(
             $message ?: 'Expected an instance of any of %2$s. Got: %s',
             static::typeToString($value),
-            \implode(', ', \array_map(array(static::class, 'valueToString'), $classes))
+            \implode(', ', \array_map(function ($value): string {
+                return static::valueToString($value);
+            }, $classes))
         ));
     }
 
@@ -966,7 +968,9 @@ final class Assert
             static::reportInvalidArgument(\sprintf(
                 $message ?: 'Expected one of: %2$s. Got: %s',
                 static::valueToString($value),
-                \implode(', ', \array_map(array(static::class, 'valueToString'), $values))
+                \implode(', ', \array_map(function ($value): string {
+                    return static::valueToString($value);
+                }, $values))
             ));
         }
     }
@@ -1629,7 +1633,7 @@ final class Assert
      */
     public static function methodExists($classOrObject, $method, $message = '')
     {
-        if (!(\is_string($classOrObject) || \is_object($classOrObject)) || !\method_exists($classOrObject, $method)) {
+        if (!\is_string($classOrObject) && !\is_object($classOrObject) || !\method_exists($classOrObject, $method)) {
             static::reportInvalidArgument(\sprintf(
                 $message ?: 'Expected the method %s to exist.',
                 static::valueToString($method)
@@ -1668,7 +1672,7 @@ final class Assert
      */
     public static function keyExists($array, $key, $message = '')
     {
-        if (!(isset($array[$key]) || \array_key_exists($key, $array))) {
+        if (!isset($array[$key]) && !\array_key_exists($key, $array)) {
             static::reportInvalidArgument(\sprintf(
                 $message ?: 'Expected the key %s to exist.',
                 static::valueToString($key)
@@ -1708,7 +1712,7 @@ final class Assert
      */
     public static function validArrayKey($value, $message = '')
     {
-        if (!(\is_int($value) || \is_string($value))) {
+        if (!\is_int($value) && !\is_string($value)) {
             static::reportInvalidArgument(\sprintf(
                 $message ?: 'Expected string or integer. Got: %s',
                 static::typeToString($value)
@@ -1824,7 +1828,7 @@ final class Assert
         }
 
         $nextKey = -1;
-        foreach ($array as $k => $v) {
+        foreach (array_keys($array) as $k) {
             if ($k !== ++$nextKey) {
                 static::reportInvalidArgument(
                     $message ?: 'Expected list - non-associative array.'
@@ -1996,7 +2000,9 @@ final class Assert
      */
     public static function nullOrString($value, $message = '')
     {
-        null === $value || static::string($value, $message);
+        if (null !== $value) {
+            static::string($value, $message);
+        }
     }
 
     /**
@@ -2035,7 +2041,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::string($entry, $message);
+            if (null !== $entry) {
+                static::string($entry, $message);
+            }
         }
     }
 
@@ -2052,7 +2060,9 @@ final class Assert
      */
     public static function nullOrStringNotEmpty($value, $message = '')
     {
-        null === $value || static::stringNotEmpty($value, $message);
+        if (null !== $value) {
+            static::stringNotEmpty($value, $message);
+        }
     }
 
     /**
@@ -2091,7 +2101,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::stringNotEmpty($entry, $message);
+            if (null !== $entry) {
+                static::stringNotEmpty($entry, $message);
+            }
         }
     }
 
@@ -2108,7 +2120,9 @@ final class Assert
      */
     public static function nullOrInteger($value, $message = '')
     {
-        null === $value || static::integer($value, $message);
+        if (null !== $value) {
+            static::integer($value, $message);
+        }
     }
 
     /**
@@ -2147,7 +2161,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::integer($entry, $message);
+            if (null !== $entry) {
+                static::integer($entry, $message);
+            }
         }
     }
 
@@ -2164,7 +2180,9 @@ final class Assert
      */
     public static function nullOrIntegerish($value, $message = '')
     {
-        null === $value || static::integerish($value, $message);
+        if (null !== $value) {
+            static::integerish($value, $message);
+        }
     }
 
     /**
@@ -2203,7 +2221,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::integerish($entry, $message);
+            if (null !== $entry) {
+                static::integerish($entry, $message);
+            }
         }
     }
 
@@ -2220,7 +2240,9 @@ final class Assert
      */
     public static function nullOrPositiveInteger($value, $message = '')
     {
-        null === $value || static::positiveInteger($value, $message);
+        if (null !== $value) {
+            static::positiveInteger($value, $message);
+        }
     }
 
     /**
@@ -2259,7 +2281,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::positiveInteger($entry, $message);
+            if (null !== $entry) {
+                static::positiveInteger($entry, $message);
+            }
         }
     }
 
@@ -2276,7 +2300,9 @@ final class Assert
      */
     public static function nullOrFloat($value, $message = '')
     {
-        null === $value || static::float($value, $message);
+        if (null !== $value) {
+            static::float($value, $message);
+        }
     }
 
     /**
@@ -2315,7 +2341,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::float($entry, $message);
+            if (null !== $entry) {
+                static::float($entry, $message);
+            }
         }
     }
 
@@ -2332,7 +2360,9 @@ final class Assert
      */
     public static function nullOrNumeric($value, $message = '')
     {
-        null === $value || static::numeric($value, $message);
+        if (null !== $value) {
+            static::numeric($value, $message);
+        }
     }
 
     /**
@@ -2371,7 +2401,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::numeric($entry, $message);
+            if (null !== $entry) {
+                static::numeric($entry, $message);
+            }
         }
     }
 
@@ -2388,7 +2420,9 @@ final class Assert
      */
     public static function nullOrNatural($value, $message = '')
     {
-        null === $value || static::natural($value, $message);
+        if (null !== $value) {
+            static::natural($value, $message);
+        }
     }
 
     /**
@@ -2427,7 +2461,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::natural($entry, $message);
+            if (null !== $entry) {
+                static::natural($entry, $message);
+            }
         }
     }
 
@@ -2444,7 +2480,9 @@ final class Assert
      */
     public static function nullOrBoolean($value, $message = '')
     {
-        null === $value || static::boolean($value, $message);
+        if (null !== $value) {
+            static::boolean($value, $message);
+        }
     }
 
     /**
@@ -2483,7 +2521,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::boolean($entry, $message);
+            if (null !== $entry) {
+                static::boolean($entry, $message);
+            }
         }
     }
 
@@ -2500,7 +2540,9 @@ final class Assert
      */
     public static function nullOrScalar($value, $message = '')
     {
-        null === $value || static::scalar($value, $message);
+        if (null !== $value) {
+            static::scalar($value, $message);
+        }
     }
 
     /**
@@ -2539,7 +2581,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::scalar($entry, $message);
+            if (null !== $entry) {
+                static::scalar($entry, $message);
+            }
         }
     }
 
@@ -2556,7 +2600,9 @@ final class Assert
      */
     public static function nullOrObject($value, $message = '')
     {
-        null === $value || static::object($value, $message);
+        if (null !== $value) {
+            static::object($value, $message);
+        }
     }
 
     /**
@@ -2595,7 +2641,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::object($entry, $message);
+            if (null !== $entry) {
+                static::object($entry, $message);
+            }
         }
     }
 
@@ -2613,7 +2661,9 @@ final class Assert
      */
     public static function nullOrResource($value, $type = null, $message = '')
     {
-        null === $value || static::resource($value, $type, $message);
+        if (null !== $value) {
+            static::resource($value, $type, $message);
+        }
     }
 
     /**
@@ -2654,7 +2704,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::resource($entry, $type, $message);
+            if (null !== $entry) {
+                static::resource($entry, $type, $message);
+            }
         }
     }
 
@@ -2671,7 +2723,9 @@ final class Assert
      */
     public static function nullOrIsCallable($value, $message = '')
     {
-        null === $value || static::isCallable($value, $message);
+        if (null !== $value) {
+            static::isCallable($value, $message);
+        }
     }
 
     /**
@@ -2710,7 +2764,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isCallable($entry, $message);
+            if (null !== $entry) {
+                static::isCallable($entry, $message);
+            }
         }
     }
 
@@ -2727,7 +2783,9 @@ final class Assert
      */
     public static function nullOrIsArray($value, $message = '')
     {
-        null === $value || static::isArray($value, $message);
+        if (null !== $value) {
+            static::isArray($value, $message);
+        }
     }
 
     /**
@@ -2766,7 +2824,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isArray($entry, $message);
+            if (null !== $entry) {
+                static::isArray($entry, $message);
+            }
         }
     }
 
@@ -2785,7 +2845,9 @@ final class Assert
      */
     public static function nullOrIsTraversable($value, $message = '')
     {
-        null === $value || static::isTraversable($value, $message);
+        if (null !== $value) {
+            static::isTraversable($value, $message);
+        }
     }
 
     /**
@@ -2828,7 +2890,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isTraversable($entry, $message);
+            if (null !== $entry) {
+                static::isTraversable($entry, $message);
+            }
         }
     }
 
@@ -2845,7 +2909,9 @@ final class Assert
      */
     public static function nullOrIsArrayAccessible($value, $message = '')
     {
-        null === $value || static::isArrayAccessible($value, $message);
+        if (null !== $value) {
+            static::isArrayAccessible($value, $message);
+        }
     }
 
     /**
@@ -2884,7 +2950,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isArrayAccessible($entry, $message);
+            if (null !== $entry) {
+                static::isArrayAccessible($entry, $message);
+            }
         }
     }
 
@@ -2901,7 +2969,9 @@ final class Assert
      */
     public static function nullOrIsCountable($value, $message = '')
     {
-        null === $value || static::isCountable($value, $message);
+        if (null !== $value) {
+            static::isCountable($value, $message);
+        }
     }
 
     /**
@@ -2940,7 +3010,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isCountable($entry, $message);
+            if (null !== $entry) {
+                static::isCountable($entry, $message);
+            }
         }
     }
 
@@ -2957,7 +3029,9 @@ final class Assert
      */
     public static function nullOrIsIterable($value, $message = '')
     {
-        null === $value || static::isIterable($value, $message);
+        if (null !== $value) {
+            static::isIterable($value, $message);
+        }
     }
 
     /**
@@ -2996,7 +3070,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isIterable($entry, $message);
+            if (null !== $entry) {
+                static::isIterable($entry, $message);
+            }
         }
     }
 
@@ -3016,7 +3092,9 @@ final class Assert
      */
     public static function nullOrIsInstanceOf($value, $class, $message = '')
     {
-        null === $value || static::isInstanceOf($value, $class, $message);
+        if (null !== $value) {
+            static::isInstanceOf($value, $class, $message);
+        }
     }
 
     /**
@@ -3061,7 +3139,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isInstanceOf($entry, $class, $message);
+            if (null !== $entry) {
+                static::isInstanceOf($entry, $class, $message);
+            }
         }
     }
 
@@ -3080,7 +3160,9 @@ final class Assert
      */
     public static function nullOrNotInstanceOf($value, $class, $message = '')
     {
-        null === $value || static::notInstanceOf($value, $class, $message);
+        if (null !== $value) {
+            static::notInstanceOf($value, $class, $message);
+        }
     }
 
     /**
@@ -3124,7 +3206,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notInstanceOf($entry, $class, $message);
+            if (null !== $entry) {
+                static::notInstanceOf($entry, $class, $message);
+            }
         }
     }
 
@@ -3142,7 +3226,9 @@ final class Assert
      */
     public static function nullOrIsInstanceOfAny($value, $classes, $message = '')
     {
-        null === $value || static::isInstanceOfAny($value, $classes, $message);
+        if (null !== $value) {
+            static::isInstanceOfAny($value, $classes, $message);
+        }
     }
 
     /**
@@ -3183,7 +3269,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isInstanceOfAny($entry, $classes, $message);
+            if (null !== $entry) {
+                static::isInstanceOfAny($entry, $classes, $message);
+            }
         }
     }
 
@@ -3203,7 +3291,9 @@ final class Assert
      */
     public static function nullOrIsAOf($value, $class, $message = '')
     {
-        null === $value || static::isAOf($value, $class, $message);
+        if (null !== $value) {
+            static::isAOf($value, $class, $message);
+        }
     }
 
     /**
@@ -3248,7 +3338,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isAOf($entry, $class, $message);
+            if (null !== $entry) {
+                static::isAOf($entry, $class, $message);
+            }
         }
     }
 
@@ -3267,7 +3359,9 @@ final class Assert
      */
     public static function nullOrIsNotA($value, $class, $message = '')
     {
-        null === $value || static::isNotA($value, $class, $message);
+        if (null !== $value) {
+            static::isNotA($value, $class, $message);
+        }
     }
 
     /**
@@ -3312,7 +3406,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isNotA($entry, $class, $message);
+            if (null !== $entry) {
+                static::isNotA($entry, $class, $message);
+            }
         }
     }
 
@@ -3330,7 +3426,9 @@ final class Assert
      */
     public static function nullOrIsAnyOf($value, $classes, $message = '')
     {
-        null === $value || static::isAnyOf($value, $classes, $message);
+        if (null !== $value) {
+            static::isAnyOf($value, $classes, $message);
+        }
     }
 
     /**
@@ -3371,7 +3469,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isAnyOf($entry, $classes, $message);
+            if (null !== $entry) {
+                static::isAnyOf($entry, $classes, $message);
+            }
         }
     }
 
@@ -3388,7 +3488,9 @@ final class Assert
      */
     public static function nullOrIsEmpty($value, $message = '')
     {
-        null === $value || static::isEmpty($value, $message);
+        if (null !== $value) {
+            static::isEmpty($value, $message);
+        }
     }
 
     /**
@@ -3427,7 +3529,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::isEmpty($entry, $message);
+            if (null !== $entry) {
+                static::isEmpty($entry, $message);
+            }
         }
     }
 
@@ -3443,7 +3547,9 @@ final class Assert
      */
     public static function nullOrNotEmpty($value, $message = '')
     {
-        null === $value || static::notEmpty($value, $message);
+        if (null !== $value) {
+            static::notEmpty($value, $message);
+        }
     }
 
     /**
@@ -3481,7 +3587,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notEmpty($entry, $message);
+            if (null !== $entry) {
+                static::notEmpty($entry, $message);
+            }
         }
     }
 
@@ -3537,7 +3645,9 @@ final class Assert
      */
     public static function nullOrTrue($value, $message = '')
     {
-        null === $value || static::true($value, $message);
+        if (null !== $value) {
+            static::true($value, $message);
+        }
     }
 
     /**
@@ -3576,7 +3686,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::true($entry, $message);
+            if (null !== $entry) {
+                static::true($entry, $message);
+            }
         }
     }
 
@@ -3593,7 +3705,9 @@ final class Assert
      */
     public static function nullOrFalse($value, $message = '')
     {
-        null === $value || static::false($value, $message);
+        if (null !== $value) {
+            static::false($value, $message);
+        }
     }
 
     /**
@@ -3632,7 +3746,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::false($entry, $message);
+            if (null !== $entry) {
+                static::false($entry, $message);
+            }
         }
     }
 
@@ -3648,7 +3764,9 @@ final class Assert
      */
     public static function nullOrNotFalse($value, $message = '')
     {
-        null === $value || static::notFalse($value, $message);
+        if (null !== $value) {
+            static::notFalse($value, $message);
+        }
     }
 
     /**
@@ -3686,7 +3804,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notFalse($entry, $message);
+            if (null !== $entry) {
+                static::notFalse($entry, $message);
+            }
         }
     }
 
@@ -3700,7 +3820,9 @@ final class Assert
      */
     public static function nullOrIp($value, $message = '')
     {
-        null === $value || static::ip($value, $message);
+        if (null !== $value) {
+            static::ip($value, $message);
+        }
     }
 
     /**
@@ -3733,7 +3855,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::ip($entry, $message);
+            if (null !== $entry) {
+                static::ip($entry, $message);
+            }
         }
     }
 
@@ -3747,7 +3871,9 @@ final class Assert
      */
     public static function nullOrIpv4($value, $message = '')
     {
-        null === $value || static::ipv4($value, $message);
+        if (null !== $value) {
+            static::ipv4($value, $message);
+        }
     }
 
     /**
@@ -3780,7 +3906,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::ipv4($entry, $message);
+            if (null !== $entry) {
+                static::ipv4($entry, $message);
+            }
         }
     }
 
@@ -3794,7 +3922,9 @@ final class Assert
      */
     public static function nullOrIpv6($value, $message = '')
     {
-        null === $value || static::ipv6($value, $message);
+        if (null !== $value) {
+            static::ipv6($value, $message);
+        }
     }
 
     /**
@@ -3827,7 +3957,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::ipv6($entry, $message);
+            if (null !== $entry) {
+                static::ipv6($entry, $message);
+            }
         }
     }
 
@@ -3841,7 +3973,9 @@ final class Assert
      */
     public static function nullOrEmail($value, $message = '')
     {
-        null === $value || static::email($value, $message);
+        if (null !== $value) {
+            static::email($value, $message);
+        }
     }
 
     /**
@@ -3874,7 +4008,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::email($entry, $message);
+            if (null !== $entry) {
+                static::email($entry, $message);
+            }
         }
     }
 
@@ -3888,7 +4024,9 @@ final class Assert
      */
     public static function nullOrUniqueValues($values, $message = '')
     {
-        null === $values || static::uniqueValues($values, $message);
+        if (null !== $values) {
+            static::uniqueValues($values, $message);
+        }
     }
 
     /**
@@ -3921,7 +4059,9 @@ final class Assert
         static::isIterable($values);
 
         foreach ($values as $entry) {
-            null === $entry || static::uniqueValues($entry, $message);
+            if (null !== $entry) {
+                static::uniqueValues($entry, $message);
+            }
         }
     }
 
@@ -3936,7 +4076,9 @@ final class Assert
      */
     public static function nullOrEq($value, $expect, $message = '')
     {
-        null === $value || static::eq($value, $expect, $message);
+        if (null !== $value) {
+            static::eq($value, $expect, $message);
+        }
     }
 
     /**
@@ -3971,7 +4113,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::eq($entry, $expect, $message);
+            if (null !== $entry) {
+                static::eq($entry, $expect, $message);
+            }
         }
     }
 
@@ -3986,7 +4130,9 @@ final class Assert
      */
     public static function nullOrNotEq($value, $expect, $message = '')
     {
-        null === $value || static::notEq($value, $expect, $message);
+        if (null !== $value) {
+            static::notEq($value, $expect, $message);
+        }
     }
 
     /**
@@ -4021,7 +4167,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notEq($entry, $expect, $message);
+            if (null !== $entry) {
+                static::notEq($entry, $expect, $message);
+            }
         }
     }
 
@@ -4038,7 +4186,9 @@ final class Assert
      */
     public static function nullOrSame($value, $expect, $message = '')
     {
-        null === $value || static::same($value, $expect, $message);
+        if (null !== $value) {
+            static::same($value, $expect, $message);
+        }
     }
 
     /**
@@ -4077,7 +4227,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::same($entry, $expect, $message);
+            if (null !== $entry) {
+                static::same($entry, $expect, $message);
+            }
         }
     }
 
@@ -4094,7 +4246,9 @@ final class Assert
      */
     public static function nullOrNotSame($value, $expect, $message = '')
     {
-        null === $value || static::notSame($value, $expect, $message);
+        if (null !== $value) {
+            static::notSame($value, $expect, $message);
+        }
     }
 
     /**
@@ -4133,7 +4287,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notSame($entry, $expect, $message);
+            if (null !== $entry) {
+                static::notSame($entry, $expect, $message);
+            }
         }
     }
 
@@ -4150,7 +4306,9 @@ final class Assert
      */
     public static function nullOrGreaterThan($value, $limit, $message = '')
     {
-        null === $value || static::greaterThan($value, $limit, $message);
+        if (null !== $value) {
+            static::greaterThan($value, $limit, $message);
+        }
     }
 
     /**
@@ -4189,7 +4347,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::greaterThan($entry, $limit, $message);
+            if (null !== $entry) {
+                static::greaterThan($entry, $limit, $message);
+            }
         }
     }
 
@@ -4206,7 +4366,9 @@ final class Assert
      */
     public static function nullOrGreaterThanEq($value, $limit, $message = '')
     {
-        null === $value || static::greaterThanEq($value, $limit, $message);
+        if (null !== $value) {
+            static::greaterThanEq($value, $limit, $message);
+        }
     }
 
     /**
@@ -4245,7 +4407,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::greaterThanEq($entry, $limit, $message);
+            if (null !== $entry) {
+                static::greaterThanEq($entry, $limit, $message);
+            }
         }
     }
 
@@ -4262,7 +4426,9 @@ final class Assert
      */
     public static function nullOrLessThan($value, $limit, $message = '')
     {
-        null === $value || static::lessThan($value, $limit, $message);
+        if (null !== $value) {
+            static::lessThan($value, $limit, $message);
+        }
     }
 
     /**
@@ -4301,7 +4467,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::lessThan($entry, $limit, $message);
+            if (null !== $entry) {
+                static::lessThan($entry, $limit, $message);
+            }
         }
     }
 
@@ -4318,7 +4486,9 @@ final class Assert
      */
     public static function nullOrLessThanEq($value, $limit, $message = '')
     {
-        null === $value || static::lessThanEq($value, $limit, $message);
+        if (null !== $value) {
+            static::lessThanEq($value, $limit, $message);
+        }
     }
 
     /**
@@ -4357,7 +4527,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::lessThanEq($entry, $limit, $message);
+            if (null !== $entry) {
+                static::lessThanEq($entry, $limit, $message);
+            }
         }
     }
 
@@ -4375,7 +4547,9 @@ final class Assert
      */
     public static function nullOrRange($value, $min, $max, $message = '')
     {
-        null === $value || static::range($value, $min, $max, $message);
+        if (null !== $value) {
+            static::range($value, $min, $max, $message);
+        }
     }
 
     /**
@@ -4416,7 +4590,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::range($entry, $min, $max, $message);
+            if (null !== $entry) {
+                static::range($entry, $min, $max, $message);
+            }
         }
     }
 
@@ -4433,7 +4609,9 @@ final class Assert
      */
     public static function nullOrOneOf($value, $values, $message = '')
     {
-        null === $value || static::oneOf($value, $values, $message);
+        if (null !== $value) {
+            static::oneOf($value, $values, $message);
+        }
     }
 
     /**
@@ -4472,7 +4650,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::oneOf($entry, $values, $message);
+            if (null !== $entry) {
+                static::oneOf($entry, $values, $message);
+            }
         }
     }
 
@@ -4489,7 +4669,9 @@ final class Assert
      */
     public static function nullOrInArray($value, $values, $message = '')
     {
-        null === $value || static::inArray($value, $values, $message);
+        if (null !== $value) {
+            static::inArray($value, $values, $message);
+        }
     }
 
     /**
@@ -4528,7 +4710,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::inArray($entry, $values, $message);
+            if (null !== $entry) {
+                static::inArray($entry, $values, $message);
+            }
         }
     }
 
@@ -4545,7 +4729,9 @@ final class Assert
      */
     public static function nullOrContains($value, $subString, $message = '')
     {
-        null === $value || static::contains($value, $subString, $message);
+        if (null !== $value) {
+            static::contains($value, $subString, $message);
+        }
     }
 
     /**
@@ -4584,7 +4770,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::contains($entry, $subString, $message);
+            if (null !== $entry) {
+                static::contains($entry, $subString, $message);
+            }
         }
     }
 
@@ -4601,7 +4789,9 @@ final class Assert
      */
     public static function nullOrNotContains($value, $subString, $message = '')
     {
-        null === $value || static::notContains($value, $subString, $message);
+        if (null !== $value) {
+            static::notContains($value, $subString, $message);
+        }
     }
 
     /**
@@ -4640,7 +4830,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notContains($entry, $subString, $message);
+            if (null !== $entry) {
+                static::notContains($entry, $subString, $message);
+            }
         }
     }
 
@@ -4656,7 +4848,9 @@ final class Assert
      */
     public static function nullOrNotWhitespaceOnly($value, $message = '')
     {
-        null === $value || static::notWhitespaceOnly($value, $message);
+        if (null !== $value) {
+            static::notWhitespaceOnly($value, $message);
+        }
     }
 
     /**
@@ -4693,7 +4887,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notWhitespaceOnly($entry, $message);
+            if (null !== $entry) {
+                static::notWhitespaceOnly($entry, $message);
+            }
         }
     }
 
@@ -4710,7 +4906,9 @@ final class Assert
      */
     public static function nullOrStartsWith($value, $prefix, $message = '')
     {
-        null === $value || static::startsWith($value, $prefix, $message);
+        if (null !== $value) {
+            static::startsWith($value, $prefix, $message);
+        }
     }
 
     /**
@@ -4749,7 +4947,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::startsWith($entry, $prefix, $message);
+            if (null !== $entry) {
+                static::startsWith($entry, $prefix, $message);
+            }
         }
     }
 
@@ -4766,7 +4966,9 @@ final class Assert
      */
     public static function nullOrNotStartsWith($value, $prefix, $message = '')
     {
-        null === $value || static::notStartsWith($value, $prefix, $message);
+        if (null !== $value) {
+            static::notStartsWith($value, $prefix, $message);
+        }
     }
 
     /**
@@ -4805,7 +5007,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notStartsWith($entry, $prefix, $message);
+            if (null !== $entry) {
+                static::notStartsWith($entry, $prefix, $message);
+            }
         }
     }
 
@@ -4821,7 +5025,9 @@ final class Assert
      */
     public static function nullOrStartsWithLetter($value, $message = '')
     {
-        null === $value || static::startsWithLetter($value, $message);
+        if (null !== $value) {
+            static::startsWithLetter($value, $message);
+        }
     }
 
     /**
@@ -4858,7 +5064,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::startsWithLetter($entry, $message);
+            if (null !== $entry) {
+                static::startsWithLetter($entry, $message);
+            }
         }
     }
 
@@ -4875,7 +5083,9 @@ final class Assert
      */
     public static function nullOrEndsWith($value, $suffix, $message = '')
     {
-        null === $value || static::endsWith($value, $suffix, $message);
+        if (null !== $value) {
+            static::endsWith($value, $suffix, $message);
+        }
     }
 
     /**
@@ -4914,7 +5124,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::endsWith($entry, $suffix, $message);
+            if (null !== $entry) {
+                static::endsWith($entry, $suffix, $message);
+            }
         }
     }
 
@@ -4931,7 +5143,9 @@ final class Assert
      */
     public static function nullOrNotEndsWith($value, $suffix, $message = '')
     {
-        null === $value || static::notEndsWith($value, $suffix, $message);
+        if (null !== $value) {
+            static::notEndsWith($value, $suffix, $message);
+        }
     }
 
     /**
@@ -4970,7 +5184,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notEndsWith($entry, $suffix, $message);
+            if (null !== $entry) {
+                static::notEndsWith($entry, $suffix, $message);
+            }
         }
     }
 
@@ -4987,7 +5203,9 @@ final class Assert
      */
     public static function nullOrRegex($value, $pattern, $message = '')
     {
-        null === $value || static::regex($value, $pattern, $message);
+        if (null !== $value) {
+            static::regex($value, $pattern, $message);
+        }
     }
 
     /**
@@ -5026,7 +5244,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::regex($entry, $pattern, $message);
+            if (null !== $entry) {
+                static::regex($entry, $pattern, $message);
+            }
         }
     }
 
@@ -5043,7 +5263,9 @@ final class Assert
      */
     public static function nullOrNotRegex($value, $pattern, $message = '')
     {
-        null === $value || static::notRegex($value, $pattern, $message);
+        if (null !== $value) {
+            static::notRegex($value, $pattern, $message);
+        }
     }
 
     /**
@@ -5082,7 +5304,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::notRegex($entry, $pattern, $message);
+            if (null !== $entry) {
+                static::notRegex($entry, $pattern, $message);
+            }
         }
     }
 
@@ -5098,7 +5322,9 @@ final class Assert
      */
     public static function nullOrUnicodeLetters($value, $message = '')
     {
-        null === $value || static::unicodeLetters($value, $message);
+        if (null !== $value) {
+            static::unicodeLetters($value, $message);
+        }
     }
 
     /**
@@ -5135,7 +5361,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::unicodeLetters($entry, $message);
+            if (null !== $entry) {
+                static::unicodeLetters($entry, $message);
+            }
         }
     }
 
@@ -5151,7 +5379,9 @@ final class Assert
      */
     public static function nullOrAlpha($value, $message = '')
     {
-        null === $value || static::alpha($value, $message);
+        if (null !== $value) {
+            static::alpha($value, $message);
+        }
     }
 
     /**
@@ -5188,7 +5418,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::alpha($entry, $message);
+            if (null !== $entry) {
+                static::alpha($entry, $message);
+            }
         }
     }
 
@@ -5204,7 +5436,9 @@ final class Assert
      */
     public static function nullOrDigits($value, $message = '')
     {
-        null === $value || static::digits($value, $message);
+        if (null !== $value) {
+            static::digits($value, $message);
+        }
     }
 
     /**
@@ -5241,7 +5475,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::digits($entry, $message);
+            if (null !== $entry) {
+                static::digits($entry, $message);
+            }
         }
     }
 
@@ -5257,7 +5493,9 @@ final class Assert
      */
     public static function nullOrAlnum($value, $message = '')
     {
-        null === $value || static::alnum($value, $message);
+        if (null !== $value) {
+            static::alnum($value, $message);
+        }
     }
 
     /**
@@ -5294,7 +5532,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::alnum($entry, $message);
+            if (null !== $entry) {
+                static::alnum($entry, $message);
+            }
         }
     }
 
@@ -5311,7 +5551,9 @@ final class Assert
      */
     public static function nullOrLower($value, $message = '')
     {
-        null === $value || static::lower($value, $message);
+        if (null !== $value) {
+            static::lower($value, $message);
+        }
     }
 
     /**
@@ -5350,7 +5592,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::lower($entry, $message);
+            if (null !== $entry) {
+                static::lower($entry, $message);
+            }
         }
     }
 
@@ -5366,7 +5610,9 @@ final class Assert
      */
     public static function nullOrUpper($value, $message = '')
     {
-        null === $value || static::upper($value, $message);
+        if (null !== $value) {
+            static::upper($value, $message);
+        }
     }
 
     /**
@@ -5404,7 +5650,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::upper($entry, $message);
+            if (null !== $entry) {
+                static::upper($entry, $message);
+            }
         }
     }
 
@@ -5421,7 +5669,9 @@ final class Assert
      */
     public static function nullOrLength($value, $length, $message = '')
     {
-        null === $value || static::length($value, $length, $message);
+        if (null !== $value) {
+            static::length($value, $length, $message);
+        }
     }
 
     /**
@@ -5460,7 +5710,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::length($entry, $length, $message);
+            if (null !== $entry) {
+                static::length($entry, $length, $message);
+            }
         }
     }
 
@@ -5477,7 +5729,9 @@ final class Assert
      */
     public static function nullOrMinLength($value, $min, $message = '')
     {
-        null === $value || static::minLength($value, $min, $message);
+        if (null !== $value) {
+            static::minLength($value, $min, $message);
+        }
     }
 
     /**
@@ -5516,7 +5770,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::minLength($entry, $min, $message);
+            if (null !== $entry) {
+                static::minLength($entry, $min, $message);
+            }
         }
     }
 
@@ -5533,7 +5789,9 @@ final class Assert
      */
     public static function nullOrMaxLength($value, $max, $message = '')
     {
-        null === $value || static::maxLength($value, $max, $message);
+        if (null !== $value) {
+            static::maxLength($value, $max, $message);
+        }
     }
 
     /**
@@ -5572,7 +5830,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::maxLength($entry, $max, $message);
+            if (null !== $entry) {
+                static::maxLength($entry, $max, $message);
+            }
         }
     }
 
@@ -5590,7 +5850,9 @@ final class Assert
      */
     public static function nullOrLengthBetween($value, $min, $max, $message = '')
     {
-        null === $value || static::lengthBetween($value, $min, $max, $message);
+        if (null !== $value) {
+            static::lengthBetween($value, $min, $max, $message);
+        }
     }
 
     /**
@@ -5631,7 +5893,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::lengthBetween($entry, $min, $max, $message);
+            if (null !== $entry) {
+                static::lengthBetween($entry, $min, $max, $message);
+            }
         }
     }
 
@@ -5645,7 +5909,9 @@ final class Assert
      */
     public static function nullOrFileExists($value, $message = '')
     {
-        null === $value || static::fileExists($value, $message);
+        if (null !== $value) {
+            static::fileExists($value, $message);
+        }
     }
 
     /**
@@ -5678,7 +5944,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::fileExists($entry, $message);
+            if (null !== $entry) {
+                static::fileExists($entry, $message);
+            }
         }
     }
 
@@ -5692,7 +5960,9 @@ final class Assert
      */
     public static function nullOrFile($value, $message = '')
     {
-        null === $value || static::file($value, $message);
+        if (null !== $value) {
+            static::file($value, $message);
+        }
     }
 
     /**
@@ -5725,7 +5995,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::file($entry, $message);
+            if (null !== $entry) {
+                static::file($entry, $message);
+            }
         }
     }
 
@@ -5739,7 +6011,9 @@ final class Assert
      */
     public static function nullOrDirectory($value, $message = '')
     {
-        null === $value || static::directory($value, $message);
+        if (null !== $value) {
+            static::directory($value, $message);
+        }
     }
 
     /**
@@ -5772,7 +6046,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::directory($entry, $message);
+            if (null !== $entry) {
+                static::directory($entry, $message);
+            }
         }
     }
 
@@ -5786,7 +6062,9 @@ final class Assert
      */
     public static function nullOrReadable($value, $message = '')
     {
-        null === $value || static::readable($value, $message);
+        if (null !== $value) {
+            static::readable($value, $message);
+        }
     }
 
     /**
@@ -5819,7 +6097,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::readable($entry, $message);
+            if (null !== $entry) {
+                static::readable($entry, $message);
+            }
         }
     }
 
@@ -5833,7 +6113,9 @@ final class Assert
      */
     public static function nullOrWritable($value, $message = '')
     {
-        null === $value || static::writable($value, $message);
+        if (null !== $value) {
+            static::writable($value, $message);
+        }
     }
 
     /**
@@ -5866,7 +6148,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::writable($entry, $message);
+            if (null !== $entry) {
+                static::writable($entry, $message);
+            }
         }
     }
 
@@ -5882,7 +6166,9 @@ final class Assert
      */
     public static function nullOrClassExists($value, $message = '')
     {
-        null === $value || static::classExists($value, $message);
+        if (null !== $value) {
+            static::classExists($value, $message);
+        }
     }
 
     /**
@@ -5919,7 +6205,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::classExists($entry, $message);
+            if (null !== $entry) {
+                static::classExists($entry, $message);
+            }
         }
     }
 
@@ -5939,7 +6227,9 @@ final class Assert
      */
     public static function nullOrSubclassOf($value, $class, $message = '')
     {
-        null === $value || static::subclassOf($value, $class, $message);
+        if (null !== $value) {
+            static::subclassOf($value, $class, $message);
+        }
     }
 
     /**
@@ -5984,7 +6274,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::subclassOf($entry, $class, $message);
+            if (null !== $entry) {
+                static::subclassOf($entry, $class, $message);
+            }
         }
     }
 
@@ -6000,7 +6292,9 @@ final class Assert
      */
     public static function nullOrInterfaceExists($value, $message = '')
     {
-        null === $value || static::interfaceExists($value, $message);
+        if (null !== $value) {
+            static::interfaceExists($value, $message);
+        }
     }
 
     /**
@@ -6037,7 +6331,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::interfaceExists($entry, $message);
+            if (null !== $entry) {
+                static::interfaceExists($entry, $message);
+            }
         }
     }
 
@@ -6057,7 +6353,9 @@ final class Assert
      */
     public static function nullOrImplementsInterface($value, $interface, $message = '')
     {
-        null === $value || static::implementsInterface($value, $interface, $message);
+        if (null !== $value) {
+            static::implementsInterface($value, $interface, $message);
+        }
     }
 
     /**
@@ -6102,7 +6400,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::implementsInterface($entry, $interface, $message);
+            if (null !== $entry) {
+                static::implementsInterface($entry, $interface, $message);
+            }
         }
     }
 
@@ -6120,7 +6420,9 @@ final class Assert
      */
     public static function nullOrPropertyExists($classOrObject, $property, $message = '')
     {
-        null === $classOrObject || static::propertyExists($classOrObject, $property, $message);
+        if (null !== $classOrObject) {
+            static::propertyExists($classOrObject, $property, $message);
+        }
     }
 
     /**
@@ -6161,7 +6463,9 @@ final class Assert
         static::isIterable($classOrObject);
 
         foreach ($classOrObject as $entry) {
-            null === $entry || static::propertyExists($entry, $property, $message);
+            if (null !== $entry) {
+                static::propertyExists($entry, $property, $message);
+            }
         }
     }
 
@@ -6179,7 +6483,9 @@ final class Assert
      */
     public static function nullOrPropertyNotExists($classOrObject, $property, $message = '')
     {
-        null === $classOrObject || static::propertyNotExists($classOrObject, $property, $message);
+        if (null !== $classOrObject) {
+            static::propertyNotExists($classOrObject, $property, $message);
+        }
     }
 
     /**
@@ -6220,7 +6526,9 @@ final class Assert
         static::isIterable($classOrObject);
 
         foreach ($classOrObject as $entry) {
-            null === $entry || static::propertyNotExists($entry, $property, $message);
+            if (null !== $entry) {
+                static::propertyNotExists($entry, $property, $message);
+            }
         }
     }
 
@@ -6238,7 +6546,9 @@ final class Assert
      */
     public static function nullOrMethodExists($classOrObject, $method, $message = '')
     {
-        null === $classOrObject || static::methodExists($classOrObject, $method, $message);
+        if (null !== $classOrObject) {
+            static::methodExists($classOrObject, $method, $message);
+        }
     }
 
     /**
@@ -6279,7 +6589,9 @@ final class Assert
         static::isIterable($classOrObject);
 
         foreach ($classOrObject as $entry) {
-            null === $entry || static::methodExists($entry, $method, $message);
+            if (null !== $entry) {
+                static::methodExists($entry, $method, $message);
+            }
         }
     }
 
@@ -6297,7 +6609,9 @@ final class Assert
      */
     public static function nullOrMethodNotExists($classOrObject, $method, $message = '')
     {
-        null === $classOrObject || static::methodNotExists($classOrObject, $method, $message);
+        if (null !== $classOrObject) {
+            static::methodNotExists($classOrObject, $method, $message);
+        }
     }
 
     /**
@@ -6338,7 +6652,9 @@ final class Assert
         static::isIterable($classOrObject);
 
         foreach ($classOrObject as $entry) {
-            null === $entry || static::methodNotExists($entry, $method, $message);
+            if (null !== $entry) {
+                static::methodNotExists($entry, $method, $message);
+            }
         }
     }
 
@@ -6355,7 +6671,9 @@ final class Assert
      */
     public static function nullOrKeyExists($array, $key, $message = '')
     {
-        null === $array || static::keyExists($array, $key, $message);
+        if (null !== $array) {
+            static::keyExists($array, $key, $message);
+        }
     }
 
     /**
@@ -6394,7 +6712,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::keyExists($entry, $key, $message);
+            if (null !== $entry) {
+                static::keyExists($entry, $key, $message);
+            }
         }
     }
 
@@ -6411,7 +6731,9 @@ final class Assert
      */
     public static function nullOrKeyNotExists($array, $key, $message = '')
     {
-        null === $array || static::keyNotExists($array, $key, $message);
+        if (null !== $array) {
+            static::keyNotExists($array, $key, $message);
+        }
     }
 
     /**
@@ -6450,7 +6772,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::keyNotExists($entry, $key, $message);
+            if (null !== $entry) {
+                static::keyNotExists($entry, $key, $message);
+            }
         }
     }
 
@@ -6467,7 +6791,9 @@ final class Assert
      */
     public static function nullOrValidArrayKey($value, $message = '')
     {
-        null === $value || static::validArrayKey($value, $message);
+        if (null !== $value) {
+            static::validArrayKey($value, $message);
+        }
     }
 
     /**
@@ -6506,7 +6832,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::validArrayKey($entry, $message);
+            if (null !== $entry) {
+                static::validArrayKey($entry, $message);
+            }
         }
     }
 
@@ -6521,7 +6849,9 @@ final class Assert
      */
     public static function nullOrCount($array, $number, $message = '')
     {
-        null === $array || static::count($array, $number, $message);
+        if (null !== $array) {
+            static::count($array, $number, $message);
+        }
     }
 
     /**
@@ -6556,7 +6886,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::count($entry, $number, $message);
+            if (null !== $entry) {
+                static::count($entry, $number, $message);
+            }
         }
     }
 
@@ -6571,7 +6903,9 @@ final class Assert
      */
     public static function nullOrMinCount($array, $min, $message = '')
     {
-        null === $array || static::minCount($array, $min, $message);
+        if (null !== $array) {
+            static::minCount($array, $min, $message);
+        }
     }
 
     /**
@@ -6606,7 +6940,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::minCount($entry, $min, $message);
+            if (null !== $entry) {
+                static::minCount($entry, $min, $message);
+            }
         }
     }
 
@@ -6621,7 +6957,9 @@ final class Assert
      */
     public static function nullOrMaxCount($array, $max, $message = '')
     {
-        null === $array || static::maxCount($array, $max, $message);
+        if (null !== $array) {
+            static::maxCount($array, $max, $message);
+        }
     }
 
     /**
@@ -6656,7 +6994,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::maxCount($entry, $max, $message);
+            if (null !== $entry) {
+                static::maxCount($entry, $max, $message);
+            }
         }
     }
 
@@ -6672,7 +7012,9 @@ final class Assert
      */
     public static function nullOrCountBetween($array, $min, $max, $message = '')
     {
-        null === $array || static::countBetween($array, $min, $max, $message);
+        if (null !== $array) {
+            static::countBetween($array, $min, $max, $message);
+        }
     }
 
     /**
@@ -6709,7 +7051,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::countBetween($entry, $min, $max, $message);
+            if (null !== $entry) {
+                static::countBetween($entry, $min, $max, $message);
+            }
         }
     }
 
@@ -6726,7 +7070,9 @@ final class Assert
      */
     public static function nullOrIsList($array, $message = '')
     {
-        null === $array || static::isList($array, $message);
+        if (null !== $array) {
+            static::isList($array, $message);
+        }
     }
 
     /**
@@ -6765,7 +7111,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::isList($entry, $message);
+            if (null !== $entry) {
+                static::isList($entry, $message);
+            }
         }
     }
 
@@ -6782,7 +7130,9 @@ final class Assert
      */
     public static function nullOrIsNonEmptyList($array, $message = '')
     {
-        null === $array || static::isNonEmptyList($array, $message);
+        if (null !== $array) {
+            static::isNonEmptyList($array, $message);
+        }
     }
 
     /**
@@ -6821,7 +7171,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::isNonEmptyList($entry, $message);
+            if (null !== $entry) {
+                static::isNonEmptyList($entry, $message);
+            }
         }
     }
 
@@ -6840,7 +7192,9 @@ final class Assert
      */
     public static function nullOrIsMap($array, $message = '')
     {
-        null === $array || static::isMap($array, $message);
+        if (null !== $array) {
+            static::isMap($array, $message);
+        }
     }
 
     /**
@@ -6883,7 +7237,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::isMap($entry, $message);
+            if (null !== $entry) {
+                static::isMap($entry, $message);
+            }
         }
     }
 
@@ -6901,7 +7257,9 @@ final class Assert
      */
     public static function nullOrIsNonEmptyMap($array, $message = '')
     {
-        null === $array || static::isNonEmptyMap($array, $message);
+        if (null !== $array) {
+            static::isNonEmptyMap($array, $message);
+        }
     }
 
     /**
@@ -6944,7 +7302,9 @@ final class Assert
         static::isIterable($array);
 
         foreach ($array as $entry) {
-            null === $entry || static::isNonEmptyMap($entry, $message);
+            if (null !== $entry) {
+                static::isNonEmptyMap($entry, $message);
+            }
         }
     }
 
@@ -6960,7 +7320,9 @@ final class Assert
      */
     public static function nullOrUuid($value, $message = '')
     {
-        null === $value || static::uuid($value, $message);
+        if (null !== $value) {
+            static::uuid($value, $message);
+        }
     }
 
     /**
@@ -6997,7 +7359,9 @@ final class Assert
         static::isIterable($value);
 
         foreach ($value as $entry) {
-            null === $entry || static::uuid($entry, $message);
+            if (null !== $entry) {
+                static::uuid($entry, $message);
+            }
         }
     }
 
@@ -7014,7 +7378,9 @@ final class Assert
      */
     public static function nullOrThrows($expression, $class = 'Exception', $message = '')
     {
-        null === $expression || static::throws($expression, $class, $message);
+        if (null !== $expression) {
+            static::throws($expression, $class, $message);
+        }
     }
 
     /**
@@ -7053,7 +7419,9 @@ final class Assert
         static::isIterable($expression);
 
         foreach ($expression as $entry) {
-            null === $entry || static::throws($entry, $class, $message);
+            if (null !== $entry) {
+                static::throws($entry, $class, $message);
+            }
         }
     }
 
@@ -7113,7 +7481,7 @@ final class Assert
         return \is_object($value) ? \get_class($value) : \gettype($value);
     }
 
-    private static function strlen($value)
+    private static function strlen($value): int
     {
         if (!\function_exists('mb_detect_encoding')) {
             return \strlen($value);
