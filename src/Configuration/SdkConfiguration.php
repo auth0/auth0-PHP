@@ -1312,10 +1312,18 @@ final class SdkConfiguration implements ConfigurableContract
         Assert::isInstanceOf($streamFactory, StreamFactoryInterface::class, 'Could not find a PSR-17 compatible stream factory. Please install one, or provide one using the `setHttpStreamFactory()` method.');
         Assert::isInstanceOf($httpClient, ClientInterface::class, 'Could not find a PSR-18 compatible HTTP client. Please install one, or provide one using the `setHttpClient()` method.');
 
-        if (! $this->hasHttpClient()) $this->setHttpClient($httpClient);
-        if (! $this->hasHttpRequestFactory()) $this->setHttpRequestFactory($requestFactory);
-        if (! $this->hasHttpResponseFactory()) $this->setHttpResponseFactory($responseFactory);
-        if (! $this->hasHttpStreamFactory()) $this->setHttpStreamFactory($streamFactory);
+        if (! $this->hasHttpClient()) {
+            $this->setHttpClient($httpClient);
+        }
+        if (! $this->hasHttpRequestFactory()) {
+            $this->setHttpRequestFactory($requestFactory);
+        }
+        if (! $this->hasHttpResponseFactory()) {
+            $this->setHttpResponseFactory($responseFactory);
+        }
+        if (! $this->hasHttpStreamFactory()) {
+            $this->setHttpStreamFactory($streamFactory);
+        }
     }
 
     /**

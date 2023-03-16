@@ -93,8 +93,7 @@ final class Auth0 implements Auth0Interface
 
     public function setConfiguration(
         SdkConfiguration|array $configuration
-    ): self
-    {
+    ): self {
         $this->validatedConfiguration = null; // Reset validation state.
         $this->configuration = $configuration; // Set new configuration.
         $this->configuration(); // Validate configuration immediately.

@@ -14,8 +14,7 @@ final class ListenerProviderMock implements ListenerProviderInterface
         string|object|null $event = null,
         callable|null $listener = null,
         int $priority = 0
-    )
-    {
+    ) {
         if (null !== $event && null !== $listener) {
             $this->on($event, $listener, $priority);
         }

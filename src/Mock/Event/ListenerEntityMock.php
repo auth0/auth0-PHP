@@ -13,8 +13,7 @@ final class ListenerEntityMock
         public string|object $event,
         callable $listener,
         public int $priority = 0
-    )
-    {
+    ) {
         $this->listener = $listener;
 
         if (is_string($event)) {
