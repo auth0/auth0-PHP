@@ -10,6 +10,7 @@ use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\SDK\Utility\HttpResponse;
 use Psr\Cache\CacheItemPoolInterface;
+use Throwable;
 
 /**
  * Class Verifier.
@@ -81,7 +82,7 @@ final class Verifier
             };
 
             $hash = hash_hmac($digest, $this->payload, $this->clientSecret, true);
-            $valid = hash_equals($this->signature, $hash);
+            $valid = hash_equals($hash, $this->signature);
 
             if (! $valid) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
@@ -170,7 +171,7 @@ final class Verifier
         if (HttpResponse::wasSuccessful($keys)) {
             try {
                 $keys = HttpResponse::decodeContent($keys);
-            } catch (\Throwable $throwable) {
+            } catch (Throwable) {
                 return [];
             }
 
