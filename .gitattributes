@@ -17,3 +17,4 @@ rector.php            export-ignore
 tests/                export-ignore
 UPGRADE.md            export-ignore
 vendor/               export-ignore
+CHANGELOG.ARCHIVE.md  export-ignore

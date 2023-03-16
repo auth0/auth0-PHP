@@ -258,4 +258,4 @@ For a complete overview of API changes, please see [UPGRADE.md](UPGRADE.md).
 
 For guidance on using the new configuration interface or SDK API, please see [README.md](README.md).
 
-> Changelog entries for releases prior to 8.0 have been relocated to [CHANGELOG.ARCHIVED.md](CHANGELOG.ARCHIVED.md).
+> Changelog entries for releases prior to 8.0 have been relocated to [CHANGELOG.ARCHIVE.md](CHANGELOG.ARCHIVE.md).
