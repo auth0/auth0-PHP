@@ -16,7 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class Authentication.
  */
-final class Authentication implements AuthenticationInterface
+final class Authentication extends ClientAbstract implements AuthenticationInterface
 {
     public const CONST_CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
 
@@ -60,11 +60,11 @@ final class Authentication implements AuthenticationInterface
 
     public function getHttpClient(): HttpClient
     {
-        if (null !== $this->httpClient) {
-            return $this->httpClient;
+        if (null === $this->httpClient) {
+            $this->httpClient = new HttpClient($this->getConfiguration(), HttpClient::CONTEXT_AUTHENTICATION_CLIENT);
         }
 
-        return $this->httpClient = new HttpClient($this->getConfiguration(), HttpClient::CONTEXT_AUTHENTICATION_CLIENT);
+        return $this->httpClient;
     }
 
     public function getSamlpLink(
@@ -207,12 +207,14 @@ final class Authentication implements AuthenticationInterface
 
         $body = $this->addClientAuthentication($body);
 
-        return $this->getHttpClient()->
+        $response = $this->getHttpClient()->
             method('post')->
             addPath('passwordless', 'start')->
             withBody((object) $body)->
             withHeaders($headers)->
             call();
+
+        return $response;
     }
 
     public function emailPasswordlessStart(
@@ -321,12 +323,14 @@ final class Authentication implements AuthenticationInterface
 
         /** @var array<bool|int|string> $params */
 
-        return $this->getHttpClient()->
+        $response = $this->getHttpClient()->
             method('post')->
             addPath('oauth', 'token')->
             withHeaders($headers)->
             withFormParams($params)->
             call();
+
+        return $response;
     }
 
     public function codeExchange(
@@ -351,8 +355,6 @@ final class Authentication implements AuthenticationInterface
                 'code_verifier' => $codeVerifier,
             ],
         ])->array()->trim()[0];
-
-        /** @var array<int|string|null> $params */
 
         return $this->oauthToken('authorization_code', $params);
     }
