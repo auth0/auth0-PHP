@@ -27,6 +27,7 @@ trait ConfigurableMixin
                 continue;
             }
 
+            // @phpstan-ignore-next-line
             if (! isset($validators[$configKey]) || ! \is_callable($validators[$configKey])) {
                 throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($configKey);
             }

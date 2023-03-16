@@ -383,4 +383,124 @@ interface UsersInterface
         string $id,
         ?RequestOptions $options = null,
     ): ResponseInterface;
+
+    /**
+     * Get the available authentication methods for a user.
+     *
+     * Required scope: `read:authentication_methods`.
+     *
+     * @param  string  $user  ID of user to query.
+     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `user` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_authentication_methods
+     */
+    public function getAuthenticationMethods(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Replace the available authentication methods for a user.
+     *
+     * Required scope: `update:authentication_methods`.
+     *
+     * @param string $user ID of user to query.
+     * @param array<string> $body Array of authentication methods to set.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/put_authentication_methods
+     */
+    public function replaceAuthenticationMethods(
+        string $user,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Delete all available authentication methods for a user.
+     *
+     * Required scope: `delete:authentication_methods`.
+     *
+     * @param string $user ID of user to query.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_authentication_methods
+     */
+    public function deleteAuthenticationMethods(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Create an authentication method for a user.
+     *
+     * Required scope: `create:authentication_methods`.
+     *
+     * @param string $user ID of user to query.
+     * @param array<string> $body Array of authentication method to set.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/post_authentication_methods
+     */
+    public function createAuthenticationMethod(
+        string $user,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Get an authentication method for a user.
+     *
+     * Required scope: `read:authentication_methods`.
+     *
+     * @param string $user ID of user to query.
+     * @param string $method ID of authentication method to get.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_authentication_methods_by_authentication_method_id
+     */
+    public function getAuthenticationMethod(
+        string $user,
+        string $method,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Update an authentication method for a user.
+     *
+     * Required scope: `update:authentication_methods`.
+     *
+     * @param string $user ID of user to query.
+     * @param string $method ID of authentication method to update.
+     * @param array<string> $body Array of authentication method to set.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/patch_authentication_methods_by_authentication_method_id
+     */
+    public function updateAuthenticationMethod(
+        string $user,
+        string $method,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Delete an authentication method for a user.
+     *
+     * Required scope: `delete:authentication_methods`.
+     *
+     * @param string $user ID of user to query.
+     * @param string $method ID of authentication method to delete.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_authentication_methods_by_authentication_method_id
+     */
+    public function deleteAuthenticationMethod(
+        string $user,
+        string $method,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
 }

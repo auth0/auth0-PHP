@@ -1,6 +1,6 @@
 name: Suggest a Feature
 description: Help us improve the SDK by suggest new features and improvements.
-labels: ["Type: ⭐ Enhancement", "Status: 👀 Reviewing"]
+labels: ["inbox"]
 
 body:
   - type: markdown

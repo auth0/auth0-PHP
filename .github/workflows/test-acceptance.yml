@@ -1,0 +1,46 @@
+on:
+  pull_request_target:
+    types:
+      - labeled
+  push:
+    branches:
+      - main
+
+jobs:
+  acceptance:
+    name: Acceptance Tests
+    runs-on: ${{ matrix.operating-systems }}
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-systems:
+          - ubuntu-latest
+        php-versions:
+          - 8.0
+          - 8.1
+          - 8.2
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: none
+          extensions: mbstring, openssl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v3
+
+      - run: composer install --prefer-dist --no-dev
+      - run: composer require auth0/auth0-php:@dev
+        working-directory: tests/Acceptance
+      - run: php 00-php.php
+        working-directory: tests/Acceptance
+      - run: php 01-composer.php
+        working-directory: tests/Acceptance
+      - run: php 02-configuration.php
+        working-directory: tests/Acceptance
+      - run: php 03-sdk.php
+        working-directory: tests/Acceptance

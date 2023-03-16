@@ -1,0 +1,40 @@
+on:
+  pull_request_target:
+    types:
+      - labeled
+  push:
+    branches:
+      - main
+
+jobs:
+  pest:
+    name: PEST
+    runs-on: ${{ matrix.operating-systems }}
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-systems:
+          - ubuntu-latest
+        php-versions:
+          - 8.0
+          - 8.1
+          - 8.2
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          coverage: pcov
+          extensions: mbstring, openssl
+
+      - uses: actions/checkout@v3
+
+      - run: composer install --prefer-dist
+      - run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction --order-by random
+
+      - if: (matrix.php == '8.2')
+        uses: codecov/codecov-action@v2
+        with:
+          directory: coverage

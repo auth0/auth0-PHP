@@ -1,5 +1,3 @@
-name: Contributors
-
 on:
   pull_request_target:
     types:
@@ -11,8 +9,8 @@ on:
       - synchronize
 
 jobs:
-  cleanup-labels:
-    name: Cleanup Labels
+  rep-cleanup:
+    name: Issue/PR Cleanup
     runs-on: ubuntu-latest
 
     permissions:
@@ -30,12 +28,12 @@ jobs:
                 repo: context.repo.repo
               })
 
-              if (labels.data.some(label => label.name === 'Status: 🤞 Run Tests')) {
+              if (labels.data.some(label => label.name === 'run')) {
                 github.rest.issues.removeLabel({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: context.issue.number,
-                  name: 'Status: 🤞 Run Tests'
+                  name: 'run'
                 });
               }
             } catch (error) {

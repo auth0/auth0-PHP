@@ -1,6 +1,6 @@
 name: Report a Bug
 description: Encountering unexpected problems or unintended behavior? Let us know!
-labels: ["Type: 🐞 Bug (Unconfirmed)", "Status: 👀 Reviewing"]
+labels: ["inbox"]
 
 body:
   - type: markdown

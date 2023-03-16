@@ -1,0 +1,17 @@
+on:
+  pull_request_target:
+    types:
+      - labeled
+  push:
+    branches:
+      - main
+
+jobs:
+  normalize:
+    name: Composer Normalize
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker://ergebnis/composer-normalize-action

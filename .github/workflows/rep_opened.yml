@@ -1,0 +1,68 @@
+on:
+  pull_request_target:
+    types:
+      - opened
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  rep-opened:
+    name: PR/Issue Setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const pattern = /^(\w*)(?:\(([\w]*)\))?: (.*)$/;
+            const title = context.payload.pull_request.title
+            const [type, scope, subject] = title.match(pattern).slice(1);
+
+            console.log(`Type: ${type}`, `Scope: ${scope}`, `Subject: ${subject}`)
+
+            if (type !== undefined) {
+              const labels = {
+                'feat': 'type-improvement',
+                'refactor': 'type-improvement',
+                'perf': 'type-improvement',
+                'build': 'type-chore',
+                'cj': 'type-chore',
+                'style': 'type-chore',
+                'fix': 'type-bug',
+                'security': 'type-security',
+                'docs': 'type-documentation',
+                'test': 'type-tests',
+                'release': 'type-release',
+              }
+
+              if (type in labels) {
+                github.rest.issues.addLabels({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  labels: [labels[type]]
+                })
+              }
+            }
+
+            let isMember = false;
+
+            try {
+              isMember = await github.rest.orgs.checkMembershipForUser({
+                org: context.repo.owner,
+                username: context.payload.pull_request.user.login
+              });
+            } catch (error) {
+              console.error(error);
+            }
+
+            if (! isMember) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '**👋 Thanks for contributing!** Please be patient while a maintainer reviews your PR. In the meantime, please make sure you\'ve read our [contributing guide](CONTRIBUTING.md).'
+              })
+            }
