@@ -390,7 +390,7 @@ test('replaceAuthenticationMethods() issues an appropriate request', function():
         ->email->toEqual($body[0]['email']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('deleteAuthenticationMethods() issues an appropriate request', function(): void {
@@ -402,7 +402,7 @@ test('deleteAuthenticationMethods() issues an appropriate request', function(): 
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('createAuthenticationMethod() issues an appropriate request', function(): void {
@@ -426,7 +426,7 @@ test('createAuthenticationMethod() issues an appropriate request', function(): v
         ->email->toEqual($body['email']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('getAuthenticationMethod() issues an appropriate request', function(): void {
@@ -461,7 +461,7 @@ test('updateAuthenticationMethod() issues an appropriate request', function(): v
         ->email->toEqual($body['email']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('deleteAuthenticationMethod() issues an appropriate request', function(): void {
@@ -474,5 +474,5 @@ test('deleteAuthenticationMethod() issues an appropriate request', function(): v
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods/' . $methodId);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
