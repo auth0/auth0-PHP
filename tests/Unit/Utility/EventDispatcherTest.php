@@ -3,13 +3,14 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Hyperf\Event\ListenerProvider;
+use Auth0\SDK\Mock\Event\ListenerProviderMock;
+use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 
 uses()->group('utility', 'utility.event_dispatcher');
 
 test('dispatch() functions as expected', function(): void {
-    $mockEvent = new class() implements StoppableEventInterface {
+    $event = new class() implements StoppableEventInterface {
         public int $id = 123;
         public bool $hit = false;
         public bool $stopped = false;
@@ -19,9 +20,7 @@ test('dispatch() functions as expected', function(): void {
         }
     };
 
-    $listener = new ListenerProvider();
-
-    $listener->on(get_class($mockEvent), function($test) {
+    $listener = ListenerProviderMock::create($event, function($test) {
         $test->hit = true;
         return $test;
     });
@@ -31,20 +30,19 @@ test('dispatch() functions as expected', function(): void {
         'eventListenerProvider' => $listener
     ]);
 
-    expect($configuration->getEventListenerProvider())->toBeInstanceOf(ListenerProvider::class);
+    expect($configuration->getEventListenerProvider())->toBeInstanceOf(ListenerProviderInterface::class);
 
-    $mockEvent = $configuration->eventDispatcher()->dispatch($mockEvent);
+    $event = $configuration->eventDispatcher()->dispatch($event);
 
-    expect($mockEvent)
+    expect($event)
         ->hit->toBeTrue()
         ->id->toEqual(123)
         ->isPropagationStopped()->toBeFalse();
 
-    $mockEvent->stopped = true;
+    $event->stopped = true;
+    $event = $configuration->eventDispatcher()->dispatch($event);
 
-    $mockEvent = $configuration->eventDispatcher()->dispatch($mockEvent);
-
-    expect($mockEvent)
+    expect($event)
         ->hit->toBeTrue()
         ->id->toEqual(123)
         ->isPropagationStopped()->toBeTrue();

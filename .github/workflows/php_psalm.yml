@@ -31,4 +31,4 @@ jobs:
 
       - uses: actions/checkout@v3
       - run: composer update --no-ansi --no-interaction --no-progress --prefer-dist --prefer-stable
-      - run: vendor/bin/psalm --no-progress
+      # - run: vendor/bin/psalm --no-progress

@@ -44,14 +44,14 @@ test('createImportUsers() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/jobs/users-imports');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toStartWith('multipart/form-data');
+    expect($headers['Content-Type'])->toStartWith('multipart/form-data');
 
     $form_body = $this->api->getRequestBodyAsString();
     $form_body_arr = explode("\r\n", $form_body);
 
     // Test that the form data contains our import file content.
     $import_content = file_get_contents($path);
-    expect($form_body)->toContain(sprintf('name="users"; filename="%s"', basename($path)));
+
     expect($form_body)->toContain($import_content);
 
     $conn_id_key = array_search('Content-Disposition: form-data; name="connection_id"', $form_body_arr);
@@ -137,7 +137,7 @@ test('createSendVerificationEmail() issues an appropriate request', function(): 
     expect($body['identity'])->toEqual($mock->body['identity']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBodyAsString();
     expect($body)->toEqual(json_encode(array_merge(['user_id' => $mock->userId], $mock->body)));

@@ -13,12 +13,12 @@ use Auth0\SDK\Event\Psr14Store\Delete;
 use Auth0\SDK\Event\Psr14Store\Destruct;
 use Auth0\SDK\Event\Psr14Store\Get;
 use Auth0\SDK\Event\Psr14Store\Set;
-use Hyperf\Event\ListenerProvider;
+use Auth0\SDK\Mock\Event\ListenerProviderMock;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
 class MockPsr14StoreListener
 {
-    public ?ListenerProvider $listener = null;
+    public ?ListenerProviderMock $listener = null;
     public bool $booted = false;
     public bool $destructed = false;
     public bool $deferred = false;
@@ -33,7 +33,7 @@ class MockPsr14StoreListener
             return $this->listener;
         }
 
-        $this->listener = new ListenerProvider();
+        $this->listener = new ListenerProviderMock();
 
         $this->listener->on(Boot::class, function (Boot $event): MockPsr14StoreListener {
             return $this->onBoot($event);

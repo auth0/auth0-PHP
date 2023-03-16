@@ -9,10 +9,15 @@ use Auth0\Tests\Utilities\MockDomain;
 use Auth0\Tests\Utilities\MockPsr14StoreListener;
 use Auth0\Tests\Utilities\MockStore;
 use Auth0\Tests\Utilities\TokenGenerator;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use PsrMock\Psr17\RequestFactory;
+use PsrMock\Psr17\ResponseFactory;
+use PsrMock\Psr17\StreamFactory;
+use PsrMock\Psr18\Client;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 uses()->group('configuration');
@@ -228,6 +233,14 @@ test('a `webapp` strategy requires a domain', function(): void
         'cookieSecret' => uniqid(),
     ]);
 })->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_DOMAIN);
+
+test('a `webapp` strategy requires a secret', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => MockDomain::valid(),
+        'clientId' => uniqid(),
+    ]);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
 
 test('a `webapp` strategy requires a client id', function(): void
 {
@@ -455,6 +468,18 @@ test('defaultOrganization() successfully returns the first organization', functi
     expect($sdk->defaultOrganization())->toEqual('org1');
 });
 
+test('defaultOrganization() returns null when no organizations are configured', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => MockDomain::valid(),
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid(),
+    ]);
+
+    expect($sdk->defaultOrganization())->toBeNull();
+});
+
 test('defaultAudience() successfully returns the first audience', function(): void
 {
     $sdk = new SdkConfiguration([
@@ -466,6 +491,30 @@ test('defaultAudience() successfully returns the first audience', function(): vo
     ]);
 
     expect($sdk->defaultAudience())->toEqual('aud1');
+});
+
+test('defaultAudience() returns an empty string when no audiences are configured', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => MockDomain::valid(),
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid()
+    ]);
+
+    expect($sdk->defaultAudience())->toEqual('');
+});
+
+test('eventDispatcher() creates an event dispatcher on demand', function(): void
+{
+    $sdk = new SdkConfiguration([
+        'domain' => MockDomain::valid(),
+        'cookieSecret' => uniqid(),
+        'clientId' => uniqid(),
+        'redirectUri' => uniqid()
+    ]);
+
+    expect($sdk->eventDispatcher())->toBeInstanceOf(EventDispatcherInterface::class);
 });
 
 test('Audience methods function as expected', function(): void
@@ -831,7 +880,7 @@ test('HttpClient methods function as expected', function(): void
     expect($config->hasHttpClient())->toBeTrue();
     expect($config->getHttpClient())->toBeInstanceOf(ClientInterface::class);
 
-    $client = Mockery::mock(ClientInterface::class);
+    $client = new Client();
 
     $config->setHttpClient($client);
     expect($config->hasHttpClient())->toBeTrue();
@@ -890,7 +939,7 @@ test('HttpRequestFactory methods function as expected', function(): void
     expect($config->hasHttpRequestFactory())->toBeTrue();
     expect($config->getHttpRequestFactory())->toBeInstanceOf(RequestFactoryInterface::class);
 
-    $factory = Mockery::mock(RequestFactoryInterface::class);
+    $factory = new RequestFactory();
 
     $config->setHttpRequestFactory($factory);
     expect($config->hasHttpRequestFactory())->toBeTrue();
@@ -921,7 +970,7 @@ test('HttpResponseFactory methods function as expected', function(): void
     expect($config->hasHttpResponseFactory())->toBeTrue();
     expect($config->getHttpResponseFactory())->toBeInstanceOf(ResponseFactoryInterface::class);
 
-    $factory = Mockery::mock(ResponseFactoryInterface::class);
+    $factory = new ResponseFactory();
 
     $config->setHttpResponseFactory($factory);
     expect($config->hasHttpResponseFactory())->toBeTrue();
@@ -952,7 +1001,7 @@ test('HttpStreamFactory methods function as expected', function(): void
     expect($config->hasHttpStreamFactory())->toBeTrue();
     expect($config->getHttpStreamFactory())->toBeInstanceOf(StreamFactoryInterface::class);
 
-    $factory = Mockery::mock(StreamFactoryInterface::class);
+    $factory = new StreamFactory();
 
     $config->setHttpStreamFactory($factory);
     expect($config->hasHttpStreamFactory())->toBeTrue();

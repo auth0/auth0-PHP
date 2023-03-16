@@ -108,7 +108,6 @@ final class HttpClient
 
             if (null !== $callback) {
                 $this->mockResponse($response['response'], $callback);
-
                 continue;
             }
 

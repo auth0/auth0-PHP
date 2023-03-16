@@ -11,10 +11,9 @@ use Auth0\SDK\Mixins\ConfigurableMixin;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\SDK\Token;
 use Auth0\SDK\Token\ClientAssertionGenerator;
+use Auth0\SDK\Utility\Assert;
 use Auth0\SDK\Utility\EventDispatcher;
-use Http\Discovery\Exception\NotFoundException;
-use Http\Discovery\Psr17FactoryDiscovery;
-use Http\Discovery\Psr18ClientDiscovery;
+use Auth0\SDK\Utility\InterfaceDiscovery;
 use OpenSSLAsymmetricKey;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -230,8 +229,8 @@ final class SdkConfiguration implements ConfigurableContract
         $domain ??= (isset($_SERVER['SERVER_NAME']) && trim($_SERVER['SERVER_NAME']) !== '') ? $_SERVER['SERVER_NAME'] : null;
         $domain = trim($domain ?? '');
 
-        if (mb_strlen($domain) > 0) {
-            $parsed = parse_url($domain, PHP_URL_HOST);
+        if (\mb_strlen($domain) > 0) {
+            $parsed = \parse_url($domain, PHP_URL_HOST);
 
             if (\is_string($parsed)) {
                 $domain = $parsed;
@@ -1299,46 +1298,31 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * Setup SDK factories.
      *
-     * @throws NotFoundException when a PSR-18 or PSR-17 are not configured, and cannot be discovered
-     *
      * @codeCoverageIgnore
      */
     private function setupStateFactories(): void
     {
-        // If a PSR-18 compatible client wasn't provided, try to discover one.
-        if (! $this->getHttpClient() instanceof ClientInterface) {
-            try {
-                $this->setHttpClient(Psr18ClientDiscovery::find());
-            } catch (\Throwable $th) {
-                throw ConfigurationException::missingPsr18Library();
-            }
-        }
+        $responseFactory = $this->getHttpResponseFactory() ?? InterfaceDiscovery::getResponseFactory();
+        $requestFactory = $this->getHttpRequestFactory() ?? InterfaceDiscovery::getRequestFactory();
+        $streamFactory = $this->getHttpStreamFactory() ?? InterfaceDiscovery::getStreamFactory();
+        $httpClient = $this->getHttpClient() ?? InterfaceDiscovery::getClient();
 
-        // If a PSR-17 compatible request factory wasn't provided, try to discover one.
-        if (! $this->getHttpRequestFactory() instanceof RequestFactoryInterface) {
-            try {
-                $this->setHttpRequestFactory(Psr17FactoryDiscovery::findRequestFactory());
-            } catch (NotFoundException $exception) {
-                throw ConfigurationException::missingPsr17Library();
-            }
-        }
+        Assert::isInstanceOf($requestFactory, RequestFactoryInterface::class, 'Could not find a PSR-17 compatible request factory. Please install one, or provide one using the `setHttpRequestFactory()` method.');
+        Assert::isInstanceOf($responseFactory, ResponseFactoryInterface::class, 'Could not find a PSR-17 compatible response factory. Please install one, or provide one using the `setHttpResponseFactory()` method.');
+        Assert::isInstanceOf($streamFactory, StreamFactoryInterface::class, 'Could not find a PSR-17 compatible stream factory. Please install one, or provide one using the `setHttpStreamFactory()` method.');
+        Assert::isInstanceOf($httpClient, ClientInterface::class, 'Could not find a PSR-18 compatible HTTP client. Please install one, or provide one using the `setHttpClient()` method.');
 
-        // If a PSR-17 compatible response factory wasn't provided, try to discover one.
-        if (! $this->getHttpResponseFactory() instanceof ResponseFactoryInterface) {
-            try {
-                $this->setHttpResponseFactory(Psr17FactoryDiscovery::findResponseFactory());
-            } catch (NotFoundException $exception) {
-                throw ConfigurationException::missingPsr17Library();
-            }
+        if (! $this->hasHttpClient()) {
+            $this->setHttpClient($httpClient);
         }
-
-        // If a PSR-17 compatible stream factory wasn't provided, try to discover one.
-        if (! $this->getHttpStreamFactory() instanceof StreamFactoryInterface) {
-            try {
-                $this->setHttpStreamFactory(Psr17FactoryDiscovery::findStreamFactory());
-            } catch (NotFoundException $exception) {
-                throw ConfigurationException::missingPsr17Library();
-            }
+        if (! $this->hasHttpRequestFactory()) {
+            $this->setHttpRequestFactory($requestFactory);
+        }
+        if (! $this->hasHttpResponseFactory()) {
+            $this->setHttpResponseFactory($responseFactory);
+        }
+        if (! $this->hasHttpStreamFactory()) {
+            $this->setHttpStreamFactory($streamFactory);
         }
     }
 

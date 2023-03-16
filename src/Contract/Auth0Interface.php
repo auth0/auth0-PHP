@@ -169,6 +169,19 @@ interface Auth0Interface
      */
     public function getCredentials(): ?object;
 
+
+    /**
+     * Set the configuration for the SDK instance.
+     */
+    public function setConfiguration(
+        SdkConfiguration|array $configuration
+    ): self;
+
+    /**
+     * Updates the SDK's internal state by clearing it's credentials cache, and retrieving the current credentials from the configured session medium. Use this when you directly make changes to the configured session medium to ensure the SDK reflects those changes.
+     */
+    public function refreshState(): self;
+
     /**
      * Get ID token from an active session.
      */

@@ -245,9 +245,10 @@ final class HttpRequest
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
         $httpClient = $this->configuration->getHttpClient();
         $configuredRetries = $this->configuration->getHttpMaxRetries();
-        $httpRequest = $httpRequestFactory->createRequest(mb_strtoupper($this->method), $uri);
         $headers = $this->headers;
         $mockedResponse = null;
+
+        $httpRequest = $httpRequestFactory->createRequest(mb_strtoupper($this->method), $uri);
 
         // Write a body, if available (e.g. a JSON object body, etc.)
         if (0 !== mb_strlen($this->body)) {
@@ -278,10 +279,11 @@ final class HttpRequest
             $httpRequest = $httpRequest->withHeader('Auth0-Client', HttpTelemetry::build());
         }
 
+
         // IF we are mocking responses, add the mocked response to the client response stack.
         if (null !== $this->mockedResponses && [] !== $this->mockedResponses && method_exists($httpClient, 'addResponse')) {
             $mockedResponse = array_shift($this->mockedResponses);
-            $httpClient->addResponse($mockedResponse->response); // @phpstan-ignore-line
+            $httpClient->addResponse($this->method, $uri, $mockedResponse->response);
         }
 
         // Dispatch event to listeners of Auth0\SDK\EventHttpRequestBuilt.
@@ -291,7 +293,7 @@ final class HttpRequest
         $this->lastRequest = $httpRequest;
 
         try {
-            ++$this->count;
+            $this->count++;
 
             if ($mockedResponse && $mockedResponse->exception instanceof \Exception) { // @phpstan-ignore-line
                 throw $mockedResponse->exception;
@@ -301,9 +303,11 @@ final class HttpRequest
             $httpResponse = $httpClient->sendRequest($httpRequest);
 
             // Used for unit testing: if we're mocking responses and have a callback assigned, invoke that callback with our request and response.
+            // @codeCoverageIgnoreStart
             if ($mockedResponse && $mockedResponse->callback && \is_callable($mockedResponse->callback)) { // @phpstan-ignore-line
                 ($mockedResponse->callback)($httpRequest, $httpResponse);
             }
+            // @codeCoverageIgnoreEnd
 
             // Dispatch event to listeners of Auth0\SDK\HttpResponseReceived.
             $this->configuration->eventDispatcher()->dispatch(new HttpResponseReceived($httpResponse, $httpRequest));
@@ -328,7 +332,7 @@ final class HttpRequest
                      * ✔ Is never more than MAX_REQUEST_RETRY_DELAY (1s)
                      */
                     $wait = 100 * 2 ** ($attempt - 1); // Exponential delay with each subsequent request attempt.
-                    $wait = mt_rand($wait + 1, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
+                    $wait = \mt_rand($wait + 1, $wait + self::MAX_REQUEST_RETRY_JITTER); // Add jitter to the delay window.
                     $wait = min(self::MAX_REQUEST_RETRY_DELAY, $wait); // Ensure delay is less than MAX_REQUEST_RETRY_DELAY.
                     $wait = max(self::MIN_REQUEST_RETRY_DELAY, $wait); // Ensure delay is more than MIN_REQUEST_RETRY_DELAY.
 
