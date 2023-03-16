@@ -40,7 +40,7 @@ test('create() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/log-streams');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
@@ -68,7 +68,7 @@ test('update() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/log-streams/' . $mock->id);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
@@ -85,5 +85,5 @@ test('delete() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/log-streams/123');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });

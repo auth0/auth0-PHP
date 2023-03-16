@@ -9,28 +9,22 @@ use Auth0\SDK\API\Authentication;
 /**
  * Class MockAuthenticationApi.
  */
-class MockAuthenticationApi extends MockApi
+class AuthenticationMockClient extends MockClientAbstract
 {
-    /**
-     * Authentication API object.
-     */
     protected Authentication $client;
 
-    /**
-     * Setup the MockAPI to use the Authentication class.
-     */
-    protected function setClient(): void
-    {
+    public function __construct(
+        ?array $responses = []
+    ) {
         $this->client = new Authentication([
             'domain' => MockDomain::valid(),
             'clientId' => '__test_client_id__',
             'redirectUri' => uniqid(),
         ]);
+
+        parent::__construct($responses);
     }
 
-    /**
-     * Return the endpoint being used.
-     */
     public function mock(): Authentication
     {
         return $this->client;

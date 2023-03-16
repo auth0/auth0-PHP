@@ -133,10 +133,12 @@ test('withParam() replaces a parameter in the URL', function(string $parameter, 
 ]]);
 
 test('withFormParam() adds a form parameter to the request body with a `true` value', function(string $parameter, bool $value, HttpRequest $client): void {
+    $this->configuration->getHttpClient()->setFallbackResponse(HttpResponseGenerator::create());
+
     $client->withFormParam($parameter, $value);
     $client->call();
 
-    expect($client->getLastRequest()->getBody()->__toString())->toEqual($parameter . '=true');
+    expect((string) $client->getLastRequest()->getBody())->toEqual($parameter . '=true');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => true,
@@ -144,10 +146,12 @@ test('withFormParam() adds a form parameter to the request body with a `true` va
 ]]);
 
 test('withFormParam() adds a form parameter to the request body with a `false` value', function(string $parameter, bool $value, HttpRequest $client): void {
+    $this->configuration->getHttpClient()->setFallbackResponse(HttpResponseGenerator::create());
+
     $client->withFormParam($parameter, $value);
     $client->call();
 
-    expect($client->getLastRequest()->getBody()->__toString())->toEqual($parameter . '=false');
+    expect((string) $client->getLastRequest()->getBody())->toEqual($parameter . '=false');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => false,

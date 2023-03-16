@@ -4,19 +4,10 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Contract\API;
 
-use Auth0\SDK\Utility\HttpClient;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Interface AuthenticationInterface.
- */
-interface AuthenticationInterface
+interface AuthenticationInterface extends ClientInterface
 {
-    /**
-     * Return the HttpClient instance being used for authentication  API requests.
-     */
-    public function getHttpClient(): HttpClient;
-
     /**
      * Build and return a SAMLP link.
      *

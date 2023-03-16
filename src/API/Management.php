@@ -29,6 +29,7 @@ use Auth0\SDK\API\Management\UserBlocks;
 use Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\UsersByEmail;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Contract\API\AuthenticationInterface;
 use Auth0\SDK\Contract\API\Management\ActionsInterface;
 use Auth0\SDK\Contract\API\Management\AttackProtectionInterface;
 use Auth0\SDK\Contract\API\Management\BlacklistsInterface;
@@ -62,7 +63,7 @@ use Auth0\SDK\Utility\HttpResponsePaginator;
 /**
  * Class Management.
  */
-final class Management implements ManagementInterface
+final class Management extends ClientAbstract implements ManagementInterface
 {
     /**
      * Instance of SdkConfiguration, for shared configuration across classes.
@@ -103,7 +104,7 @@ final class Management implements ManagementInterface
     }
 
     public function getHttpClient(
-        ?Authentication $authentication = null,
+        ?AuthenticationInterface $authentication = null,
     ): HttpClient {
         if (null !== $this->httpClient) {
             return $this->httpClient;
@@ -164,11 +165,6 @@ final class Management implements ManagementInterface
 
         // Build the API client using the management token.
         return $this->httpClient = new HttpClient($this->getConfiguration(), HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);
-    }
-
-    public function getLastRequest(): ?HttpRequest
-    {
-        return $this->getHttpClient()->getLastRequest();
     }
 
     public function getResponsePaginator(): HttpResponsePaginator

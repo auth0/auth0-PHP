@@ -33,7 +33,7 @@ test('create() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
 
@@ -87,7 +87,7 @@ test('update() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations/' . $mock->id);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
 
@@ -124,7 +124,7 @@ test('delete() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations/test-organization');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('delete() throws an exception when an invalid `id` is used', function(): void {
@@ -215,7 +215,7 @@ test('updateEnabledConnection() issues an appropriate request', function(): void
     expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/enabled_connections/test-connection');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('assign_membership_on_login', $body);
@@ -266,7 +266,7 @@ test('addMembers() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/members');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('members', $body);
@@ -328,7 +328,7 @@ test('addMemberRoles() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/members/test-user/roles');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('roles', $body);
@@ -414,7 +414,7 @@ test('createInvitation() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/test-organization/invitations');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('client_id', $body);

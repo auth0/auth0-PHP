@@ -7,6 +7,7 @@ use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Exception\StateException;
@@ -38,7 +39,6 @@ it('does not persist user data when configured so', function(): void {
     $auth0 = new Auth0($this->configuration + ['persistUser' => false]);
     expect($auth0->getUser())->toBeNull();
 });
-
 
 it('uses the configured session storage handler', function(): void {
     $storeMock = new class () implements StoreInterface {
@@ -109,6 +109,25 @@ test('configuration() returns the same instance of the SdkConfiguration class th
     expect($auth0->configuration())
         ->toBeInstanceOf(SdkConfiguration::class)
         ->toEqual($configuration);
+});
+
+test('setConfiguration() assigns a new configuration entity', function(): void {
+    $configuration1 = new SdkConfiguration($this->configuration);
+    $configuration2 = new SdkConfiguration($this->configuration);
+
+    $auth0 = new Auth0($configuration1);
+
+    expect($auth0->configuration())
+        ->toBeInstanceOf(SdkConfiguration::class)
+        ->toBe($configuration1)
+        ->not()->toBe($configuration2);
+
+    $auth0->setConfiguration($configuration2);
+
+    expect($auth0->configuration())
+        ->toBeInstanceOf(SdkConfiguration::class)
+        ->toBe($configuration2)
+        ->not()->toBe($configuration1);
 });
 
 test('getLoginLink() returns expected default value', function(): void {
@@ -328,30 +347,23 @@ test('logout() returns a a valid logout url', function(): void {
             ->toContain('rand=' . $randomParam);
 });
 
-test('decode() uses the configured cache handler', function(): void {
-    $cacheKey = hash('sha256', $this->configuration['domain'] . '/.well-known/jwks.json');
-    $mockJwks = [
-        '__test_kid__' => [
-            'x5c' => ['123'],
-        ],
-    ];
+test('decode() uses the configured cache handler', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $auth0 = new Auth0(array_merge($this->configuration, [
+        'domain' => 'https://domain.test',
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
 
-    $pool = new ArrayAdapter();
-    $item = $pool->getItem($cacheKey);
-    $item->set($mockJwks);
-    $pool->save($item);
+    // If a network request is attempted to validate the token (indicating the cache is not being used) fail the test.
+    $auth0->configuration()->getHttpClient()->setRequestLimit(0);
 
-    $auth0 = new Auth0($this->configuration + [
-        'tokenCache' => $pool,
-    ]);
-
-    $cachedJwks = $pool->getItem($cacheKey)->get();
-    $this->assertNotEmpty($cachedJwks);
-    $this->assertArrayHasKey('__test_kid__', $cachedJwks);
-    expect($cachedJwks)->toEqual($mockJwks);
-
-    $auth0->decode((new TokenGenerator())->withRs256([], null, ['kid' => '__test_kid__']));
-})->throws(InvalidTokenException::class, InvalidTokenException::MSG_BAD_SIGNATURE);
+    expect($auth0->decode($candidate->token))
+        ->toBeInstanceOf(TokenInterface::class);
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_RS256)
+]]);
 
 test('decode() compares `auth_time` against `tokenMaxAge` configuration', function(): void {
     $now = time();
@@ -807,9 +819,16 @@ test('getCredentials() returns the expected object structure when a session is a
 
     expect($credentials)
         ->toBeObject()
-        ->toHaveProperties(['user', 'idToken', 'accessToken', 'accessTokenScope', 'accessTokenExpiration', 'accessTokenExpired', 'refreshToken']);
+        ->toHaveProperty('user')
+        ->toHaveProperty('idToken')
+        ->toHaveProperty('accessToken')
+        ->toHaveProperty('accessTokenScope')
+        ->toHaveProperty('accessTokenExpiration')
+        ->toHaveProperty('accessTokenExpired')
+        ->toHaveProperty('refreshToken');
 
-    expect($credentials->user)->toBeArray();
+    expect($credentials->user)
+        ->toBeArray();
 });
 
 test('setIdToken() properly stores data', function(): void {

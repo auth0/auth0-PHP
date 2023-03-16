@@ -46,7 +46,7 @@ test('update() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('given_name', $body);
@@ -74,7 +74,7 @@ test('create() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('connection', $body);
@@ -97,7 +97,7 @@ test('delete() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $id);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('linkAccount() issues an appropriate request', function(): void {
@@ -116,7 +116,7 @@ test('linkAccount() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/identities');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('provider', $body);
@@ -143,7 +143,7 @@ test('unlinkAccount() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/identities/' . $mockup->provider . '/' . $mockup->identity);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('deleteMultifactorProvider() issues an appropriate request', function(): void {
@@ -158,7 +158,7 @@ test('deleteMultifactorProvider() issues an appropriate request', function(): vo
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/multifactor/' . $mockup->provider);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('deleteAllAuthenticators() issues an appropriate request', function(): void {
@@ -170,7 +170,7 @@ test('deleteAllAuthenticators() issues an appropriate request', function(): void
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $id . '/authenticators');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 
@@ -198,7 +198,7 @@ test('removeRoles() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/roles');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('roles', $body);
@@ -225,7 +225,7 @@ test('addRoles() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/roles');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('roles', $body);
@@ -272,7 +272,7 @@ test('removePermissions() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/permissions');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('permissions', $body);
@@ -303,7 +303,7 @@ test('addPermissions() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockup->id . '/permissions');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('permissions', $body);
@@ -344,7 +344,7 @@ test('createRecoveryCode() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockupId . '/recovery-code-regeneration');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('invalidateBrowsers() issues an appropriate request', function(): void {
@@ -356,7 +356,7 @@ test('invalidateBrowsers() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $mockupId . '/multifactor/actions/invalidate-remember-browser');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('getAuthenticationMethods() issues an appropriate request', function(): void {
@@ -390,7 +390,7 @@ test('replaceAuthenticationMethods() issues an appropriate request', function():
         ->email->toEqual($body[0]['email']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('deleteAuthenticationMethods() issues an appropriate request', function(): void {
@@ -402,7 +402,7 @@ test('deleteAuthenticationMethods() issues an appropriate request', function(): 
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('createAuthenticationMethod() issues an appropriate request', function(): void {
@@ -426,7 +426,7 @@ test('createAuthenticationMethod() issues an appropriate request', function(): v
         ->email->toEqual($body['email']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('getAuthenticationMethod() issues an appropriate request', function(): void {
@@ -461,7 +461,7 @@ test('updateAuthenticationMethod() issues an appropriate request', function(): v
         ->email->toEqual($body['email']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });
 
 test('deleteAuthenticationMethod() issues an appropriate request', function(): void {
@@ -474,5 +474,5 @@ test('deleteAuthenticationMethod() issues an appropriate request', function(): v
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/authentication-methods/' . $methodId);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'][0])->toEqual('application/json');
+    expect($headers['Content-Type'])->toEqual('application/json');
 });

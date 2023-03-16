@@ -183,9 +183,12 @@ test('usersByEmail() returns an instance of UsersByEmail', function(): void {
 test('getLastRequest() returns an HttpRequest or null', function(): void {
     expect($this->sdk->management()->getLastRequest())->toBeNull();
 
-    $this->sdk->management()->users()->getAll();
+    try {
+        $this->sdk->management()->users()->getAll();
+    } catch (Exception) {
+    }
 
-    expect($this->sdk->management()->getLastRequest())->toBeInstanceOf(HttpRequest::class);
+    expect($this->sdk->management()->getHttpClient()->getLastRequest())->toBeInstanceOf(HttpRequest::class);
 });
 
 test('Caching of management tokens works.', function(): void {

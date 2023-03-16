@@ -7,13 +7,13 @@ use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Exception\ArgumentException;
 use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\MockDomain;
 use Auth0\Tests\Utilities\TokenGenerator;
 
 uses()->group('authentication');
 
 beforeEach(function(): void {
-
     $this->configuration = new SdkConfiguration([
         'domain' => MockDomain::valid(),
         'cookieSecret' => uniqid(),
@@ -55,9 +55,12 @@ test('addClientAuthentication() inserts `client_id` and `client_secret` properti
     $secret = uniqid();
 
     $this->configuration->setClientSecret($secret);
-    $this->sdk->authentication()->passwordlessStart();
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->passwordlessStart();
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestBody = json_decode($request->getBody()->__toString(), true);
 
     expect($requestBody)
@@ -72,9 +75,11 @@ test('addClientAuthentication() inserts correct client assertion properties when
     $secret = TokenGenerator::generateRsaKeyPair();
 
     $this->configuration->setClientAssertionSigningKey($secret['private']);
-    $this->sdk->authentication()->passwordlessStart();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->passwordlessStart();
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestBody = json_decode($request->getBody()->__toString(), true);
 
     expect($requestBody)
@@ -183,9 +188,12 @@ test('passwordlessStart() throws a ConfigurationException if client id is not co
 
 test('passwordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());
-    $this->sdk->authentication()->passwordlessStart();
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->passwordlessStart();
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
 
@@ -214,9 +222,12 @@ test('emailPasswordlessStart() throws an ArgumentException if `type` is empty', 
 
 test('emailPasswordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());
-    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow   ', 'code');
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->emailPasswordlessStart('someone@somewhere.somehow   ', 'code');
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
 
@@ -236,9 +247,12 @@ test('emailPasswordlessStart() is properly formatted', function(): void {
 
 test('emailPasswordlessStart() returns authParams with default configured scopes when none are provided', function(): void {
     $this->configuration->setClientSecret(uniqid());
-    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', 'code');
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->emailPasswordlessStart('someone@somewhere.somehow', 'code');
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestBody = json_decode($request->getBody()->__toString(), false);
 
     expect($requestBody)->toHaveProperties(['authParams']);
@@ -248,9 +262,12 @@ test('emailPasswordlessStart() returns authParams with default configured scopes
 
 test('emailPasswordlessStart() returns authParams with default configured scopes when an empty array is configured', function(): void {
     $this->configuration->setClientSecret(uniqid());
-    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', 'code', []);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->emailPasswordlessStart('someone@somewhere.somehow', 'code', []);
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestBody = json_decode($request->getBody()->__toString(), false);
 
     expect($requestBody)->toHaveProperties(['authParams']);
@@ -260,9 +277,12 @@ test('emailPasswordlessStart() returns authParams with default configured scopes
 
 test('emailPasswordlessStart() returns authParams correctly configured when provided', function(): void {
     $this->configuration->setClientSecret(uniqid());
-    $this->sdk->authentication()->emailPasswordlessStart('someone@somewhere.somehow', 'code', ['scope' => 'test1 test2']);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->emailPasswordlessStart('someone@somewhere.somehow', 'code', ['scope' => 'test1 test2']);
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestBody = json_decode($request->getBody()->__toString(), false);
 
     expect($requestBody)->toHaveProperties(['authParams']);
@@ -272,14 +292,20 @@ test('emailPasswordlessStart() returns authParams correctly configured when prov
 
 test('smsPasswordlessStart() throws an ArgumentException if `phoneNumber` is empty', function(): void {
     $this->configuration->setClientSecret(uniqid());
-    $this->sdk->authentication()->smsPasswordlessStart('');
+
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->smsPasswordlessStart('');
 })->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'phoneNumber'));
 
 test('smsPasswordlessStart() is properly formatted', function(): void {
     $this->configuration->setClientSecret(uniqid());
-    $this->sdk->authentication()->smsPasswordlessStart('   8675309');
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->smsPasswordlessStart('   8675309');
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
 
@@ -298,9 +324,11 @@ test('smsPasswordlessStart() is properly formatted', function(): void {
 test('userInfo() is properly formatted', function(): void {
     $accessToken = uniqid();
 
-    $this->sdk->authentication()->userInfo($accessToken);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->userInfo($accessToken);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
     $requestHeaders = $request->getHeaders();
@@ -308,16 +336,18 @@ test('userInfo() is properly formatted', function(): void {
     expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
     expect($requestUri->getPath())->toEqual('/userinfo');
     $this->assertArrayHasKey('Authorization', $requestHeaders);
-    expect($requestHeaders['Authorization'][0])->toEqual('Bearer ' . $accessToken);
+    expect($requestHeaders['Authorization'])->toEqual('Bearer ' . $accessToken);
 });
 
 test('oauthToken() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
-    $this->sdk->authentication()->oauthToken('authorization_code');
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->oauthToken('authorization_code');
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
 
@@ -336,9 +366,12 @@ test('codeExchange() is properly formatted', function(): void {
     $verifier = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
-    $this->sdk->authentication()->codeExchange($code, $redirect, $verifier);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->codeExchange($code, $redirect, $verifier);
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
 
@@ -361,9 +394,11 @@ test('login() is properly formatted', function(): void {
     $realm = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
-    $this->sdk->authentication()->login($username, $password, $realm);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->login($username, $password, $realm);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
 
@@ -385,9 +420,11 @@ test('loginWithDefaultDirectory() is properly formatted', function(): void {
     $password = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
-    $this->sdk->authentication()->loginWithDefaultDirectory($username, $password);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->loginWithDefaultDirectory($username, $password);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
 
@@ -405,9 +442,11 @@ test('clientCredentials() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
-    $this->sdk->authentication()->clientCredentials(['testing' => 123], ['header_testing' => 123]);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->clientCredentials(['testing' => 123], ['header_testing' => 123]);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
     $requestHeaders = $request->getHeaders();
@@ -422,7 +461,7 @@ test('clientCredentials() is properly formatted', function(): void {
     expect($requestBody)->toContain('testing=123');
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    expect($requestHeaders['header_testing'][0])->toEqual(123);
+    expect($requestHeaders['header_testing'])->toEqual(123);
 });
 
 test('refreshToken() is properly formatted', function(): void {
@@ -430,9 +469,11 @@ test('refreshToken() is properly formatted', function(): void {
     $refreshToken = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
-    $this->sdk->authentication()->refreshToken($refreshToken, ['testing' => 123], ['header_testing' => 123]);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->refreshToken($refreshToken, ['testing' => 123], ['header_testing' => 123]);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody =  explode('&', $request->getBody()->__toString());
     $requestHeaders = $request->getHeaders();
@@ -447,7 +488,7 @@ test('refreshToken() is properly formatted', function(): void {
     expect($requestBody)->toContain('testing=123');
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    expect($requestHeaders['header_testing'][0])->toEqual(123);
+    expect($requestHeaders['header_testing'])->toEqual(123);
 });
 
 test('dbConnectionsSignup() is properly formatted', function(): void {
@@ -458,9 +499,11 @@ test('dbConnectionsSignup() is properly formatted', function(): void {
     $connection = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
-    $this->sdk->authentication()->dbConnectionsSignup($email, $password, $connection, ['testing' => 123], ['header_testing' => 123]);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->dbConnectionsSignup($email, $password, $connection, ['testing' => 123], ['header_testing' => 123]);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
     $requestHeaders = $request->getHeaders();
@@ -481,7 +524,7 @@ test('dbConnectionsSignup() is properly formatted', function(): void {
     expect($requestBody['testing'])->toEqual(123);
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    expect($requestHeaders['header_testing'][0])->toEqual(123);
+    expect($requestHeaders['header_testing'])->toEqual(123);
 });
 
 test('dbConnectionsChangePassword() is properly formatted', function(): void {
@@ -491,9 +534,11 @@ test('dbConnectionsChangePassword() is properly formatted', function(): void {
     $connection = uniqid();
 
     $this->configuration->setClientSecret($clientSecret);
-    $this->sdk->authentication()->dbConnectionsChangePassword($email, $connection, ['testing' => 123], ['header_testing' => 123]);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->dbConnectionsChangePassword($email, $connection, ['testing' => 123], ['header_testing' => 123]);
 
-    $request = $this->sdk->authentication()->getHttpClient()->getLastRequest()->getLastRequest();
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
     $requestUri = $request->getUri();
     $requestBody = json_decode($request->getBody()->__toString(), true);
     $requestHeaders = $request->getHeaders();
@@ -512,5 +557,5 @@ test('dbConnectionsChangePassword() is properly formatted', function(): void {
     expect($requestBody['testing'])->toEqual(123);
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    expect($requestHeaders['header_testing'][0])->toEqual(123);
+    expect($requestHeaders['header_testing'])->toEqual(123);
 });

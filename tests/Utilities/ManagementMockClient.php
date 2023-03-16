@@ -6,21 +6,13 @@ namespace Auth0\Tests\Utilities;
 
 use Auth0\SDK\API\Management;
 
-/**
- * Class MockManagementApi.
- */
-class MockManagementApi extends MockApi
+final class ManagementMockClient extends MockClientAbstract
 {
-    /**
-     * Management API object.
-     */
     protected Management $client;
 
-    /**
-     * Setup the MockAPI to use the Management class.
-     */
-    protected function setClient(): void
-    {
+    public function __construct(
+        ?array $responses = []
+    ) {
         $this->client = new Management([
             'domain' => MockDomain::valid(),
             'clientId' => '__test_client_id__',
@@ -28,11 +20,10 @@ class MockManagementApi extends MockApi
             'redirectUri' => uniqid(),
             'managementToken' => '__api_token__',
         ]);
+
+        parent::__construct($responses);
     }
 
-    /**
-     * Return the endpoint being used.
-     */
     public function mock(): Management
     {
         return $this->client;

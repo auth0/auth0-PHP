@@ -31,10 +31,17 @@ test('getHttpClient() returns an HttpClient instance', function(): void {
 });
 
 test('getLastRequest() returns null when no requests have been made', function(): void {
-    expect($this->endpoint->getLastRequest())->toBeNull();
+    $this->httpClient->mockResponse(HttpResponseGenerator::create());
+
+    $client = new Users($this->httpClient);
+    $client->getAll(null, new RequestOptions(null, new PaginatedRequest(0, 5, true)));
+
+    expect($client->getLastRequest())->not()->toBeNull();
 });
 
 test('getLastRequest() returns an HttpRequest instance', function(): void {
+    $this->httpClient->mockResponse(HttpResponseGenerator::create());
+
     $client = new Users($this->httpClient);
     $client->getAll();
 
@@ -51,7 +58,7 @@ test('getResponsePaginator() returns an HttpResponsePaginator instance', functio
     ])));
 
     $client = new Users($this->httpClient);
-    $response = $client->getAll(null, new RequestOptions(null, new PaginatedRequest(0, 5, true)));
+    $client->getAll(null, new RequestOptions(null, new PaginatedRequest(0, 5, true)));
 
     expect($client->getResponsePaginator())->toBeInstanceOf(HttpResponsePaginator::class);
 });

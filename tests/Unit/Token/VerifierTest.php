@@ -82,6 +82,7 @@ test('[RS256] getKeySet() throws an error when jwks uri is not configured', func
 })->throws(InvalidTokenException::class, InvalidTokenException::MSG_REQUIRES_JWKS_URI);
 
 test('[RS256] getKeySet() throws an error when jwks uri is not reachable', function($jwksUri): void {
+    $this->configuration->getHttpClient()->setFallbackResponse(HttpResponseGenerator::create('', 404));
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => uniqid()], null, $jwksUri);
 })->with('jwksUri')->throws(InvalidTokenException::class);
 
@@ -109,6 +110,16 @@ test('[RS256] getKeySet() makes a network request to fetch JWKS and caches the r
                 ]
             ]
         ])), 'callback' => null, 'exception' => null],
+    ];
+
+    new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => '__test_kid__'], null, $jwksUri, null, null, $cache, $httpResponses);
+})->with('jwksUri')->throws(InvalidTokenException::class, InvalidTokenException::MSG_BAD_SIGNATURE_MISSING_KID);
+
+test('[RS256] getKeySet() returns an empty result when invalid JSON is parsed', function($jwksUri, $jwksCacheKey): void {
+    $cache = new ArrayAdapter();
+
+    $httpResponses = [
+        (object) ['response' => HttpResponseGenerator::create('(invalid json')],
     ];
 
     new Verifier($this->configuration, '', '', ['alg' => Token::ALGO_RS256, 'kid' => '__test_kid__'], null, $jwksUri, null, null, $cache, $httpResponses);
@@ -150,6 +161,8 @@ test('[RS256] getKeySet() does not make a network request when there are matchin
 })->with('jwksUri')->throws(InvalidTokenException::class, InvalidTokenException::MSG_BAD_SIGNATURE);
 
 test('[RS256] getKeySet() invalidates cache when expected key is missing', function($jwksUri, $jwksCacheKey): void {
+    $this->configuration->getHttpClient()->setFallbackResponse(HttpResponseGenerator::create('', 404));
+
     $cache = new ArrayAdapter();
     $item = $cache->getItem($jwksCacheKey);
     $item->set(['__test_kid__' => ['x5c' => ['123']]]);
