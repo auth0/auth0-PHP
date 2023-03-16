@@ -33,7 +33,7 @@ jobs:
       - run: composer install --prefer-dist
       - run: vendor/bin/pest --coverage-clover coverage/coverage.xml --no-interaction --order-by random
 
-      - if: (matrix.php == '8.1')
+      - if: (matrix.php-versions == '8.1')
         uses: codecov/codecov-action@v2
         with:
           directory: coverage
