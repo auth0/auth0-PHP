@@ -108,8 +108,8 @@
     "psalm": "@php vendor/bin/psalm",
     "rector:fix": "@php vendor/bin/rector process src",
     "rector": "@php vendor/bin/rector process src --dry-run",
-    "pest:coverage": "@php vendor/bin/pest --order-by random --debug --coverage",
-    "pest": "@php vendor/bin/pest --order-by random --debug",
+    "pest:coverage": "@php vendor/bin/pest --order-by random --coverage --compact",
+    "pest": "@php vendor/bin/pest --order-by random --compact",
     "test": [
       "@pest",
       "@phpstan",
