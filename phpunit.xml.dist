@@ -1,22 +1,25 @@
 <?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" stderr="true" colors="true" verbose="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage>
-    <include>
-      <directory suffix=".php">./src/</directory>
-    </include>
-    <exclude>
-      <directory suffix=".php">./src/Contract/</directory>
-      <directory suffix=".php">./src/Exception/</directory>
-    </exclude>
-  </coverage>
-  <testsuites>
-    <testsuite name="unit">
-      <directory>tests/Unit</directory>
-    </testsuite>
-  </testsuites>
-  <php>
-    <ini name="error_reporting" value="E_ALL ^ E_DEPRECATED"/>
-    <ini name="session.use_cookies" value="false"/>
-    <ini name="session.cache_limiter" value="false"/>
-  </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <coverage>
+        <include>
+            <directory suffix=".php">./src/</directory>
+        </include>
+
+        <exclude>
+            <directory suffix=".php">./src/Event/</directory>
+            <directory suffix=".php">./src/Contract/</directory>
+            <directory suffix=".php">./src/Exception/</directory>
+        </exclude>
+
+        <report>
+            <clover outputFile="coverage/clover.xml" />
+            <cobertura outputFile="coverage/cobertura.xml"/>
+        </report>
+    </coverage>
+
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>

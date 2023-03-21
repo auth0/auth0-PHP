@@ -9,7 +9,9 @@ use Auth0\Tests\Utilities\MockDomain;
 uses()->group('storage', 'storage.session');
 
 beforeEach(function(): void {
-    session_destroy();
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_destroy();
+    }
 
     $this->configuration = new SdkConfiguration([
         'domain' => MockDomain::valid(),

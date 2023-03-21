@@ -232,9 +232,18 @@ class TokenGenerator
         $response->cache = hash('sha256', 'https://test.auth0.com/.well-known/jwks.json');
 
         $cache = new ArrayAdapter();
-        $item = $cache->getItem($response->cache);
-        $item->set(['__test_kid__' => ['x5c' => [$keys['cert']]]]);
-        $cache->save($item);
+
+        if ($algorithm === self::ALG_RS256) {
+            $item = $cache->getItem($response->cache);
+            $item->set([
+                '__test_kid__' => [
+                    'x5c' => [
+                        $keys['cert']
+                    ]
+                ]
+            ]);
+            $cache->save($item);
+        }
 
         $response->cached = $cache;
 

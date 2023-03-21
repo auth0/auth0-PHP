@@ -295,7 +295,7 @@ final class HttpRequest
         try {
             $this->count++;
 
-            if ($mockedResponse && $mockedResponse->exception instanceof \Exception) { // @phpstan-ignore-line
+            if ($mockedResponse && \property_exists($mockedResponse, 'exception') && $mockedResponse->exception instanceof \Exception) { // @phpstan-ignore-line
                 throw $mockedResponse->exception;
             }
 
@@ -304,7 +304,7 @@ final class HttpRequest
 
             // Used for unit testing: if we're mocking responses and have a callback assigned, invoke that callback with our request and response.
             // @codeCoverageIgnoreStart
-            if ($mockedResponse && $mockedResponse->callback && \is_callable($mockedResponse->callback)) { // @phpstan-ignore-line
+            if ($mockedResponse && method_exists($mockedResponse, 'callback') && \is_callable($mockedResponse->callback)) { // @phpstan-ignore-line
                 ($mockedResponse->callback)($httpRequest, $httpResponse);
             }
             // @codeCoverageIgnoreEnd
