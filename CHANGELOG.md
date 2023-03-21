@@ -16,6 +16,10 @@
     - `PATCH /api/v2/users/:user/authentication-methods/:method` → `updateAuthenticationMethod()` ([Documentation](https://auth0.com/docs/api/management/v2#!/Users/patch_authentication_methods_by_authentication_method_id))
     - `DELETE /api/v2/users/:user/authentication-methods/:method` → `deleteAuthenticationMethod()` ([Documentation](https://auth0.com/docs/api/management/v2#!/Users/delete_authentication_methods_by_authentication_method_id))
 
+**Misc**
+
+- Upgraded test suite to PEST 2.0
+
 Thanks to our contributors for this release: [knash94](https://github.com/knash94)
 
 ## [8.4.0](https://github.com/auth0/auth0-PHP/tree/8.4.0) (2023-01-24)
