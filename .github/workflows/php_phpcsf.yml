@@ -1,32 +1,24 @@
+name: "PHP CS Fixer"
+
 on:
-  pull_request_target:
-    types:
-      - labeled
+  pull_request_target: {}
   push:
     branches:
-      - main
+      - 1.x
 
 jobs:
-  pint:
-    name: Pint
-    runs-on: ${{ matrix.operating-systems }}
-    if: github.event.label.name == 'run' || github.ref_name == 'main'
+  phpcsf:
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
-      matrix:
-        operating-systems:
-          - ubuntu-latest
-        php-versions:
-          - 8.1
 
     steps:
       - uses: actions/checkout@v3
 
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
-          coverage: pcov
+          php-version: 8.1
 
       - id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
