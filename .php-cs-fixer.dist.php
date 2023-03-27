@@ -172,7 +172,6 @@ return (new PhpCsFixer\Config())
         'psr_autoloading' => true,
         'random_api_migration' => true,
         'regular_callable_call' => true,
-        // 'return_assignment' => true,
         'return_type_declaration' => ['space_before' => 'none'],
         'return_type_declaration' => true,
         'self_accessor' => true,
