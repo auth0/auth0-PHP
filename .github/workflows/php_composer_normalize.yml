@@ -9,6 +9,7 @@ on:
 jobs:
   normalize:
     runs-on: ubuntu-latest
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     steps:
       - uses: actions/checkout@v3

@@ -9,9 +9,7 @@ on:
 jobs:
   rector:
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
+    if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     steps:
       - uses: actions/checkout@v3
