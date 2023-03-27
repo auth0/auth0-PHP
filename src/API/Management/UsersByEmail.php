@@ -27,11 +27,11 @@ final class UsersByEmail extends ManagementEndpoint implements UsersByEmailInter
             [$email, \Auth0\SDK\Exception\ArgumentException::missing('email')],
         ])->isEmail();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('users-by-email')->
-            withParam('email', $email)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('users-by-email')
+            ->withParam('email', $email)
+            ->withOptions($options)
+            ->call();
     }
 }

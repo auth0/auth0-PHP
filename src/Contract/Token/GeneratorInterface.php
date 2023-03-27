@@ -11,38 +11,23 @@ use OpenSSLAsymmetricKey;
 interface GeneratorInterface
 {
     /**
-     * Create a new token generator instance.
+     * Generate a new token and return it as a string.
      *
-     * @param OpenSSLAsymmetricKey|string $signingKey Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
-     * @param string $algorithm Algorithm to use for signing the token. Defaults to RS256.
-     * @param array<mixed> $claims Claims to include in the token. Defaults to an empty array.
-     * @param array<string> $headers Headers to include in the token. Defaults to an empty array. The the "alg" header will be set to represent $algorithm appropriately.
-     * @param null|string $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
-     *
-     * @throws TokenException When an unsupported algorithm is provided.
-     * @throws TokenException When a non-string $signingKey is provided for HS256.
-     * @throws TokenException When a string $signingKey is used with RS256.
-     * @throws TokenException When using RS256 and openssl_pkey_get_private() is unable to load the provided signing key.
+     * @throws TokenException
      */
-    public static function create(
-        OpenSSLAsymmetricKey|string $signingKey,
-        string $algorithm = Token::ALGO_RS256,
-        array $claims = [],
-        array $headers = [],
-        null|string $signingKeyPassphrase = null
-    ): static;
+    public function __toString(): string;
 
     /**
      * Generate a new token and return it as an array.
      *
      * @param bool $encodeSegments Whether to encode the segments or not. Defaults to true.
      *
-     * @return array<mixed>
-     *
      * @throws TokenException If an error occurs while generating the token.
+     *
+     * @return array<mixed>
      */
     public function toArray(
-        $encodeSegments = true
+        $encodeSegments = true,
     ): array;
 
     /**
@@ -53,9 +38,24 @@ interface GeneratorInterface
     public function toString(): string;
 
     /**
-     * Generate a new token and return it as a string.
+     * Create a new token generator instance.
      *
-     * @throws TokenException
+     * @param OpenSSLAsymmetricKey|string $signingKey           Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
+     * @param string                      $algorithm            Algorithm to use for signing the token. Defaults to RS256.
+     * @param array<mixed>                $claims               Claims to include in the token. Defaults to an empty array.
+     * @param array<string>               $headers              Headers to include in the token. Defaults to an empty array. The the "alg" header will be set to represent $algorithm appropriately.
+     * @param null|string                 $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
+     *
+     * @throws TokenException When an unsupported algorithm is provided.
+     * @throws TokenException When a non-string $signingKey is provided for HS256.
+     * @throws TokenException When a string $signingKey is used with RS256.
+     * @throws TokenException When using RS256 and openssl_pkey_get_private() is unable to load the provided signing key.
      */
-    public function __toString(): string;
+    public static function create(
+        OpenSSLAsymmetricKey | string $signingKey,
+        string $algorithm = Token::ALGO_RS256,
+        array $claims = [],
+        array $headers = [],
+        null | string $signingKeyPassphrase = null,
+    ): static;
 }

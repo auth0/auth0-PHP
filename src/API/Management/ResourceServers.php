@@ -23,7 +23,7 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$identifier] = Toolkit::filter([$identifier])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
+        [$body]       = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
@@ -35,67 +35,16 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('resource-servers')->
-            withBody(
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('resource-servers')
+            ->withBody(
                 (object) Toolkit::merge([
                     'identifier' => $identifier,
                 ], $body),
-            )->
-            withOptions($options)->
-            call();
-    }
-
-    public function getAll(
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('resource-servers')->
-            withOptions($options)->
-            call();
-    }
-
-    public function get(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('resource-servers', $id)->
-            withOptions($options)->
-            call();
-    }
-
-    public function update(
-        string $id,
-        array $body,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
-        ])->isArray();
-
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('resource-servers', $id)->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
+            )
+            ->withOptions($options)
+            ->call();
     }
 
     public function delete(
@@ -108,10 +57,61 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('resource-servers', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('delete')
+            ->addPath('resource-servers', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function get(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('resource-servers', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getAll(
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('resource-servers')
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function update(
+        string $id,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('patch')
+            ->addPath('resource-servers', $id)
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 }

@@ -6,6 +6,10 @@ namespace Auth0\SDK\Configuration;
 
 use Auth0\SDK\Contract\ConfigurableContract;
 use Auth0\SDK\Mixins\ConfigurableMixin;
+use Throwable;
+use function is_array;
+use function is_int;
+use function is_string;
 
 final class SdkState implements ConfigurableContract
 {
@@ -14,13 +18,13 @@ final class SdkState implements ConfigurableContract
     /**
      * SdkState Constructor.
      *
-     * @param  array<mixed>|null  $configuration  Optional. Pass an array of parameter keys and values to define the internal state of the SDK.
-     * @param  string|null  $idToken  Optional. The id token currently in use for the session, if available.
-     * @param  string|null  $accessToken  Optional. The access token currently in use for the session, if available.
-     * @param  array<string>|null  $accessTokenScope  Optional. The scopes from the access token for the session, if available.
-     * @param  string|null  $refreshToken  Optional. The refresh token currently in use for the session, if available.
-     * @param  array<mixed>|null  $user  Optional. An array representing the user data, if available.
-     * @param  int|null  $accessTokenExpiration  Optional. When the $accessToken is expected to expire, if available.
+     * @param null|array<mixed>  $configuration         Optional. Pass an array of parameter keys and values to define the internal state of the SDK.
+     * @param null|string        $idToken               Optional. The id token currently in use for the session, if available.
+     * @param null|string        $accessToken           Optional. The access token currently in use for the session, if available.
+     * @param null|array<string> $accessTokenScope      Optional. The scopes from the access token for the session, if available.
+     * @param null|string        $refreshToken          Optional. The refresh token currently in use for the session, if available.
+     * @param null|array<mixed>  $user                  Optional. An array representing the user data, if available.
+     * @param null|int           $accessTokenExpiration Optional. When the $accessToken is expected to expire, if available.
      */
     public function __construct(
         private ?array $configuration = null,
@@ -38,29 +42,134 @@ final class SdkState implements ConfigurableContract
         $this->validateProperties();
     }
 
-    public function setIdToken(?string $idToken = null): self
+    /**
+     * @return array<mixed>
+     */
+    private function getPropertyDefaults(): array
     {
-        $idToken = trim($idToken ?? '');
-
-        if ('' === $idToken) {
-            $idToken = null;
-        }
-
-        $this->idToken = $idToken;
-
-        return $this;
+        return [
+            'idToken'               => null,
+            'accessToken'           => null,
+            'accessTokenScope'      => null,
+            'refreshToken'          => null,
+            'user'                  => null,
+            'accessTokenExpiration' => null,
+        ];
     }
 
-    public function getIdToken(?\Throwable $exceptionIfNull = null): ?string
+    /**
+     * @return array<callable>
+     *
+     * @psalm-suppress MissingClosureParamType
+     */
+    private function getPropertyValidators(): array
+    {
+        return [
+            'idToken'               => static fn ($value) => is_string($value) || null === $value,
+            'accessToken'           => static fn ($value) => is_string($value) || null === $value,
+            'accessTokenScope'      => static fn ($value) => is_array($value) || null === $value,
+            'refreshToken'          => static fn ($value) => is_string($value) || null === $value,
+            'user'                  => static fn ($value) => is_array($value) || null === $value,
+            'accessTokenExpiration' => static fn ($value) => is_int($value) || null === $value,
+        ];
+    }
+
+    public function getAccessToken(?Throwable $exceptionIfNull = null): ?string
+    {
+        $this->exceptionIfNull($this->accessToken, $exceptionIfNull);
+
+        return $this->accessToken;
+    }
+
+    public function getAccessTokenExpiration(?Throwable $exceptionIfNull = null): ?int
+    {
+        $this->exceptionIfNull($this->accessTokenExpiration, $exceptionIfNull);
+
+        return $this->accessTokenExpiration;
+    }
+
+    /**
+     * @param ?Throwable $exceptionIfNull
+     *
+     * @return null|array<string>
+     */
+    public function getAccessTokenScope(?Throwable $exceptionIfNull = null): ?array
+    {
+        $this->exceptionIfNull($this->accessTokenScope, $exceptionIfNull);
+
+        return $this->accessTokenScope;
+    }
+
+    public function getIdToken(?Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->idToken, $exceptionIfNull);
 
         return $this->idToken;
     }
 
+    public function getRefreshToken(?Throwable $exceptionIfNull = null): ?string
+    {
+        $this->exceptionIfNull($this->refreshToken, $exceptionIfNull);
+
+        return $this->refreshToken;
+    }
+
+    /**
+     * @param ?Throwable $exceptionIfNull
+     *
+     * @return null|array<mixed> $user an array representing user data
+     */
+    public function getUser(?Throwable $exceptionIfNull = null): ?array
+    {
+        $this->exceptionIfNull($this->user, $exceptionIfNull);
+
+        return $this->user;
+    }
+
+    public function hasAccessToken(): bool
+    {
+        return null !== $this->accessToken;
+    }
+
+    public function hasAccessTokenExpiration(): bool
+    {
+        return null !== $this->accessTokenExpiration;
+    }
+
+    public function hasAccessTokenScope(): bool
+    {
+        return null !== $this->accessTokenScope;
+    }
+
     public function hasIdToken(): bool
     {
         return null !== $this->idToken;
+    }
+
+    public function hasRefreshToken(): bool
+    {
+        return null !== $this->refreshToken;
+    }
+
+    public function hasUser(): bool
+    {
+        return null !== $this->user;
+    }
+
+    /**
+     * @param array<string>|string $scopes a string (or array of strings) representing the scopes to add for the access token
+     *
+     * @return null|array<string>
+     */
+    public function pushAccessTokenScope(array | string $scopes): ?array
+    {
+        if (is_string($scopes)) {
+            $scopes = [$scopes];
+        }
+
+        $this->setAccessTokenScope(array_merge($this->accessTokenScope ?? [], $scopes));
+
+        return $this->accessTokenScope;
     }
 
     public function setAccessToken(?string $accessToken = null): self
@@ -76,55 +185,38 @@ final class SdkState implements ConfigurableContract
         return $this;
     }
 
-    public function getAccessToken(?\Throwable $exceptionIfNull = null): ?string
+    public function setAccessTokenExpiration(?int $accessTokenExpiration = null): self
     {
-        $this->exceptionIfNull($this->accessToken, $exceptionIfNull);
+        if (null !== $accessTokenExpiration && $accessTokenExpiration < 0) {
+            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('accessTokenExpiration');
+        }
 
-        return $this->accessToken;
-    }
+        $this->accessTokenExpiration = $accessTokenExpiration;
 
-    public function hasAccessToken(): bool
-    {
-        return null !== $this->accessToken;
-    }
-
-    /**
-     * @param  array<string>|null  $accessTokenScope  an array of strings representing the scopes for the access token
-     */
-    public function setAccessTokenScope(?array $accessTokenScope): self
-    {
-        $this->accessTokenScope = $this->filterArray($accessTokenScope);
         return $this;
     }
 
     /**
-     * @return array<string>|null
+     * @param null|array<string> $accessTokenScope an array of strings representing the scopes for the access token
      */
-    public function getAccessTokenScope(?\Throwable $exceptionIfNull = null): ?array
+    public function setAccessTokenScope(?array $accessTokenScope): self
     {
-        $this->exceptionIfNull($this->accessTokenScope, $exceptionIfNull);
+        $this->accessTokenScope = $this->filterArray($accessTokenScope);
 
-        return $this->accessTokenScope;
+        return $this;
     }
 
-    public function hasAccessTokenScope(): bool
+    public function setIdToken(?string $idToken = null): self
     {
-        return null !== $this->accessTokenScope;
-    }
+        $idToken = trim($idToken ?? '');
 
-    /**
-     * @param  array<string>|string  $scopes  a string (or array of strings) representing the scopes to add for the access token
-     * @return array<string>|null
-     */
-    public function pushAccessTokenScope(array|string $scopes): ?array
-    {
-        if (\is_string($scopes)) {
-            $scopes = [$scopes];
+        if ('' === $idToken) {
+            $idToken = null;
         }
 
-        $this->setAccessTokenScope(array_merge($this->accessTokenScope ?? [], $scopes));
+        $this->idToken = $idToken;
 
-        return $this->accessTokenScope;
+        return $this;
     }
 
     public function setRefreshToken(?string $refreshToken = null): self
@@ -140,20 +232,8 @@ final class SdkState implements ConfigurableContract
         return $this;
     }
 
-    public function getRefreshToken(?\Throwable $exceptionIfNull = null): ?string
-    {
-        $this->exceptionIfNull($this->refreshToken, $exceptionIfNull);
-
-        return $this->refreshToken;
-    }
-
-    public function hasRefreshToken(): bool
-    {
-        return null !== $this->refreshToken;
-    }
-
     /**
-     * @param  array<mixed>|null  $user  an array representing user data
+     * @param null|array<mixed> $user an array representing user data
      */
     public function setUser(?array $user): self
     {
@@ -164,75 +244,5 @@ final class SdkState implements ConfigurableContract
         $this->user = $user;
 
         return $this;
-    }
-
-    /**
-     * @return array<mixed>|null $user an array representing user data
-     */
-    public function getUser(?\Throwable $exceptionIfNull = null): ?array
-    {
-        $this->exceptionIfNull($this->user, $exceptionIfNull);
-
-        return $this->user;
-    }
-
-    public function hasUser(): bool
-    {
-        return null !== $this->user;
-    }
-
-    public function setAccessTokenExpiration(?int $accessTokenExpiration = null): self
-    {
-        if (null !== $accessTokenExpiration && $accessTokenExpiration < 0) {
-            throw \Auth0\SDK\Exception\ConfigurationException::validationFailed('accessTokenExpiration');
-        }
-
-        $this->accessTokenExpiration = $accessTokenExpiration;
-
-        return $this;
-    }
-
-    public function getAccessTokenExpiration(?\Throwable $exceptionIfNull = null): ?int
-    {
-        $this->exceptionIfNull($this->accessTokenExpiration, $exceptionIfNull);
-
-        return $this->accessTokenExpiration;
-    }
-
-    public function hasAccessTokenExpiration(): bool
-    {
-        return null !== $this->accessTokenExpiration;
-    }
-
-    /**
-     * @return array<callable>
-     *
-     * @psalm-suppress MissingClosureParamType
-     */
-    private function getPropertyValidators(): array
-    {
-        return [
-            'idToken'               => static fn ($value) => \is_string($value) || null === $value,
-            'accessToken'           => static fn ($value) => \is_string($value) || null === $value,
-            'accessTokenScope'      => static fn ($value) => \is_array($value) || null === $value,
-            'refreshToken'          => static fn ($value) => \is_string($value) || null === $value,
-            'user'                  => static fn ($value) => \is_array($value) || null === $value,
-            'accessTokenExpiration' => static fn ($value) => \is_int($value) || null === $value,
-        ];
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function getPropertyDefaults(): array
-    {
-        return [
-            'idToken'               => null,
-            'accessToken'           => null,
-            'accessTokenScope'      => null,
-            'refreshToken'          => null,
-            'user'                  => null,
-            'accessTokenExpiration' => null,
-        ];
     }
 }

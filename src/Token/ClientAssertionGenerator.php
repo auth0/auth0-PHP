@@ -8,6 +8,7 @@ use Auth0\SDK\Exception\TokenException;
 use Auth0\SDK\Token;
 use InvalidArgumentException;
 use OpenSSLAsymmetricKey;
+use function in_array;
 
 final class ClientAssertionGenerator
 {
@@ -24,20 +25,20 @@ final class ClientAssertionGenerator
     /**
      * Create a JWT client assertion.
      *
-     * @param string $domain The Auth0 domain to use.
-     * @param string $clientId The Auth0 client ID to use.
-     * @param OpenSSLAsymmetricKey|string $signingKey The signing key to use.
-     * @param string $signingAlgorithm The signing algorithm to use.
-     *
-     * @return Generator A configured instance of the Token Generator.
+     * @param string                      $domain           The Auth0 domain to use.
+     * @param string                      $clientId         The Auth0 client ID to use.
+     * @param OpenSSLAsymmetricKey|string $signingKey       The signing key to use.
+     * @param string                      $signingAlgorithm The signing algorithm to use.
      *
      * @throws InvalidArgumentException If an invalid signing algorithm is provided.
-     * @throws TokenException If an error occurs during signing.
+     * @throws TokenException           If an error occurs during signing.
+     *
+     * @return Generator A configured instance of the Token Generator.
      */
     public static function create(
         string $domain,
         string $clientId,
-        OpenSSLAsymmetricKey|string $signingKey,
+        OpenSSLAsymmetricKey | string $signingKey,
         string $signingAlgorithm = Token::ALGO_RS256,
     ): Generator {
         if (! in_array($signingAlgorithm, self::CONST_SUPPORTED_ALGORITHMS, true)) {

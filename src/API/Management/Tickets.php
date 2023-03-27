@@ -23,7 +23,7 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$userId] = Toolkit::filter([$userId])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
+        [$body]   = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
@@ -31,16 +31,16 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('tickets', 'email-verification')->
-            withBody(
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('tickets', 'email-verification')
+            ->withBody(
                 (object) Toolkit::merge([
                     'user_id' => $userId,
                 ], $body),
-            )->
-            withOptions($options)->
-            call();
+            )
+            ->withOptions($options)
+            ->call();
     }
 
     public function createPasswordChange(
@@ -53,11 +53,11 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('tickets', 'password-change')->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('tickets', 'password-change')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 }

@@ -16,7 +16,7 @@ interface StatsInterface
      * Get active user count statistics.
      * Required scope: `read:stats`.
      *
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *
@@ -30,9 +30,9 @@ interface StatsInterface
      * Get daily statistics from a period of time.
      * Required scope: `read:stats`.
      *
-     * @param  string|null  $from  Optional. Beginning from this date; YYYYMMDD format.
-     * @param  string|null  $to  Optional. Ending from this date; YYYYMMDD format.
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param null|string         $from    Optional. Beginning from this date; YYYYMMDD format.
+     * @param null|string         $to      Optional. Ending from this date; YYYYMMDD format.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *

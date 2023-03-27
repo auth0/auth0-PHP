@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility\Toolkit;
 
-use Auth0\SDK\Utility\Toolkit\Filter\ArrayFilter;
-use Auth0\SDK\Utility\Toolkit\Filter\StringFilter;
+use Auth0\SDK\Utility\Toolkit\Filter\{ArrayFilter, StringFilter};
 
 /**
  * Class Filter.
@@ -15,7 +14,7 @@ final class Filter
     /**
      * Filter Constructor.
      *
-     * @param  array<mixed>  $subjects  an array of values to process
+     * @param array<mixed> $subjects an array of values to process
      */
     public function __construct(
         private array $subjects,
@@ -27,7 +26,7 @@ final class Filter
      */
     public function array(): ArrayFilter
     {
-        /** @var array<array<string|null>> $subjects */
+        /** @var array<array<null|string>> $subjects */
         $subjects = $this->subjects;
 
         return new ArrayFilter($subjects);
@@ -38,7 +37,7 @@ final class Filter
      */
     public function string(): StringFilter
     {
-        /** @var array<string|null> $subjects */
+        /** @var array<null|string> $subjects */
         $subjects = $this->subjects;
 
         return new StringFilter($subjects);

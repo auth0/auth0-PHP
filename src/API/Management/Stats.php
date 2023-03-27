@@ -20,11 +20,11 @@ final class Stats extends ManagementEndpoint implements StatsInterface
     public function getActiveUsers(
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('stats', 'active-users')->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('stats', 'active-users')
+            ->withOptions($options)
+            ->call();
     }
 
     public function getDaily(
@@ -34,9 +34,9 @@ final class Stats extends ManagementEndpoint implements StatsInterface
     ): ResponseInterface {
         [$from, $to] = Toolkit::filter([$from, $to])->string()->trim();
 
-        $client = $this->getHttpClient()->
-            method('get')->
-            addPath('stats', 'daily');
+        $client = $this->getHttpClient()
+            ->method('get')
+            ->addPath('stats', 'daily');
 
         if (null !== $from) {
             Toolkit::assert([
@@ -54,8 +54,8 @@ final class Stats extends ManagementEndpoint implements StatsInterface
             $client->withParam('to', $to);
         }
 
-        return $client->
-            withOptions($options)->
-            call();
+        return $client
+            ->withOptions($options)
+            ->call();
     }
 }

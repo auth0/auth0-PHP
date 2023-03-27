@@ -13,15 +13,55 @@ use Psr\Http\Message\ResponseInterface;
 interface UsersInterface
 {
     /**
+     * Add one or more permissions to a specific user.
+     * Required scope: `update:users`.
+     *
+     * @param string                                                                                        $id          user ID to add permissions to
+     * @param array{permissions: array<array{permission_name: string, resource_server_identifier: string}>} $permissions array of permissions to add
+     * @param null|RequestOptions                                                                           $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `permissions` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/post_permissions
+     */
+    public function addPermissions(
+        string $id,
+        array $permissions,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Add one or more roles to a specific user.
+     * Required scopes:
+     * - `update:users`
+     * - `read:roles`.
+     *
+     * @param string              $id      user ID to add roles to
+     * @param array<string>       $roles   array of roles to add
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `roles` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
+     */
+    public function addRoles(
+        string $id,
+        array $roles,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
      * Create a new user for a given database or passwordless connection.
      * Required scope: `create:users`.
      *
-     * @param  string  $connection  connection (by ID) to use for the new User
-     * @param  array<mixed>  $body  Configuration for the new User. Some parameters are dependent upon the type of connection. See @see for supported options.
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param string              $connection connection (by ID) to use for the new User
+     * @param array<mixed>        $body       Configuration for the new User. Some parameters are dependent upon the type of connection. See @see for supported options.
+     * @param null|RequestOptions $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `connection` or `body` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
      * @see https://auth0.com/docs/api/management/v2#!/Users/post_users
      */
@@ -32,13 +72,153 @@ interface UsersInterface
     ): ResponseInterface;
 
     /**
+     * Create an authentication method for a user.
+     *
+     * Required scope: `create:authentication_methods`.
+     *
+     * @param string              $user    ID of user to query.
+     * @param array<string>       $body    Array of authentication method to set.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/post_authentication_methods
+     */
+    public function createAuthenticationMethod(
+        string $user,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Remove the current multi-factor authentication recovery code and generate a new one.
+     * Required scope: `update:users`.
+     *
+     * @param string              $id      user ID of the user to regenerate a multi-factor authentication recovery code for
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
+     */
+    public function createRecoveryCode(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Delete a User by ID.
+     * Required scope: `delete:users`.
+     *
+     * @param string              $id      user ID to delete
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_users_by_id
+     */
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Deletes all authenticators that are associated to the provided user.
+     *
+     * Required scope: `delete:guardian_enrollments`.
+     *
+     * @param string              $id      user ID with the authenticators to delete
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_authenticators
+     */
+    public function deleteAllAuthenticators(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Delete an authentication method for a user.
+     *
+     * Required scope: `delete:authentication_methods`.
+     *
+     * @param string              $user    ID of user to query.
+     * @param string              $method  ID of authentication method to delete.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_authentication_methods_by_authentication_method_id
+     */
+    public function deleteAuthenticationMethod(
+        string $user,
+        string $method,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Delete all available authentication methods for a user.
+     *
+     * Required scope: `delete:authentication_methods`.
+     *
+     * @param string              $user    ID of user to query.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_authentication_methods
+     */
+    public function deleteAuthenticationMethods(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Delete the multifactor provider settings for a particular user.
+     * This will force user to re-configure the multifactor provider.
+     * Required scope: `update:users`.
+     *
+     * @param string              $id       user ID with the multifactor provider to delete
+     * @param string              $provider multifactor provider to delete
+     * @param null|RequestOptions $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `provider` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_multifactor_by_provider
+     */
+    public function deleteMultifactorProvider(
+        string $id,
+        string $provider,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Get a User.
+     * Required scopes:
+     * - `read:users` for any call to this endpoint.
+     * - `read:user_idp_tokens` to retrieve the "access_token" field for logged-in identities.
+     *
+     * @param string              $id      user (by their ID) to query
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_users_by_id
+     */
+    public function get(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
      * Search all Users.
      * Required scopes:
      * - `read:users` for any call to this endpoint.
      * - `read:user_idp_tokens` to retrieve the "access_token" field for logged-in identities.
      *
-     * @param  array<int|string|null>|null  $parameters  Optional. Query parameters to pass with the API request. See @see for supported options.
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param null|array<null|int|string> $parameters Optional. Query parameters to pass with the API request. See @see for supported options.
+     * @param null|RequestOptions         $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *
@@ -51,213 +231,54 @@ interface UsersInterface
     ): ResponseInterface;
 
     /**
-     * Get a User.
-     * Required scopes:
-     * - `read:users` for any call to this endpoint.
-     * - `read:user_idp_tokens` to retrieve the "access_token" field for logged-in identities.
+     * Get an authentication method for a user.
      *
-     * @param  string  $id  user (by their ID) to query
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * Required scope: `read:authentication_methods`.
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @param string              $user    ID of user to query.
+     * @param string              $method  ID of authentication method to get.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/get_users_by_id
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_authentication_methods_by_authentication_method_id
      */
-    public function get(
-        string $id,
+    public function getAuthenticationMethod(
+        string $user,
+        string $method,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
     /**
-     * Update a User.
-     * Required scopes:
-     * - `update:users` for any call to this endpoint.
-     * - `update:users_app_metadata` for any update that includes "user_metadata" or "app_metadata" fields.
+     * Get the available authentication methods for a user.
      *
-     * @param  string  $id  user (by their ID) to update
-     * @param  array<mixed>  $body  User data to update. See @see for supported options.
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * Required scope: `read:authentication_methods`.
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `body` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @param string              $user    ID of user to query.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `user` is provided.
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_authentication_methods
      */
-    public function update(
-        string $id,
-        array $body,
+    public function getAuthenticationMethods(
+        string $user,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
     /**
-     * Delete a User by ID.
-     * Required scope: `delete:users`.
-     *
-     * @param  string  $id  user ID to delete
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_users_by_id
-     */
-    public function delete(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Link one user identity to another.
-     * Required scope: `update:users`.
-     *
-     * @param  string  $id  user ID of the primary account
-     * @param  array<mixed>  $body  additional body content to send with the API request
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `body` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/post_identities
-     */
-    public function linkAccount(
-        string $id,
-        array $body,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Unlink an identity from the target user.
-     * Required scope: `update:users`.
-     *
-     * @param  string  $id  user ID of the primary user account
-     * @param  string  $provider  Identity provider name of the secondary linked account (e.g. `google-oauth2`).
-     * @param  string  $identityId  ID of the secondary linked account
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id`, `provider`, or `identityId` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_user_identity_by_user_id
-     */
-    public function unlinkAccount(
-        string $id,
-        string $provider,
-        string $identityId,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Add one or more roles to a specific user.
-     * Required scopes:
-     * - `update:users`
-     * - `read:roles`.
-     *
-     * @param  string  $id  user ID to add roles to
-     * @param  array<string>  $roles  array of roles to add
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `roles` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/post_user_roles
-     */
-    public function addRoles(
-        string $id,
-        array $roles,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Get all roles assigned to a specific user.
-     * Required scopes:
-     * - `read:users`
-     * - `read:roles`.
-     *
-     * @param  string  $id  user ID to get roles for
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
-     */
-    public function getRoles(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Remove one or more roles from a specific user.
-     * Required scope: `update:users`.
-     *
-     * @param  string  $id  user ID to remove roles from
-     * @param  array<string>  $roles  array of permissions to remove
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `roles` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_user_roles
-     */
-    public function removeRoles(
-        string $id,
-        array $roles,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Add one or more permissions to a specific user.
-     * Required scope: `update:users`.
-     *
-     * @param  string  $id  user ID to add permissions to
-     * @param  array{permissions: array<array{permission_name: string, resource_server_identifier: string}>}  $permissions  array of permissions to add
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `permissions` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/post_permissions
-     */
-    public function addPermissions(
-        string $id,
-        array $permissions,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Get all permissions for a specific user.
+     * Retrieve the first confirmed Guardian enrollment for a user.
      * Required scope: `read:users`.
      *
-     * @param  string  $id  user ID to get permissions for
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param string              $id      user ID to query
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/get_permissions
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
      */
-    public function getPermissions(
+    public function getEnrollments(
         string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Remove one or more permissions from a specific user.
-     * Required scope: `update:users`.
-     *
-     * @param  string  $id  user ID to remove permissions from
-     * @param  array{permissions: array<array{permission_name: string, resource_server_identifier: string}>}  $permissions  array of permissions to remove
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `permissions` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_permissions
-     */
-    public function removePermissions(
-        string $id,
-        array $permissions,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
@@ -265,11 +286,11 @@ interface UsersInterface
      * Get log entries for a specific user.
      * Required scope: `read:logs`.
      *
-     * @param  string  $id  user ID to get logs entries for
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param string              $id      user ID to get logs entries for
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
      * @see https://auth0.com/docs/api/management/v2#!/Users/get_logs_by_user
      */
@@ -282,11 +303,11 @@ interface UsersInterface
      * Get organizations a specific user belongs to.
      * Required scope: `read:organizations`.
      *
-     * @param  string  $id  user ID to get organization entries for
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param string              $id      user ID to get organization entries for
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
      * @see https://auth0.com/docs/api/management/v2#!/Users/get_user_organizations
      */
@@ -296,35 +317,37 @@ interface UsersInterface
     ): ResponseInterface;
 
     /**
-     * Retrieve the first confirmed Guardian enrollment for a user.
+     * Get all permissions for a specific user.
      * Required scope: `read:users`.
      *
-     * @param  string  $id  user ID to query
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param string              $id      user ID to get permissions for
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/get_enrollments
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_permissions
      */
-    public function getEnrollments(
+    public function getPermissions(
         string $id,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
     /**
-     * Remove the current multi-factor authentication recovery code and generate a new one.
-     * Required scope: `update:users`.
+     * Get all roles assigned to a specific user.
+     * Required scopes:
+     * - `read:users`
+     * - `read:roles`.
      *
-     * @param  string  $id  user ID of the user to regenerate a multi-factor authentication recovery code for
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param string              $id      user ID to get roles for
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/post_recovery_code_regeneration
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
      */
-    public function createRecoveryCode(
+    public function getRoles(
         string $id,
         ?RequestOptions $options = null,
     ): ResponseInterface;
@@ -333,11 +356,11 @@ interface UsersInterface
      * Invalidate all remembered browsers across all authentication factors for a user.
      * Required scope: `update:users`.
      *
-     * @param  string  $id  user ID of the user to invalidate all remembered browsers and authentication factors for
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param string              $id      user ID of the user to invalidate all remembered browsers and authentication factors for
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
      * @see https://auth0.com/docs/api/management/v2#!/Users/post_invalidate_remember_browser
      */
@@ -347,58 +370,59 @@ interface UsersInterface
     ): ResponseInterface;
 
     /**
-     * Delete the multifactor provider settings for a particular user.
-     * This will force user to re-configure the multifactor provider.
+     * Link one user identity to another.
      * Required scope: `update:users`.
      *
-     * @param  string  $id  user ID with the multifactor provider to delete
-     * @param  string  $provider  multifactor provider to delete
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param string              $id      user ID of the primary account
+     * @param array<mixed>        $body    additional body content to send with the API request
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `provider` are provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `body` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_multifactor_by_provider
+     * @see https://auth0.com/docs/api/management/v2#!/Users/post_identities
      */
-    public function deleteMultifactorProvider(
+    public function linkAccount(
         string $id,
-        string $provider,
+        array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
     /**
-     * Deletes all authenticators that are associated to the provided user.
+     * Remove one or more permissions from a specific user.
+     * Required scope: `update:users`.
      *
-     * Required scope: `delete:guardian_enrollments`.
+     * @param string                                                                                        $id          user ID to remove permissions from
+     * @param array{permissions: array<array{permission_name: string, resource_server_identifier: string}>} $permissions array of permissions to remove
+     * @param null|RequestOptions                                                                           $options     Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @param  string  $id  user ID with the authenticators to delete
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `permissions` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_authenticators
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_permissions
      */
-    public function deleteAllAuthenticators(
+    public function removePermissions(
         string $id,
+        array $permissions,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
     /**
-     * Get the available authentication methods for a user.
+     * Remove one or more roles from a specific user.
+     * Required scope: `update:users`.
      *
-     * Required scope: `read:authentication_methods`.
+     * @param string              $id      user ID to remove roles from
+     * @param array<string>       $roles   array of permissions to remove
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @param  string  $user  ID of user to query.
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `roles` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `user` is provided.
-     * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/get_authentication_methods
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_user_roles
      */
-    public function getAuthenticationMethods(
-        string $user,
+    public function removeRoles(
+        string $id,
+        array $roles,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
@@ -407,8 +431,8 @@ interface UsersInterface
      *
      * Required scope: `update:authentication_methods`.
      *
-     * @param string $user ID of user to query.
-     * @param array<string> $body Array of authentication methods to set.
+     * @param string              $user    ID of user to query.
+     * @param array<string>       $body    Array of authentication methods to set.
      * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @see https://auth0.com/docs/api/management/v2#!/Users/put_authentication_methods
@@ -420,51 +444,44 @@ interface UsersInterface
     ): ResponseInterface;
 
     /**
-     * Delete all available authentication methods for a user.
+     * Unlink an identity from the target user.
+     * Required scope: `update:users`.
      *
-     * Required scope: `delete:authentication_methods`.
+     * @param string              $id         user ID of the primary user account
+     * @param string              $provider   Identity provider name of the secondary linked account (e.g. `google-oauth2`).
+     * @param string              $identityId ID of the secondary linked account
+     * @param null|RequestOptions $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @param string $user ID of user to query.
-     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id`, `provider`, or `identityId` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_authentication_methods
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_user_identity_by_user_id
      */
-    public function deleteAuthenticationMethods(
-        string $user,
+    public function unlinkAccount(
+        string $id,
+        string $provider,
+        string $identityId,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
     /**
-     * Create an authentication method for a user.
+     * Update a User.
+     * Required scopes:
+     * - `update:users` for any call to this endpoint.
+     * - `update:users_app_metadata` for any update that includes "user_metadata" or "app_metadata" fields.
      *
-     * Required scope: `create:authentication_methods`.
-     *
-     * @param string $user ID of user to query.
-     * @param array<string> $body Array of authentication method to set.
+     * @param string              $id      user (by their ID) to update
+     * @param array<mixed>        $body    User data to update. See @see for supported options.
      * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/post_authentication_methods
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `body` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id
      */
-    public function createAuthenticationMethod(
-        string $user,
+    public function update(
+        string $id,
         array $body,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Get an authentication method for a user.
-     *
-     * Required scope: `read:authentication_methods`.
-     *
-     * @param string $user ID of user to query.
-     * @param string $method ID of authentication method to get.
-     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/get_authentication_methods_by_authentication_method_id
-     */
-    public function getAuthenticationMethod(
-        string $user,
-        string $method,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
@@ -473,9 +490,9 @@ interface UsersInterface
      *
      * Required scope: `update:authentication_methods`.
      *
-     * @param string $user ID of user to query.
-     * @param string $method ID of authentication method to update.
-     * @param array<string> $body Array of authentication method to set.
+     * @param string              $user    ID of user to query.
+     * @param string              $method  ID of authentication method to update.
+     * @param array<string>       $body    Array of authentication method to set.
      * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @see https://auth0.com/docs/api/management/v2#!/Users/patch_authentication_methods_by_authentication_method_id
@@ -484,23 +501,6 @@ interface UsersInterface
         string $user,
         string $method,
         array $body,
-        ?RequestOptions $options = null,
-    ): ResponseInterface;
-
-    /**
-     * Delete an authentication method for a user.
-     *
-     * Required scope: `delete:authentication_methods`.
-     *
-     * @param string $user ID of user to query.
-     * @param string $method ID of authentication method to delete.
-     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
-     *
-     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_authentication_methods_by_authentication_method_id
-     */
-    public function deleteAuthenticationMethod(
-        string $user,
-        string $method,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 }

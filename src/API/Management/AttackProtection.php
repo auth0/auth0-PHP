@@ -20,31 +20,31 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
     public function getBreachedPasswordDetection(
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('attack-protection', 'breached-password-detection')->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('attack-protection', 'breached-password-detection')
+            ->withOptions($options)
+            ->call();
     }
 
     public function getBruteForceProtection(
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('attack-protection', 'brute-force-protection')->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('attack-protection', 'brute-force-protection')
+            ->withOptions($options)
+            ->call();
     }
 
     public function getSuspiciousIpThrottling(
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('attack-protection', 'suspicious-ip-throttling')->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('attack-protection', 'suspicious-ip-throttling')
+            ->withOptions($options)
+            ->call();
     }
 
     public function updateBreachedPasswordDetection(
@@ -57,12 +57,12 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('attack-protection', 'breached-password-detection')->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('patch')
+            ->addPath('attack-protection', 'breached-password-detection')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 
     public function updateBruteForceProtection(
@@ -75,12 +75,12 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('attack-protection', 'brute-force-protection')->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('patch')
+            ->addPath('attack-protection', 'brute-force-protection')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 
     public function updateSuspiciousIpThrottling(
@@ -93,11 +93,11 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('attack-protection', 'suspicious-ip-throttling')->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('patch')
+            ->addPath('attack-protection', 'suspicious-ip-throttling')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 }

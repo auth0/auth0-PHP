@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\API;
 
 use Auth0\SDK\Contract\API\ClientInterface;
-use Auth0\SDK\Utility\HttpClient;
-use Auth0\SDK\Utility\HttpRequest;
+use Auth0\SDK\Utility\{HttpClient, HttpRequest};
 
 abstract class ClientAbstract implements ClientInterface
 {

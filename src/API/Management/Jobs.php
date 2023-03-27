@@ -17,32 +17,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class Jobs extends ManagementEndpoint implements JobsInterface
 {
-    public function createImportUsers(
-        string $filePath,
-        string $connectionId,
-        ?array $parameters = null,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$filePath, $connectionId] = Toolkit::filter([$filePath, $connectionId])->string()->trim();
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        Toolkit::assert([
-            [$filePath, \Auth0\SDK\Exception\ArgumentException::missing('filePath')],
-            [$connectionId, \Auth0\SDK\Exception\ArgumentException::missing('connectionId')],
-        ])->isString();
-
-        /** @var array<bool|int|string> $parameters */
-
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('jobs', 'users-imports')->
-            addFile('users', $filePath)->
-            withFormParam('connection_id', $connectionId)->
-            withFormParams($parameters)->
-            withOptions($options)->
-            call();
-    }
-
     public function createExportUsers(
         array $body,
         ?RequestOptions $options = null,
@@ -53,12 +27,38 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('jobs', 'users-exports')->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('jobs', 'users-exports')
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function createImportUsers(
+        string $filePath,
+        string $connectionId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$filePath, $connectionId] = Toolkit::filter([$filePath, $connectionId])->string()->trim();
+        [$parameters]              = Toolkit::filter([$parameters])->array()->trim();
+
+        Toolkit::assert([
+            [$filePath, \Auth0\SDK\Exception\ArgumentException::missing('filePath')],
+            [$connectionId, \Auth0\SDK\Exception\ArgumentException::missing('connectionId')],
+        ])->isString();
+
+        /** @var array<bool|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('jobs', 'users-imports')
+            ->addFile('users', $filePath)
+            ->withFormParam('connection_id', $connectionId)
+            ->withFormParams($parameters)
+            ->withOptions($options)
+            ->call();
     }
 
     public function createSendVerificationEmail(
@@ -67,7 +67,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$userId] = Toolkit::filter([$userId])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
+        [$body]   = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
@@ -75,16 +75,16 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('jobs', 'verification-email')->
-            withBody(
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('jobs', 'verification-email')
+            ->withBody(
                 (object) Toolkit::merge([
                     'user_id' => $userId,
                 ], $body),
-            )->
-            withOptions($options)->
-            call();
+            )
+            ->withOptions($options)
+            ->call();
     }
 
     public function get(
@@ -97,11 +97,11 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('jobs', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('jobs', $id)
+            ->withOptions($options)
+            ->call();
     }
 
     public function getErrors(
@@ -114,10 +114,10 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('jobs', $id, 'errors')->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('jobs', $id, 'errors')
+            ->withOptions($options)
+            ->call();
     }
 }

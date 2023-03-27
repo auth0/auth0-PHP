@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Event\Psr14Store;
 
-use Auth0\SDK\Contract\Auth0Event;
-use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Contract\{Auth0Event, StoreInterface};
 
 final class Get implements Auth0Event
 {
-    private ?bool $missed = null;
-
+    private ?bool $missed  = null;
     private ?bool $success = null;
 
     /**
@@ -24,14 +22,24 @@ final class Get implements Auth0Event
     ) {
     }
 
+    public function getKey(): string
+    {
+        return $this->key;
+    }
+
+    public function getMissed(): ?bool
+    {
+        return $this->missed;
+    }
+
     public function getStore(): StoreInterface
     {
         return $this->store;
     }
 
-    public function getKey(): string
+    public function getSuccess(): ?bool
     {
-        return $this->key;
+        return $this->success;
     }
 
     /**
@@ -42,22 +50,6 @@ final class Get implements Auth0Event
         return $this->value ?? null;
     }
 
-    /**
-     * @param  mixed  $value
-     */
-    public function setValue(
-        $value,
-    ): self {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    public function getMissed(): ?bool
-    {
-        return $this->missed;
-    }
-
     public function setMissed(
         bool $missed,
     ): self {
@@ -66,15 +58,21 @@ final class Get implements Auth0Event
         return $this;
     }
 
-    public function getSuccess(): ?bool
-    {
-        return $this->success;
-    }
-
     public function setSuccess(
         bool $success,
     ): self {
         $this->success = $success;
+
+        return $this;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue(
+        $value,
+    ): self {
+        $this->value = $value;
 
         return $this;
     }

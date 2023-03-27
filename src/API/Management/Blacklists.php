@@ -28,19 +28,19 @@ final class Blacklists extends ManagementEndpoint implements BlacklistsInterface
             [$jti, \Auth0\SDK\Exception\ArgumentException::missing('jti')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('blacklists', 'tokens')->
-            withBody(
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('blacklists', 'tokens')
+            ->withBody(
                 (object) Toolkit::filter([
                     [
                         'jti' => $jti,
                         'aud' => $aud,
                     ],
                 ])->array()->trim()[0],
-            )->
-            withOptions($options)->
-            call();
+            )
+            ->withOptions($options)
+            ->call();
     }
 
     public function get(
@@ -49,11 +49,11 @@ final class Blacklists extends ManagementEndpoint implements BlacklistsInterface
     ): ResponseInterface {
         [$aud] = Toolkit::filter([$aud])->string()->trim();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('blacklists', 'tokens')->
-            withParam('aud', $aud)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('blacklists', 'tokens')
+            ->withParam('aud', $aud)
+            ->withOptions($options)
+            ->call();
     }
 }

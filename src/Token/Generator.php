@@ -4,19 +4,28 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Token;
 
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_SLASHES;
+use const OPENSSL_ALGO_SHA256;
+use const OPENSSL_ALGO_SHA384;
+use const OPENSSL_ALGO_SHA512;
 use Auth0\SDK\Contract\Token\GeneratorInterface;
 use Auth0\SDK\Exception\TokenException;
 use Auth0\SDK\Token;
 use OpenSSLAsymmetricKey;
 use Throwable;
+use function extension_loaded;
+use function in_array;
+use function is_array;
+use function is_string;
 
 final class Generator implements GeneratorInterface
 {
     // Lookup table for supported digest algorithms as strings.
     public const CONST_DIGEST_STRING = [
-        \OPENSSL_ALGO_SHA256 => 'sha256',
-        \OPENSSL_ALGO_SHA384 => 'sha384',
-        \OPENSSL_ALGO_SHA512 => 'sha512',
+        OPENSSL_ALGO_SHA256 => 'sha256',
+        OPENSSL_ALGO_SHA384 => 'sha384',
+        OPENSSL_ALGO_SHA512 => 'sha512',
     ];
 
     // Lookup table for supported key types as strings.
@@ -34,69 +43,14 @@ final class Generator implements GeneratorInterface
         Token::ALGO_RS512,
     ];
 
-    public static function create(
-        OpenSSLAsymmetricKey|string $signingKey,
-        string $algorithm = Token::ALGO_RS256,
-        array $claims = [],
-        array $headers = [],
-        null|string $signingKeyPassphrase = null
-    ): static {
-        return new self(
-            signingKey: $signingKey,
-            algorithm: $algorithm,
-            claims: $claims,
-            headers: $headers,
-            signingKeyPassphrase: $signingKeyPassphrase
-        );
-    }
-
-    public function toArray(
-        $encodeSegments = true
-    ): array {
-        // Build token from headers and claims.
-        $segments = [
-            static::encode(data: $this->headers, segment: 'headers', skip: !$encodeSegments),
-            static::encode(data: $this->claims, segment: 'claims', skip: !$encodeSegments)
-        ];
-
-        // Sign the token.
-        $signature = $this->sign(
-            data: $this->glue($segments)
-        );
-
-        // Attach the signature to the token.
-        $segments[] = $signature;
-
-        if (! $encodeSegments) {
-            return [
-                'headers' => $this->headers,
-                'claims' => $this->claims,
-                'signature' => $signature
-            ];
-        }
-
-        // Return the token with encoded segments.
-        return $segments;
-    }
-
-    public function toString(): string
-    {
-        return $this->glue(array_values($this->toArray()));
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
-
     /**
      * Create a new token generator instance.
      *
-     * @param OpenSSLAsymmetricKey|string $signingKey Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
-     * @param string $algorithm Algorithm to use for signing the token. Defaults to RS256.
-     * @param array<mixed> $claims Claims to include in the token. Defaults to an empty array.
-     * @param array<string> $headers Headers to include in the token. Defaults to an empty array. The the "alg" header will be set to represent $algorithm appropriately.
-     * @param null|string $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
+     * @param OpenSSLAsymmetricKey|string $signingKey           Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
+     * @param string                      $algorithm            Algorithm to use for signing the token. Defaults to RS256.
+     * @param array<mixed>                $claims               Claims to include in the token. Defaults to an empty array.
+     * @param array<string>               $headers              Headers to include in the token. Defaults to an empty array. The the "alg" header will be set to represent $algorithm appropriately.
+     * @param null|string                 $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
      *
      * @throws TokenException When an unsupported algorithm is provided.
      * @throws TokenException When a non-string $signingKey is provided for HS256.
@@ -104,11 +58,11 @@ final class Generator implements GeneratorInterface
      * @throws TokenException When using RS256 and openssl_pkey_get_private() is unable to load the provided signing key.
      */
     private function __construct(
-        private OpenSSLAsymmetricKey|string $signingKey,
+        private OpenSSLAsymmetricKey | string $signingKey,
         private string $algorithm = Token::ALGO_RS256,
         private array $claims = [],
         private array $headers = [],
-        private null|string $signingKeyPassphrase = null
+        private null | string $signingKeyPassphrase = null,
     ) {
         // @codeCoverageIgnoreStart
         if (! extension_loaded('openssl')) {
@@ -117,8 +71,8 @@ final class Generator implements GeneratorInterface
         // @codeCoverageIgnoreEnd
 
         // Ensure the provided algorithm is supported.
-        if (! \in_array($this->algorithm, static::CONST_SUPPORTED_ALGORITHMS, true)) {
-            throw TokenException::unsupportedAlgorithm($this->algorithm, implode(',', static::CONST_SUPPORTED_ALGORITHMS));
+        if (! in_array($this->algorithm, self::CONST_SUPPORTED_ALGORITHMS, true)) {
+            throw TokenException::unsupportedAlgorithm($this->algorithm, implode(',', self::CONST_SUPPORTED_ALGORITHMS));
         }
 
         // Merge any provided headers with the defaults.
@@ -128,17 +82,110 @@ final class Generator implements GeneratorInterface
         $this->signingKey = $this->loadSigningKey($this->signingKey, $this->signingKeyPassphrase);
     }
 
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Encode the provided data segment as a base64-encoded string. Optionally, encode the data as JSON.
+     *
+     * @param array<mixed>|string $data    Data to encode.
+     * @param string              $segment Segment name to use for error messages.
+     * @param bool                $json    Whether to encode the data as JSON. Defaults to true.
+     * @param bool                $skip    Whether to skip encoding the data. Defaults to false.
+     *
+     * @throws TokenException When unable to encode the data segment.
+     */
+    private function encode(string | array $data, string $segment, bool $json = true, bool $skip = false): string
+    {
+        // If $skip is true, return the data as-is.
+        if ($skip) {
+            $data = json_encode($data);
+
+            if (false !== $data) {
+                return $data;
+            }
+
+            // @codeCoverageIgnoreStart
+            return 'JSON_ENCODING_ERROR';
+            // @codeCoverageIgnoreEnd
+        }
+
+        // If the data is an array, or $json is true, encode it as JSON.
+        if ($json || ! is_string($data)) {
+            try {
+                $data = json_encode(
+                    value: $data,
+                    flags: JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR,
+                );
+                // @codeCoverageIgnoreStart
+            } catch (Throwable $th) {
+                throw TokenException::unableToEncodeSegment($segment, $th->getMessage());
+            }
+            // @codeCoverageIgnoreEnd
+        }
+
+        // Return the sanitized base64-encoded data.
+        return str_replace(
+            search: '=',
+            replace: '',
+            subject: strtr(base64_encode($data), '+/', '-_'),
+        );
+    }
+
+    /**
+     * Get the digest algorithm to use for the provided algorithm.
+     *
+     * @return int The digest algorithm to use.
+     */
+    private function getDigestAlgorithm(): int
+    {
+        return match ($this->algorithm) {
+            Token::ALGO_HS256, Token::ALGO_RS256 => OPENSSL_ALGO_SHA256,
+            Token::ALGO_HS384, Token::ALGO_RS384 => OPENSSL_ALGO_SHA384,
+            Token::ALGO_HS512, Token::ALGO_RS512 => OPENSSL_ALGO_SHA512,
+            default => throw TokenException::unsupportedAlgorithm($this->algorithm, implode(', ', self::CONST_SUPPORTED_ALGORITHMS))
+        };
+    }
+
+    /**
+     * Get the OpenSSL key type to use for the provided algorithm.
+     *
+     * @return null|int The OpenSSL key type to use.
+     */
+    private function getOpenSslKeyType(): ?int
+    {
+        return match ($this->algorithm) {
+            Token::ALGO_RS256, Token::ALGO_RS384, Token::ALGO_RS512 => \OPENSSL_KEYTYPE_RSA,
+            default => null
+        };
+    }
+
+    /**
+     * Glue the provided data segments together with a period, to produce a formatted token.
+     *
+     * @param array<mixed> $data Data segments to glue together.
+     */
+    private function glue(array $data): string
+    {
+        return implode(
+            separator: '.',
+            array: $data,
+        );
+    }
+
     /**
      * Load the provided signing key and return as an appropriate object type.
      *
-     * @param OpenSSLAsymmetricKey|string $signingKey Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
-     * @param null|string $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
+     * @param OpenSSLAsymmetricKey|string $signingKey           Signing key to use for signing the token. This MUST be a string for HS256. MUST be either a string or OpenSSLAsymmetricKey for RS256.
+     * @param null|string                 $signingKeyPassphrase Optional. Passphrase to use for signing key if it is encrypted. Defaults to null.
      *
      * @throws TokenException When a non-string $signingKey is provided for HS256.
      * @throws TokenException When a string $signingKey is used with RS256.
      * @throws TokenException When using RS256 and openssl_pkey_get_private() is unable to load the provided signing key.
      */
-    private function loadSigningKey(OpenSSLAsymmetricKey|string $signingKey, null|string $signingKeyPassphrase = null): OpenSSLAsymmetricKey|string
+    private function loadSigningKey(OpenSSLAsymmetricKey | string $signingKey, null | string $signingKeyPassphrase = null): OpenSSLAsymmetricKey | string
     {
         if (null === $this->getOpenSslKeyType()) {
             if (! is_string($signingKey)) {
@@ -156,7 +203,7 @@ final class Generator implements GeneratorInterface
             // Attempt to load signing key with openssl_pkey_get_private(). This returns an OpenSSLAsymmetricKey.
             $signingKey = openssl_pkey_get_private(
                 private_key: $signingKey,
-                passphrase: $signingKeyPassphrase
+                passphrase: $signingKeyPassphrase,
             );
 
             // Get the key details from the OpenSSLAsymmetricKey.
@@ -169,8 +216,9 @@ final class Generator implements GeneratorInterface
         }
 
         // If we were unable to load the key, throw an exception.
-        if (! $signingKey instanceof OpenSSLAsymmetricKey || $details === false) {
+        if (! $signingKey instanceof OpenSSLAsymmetricKey || false === $details) {
             $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) . $this->openSslErrors();
+
             throw TokenException::unableToProcessSigningKey($message, $failure);
         }
 
@@ -186,7 +234,7 @@ final class Generator implements GeneratorInterface
         }
 
         // @codeCoverageIgnoreStart
-        if ($keyType === OPENSSL_KEYTYPE_RSA && ! isset($details['rsa'])) {
+        if (OPENSSL_KEYTYPE_RSA === $keyType && ! isset($details['rsa'])) {
             throw TokenException::unidentifiableKeyType();
         }
         // @codeCoverageIgnoreEnd
@@ -195,63 +243,25 @@ final class Generator implements GeneratorInterface
     }
 
     /**
-     * Glue the provided data segments together with a period, to produce a formatted token.
+     * Retrieve and format the OpenSSL error stack as a string suitable for logging.
      *
-     * @param array<mixed> $data Data segments to glue together.
+     * @return string The OpenSSL error stack.
+     *
+     * @codeCoverageIgnore
      */
-    private function glue(array $data): string
+    private function openSslErrors(): string
     {
-        return implode(
-            separator: '.',
-            array: $data
-        );
-    }
+        $errors = [];
 
-    /**
-     * Encode the provided data segment as a base64-encoded string. Optionally, encode the data as JSON.
-     *
-     * @param string|array<mixed> $data Data to encode.
-     * @param string $segment Segment name to use for error messages.
-     * @param bool $json Whether to encode the data as JSON. Defaults to true.
-     * @param bool $skip Whether to skip encoding the data. Defaults to false.
-     *
-     * @throws TokenException When unable to encode the data segment.
-     */
-    private function encode(string|array $data, string $segment, bool $json = true, bool $skip = false): string
-    {
-        // If $skip is true, return the data as-is.
-        if ($skip) {
-            $data = json_encode($data);
-
-            if ($data !== false) {
-                return $data;
-            }
-
-            // @codeCoverageIgnoreStart
-            return 'JSON_ENCODING_ERROR';
-            // @codeCoverageIgnoreEnd
+        while ($error = openssl_error_string()) {
+            $errors[] = $error;
         }
 
-        // If the data is an array, or $json is true, encode it as JSON.
-        if ($json || ! is_string($data)) {
-            try {
-                $data = json_encode(
-                    value: $data,
-                    flags: \JSON_UNESCAPED_SLASHES | \JSON_THROW_ON_ERROR
-                );
-                // @codeCoverageIgnoreStart
-            } catch (Throwable $th) {
-                throw TokenException::unableToEncodeSegment($segment, $th->getMessage());
-            }
-            // @codeCoverageIgnoreEnd
+        if ([] !== $errors) {
+            return "\n" . implode("\n* ", $errors);
         }
 
-        // Return the sanitized base64-encoded data.
-        return str_replace(
-            search: '=',
-            replace: '',
-            subject: strtr(base64_encode($data), '+/', '-_')
-        );
+        return '';
     }
 
     /**
@@ -277,7 +287,7 @@ final class Generator implements GeneratorInterface
                     algo: self::CONST_DIGEST_STRING[$this->getDigestAlgorithm()],
                     data: $data,
                     key: $this->signingKey,
-                    binary: true
+                    binary: true,
                 ),
                 json: false,
                 segment: 'signature',
@@ -286,8 +296,8 @@ final class Generator implements GeneratorInterface
 
         // Otherwise, default to RS256, and use openssl_sign() to sign the data.
         $signature = '';
-        $success = false;
-        $failure = null;
+        $success   = false;
+        $failure   = null;
 
         try {
             $success = openssl_sign($data, $signature, $this->signingKey, $this->getDigestAlgorithm());
@@ -299,7 +309,8 @@ final class Generator implements GeneratorInterface
         // If we were unable to sign the data, throw an exception.
         if (! $success) {
             $message = $this->openSslErrors();
-            $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) .  $message;
+            $message = (($failure instanceof Throwable) ? $failure->getMessage() : TokenException::MSG_UNKNOWN_ERROR) . $message;
+
             throw TokenException::unableToSignData($message, $failure);
         }
         // @codeCoverageIgnoreEnd
@@ -307,57 +318,57 @@ final class Generator implements GeneratorInterface
         return $this->encode(
             data: $signature,
             segment: 'signature',
-            json: false
+            json: false,
         );
     }
 
-    /**
-     * Get the OpenSSL key type to use for the provided algorithm.
-     *
-     * @return int|null The OpenSSL key type to use.
-     */
-    private function getOpenSslKeyType(): ?int
-    {
-        return match ($this->algorithm) {
-            Token::ALGO_RS256, Token::ALGO_RS384, Token::ALGO_RS512 => \OPENSSL_KEYTYPE_RSA,
-            default => null
-        };
-    }
+    public function toArray(
+        $encodeSegments = true,
+    ): array {
+        // Build token from headers and claims.
+        $segments = [
+            self::encode(data: $this->headers, segment: 'headers', skip: ! $encodeSegments),
+            self::encode(data: $this->claims, segment: 'claims', skip: ! $encodeSegments)
+        ];
 
-    /**
-     * Get the digest algorithm to use for the provided algorithm.
-     *
-     * @return int The digest algorithm to use.
-     */
-    private function getDigestAlgorithm(): int
-    {
-        return match ($this->algorithm) {
-            Token::ALGO_HS256, Token::ALGO_RS256 => \OPENSSL_ALGO_SHA256,
-            Token::ALGO_HS384, Token::ALGO_RS384 => \OPENSSL_ALGO_SHA384,
-            Token::ALGO_HS512, Token::ALGO_RS512 => \OPENSSL_ALGO_SHA512,
-            default => throw TokenException::unsupportedAlgorithm($this->algorithm, implode(', ', self::CONST_SUPPORTED_ALGORITHMS))
-        };
-    }
+        // Sign the token.
+        $signature = $this->sign(
+            data: $this->glue($segments),
+        );
 
-    /**
-     * Retrieve and format the OpenSSL error stack as a string suitable for logging.
-     *
-     * @return string The OpenSSL error stack.
-     *
-     * @codeCoverageIgnore
-     */
-    private function openSslErrors(): string
-    {
-        $errors = [];
+        // Attach the signature to the token.
+        $segments[] = $signature;
 
-        while ($error = openssl_error_string()) {
-            $errors[] = $error;
+        if (! $encodeSegments) {
+            return [
+                'headers'   => $this->headers,
+                'claims'    => $this->claims,
+                'signature' => $signature
+            ];
         }
 
-        if ([] !== $errors) {
-            return "\n" . implode("\n* ", $errors);
-        }
+        // Return the token with encoded segments.
+        return $segments;
+    }
 
-        return '';
+    public function toString(): string
+    {
+        return $this->glue(array_values($this->toArray()));
+    }
+
+    public static function create(
+        OpenSSLAsymmetricKey | string $signingKey,
+        string $algorithm = Token::ALGO_RS256,
+        array $claims = [],
+        array $headers = [],
+        null | string $signingKeyPassphrase = null,
+    ): static {
+        return new self(
+            signingKey: $signingKey,
+            algorithm: $algorithm,
+            claims: $claims,
+            headers: $headers,
+            signingKeyPassphrase: $signingKeyPassphrase,
+        );
     }
 }

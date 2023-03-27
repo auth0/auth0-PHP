@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility\Toolkit\Filter;
 
+use function is_string;
+
 /**
  * Class StringFilter.
  */
@@ -12,7 +14,7 @@ final class StringFilter
     /**
      * StringFilter constructor.
      *
-     * @param  array<string|null>  $subjects  an array of string or null values
+     * @param array<null|string> $subjects an array of string or null values
      */
     public function __construct(
         private array $subjects,
@@ -22,14 +24,14 @@ final class StringFilter
     /**
      * Nullsafe trim. Trims the array of string values, or sets their value when invalid or empty.
      *
-     * @return array<string|null>
+     * @return array<null|string>
      */
     public function trim(): array
     {
         $results = [];
 
         foreach ($this->subjects as $subject) {
-            if (! \is_string($subject)) {
+            if (! is_string($subject)) {
                 $results[] = null;
 
                 continue;

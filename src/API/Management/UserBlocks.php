@@ -17,23 +17,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
 {
-    public function get(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('user-blocks', $id)->
-            withOptions($options)->
-            call();
-    }
-
     public function delete(
         string $id,
         ?RequestOptions $options = null,
@@ -44,29 +27,11 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('user-blocks', $id)->
-            withOptions($options)->
-            call();
-    }
-
-    public function getByIdentifier(
-        string $identifier,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$identifier] = Toolkit::filter([$identifier])->string()->trim();
-
-        Toolkit::assert([
-            [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
-        ])->isString();
-
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('user-blocks')->
-            withParam('identifier', $identifier)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('delete')
+            ->addPath('user-blocks', $id)
+            ->withOptions($options)
+            ->call();
     }
 
     public function deleteByIdentifier(
@@ -79,11 +44,46 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
             [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('user-blocks')->
-            withParam('identifier', $identifier)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('delete')
+            ->addPath('user-blocks')
+            ->withParam('identifier', $identifier)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function get(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('user-blocks', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getByIdentifier(
+        string $identifier,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$identifier] = Toolkit::filter([$identifier])->string()->trim();
+
+        Toolkit::assert([
+            [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('user-blocks')
+            ->withParam('identifier', $identifier)
+            ->withOptions($options)
+            ->call();
     }
 }

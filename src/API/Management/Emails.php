@@ -23,7 +23,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$name] = Toolkit::filter([$name])->string()->trim();
+        [$name]               = Toolkit::filter([$name])->string()->trim();
         [$credentials, $body] = Toolkit::filter([$credentials, $body])->array()->trim();
 
         Toolkit::assert([
@@ -36,27 +36,37 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('emails', 'provider')->
-            withBody(
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('emails', 'provider')
+            ->withBody(
                 (object) Toolkit::merge([
                     'name'        => $name,
                     'credentials' => (object) $credentials,
                 ], $body),
-            )->
-            withOptions($options)->
-            call();
+            )
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function deleteProvider(
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        return $this->getHttpClient()
+            ->method('delete')
+            ->addPath('emails', 'provider')
+            ->withOptions($options)
+            ->call();
     }
 
     public function getProvider(
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('emails', 'provider')->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('emails', 'provider')
+            ->withOptions($options)
+            ->call();
     }
 
     public function updateProvider(
@@ -65,7 +75,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$name] = Toolkit::filter([$name])->string()->trim();
+        [$name]               = Toolkit::filter([$name])->string()->trim();
         [$credentials, $body] = Toolkit::filter([$credentials, $body])->array()->trim();
 
         Toolkit::assert([
@@ -78,26 +88,16 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('emails', 'provider')->
-            withBody(
+        return $this->getHttpClient()
+            ->method('patch')
+            ->addPath('emails', 'provider')
+            ->withBody(
                 (object) Toolkit::merge([
                     'name'        => $name,
                     'credentials' => (object) $credentials,
                 ], $body),
-            )->
-            withOptions($options)->
-            call();
-    }
-
-    public function deleteProvider(
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('emails', 'provider')->
-            withOptions($options)->
-            call();
+            )
+            ->withOptions($options)
+            ->call();
     }
 }

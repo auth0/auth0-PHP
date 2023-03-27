@@ -24,7 +24,7 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$type, $name] = Toolkit::filter([$type, $name])->string()->trim();
-        [$sink] = Toolkit::filter([$sink])->array()->trim();
+        [$sink]        = Toolkit::filter([$sink])->array()->trim();
 
         Toolkit::assert([
             [$type, \Auth0\SDK\Exception\ArgumentException::missing('type')],
@@ -34,10 +34,10 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
             [$sink, \Auth0\SDK\Exception\ArgumentException::missing('sink')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('log-streams')->
-            withBody(
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath('log-streams')
+            ->withBody(
                 (object) Toolkit::filter([
                     [
                         'type' => $type,
@@ -45,60 +45,9 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
                         'name' => $name,
                     ],
                 ])->array()->trim()[0],
-            )->
-            withOptions($options)->
-            call();
-    }
-
-    public function getAll(
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('log-streams')->
-            withOptions($options)->
-            call();
-    }
-
-    public function get(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('log-streams', $id)->
-            withOptions($options)->
-            call();
-    }
-
-    public function update(
-        string $id,
-        array $body,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-        [$body] = Toolkit::filter([$body])->array()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        Toolkit::assert([
-            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
-        ])->isArray();
-
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('log-streams', $id)->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
+            )
+            ->withOptions($options)
+            ->call();
     }
 
     public function delete(
@@ -111,10 +60,61 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('log-streams', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('delete')
+            ->addPath('log-streams', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function get(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('log-streams', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getAll(
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('log-streams')
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function update(
+        string $id,
+        array $body,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
+        ])->isArray();
+
+        return $this->getHttpClient()
+            ->method('patch')
+            ->addPath('log-streams', $id)
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 }

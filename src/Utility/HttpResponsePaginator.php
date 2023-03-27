@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Countable;
+use Iterator;
+use Psr\Http\Message\{RequestInterface, ResponseInterface};
+use ReturnTypeWillChange;
+use Throwable;
+use function count;
+use function is_array;
 
 /**
  * Class HttpResponsePaginator.
  *
  * @phpstan-implements \Iterator<int,mixed>
  */
-final class HttpResponsePaginator implements \Countable, \Iterator
+final class HttpResponsePaginator implements Countable, Iterator
 {
     /**
      * These endpoints support checkpoint-based pagination (from, take). A 'next' value will be present in responses if more results are available.
@@ -25,9 +30,19 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     ];
 
     /**
+     * The 'next' value pulled from checkpoint-paginated results to indicate next page query id.
+     */
+    private ?string $nextCheckpoint = null;
+
+    /**
      * The current position in use by the Iterator, for tracking our index while looping.
      */
     private int $position = 0;
+
+    /**
+     * A counter for tracking the number of network requests made for pagination. Does not include any initial network request involved in passing seed data to the class constructor.
+     */
+    private int $requestCount = 0;
 
     /**
      * The 'limit' value returned with the last network response.
@@ -38,11 +53,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
      * The 'total' value returned with the last network response.
      */
     private int $requestTotal = 0;
-
-    /**
-     * A counter for tracking the number of network requests made for pagination. Does not include any initial network request involved in passing seed data to the class constructor.
-     */
-    private int $requestCount = 0;
 
     /**
      * A cache of the paginated results. Appended to when new responses are retrieved from the network.
@@ -57,21 +67,16 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     private bool $usingCheckpointPagination = false;
 
     /**
-     * The 'next' value pulled from checkpoint-paginated results to indicate next page query id.
-     */
-    private ?string $nextCheckpoint = null;
-
-    /**
      * HttpResponsePaginator constructor.
      *
-     * @param  HttpClient  $httpClient  an instance of HttpClient to use for paginated network requests
+     * @param HttpClient $httpClient an instance of HttpClient to use for paginated network requests
      *
      * @throws \Auth0\SDK\Exception\PaginatorException when an unsupported request type is provided
      */
     public function __construct(
         private HttpClient $httpClient,
     ) {
-        $lastRequest = $this->lastRequest();
+        $lastRequest  = $this->lastRequest();
         $lastResponse = $this->lastResponse();
 
         // Did the network request return a successful response?
@@ -112,109 +117,6 @@ final class HttpResponsePaginator implements \Countable, \Iterator
         }
 
         $this->processLastResponse();
-    }
-
-    /**
-     * Return the total number of network requests made for this paginator instance.
-     */
-    public function countNetworkRequests(): int
-    {
-        return $this->requestCount;
-    }
-
-    /**
-     * Return the total number of results available, according to the API.
-     */
-    public function count(): int
-    {
-        if ($this->usingCheckpointPagination) {
-            throw \Auth0\SDK\Exception\PaginatorException::httpCheckpointCannotBeCounted();
-        }
-
-        return $this->requestTotal;
-    }
-
-    /**
-     * Return the current result at our position, if available.
-     *
-     * @return mixed
-     *
-     * @psalm-suppress InvalidAttribute
-     *
-     * @codeCoverageIgnore
-     */
-    #[\ReturnTypeWillChange]
-    public function current()
-    {
-        if ($this->valid()) {
-            return $this->result() ?? false;
-        }
-
-        return false;
-    }
-
-    /**
-     * Retrieve the current position, if valid.
-     */
-    public function key(): int
-    {
-        return $this->valid() ? $this->position : 0;
-    }
-
-    /**
-     * Increase our position cursor.
-     */
-    public function next(): void
-    {
-        ++$this->position;
-    }
-
-    /**
-     * Return true if a result is available. If a result is not immediately available (cached) but the current position is less than the API-reported total results, a paginated network request will be attempted to get the next results. Returns false when no results are available at the current position.
-     */
-    public function valid(): bool
-    {
-        // A cached result is available.
-        if (null !== $this->result()) {
-            return true;
-        }
-
-        // When using checkpoint-based pagination, we don't have a 'total' API response to work with.
-        if ($this->usingCheckpointPagination) {
-            // If we have a next checkpoint to query, do that.
-            if (null !== $this->nextCheckpoint) {
-                return $this->getNextResults();
-            }
-
-            // Otherwise, no more results.
-            return false;
-        }
-
-        // No cached result available; is our position beyond the API's reported total?
-        if ($this->position < $this->requestTotal) {
-            // No, there should be more results available for request. Do that.
-            return $this->getNextResults();
-        }
-
-        return false;
-    }
-
-    /**
-     * Reset position to 0.
-     */
-    public function rewind(): void
-    {
-        $this->position = 0;
-    }
-
-    /**
-     * Return the current result at our position, if available.
-     *
-     * @return array<mixed>|null
-     */
-    private function result()
-    {
-        return $this->results[$this->position] ?? null;
     }
 
     /**
@@ -263,11 +165,47 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     }
 
     /**
+     * Return the current instance of the HttpRequest.
+     */
+    private function lastBuilder(): ?HttpRequest
+    {
+        return $this->httpClient->getLastRequest();
+    }
+
+    /**
+     * Return a RequestInterface representing the most recent sent HTTP request.
+     */
+    private function lastRequest(): ?RequestInterface
+    {
+        $lastBuilder = $this->lastBuilder();
+
+        if (null !== $lastBuilder) {
+            return $lastBuilder->getLastRequest();
+        }
+
+        return null;
+    }
+
+    /**
+     * Return a ResponseInterface representing the most recently returned HTTP response.
+     */
+    private function lastResponse(): ?ResponseInterface
+    {
+        $lastBuilder = $this->lastBuilder();
+
+        if (null !== $lastBuilder) {
+            return $lastBuilder->getLastResponse();
+        }
+
+        return null;
+    }
+
+    /**
      * Process the previous HttpResponse results and cache them for iterator content.
      */
     private function processLastResponse(): bool
     {
-        $lastRequest = $this->lastRequest();
+        $lastRequest  = $this->lastRequest();
         $lastResponse = $this->lastResponse();
 
         if (null !== $lastRequest && null !== $lastResponse) {
@@ -276,18 +214,18 @@ final class HttpResponsePaginator implements \Countable, \Iterator
                 // Decode the response.
                 try {
                     $results = HttpResponse::decodeContent($lastResponse);
-                } catch (\Throwable $throwable) {
+                } catch (Throwable $throwable) {
                     throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
                 }
 
                 // No results, abort processing.
-                if (! \is_array($results) || [] === $results) {
+                if (! is_array($results) || [] === $results) {
                     // @codeCoverageIgnoreStart
                     return false;
                     // @codeCoverageIgnoreEnd
                 }
 
-                /** @var array{start?: int|string|null, limit?: int|string|null, total?: int|string|null, length?: int|string|null, next?: string|null} $results */
+                /** @var array{start?: null|int|string, limit?: null|int|string, total?: null|int|string, length?: null|int|string, next?: null|string} $results */
 
                 // If not using checkpoint pagination, grab the 'start' value.
                 $start = $results['start'] ?? null;
@@ -303,7 +241,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
                 $start = (int) $start;
 
-                $hadResults = false;
+                $hadResults     = false;
                 $nextCheckpoint = null;
 
                 foreach ($results as $resultKey => $result) {
@@ -331,7 +269,7 @@ final class HttpResponsePaginator implements \Countable, \Iterator
 
                     if ('start' !== $resultKey) {
                         /** @var mixed $result */
-                        $resultCount = \is_array($result) ? \count($result) : 0;
+                        $resultCount = is_array($result) ? count($result) : 0;
 
                         /** @var array<array<mixed>> $result */
                         for ($i = 0; $i < $resultCount; ++$i) {
@@ -368,38 +306,105 @@ final class HttpResponsePaginator implements \Countable, \Iterator
     }
 
     /**
-     * Return the current instance of the HttpRequest.
+     * Return the current result at our position, if available.
+     *
+     * @return null|array<mixed>
      */
-    private function lastBuilder(): ?HttpRequest
+    private function result()
     {
-        return $this->httpClient->getLastRequest();
+        return $this->results[$this->position] ?? null;
     }
 
     /**
-     * Return a RequestInterface representing the most recent sent HTTP request.
+     * Return the total number of results available, according to the API.
      */
-    private function lastRequest(): ?RequestInterface
+    public function count(): int
     {
-        $lastBuilder = $this->lastBuilder();
-
-        if (null !== $lastBuilder) {
-            return $lastBuilder->getLastRequest();
+        if ($this->usingCheckpointPagination) {
+            throw \Auth0\SDK\Exception\PaginatorException::httpCheckpointCannotBeCounted();
         }
 
-        return null;
+        return $this->requestTotal;
     }
 
     /**
-     * Return a ResponseInterface representing the most recently returned HTTP response.
+     * Return the total number of network requests made for this paginator instance.
      */
-    private function lastResponse(): ?ResponseInterface
+    public function countNetworkRequests(): int
     {
-        $lastBuilder = $this->lastBuilder();
+        return $this->requestCount;
+    }
 
-        if (null !== $lastBuilder) {
-            return $lastBuilder->getLastResponse();
+    /**
+     * Return the current result at our position, if available.
+     *
+     * @return mixed
+     *
+     * @psalm-suppress InvalidAttribute
+     *
+     * @codeCoverageIgnore
+     */
+    #[ReturnTypeWillChange]
+    public function current()
+    {
+        if ($this->valid()) {
+            return $this->result() ?? false;
         }
 
-        return null;
+        return false;
+    }
+
+    /**
+     * Retrieve the current position, if valid.
+     */
+    public function key(): int
+    {
+        return $this->valid() ? $this->position : 0;
+    }
+
+    /**
+     * Increase our position cursor.
+     */
+    public function next(): void
+    {
+        ++$this->position;
+    }
+
+    /**
+     * Reset position to 0.
+     */
+    public function rewind(): void
+    {
+        $this->position = 0;
+    }
+
+    /**
+     * Return true if a result is available. If a result is not immediately available (cached) but the current position is less than the API-reported total results, a paginated network request will be attempted to get the next results. Returns false when no results are available at the current position.
+     */
+    public function valid(): bool
+    {
+        // A cached result is available.
+        if (null !== $this->result()) {
+            return true;
+        }
+
+        // When using checkpoint-based pagination, we don't have a 'total' API response to work with.
+        if ($this->usingCheckpointPagination) {
+            // If we have a next checkpoint to query, do that.
+            if (null !== $this->nextCheckpoint) {
+                return $this->getNextResults();
+            }
+
+            // Otherwise, no more results.
+            return false;
+        }
+
+        // No cached result available; is our position beyond the API's reported total?
+        if ($this->position < $this->requestTotal) {
+            // No, there should be more results available for request. Do that.
+            return $this->getNextResults();
+        }
+
+        return false;
     }
 }

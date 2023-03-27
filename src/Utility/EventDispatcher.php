@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Auth0\SDK\Utility;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\EventDispatcher\ListenerProviderInterface;
-use Psr\EventDispatcher\StoppableEventInterface;
+use Psr\EventDispatcher\{EventDispatcherInterface, ListenerProviderInterface, StoppableEventInterface};
+use stdClass;
 
 /**
  * Class EventDispatcher.
@@ -17,24 +16,17 @@ final class EventDispatcher implements EventDispatcherInterface
     /**
      * EventDispatcher constructor.
      *
-     * @param  SdkConfiguration  $configuration  Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param SdkConfiguration $configuration Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      */
     public function __construct(
         private SdkConfiguration $configuration,
     ) {
     }
 
-    public function getListenerProvider(): ?ListenerProviderInterface
-    {
-        $listenerProvider = $this->configuration->getEventListenerProvider();
-
-        return $listenerProvider instanceof ListenerProviderInterface ? $listenerProvider : null;
-    }
-
     /**
      * Dispatch an event to any subscribed listeners.
      *
-     * @param  object  $event  the event to be dispatched to listeners
+     * @param object $event the event to be dispatched to listeners
      *
      * @psalm-suppress MixedFunctionCall
      */
@@ -44,7 +36,7 @@ final class EventDispatcher implements EventDispatcherInterface
         $listenerProvider = $this->getListenerProvider();
 
         if (! $listenerProvider instanceof \Psr\EventDispatcher\ListenerProviderInterface) {
-            return new \stdClass();
+            return new stdClass();
         }
 
         $listeners = $listenerProvider->getListenersForEvent($event);
@@ -58,5 +50,12 @@ final class EventDispatcher implements EventDispatcherInterface
         }
 
         return $event;
+    }
+
+    public function getListenerProvider(): ?ListenerProviderInterface
+    {
+        $listenerProvider = $this->configuration->getEventListenerProvider();
+
+        return $listenerProvider instanceof ListenerProviderInterface ? $listenerProvider : null;
     }
 }

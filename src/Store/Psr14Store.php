@@ -6,13 +6,7 @@ namespace Auth0\SDK\Store;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
-use Auth0\SDK\Event\Psr14Store\Boot;
-use Auth0\SDK\Event\Psr14Store\Clear;
-use Auth0\SDK\Event\Psr14Store\Defer;
-use Auth0\SDK\Event\Psr14Store\Delete;
-use Auth0\SDK\Event\Psr14Store\Destruct;
-use Auth0\SDK\Event\Psr14Store\Get;
-use Auth0\SDK\Event\Psr14Store\Set;
+use Auth0\SDK\Event\Psr14Store\{Boot, Clear, Defer, Delete, Destruct, Get, Set};
 
 /**
  * Class Psr14Store
@@ -28,8 +22,8 @@ final class Psr14Store implements StoreInterface
     /**
      * Psr14Store constructor.
      *
-     * @param  SdkConfiguration  $configuration  Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
-     * @param  string  $sessionPrefix  a string to prefix session keys with
+     * @param SdkConfiguration $configuration Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
+     * @param string           $sessionPrefix a string to prefix session keys with
      */
     public function __construct(
         private SdkConfiguration $configuration,
@@ -46,9 +40,23 @@ final class Psr14Store implements StoreInterface
     }
 
     /**
+     * Dispatch event to alert that a session should be prepared for an incoming request.
+     */
+    private function boot(): void
+    {
+        if (! $this->booted) {
+            $event = $this->configuration->eventDispatcher()->dispatch(new Boot($this, $this->sessionPrefix));
+
+            /** @var Boot $event */
+            $this->sessionPrefix = $event->getPrefix();
+            $this->booted        = true;
+        }
+    }
+
+    /**
      * Dispatch event to toggle state deferrance.
      *
-     * @param  bool  $deferring  whether to defer persisting the storage state
+     * @param bool $deferring whether to defer persisting the storage state
      */
     public function defer(
         bool $deferring,
@@ -58,24 +66,23 @@ final class Psr14Store implements StoreInterface
     }
 
     /**
-     * Dispatch event to set the value of a key-value pair.
+     * Dispatch event to delete key-value pair.
      *
-     * @param  string  $key  session key to set
-     * @param  mixed  $value  value to use
+     * @param string $key session key to delete
      */
-    public function set(
+    public function delete(
         string $key,
-        $value,
     ): void {
         $this->boot();
-        $this->configuration->eventDispatcher()->dispatch(new Set($this, $key, $value));
+        $this->configuration->eventDispatcher()->dispatch(new Delete($this, $key));
     }
 
     /**
      * Dispatch event to retrieve the value of a key-value pair.
      *
-     * @param  string  $key  session key to query
-     * @param  mixed  $default  default to return if nothing was found
+     * @param string $key     session key to query
+     * @param mixed  $default default to return if nothing was found
+     *
      * @return mixed
      */
     public function get(
@@ -107,29 +114,16 @@ final class Psr14Store implements StoreInterface
     }
 
     /**
-     * Dispatch event to delete key-value pair.
+     * Dispatch event to set the value of a key-value pair.
      *
-     * @param  string  $key  session key to delete
+     * @param string $key   session key to set
+     * @param mixed  $value value to use
      */
-    public function delete(
+    public function set(
         string $key,
+        $value,
     ): void {
         $this->boot();
-        $this->configuration->eventDispatcher()->dispatch(new Delete($this, $key));
-    }
-
-    /**
-     * Dispatch event to alert that a session should be prepared for an incoming request.
-     */
-    private function boot(): void
-    {
-        if (! $this->booted) {
-            $event = $this->configuration->eventDispatcher()->dispatch(new Boot($this, $this->sessionPrefix));
-
-            /** @var Boot $event */
-
-            $this->sessionPrefix = $event->getPrefix();
-            $this->booted = true;
-        }
+        $this->configuration->eventDispatcher()->dispatch(new Set($this, $key, $value));
     }
 }

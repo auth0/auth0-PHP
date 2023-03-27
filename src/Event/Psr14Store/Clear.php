@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Event\Psr14Store;
 
-use Auth0\SDK\Contract\Auth0Event;
-use Auth0\SDK\Contract\StoreInterface;
+use Auth0\SDK\Contract\{Auth0Event, StoreInterface};
 
 final class Clear implements Auth0Event
 {

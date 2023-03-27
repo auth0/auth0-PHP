@@ -17,22 +17,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class Logs extends ManagementEndpoint implements LogsInterface
 {
-    public function getAll(
-        ?array $parameters = null,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
-
-        /** @var array<int|string|null> $parameters */
-
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('logs')->
-            withParams($parameters)->
-            withOptions($options)->
-            call();
-    }
-
     public function get(
         string $id,
         ?RequestOptions $options = null,
@@ -43,10 +27,26 @@ final class Logs extends ManagementEndpoint implements LogsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('logs', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('logs', $id)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getAll(
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        /** @var array<null|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath('logs')
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
     }
 }
