@@ -55,7 +55,7 @@ final class PKCE
             // @codeCoverageIgnoreStart
             try {
                 $bytes = random_bytes($size);
-            } catch (Exception $exception) {
+            } catch (Exception) {
                 $bytes = openssl_random_pseudo_bytes($size);
             }
             // @codeCoverageIgnoreEnd

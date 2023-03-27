@@ -32,10 +32,12 @@ trait ConfigurableMixin
         $defaults   = $this->getPropertyDefaults();
 
         foreach ($configuration as $configKey => $configuredValue) {
-            if (! property_exists($this, $configKey) || ! array_key_exists($configKey, $defaults)) {
+            if (! property_exists($this, $configKey)) {
                 continue;
             }
-
+            if (! array_key_exists($configKey, $defaults)) {
+                continue;
+            }
             // @phpstan-ignore-next-line
             if (! isset($validators[$configKey]) || ! is_callable($validators[$configKey])) {
                 throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($configKey);
@@ -192,7 +194,6 @@ trait ConfigurableMixin
     /**
      * @param string $string A string to apply sanitization filtering to.
      *
-     * @return string
      *
      * @psalm-suppress UnusedFunctionCall
      */

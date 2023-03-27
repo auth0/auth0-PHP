@@ -43,7 +43,7 @@ final class Psr6Store implements StoreInterface
     {
         try {
             $randomBytes = random_bytes(32);
-        } catch (Exception $exception) {
+        } catch (Exception) {
             $randomBytes = openssl_random_pseudo_bytes(32);
         }
 

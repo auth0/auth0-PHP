@@ -37,11 +37,11 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('resource-servers')
+            ->addPath(['resource-servers'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'identifier' => $identifier,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -58,8 +58,7 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('resource-servers', $id)
+            ->method('delete')->addPath(['resource-servers', $id])
             ->withOptions($options)
             ->call();
     }
@@ -75,8 +74,7 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('resource-servers', $id)
+            ->method('get')->addPath(['resource-servers', $id])
             ->withOptions($options)
             ->call();
     }
@@ -86,7 +84,7 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
     ): ResponseInterface {
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('resource-servers')
+            ->addPath(['resource-servers'])
             ->withOptions($options)
             ->call();
     }
@@ -108,8 +106,7 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('resource-servers', $id)
+            ->method('patch')->addPath(['resource-servers', $id])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

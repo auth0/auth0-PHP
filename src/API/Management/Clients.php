@@ -33,11 +33,11 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('clients')
+            ->addPath(['clients'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'name' => $name,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -58,8 +58,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         /** @var array<mixed> $body */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('clients', $clientId, 'credentials')
+            ->method('post')->addPath(['clients', $clientId, 'credentials'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -76,8 +75,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('clients', $id)
+            ->method('delete')->addPath(['clients', $id])
             ->withOptions($options)
             ->call();
     }
@@ -95,8 +93,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('clients', $clientId, 'credentials', $credentialId)
+            ->method('delete')->addPath(['clients', $clientId, 'credentials', $credentialId])
             ->withOptions($options)
             ->call();
     }
@@ -112,8 +109,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('clients', $id)
+            ->method('get')->addPath(['clients', $id])
             ->withOptions($options)
             ->call();
     }
@@ -128,7 +124,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('clients')
+            ->addPath(['clients'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -147,8 +143,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('clients', $clientId, 'credentials', $credentialId)
+            ->method('get')->addPath(['clients', $clientId, 'credentials', $credentialId])
             ->withOptions($options)
             ->call();
     }
@@ -168,8 +163,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         /** @var array<null|int|string> $parameters */
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('clients', $clientId, 'credentials')
+            ->method('get')->addPath(['clients', $clientId, 'credentials'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -188,8 +182,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('clients', $id)
+            ->method('patch')->addPath(['clients', $id])
             ->withBody($body ?? [])
             ->withOptions($options)
             ->call();

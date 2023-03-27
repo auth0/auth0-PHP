@@ -19,9 +19,12 @@ use function in_array;
 use function is_array;
 use function is_string;
 
-final class Generator implements GeneratorInterface
+final class Generator implements GeneratorInterface, \Stringable
 {
     // Lookup table for supported digest algorithms as strings.
+    /**
+     * @var array<int, string>
+     */
     public const CONST_DIGEST_STRING = [
         OPENSSL_ALGO_SHA256 => 'sha256',
         OPENSSL_ALGO_SHA384 => 'sha384',
@@ -29,11 +32,17 @@ final class Generator implements GeneratorInterface
     ];
 
     // Lookup table for supported key types as strings.
+    /**
+     * @var string[]
+     */
     public const CONST_KEYTYPE_STRING = [
         \OPENSSL_KEYTYPE_RSA => 'RSA',
     ];
 
     // Supported algorithms for token generation.
+    /**
+     * @var string[]
+     */
     public const CONST_SUPPORTED_ALGORITHMS = [
         Token::ALGO_HS256,
         Token::ALGO_HS384,
@@ -120,8 +129,8 @@ final class Generator implements GeneratorInterface
                     flags: JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR,
                 );
                 // @codeCoverageIgnoreStart
-            } catch (Throwable $th) {
-                throw TokenException::unableToEncodeSegment($segment, $th->getMessage());
+            } catch (Throwable $throwable) {
+                throw TokenException::unableToEncodeSegment($segment, $throwable->getMessage());
             }
             // @codeCoverageIgnoreEnd
         }
@@ -211,8 +220,8 @@ final class Generator implements GeneratorInterface
                 $details = openssl_pkey_get_details($signingKey);
             }
             // @codeCoverageIgnoreStart
-        } catch (Throwable $th) {
-            $failure = $th;
+        } catch (Throwable $throwable) {
+            $failure = $throwable;
         }
 
         // If we were unable to load the key, throw an exception.
@@ -302,8 +311,8 @@ final class Generator implements GeneratorInterface
         try {
             $success = openssl_sign($data, $signature, $this->signingKey, $this->getDigestAlgorithm());
             // @codeCoverageIgnoreStart
-        } catch (Throwable $th) {
-            $failure = $th;
+        } catch (Throwable $throwable) {
+            $failure = $throwable;
         }
 
         // If we were unable to sign the data, throw an exception.

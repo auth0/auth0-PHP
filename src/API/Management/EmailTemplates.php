@@ -42,16 +42,16 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('email-templates')
+            ->addPath(['email-templates'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'template' => $template,
                     'body'     => $body,
                     'from'     => $from,
                     'subject'  => $subject,
                     'syntax'   => $syntax,
                     'enabled'  => $enabled,
-                ], $additional),
+                ], $additional]),
             )
             ->withOptions($options)
             ->call();
@@ -68,8 +68,7 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('email-templates', $templateName)
+            ->method('get')->addPath(['email-templates', $templateName])
             ->withOptions($options)
             ->call();
     }
@@ -91,8 +90,7 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('email-templates', $templateName)
+            ->method('patch')->addPath(['email-templates', $templateName])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -115,8 +113,7 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('put')
-            ->addPath('email-templates', $templateName)
+            ->method('put')->addPath(['email-templates', $templateName])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

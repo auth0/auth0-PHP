@@ -39,14 +39,14 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('device-credentials')
+            ->addPath(['device-credentials'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'device_name' => $deviceName,
                     'type'        => $type,
                     'value'       => $value,
                     'device_id'   => $deviceId,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -63,8 +63,7 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('device-credentials', $id)
+            ->method('delete')->addPath(['device-credentials', $id])
             ->withOptions($options)
             ->call();
     }
@@ -95,7 +94,7 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('device-credentials')
+            ->addPath(['device-credentials'])
             ->withParams($params)
             ->withOptions($options)
             ->call();

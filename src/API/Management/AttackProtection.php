@@ -21,8 +21,7 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('attack-protection', 'breached-password-detection')
+            ->method('get')->addPath(['attack-protection', 'breached-password-detection'])
             ->withOptions($options)
             ->call();
     }
@@ -31,8 +30,7 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('attack-protection', 'brute-force-protection')
+            ->method('get')->addPath(['attack-protection', 'brute-force-protection'])
             ->withOptions($options)
             ->call();
     }
@@ -41,8 +39,7 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('attack-protection', 'suspicious-ip-throttling')
+            ->method('get')->addPath(['attack-protection', 'suspicious-ip-throttling'])
             ->withOptions($options)
             ->call();
     }
@@ -58,8 +55,7 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('attack-protection', 'breached-password-detection')
+            ->method('patch')->addPath(['attack-protection', 'breached-password-detection'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -76,8 +72,7 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('attack-protection', 'brute-force-protection')
+            ->method('patch')->addPath(['attack-protection', 'brute-force-protection'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -94,8 +89,7 @@ final class AttackProtection extends ManagementEndpoint implements AttackProtect
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('attack-protection', 'suspicious-ip-throttling')
+            ->method('patch')->addPath(['attack-protection', 'suspicious-ip-throttling'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

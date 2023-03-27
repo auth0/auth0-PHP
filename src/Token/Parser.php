@@ -31,14 +31,14 @@ final class Parser
     /**
      * Decoded headers contained within the JWT.
      *
-     * @var array<string,int|string>
+     * @var int[]|string[]|null
      */
     private ?array $tokenHeaders = null;
 
     /**
      * Each of the 3 sections of the JWT separated for easier processing.
      *
-     * @var array<int,string>
+     * @var string[]|null
      */
     private ?array $tokenParts = null;
 
@@ -285,8 +285,8 @@ final class Parser
             try {
                 $this->tokenHeaders = $this->decodeHeaders($parts[0]);
                 $this->tokenClaims  = $this->decodeClaims($parts[1]);
-            } catch (JsonException $exception) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::jsonError($exception->getMessage());
+            } catch (JsonException $jsonException) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::jsonError($jsonException->getMessage());
             }
 
             $this->tokenSignature = $this->decodeSignature($parts[2]);

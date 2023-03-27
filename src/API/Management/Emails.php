@@ -37,13 +37,12 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         /** @var array<mixed> $body */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('emails', 'provider')
+            ->method('post')->addPath(['emails', 'provider'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'name'        => $name,
                     'credentials' => (object) $credentials,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -53,8 +52,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('emails', 'provider')
+            ->method('delete')->addPath(['emails', 'provider'])
             ->withOptions($options)
             ->call();
     }
@@ -63,8 +61,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('emails', 'provider')
+            ->method('get')->addPath(['emails', 'provider'])
             ->withOptions($options)
             ->call();
     }
@@ -89,13 +86,12 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         /** @var array<mixed> $body */
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('emails', 'provider')
+            ->method('patch')->addPath(['emails', 'provider'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'name'        => $name,
                     'credentials' => (object) $credentials,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();

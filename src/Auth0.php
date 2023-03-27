@@ -20,6 +20,9 @@ use function is_string;
  */
 final class Auth0 implements Auth0Interface
 {
+    /**
+     * @var string
+     */
     public const VERSION = '8.4.0';
 
     /**
@@ -144,7 +147,7 @@ final class Auth0 implements Auth0Interface
         if ('' !== $token) {
             try {
                 return $this->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN);
-            } catch (\Auth0\SDK\Exception\InvalidTokenException $exception) {
+            } catch (\Auth0\SDK\Exception\InvalidTokenException) {
                 return null;
             }
         }
@@ -262,7 +265,7 @@ final class Auth0 implements Auth0Interface
         $state ??= $this->getRequestParameter('state');
         $pkce     = $store->getOnce('code_verifier');
         $nonce    = $store->isset('nonce');
-        $verified = (null !== $state ? $store->verify('state', $state) : false);
+        $verified = (null !== $state && $store->verify('state', $state));
 
         $user = null;
 
@@ -308,10 +311,10 @@ final class Auth0 implements Auth0Interface
             try {
                 $user = $this->decode($response['id_token'])->toArray();
                 $this->setIdToken($response['id_token']);
-            } catch (Throwable $tokenException) {
+            } catch (Throwable $throwable) {
                 $this->clear();
 
-                throw $tokenException;
+                throw $throwable;
             }
         }
 
@@ -528,10 +531,10 @@ final class Auth0 implements Auth0Interface
         $invite = $this->getInvitationParameters();
 
         if (null !== $invite) {
-            $params = Toolkit::merge([
+            $params = Toolkit::merge([[
                 'invitation'   => $invite['invitation'],
                 'organization' => $invite['organization'],
-            ], $params);
+            ], $params]);
 
             /** @var null|array<null|int|string> $params */
 
@@ -746,9 +749,9 @@ final class Auth0 implements Auth0Interface
             throw ConfigurationException::requiresStatefulness('Auth0->signup()');
         }
 
-        $params = Toolkit::merge([
+        $params = Toolkit::merge([[
             'screen_hint' => 'signup',
-        ], $params);
+        ], $params]);
 
         /** @var null|array<null|int|string> $params */
 

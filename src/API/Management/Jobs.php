@@ -28,8 +28,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('jobs', 'users-exports')
+            ->method('post')->addPath(['jobs', 'users-exports'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -52,8 +51,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
         /** @var array<bool|int|string> $parameters */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('jobs', 'users-imports')
+            ->method('post')->addPath(['jobs', 'users-imports'])
             ->addFile('users', $filePath)
             ->withFormParam('connection_id', $connectionId)
             ->withFormParams($parameters)
@@ -76,12 +74,11 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
         /** @var array<mixed> $body */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('jobs', 'verification-email')
+            ->method('post')->addPath(['jobs', 'verification-email'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'user_id' => $userId,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -98,8 +95,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('jobs', $id)
+            ->method('get')->addPath(['jobs', $id])
             ->withOptions($options)
             ->call();
     }
@@ -115,8 +111,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('jobs', $id, 'errors')
+            ->method('get')->addPath(['jobs', $id, 'errors'])
             ->withOptions($options)
             ->call();
     }

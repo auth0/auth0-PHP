@@ -28,8 +28,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('grants', $id)
+            ->method('delete')->addPath(['grants', $id])
             ->withOptions($options)
             ->call();
     }
@@ -44,7 +43,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('grants')
+            ->addPath(['grants'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -64,9 +63,9 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
 
         /** @var array<null|int|string> $parameters */
         /** @var array<null|int|string> $params */
-        $params = Toolkit::merge([
+        $params = Toolkit::merge([[
             'audience' => $audience,
-        ], $parameters);
+        ], $parameters]);
 
         return $this->getAll($params, $options);
     }
@@ -85,9 +84,9 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
 
         /** @var array<null|int|string> $parameters */
         /** @var array<null|int|string> $params */
-        $params = Toolkit::merge([
+        $params = Toolkit::merge([[
             'client_id' => $clientId,
-        ], $parameters);
+        ], $parameters]);
 
         return $this->getAll($params, $options);
     }
@@ -106,9 +105,9 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
 
         /** @var array<null|int|string> $parameters */
         /** @var array<null|int|string> $params */
-        $params = Toolkit::merge([
+        $params = Toolkit::merge([[
             'user_id' => $userId,
-        ], $parameters);
+        ], $parameters]);
 
         return $this->getAll($params, $options);
     }

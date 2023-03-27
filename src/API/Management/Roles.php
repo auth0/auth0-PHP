@@ -36,8 +36,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('roles', $id, 'permissions')
+            ->method('post')->addPath(['roles', $id, 'permissions'])
             ->withBody($permissions)
             ->withOptions($options)
             ->call();
@@ -60,8 +59,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('roles', $id, 'users')
+            ->method('post')->addPath(['roles', $id, 'users'])
             ->withBody(
                 (object) [
                     'users' => $users,
@@ -79,18 +77,17 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         [$name] = Toolkit::filter([$name])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
-        /** @var array<mixed> $body */
         Toolkit::assert([
             [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
         ])->isString();
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('roles')
+            ->addPath(['roles'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'name' => $name,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -107,8 +104,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('roles', $id)
+            ->method('delete')->addPath(['roles', $id])
             ->withOptions($options)
             ->call();
     }
@@ -124,8 +120,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('roles', $id)
+            ->method('get')->addPath(['roles', $id])
             ->withOptions($options)
             ->call();
     }
@@ -140,7 +135,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('roles')
+            ->addPath(['roles'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -157,8 +152,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('roles', $id, 'permissions')
+            ->method('get')->addPath(['roles', $id, 'permissions'])
             ->withOptions($options)
             ->call();
     }
@@ -174,8 +168,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('roles', $id, 'users')
+            ->method('get')->addPath(['roles', $id, 'users'])
             ->withOptions($options)
             ->call();
     }
@@ -199,8 +192,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('roles', $id, 'permissions')
+            ->method('delete')->addPath(['roles', $id, 'permissions'])
             ->withBody($permissions)
             ->withOptions($options)
             ->call();
@@ -223,8 +215,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('roles', $id)
+            ->method('patch')->addPath(['roles', $id])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

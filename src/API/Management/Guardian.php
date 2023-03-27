@@ -28,8 +28,7 @@ final class Guardian extends ManagementEndpoint implements GuardianInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('guardian', 'enrollments', $id)
+            ->method('delete')->addPath(['guardian', 'enrollments', $id])
             ->withOptions($options)
             ->call();
     }
@@ -45,8 +44,7 @@ final class Guardian extends ManagementEndpoint implements GuardianInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('guardian', 'enrollments', $id)
+            ->method('get')->addPath(['guardian', 'enrollments', $id])
             ->withOptions($options)
             ->call();
     }
@@ -55,8 +53,7 @@ final class Guardian extends ManagementEndpoint implements GuardianInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('guardian', 'factors')
+            ->method('get')->addPath(['guardian', 'factors'])
             ->withOptions($options)
             ->call();
     }

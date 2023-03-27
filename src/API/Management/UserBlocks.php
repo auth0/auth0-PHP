@@ -28,8 +28,7 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('user-blocks', $id)
+            ->method('delete')->addPath(['user-blocks', $id])
             ->withOptions($options)
             ->call();
     }
@@ -46,7 +45,7 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
 
         return $this->getHttpClient()
             ->method('delete')
-            ->addPath('user-blocks')
+            ->addPath(['user-blocks'])
             ->withParam('identifier', $identifier)
             ->withOptions($options)
             ->call();
@@ -63,8 +62,7 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('user-blocks', $id)
+            ->method('get')->addPath(['user-blocks', $id])
             ->withOptions($options)
             ->call();
     }
@@ -81,7 +79,7 @@ final class UserBlocks extends ManagementEndpoint implements UserBlocksInterface
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('user-blocks')
+            ->addPath(['user-blocks'])
             ->withParam('identifier', $identifier)
             ->withOptions($options)
             ->call();

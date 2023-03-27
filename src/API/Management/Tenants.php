@@ -21,8 +21,7 @@ final class Tenants extends ManagementEndpoint implements TenantsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('tenants', 'settings')
+            ->method('get')->addPath(['tenants', 'settings'])
             ->withOptions($options)
             ->call();
     }
@@ -38,8 +37,7 @@ final class Tenants extends ManagementEndpoint implements TenantsInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('tenants', 'settings')
+            ->method('patch')->addPath(['tenants', 'settings'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

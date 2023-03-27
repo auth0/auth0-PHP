@@ -24,9 +24,21 @@ use function is_string;
  */
 final class HttpRequest
 {
+    /**
+     * @var int
+     */
     public const MAX_REQUEST_RETRIES      = 10;
+    /**
+     * @var int
+     */
     public const MAX_REQUEST_RETRY_DELAY  = 1000;
+    /**
+     * @var int
+     */
     public const MAX_REQUEST_RETRY_JITTER = 100;
+    /**
+     * @var int
+     */
     public const MIN_REQUEST_RETRY_DELAY  = 100;
 
     /**
@@ -196,10 +208,10 @@ final class HttpRequest
     /**
      * Add paths to the request URL.
      *
-     * @param string ...$params String paths to append to the request.
+     * @param array<int,string|null> $params String paths to append to the request.
      */
     public function addPath(
-        ?string ...$params,
+        array $params = [],
     ): self {
         /** @var array<string> $params */
         [$params] = Toolkit::filter([$params])->array()->trim();
@@ -326,8 +338,8 @@ final class HttpRequest
 
             // Return the response.
             return $httpResponse;
-        } catch (ClientExceptionInterface $exception) {
-            throw \Auth0\SDK\Exception\NetworkException::requestFailed($exception->getMessage(), $exception);
+        } catch (ClientExceptionInterface $clientException) {
+            throw \Auth0\SDK\Exception\NetworkException::requestFailed($clientException->getMessage(), $clientException);
         }
     }
 

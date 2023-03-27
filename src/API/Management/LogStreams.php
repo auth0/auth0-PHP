@@ -36,7 +36,7 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('log-streams')
+            ->addPath(['log-streams'])
             ->withBody(
                 (object) Toolkit::filter([
                     [
@@ -61,8 +61,7 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('log-streams', $id)
+            ->method('delete')->addPath(['log-streams', $id])
             ->withOptions($options)
             ->call();
     }
@@ -78,8 +77,7 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('log-streams', $id)
+            ->method('get')->addPath(['log-streams', $id])
             ->withOptions($options)
             ->call();
     }
@@ -89,7 +87,7 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
     ): ResponseInterface {
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('log-streams')
+            ->addPath(['log-streams'])
             ->withOptions($options)
             ->call();
     }
@@ -111,8 +109,7 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('log-streams', $id)
+            ->method('patch')->addPath(['log-streams', $id])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

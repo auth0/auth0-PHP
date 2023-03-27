@@ -21,8 +21,7 @@ final class Stats extends ManagementEndpoint implements StatsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('stats', 'active-users')
+            ->method('get')->addPath(['stats', 'active-users'])
             ->withOptions($options)
             ->call();
     }
@@ -35,8 +34,7 @@ final class Stats extends ManagementEndpoint implements StatsInterface
         [$from, $to] = Toolkit::filter([$from, $to])->string()->trim();
 
         $client = $this->getHttpClient()
-            ->method('get')
-            ->addPath('stats', 'daily');
+            ->method('get')->addPath(['stats', 'daily']);
 
         if (null !== $from) {
             Toolkit::assert([

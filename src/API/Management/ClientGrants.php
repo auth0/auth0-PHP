@@ -33,7 +33,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('client-grants')
+            ->addPath(['client-grants'])
             ->withBody(
                 (object) [
                     'client_id' => $clientId,
@@ -56,8 +56,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('client-grants', $grantId)
+            ->method('delete')->addPath(['client-grants', $grantId])
             ->withOptions($options)
             ->call();
     }
@@ -72,7 +71,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('client-grants')
+            ->addPath(['client-grants'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -91,9 +90,9 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         ])->isString();
 
         /** @var array<null|int|string> $parameters */
-        $params = Toolkit::merge([
+        $params = Toolkit::merge([[
             'audience' => $audience,
-        ], $parameters);
+        ], $parameters]);
 
         /** @var array<null|int|string> $params */
 
@@ -113,9 +112,9 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         ])->isString();
 
         /** @var array<null|int|string> $parameters */
-        $params = Toolkit::merge([
+        $params = Toolkit::merge([[
             'client_id' => $clientId,
-        ], $parameters);
+        ], $parameters]);
 
         /** @var array<null|int|string> $params */
 
@@ -135,8 +134,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('client-grants', $grantId)
+            ->method('patch')->addPath(['client-grants', $grantId])
             ->withBody(
                 (object) [
                     'scope' => $scope,

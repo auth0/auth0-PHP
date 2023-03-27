@@ -16,16 +16,43 @@ use function is_string;
 final class Token implements TokenInterface
 {
     // TODO: Replace these with an enum when PHP 8.1 is our min supported version.
+    /**
+     * @var string
+     */
     public const ALGO_HS256        = 'HS256';
+    /**
+     * @var string
+     */
     public const ALGO_HS384        = 'HS384';
+    /**
+     * @var string
+     */
     public const ALGO_HS512        = 'HS512';
+    /**
+     * @var string
+     */
     public const ALGO_RS256        = 'RS256';
+    /**
+     * @var string
+     */
     public const ALGO_RS384        = 'RS384';
+    /**
+     * @var string
+     */
     public const ALGO_RS512        = 'RS512';
+    /**
+     * @var int
+     */
     public const TYPE_ACCESS_TOKEN = 2;
 
     // TODO: Replace these with an enum when PHP 8.1 is our min supported version.
+    /**
+     * @var int
+     */
     public const TYPE_ID_TOKEN = 1;
+    /**
+     * @var int
+     */
     public const TYPE_TOKEN    = 2;
     private ?Parser $parser    = null;
 
@@ -59,7 +86,7 @@ final class Token implements TokenInterface
         $claim = $this->getParser()->getClaim('aud');
 
         if (is_string($claim)) {
-            $claim = [$claim];
+            return [$claim];
         }
 
         /** @var null|array<string> $claim */

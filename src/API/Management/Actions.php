@@ -28,8 +28,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('actions', 'actions')
+            ->method('post')->addPath(['actions', 'actions'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -55,8 +54,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         /** @var array<null|int|string> $params */
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('actions', 'actions', $id)
+            ->method('delete')->addPath(['actions', 'actions', $id])
             ->withParams($params)
             ->withOptions($options)
             ->call();
@@ -73,8 +71,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('actions', $id, 'deploy')
+            ->method('post')->addPath(['actions', $id, 'deploy'])
             ->withOptions($options)
             ->call();
     }
@@ -90,8 +87,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'actions', $id)
+            ->method('get')->addPath(['actions', 'actions', $id])
             ->withOptions($options)
             ->call();
     }
@@ -105,8 +101,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         /** @var array<null|int|string> $parameters */
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'actions')
+            ->method('get')->addPath(['actions', 'actions'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -123,8 +118,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'executions', $id)
+            ->method('get')->addPath(['actions', 'executions', $id])
             ->withOptions($options)
             ->call();
     }
@@ -140,8 +134,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'triggers', $triggerId, 'bindings')
+            ->method('get')->addPath(['actions', 'triggers', $triggerId, 'bindings'])
             ->withOptions($options)
             ->call();
     }
@@ -150,8 +143,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', 'triggers')
+            ->method('get')->addPath(['actions', 'triggers'])
             ->withOptions($options)
             ->call();
     }
@@ -169,8 +161,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', $actionId, 'versions', $id)
+            ->method('get')->addPath(['actions', $actionId, 'versions', $id])
             ->withOptions($options)
             ->call();
     }
@@ -186,8 +177,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('actions', $actionId, 'versions')
+            ->method('get')->addPath(['actions', $actionId, 'versions'])
             ->withOptions($options)
             ->call();
     }
@@ -205,8 +195,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('actions', $actionId, 'versions', $id, 'deploy')
+            ->method('post')->addPath(['actions', $actionId, 'versions', $id, 'deploy'])
             ->withOptions($options)
             ->call();
     }
@@ -228,8 +217,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('actions', 'actions', $id, 'test')
+            ->method('post')->addPath(['actions', 'actions', $id, 'test'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -252,8 +240,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('actions', 'actions', $id)
+            ->method('patch')->addPath(['actions', 'actions', $id])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -276,8 +263,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('actions', 'triggers', $triggerId, 'bindings')
+            ->method('patch')->addPath(['actions', 'triggers', $triggerId, 'bindings'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

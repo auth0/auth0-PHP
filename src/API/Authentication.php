@@ -17,6 +17,9 @@ use function is_array;
  */
 final class Authentication extends ClientAbstract implements AuthenticationInterface
 {
+    /**
+     * @var string
+     */
     public const CONST_CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
 
     /**
@@ -86,9 +89,9 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
 
         /** @var array<null|int|string> $params */
-        $parameters = Toolkit::merge([
+        $parameters = Toolkit::merge([[
             'audience' => $this->getConfiguration()->defaultAudience(),
-        ], $params);
+        ], $params]);
 
         /** @var array<null|int|string> $parameters */
         /** @var array<int|string> $headers */
@@ -142,13 +145,12 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         /** @var array<int|string> $headers */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('dbconnections', 'change_password')
-            ->withBody(Toolkit::merge([
+            ->method('post')->addPath(['dbconnections', 'change_password'])
+            ->withBody(Toolkit::merge([[
                 'client_id'  => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'email'      => $email,
                 'connection' => $connection,
-            ], $body))
+            ], $body]))
             ->withHeaders($headers)
             ->call();
     }
@@ -173,14 +175,13 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         /** @var array<int|string> $headers */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('dbconnections', 'signup')
-            ->withBody(Toolkit::merge([
+            ->method('post')->addPath(['dbconnections', 'signup'])
+            ->withBody(Toolkit::merge([[
                 'client_id'  => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'email'      => $email,
                 'password'   => $password,
                 'connection' => $connection,
-            ], $body))
+            ], $body]))
             ->withHeaders($headers)
             ->call();
     }
@@ -270,7 +271,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         return sprintf(
             '%s/authorize?%s',
             $this->getConfiguration()->formatDomain(),
-            http_build_query(Toolkit::merge([
+            http_build_query(Toolkit::merge([[
                 'state'         => $state,
                 'client_id'     => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'audience'      => $this->getConfiguration()->defaultAudience(),
@@ -279,7 +280,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
                 'scope'         => $this->getConfiguration()->formatScope(),
                 'response_mode' => $this->getConfiguration()->getResponseMode(),
                 'response_type' => $this->getConfiguration()->getResponseType(),
-            ], $params), '', '&', PHP_QUERY_RFC3986),
+            ], $params]), '', '&', PHP_QUERY_RFC3986),
         );
     }
 
@@ -300,10 +301,10 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         return sprintf(
             '%s/v2/logout?%s',
             $this->getConfiguration()->formatDomain(),
-            http_build_query(Toolkit::merge([
+            http_build_query(Toolkit::merge([[
                 'returnTo'  => $returnTo,
                 'client_id' => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
-            ], $params), '', '&', PHP_QUERY_RFC3986),
+            ], $params]), '', '&', PHP_QUERY_RFC3986),
         );
     }
 
@@ -395,11 +396,11 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         ])->isString();
 
         /** @var array<null|int|string> $params */
-        $parameters = Toolkit::merge([
+        $parameters = Toolkit::merge([[
             'username' => $username,
             'password' => $password,
             'realm'    => $realm,
-        ], $params);
+        ], $params]);
 
         /** @var array<null|int|string> $parameters */
         /** @var array<int|string> $headers */
@@ -422,10 +423,10 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         ])->isString();
 
         /** @var array<null|int|string> $params */
-        $parameters = Toolkit::merge([
+        $parameters = Toolkit::merge([[
             'username' => $username,
             'password' => $password,
-        ], $params);
+        ], $params]);
 
         /** @var array<null|int|string> $parameters */
         /** @var array<int|string> $headers */
@@ -448,17 +449,16 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             [$grantType, \Auth0\SDK\Exception\ArgumentException::missing('grantType')],
         ])->isString();
 
-        $params = Toolkit::merge([
+        $params = Toolkit::merge([[
             'grant_type' => $grantType,
-        ], $params);
+        ], $params]);
 
         $params = $this->addClientAuthentication($params);
 
         /** @var array<bool|int|string> $params */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('oauth', 'token')
+            ->method('post')->addPath(['oauth', 'token'])
             ->withHeaders($headers)
             ->withFormParams($params)
             ->call();
@@ -475,8 +475,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         $body = $this->addClientAuthentication($body);
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('passwordless', 'start')
+            ->method('post')->addPath(['passwordless', 'start'])
             ->withBody((object) $body)
             ->withHeaders($headers)
             ->call();
@@ -495,9 +494,9 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         ])->isString();
 
         /** @var array<null|int|string> $params */
-        $parameters = Toolkit::merge([
+        $parameters = Toolkit::merge([[
             'refresh_token' => $refreshToken,
-        ], $params);
+        ], $params]);
 
         /** @var array<null|int|string> $parameters */
         /** @var array<int|string> $headers */
@@ -540,7 +539,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('userinfo')
+            ->addPath(['userinfo'])
             ->withHeader('Authorization', 'Bearer ' . ($accessToken ?? ''))
             ->call();
     }

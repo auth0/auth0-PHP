@@ -92,6 +92,7 @@ final class Assert
      * @psalm-pure this method is not supposed to perform side-effects
      *
      * @psalm-return never
+     * @return never
      */
     private static function reportInvalidArgument($message): void
     {
@@ -113,12 +114,10 @@ final class Assert
 
     /**
      * @param mixed $value
-     *
-     * @return string
      */
-    private static function typeToString($value)
+    private static function typeToString($value): string
     {
-        return is_object($value) ? $value::class : gettype($value);
+        return get_debug_type($value);
     }
 
     /**
@@ -506,7 +505,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function allInArray($value, $values, $message = ''): void
+    public static function allInArray($value, array $values, $message = ''): void
     {
         self::isIterable($value);
 
@@ -626,7 +625,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function allIsAnyOf($value, $classes, $message = ''): void
+    public static function allIsAnyOf($value, array $classes, $message = ''): void
     {
         self::isIterable($value);
 
@@ -789,7 +788,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function allIsInstanceOfAny($value, $classes, $message = ''): void
+    public static function allIsInstanceOfAny($value, array $classes, $message = ''): void
     {
         self::isIterable($value);
 
@@ -3190,9 +3189,9 @@ final class Assert
     {
         self::isIterable($values);
 
-        foreach ($values as $entry) {
-            if (null !== $entry) {
-                self::uniqueValues($entry, $message);
+        foreach ($values as $value) {
+            if (null !== $value) {
+                self::uniqueValues($value, $message);
             }
         }
     }
@@ -3322,7 +3321,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function allOneOf($value, $values, $message = ''): void
+    public static function allOneOf($value, array $values, $message = ''): void
     {
         self::isIterable($value);
 
@@ -3660,8 +3659,8 @@ final class Assert
     {
         self::isIterable($values);
 
-        foreach ($values as $entry) {
-            self::uniqueValues($entry, $message);
+        foreach ($values as $value) {
+            self::uniqueValues($value, $message);
         }
     }
 
@@ -5145,7 +5144,7 @@ final class Assert
      */
     public static function notWhitespaceOnly($value, $message = ''): void
     {
-        if (preg_match('/^\s*$/', $value)) {
+        if (preg_match('#^\s*$#', $value)) {
             self::reportInvalidArgument(sprintf(
                 $message ?: 'Expected a non-whitespace string. Got: %s',
                 self::valueToString($value),
@@ -7032,14 +7031,14 @@ final class Assert
 
         try {
             $expression();
-        } catch (Exception $e) {
-            $actual = $e::class;
-            if ($e instanceof $class) {
+        } catch (Exception $exception) {
+            $actual = $exception::class;
+            if ($exception instanceof $class) {
                 return;
             }
-        } catch (Throwable $e) {
-            $actual = $e::class;
-            if ($e instanceof $class) {
+        } catch (Throwable $throwable) {
+            $actual = $throwable::class;
+            if ($throwable instanceof $class) {
                 return;
             }
         }
@@ -7083,7 +7082,7 @@ final class Assert
     {
         self::string($value);
 
-        if (! preg_match('/^\p{L}+$/u', $value)) {
+        if (! preg_match('#^\p{L}+$#u', $value)) {
             self::reportInvalidArgument(sprintf(
                 $message ?: 'Expected a value to contain only Unicode letters. Got: %s',
                 self::valueToString($value),
@@ -7158,7 +7157,7 @@ final class Assert
             return;
         }
 
-        if (! preg_match('/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/', $value)) {
+        if (! preg_match('#^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$#', $value)) {
             self::reportInvalidArgument(sprintf(
                 $message ?: 'Value %s is not a valid UUID.',
                 self::valueToString($value),

@@ -51,7 +51,7 @@ test('merge() merges two or more arrays and ignores items with null values', fun
     $array1 = ['a' => 'string test', 'b' => 123456, 'c' => null];
     $array2 = ['b' => 654321, 'a' => null];
 
-    $final = Toolkit::merge($array1, $array2);
+    $final = Toolkit::merge([$array1, $array2]);
 
     expect($final)->toEqual(['b' => 654321, 'a' => 'string test']);
 });

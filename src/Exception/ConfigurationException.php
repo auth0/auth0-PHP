@@ -12,27 +12,93 @@ use Throwable;
  */
 final class ConfigurationException extends Exception implements Auth0Exception
 {
+    /**
+     * @var string
+     */
     public const MSG_CONFIGURATION_REQUIRED         = 'The Auth0 SDK requires an SdkConfiguration be provided at initialization';
+    /**
+     * @var string
+     */
     public const MSG_GET_MISSING                    = 'Attempted to retrieve the value of an undefined property "%s"';
+    /**
+     * @var string
+     */
     public const MSG_INCOMPATIBLE_SIGNING_ALGORITHM = '%s it not a compatible signing algorithm';
+    /**
+     * @var string
+     */
     public const MSG_INVALID_TOKEN_ALGORITHM        = 'Invalid token algorithm; must be "HS256" or "RS256"';
+    /**
+     * @var string
+     */
     public const MSG_NO_PSR17_LIBRARY               = 'No compatible PSR-17 library was configured, and one could not be auto-discovered';
+    /**
+     * @var string
+     */
     public const MSG_NO_PSR18_LIBRARY               = 'No compatible PSR-18 library was configured, and one could not be auto-discovered';
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_AUDIENCE              = '`audience` must be configured';
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_CLIENT_ID             = '`clientId` must be configured';
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_CLIENT_SECRET         = '`clientSecret` must be configured';
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_COOKIE_SECRET         = '`cookieSecret` must be configured';
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_DOMAIN                = '`domain` must be configured';
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_MANAGEMENT_KEY        = '`managementToken` must be configured';
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_REDIRECT_URI          = '`redirectUri` must be configured';
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_RETURN_URI            = '`returnUri` must be configured';
+    /**
+     * @var string
+     */
     public const MSG_SESSION_REQUIRED               = 'Method %s requires a stateful `strategy` with sessions configured.';
+    /**
+     * @var string
+     */
     public const MSG_SET_IMMUTABLE                  = 'Changes cannot be applied to a locked configuration';
+    /**
+     * @var string
+     */
     public const MSG_SET_INCOMPATIBLE               = 'Parameter "%s" must be of type %s, %s used';
+    /**
+     * @var string
+     */
     public const MSG_SET_INCOMPATIBLE_NULLABLE      = 'Parameter "%s" must be of type %s or null, %s used';
+    /**
+     * @var string
+     */
     public const MSG_SET_MISSING                    = 'Attempted to assign a value to undefined property "%s"';
+    /**
+     * @var string
+     */
     public const MSG_STRATEGY_REQUIRED              = 'The Auth0 SDK requires a `strategy` to be configured';
+    /**
+     * @var string
+     */
     public const MSG_VALIDATION_FAILED              = 'Validation of "%s" was unsuccessful';
+    /**
+     * @var string
+     */
     public const MSG_VALUE_REQUIRED                 = '`%s` is not configured';
 
     public static function getMissing(

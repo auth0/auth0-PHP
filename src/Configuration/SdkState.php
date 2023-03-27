@@ -27,7 +27,7 @@ final class SdkState implements ConfigurableContract
      * @param null|int           $accessTokenExpiration Optional. When the $accessToken is expected to expire, if available.
      */
     public function __construct(
-        private ?array $configuration = null,
+        ?array $configuration = null,
         public ?string $idToken = null,
         public ?string $accessToken = null,
         public ?array $accessTokenScope = null,
@@ -43,7 +43,7 @@ final class SdkState implements ConfigurableContract
     }
 
     /**
-     * @return array<mixed>
+     * @return array{idToken: null, accessToken: null, accessTokenScope: null, refreshToken: null, user: null, accessTokenExpiration: null}
      */
     private function getPropertyDefaults(): array
     {
@@ -65,12 +65,12 @@ final class SdkState implements ConfigurableContract
     private function getPropertyValidators(): array
     {
         return [
-            'idToken'               => static fn ($value) => is_string($value) || null === $value,
-            'accessToken'           => static fn ($value) => is_string($value) || null === $value,
-            'accessTokenScope'      => static fn ($value) => is_array($value) || null === $value,
-            'refreshToken'          => static fn ($value) => is_string($value) || null === $value,
-            'user'                  => static fn ($value) => is_array($value) || null === $value,
-            'accessTokenExpiration' => static fn ($value) => is_int($value) || null === $value,
+            'idToken'               => static fn ($value): bool => is_string($value) || null === $value,
+            'accessToken'           => static fn ($value): bool => is_string($value) || null === $value,
+            'accessTokenScope'      => static fn ($value): bool => is_array($value) || null === $value,
+            'refreshToken'          => static fn ($value): bool => is_string($value) || null === $value,
+            'user'                  => static fn ($value): bool => is_array($value) || null === $value,
+            'accessTokenExpiration' => static fn ($value): bool => is_int($value) || null === $value,
         ];
     }
 

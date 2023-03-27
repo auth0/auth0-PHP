@@ -58,15 +58,17 @@ final class ArrayFilter
      */
     public function first(
         Throwable $exception,
-    ) {
+    ): array {
         $results = [];
 
         foreach ($this->subjects as $subject) {
             /** @var null|array<mixed> $subject */
-            if (! is_array($subject) || [] === $subject) {
+            if (! is_array($subject)) {
                 continue;
             }
-
+            if ([] === $subject) {
+                continue;
+            }
             $values = Toolkit::some($exception, $subject);
 
             if (false !== $values) {
@@ -153,7 +155,7 @@ final class ArrayFilter
                 }
 
                 return $val;
-            }, array_filter($subject, static fn ($val) => null !== $val));
+            }, array_filter($subject, static fn ($val): bool => null !== $val));
         }
 
         return $results;

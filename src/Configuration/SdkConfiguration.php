@@ -30,10 +30,25 @@ use function is_string;
 final class SdkConfiguration implements ConfigurableContract
 {
     use ConfigurableMixin;
+    /**
+     * @var string[]
+     */
     public const STRATEGIES_USING_SESSIONS = [self::STRATEGY_REGULAR];
+    /**
+     * @var string
+     */
     public const STRATEGY_API              = 'api';
+    /**
+     * @var string
+     */
     public const STRATEGY_MANAGEMENT_API   = 'management';
+    /**
+     * @var string
+     */
     public const STRATEGY_NONE             = 'none';
+    /**
+     * @var string
+     */
     public const STRATEGY_REGULAR          = 'webapp';
 
     /**
@@ -93,7 +108,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @throws ConfigurationException when a valid `$strategy` is not specified
      */
     public function __construct(
-        private ?array $configuration = null,
+        ?array $configuration = null,
         private string $strategy = self::STRATEGY_REGULAR,
         private ?string $domain = null,
         private ?string $customDomain = null,
@@ -154,7 +169,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @return array<mixed>
+     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string}
      */
     private function getPropertyDefaults(): array
     {
@@ -214,50 +229,50 @@ final class SdkConfiguration implements ConfigurableContract
     private function getPropertyValidators(): array
     {
         return [
-            'strategy'                        => static fn ($value) => is_string($value),
-            'domain'                          => static fn ($value) => is_string($value) || null === $value,
-            'customDomain'                    => static fn ($value) => is_string($value) || null === $value,
-            'clientId'                        => static fn ($value) => is_string($value) || null === $value,
-            'redirectUri'                     => static fn ($value) => is_string($value) || null === $value,
-            'clientSecret'                    => static fn ($value) => is_string($value) || null === $value,
-            'audience'                        => static fn ($value) => is_array($value) || null === $value,
-            'organization'                    => static fn ($value) => is_array($value) || null === $value,
-            'usePkce'                         => static fn ($value) => is_bool($value),
-            'scope'                           => static fn ($value) => is_array($value) || null === $value,
-            'responseMode'                    => static fn ($value) => is_string($value),
-            'responseType'                    => static fn ($value) => is_string($value),
-            'tokenAlgorithm'                  => static fn ($value) => is_string($value),
-            'tokenJwksUri'                    => static fn ($value) => is_string($value) || null === $value,
-            'tokenMaxAge'                     => static fn ($value) => is_int($value) || null === $value,
-            'tokenLeeway'                     => static fn ($value) => is_int($value),
-            'tokenCache'                      => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
-            'tokenCacheTtl'                   => static fn ($value) => is_int($value),
-            'httpClient'                      => static fn ($value) => $value instanceof ClientInterface || null === $value,
-            'httpMaxRetries'                  => static fn ($value) => is_int($value),
-            'httpRequestFactory'              => static fn ($value) => $value instanceof RequestFactoryInterface || null === $value,
-            'httpResponseFactory'             => static fn ($value) => $value instanceof ResponseFactoryInterface || null === $value,
-            'httpStreamFactory'               => static fn ($value) => $value instanceof StreamFactoryInterface || null === $value,
-            'httpTelemetry'                   => static fn ($value) => is_bool($value),
-            'sessionStorage'                  => static fn ($value) => $value instanceof StoreInterface || null === $value,
-            'sessionStorageId'                => static fn ($value) => is_string($value),
-            'cookieSecret'                    => static fn ($value) => is_string($value) || null === $value,
-            'cookieDomain'                    => static fn ($value) => is_string($value) || null === $value,
-            'cookieExpires'                   => static fn ($value) => is_int($value),
-            'cookiePath'                      => static fn ($value) => is_string($value),
-            'cookieSecure'                    => static fn ($value) => is_bool($value),
-            'cookieSameSite'                  => static fn ($value) => is_string($value) || null === $value,
-            'persistUser'                     => static fn ($value) => is_bool($value),
-            'persistIdToken'                  => static fn ($value) => is_bool($value),
-            'persistAccessToken'              => static fn ($value) => is_bool($value),
-            'persistRefreshToken'             => static fn ($value) => is_bool($value),
-            'transientStorage'                => static fn ($value) => $value instanceof StoreInterface || null === $value,
-            'transientStorageId'              => static fn ($value) => is_string($value),
-            'queryUserInfo'                   => static fn ($value) => is_bool($value),
-            'managementToken'                 => static fn ($value) => is_string($value) || null === $value,
-            'managementTokenCache'            => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
-            'eventListenerProvider'           => static fn ($value) => $value instanceof ListenerProviderInterface || null === $value,
-            'clientAssertionSigningKey'       => static fn ($value) => $value instanceof OpenSSLAsymmetricKey || is_string($value) || null === $value,
-            'clientAssertionSigningAlgorithm' => static fn ($value) => is_string($value),
+            'strategy'                        => static fn ($value): bool => is_string($value),
+            'domain'                          => static fn ($value): bool => is_string($value) || null === $value,
+            'customDomain'                    => static fn ($value): bool => is_string($value) || null === $value,
+            'clientId'                        => static fn ($value): bool => is_string($value) || null === $value,
+            'redirectUri'                     => static fn ($value): bool => is_string($value) || null === $value,
+            'clientSecret'                    => static fn ($value): bool => is_string($value) || null === $value,
+            'audience'                        => static fn ($value): bool => is_array($value) || null === $value,
+            'organization'                    => static fn ($value): bool => is_array($value) || null === $value,
+            'usePkce'                         => static fn ($value): bool => is_bool($value),
+            'scope'                           => static fn ($value): bool => is_array($value) || null === $value,
+            'responseMode'                    => static fn ($value): bool => is_string($value),
+            'responseType'                    => static fn ($value): bool => is_string($value),
+            'tokenAlgorithm'                  => static fn ($value): bool => is_string($value),
+            'tokenJwksUri'                    => static fn ($value): bool => is_string($value) || null === $value,
+            'tokenMaxAge'                     => static fn ($value): bool => is_int($value) || null === $value,
+            'tokenLeeway'                     => static fn ($value): bool => is_int($value),
+            'tokenCache'                      => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
+            'tokenCacheTtl'                   => static fn ($value): bool => is_int($value),
+            'httpClient'                      => static fn ($value): bool => $value instanceof ClientInterface || null === $value,
+            'httpMaxRetries'                  => static fn ($value): bool => is_int($value),
+            'httpRequestFactory'              => static fn ($value): bool => $value instanceof RequestFactoryInterface || null === $value,
+            'httpResponseFactory'             => static fn ($value): bool => $value instanceof ResponseFactoryInterface || null === $value,
+            'httpStreamFactory'               => static fn ($value): bool => $value instanceof StreamFactoryInterface || null === $value,
+            'httpTelemetry'                   => static fn ($value): bool => is_bool($value),
+            'sessionStorage'                  => static fn ($value): bool => $value instanceof StoreInterface || null === $value,
+            'sessionStorageId'                => static fn ($value): bool => is_string($value),
+            'cookieSecret'                    => static fn ($value): bool => is_string($value) || null === $value,
+            'cookieDomain'                    => static fn ($value): bool => is_string($value) || null === $value,
+            'cookieExpires'                   => static fn ($value): bool => is_int($value),
+            'cookiePath'                      => static fn ($value): bool => is_string($value),
+            'cookieSecure'                    => static fn ($value): bool => is_bool($value),
+            'cookieSameSite'                  => static fn ($value): bool => is_string($value) || null === $value,
+            'persistUser'                     => static fn ($value): bool => is_bool($value),
+            'persistIdToken'                  => static fn ($value): bool => is_bool($value),
+            'persistAccessToken'              => static fn ($value): bool => is_bool($value),
+            'persistRefreshToken'             => static fn ($value): bool => is_bool($value),
+            'transientStorage'                => static fn ($value): bool => $value instanceof StoreInterface || null === $value,
+            'transientStorageId'              => static fn ($value): bool => is_string($value),
+            'queryUserInfo'                   => static fn ($value): bool => is_bool($value),
+            'managementToken'                 => static fn ($value): bool => is_string($value) || null === $value,
+            'managementTokenCache'            => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
+            'eventListenerProvider'           => static fn ($value): bool => $value instanceof ListenerProviderInterface || null === $value,
+            'clientAssertionSigningKey'       => static fn ($value): bool => $value instanceof OpenSSLAsymmetricKey || is_string($value) || null === $value,
+            'clientAssertionSigningAlgorithm' => static fn ($value): bool => is_string($value),
         ];
     }
 
@@ -1388,7 +1403,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param array<string> $scope an array of scopes to request during authentication steps
+     * @param string[]|null $scope an array of scopes to request during authentication steps
      */
     public function setScope(?array $scope = ['openid', 'profile', 'email']): self
     {

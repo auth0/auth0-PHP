@@ -12,6 +12,9 @@ use Throwable;
  */
 final class AuthenticationException extends Exception implements Auth0Exception
 {
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_GRANT_TYPE = 'A grant type must be specified for this request';
 
     public static function requiresGrantType(

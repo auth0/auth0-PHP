@@ -291,7 +291,7 @@ interface AuthenticationInterface extends ClientInterface
      *
      * @param string                      $refreshToken refresh token to use
      * @param null|array<null|int|string> $params       Optional. Additional parameters to include with the request.
-     * @param array<int|string>           $headers      Optional. Additional headers to send with the request.
+     * @param int[]|string[]|null $headers Optional. Additional headers to send with the request.
      *
      * @throws \Auth0\SDK\Exception\ArgumentException      when an invalid `refreshToken` is passed
      * @throws \Auth0\SDK\Exception\ConfigurationException when a Client ID is not configured

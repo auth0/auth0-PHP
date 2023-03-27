@@ -33,7 +33,7 @@ test('a 429 response is not retried if httpMaxRetries is zero', function(): void
     }
 
     $response = $this->client->method('get')
-        ->addPath('client')
+        ->addPath(['client'])
         ->call();
 
     expect(HttpResponse::getStatusCode($response))->toEqual(429);
@@ -51,7 +51,7 @@ test('a 429 response is not retried more than the hard cap', function(): void {
     }
 
     $response = $this->client->method('get')
-        ->addPath('client')
+    ->addPath(['client'])
         ->call();
 
     expect(HttpResponse::getStatusCode($response))->toEqual(429);
@@ -75,7 +75,7 @@ test('an exponential back-off and jitter are being applied', function(): void {
     }
 
     $response = $this->client->method('get')
-        ->addPath('client')
+    ->addPath(['client'])
         ->call();
 
     $requestCount = $this->client->getLastRequest()->getRequestCount();
@@ -142,7 +142,7 @@ test('a request is tried 3 times before failing in the event of a 429', function
     $this->client->mockResponse(clone $this->httpResponse200);
 
     $response = $this->client->method('get')
-        ->addPath('client')
+    ->addPath(['client'])
         ->call();
 
     expect(HttpResponse::getStatusCode($response))->toEqual(429);
@@ -160,7 +160,7 @@ test('a request recovers from a 429 response and returns the successful result',
     ]);
 
     $response = $this->client->method('get')
-        ->addPath('client')
+    ->addPath(['client'])
         ->call();
 
     expect(HttpResponse::getStatusCode($response))->toEqual(200);

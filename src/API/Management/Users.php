@@ -36,8 +36,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'permissions')
+            ->method('post')->addPath(['users', $id, 'permissions'])
             ->withBody($permissions)
             ->withOptions($options)
             ->call();
@@ -60,8 +59,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'roles')
+            ->method('post')->addPath(['users', $id, 'roles'])
             ->withBody(
                 (object) [
                     'roles' => $roles,
@@ -91,11 +89,11 @@ final class Users extends ManagementEndpoint implements UsersInterface
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('users')
+            ->addPath(['users'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'connection' => $connection,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -118,8 +116,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $user, 'authentication-methods')
+            ->method('post')->addPath(['users', $user, 'authentication-methods'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -136,8 +133,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'recovery-code-regeneration')
+            ->method('post')->addPath(['users', $id, 'recovery-code-regeneration'])
             ->withOptions($options)
             ->call();
     }
@@ -153,8 +149,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id)
+            ->method('delete')->addPath(['users', $id])
             ->withOptions($options)
             ->call();
     }
@@ -170,8 +165,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'authenticators')
+            ->method('delete')->addPath(['users', $id, 'authenticators'])
             ->withOptions($options)
             ->call();
     }
@@ -189,8 +183,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $user, 'authentication-methods', $method)
+            ->method('delete')->addPath(['users', $user, 'authentication-methods', $method])
             ->withOptions($options)
             ->call();
     }
@@ -206,8 +199,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $user, 'authentication-methods')
+            ->method('delete')->addPath(['users', $user, 'authentication-methods'])
             ->withOptions($options)
             ->call();
     }
@@ -225,8 +217,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'multifactor', $provider)
+            ->method('delete')->addPath(['users', $id, 'multifactor', $provider])
             ->withOptions($options)
             ->call();
     }
@@ -242,8 +233,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id)
+            ->method('get')->addPath(['users', $id])
             ->withOptions($options)
             ->call();
     }
@@ -258,7 +248,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('users')
+            ->addPath(['users'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -277,8 +267,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $user, 'authentication-methods', $method)
+            ->method('get')->addPath(['users', $user, 'authentication-methods', $method])
             ->withOptions($options)
             ->call();
     }
@@ -294,8 +283,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $user, 'authentication-methods')
+            ->method('get')->addPath(['users', $user, 'authentication-methods'])
             ->withOptions($options)
             ->call();
     }
@@ -311,8 +299,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'enrollments')
+            ->method('get')->addPath(['users', $id, 'enrollments'])
             ->withOptions($options)
             ->call();
     }
@@ -328,8 +315,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'logs')
+            ->method('get')->addPath(['users', $id, 'logs'])
             ->withOptions($options)
             ->call();
     }
@@ -345,8 +331,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'organizations')
+            ->method('get')->addPath(['users', $id, 'organizations'])
             ->withOptions($options)
             ->call();
     }
@@ -362,8 +347,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'permissions')
+            ->method('get')->addPath(['users', $id, 'permissions'])
             ->withOptions($options)
             ->call();
     }
@@ -379,8 +363,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('users', $id, 'roles')
+            ->method('get')->addPath(['users', $id, 'roles'])
             ->withOptions($options)
             ->call();
     }
@@ -396,8 +379,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'multifactor', 'actions', 'invalidate-remember-browser')
+            ->method('post')->addPath(['users', $id, 'multifactor', 'actions', 'invalidate-remember-browser'])
             ->withOptions($options)
             ->call();
     }
@@ -419,8 +401,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('users', $id, 'identities')
+            ->method('post')->addPath(['users', $id, 'identities'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -445,8 +426,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         [$permissions] = Toolkit::filter([$permissions])->array()->permissions();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'permissions')
+            ->method('delete')->addPath(['users', $id, 'permissions'])
             ->withBody($permissions)
             ->withOptions($options)
             ->call();
@@ -469,8 +449,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'roles')
+            ->method('delete')->addPath(['users', $id, 'roles'])
             ->withBody(
                 (object) [
                     'roles' => $roles,
@@ -497,8 +476,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('put')
-            ->addPath('users', $user, 'authentication-methods')
+            ->method('put')->addPath(['users', $user, 'authentication-methods'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -519,8 +497,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('users', $id, 'identities', $provider, $identityId)
+            ->method('delete')->addPath(['users', $id, 'identities', $provider, $identityId])
             ->withOptions($options)
             ->call();
     }
@@ -542,8 +519,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('users', $id)
+            ->method('patch')->addPath(['users', $id])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
@@ -568,8 +544,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('users', $user, 'authentication-methods', $method)
+            ->method('patch')->addPath(['users', $user, 'authentication-methods', $method])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

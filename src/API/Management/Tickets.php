@@ -32,12 +32,11 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
         /** @var array<mixed> $body */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('tickets', 'email-verification')
+            ->method('post')->addPath(['tickets', 'email-verification'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'user_id' => $userId,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -54,8 +53,7 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('tickets', 'password-change')
+            ->method('post')->addPath(['tickets', 'password-change'])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

@@ -38,12 +38,11 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         /** @var array<mixed> $body */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations', $id, 'enabled_connections')
+            ->method('post')->addPath(['organizations', $id, 'enabled_connections'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'connection_id' => $connectionId,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -68,8 +67,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations', $id, 'members', $userId, 'roles')
+            ->method('post')->addPath(['organizations', $id, 'members', $userId, 'roles'])
             ->withBody(
                 (object) [
                     'roles' => $roles,
@@ -96,8 +94,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations', $id, 'members')
+            ->method('post')->addPath(['organizations', $id, 'members'])
             ->withBody(
                 (object) [
                     'members' => $members,
@@ -128,14 +125,14 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('organizations')
+            ->addPath(['organizations'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'name'         => $name,
                     'display_name' => $displayName,
                     'branding'     => $branding,
                     'metadata'     => $metadata,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -175,14 +172,13 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         /** @var array<mixed> $body */
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('organizations', $id, 'invitations')
+            ->method('post')->addPath(['organizations', $id, 'invitations'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'client_id' => $clientId,
                     'inviter'   => (object) $inviter,
                     'invitee'   => (object) $invitee,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -199,8 +195,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id)
+            ->method('delete')->addPath(['organizations', $id])
             ->withOptions($options)
             ->call();
     }
@@ -218,8 +213,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id, 'invitations', $invitationId)
+            ->method('delete')->addPath(['organizations', $id, 'invitations', $invitationId])
             ->withOptions($options)
             ->call();
     }
@@ -235,8 +229,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id)
+            ->method('get')->addPath(['organizations', $id])
             ->withOptions($options)
             ->call();
     }
@@ -246,7 +239,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
     ): ResponseInterface {
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('organizations')
+            ->addPath(['organizations'])
             ->withOptions($options)
             ->call();
     }
@@ -262,8 +255,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', 'name', $name)
+            ->method('get')->addPath(['organizations', 'name', $name])
             ->withOptions($options)
             ->call();
     }
@@ -281,8 +273,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
+            ->method('get')->addPath(['organizations', $id, 'enabled_connections', $connectionId])
             ->withOptions($options)
             ->call();
     }
@@ -298,8 +289,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'enabled_connections')
+            ->method('get')->addPath(['organizations', $id, 'enabled_connections'])
             ->withOptions($options)
             ->call();
     }
@@ -317,8 +307,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'invitations', $invitationId)
+            ->method('get')->addPath(['organizations', $id, 'invitations', $invitationId])
             ->withOptions($options)
             ->call();
     }
@@ -334,8 +323,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'invitations')
+            ->method('get')->addPath(['organizations', $id, 'invitations'])
             ->withOptions($options)
             ->call();
     }
@@ -353,8 +341,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'members', $userId, 'roles')
+            ->method('get')->addPath(['organizations', $id, 'members', $userId, 'roles'])
             ->withOptions($options)
             ->call();
     }
@@ -370,8 +357,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('organizations', $id, 'members')
+            ->method('get')->addPath(['organizations', $id, 'members'])
             ->withOptions($options)
             ->call();
     }
@@ -389,8 +375,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
+            ->method('delete')->addPath(['organizations', $id, 'enabled_connections', $connectionId])
             ->withOptions($options)
             ->call();
     }
@@ -414,8 +399,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id, 'members', $userId, 'roles')
+            ->method('delete')->addPath(['organizations', $id, 'members', $userId, 'roles'])
             ->withBody(
                 (object) [
                     'roles' => $roles,
@@ -442,8 +426,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('organizations', $id, 'members')
+            ->method('delete')->addPath(['organizations', $id, 'members'])
             ->withBody(
                 (object) [
                     'members' => $members,
@@ -474,15 +457,14 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         /** @var array<mixed> $body */
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('organizations', $id)
+            ->method('patch')->addPath(['organizations', $id])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'name'         => $name,
                     'display_name' => $displayName,
                     'branding'     => $branding,
                     'metadata'     => $metadata,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -503,8 +485,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('organizations', $id, 'enabled_connections', $connectionId)
+            ->method('patch')->addPath(['organizations', $id, 'enabled_connections', $connectionId])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

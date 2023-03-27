@@ -118,7 +118,7 @@ final class Management extends ClientAbstract implements ManagementInterface
 
             if ($item->isHit()) {
                 $managementToken = $item->get();
-                /** @var null|int|string $managementToken */
+
             }
         }
 
@@ -157,6 +157,8 @@ final class Management extends ClientAbstract implements ManagementInterface
         if (null === $managementToken) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresManagementToken();
         }
+
+        /** @var null|int|string $managementToken */
 
         // Build the API client using the management token.
         return $this->httpClient = new HttpClient($this->getConfiguration(), HttpClient::CONTEXT_MANAGEMENT_CLIENT, '/api/v2/', ['Authorization' => 'Bearer ' . (string) $managementToken]);

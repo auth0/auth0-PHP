@@ -23,8 +23,8 @@ beforeEach(function(): void {
 
 it('builds url pathes correctly', function(HttpRequest $client): void {
     expect($client->getUrl())->toEqual('');
-    expect($client->addPath('path1')->getUrl())->toEqual('path1');
-    expect($client->addPath('path2', '3')->getUrl())->toEqual('path1/path2/3');
+    expect($client->addPath(['path1'])->getUrl())->toEqual('path1');
+    expect($client->addPath(['path2', '3'])->getUrl())->toEqual('path1/path2/3');
 })->with(['mocked client' => [
     fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
 ]]);

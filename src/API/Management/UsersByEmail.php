@@ -29,7 +29,7 @@ final class UsersByEmail extends ManagementEndpoint implements UsersByEmailInter
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('users-by-email')
+            ->addPath(['users-by-email'])
             ->withParam('email', $email)
             ->withOptions($options)
             ->call();

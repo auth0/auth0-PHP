@@ -35,12 +35,12 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('connections')
+            ->addPath(['connections'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'name'     => $name,
                     'strategy' => $strategy,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -57,8 +57,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('connections', $id)
+            ->method('delete')->addPath(['connections', $id])
             ->withOptions($options)
             ->call();
     }
@@ -79,8 +78,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         ])->isEmail();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('connections', $id, 'users')
+            ->method('delete')->addPath(['connections', $id, 'users'])
             ->withParam('email', $email)
             ->withOptions($options)
             ->call();
@@ -97,8 +95,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('connections', $id)
+            ->method('get')->addPath(['connections', $id])
             ->withOptions($options)
             ->call();
     }
@@ -113,7 +110,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('connections')
+            ->addPath(['connections'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -132,8 +129,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('connections', $id)
+            ->method('patch')->addPath(['connections', $id])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();

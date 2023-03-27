@@ -21,6 +21,7 @@ final class HttpResponsePaginator implements Countable, Iterator
 {
     /**
      * These endpoints support checkpoint-based pagination (from, take). A 'next' value will be present in responses if more results are available.
+     * @var string[]
      */
     private const SUPPORTED_ENDPOINTS_WITH_CHECKPOINT = [
         '^\/api\/v2\/logs$',
@@ -151,7 +152,7 @@ final class HttpResponsePaginator implements Countable, Iterator
             // Issue next paged request.
             try {
                 $lastBuilder->call();
-            } catch (\Auth0\SDK\Exception\NetworkException $exception) {
+            } catch (\Auth0\SDK\Exception\NetworkException) {
                 return false;
             }
 
@@ -214,7 +215,7 @@ final class HttpResponsePaginator implements Countable, Iterator
                 // Decode the response.
                 try {
                     $results = HttpResponse::decodeContent($lastResponse);
-                } catch (Throwable $throwable) {
+                } catch (Throwable) {
                     throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
                 }
 
@@ -338,14 +339,12 @@ final class HttpResponsePaginator implements Countable, Iterator
     /**
      * Return the current result at our position, if available.
      *
-     * @return mixed
      *
      * @psalm-suppress InvalidAttribute
-     *
      * @codeCoverageIgnore
      */
     #[ReturnTypeWillChange]
-    public function current()
+    public function current(): mixed
     {
         if ($this->valid()) {
             return $this->result() ?? false;

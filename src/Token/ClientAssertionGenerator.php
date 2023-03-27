@@ -15,7 +15,7 @@ final class ClientAssertionGenerator
     /**
      * Supported signing algorithms.
      *
-     * @var array<string>
+     * @var string[]
      */
     public const CONST_SUPPORTED_ALGORITHMS = [
         Token::ALGO_RS256,

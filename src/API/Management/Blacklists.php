@@ -29,8 +29,7 @@ final class Blacklists extends ManagementEndpoint implements BlacklistsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('post')
-            ->addPath('blacklists', 'tokens')
+            ->method('post')->addPath(['blacklists', 'tokens'])
             ->withBody(
                 (object) Toolkit::filter([
                     [
@@ -50,8 +49,7 @@ final class Blacklists extends ManagementEndpoint implements BlacklistsInterface
         [$aud] = Toolkit::filter([$aud])->string()->trim();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('blacklists', 'tokens')
+            ->method('get')->addPath(['blacklists', 'tokens'])
             ->withParam('aud', $aud)
             ->withOptions($options)
             ->call();

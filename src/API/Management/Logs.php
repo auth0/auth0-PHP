@@ -28,8 +28,7 @@ final class Logs extends ManagementEndpoint implements LogsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('logs', $id)
+            ->method('get')->addPath(['logs', $id])
             ->withOptions($options)
             ->call();
     }
@@ -44,7 +43,7 @@ final class Logs extends ManagementEndpoint implements LogsInterface
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('logs')
+            ->addPath(['logs'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();

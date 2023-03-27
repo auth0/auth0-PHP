@@ -58,7 +58,6 @@ final class Verifier
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When unable to retrieve key. See error message for details.
      *
-     * @return OpenSSLAsymmetricKey
      *
      * @psalm-suppress UndefinedDocblockClass
      */

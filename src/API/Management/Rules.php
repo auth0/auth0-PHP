@@ -35,12 +35,12 @@ final class Rules extends ManagementEndpoint implements RulesInterface
 
         return $this->getHttpClient()
             ->method('post')
-            ->addPath('rules')
+            ->addPath(['rules'])
             ->withBody(
-                (object) Toolkit::merge([
+                (object) Toolkit::merge([[
                     'name'   => $name,
                     'script' => $script,
-                ], $body),
+                ], $body]),
             )
             ->withOptions($options)
             ->call();
@@ -57,8 +57,7 @@ final class Rules extends ManagementEndpoint implements RulesInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('delete')
-            ->addPath('rules', $id)
+            ->method('delete')->addPath(['rules', $id])
             ->withOptions($options)
             ->call();
     }
@@ -74,8 +73,7 @@ final class Rules extends ManagementEndpoint implements RulesInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('get')
-            ->addPath('rules', $id)
+            ->method('get')->addPath(['rules', $id])
             ->withOptions($options)
             ->call();
     }
@@ -90,7 +88,7 @@ final class Rules extends ManagementEndpoint implements RulesInterface
 
         return $this->getHttpClient()
             ->method('get')
-            ->addPath('rules')
+            ->addPath(['rules'])
             ->withParams($parameters)
             ->withOptions($options)
             ->call();
@@ -113,8 +111,7 @@ final class Rules extends ManagementEndpoint implements RulesInterface
         ])->isArray();
 
         return $this->getHttpClient()
-            ->method('patch')
-            ->addPath('rules', $id)
+            ->method('patch')->addPath(['rules', $id])
             ->withBody((object) $body)
             ->withOptions($options)
             ->call();
