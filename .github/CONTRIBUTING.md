@@ -46,9 +46,21 @@ The following types are allowed:
 
 If you discover a security vulnerability within this SDK, please review Auth0's [Responsible Disclosure Program](https://auth0.com/responsible-disclosure-policy) details the procedure for disclosing security issues. All security vulnerabilities will be promptly addressed.
 
+## Unit Testing and 100% Minimum Coverage
+
+We use [PEST](https://pestphp.com/) for testing. You can run `composer pest` to run the test suite. You can also run `composer pest:coverage` to generate a code coverage report.
+
+We require 100% code coverage for all new features. If you are adding a new feature, please add tests to cover all of the new code. If you are fixing a bug, please add a test that reproduces the bug and then shows that it has been fixed.
+
+Pull requests that do not meet the minimum coverage requirements will not be merged.
+
 ## Coding Style
 
-This SDK follows the [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standard and the [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) autoloading standard.
+We use [PHP CS Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) to ensure that the code style is consistent. You can run `composer phpcs` to check for any code style issues. `composer phpcs:fix` will attempt to automatically fix the issues, but be cautious as it may not always get it right.
+
+We also use [Rector](https://github.com/rectorphp/rector) to catch edge cases where more optimal refactoring can be made. You can run `composer rector` to check for any recommendations, and `composer rector:fix` will to accept the suggested changes.
+
+It's important to note that our GitHub CI will also run these checks for pull requests, so it's important you run these locally first to avoid any surprise failures when you push your code. If you disagree with one of these tools recommendations, please bring it up in the pull request so we can discuss it. We may decide to adjust the styling rules if we feel it's warranted, but we prefer to avoid it if possible.
 
 ### PHPDoc
 
@@ -70,12 +82,6 @@ public function bind($abstract, $concrete = null, $shared = false)
     //
 }
 ```
-
-### Pint
-
-You should focus on the content of your contribution and not on the code styling. To this end, we use [Laravel Pint](https://github.com/laravel/pint) to automatically check and fix the code styling.
-
-Before creating a pull request, please run `composer pint` to review any necessary styling changes. `composer pint:fix` will attempt to automatically fix the issues.
 
 ## Code of Conduct
 
