@@ -10,6 +10,10 @@ This release also introduces support for a number of additional Management API e
 
 **Added**
 
+- **State Management**
+
+  - Added `Auth0\SDK\Auth0::refreshState()` to force a refresh of the SDK's internal state. This is useful when you have updated the SDK's configuration and want to ensure the SDK is using the latest values.
+
 - **Management API**
   - `Auth0\APIs\Management\Users`
     - `DELETE /users/:id/authenticators` → `deleteAllAuthenticators()` ([#702](https://github.com/auth0/auth0-PHP/pull/702)) ([Documentation](https://auth0.github.io/auth0-PHP/API/Management/Management.html#method-deleteAllAuthenticators))
@@ -24,7 +28,8 @@ This release also introduces support for a number of additional Management API e
 
 **Fixed**
 
-- Wherein calls to certain methods under `Auth0\SDK\API\Authentication` with manually assigned `client_id` or `client_secret` parameters could have those values overwritten by the SDK's assigned configuration. [\#705](https://github.com/auth0/auth0-PHP/issues/705)
+- Transient storage would sometimes not be fully cleared after a successful code exchange under certain conditions.
+- Calls to certain methods under `Auth0\SDK\API\Authentication` with manually assigned `client_id` or `client_secret` parameters could have those values overwritten by the SDK's assigned configuration. [\#705](https://github.com/auth0/auth0-PHP/issues/705)
 
 **Changed**
 
