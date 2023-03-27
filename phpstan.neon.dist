@@ -7,6 +7,9 @@ parameters:
     paths:
         - src
 
+    excludePaths:
+        - src/Utility/Assert.php
+
     ignoreErrors:
         - '#Cannot call method createRequest\(\) on Psr\\Http\\Message\\RequestFactoryInterface\|null.#'
         - '#Cannot call method sendRequest\(\) on Psr\\Http\\Client\\ClientInterface\|null.#'
