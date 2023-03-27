@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [8.5.0](https://github.com/auth0/auth0-PHP/tree/8.5.0) (2023-03-27)
+
 **Added**
 
 - **Management API**
