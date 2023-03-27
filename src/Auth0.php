@@ -344,6 +344,8 @@ final class Auth0 implements Auth0Interface
             }
         }
 
+        $this->configuration()->getTransientStorage()->purge();
+
         /** @var null|array<array<mixed>|int|string> $user */
         $this->setUser($user ?? []);
         $this->deferStateSaving(false);
