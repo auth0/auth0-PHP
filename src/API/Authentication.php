@@ -354,6 +354,8 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             ],
         ])->array()->trim()[0];
 
+        /** @var array<int|string|null> $params */
+
         return $this->oauthToken('authorization_code', $params);
     }
 

@@ -172,6 +172,8 @@ interface Auth0Interface
 
     /**
      * Set the configuration for the SDK instance.
+     *
+     * @param  array<mixed>|SdkConfiguration  $configuration  Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.
      */
     public function setConfiguration(
         SdkConfiguration|array $configuration

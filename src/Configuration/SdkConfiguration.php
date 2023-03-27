@@ -13,7 +13,7 @@ use Auth0\SDK\Token;
 use Auth0\SDK\Token\ClientAssertionGenerator;
 use Auth0\SDK\Utility\Assert;
 use Auth0\SDK\Utility\EventDispatcher;
-use Auth0\SDK\Utility\InterfaceDiscovery;
+use PsrDiscovery\Discover;
 use OpenSSLAsymmetricKey;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
@@ -1302,10 +1302,10 @@ final class SdkConfiguration implements ConfigurableContract
      */
     private function setupStateFactories(): void
     {
-        $responseFactory = $this->getHttpResponseFactory() ?? InterfaceDiscovery::getResponseFactory();
-        $requestFactory = $this->getHttpRequestFactory() ?? InterfaceDiscovery::getRequestFactory();
-        $streamFactory = $this->getHttpStreamFactory() ?? InterfaceDiscovery::getStreamFactory();
-        $httpClient = $this->getHttpClient() ?? InterfaceDiscovery::getClient();
+        $responseFactory = $this->getHttpResponseFactory() ?? Discover::httpResponseFactory();
+        $requestFactory = $this->getHttpRequestFactory() ?? Discover::httpRequestFactory();
+        $streamFactory = $this->getHttpStreamFactory() ?? Discover::httpStreamFactory();
+        $httpClient = $this->getHttpClient() ?? Discover::httpClient();
 
         Assert::isInstanceOf($requestFactory, RequestFactoryInterface::class, 'Could not find a PSR-17 compatible request factory. Please install one, or provide one using the `setHttpRequestFactory()` method.');
         Assert::isInstanceOf($responseFactory, ResponseFactoryInterface::class, 'Could not find a PSR-17 compatible response factory. Please install one, or provide one using the `setHttpResponseFactory()` method.');

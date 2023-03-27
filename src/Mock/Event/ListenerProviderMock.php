@@ -8,8 +8,16 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 
 final class ListenerProviderMock implements ListenerProviderInterface
 {
+    /**
+     * @var ListenerEntityMock[] $listeners Listeners to execute when an event is triggered.
+     */
     private array $listeners = [];
 
+    /**
+     * @param null|string|object $event Event class name or instance to listen for.
+     * @param null|callable $listener Callable to execute when the event is triggered.
+     * @param int $priority Priority of the listener. Lower numbers are executed first.
+     */
     public function __construct(
         string|object|null $event = null,
         callable|null $listener = null,
@@ -20,6 +28,11 @@ final class ListenerProviderMock implements ListenerProviderInterface
         }
     }
 
+    /**
+     * @param string|object $event Event class name or instance to listen for.
+     * @param callable $listener Callable to execute when the event is triggered.
+     * @param int $priority Priority of the listener. Lower numbers are executed first.
+     */
     public static function create(
         string|object $event,
         callable $listener,
@@ -28,9 +41,14 @@ final class ListenerProviderMock implements ListenerProviderInterface
         return new self($event, $listener, $priority);
     }
 
+    /**
+     * @param string|object $event Event class name or instance to listen for.
+     *
+     * @return array<callable> Listeners to execute when the event is triggered.
+     */
     public function getListenersForEvent(
         string|object $event
-    ): iterable {
+    ): array {
         $queue = [];
 
         foreach ($this->listeners as $listener) {
@@ -42,6 +60,11 @@ final class ListenerProviderMock implements ListenerProviderInterface
         return $queue;
     }
 
+    /**
+     * @param string|object $event Event class name or instance to listen for.
+     * @param callable $listener Callable to execute when the event is triggered.
+     * @param int $priority Priority of the listener. Lower numbers are executed first.
+     */
     public function on(
         string|object $event,
         callable $listener,

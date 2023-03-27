@@ -283,7 +283,10 @@ final class HttpRequest
         // IF we are mocking responses, add the mocked response to the client response stack.
         if (null !== $this->mockedResponses && [] !== $this->mockedResponses && method_exists($httpClient, 'addResponse')) {
             $mockedResponse = array_shift($this->mockedResponses);
-            $httpClient->addResponse($this->method, $uri, $mockedResponse->response);
+
+            if (property_exists($mockedResponse, 'response')) {
+                $httpClient->addResponse($this->method, $uri, $mockedResponse->response);
+            }
         }
 
         // Dispatch event to listeners of Auth0\SDK\EventHttpRequestBuilt.
