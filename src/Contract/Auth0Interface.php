@@ -35,7 +35,7 @@ interface Auth0Interface
      * Verifies and decodes an ID token using the properties in this class.
      *
      * @param string             $token             ID token to verify and decode
-     * @param string[]|null $tokenAudience Optional. An array of allowed values for the 'aud' claim. Successful if ANY match.
+     * @param null|string[]      $tokenAudience     Optional. An array of allowed values for the 'aud' claim. Successful if ANY match.
      * @param null|array<string> $tokenOrganization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
      * @param null|string        $tokenNonce        Optional. The value expected for the 'nonce' claim.
      * @param null|int           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.

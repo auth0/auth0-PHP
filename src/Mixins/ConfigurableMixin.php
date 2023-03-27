@@ -194,7 +194,6 @@ trait ConfigurableMixin
     /**
      * @param string $string A string to apply sanitization filtering to.
      *
-     *
      * @psalm-suppress UnusedFunctionCall
      */
     private function filterString(string $string): string

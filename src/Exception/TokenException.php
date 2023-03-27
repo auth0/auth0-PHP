@@ -16,38 +16,47 @@ final class TokenException extends Exception implements Auth0Exception
      * @var string
      */
     public const MSG_HS256_REQUIRES_KEY_AS_STRING = 'HS256 algorithm requires a key in string format.';
+
     /**
      * @var string
      */
     public const MSG_KEY_TYPE_NOT_SUPPORTED       = 'Key type "%s" is not supported for the %s algorithm';
+
     /**
      * @var string
      */
     public const MSG_KEY_TYPE_UNKNOWN             = 'Key type could not be determined';
+
     /**
      * @var string
      */
     public const MSG_LIB_OPENSSL_MISSING          = 'The OpenSSL extension is required to generate tokens';
+
     /**
      * @var string
      */
     public const MSG_LIB_OPENSSL_MISSING_ALGO     = 'The OpenSSL extension must support %s algorithm to generate tokens';
+
     /**
      * @var string
      */
     public const MSG_SIGNING_KEY_PROCESSING_ERROR = 'An exception occurred while attempting to process the configured signing key: %s';
+
     /**
      * @var string
      */
     public const MSG_UNABLE_TO_ENCODE_SEGMENT     = 'An exception occurred while attempting to encode segment "%s" during token generation: %s';
+
     /**
      * @var string
      */
     public const MSG_UNABLE_TO_SIGN_DATA          = 'An exception occurred while attempting to produce signature during token generation: %s';
+
     /**
      * @var string
      */
     public const MSG_UNKNOWN_ERROR                = 'An unknown error occurred.';
+
     /**
      * @var string
      */

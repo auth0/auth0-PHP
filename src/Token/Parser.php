@@ -31,14 +31,14 @@ final class Parser
     /**
      * Decoded headers contained within the JWT.
      *
-     * @var int[]|string[]|null
+     * @var null|int[]|string[]
      */
     private ?array $tokenHeaders = null;
 
     /**
      * Each of the 3 sections of the JWT separated for easier processing.
      *
-     * @var string[]|null
+     * @var null|string[]
      */
     private ?array $tokenParts = null;
 

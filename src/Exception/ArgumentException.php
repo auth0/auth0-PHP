@@ -16,14 +16,17 @@ final class ArgumentException extends Exception implements Auth0Exception
      * @var string
      */
     public const MSG_BAD_PERMISSIONS_ARRAY     = 'Invalid or empty permissions array passed. All permissions must include both permission_name and resource_server_identifier keys.';
+
     /**
      * @var string
      */
     public const MSG_PKCE_CODE_VERIFIER_LENGTH = 'Code verifier must be created with a minimum length of 43 characters and a maximum length of 128 characters.';
+
     /**
      * @var string
      */
     public const MSG_UNKNOWN_METHOD            = 'Unknown method %s.';
+
     /**
      * @var string
      */

@@ -28,14 +28,17 @@ final class HttpRequest
      * @var int
      */
     public const MAX_REQUEST_RETRIES      = 10;
+
     /**
      * @var int
      */
     public const MAX_REQUEST_RETRY_DELAY  = 1000;
+
     /**
      * @var int
      */
     public const MAX_REQUEST_RETRY_JITTER = 100;
+
     /**
      * @var int
      */
@@ -208,7 +211,7 @@ final class HttpRequest
     /**
      * Add paths to the request URL.
      *
-     * @param array<int,string|null> $params String paths to append to the request.
+     * @param array<int,null|string> $params String paths to append to the request.
      */
     public function addPath(
         array $params = [],

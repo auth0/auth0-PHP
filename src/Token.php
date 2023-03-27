@@ -20,26 +20,32 @@ final class Token implements TokenInterface
      * @var string
      */
     public const ALGO_HS256        = 'HS256';
+
     /**
      * @var string
      */
     public const ALGO_HS384        = 'HS384';
+
     /**
      * @var string
      */
     public const ALGO_HS512        = 'HS512';
+
     /**
      * @var string
      */
     public const ALGO_RS256        = 'RS256';
+
     /**
      * @var string
      */
     public const ALGO_RS384        = 'RS384';
+
     /**
      * @var string
      */
     public const ALGO_RS512        = 'RS512';
+
     /**
      * @var int
      */
@@ -50,6 +56,7 @@ final class Token implements TokenInterface
      * @var int
      */
     public const TYPE_ID_TOKEN = 1;
+
     /**
      * @var int
      */

@@ -23,14 +23,17 @@ final class CookieStore implements StoreInterface
      * @var int
      */
     public const KEY_CHUNKING_THRESHOLD = 2048;
+
     /**
      * @var string
      */
     public const KEY_HASHING_ALGO       = 'sha256';
+
     /**
      * @var string
      */
     public const KEY_SEPARATOR          = '_';
+
     /**
      * @var string
      */
@@ -326,7 +329,7 @@ final class CookieStore implements StoreInterface
     /**
      * Setup our storage state by pulling from persistence source.
      *
-     * @param mixed[]|null $state skip loading any persistent source state and inject a custom state
+     * @param null|mixed[] $state skip loading any persistent source state and inject a custom state
      *
      * @return array<mixed>
      */

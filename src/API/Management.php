@@ -118,7 +118,6 @@ final class Management extends ClientAbstract implements ManagementInterface
 
             if ($item->isHit()) {
                 $managementToken = $item->get();
-
             }
         }
 

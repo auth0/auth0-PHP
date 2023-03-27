@@ -54,8 +54,8 @@ interface ClientGrantsInterface
      * Retrieve client grants, by page if desired.
      * Required scope: `read:client_grants`.
      *
-     * @param int[]|string[]|null[]|null $parameters Optional. Additional query parameters to pass with the API request. See @see for supported options.
-     * @param null|RequestOptions    $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param null|int[]|null[]|string[] $parameters Optional. Additional query parameters to pass with the API request. See @see for supported options.
+     * @param null|RequestOptions        $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *

@@ -24,7 +24,6 @@ use function array_key_exists;
 use function call_user_func_array;
 use function count;
 use function function_exists;
-use function gettype;
 use function in_array;
 use function is_array;
 use function is_bool;
@@ -92,6 +91,7 @@ final class Assert
      * @psalm-pure this method is not supposed to perform side-effects
      *
      * @psalm-return never
+     *
      * @return never
      */
     private static function reportInvalidArgument($message): void

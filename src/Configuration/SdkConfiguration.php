@@ -30,22 +30,27 @@ use function is_string;
 final class SdkConfiguration implements ConfigurableContract
 {
     use ConfigurableMixin;
+
     /**
      * @var string[]
      */
     public const STRATEGIES_USING_SESSIONS = [self::STRATEGY_REGULAR];
+
     /**
      * @var string
      */
     public const STRATEGY_API              = 'api';
+
     /**
      * @var string
      */
     public const STRATEGY_MANAGEMENT_API   = 'management';
+
     /**
      * @var string
      */
     public const STRATEGY_NONE             = 'none';
+
     /**
      * @var string
      */
@@ -1403,7 +1408,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param string[]|null $scope an array of scopes to request during authentication steps
+     * @param null|string[] $scope an array of scopes to request during authentication steps
      */
     public function setScope(?array $scope = ['openid', 'profile', 'email']): self
     {

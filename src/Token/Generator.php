@@ -13,13 +13,14 @@ use Auth0\SDK\Contract\Token\GeneratorInterface;
 use Auth0\SDK\Exception\TokenException;
 use Auth0\SDK\Token;
 use OpenSSLAsymmetricKey;
+use Stringable;
 use Throwable;
 use function extension_loaded;
 use function in_array;
 use function is_array;
 use function is_string;
 
-final class Generator implements GeneratorInterface, \Stringable
+final class Generator implements GeneratorInterface, Stringable
 {
     // Lookup table for supported digest algorithms as strings.
     /**

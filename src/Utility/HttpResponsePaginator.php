@@ -21,6 +21,7 @@ final class HttpResponsePaginator implements Countable, Iterator
 {
     /**
      * These endpoints support checkpoint-based pagination (from, take). A 'next' value will be present in responses if more results are available.
+     *
      * @var string[]
      */
     private const SUPPORTED_ENDPOINTS_WITH_CHECKPOINT = [
@@ -339,8 +340,8 @@ final class HttpResponsePaginator implements Countable, Iterator
     /**
      * Return the current result at our position, if available.
      *
-     *
      * @psalm-suppress InvalidAttribute
+     *
      * @codeCoverageIgnore
      */
     #[ReturnTypeWillChange]

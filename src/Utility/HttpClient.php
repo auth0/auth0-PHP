@@ -17,10 +17,12 @@ final class HttpClient
      * @var int
      */
     public const CONTEXT_AUTHENTICATION_CLIENT = 2;
+
     /**
      * @var int
      */
     public const CONTEXT_GENERIC_CLIENT        = 1;
+
     /**
      * @var int
      */
