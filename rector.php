@@ -422,7 +422,6 @@ return static function (RectorConfig $rectorConfig): void {
         ParamTypeFromStrictTypedPropertyRector::class,
         Php8ResourceReturnToObjectRector::class,
         PostIncDecToPreIncDecRector::class,
-        PreparedValueToEarlyReturnRector::class,
         PrivatizeFinalClassMethodRector::class,
         PrivatizeFinalClassPropertyRector::class,
         PropertyTypeFromStrictSetterGetterRector::class,
