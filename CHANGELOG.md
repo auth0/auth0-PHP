@@ -4,6 +4,10 @@
 
 ## [8.5.0](https://github.com/auth0/auth0-PHP/tree/8.5.0) - 2023-03-27
 
+This release improves the SDK's automatic discovery process of compatible HTTP clients, factories and messages (PSR-18, 17 and 7, respectively). If you encounter issues with your implementation not being discovered, please open an issue.
+
+This release also introduces support for a number of additional Management API endpoints.
+
 **Added**
 
 - **Management API**
@@ -18,22 +22,27 @@
     - `PATCH /api/v2/users/:user/authentication-methods/:method` → `updateAuthenticationMethod()` ([Documentation](https://auth0.com/docs/api/management/v2#!/Users/patch_authentication_methods_by_authentication_method_id))
     - `DELETE /api/v2/users/:user/authentication-methods/:method` → `deleteAuthenticationMethod()` ([Documentation](https://auth0.com/docs/api/management/v2#!/Users/delete_authentication_methods_by_authentication_method_id))
 
+**Fixed**
+
+- Wherein calls to certain methods under `Auth0\SDK\API\Authentication` with manually assigned `client_id` or `client_secret` parameters could have those values overwritten by the SDK's assigned configuration. [\#705](https://github.com/auth0/auth0-PHP/issues/705)
+
 **Changed**
 
 - Upgraded test suite to [PEST](https://pestphp.com/) 2.0 framework.
+- Updated code styling rules, along with some light refactoring.
 - Updated production dependencies:
-    - Replaced `php-http/discovery` dependency with `psr-discovery/all`.
-    - Replaced `php-http/httplug` dependency with `psr-discovery/all`.
+  - Replaced `php-http/discovery` dependency with `psr-discovery/all`.
+  - Replaced `php-http/httplug` dependency with `psr-discovery/all`.
 - Updated development dependencies:
-    - Removed `ergebnis/composer-normalize` as it now runs in CI.
-    - Removed `firebase/php-jwt` as it was replaced by an in-library generator.
-    - Replaced `hyperf/event` with `symfony/event-dispatcher`.
-    - Replaced `laravel/pint` with `friendsofphp/php-cs-fixer`.
-    - Replaced `nyholm/psr7` with `psr-mock/http-factory-implementation`.
-    - Replaced `php-http/mock-client` with `psr-mock/http-client-implementation`.
-    - Updated `vimeo/psalm` to 5.8.
-    - Updated `phpstan/phpstan` to 1.10.
-    - Updated `rector/rector` to 0.15.
+  - Removed `ergebnis/composer-normalize` as it now runs in CI.
+  - Removed `firebase/php-jwt` as it was replaced by an in-library generator.
+  - Replaced `hyperf/event` with `symfony/event-dispatcher`.
+  - Replaced `laravel/pint` with `friendsofphp/php-cs-fixer`.
+  - Replaced `nyholm/psr7` with `psr-mock/http-factory-implementation`.
+  - Replaced `php-http/mock-client` with `psr-mock/http-client-implementation`.
+  - Updated `vimeo/psalm` to 5.8.
+  - Updated `phpstan/phpstan` to 1.10.
+  - Updated `rector/rector` to 0.15.
 
 Thanks to our contributors for this release: [knash94](https://github.com/knash94)
 
