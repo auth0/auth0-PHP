@@ -60,7 +60,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         $clientAssertionSigningKey       = $this->getConfiguration()->getClientAssertionSigningKey();
         $clientAssertionSigningAlgorithm = $this->getConfiguration()->getClientAssertionSigningAlgorithm();
 
-        $requestBody['client_id'] = $clientId;
+        $requestBody['client_id'] ??= $clientId;
 
         if (null !== $clientAssertionSigningKey) {
             $requestBody['client_assertion_type'] = self::CONST_CLIENT_ASSERTION_TYPE;
@@ -74,7 +74,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             return $requestBody;
         }
 
-        $requestBody['client_secret'] = $this->getConfiguration()->getClientSecret(ConfigurationException::requiresClientSecret()) ?? '';
+        $requestBody['client_secret'] ??= $this->getConfiguration()->getClientSecret(ConfigurationException::requiresClientSecret()) ?? '';
 
         return $requestBody;
     }
