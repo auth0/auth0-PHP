@@ -54,6 +54,10 @@ We require 100% code coverage for all new features. If you are adding a new feat
 
 Pull requests that do not meet the minimum coverage requirements will not be merged.
 
+## Static Analysis
+
+We use [PHPStan](https://phpstan.org) and [Psalm](https://psalm.dev/) for static analysis. You can run `composer psalm` to run the static analysis. You can also run `composer psalm:coverage` to generate a code coverage report.
+
 ## Coding Style
 
 We use [PHP CS Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) to ensure that the code style is consistent. You can run `composer phpcs` to check for any code style issues. `composer phpcs:fix` will attempt to automatically fix the issues, but be cautious as it may not always get it right.
