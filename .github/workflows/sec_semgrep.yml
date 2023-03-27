@@ -1,6 +1,12 @@
 on:
   pull_request_target:
     types:
+      - closed
+      - reopened
+      - converted_to_draft
+      - review_requested
+      - review_request_removed
+      - synchronize
       - labeled
   push:
     branches:
@@ -20,7 +26,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - run: semgrep scan --sarif --output=semgrep.sarif
         env:
           SEMGREP_RULES: >-
@@ -31,12 +37,12 @@ jobs:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
           SEMGREP_REPO_NAME: "auth0/auth0-PHP"
           SEMGREP_REPO_URL: "https://github.com/auth0/auth0-PHP"
-          
+
       - uses: andstor/file-existence-action@v1
         id: sarif_file_exists
         with:
           files: "semgrep.sarif"
-          
+
       - uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: semgrep.sarif

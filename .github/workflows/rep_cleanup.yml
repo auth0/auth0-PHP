@@ -1,3 +1,5 @@
+name: Repo Maintenance
+
 on:
   pull_request_target:
     types:
@@ -9,8 +11,7 @@ on:
       - synchronize
 
 jobs:
-  rep-cleanup:
-    name: Issue/PR Cleanup
+  cleanup:
     runs-on: ubuntu-latest
 
     permissions:

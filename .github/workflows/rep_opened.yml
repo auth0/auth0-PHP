@@ -1,3 +1,5 @@
+name: Repo Maintenance
+
 on:
   pull_request_target:
     types:
@@ -8,8 +10,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  rep-opened:
-    name: PR/Issue Setup
+  opened:
     runs-on: ubuntu-latest
 
     steps:
