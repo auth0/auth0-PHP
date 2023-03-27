@@ -12,21 +12,13 @@ permissions:
 jobs:
   snyk:
     name: Snyk
-    runs-on: ${{ matrix.operating-systems }}
+    runs-on: ubuntu-latest
     if: github.event.label.name == 'run' || github.ref_name == 'main'
-
-    strategy:
-      fail-fast: false
-      matrix:
-        operating-systems:
-          - ubuntu-latest
-        php-versions:
-          - 8.1
 
     steps:
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: 8.1
           coverage: none
           extensions: mbstring
         env:
