@@ -33,12 +33,7 @@
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "php-http/multipart-stream-builder": "^1.2",
-    "psr-discovery/cache-implementations": "^1.0",
-    "psr-discovery/event-dispatcher-implementations": "^1.0",
-    "psr-discovery/http-client-implementations": "^1.0",
-    "psr-discovery/http-factory-implementations": "^1.0",
-    "psr/cache": "^2.0 || ^3.0",
-    "psr/event-dispatcher": "^1.0",
+    "psr-discovery/all": "^1.0",
     "psr/http-client-implementation": "^1.0",
     "psr/http-factory-implementation": "^1.0",
     "psr/http-message-implementation": "^1.0"
