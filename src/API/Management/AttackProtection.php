@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Attack Protection.
  * Handles requests to the Attack Protection endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Attack_Protection

@@ -10,9 +10,6 @@ use Auth0\SDK\Token\Parser;
 use Psr\Cache\CacheItemPoolInterface;
 use function is_string;
 
-/**
- * Class Token.
- */
 final class Token implements TokenInterface
 {
     // TODO: Replace these with an enum when PHP 8.1 is our min supported version.

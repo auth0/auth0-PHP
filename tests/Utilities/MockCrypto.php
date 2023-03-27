@@ -6,9 +6,6 @@ namespace Auth0\Tests\Utilities;
 
 use Auth0\SDK\Store\CookieStore;
 
-/**
- * Class MockDataset.
- */
 class MockCrypto
 {
     /**

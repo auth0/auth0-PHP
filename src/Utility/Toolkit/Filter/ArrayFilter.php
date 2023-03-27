@@ -10,9 +10,6 @@ use function array_slice;
 use function is_array;
 use function is_string;
 
-/**
- * Class ArrayFilter.
- */
 final class ArrayFilter
 {
     /**

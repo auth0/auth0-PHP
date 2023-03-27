@@ -6,9 +6,6 @@ namespace Auth0\Tests\Utilities;
 
 use Auth0\SDK\API\Authentication;
 
-/**
- * Class MockAuthenticationApi.
- */
 class AuthenticationMockClient extends MockClientAbstract
 {
     protected Authentication $client;

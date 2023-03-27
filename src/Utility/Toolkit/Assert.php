@@ -9,9 +9,6 @@ use Throwable;
 use function is_array;
 use function is_string;
 
-/**
- * Class Assert.
- */
 final class Assert
 {
     /**

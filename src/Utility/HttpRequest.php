@@ -19,9 +19,6 @@ use function is_object;
 use function is_resource;
 use function is_string;
 
-/**
- * Class HttpRequest.
- */
 final class HttpRequest
 {
     /**

@@ -15,9 +15,6 @@ use function count;
 use function is_array;
 use function is_string;
 
-/**
- * Class Auth0.
- */
 final class Auth0 implements Auth0Interface
 {
     /**

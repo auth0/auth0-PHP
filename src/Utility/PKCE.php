@@ -6,9 +6,6 @@ namespace Auth0\SDK\Utility;
 
 use Exception;
 
-/**
- * Class PKCE.
- */
 final class PKCE
 {
     /**

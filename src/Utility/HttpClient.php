@@ -8,9 +8,6 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Psr\Http\Message\ResponseInterface;
 use function in_array;
 
-/**
- * Class HttpClient.
- */
 final class HttpClient
 {
     /**

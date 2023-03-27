@@ -7,9 +7,6 @@ namespace Auth0\Tests\Utilities;
 use PsrDiscovery\Discover;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Class HttpResponseGenerator.
- */
 class HttpResponseGenerator
 {
     public static function create(

@@ -6,9 +6,6 @@ namespace Auth0\SDK\Utility\Toolkit;
 
 use Auth0\SDK\Utility\Toolkit\Filter\{ArrayFilter, StringFilter};
 
-/**
- * Class Filter.
- */
 final class Filter
 {
     /**

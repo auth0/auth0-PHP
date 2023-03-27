@@ -7,9 +7,6 @@ namespace Auth0\SDK\Utility;
 use Auth0\SDK\Contract\StoreInterface;
 use Exception;
 
-/**
- * Class TransientStoreHandler.
- */
 final class TransientStoreHandler
 {
     /**

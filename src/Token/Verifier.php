@@ -17,9 +17,6 @@ use function count;
 use function is_array;
 use function is_bool;
 
-/**
- * Class Verifier.
- */
 final class Verifier
 {
     /**

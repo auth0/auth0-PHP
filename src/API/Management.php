@@ -11,9 +11,6 @@ use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
 use Auth0\SDK\Utility\{HttpClient, HttpRequest, HttpResponse, HttpResponsePaginator};
 use function is_array;
 
-/**
- * Class Management.
- */
 final class Management extends ClientAbstract implements ManagementInterface
 {
     /**

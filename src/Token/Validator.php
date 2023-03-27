@@ -9,9 +9,6 @@ use function in_array;
 use function is_array;
 use function is_string;
 
-/**
- * Class Validator.
- */
 final class Validator implements ValidatorInterface
 {
     /**

@@ -24,9 +24,6 @@ use function is_bool;
 use function is_int;
 use function is_string;
 
-/**
- * Configuration container for use with Auth0\SDK.
- */
 final class SdkConfiguration implements ConfigurableContract
 {
     use ConfigurableMixin;

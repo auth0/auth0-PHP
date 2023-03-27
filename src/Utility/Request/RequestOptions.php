@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Utility\Request;
 
-/**
- * Class RequestOptions.
- */
 final class RequestOptions
 {
     /**

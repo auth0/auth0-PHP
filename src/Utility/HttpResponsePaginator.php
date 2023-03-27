@@ -13,8 +13,6 @@ use function count;
 use function is_array;
 
 /**
- * Class HttpResponsePaginator.
- *
  * @phpstan-implements \Iterator<int,mixed>
  */
 final class HttpResponsePaginator implements Countable, Iterator

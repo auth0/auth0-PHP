@@ -7,7 +7,6 @@ namespace Auth0\SDK\API\Management;
 use Auth0\SDK\Utility\{HttpClient, HttpRequest, HttpResponsePaginator};
 
 /**
- * Class ManagementEndpoint.
  * Extended by Management API endpoints classes.
  */
 abstract class ManagementEndpoint

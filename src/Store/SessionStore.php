@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use function defined;
 
 /**
- * Class SessionStore
  * This class provides a layer to persist data using PHP Sessions.
  */
 final class SessionStore implements StoreInterface

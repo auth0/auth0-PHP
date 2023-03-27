@@ -7,9 +7,6 @@ namespace Auth0\SDK\Contract;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
 
-/**
- * Interface Auth0Interface.
- */
 interface Auth0Interface
 {
     /**

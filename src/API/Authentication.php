@@ -12,9 +12,6 @@ use Auth0\SDK\Utility\{HttpClient, Toolkit};
 use Psr\Http\Message\ResponseInterface;
 use function is_array;
 
-/**
- * Class Authentication.
- */
 final class Authentication extends ClientAbstract implements AuthenticationInterface
 {
     /**

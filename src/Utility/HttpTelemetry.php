@@ -7,7 +7,6 @@ namespace Auth0\SDK\Utility;
 use Auth0\SDK\Auth0;
 
 /**
- * Class Telemetry
  * Builds, extends, modifies, and formats SDK telemetry data.
  */
 final class HttpTelemetry

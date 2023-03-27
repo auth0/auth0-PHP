@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class EmailTemplates.
  * Handles requests to the Email Templates endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Email_Templates

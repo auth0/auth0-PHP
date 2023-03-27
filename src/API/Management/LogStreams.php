@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class LogStreams.
  * Handles requests to the Log Streams endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Log_Streams

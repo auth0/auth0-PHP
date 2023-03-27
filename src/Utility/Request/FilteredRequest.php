@@ -6,9 +6,6 @@ namespace Auth0\SDK\Utility\Request;
 
 use function count;
 
-/**
- * Class FilteredRequest.
- */
 final class FilteredRequest
 {
     /**

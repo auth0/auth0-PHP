@@ -7,9 +7,6 @@ namespace Auth0\SDK\Contract\API\Management;
 use Auth0\SDK\Utility\Request\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Interface TicketsInterface.
- */
 interface TicketsInterface
 {
     /**

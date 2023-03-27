@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class ResourceServers.
  * Handles requests to the Resource Servers endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Resource_Servers

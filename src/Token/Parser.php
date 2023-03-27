@@ -11,9 +11,6 @@ use Psr\Cache\CacheItemPoolInterface;
 use function count;
 use function is_array;
 
-/**
- * Class Parser.
- */
 final class Parser
 {
     /**

@@ -7,9 +7,6 @@ namespace Auth0\SDK\Utility;
 use JsonException;
 use Psr\Http\Message\{ResponseInterface, StreamInterface};
 
-/**
- * Class HttpResponse.
- */
 final class HttpResponse
 {
     /**

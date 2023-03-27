@@ -9,9 +9,6 @@ use Auth0\SDK\Token\Generator;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-/**
- * Class TokenGenerator.
- */
 class TokenGenerator
 {
     public const ALG_RS256 = 1;

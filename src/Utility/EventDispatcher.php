@@ -8,9 +8,6 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Psr\EventDispatcher\{EventDispatcherInterface, ListenerProviderInterface, StoppableEventInterface};
 use stdClass;
 
-/**
- * Class EventDispatcher.
- */
 final class EventDispatcher implements EventDispatcherInterface
 {
     /**
