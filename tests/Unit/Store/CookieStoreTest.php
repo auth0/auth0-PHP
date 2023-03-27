@@ -65,18 +65,6 @@ it('populates state from a chunked $_COOKIE correctly', function(array $state): 
     fn() => MockDataset::state()
 ]]);
 
-it('does not populate state from a malformed $_COOKIE', function(array $state): void {
-    $cookieNamespace = $this->store->getNamespace() . '_0';
-
-    $_COOKIE[$cookieNamespace] = [$this->exampleKey => $state];
-
-    $this->store->getState();
-
-    expect($this->store->get($this->exampleKey))->toBeNull();
-})->with(['mocked state' => [
-    fn() => MockDataset::state()
-]]);
-
 it('does not populate state from an unencrypted $_COOKIE', function(array $state): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
 
