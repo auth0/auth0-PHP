@@ -1,3 +1,5 @@
+name: Snyk
+
 on:
   pull_request_target:
     types:
@@ -17,7 +19,6 @@ permissions:
 
 jobs:
   snyk:
-    name: Snyk
     runs-on: ubuntu-latest
     if: github.event.label.name == 'run' || github.ref_name == 'main'
 
