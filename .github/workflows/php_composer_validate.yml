@@ -1,7 +1,15 @@
 name: "Composer Validate"
 
 on:
-  pull_request_target: {}
+  pull_request_target:
+    types:
+      - closed
+      - reopened
+      - converted_to_draft
+      - review_requested
+      - review_request_removed
+      - synchronize
+      - labeled
   push:
     branches:
       - main
