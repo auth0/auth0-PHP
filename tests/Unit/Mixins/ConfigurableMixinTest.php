@@ -57,6 +57,34 @@ test('applyConfiguration() skips invalid properties', function(): void {
     expect($propNonexistent)->toBeTrue();
 });
 
+test('applyConfiguration() skips properties without configured defaults', function(): void {
+    $mockPropertyValue = uniqid();
+
+    $response = ObjectMutator::callMethod(
+        class: $this->configuration,
+        method: 'applyConfiguration',
+        args: [
+            'configuration' => [
+                'stringPropertyNoDefault' => 123
+            ]
+        ]
+    );
+
+    expect($response)->toBeInstanceOf(MockConfiguration::class);
+    expect(class_uses($response))->toHaveKey('Auth0\SDK\Mixins\ConfigurableMixin');
+    expect($response)->toEqual($this->configuration);
+
+    $defaultNonexistent = false;
+
+    try {
+        $defaultNonexistent = $this->configuration->getStringPropertyNoDefault();
+    } catch (Throwable $th) {
+        $defaultNonexistent = true;
+    }
+
+    expect($defaultNonexistent)->toBeTrue();
+});
+
 test('applyConfiguration() throws a ConfigurationException when a validator for a configured property does not exist', function(): void {
     ObjectMutator::callMethod(
         class: $this->configuration,

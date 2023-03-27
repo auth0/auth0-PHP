@@ -63,7 +63,7 @@ it('accepts and successfully parses a valid HS256 ID Token', function(
     $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
 
     expect($token)->toBeObject();
-    expect($token->getAudience()[0] ?? null)->toEqual($jwt->claims['aud'] ?? null);
+    expect($token->getAudience())->toEqual($jwt->claims['aud'] ?? null);
     expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
     expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
     expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
@@ -74,7 +74,7 @@ it('accepts and successfully parses a valid HS256 ID Token', function(
     expect($token->getSubject())->toEqual($jwt->claims['sub'] ?? null);
 })->with(['mocked hs256 id token' => [
     fn() => $this->configuration,
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256)
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['aud' => ['123', '456']])
 ]]);
 
 it('accepts and successfully parses a valid RS256 Access Token', function(
