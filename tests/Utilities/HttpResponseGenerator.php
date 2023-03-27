@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\Tests\Utilities;
 
-use Auth0\SDK\Utility\InterfaceDiscovery;
+use PsrDiscovery\Discover;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -17,7 +17,7 @@ class HttpResponseGenerator
         int $statusCode = 200,
         array $headers = []
     ): ResponseInterface {
-        $factory = InterfaceDiscovery::getResponseFactory();
+        $factory = Discover::httpResponseFactory();
         $response = $factory->createResponse($statusCode);
 
         foreach($headers as $header => $value) {

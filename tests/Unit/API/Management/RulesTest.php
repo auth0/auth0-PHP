@@ -49,7 +49,7 @@ test('create() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/rules');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'])->toEqual('application/json');
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('name', $body);
@@ -77,7 +77,7 @@ test('update() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/rules/' . $mockup->id);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'])->toEqual('application/json');
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBody();
     $this->assertArrayHasKey('test_parameter', $body);

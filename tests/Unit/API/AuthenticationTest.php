@@ -336,7 +336,7 @@ test('userInfo() is properly formatted', function(): void {
     expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
     expect($requestUri->getPath())->toEqual('/userinfo');
     $this->assertArrayHasKey('Authorization', $requestHeaders);
-    expect($requestHeaders['Authorization'])->toEqual('Bearer ' . $accessToken);
+    expect($requestHeaders['Authorization'][0])->toEqual('Bearer ' . $accessToken);
 });
 
 test('oauthToken() is properly formatted', function(): void {
@@ -461,7 +461,7 @@ test('clientCredentials() is properly formatted', function(): void {
     expect($requestBody)->toContain('testing=123');
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    expect($requestHeaders['header_testing'])->toEqual(123);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
 test('refreshToken() is properly formatted', function(): void {
@@ -488,7 +488,7 @@ test('refreshToken() is properly formatted', function(): void {
     expect($requestBody)->toContain('testing=123');
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    expect($requestHeaders['header_testing'])->toEqual(123);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
 test('dbConnectionsSignup() is properly formatted', function(): void {
@@ -524,7 +524,7 @@ test('dbConnectionsSignup() is properly formatted', function(): void {
     expect($requestBody['testing'])->toEqual(123);
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    expect($requestHeaders['header_testing'])->toEqual(123);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
 test('dbConnectionsChangePassword() is properly formatted', function(): void {
@@ -557,5 +557,5 @@ test('dbConnectionsChangePassword() is properly formatted', function(): void {
     expect($requestBody['testing'])->toEqual(123);
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
-    expect($requestHeaders['header_testing'])->toEqual(123);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
 });

@@ -44,7 +44,7 @@ test('createImportUsers() issues an appropriate request', function(): void {
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/jobs/users-imports');
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'])->toStartWith('multipart/form-data');
+    expect($headers['Content-Type'][0])->toStartWith('multipart/form-data');
 
     $form_body = $this->api->getRequestBodyAsString();
     $form_body_arr = explode("\r\n", $form_body);
@@ -137,7 +137,7 @@ test('createSendVerificationEmail() issues an appropriate request', function(): 
     expect($body['identity'])->toEqual($mock->body['identity']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'])->toEqual('application/json');
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBodyAsString();
     expect($body)->toEqual(json_encode(array_merge(['user_id' => $mock->userId], $mock->body)));

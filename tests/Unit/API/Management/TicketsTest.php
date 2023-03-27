@@ -30,7 +30,7 @@ test('createEmailVerification() issues an appropriate request', function(): void
     expect($body['identity'])->toEqual($mock->identity);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'])->toEqual('application/json');
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBodyAsString();
     expect($body)->toEqual(json_encode(['user_id' => $mock->userId, 'identity' => $mock->identity]));
@@ -67,7 +67,7 @@ test('createPasswordChange() issues an appropriate request', function(): void {
     expect($body['client_id'])->toEqual($mock['client_id']);
 
     $headers = $this->api->getRequestHeaders();
-    expect($headers['Content-Type'])->toEqual('application/json');
+    expect($headers['Content-Type'][0])->toEqual('application/json');
 
     $body = $this->api->getRequestBodyAsString();
     expect($body)->toEqual(json_encode($mock));
