@@ -449,6 +449,11 @@ final class Auth0 implements Auth0Interface
         return null;
     }
 
+    public function isAuthenticated(): bool
+    {
+        return null !== $this->getCredentials();
+    }
+
     public function login(
         ?string $redirectUrl = null,
         ?array $params = null,

@@ -172,6 +172,11 @@ interface Auth0Interface
     ): ?string;
 
     /**
+     * Returns true if a session is present. Your application must check if the session's access token has expired.
+     */
+    public function isAuthenticated(): bool;
+
+    /**
      * Return the url to the login page.
      *
      * @param null|string                 $redirectUrl Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.

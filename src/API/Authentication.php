@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API;
 
+use Auth0\SDK\API\Authentication\PushedAuthorizationRequest;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\AuthenticationInterface;
-use Auth0\SDK\Exception\{ConfigurationException, TokenException};
+use Auth0\SDK\Exception\Authentication\{ParRequestException, ParResponseException, ParUnexpectedResponseException};
+use Auth0\SDK\Exception\{ConfigurationException, NetworkException, TokenException};
 use Auth0\SDK\Token\ClientAssertionGenerator;
-use Auth0\SDK\Utility\{HttpClient, Toolkit};
+use Auth0\SDK\Utility\{HttpClient, HttpResponse, Toolkit};
 use Psr\Http\Message\ResponseInterface;
 
 use function is_array;
@@ -43,6 +45,31 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         private SdkConfiguration | array $configuration,
     ) {
         $this->getConfiguration();
+    }
+
+    public function addClientAuthentication(array $content): array
+    {
+        $clientId = $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()) ?? '';
+        $clientAssertionSigningKey = $this->getConfiguration()->getClientAssertionSigningKey();
+        $clientAssertionSigningAlgorithm = $this->getConfiguration()->getClientAssertionSigningAlgorithm();
+
+        $content['client_id'] ??= $clientId;
+
+        if (null !== $clientAssertionSigningKey) {
+            $content['client_assertion_type'] = self::CONST_CLIENT_ASSERTION_TYPE;
+            $content['client_assertion'] = (string) ClientAssertionGenerator::create(
+                domain: $this->getConfiguration()->formatDomain(true) . '/',
+                clientId: $clientId,
+                signingKey: $clientAssertionSigningKey,
+                signingAlgorithm: $clientAssertionSigningAlgorithm,
+            );
+
+            return $content;
+        }
+
+        $content['client_secret'] ??= $this->getConfiguration()->getClientSecret(ConfigurationException::requiresClientSecret()) ?? '';
+
+        return $content;
     }
 
     public function clientCredentials(
@@ -505,40 +532,5 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             ->addPath(['userinfo'])
             ->withHeader('Authorization', 'Bearer ' . ($accessToken ?? ''))
             ->call();
-    }
-
-    /**
-     * Add client authentication to a request body.
-     *
-     * @param array<mixed> $requestBody Request body being sent to the endpoint.
-     *
-     * @throws TokenException         If client assertion signing key or algorithm is invalid.
-     * @throws ConfigurationException If client ID or secret are invalid.
-     *
-     * @return array<mixed> Request body with client authentication added.
-     */
-    private function addClientAuthentication(array $requestBody): array
-    {
-        $clientId = $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()) ?? '';
-        $clientAssertionSigningKey = $this->getConfiguration()->getClientAssertionSigningKey();
-        $clientAssertionSigningAlgorithm = $this->getConfiguration()->getClientAssertionSigningAlgorithm();
-
-        $requestBody['client_id'] ??= $clientId;
-
-        if (null !== $clientAssertionSigningKey) {
-            $requestBody['client_assertion_type'] = self::CONST_CLIENT_ASSERTION_TYPE;
-            $requestBody['client_assertion'] = (string) ClientAssertionGenerator::create(
-                domain: $this->getConfiguration()->formatDomain(true) . '/',
-                clientId: $clientId,
-                signingKey: $clientAssertionSigningKey,
-                signingAlgorithm: $clientAssertionSigningAlgorithm,
-            );
-
-            return $requestBody;
-        }
-
-        $requestBody['client_secret'] ??= $this->getConfiguration()->getClientSecret(ConfigurationException::requiresClientSecret()) ?? '';
-
-        return $requestBody;
     }
 }
