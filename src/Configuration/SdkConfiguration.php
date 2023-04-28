@@ -18,6 +18,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\{RequestFactoryInterface, ResponseFactoryInterface, StreamFactoryInterface};
 use PsrDiscovery\Discover;
 use Throwable;
+
 use function in_array;
 use function is_array;
 use function is_bool;
@@ -36,22 +37,22 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * @var string
      */
-    public const STRATEGY_API              = 'api';
+    public const STRATEGY_API = 'api';
 
     /**
      * @var string
      */
-    public const STRATEGY_MANAGEMENT_API   = 'management';
+    public const STRATEGY_MANAGEMENT_API = 'management';
 
     /**
      * @var string
      */
-    public const STRATEGY_NONE             = 'none';
+    public const STRATEGY_NONE = 'none';
 
     /**
      * @var string
      */
-    public const STRATEGY_REGULAR          = 'webapp';
+    public const STRATEGY_REGULAR = 'webapp';
 
     /**
      * An instance of the EventDispatcher utility.
@@ -171,238 +172,6 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string}
-     */
-    private function getPropertyDefaults(): array
-    {
-        return [
-            'strategy'                        => self::STRATEGY_REGULAR,
-            'domain'                          => null,
-            'customDomain'                    => null,
-            'clientId'                        => null,
-            'redirectUri'                     => null,
-            'clientSecret'                    => null,
-            'audience'                        => null,
-            'organization'                    => null,
-            'usePkce'                         => true,
-            'scope'                           => ['openid', 'profile', 'email'],
-            'responseMode'                    => 'query',
-            'responseType'                    => 'code',
-            'tokenAlgorithm'                  => Token::ALGO_RS256,
-            'tokenJwksUri'                    => null,
-            'tokenMaxAge'                     => null,
-            'tokenLeeway'                     => 60,
-            'tokenCache'                      => null,
-            'tokenCacheTtl'                   => 60,
-            'httpClient'                      => null,
-            'httpMaxRetries'                  => 3,
-            'httpRequestFactory'              => null,
-            'httpResponseFactory'             => null,
-            'httpStreamFactory'               => null,
-            'httpTelemetry'                   => true,
-            'sessionStorage'                  => null,
-            'sessionStorageId'                => 'auth0_session',
-            'cookieSecret'                    => null,
-            'cookieDomain'                    => null,
-            'cookieExpires'                   => 0,
-            'cookiePath'                      => '/',
-            'cookieSecure'                    => false,
-            'cookieSameSite'                  => null,
-            'persistUser'                     => true,
-            'persistIdToken'                  => true,
-            'persistAccessToken'              => true,
-            'persistRefreshToken'             => true,
-            'transientStorage'                => null,
-            'transientStorageId'              => 'auth0_transient',
-            'queryUserInfo'                   => false,
-            'managementToken'                 => null,
-            'managementTokenCache'            => null,
-            'eventListenerProvider'           => null,
-            'clientAssertionSigningKey'       => null,
-            'clientAssertionSigningAlgorithm' => Token::ALGO_RS256,
-        ];
-    }
-
-    /**
-     * @return array<callable>
-     *
-     * @psalm-suppress MissingClosureParamType
-     */
-    private function getPropertyValidators(): array
-    {
-        return [
-            'strategy'                        => static fn ($value): bool => is_string($value),
-            'domain'                          => static fn ($value): bool => is_string($value) || null === $value,
-            'customDomain'                    => static fn ($value): bool => is_string($value) || null === $value,
-            'clientId'                        => static fn ($value): bool => is_string($value) || null === $value,
-            'redirectUri'                     => static fn ($value): bool => is_string($value) || null === $value,
-            'clientSecret'                    => static fn ($value): bool => is_string($value) || null === $value,
-            'audience'                        => static fn ($value): bool => is_array($value) || null === $value,
-            'organization'                    => static fn ($value): bool => is_array($value) || null === $value,
-            'usePkce'                         => static fn ($value): bool => is_bool($value),
-            'scope'                           => static fn ($value): bool => is_array($value) || null === $value,
-            'responseMode'                    => static fn ($value): bool => is_string($value),
-            'responseType'                    => static fn ($value): bool => is_string($value),
-            'tokenAlgorithm'                  => static fn ($value): bool => is_string($value),
-            'tokenJwksUri'                    => static fn ($value): bool => is_string($value) || null === $value,
-            'tokenMaxAge'                     => static fn ($value): bool => is_int($value) || null === $value,
-            'tokenLeeway'                     => static fn ($value): bool => is_int($value),
-            'tokenCache'                      => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
-            'tokenCacheTtl'                   => static fn ($value): bool => is_int($value),
-            'httpClient'                      => static fn ($value): bool => $value instanceof ClientInterface || null === $value,
-            'httpMaxRetries'                  => static fn ($value): bool => is_int($value),
-            'httpRequestFactory'              => static fn ($value): bool => $value instanceof RequestFactoryInterface || null === $value,
-            'httpResponseFactory'             => static fn ($value): bool => $value instanceof ResponseFactoryInterface || null === $value,
-            'httpStreamFactory'               => static fn ($value): bool => $value instanceof StreamFactoryInterface || null === $value,
-            'httpTelemetry'                   => static fn ($value): bool => is_bool($value),
-            'sessionStorage'                  => static fn ($value): bool => $value instanceof StoreInterface || null === $value,
-            'sessionStorageId'                => static fn ($value): bool => is_string($value),
-            'cookieSecret'                    => static fn ($value): bool => is_string($value) || null === $value,
-            'cookieDomain'                    => static fn ($value): bool => is_string($value) || null === $value,
-            'cookieExpires'                   => static fn ($value): bool => is_int($value),
-            'cookiePath'                      => static fn ($value): bool => is_string($value),
-            'cookieSecure'                    => static fn ($value): bool => is_bool($value),
-            'cookieSameSite'                  => static fn ($value): bool => is_string($value) || null === $value,
-            'persistUser'                     => static fn ($value): bool => is_bool($value),
-            'persistIdToken'                  => static fn ($value): bool => is_bool($value),
-            'persistAccessToken'              => static fn ($value): bool => is_bool($value),
-            'persistRefreshToken'             => static fn ($value): bool => is_bool($value),
-            'transientStorage'                => static fn ($value): bool => $value instanceof StoreInterface || null === $value,
-            'transientStorageId'              => static fn ($value): bool => is_string($value),
-            'queryUserInfo'                   => static fn ($value): bool => is_bool($value),
-            'managementToken'                 => static fn ($value): bool => is_string($value) || null === $value,
-            'managementTokenCache'            => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
-            'eventListenerProvider'           => static fn ($value): bool => $value instanceof ListenerProviderInterface || null === $value,
-            'clientAssertionSigningKey'       => static fn ($value): bool => $value instanceof OpenSSLAsymmetricKey || is_string($value) || null === $value,
-            'clientAssertionSigningAlgorithm' => static fn ($value): bool => is_string($value),
-        ];
-    }
-
-    /**
-     * Setup SDK factories.
-     *
-     * @codeCoverageIgnore
-     */
-    private function setupStateFactories(): void
-    {
-        $responseFactory = $this->getHttpResponseFactory() ?? Discover::httpResponseFactory();
-        $requestFactory  = $this->getHttpRequestFactory() ?? Discover::httpRequestFactory();
-        $streamFactory   = $this->getHttpStreamFactory() ?? Discover::httpStreamFactory();
-        $httpClient      = $this->getHttpClient() ?? Discover::httpClient();
-
-        Assert::isInstanceOf($requestFactory, RequestFactoryInterface::class, 'Could not find a PSR-17 compatible request factory. Please install one, or provide one using the `setHttpRequestFactory()` method.');
-        Assert::isInstanceOf($responseFactory, ResponseFactoryInterface::class, 'Could not find a PSR-17 compatible response factory. Please install one, or provide one using the `setHttpResponseFactory()` method.');
-        Assert::isInstanceOf($streamFactory, StreamFactoryInterface::class, 'Could not find a PSR-17 compatible stream factory. Please install one, or provide one using the `setHttpStreamFactory()` method.');
-        Assert::isInstanceOf($httpClient, ClientInterface::class, 'Could not find a PSR-18 compatible HTTP client. Please install one, or provide one using the `setHttpClient()` method.');
-
-        if (! $this->hasHttpClient()) {
-            $this->setHttpClient($httpClient);
-        }
-        if (! $this->hasHttpRequestFactory()) {
-            $this->setHttpRequestFactory($requestFactory);
-        }
-        if (! $this->hasHttpResponseFactory()) {
-            $this->setHttpResponseFactory($responseFactory);
-        }
-        if (! $this->hasHttpStreamFactory()) {
-            $this->setHttpStreamFactory($streamFactory);
-        }
-    }
-
-    /**
-     * Setup SDK storage state.
-     */
-    private function setupStateStorage(): void
-    {
-        if (! $this->getSessionStorage() instanceof StoreInterface) {
-            $this->setSessionStorage(new CookieStore($this, $this->getSessionStorageId()));
-        }
-
-        if (! $this->getTransientStorage() instanceof StoreInterface) {
-            $this->setTransientStorage(new CookieStore($this, $this->getTransientStorageId()));
-        }
-    }
-
-    /**
-     * Setup SDK validators based on strategy type.
-     *
-     * @param ?string $strategy
-     */
-    private function validateState(
-        ?string $strategy = null,
-    ): void {
-        $strategy ??= $this->getStrategy();
-
-        if (self::STRATEGY_REGULAR === $strategy) {
-            $this->validateStateWebApp();
-        }
-
-        if (self::STRATEGY_API === $strategy) {
-            $this->validateStateApi();
-        }
-
-        if (self::STRATEGY_MANAGEMENT_API === $strategy) {
-            $this->validateStateManagement();
-        }
-    }
-
-    /**
-     * Run validations for an API-only usage configuration.
-     */
-    private function validateStateApi(): void
-    {
-        if (! $this->hasDomain()) {
-            throw ConfigurationException::requiresDomain();
-        }
-
-        if (! $this->hasAudience()) {
-            throw ConfigurationException::requiresAudience();
-        }
-    }
-
-    /**
-     * Run validations for a Management-only usage configuration.
-     */
-    private function validateStateManagement(): void
-    {
-        if (! $this->hasDomain()) {
-            throw ConfigurationException::requiresDomain();
-        }
-
-        if (! $this->hasManagementToken()) {
-            if (! $this->hasClientId()) {
-                throw ConfigurationException::requiresClientId();
-            }
-
-            if (! $this->hasClientSecret() && ! $this->hasClientAssertionSigningKey()) {
-                throw ConfigurationException::requiresClientSecret();
-            }
-        }
-    }
-
-    /**
-     * Run validations for a general webapp usage configuration.
-     */
-    private function validateStateWebApp(): void
-    {
-        if (! $this->hasDomain()) {
-            throw ConfigurationException::requiresDomain();
-        }
-
-        if (! $this->hasClientId()) {
-            throw ConfigurationException::requiresClientId();
-        }
-
-        if ('HS256' === $this->getTokenAlgorithm() && ! $this->hasClientSecret()) {
-            throw ConfigurationException::requiresClientSecret();
-        }
-
-        if (! $this->hasCookieSecret()) {
-            throw ConfigurationException::requiresCookieSecret();
-        }
-    }
-
-    /**
      * Get the first configured audience.
      */
     public function defaultAudience(): string
@@ -445,7 +214,7 @@ final class SdkConfiguration implements ConfigurableContract
      */
     public function eventDispatcher(): EventDispatcher
     {
-        if (null === $this->eventDispatcher) {
+        if (! $this->eventDispatcher instanceof EventDispatcher) {
             $this->eventDispatcher = new EventDispatcher($this);
         }
 
@@ -852,12 +621,12 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function hasEventListenerProvider(): bool
     {
-        return null !== $this->eventListenerProvider;
+        return $this->eventListenerProvider instanceof ListenerProviderInterface;
     }
 
     public function hasHttpClient(): bool
     {
-        return null !== $this->httpClient;
+        return $this->httpClient instanceof ClientInterface;
     }
 
     public function hasHttpMaxRetries(): bool
@@ -867,17 +636,17 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function hasHttpRequestFactory(): bool
     {
-        return null !== $this->httpRequestFactory;
+        return $this->httpRequestFactory instanceof RequestFactoryInterface;
     }
 
     public function hasHttpResponseFactory(): bool
     {
-        return null !== $this->httpResponseFactory;
+        return $this->httpResponseFactory instanceof ResponseFactoryInterface;
     }
 
     public function hasHttpStreamFactory(): bool
     {
-        return null !== $this->httpStreamFactory;
+        return $this->httpStreamFactory instanceof StreamFactoryInterface;
     }
 
     public function hasHttpTelemetry(): bool
@@ -892,7 +661,7 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function hasManagementTokenCache(): bool
     {
-        return null !== $this->managementTokenCache;
+        return $this->managementTokenCache instanceof CacheItemPoolInterface;
     }
 
     public function hasOrganization(): bool
@@ -947,7 +716,7 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function hasSessionStorage(): bool
     {
-        return null !== $this->sessionStorage;
+        return $this->sessionStorage instanceof StoreInterface;
     }
 
     public function hasSessionStorageId(): bool
@@ -967,7 +736,7 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function hasTokenCache(): bool
     {
-        return null !== $this->tokenCache;
+        return $this->tokenCache instanceof CacheItemPoolInterface;
     }
 
     public function hasTokenCacheTtl(): bool
@@ -992,7 +761,7 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function hasTransientStorage(): bool
     {
-        return null !== $this->transientStorage;
+        return $this->transientStorage instanceof StoreInterface;
     }
 
     public function hasTransientStorageId(): bool
@@ -1548,5 +1317,237 @@ final class SdkConfiguration implements ConfigurableContract
     public function usingStatefulness(): bool
     {
         return in_array($this->getStrategy(), self::STRATEGIES_USING_SESSIONS, true);
+    }
+
+    /**
+     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string}
+     */
+    private function getPropertyDefaults(): array
+    {
+        return [
+            'strategy' => self::STRATEGY_REGULAR,
+            'domain' => null,
+            'customDomain' => null,
+            'clientId' => null,
+            'redirectUri' => null,
+            'clientSecret' => null,
+            'audience' => null,
+            'organization' => null,
+            'usePkce' => true,
+            'scope' => ['openid', 'profile', 'email'],
+            'responseMode' => 'query',
+            'responseType' => 'code',
+            'tokenAlgorithm' => Token::ALGO_RS256,
+            'tokenJwksUri' => null,
+            'tokenMaxAge' => null,
+            'tokenLeeway' => 60,
+            'tokenCache' => null,
+            'tokenCacheTtl' => 60,
+            'httpClient' => null,
+            'httpMaxRetries' => 3,
+            'httpRequestFactory' => null,
+            'httpResponseFactory' => null,
+            'httpStreamFactory' => null,
+            'httpTelemetry' => true,
+            'sessionStorage' => null,
+            'sessionStorageId' => 'auth0_session',
+            'cookieSecret' => null,
+            'cookieDomain' => null,
+            'cookieExpires' => 0,
+            'cookiePath' => '/',
+            'cookieSecure' => false,
+            'cookieSameSite' => null,
+            'persistUser' => true,
+            'persistIdToken' => true,
+            'persistAccessToken' => true,
+            'persistRefreshToken' => true,
+            'transientStorage' => null,
+            'transientStorageId' => 'auth0_transient',
+            'queryUserInfo' => false,
+            'managementToken' => null,
+            'managementTokenCache' => null,
+            'eventListenerProvider' => null,
+            'clientAssertionSigningKey' => null,
+            'clientAssertionSigningAlgorithm' => Token::ALGO_RS256,
+        ];
+    }
+
+    /**
+     * @return array<callable>
+     *
+     * @psalm-suppress MissingClosureParamType
+     */
+    private function getPropertyValidators(): array
+    {
+        return [
+            'strategy' => static fn ($value): bool => is_string($value),
+            'domain' => static fn ($value): bool => is_string($value) || null === $value,
+            'customDomain' => static fn ($value): bool => is_string($value) || null === $value,
+            'clientId' => static fn ($value): bool => is_string($value) || null === $value,
+            'redirectUri' => static fn ($value): bool => is_string($value) || null === $value,
+            'clientSecret' => static fn ($value): bool => is_string($value) || null === $value,
+            'audience' => static fn ($value): bool => is_array($value) || null === $value,
+            'organization' => static fn ($value): bool => is_array($value) || null === $value,
+            'usePkce' => static fn ($value): bool => is_bool($value),
+            'scope' => static fn ($value): bool => is_array($value) || null === $value,
+            'responseMode' => static fn ($value): bool => is_string($value),
+            'responseType' => static fn ($value): bool => is_string($value),
+            'tokenAlgorithm' => static fn ($value): bool => is_string($value),
+            'tokenJwksUri' => static fn ($value): bool => is_string($value) || null === $value,
+            'tokenMaxAge' => static fn ($value): bool => is_int($value) || null === $value,
+            'tokenLeeway' => static fn ($value): bool => is_int($value),
+            'tokenCache' => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
+            'tokenCacheTtl' => static fn ($value): bool => is_int($value),
+            'httpClient' => static fn ($value): bool => $value instanceof ClientInterface || null === $value,
+            'httpMaxRetries' => static fn ($value): bool => is_int($value),
+            'httpRequestFactory' => static fn ($value): bool => $value instanceof RequestFactoryInterface || null === $value,
+            'httpResponseFactory' => static fn ($value): bool => $value instanceof ResponseFactoryInterface || null === $value,
+            'httpStreamFactory' => static fn ($value): bool => $value instanceof StreamFactoryInterface || null === $value,
+            'httpTelemetry' => static fn ($value): bool => is_bool($value),
+            'sessionStorage' => static fn ($value): bool => $value instanceof StoreInterface || null === $value,
+            'sessionStorageId' => static fn ($value): bool => is_string($value),
+            'cookieSecret' => static fn ($value): bool => is_string($value) || null === $value,
+            'cookieDomain' => static fn ($value): bool => is_string($value) || null === $value,
+            'cookieExpires' => static fn ($value): bool => is_int($value),
+            'cookiePath' => static fn ($value): bool => is_string($value),
+            'cookieSecure' => static fn ($value): bool => is_bool($value),
+            'cookieSameSite' => static fn ($value): bool => is_string($value) || null === $value,
+            'persistUser' => static fn ($value): bool => is_bool($value),
+            'persistIdToken' => static fn ($value): bool => is_bool($value),
+            'persistAccessToken' => static fn ($value): bool => is_bool($value),
+            'persistRefreshToken' => static fn ($value): bool => is_bool($value),
+            'transientStorage' => static fn ($value): bool => $value instanceof StoreInterface || null === $value,
+            'transientStorageId' => static fn ($value): bool => is_string($value),
+            'queryUserInfo' => static fn ($value): bool => is_bool($value),
+            'managementToken' => static fn ($value): bool => is_string($value) || null === $value,
+            'managementTokenCache' => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
+            'eventListenerProvider' => static fn ($value): bool => $value instanceof ListenerProviderInterface || null === $value,
+            'clientAssertionSigningKey' => static fn ($value): bool => $value instanceof OpenSSLAsymmetricKey || is_string($value) || null === $value,
+            'clientAssertionSigningAlgorithm' => static fn ($value): bool => is_string($value),
+        ];
+    }
+
+    /**
+     * Setup SDK factories.
+     *
+     * @codeCoverageIgnore
+     */
+    private function setupStateFactories(): void
+    {
+        $responseFactory = $this->getHttpResponseFactory() ?? Discover::httpResponseFactory();
+        $requestFactory = $this->getHttpRequestFactory() ?? Discover::httpRequestFactory();
+        $streamFactory = $this->getHttpStreamFactory() ?? Discover::httpStreamFactory();
+        $httpClient = $this->getHttpClient() ?? Discover::httpClient();
+
+        Assert::isInstanceOf($requestFactory, RequestFactoryInterface::class, 'Could not find a PSR-17 compatible request factory. Please install one, or provide one using the `setHttpRequestFactory()` method.');
+        Assert::isInstanceOf($responseFactory, ResponseFactoryInterface::class, 'Could not find a PSR-17 compatible response factory. Please install one, or provide one using the `setHttpResponseFactory()` method.');
+        Assert::isInstanceOf($streamFactory, StreamFactoryInterface::class, 'Could not find a PSR-17 compatible stream factory. Please install one, or provide one using the `setHttpStreamFactory()` method.');
+        Assert::isInstanceOf($httpClient, ClientInterface::class, 'Could not find a PSR-18 compatible HTTP client. Please install one, or provide one using the `setHttpClient()` method.');
+
+        if (! $this->hasHttpClient()) {
+            $this->setHttpClient($httpClient);
+        }
+        if (! $this->hasHttpRequestFactory()) {
+            $this->setHttpRequestFactory($requestFactory);
+        }
+        if (! $this->hasHttpResponseFactory()) {
+            $this->setHttpResponseFactory($responseFactory);
+        }
+        if (! $this->hasHttpStreamFactory()) {
+            $this->setHttpStreamFactory($streamFactory);
+        }
+    }
+
+    /**
+     * Setup SDK storage state.
+     */
+    private function setupStateStorage(): void
+    {
+        if (! $this->getSessionStorage() instanceof StoreInterface) {
+            $this->setSessionStorage(new CookieStore($this, $this->getSessionStorageId()));
+        }
+
+        if (! $this->getTransientStorage() instanceof StoreInterface) {
+            $this->setTransientStorage(new CookieStore($this, $this->getTransientStorageId()));
+        }
+    }
+
+    /**
+     * Setup SDK validators based on strategy type.
+     *
+     * @param ?string $strategy
+     */
+    private function validateState(
+        ?string $strategy = null,
+    ): void {
+        $strategy ??= $this->getStrategy();
+
+        if (self::STRATEGY_REGULAR === $strategy) {
+            $this->validateStateWebApp();
+        }
+
+        if (self::STRATEGY_API === $strategy) {
+            $this->validateStateApi();
+        }
+
+        if (self::STRATEGY_MANAGEMENT_API === $strategy) {
+            $this->validateStateManagement();
+        }
+    }
+
+    /**
+     * Run validations for an API-only usage configuration.
+     */
+    private function validateStateApi(): void
+    {
+        if (! $this->hasDomain()) {
+            throw ConfigurationException::requiresDomain();
+        }
+
+        if (! $this->hasAudience()) {
+            throw ConfigurationException::requiresAudience();
+        }
+    }
+
+    /**
+     * Run validations for a Management-only usage configuration.
+     */
+    private function validateStateManagement(): void
+    {
+        if (! $this->hasDomain()) {
+            throw ConfigurationException::requiresDomain();
+        }
+
+        if (! $this->hasManagementToken()) {
+            if (! $this->hasClientId()) {
+                throw ConfigurationException::requiresClientId();
+            }
+
+            if (! $this->hasClientSecret() && ! $this->hasClientAssertionSigningKey()) {
+                throw ConfigurationException::requiresClientSecret();
+            }
+        }
+    }
+
+    /**
+     * Run validations for a general webapp usage configuration.
+     */
+    private function validateStateWebApp(): void
+    {
+        if (! $this->hasDomain()) {
+            throw ConfigurationException::requiresDomain();
+        }
+
+        if (! $this->hasClientId()) {
+            throw ConfigurationException::requiresClientId();
+        }
+
+        if ('HS256' === $this->getTokenAlgorithm() && ! $this->hasClientSecret()) {
+            throw ConfigurationException::requiresClientSecret();
+        }
+
+        if (! $this->hasCookieSecret()) {
+            throw ConfigurationException::requiresCookieSecret();
+        }
     }
 }

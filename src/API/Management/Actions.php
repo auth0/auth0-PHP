@@ -204,7 +204,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
@@ -227,7 +227,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
@@ -251,7 +251,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$triggerId] = Toolkit::filter([$triggerId])->string()->trim();
-        [$body]      = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$triggerId, \Auth0\SDK\Exception\ArgumentException::missing('triggerId')],

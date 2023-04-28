@@ -7,12 +7,14 @@ namespace Auth0\SDK\Token;
 use const OPENSSL_ALGO_SHA256;
 use const OPENSSL_ALGO_SHA384;
 use const OPENSSL_ALGO_SHA512;
+
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use Auth0\SDK\Utility\{HttpClient, HttpRequest, HttpResponse};
 use OpenSSLAsymmetricKey;
-use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
 use Throwable;
+
 use function count;
 use function is_array;
 use function is_bool;
@@ -46,6 +48,84 @@ final class Verifier
         private ?array &$mockedHttpResponses = null,
     ) {
         $this->verify();
+    }
+
+    /**
+     * Verify the token signature.
+     *
+     * @throws \Auth0\SDK\Exception\InvalidTokenException When signature verification fails. See exception message for details.
+     *
+     * @psalm-suppress PossiblyInvalidArgument
+     */
+    public function verify(): self
+    {
+        $alg = $this->headers['alg'] ?? null;
+
+        if (null === $alg) {
+            throw \Auth0\SDK\Exception\InvalidTokenException::missingAlgHeader();
+        }
+
+        if (null !== $this->algorithm && $this->algorithm !== $alg) {
+            throw \Auth0\SDK\Exception\InvalidTokenException::unexpectedSigningAlgorithm($this->algorithm, (string) $alg);
+        }
+
+        $usesHmac = match ($alg) {
+            Token::ALGO_HS256, Token::ALGO_HS384, Token::ALGO_HS512 => true,
+            default => false,
+        };
+
+        if ($usesHmac) {
+            if (null === $this->clientSecret) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::requiresClientSecret();
+            }
+
+            $digest = match ($alg) {
+                Token::ALGO_HS256 => 'sha256',
+                Token::ALGO_HS384 => 'sha384',
+                Token::ALGO_HS512 => 'sha512',
+                default => throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg),
+            };
+
+            $hash = hash_hmac($digest, $this->payload, $this->clientSecret, true);
+            $valid = hash_equals($hash, $this->signature);
+
+            if (! $valid) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
+            }
+
+            return $this;
+        }
+
+        $usesRsa = match ($alg) {
+            Token::ALGO_RS256, Token::ALGO_RS384, Token::ALGO_RS512 => true,
+            default => false,
+        };
+
+        if ($usesRsa) {
+            $digest = match ($alg) {
+                Token::ALGO_RS256 => OPENSSL_ALGO_SHA256,
+                Token::ALGO_RS384 => OPENSSL_ALGO_SHA384,
+                Token::ALGO_RS512 => OPENSSL_ALGO_SHA512,
+                default => throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg),
+            };
+
+            $kid = $this->headers['kid'] ?? null;
+
+            if (null === $kid) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::missingKidHeader();
+            }
+
+            $key = $this->getKey((string) $kid);
+            $valid = openssl_verify($this->payload, $this->signature, $key, $digest);
+
+            if (1 !== $valid) {
+                throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
+            }
+
+            return $this;
+        }
+
+        throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg);
     }
 
     /**
@@ -99,7 +179,7 @@ final class Verifier
         }
 
         $jwksCacheKey = hash('sha256', $this->jwksUri);
-        $jwksUri      = parse_url($this->jwksUri);
+        $jwksUri = parse_url($this->jwksUri);
 
         // @phpstan-ignore-next-line
         if (! $jwksCacheKey || ! is_array($jwksUri)) {
@@ -107,13 +187,13 @@ final class Verifier
         }
 
         $scheme = $jwksUri['scheme'] ?? 'https';
-        $path   = $jwksUri['path'] ?? '/.well-known/jwks.json';
-        $host   = $jwksUri['host'] ?? $this->configuration->getDomain() ?? '';
-        $item   = null;
+        $path = $jwksUri['path'] ?? '/.well-known/jwks.json';
+        $host = $jwksUri['host'] ?? $this->configuration->getDomain() ?? '';
+        $item = null;
 
         $response = [];
 
-        if (null !== $this->cache) {
+        if ($this->cache instanceof CacheItemPoolInterface) {
             $item = $this->cache->getItem($jwksCacheKey);
 
             if ($item->isHit()) {
@@ -143,7 +223,7 @@ final class Verifier
                 }
             }
 
-            if ([] !== $response && null !== $item) {
+            if ([] !== $response && $item instanceof CacheItemInterface) {
                 $item->set($response);
                 $item->expiresAfter($this->cacheExpires ?? 60);
                 $this->cache->save($item);
@@ -151,83 +231,5 @@ final class Verifier
         }
 
         return $response;
-    }
-
-    /**
-     * Verify the token signature.
-     *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When signature verification fails. See exception message for details.
-     *
-     * @psalm-suppress PossiblyInvalidArgument
-     */
-    public function verify(): self
-    {
-        $alg = $this->headers['alg'] ?? null;
-
-        if (null === $alg) {
-            throw \Auth0\SDK\Exception\InvalidTokenException::missingAlgHeader();
-        }
-
-        if (null !== $this->algorithm && $this->algorithm !== $alg) {
-            throw \Auth0\SDK\Exception\InvalidTokenException::unexpectedSigningAlgorithm($this->algorithm, (string) $alg);
-        }
-
-        $usesHmac = match ($alg) {
-            Token::ALGO_HS256, Token::ALGO_HS384, Token::ALGO_HS512 => true,
-            default => false,
-        };
-
-        if ($usesHmac) {
-            if (null === $this->clientSecret) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::requiresClientSecret();
-            }
-
-            $digest = match ($alg) {
-                Token::ALGO_HS256 => 'sha256',
-                Token::ALGO_HS384 => 'sha384',
-                Token::ALGO_HS512 => 'sha512',
-                default           => throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg),
-            };
-
-            $hash  = hash_hmac($digest, $this->payload, $this->clientSecret, true);
-            $valid = hash_equals($hash, $this->signature);
-
-            if (! $valid) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
-            }
-
-            return $this;
-        }
-
-        $usesRsa = match ($alg) {
-            Token::ALGO_RS256, Token::ALGO_RS384, Token::ALGO_RS512 => true,
-            default => false,
-        };
-
-        if ($usesRsa) {
-            $digest = match ($alg) {
-                Token::ALGO_RS256 => OPENSSL_ALGO_SHA256,
-                Token::ALGO_RS384 => OPENSSL_ALGO_SHA384,
-                Token::ALGO_RS512 => OPENSSL_ALGO_SHA512,
-                default           => throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg),
-            };
-
-            $kid = $this->headers['kid'] ?? null;
-
-            if (null === $kid) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::missingKidHeader();
-            }
-
-            $key   = $this->getKey((string) $kid);
-            $valid = openssl_verify($this->payload, $this->signature, $key, $digest);
-
-            if (1 !== $valid) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::badSignature();
-            }
-
-            return $this;
-        }
-
-        throw \Auth0\SDK\Exception\InvalidTokenException::unsupportedSigningAlgorithm((string) $alg);
     }
 }

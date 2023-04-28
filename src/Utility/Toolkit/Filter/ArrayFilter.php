@@ -6,6 +6,7 @@ namespace Auth0\SDK\Utility\Toolkit\Filter;
 
 use Auth0\SDK\Utility\Toolkit;
 use Throwable;
+
 use function array_slice;
 use function is_array;
 use function is_string;

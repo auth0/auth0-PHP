@@ -8,7 +8,8 @@ use Auth0\SDK\Contract\{Auth0Event, StoreInterface};
 
 final class Get implements Auth0Event
 {
-    private ?bool $missed  = null;
+    private ?bool $missed = null;
+
     private ?bool $success = null;
 
     /**

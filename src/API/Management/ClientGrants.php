@@ -23,7 +23,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$clientId, $audience] = Toolkit::filter([$clientId, $audience])->string()->trim();
-        [$scope]               = Toolkit::filter([$scope])->array()->trim();
+        [$scope] = Toolkit::filter([$scope])->array()->trim();
 
         Toolkit::assert([
             [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
@@ -36,8 +36,8 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             ->withBody(
                 (object) [
                     'client_id' => $clientId,
-                    'audience'  => $audience,
-                    'scope'     => $scope,
+                    'audience' => $audience,
+                    'scope' => $scope,
                 ],
             )
             ->withOptions($options)
@@ -81,7 +81,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         ?array $parameters = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$audience]   = Toolkit::filter([$audience])->string()->trim();
+        [$audience] = Toolkit::filter([$audience])->string()->trim();
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
         Toolkit::assert([
@@ -103,7 +103,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         ?array $parameters = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$clientId]   = Toolkit::filter([$clientId])->string()->trim();
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
         Toolkit::assert([
@@ -126,7 +126,7 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$grantId] = Toolkit::filter([$grantId])->string()->trim();
-        [$scope]   = Toolkit::filter([$scope])->array()->trim();
+        [$scope] = Toolkit::filter([$scope])->array()->trim();
 
         Toolkit::assert([
             [$grantId, \Auth0\SDK\Exception\ArgumentException::missing('grantId')],

@@ -21,7 +21,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         array $permissions,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]          = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$permissions] = Toolkit::filter([$permissions])->array()->trim();
 
         Toolkit::assert([
@@ -46,7 +46,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         array $users,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]    = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$users] = Toolkit::filter([$users])->array()->trim();
 
         Toolkit::assert([
@@ -177,7 +177,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         array $permissions,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]          = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$permissions] = Toolkit::filter([$permissions])->array()->trim();
 
         Toolkit::assert([
@@ -202,7 +202,7 @@ final class Roles extends ManagementEndpoint implements RolesInterface
         array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([

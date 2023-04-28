@@ -8,6 +8,9 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Token\Parser;
 use Psr\Cache\CacheItemPoolInterface;
+
+use function is_array;
+use function is_int;
 use function is_string;
 
 final class Token implements TokenInterface
@@ -16,39 +19,38 @@ final class Token implements TokenInterface
     /**
      * @var string
      */
-    public const ALGO_HS256        = 'HS256';
+    public const ALGO_HS256 = 'HS256';
 
     /**
      * @var string
      */
-    public const ALGO_HS384        = 'HS384';
+    public const ALGO_HS384 = 'HS384';
 
     /**
      * @var string
      */
-    public const ALGO_HS512        = 'HS512';
+    public const ALGO_HS512 = 'HS512';
 
     /**
      * @var string
      */
-    public const ALGO_RS256        = 'RS256';
+    public const ALGO_RS256 = 'RS256';
 
     /**
      * @var string
      */
-    public const ALGO_RS384        = 'RS384';
+    public const ALGO_RS384 = 'RS384';
 
     /**
      * @var string
      */
-    public const ALGO_RS512        = 'RS512';
+    public const ALGO_RS512 = 'RS512';
 
     /**
      * @var int
      */
     public const TYPE_ACCESS_TOKEN = 2;
 
-    // TODO: Replace these with an enum when PHP 8.1 is our min supported version.
     /**
      * @var int
      */
@@ -57,8 +59,9 @@ final class Token implements TokenInterface
     /**
      * @var int
      */
-    public const TYPE_TOKEN    = 2;
-    private ?Parser $parser    = null;
+    public const TYPE_TOKEN = 2;
+
+    private ?Parser $parser = null;
 
     /**
      * Constructor for Token handling class.
@@ -76,84 +79,108 @@ final class Token implements TokenInterface
     ) {
     }
 
-    private function getParser(): Parser
-    {
-        if (null === $this->parser) {
-            $this->parser = new Parser($this->configuration, $this->jwt);
-        }
-
-        return $this->parser;
-    }
-
     public function getAudience(): ?array
     {
         $claim = $this->getParser()->getClaim('aud');
+        $reshaped = [];
 
-        if (is_string($claim)) {
-            return [$claim];
+        if (is_string($claim) || is_int($claim)) {
+            $claim = [$claim];
         }
 
-        /** @var null|array<string> $claim */
-        return $claim;
+        if (! is_array($claim)) {
+            return null;
+        }
+
+        foreach ($claim as $k => $v) {
+            if (is_string($v) && ctype_digit($v)) {
+                $v = (int) $v;
+            }
+
+            if (is_string($v) || is_int($v)) {
+                $reshaped[$k] = (string) $v;
+            }
+        }
+
+        return $reshaped;
     }
 
     public function getAuthorizedParty(): ?string
     {
-        $claim = $this->getParser()->getClaim('azp');
-        /** @var null|string $claim */
-        return $claim;
+        if (is_string($claim = $this->getParser()->getClaim('azp'))) {
+            return $claim;
+        }
+
+        return null;
     }
 
     public function getAuthTime(): ?int
     {
-        /** @var null|int|string $response */
-        $response = $this->getParser()->getClaim('auth_time');
+        $claim = $this->getParser()->getClaim('auth_time');
 
-        return null === $response ? null : (int) $response;
+        if (is_int($claim) || is_string($claim) && ctype_digit($claim)) {
+            return (int) $claim;
+        }
+
+        return null;
     }
 
     public function getExpiration(): ?int
     {
-        /** @var null|int|string $response */
-        $response = $this->getParser()->getClaim('exp');
+        $claim = $this->getParser()->getClaim('exp');
 
-        return null === $response ? null : (int) $response;
+        if (is_int($claim) || is_string($claim) && ctype_digit($claim)) {
+            return (int) $claim;
+        }
+
+        return null;
     }
 
     public function getIssued(): ?int
     {
-        /** @var null|int|string $response */
-        $response = $this->getParser()->getClaim('iat');
+        $claim = $this->getParser()->getClaim('iat');
 
-        return null === $response ? null : (int) $response;
+        if (is_int($claim) || is_string($claim) && ctype_digit($claim)) {
+            return (int) $claim;
+        }
+
+        return null;
     }
 
     public function getIssuer(): ?string
     {
-        $claim = $this->getParser()->getClaim('iss');
-        /** @var null|string $claim */
-        return $claim;
+        if (is_string($claim = $this->getParser()->getClaim('iss'))) {
+            return $claim;
+        }
+
+        return null;
     }
 
     public function getNonce(): ?string
     {
-        $claim = $this->getParser()->getClaim('nonce');
-        /** @var null|string $claim */
-        return $claim;
+        if (is_string($claim = $this->getParser()->getClaim('nonce'))) {
+            return $claim;
+        }
+
+        return null;
     }
 
     public function getOrganization(): ?string
     {
-        $claim = $this->getParser()->getClaim('org_id');
-        /** @var null|string $claim */
-        return $claim;
+        if (is_string($claim = $this->getParser()->getClaim('org_id'))) {
+            return $claim;
+        }
+
+        return null;
     }
 
     public function getSubject(): ?string
     {
-        $claim = $this->getParser()->getClaim('sub');
-        /** @var null|string $claim */
-        return $claim;
+        if (is_string($claim = $this->getParser()->getClaim('sub'))) {
+            return $claim;
+        }
+
+        return null;
     }
 
     public function parse(
@@ -188,7 +215,7 @@ final class Token implements TokenInterface
         $tokenMaxAge ??= $this->configuration->getTokenMaxAge() ?? null;
         $tokenLeeway ??= $this->configuration->getTokenLeeway() ?? 60;
         $tokenAudience[] = (string) $this->configuration->getClientId();
-        $tokenAudience   = array_unique($tokenAudience);
+        $tokenAudience = array_unique($tokenAudience);
 
         $validator = $this->getParser()->validate();
         $tokenNow ??= time();
@@ -246,5 +273,14 @@ final class Token implements TokenInterface
         );
 
         return $this;
+    }
+
+    private function getParser(): Parser
+    {
+        if (! $this->parser instanceof Parser) {
+            $this->parser = new Parser($this->configuration, $this->jwt);
+        }
+
+        return $this->parser;
     }
 }

@@ -25,7 +25,7 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$deviceName, $type, $value, $deviceId] = Toolkit::filter([$deviceName, $type, $value, $deviceId])->string()->trim();
-        [$body]                                 = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$deviceName, \Auth0\SDK\Exception\ArgumentException::missing('deviceName')],
@@ -42,9 +42,9 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
             ->withBody(
                 (object) Toolkit::merge([[
                     'device_name' => $deviceName,
-                    'type'        => $type,
-                    'value'       => $value,
-                    'device_id'   => $deviceId,
+                    'type' => $type,
+                    'value' => $value,
+                    'device_id' => $deviceId,
                 ], $body]),
             )
             ->withOptions($options)
@@ -83,9 +83,9 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
 
         $params = Toolkit::filter([
             [
-                'user_id'   => $userId,
+                'user_id' => $userId,
                 'client_id' => $clientId,
-                'type'      => $type,
+                'type' => $type,
             ],
         ])->array()->trim()[0];
 

@@ -11,6 +11,7 @@ use Exception;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\{RequestInterface, ResponseInterface, StreamInterface};
+
 use function defined;
 use function is_array;
 use function is_bool;
@@ -24,12 +25,12 @@ final class HttpRequest
     /**
      * @var int
      */
-    public const MAX_REQUEST_RETRIES      = 10;
+    public const MAX_REQUEST_RETRIES = 10;
 
     /**
      * @var int
      */
-    public const MAX_REQUEST_RETRY_DELAY  = 1000;
+    public const MAX_REQUEST_RETRY_DELAY = 1000;
 
     /**
      * @var int
@@ -39,7 +40,7 @@ final class HttpRequest
     /**
      * @var int
      */
-    public const MIN_REQUEST_RETRY_DELAY  = 100;
+    public const MIN_REQUEST_RETRY_DELAY = 100;
 
     /**
      * Request body.
@@ -119,76 +120,6 @@ final class HttpRequest
     }
 
     /**
-     * Build a multi-part request.
-     *
-     * @return array{stream: \Psr\Http\Message\StreamInterface, boundary: string}
-     */
-    private function buildMultiPart(): array
-    {
-        $builder = new MultipartStreamBuilder($this->configuration->getHttpStreamFactory());
-
-        foreach ($this->files as $field => $file) {
-            /** @var int|string $file */
-            $resource = fopen((string) $file, 'rb');
-
-            if (false !== $resource) {
-                $builder->addResource($field, $resource);
-            }
-        }
-
-        foreach ($this->formParams as $param => $value) {
-            if (is_string($value) || is_resource($value) || $value instanceof StreamInterface) {
-                $builder->addResource($param, $value);
-            }
-        }
-
-        return [
-            'stream'   => $builder->build(),
-            'boundary' => $builder->getBoundary(),
-        ];
-    }
-
-    /**
-     * Translate a boolean value to a string for use in a URL or form parameter.
-     *
-     * @param mixed $value parameter value to check
-     *
-     * @return mixed|string
-     */
-    private function prepareBoolParam(
-        $value,
-    ) {
-        if (is_bool($value)) {
-            return $value ? 'true' : 'false';
-        }
-
-        return $value;
-    }
-
-    /**
-     * Issue a usleep() for $milliseconds, and log the delay.
-     *
-     * @param int $milliseconds how long, in milliseconds, to trigger a usleep() for
-     *
-     * @codeCoverageIgnore
-     */
-    private function sleep(
-        int $milliseconds,
-    ): self {
-        if ($milliseconds > 0) {
-            $this->waits[] = $milliseconds;
-
-            // Don't actually trigger a sleep if we're running tests.
-            if (! defined('AUTH0_TESTS_DIR')) {
-                // usleep() uses microseconds, so * 1000 for the correct conversion.
-                usleep($milliseconds * 1000);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Add a file to be sent with the request.
      *
      * @param string      $field     field name in the multipart request
@@ -230,13 +161,13 @@ final class HttpRequest
      */
     public function call(): ResponseInterface
     {
-        $domain             = $this->domain ?? $this->configuration->formatDomain();
-        $uri                = $domain . $this->basePath . $this->getUrl();
+        $domain = $this->domain ?? $this->configuration->formatDomain();
+        $uri = $domain . $this->basePath . $this->getUrl();
         $httpRequestFactory = $this->configuration->getHttpRequestFactory();
-        $httpClient         = $this->configuration->getHttpClient();
-        $configuredRetries  = $this->configuration->getHttpMaxRetries();
-        $headers            = $this->headers;
-        $mockedResponse     = null;
+        $httpClient = $this->configuration->getHttpClient();
+        $configuredRetries = $this->configuration->getHttpMaxRetries();
+        $headers = $this->headers;
+        $mockedResponse = null;
 
         $httpRequest = $httpRequestFactory->createRequest(mb_strtoupper($this->method), $uri);
 
@@ -309,7 +240,7 @@ final class HttpRequest
 
             // If the API responds with a 429, try reissuing the request up to 3 times before returning the last response.
             if (429 === $httpResponse->getStatusCode() && $configuredRetries > 0 && HttpClient::CONTEXT_MANAGEMENT_CLIENT === $this->context) {
-                $attempt    = $this->getRequestCount();
+                $attempt = $this->getRequestCount();
                 $maxRetries = min(self::MAX_REQUEST_RETRIES, $configuredRetries);
 
                 if ($attempt < $maxRetries) {
@@ -429,7 +360,7 @@ final class HttpRequest
     public function withFields(
         ?FilteredRequest $fields,
     ): self {
-        if (null !== $fields) {
+        if ($fields instanceof FilteredRequest) {
             $this->params += $fields->build();
         }
 
@@ -508,7 +439,7 @@ final class HttpRequest
     public function withOptions(
         ?RequestOptions $options,
     ): self {
-        if (null !== $options) {
+        if ($options instanceof RequestOptions) {
             $this->params += $options->build();
         }
 
@@ -523,7 +454,7 @@ final class HttpRequest
     public function withPagination(
         ?PaginatedRequest $paginated,
     ): self {
-        if (null !== $paginated) {
+        if ($paginated instanceof PaginatedRequest) {
             $this->params += $paginated->build();
         }
 
@@ -545,7 +476,7 @@ final class HttpRequest
         }
 
         /** @var null|int|string $value */
-        $value              = $this->prepareBoolParam($value);
+        $value = $this->prepareBoolParam($value);
         $this->params[$key] = $value;
 
         return $this;
@@ -564,6 +495,76 @@ final class HttpRequest
                 if (null !== $value) {
                     $this->withParam((string) $key, $value);
                 }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Build a multi-part request.
+     *
+     * @return array{stream: \Psr\Http\Message\StreamInterface, boundary: string}
+     */
+    private function buildMultiPart(): array
+    {
+        $builder = new MultipartStreamBuilder($this->configuration->getHttpStreamFactory());
+
+        foreach ($this->files as $field => $file) {
+            /** @var int|string $file */
+            $resource = fopen((string) $file, 'rb');
+
+            if (false !== $resource) {
+                $builder->addResource($field, $resource);
+            }
+        }
+
+        foreach ($this->formParams as $param => $value) {
+            if (is_string($value) || is_resource($value) || $value instanceof StreamInterface) {
+                $builder->addResource($param, $value);
+            }
+        }
+
+        return [
+            'stream' => $builder->build(),
+            'boundary' => $builder->getBoundary(),
+        ];
+    }
+
+    /**
+     * Translate a boolean value to a string for use in a URL or form parameter.
+     *
+     * @param mixed $value parameter value to check
+     *
+     * @return mixed|string
+     */
+    private function prepareBoolParam(
+        $value,
+    ) {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
+
+        return $value;
+    }
+
+    /**
+     * Issue a usleep() for $milliseconds, and log the delay.
+     *
+     * @param int $milliseconds how long, in milliseconds, to trigger a usleep() for
+     *
+     * @codeCoverageIgnore
+     */
+    private function sleep(
+        int $milliseconds,
+    ): self {
+        if ($milliseconds > 0) {
+            $this->waits[] = $milliseconds;
+
+            // Don't actually trigger a sleep if we're running tests.
+            if (! defined('AUTH0_TESTS_DIR')) {
+                // usleep() uses microseconds, so * 1000 for the correct conversion.
+                usleep($milliseconds * 1000);
             }
         }
 

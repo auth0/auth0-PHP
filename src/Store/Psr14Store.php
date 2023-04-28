@@ -39,20 +39,6 @@ final class Psr14Store implements StoreInterface
     }
 
     /**
-     * Dispatch event to alert that a session should be prepared for an incoming request.
-     */
-    private function boot(): void
-    {
-        if (! $this->booted) {
-            $event = $this->configuration->eventDispatcher()->dispatch(new Boot($this, $this->sessionPrefix));
-
-            /** @var Boot $event */
-            $this->sessionPrefix = $event->getPrefix();
-            $this->booted        = true;
-        }
-    }
-
-    /**
      * Dispatch event to toggle state deferrance.
      *
      * @param bool $deferring whether to defer persisting the storage state
@@ -124,5 +110,19 @@ final class Psr14Store implements StoreInterface
     ): void {
         $this->boot();
         $this->configuration->eventDispatcher()->dispatch(new Set($this, $key, $value));
+    }
+
+    /**
+     * Dispatch event to alert that a session should be prepared for an incoming request.
+     */
+    private function boot(): void
+    {
+        if (! $this->booted) {
+            $event = $this->configuration->eventDispatcher()->dispatch(new Boot($this, $this->sessionPrefix));
+
+            /** @var Boot $event */
+            $this->sessionPrefix = $event->getPrefix();
+            $this->booted = true;
+        }
     }
 }

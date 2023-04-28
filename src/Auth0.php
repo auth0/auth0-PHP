@@ -7,10 +7,11 @@ namespace Auth0\SDK;
 use Auth0\SDK\API\{Authentication, Management};
 use Auth0\SDK\Configuration\{SdkConfiguration, SdkState};
 use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
-use Auth0\SDK\Contract\{Auth0Interface, TokenInterface};
+use Auth0\SDK\Contract\{Auth0Interface, StoreInterface, TokenInterface};
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Utility\{HttpResponse, PKCE, Toolkit, TransientStoreHandler};
 use Throwable;
+
 use function count;
 use function is_array;
 use function is_string;
@@ -57,104 +58,9 @@ final class Auth0 implements Auth0Interface
     ) {
     }
 
-    /**
-     * Defer saving transient or session states to destination medium.
-     * Improves performance during large blocks of changes.
-     *
-     * @param bool $deferring whether to defer persisting the storage state
-     */
-    private function deferStateSaving(
-        bool $deferring = true,
-    ): self {
-        if ($this->configuration()->usingStatefulness()) {
-            if ($this->configuration()->hasSessionStorage()) {
-                $this->configuration()->getSessionStorage()->defer($deferring);
-            }
-
-            if ($this->configuration()->hasTransientStorage()) {
-                $this->configuration()->getTransientStorage()->defer($deferring);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Retrieve state from session storage and configure SDK state.
-     *
-     * @param bool $reset
-     */
-    private function getState(bool $reset = false): SdkState
-    {
-        if (null !== $this->state && ! $reset) {
-            return $this->state;
-        }
-
-        $state = [];
-
-        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage()) {
-            if ($this->configuration()->getPersistUser()) {
-                $state['user'] = $this->configuration()->getSessionStorage()->get('user');
-            }
-
-            if ($this->configuration()->getPersistIdToken()) {
-                $state['idToken'] = $this->configuration()->getSessionStorage()->get('idToken');
-            }
-
-            if ($this->configuration()->getPersistAccessToken()) {
-                $state['accessToken']      = $this->configuration()->getSessionStorage()->get('accessToken');
-                $state['accessTokenScope'] = $this->configuration()->getSessionStorage()->get('accessTokenScope');
-
-                $expires = $this->configuration()->getSessionStorage()->get('accessTokenExpiration');
-
-                /** @var null|int|string $expires */
-                if (null !== $expires) {
-                    $state['accessTokenExpiration'] = (int) $expires;
-                }
-            }
-
-            if ($this->configuration()->getPersistRefreshToken()) {
-                $state['refreshToken'] = $this->configuration()->getSessionStorage()->get('refreshToken');
-            }
-        }
-
-        return $this->state = new SdkState($state);
-    }
-
-    /**
-     * Create a transient storage handler using the configured transientStorage medium.
-     *
-     * @param bool $reset
-     */
-    private function getTransientStore(bool $reset = false): ?TransientStoreHandler
-    {
-        if ((null === $this->transient || $reset) && ($this->configuration()->usingStatefulness() && null !== $this->configuration()->getTransientStorage())) {
-            $this->transient = new TransientStoreHandler($this->configuration()->getTransientStorage());
-        }
-
-        return $this->transient;
-    }
-
-    private function processBearerToken(
-        string $token,
-    ): ?TokenInterface {
-        $token = trim($token);
-        $token = 'Bearer ' === mb_substr($token, 0, 7) ? trim(mb_substr($token, 7)) : $token;
-
-        if ('' !== $token) {
-            try {
-                return $this->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN);
-            } catch (\Auth0\SDK\Exception\InvalidTokenException) {
-                return null;
-            }
-        }
-
-        return null;
-    }
-
     public function authentication(): AuthenticationInterface
     {
-        if (null === $this->authentication) {
+        if (! $this->authentication instanceof Authentication) {
             $this->authentication = new Authentication($this->configuration());
         }
 
@@ -189,7 +95,7 @@ final class Auth0 implements Auth0Interface
 
     public function configuration(): SdkConfiguration
     {
-        if (null === $this->validatedConfiguration) {
+        if (! $this->validatedConfiguration instanceof SdkConfiguration) {
             if (is_array($this->configuration)) {
                 return $this->validatedConfiguration = new SdkConfiguration($this->configuration);
             }
@@ -260,8 +166,8 @@ final class Auth0 implements Auth0Interface
 
         $code ??= $this->getRequestParameter('code');
         $state ??= $this->getRequestParameter('state');
-        $pkce     = $store->getOnce('code_verifier');
-        $nonce    = $store->isset('nonce');
+        $pkce = $store->getOnce('code_verifier');
+        $nonce = $store->isset('nonce');
         $verified = (null !== $state && $store->verify('state', $state));
 
         $user = null;
@@ -380,7 +286,7 @@ final class Auth0 implements Auth0Interface
                 if (isset($_GET[$parameterName]) && is_string($_GET[$parameterName])) {
                     $candidate = $this->processBearerToken($_GET[$parameterName]);
 
-                    if (null !== $candidate) {
+                    if ($candidate instanceof TokenInterface) {
                         return $candidate;
                     }
                 }
@@ -392,7 +298,7 @@ final class Auth0 implements Auth0Interface
                 if (isset($_POST[$parameterName]) && is_string($_POST[$parameterName])) {
                     $candidate = $this->processBearerToken($_POST[$parameterName]);
 
-                    if (null !== $candidate) {
+                    if ($candidate instanceof TokenInterface) {
                         return $candidate;
                     }
                 }
@@ -404,7 +310,7 @@ final class Auth0 implements Auth0Interface
                 if (isset($_SERVER[$parameterName]) && is_string($_SERVER[$parameterName])) {
                     $candidate = $this->processBearerToken($_SERVER[$parameterName]);
 
-                    if (null !== $candidate) {
+                    if ($candidate instanceof TokenInterface) {
                         return $candidate;
                     }
                 }
@@ -416,7 +322,7 @@ final class Auth0 implements Auth0Interface
                 if (isset($haystack[$needle])) {
                     $candidate = $this->processBearerToken($haystack[$needle]);
 
-                    if (null !== $candidate) {
+                    if ($candidate instanceof TokenInterface) {
                         return $candidate;
                     }
                 }
@@ -434,32 +340,32 @@ final class Auth0 implements Auth0Interface
             return null;
         }
 
-        $idToken               = $this->getState()->getIdToken();
-        $accessToken           = $this->getState()->getAccessToken();
-        $accessTokenScope      = $this->getState()->getAccessTokenScope();
+        $idToken = $this->getState()->getIdToken();
+        $accessToken = $this->getState()->getAccessToken();
+        $accessTokenScope = $this->getState()->getAccessTokenScope();
         $accessTokenExpiration = (int) $this->getState()->getAccessTokenExpiration();
-        $accessTokenExpired    = time() >= $accessTokenExpiration;
-        $refreshToken          = $this->getState()->getRefreshToken();
+        $accessTokenExpired = time() >= $accessTokenExpiration;
+        $refreshToken = $this->getState()->getRefreshToken();
 
         return (object) [
-            'user'                  => $user,
-            'idToken'               => $idToken,
-            'accessToken'           => $accessToken,
-            'accessTokenScope'      => $accessTokenScope ?? [],
+            'user' => $user,
+            'idToken' => $idToken,
+            'accessToken' => $accessToken,
+            'accessTokenScope' => $accessTokenScope ?? [],
             'accessTokenExpiration' => $accessTokenExpiration,
-            'accessTokenExpired'    => $accessTokenExpired,
-            'refreshToken'          => $refreshToken,
+            'accessTokenExpired' => $accessTokenExpired,
+            'refreshToken' => $refreshToken,
         ];
     }
 
     public function getExchangeParameters(): ?object
     {
-        $code  = $this->getRequestParameter('code');
+        $code = $this->getRequestParameter('code');
         $state = $this->getRequestParameter('state');
 
         if (null !== $code && null !== $state) {
             return (object) [
-                'code'  => $code,
+                'code' => $code,
                 'state' => $state,
             ];
         }
@@ -474,14 +380,14 @@ final class Auth0 implements Auth0Interface
 
     public function getInvitationParameters(): ?array
     {
-        $invite  = $this->getRequestParameter('invitation');
-        $orgId   = $this->getRequestParameter('organization');
+        $invite = $this->getRequestParameter('invitation');
+        $orgId = $this->getRequestParameter('organization');
         $orgName = $this->getRequestParameter('organization_name');
 
         if (null !== $invite && null !== $orgId && null !== $orgName) {
             return [
-                'invitation'       => $invite,
-                'organization'     => $orgId,
+                'invitation' => $invite,
+                'organization' => $orgId,
                 'organizationName' => $orgName,
             ];
         }
@@ -531,7 +437,7 @@ final class Auth0 implements Auth0Interface
 
         if (null !== $invite) {
             $params = Toolkit::merge([[
-                'invitation'   => $invite['invitation'],
+                'invitation' => $invite['invitation'],
                 'organization' => $invite['organization'],
             ], $params]);
 
@@ -561,8 +467,8 @@ final class Auth0 implements Auth0Interface
         $params['max_age'] ??= $this->configuration()->getTokenMaxAge();
 
         if ($this->configuration()->getUsePkce()) {
-            $codeVerifier                    = PKCE::generateCodeVerifier(128);
-            $params['code_challenge']        = PKCE::generateCodeChallenge($codeVerifier);
+            $codeVerifier = PKCE::generateCodeVerifier(128);
+            $params['code_challenge'] = PKCE::generateCodeChallenge($codeVerifier);
             $params['code_challenge_method'] = 'S256';
 
             $store->store('code_verifier', $codeVerifier);
@@ -597,7 +503,7 @@ final class Auth0 implements Auth0Interface
 
     public function management(): ManagementInterface
     {
-        if (null === $this->management) {
+        if (! $this->management instanceof Management) {
             $this->management = new Management($this->configuration());
         }
 
@@ -698,7 +604,7 @@ final class Auth0 implements Auth0Interface
         SdkConfiguration | array $configuration,
     ): self {
         $this->validatedConfiguration = null; // Reset validation state.
-        $this->configuration          = $configuration; // Set new configuration.
+        $this->configuration = $configuration; // Set new configuration.
         $this->configuration(); // Validate configuration immediately.
 
         return $this;
@@ -755,5 +661,100 @@ final class Auth0 implements Auth0Interface
         /** @var null|array<null|int|string> $params */
 
         return $this->login($redirectUrl, $params);
+    }
+
+    /**
+     * Defer saving transient or session states to destination medium.
+     * Improves performance during large blocks of changes.
+     *
+     * @param bool $deferring whether to defer persisting the storage state
+     */
+    private function deferStateSaving(
+        bool $deferring = true,
+    ): self {
+        if ($this->configuration()->usingStatefulness()) {
+            if ($this->configuration()->hasSessionStorage()) {
+                $this->configuration()->getSessionStorage()->defer($deferring);
+            }
+
+            if ($this->configuration()->hasTransientStorage()) {
+                $this->configuration()->getTransientStorage()->defer($deferring);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Retrieve state from session storage and configure SDK state.
+     *
+     * @param bool $reset
+     */
+    private function getState(bool $reset = false): SdkState
+    {
+        if ($this->state instanceof SdkState && ! $reset) {
+            return $this->state;
+        }
+
+        $state = [];
+
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage()) {
+            if ($this->configuration()->getPersistUser()) {
+                $state['user'] = $this->configuration()->getSessionStorage()->get('user');
+            }
+
+            if ($this->configuration()->getPersistIdToken()) {
+                $state['idToken'] = $this->configuration()->getSessionStorage()->get('idToken');
+            }
+
+            if ($this->configuration()->getPersistAccessToken()) {
+                $state['accessToken'] = $this->configuration()->getSessionStorage()->get('accessToken');
+                $state['accessTokenScope'] = $this->configuration()->getSessionStorage()->get('accessTokenScope');
+
+                $expires = $this->configuration()->getSessionStorage()->get('accessTokenExpiration');
+
+                /** @var null|int|string $expires */
+                if (null !== $expires) {
+                    $state['accessTokenExpiration'] = (int) $expires;
+                }
+            }
+
+            if ($this->configuration()->getPersistRefreshToken()) {
+                $state['refreshToken'] = $this->configuration()->getSessionStorage()->get('refreshToken');
+            }
+        }
+
+        return $this->state = new SdkState($state);
+    }
+
+    /**
+     * Create a transient storage handler using the configured transientStorage medium.
+     *
+     * @param bool $reset
+     */
+    private function getTransientStore(bool $reset = false): ?TransientStoreHandler
+    {
+        if ((! $this->transient instanceof TransientStoreHandler || $reset) && ($this->configuration()->usingStatefulness() && $this->configuration()->getTransientStorage() instanceof StoreInterface)) {
+            $this->transient = new TransientStoreHandler($this->configuration()->getTransientStorage());
+        }
+
+        return $this->transient;
+    }
+
+    private function processBearerToken(
+        string $token,
+    ): ?TokenInterface {
+        $token = trim($token);
+        $token = 'Bearer ' === mb_substr($token, 0, 7) ? trim(mb_substr($token, 7)) : $token;
+
+        if ('' !== $token) {
+            try {
+                return $this->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_TOKEN);
+            } catch (\Auth0\SDK\Exception\InvalidTokenException) {
+                return null;
+            }
+        }
+
+        return null;
     }
 }

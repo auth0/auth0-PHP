@@ -27,7 +27,7 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$template, $body, $from, $subject, $syntax] = Toolkit::filter([$template, $body, $from, $subject, $syntax])->string()->trim();
-        [$additional]                                = Toolkit::filter([$additional])->array()->trim();
+        [$additional] = Toolkit::filter([$additional])->array()->trim();
 
         Toolkit::assert([
             [$template, \Auth0\SDK\Exception\ArgumentException::missing('template')],
@@ -45,11 +45,11 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
             ->withBody(
                 (object) Toolkit::merge([[
                     'template' => $template,
-                    'body'     => $body,
-                    'from'     => $from,
-                    'subject'  => $subject,
-                    'syntax'   => $syntax,
-                    'enabled'  => $enabled,
+                    'body' => $body,
+                    'from' => $from,
+                    'subject' => $subject,
+                    'syntax' => $syntax,
+                    'enabled' => $enabled,
                 ], $additional]),
             )
             ->withOptions($options)
@@ -78,7 +78,7 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$templateName] = Toolkit::filter([$templateName])->string()->trim();
-        [$body]         = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$templateName, \Auth0\SDK\Exception\ArgumentException::missing('templateName')],
@@ -101,7 +101,7 @@ final class EmailTemplates extends ManagementEndpoint implements EmailTemplatesI
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$templateName] = Toolkit::filter([$templateName])->string()->trim();
-        [$body]         = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$templateName, \Auth0\SDK\Exception\ArgumentException::missing('templateName')],

@@ -23,7 +23,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$name, $strategy] = Toolkit::filter([$name, $strategy])->string()->trim();
-        [$body]            = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
@@ -37,7 +37,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
             ->addPath(['connections'])
             ->withBody(
                 (object) Toolkit::merge([[
-                    'name'     => $name,
+                    'name' => $name,
                     'strategy' => $strategy,
                 ], $body]),
             )
@@ -120,7 +120,7 @@ final class Connections extends ManagementEndpoint implements ConnectionsInterfa
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([

@@ -9,6 +9,8 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\Management\{ActionsInterface, AttackProtectionInterface, BlacklistsInterface, ClientGrantsInterface, ClientsInterface, ConnectionsInterface, DeviceCredentialsInterface, EmailTemplatesInterface, EmailsInterface, GrantsInterface, GuardianInterface, JobsInterface, LogStreamsInterface, LogsInterface, OrganizationsInterface, ResourceServersInterface, RolesInterface, RulesInterface, StatsInterface, TenantsInterface, TicketsInterface, UserBlocksInterface, UsersByEmailInterface, UsersInterface};
 use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
 use Auth0\SDK\Utility\{HttpClient, HttpRequest, HttpResponse, HttpResponsePaginator};
+use Psr\Cache\CacheItemPoolInterface;
+
 use function is_array;
 
 final class Management extends ClientAbstract implements ManagementInterface
@@ -85,7 +87,7 @@ final class Management extends ClientAbstract implements ManagementInterface
 
     public function getConfiguration(): SdkConfiguration
     {
-        if (null === $this->validatedConfiguration) {
+        if (! $this->validatedConfiguration instanceof SdkConfiguration) {
             if (is_array($this->configuration)) {
                 return $this->validatedConfiguration = new SdkConfiguration($this->configuration);
             }
@@ -99,7 +101,7 @@ final class Management extends ClientAbstract implements ManagementInterface
     public function getHttpClient(
         ?AuthenticationInterface $authentication = null,
     ): HttpClient {
-        if (null !== $this->httpClient) {
+        if ($this->httpClient instanceof HttpClient) {
             return $this->httpClient;
         }
 
@@ -110,7 +112,7 @@ final class Management extends ClientAbstract implements ManagementInterface
         $cache = $this->getConfiguration()->getManagementTokenCache();
 
         // If no token was provided, try to get one from cache.
-        if (null === $managementToken && null !== $cache) {
+        if (null === $managementToken && $cache instanceof CacheItemPoolInterface) {
             $item = $cache->getItem('managementAccessToken');
 
             if ($item->isHit()) {
@@ -122,7 +124,7 @@ final class Management extends ClientAbstract implements ManagementInterface
         if (null === $managementToken && $this->getConfiguration()->hasClientSecret()) {
             $authentication ??= new Authentication($this->getConfiguration());
             $response = $authentication->clientCredentials(['audience' => $this->getConfiguration()->formatDomain(true) . '/api/v2/']);
-            $decoded  = HttpResponse::decodeContent($response);
+            $decoded = HttpResponse::decodeContent($response);
 
             /** @var array{access_token?: (string|null), expires_in?: (int|string), error?: int|string, error_description?: int|string} $decoded */
             if (HttpResponse::wasSuccessful($response)) {
@@ -130,7 +132,7 @@ final class Management extends ClientAbstract implements ManagementInterface
                     $managementToken = $decoded['access_token'];
 
                     // If cache is available, store the token.
-                    if (null !== $cache) {
+                    if ($cache instanceof CacheItemPoolInterface) {
                         $cachedKey = $cache->getItem('managementAccessToken');
                         $cachedKey->set($managementToken);
                         $cachedKey->expiresAfter((int) ($decoded['expires_in'] ?? 3600));

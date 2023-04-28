@@ -15,7 +15,7 @@ final class NetworkException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_NETWORK_REQUEST_FAILED   = 'Unable to complete network request; %s';
+    public const MSG_NETWORK_REQUEST_FAILED = 'Unable to complete network request; %s';
 
     /**
      * @var string

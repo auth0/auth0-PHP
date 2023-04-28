@@ -22,7 +22,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$name]               = Toolkit::filter([$name])->string()->trim();
+        [$name] = Toolkit::filter([$name])->string()->trim();
         [$credentials, $body] = Toolkit::filter([$credentials, $body])->array()->trim();
 
         Toolkit::assert([
@@ -39,7 +39,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
             ->method('post')->addPath(['emails', 'provider'])
             ->withBody(
                 (object) Toolkit::merge([[
-                    'name'        => $name,
+                    'name' => $name,
                     'credentials' => (object) $credentials,
                 ], $body]),
             )
@@ -71,7 +71,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$name]               = Toolkit::filter([$name])->string()->trim();
+        [$name] = Toolkit::filter([$name])->string()->trim();
         [$credentials, $body] = Toolkit::filter([$credentials, $body])->array()->trim();
 
         Toolkit::assert([
@@ -88,7 +88,7 @@ final class Emails extends ManagementEndpoint implements EmailsInterface
             ->method('patch')->addPath(['emails', 'provider'])
             ->withBody(
                 (object) Toolkit::merge([[
-                    'name'        => $name,
+                    'name' => $name,
                     'credentials' => (object) $credentials,
                 ], $body]),
             )

@@ -15,7 +15,7 @@ final class ArgumentException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_BAD_PERMISSIONS_ARRAY     = 'Invalid or empty permissions array passed. All permissions must include both permission_name and resource_server_identifier keys.';
+    public const MSG_BAD_PERMISSIONS_ARRAY = 'Invalid or empty permissions array passed. All permissions must include both permission_name and resource_server_identifier keys.';
 
     /**
      * @var string
@@ -25,12 +25,12 @@ final class ArgumentException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_UNKNOWN_METHOD            = 'Unknown method %s.';
+    public const MSG_UNKNOWN_METHOD = 'Unknown method %s.';
 
     /**
      * @var string
      */
-    public const MSG_VALUE_CANNOT_BE_EMPTY     = 'A value for `%s` must be provided';
+    public const MSG_VALUE_CANNOT_BE_EMPTY = 'A value for `%s` must be provided';
 
     public static function badPermissionsArray(
         ?Throwable $previous = null,

@@ -44,7 +44,6 @@
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.14",
-    "infection/infection": "^0.26",
     "mockery/mockery": "^1.5",
     "pestphp/pest": "^2.0",
     "phpstan/phpstan-strict-rules": "^1.5",
@@ -95,11 +94,12 @@
     }
   },
   "scripts": {
-    "mutate": "@php ./vendor/bin/infection --test-framework=pest --show-mutations",
-    "pest:coverage": "@php vendor/bin/pest --order-by random --compact --coverage",
-    "pest": "@php vendor/bin/pest --order-by random --compact",
-    "phpcs:fix": "@php vendor/bin/php-cs-fixer fix src",
-    "phpcs": "@php vendor/bin/php-cs-fixer fix src --dry-run --diff",
+    "pest:coverage": "@php vendor/bin/pest --coverage --parallel --no-progress",
+    "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --fail-on-risky --stop-on-failure --display-errors",
+    "pest:profile": "@php vendor/bin/pest --profile",
+    "pest": "@php vendor/bin/pest --order-by random --fail-on-risky",
+    "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
+    "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
     "phpstan": "@php vendor/bin/phpstan analyze",
     "psalm:fix": "@php vendor/bin/psalter --issues=all",
     "psalm": "@php vendor/bin/psalm",

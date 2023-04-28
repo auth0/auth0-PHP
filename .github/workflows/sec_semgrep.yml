@@ -1,32 +1,21 @@
-name: Semgrep
+name: "Semgrep"
 
 on:
-  pull_request_target:
-    types:
-      - closed
-      - reopened
-      - converted_to_draft
-      - review_requested
-      - review_request_removed
-      - synchronize
-      - labeled
   push:
     branches:
       - main
 
-permissions:
-  security-events: write
-
 jobs:
   semgrep:
     runs-on: ubuntu-latest
-    if: github.event.label.name == 'run' || github.ref_name == 'main'
 
     container:
       image: returntocorp/semgrep
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - run: semgrep scan --sarif --output=semgrep.sarif
         env:
@@ -38,13 +27,3 @@ jobs:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
           SEMGREP_REPO_NAME: "auth0/auth0-PHP"
           SEMGREP_REPO_URL: "https://github.com/auth0/auth0-PHP"
-
-      - uses: andstor/file-existence-action@v1
-        id: sarif_file_exists
-        with:
-          files: "semgrep.sarif"
-
-      - uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: semgrep.sarif
-        if: always()

@@ -9,12 +9,14 @@ use const JSON_UNESCAPED_SLASHES;
 use const OPENSSL_ALGO_SHA256;
 use const OPENSSL_ALGO_SHA384;
 use const OPENSSL_ALGO_SHA512;
+
 use Auth0\SDK\Contract\Token\GeneratorInterface;
 use Auth0\SDK\Exception\TokenException;
 use Auth0\SDK\Token;
 use OpenSSLAsymmetricKey;
 use Stringable;
 use Throwable;
+
 use function extension_loaded;
 use function in_array;
 use function is_array;
@@ -97,6 +99,56 @@ final class Generator implements GeneratorInterface, Stringable
         return $this->toString();
     }
 
+    public function toArray(
+        $encodeSegments = true,
+    ): array {
+        // Build token from headers and claims.
+        $segments = [
+            self::encode(data: $this->headers, segment: 'headers', skip: ! $encodeSegments),
+            self::encode(data: $this->claims, segment: 'claims', skip: ! $encodeSegments),
+        ];
+
+        // Sign the token.
+        $signature = $this->sign(
+            data: $this->glue($segments),
+        );
+
+        // Attach the signature to the token.
+        $segments[] = $signature;
+
+        if (! $encodeSegments) {
+            return [
+                'headers' => $this->headers,
+                'claims' => $this->claims,
+                'signature' => $signature,
+            ];
+        }
+
+        // Return the token with encoded segments.
+        return $segments;
+    }
+
+    public function toString(): string
+    {
+        return $this->glue(array_values($this->toArray()));
+    }
+
+    public static function create(
+        OpenSSLAsymmetricKey | string $signingKey,
+        string $algorithm = Token::ALGO_RS256,
+        array $claims = [],
+        array $headers = [],
+        null | string $signingKeyPassphrase = null,
+    ): static {
+        return new self(
+            signingKey: $signingKey,
+            algorithm: $algorithm,
+            claims: $claims,
+            headers: $headers,
+            signingKeyPassphrase: $signingKeyPassphrase,
+        );
+    }
+
     /**
      * Encode the provided data segment as a base64-encoded string. Optionally, encode the data as JSON.
      *
@@ -155,7 +207,7 @@ final class Generator implements GeneratorInterface, Stringable
             Token::ALGO_HS256, Token::ALGO_RS256 => OPENSSL_ALGO_SHA256,
             Token::ALGO_HS384, Token::ALGO_RS384 => OPENSSL_ALGO_SHA384,
             Token::ALGO_HS512, Token::ALGO_RS512 => OPENSSL_ALGO_SHA512,
-            default => throw TokenException::unsupportedAlgorithm($this->algorithm, implode(', ', self::CONST_SUPPORTED_ALGORITHMS))
+            default => throw TokenException::unsupportedAlgorithm($this->algorithm, implode(', ', self::CONST_SUPPORTED_ALGORITHMS)),
         };
     }
 
@@ -168,7 +220,7 @@ final class Generator implements GeneratorInterface, Stringable
     {
         return match ($this->algorithm) {
             Token::ALGO_RS256, Token::ALGO_RS384, Token::ALGO_RS512 => \OPENSSL_KEYTYPE_RSA,
-            default => null
+            default => null,
         };
     }
 
@@ -306,8 +358,8 @@ final class Generator implements GeneratorInterface, Stringable
 
         // Otherwise, default to RS256, and use openssl_sign() to sign the data.
         $signature = '';
-        $success   = false;
-        $failure   = null;
+        $success = false;
+        $failure = null;
 
         try {
             $success = openssl_sign($data, $signature, $this->signingKey, $this->getDigestAlgorithm());
@@ -329,56 +381,6 @@ final class Generator implements GeneratorInterface, Stringable
             data: $signature,
             segment: 'signature',
             json: false,
-        );
-    }
-
-    public function toArray(
-        $encodeSegments = true,
-    ): array {
-        // Build token from headers and claims.
-        $segments = [
-            self::encode(data: $this->headers, segment: 'headers', skip: ! $encodeSegments),
-            self::encode(data: $this->claims, segment: 'claims', skip: ! $encodeSegments)
-        ];
-
-        // Sign the token.
-        $signature = $this->sign(
-            data: $this->glue($segments),
-        );
-
-        // Attach the signature to the token.
-        $segments[] = $signature;
-
-        if (! $encodeSegments) {
-            return [
-                'headers'   => $this->headers,
-                'claims'    => $this->claims,
-                'signature' => $signature
-            ];
-        }
-
-        // Return the token with encoded segments.
-        return $segments;
-    }
-
-    public function toString(): string
-    {
-        return $this->glue(array_values($this->toArray()));
-    }
-
-    public static function create(
-        OpenSSLAsymmetricKey | string $signingKey,
-        string $algorithm = Token::ALGO_RS256,
-        array $claims = [],
-        array $headers = [],
-        null | string $signingKeyPassphrase = null,
-    ): static {
-        return new self(
-            signingKey: $signingKey,
-            algorithm: $algorithm,
-            claims: $claims,
-            headers: $headers,
-            signingKeyPassphrase: $signingKeyPassphrase,
         );
     }
 }

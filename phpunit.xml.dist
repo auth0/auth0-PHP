@@ -1,25 +1,24 @@
 <?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <coverage>
-        <include>
-            <directory suffix=".php">./src/</directory>
-        </include>
-
-        <exclude>
-            <directory suffix=".php">./src/Event/</directory>
-            <directory suffix=".php">./src/Contract/</directory>
-            <directory suffix=".php">./src/Exception/</directory>
-        </exclude>
-
-        <report>
-            <clover outputFile="coverage/clover.xml" />
-            <cobertura outputFile="coverage/cobertura.xml"/>
-        </report>
-    </coverage>
-
-    <testsuites>
-        <testsuite name="unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
-    </testsuites>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd">
+  <coverage>
+    <report>
+      <clover outputFile="coverage/clover.xml"/>
+      <cobertura outputFile="coverage/cobertura.xml"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="unit">
+      <directory>tests/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory suffix=".php">./src/</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./src/Event/</directory>
+      <directory suffix=".php">./src/Contract/</directory>
+      <directory suffix=".php">./src/Exception/</directory>
+    </exclude>
+  </source>
 </phpunit>

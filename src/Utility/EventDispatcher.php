@@ -32,7 +32,7 @@ final class EventDispatcher implements EventDispatcherInterface
     ): object {
         $listenerProvider = $this->getListenerProvider();
 
-        if (! $listenerProvider instanceof \Psr\EventDispatcher\ListenerProviderInterface) {
+        if (! $listenerProvider instanceof ListenerProviderInterface) {
             return new stdClass();
         }
 

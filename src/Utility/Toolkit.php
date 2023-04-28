@@ -7,6 +7,7 @@ namespace Auth0\SDK\Utility;
 use Auth0\SDK\Utility\Toolkit\{Assert, Filter};
 use Closure;
 use Throwable;
+
 use function is_array;
 
 /**
@@ -56,7 +57,7 @@ final class Toolkit
     ): bool {
         foreach ($values as $value) {
             if (null === $value) {
-                if (null !== $exception) {
+                if ($exception instanceof Throwable) {
                     throw $exception;
                 }
 
@@ -101,10 +102,11 @@ final class Toolkit
             }
         }
 
-        $response = self::filter([$result])->array()->trim()[0];
+        if (is_array($response = self::filter([$result])->array()->trim()[0])) {
+            return $response;
+        }
 
-        /** @var array<mixed> $response */
-        return $response;
+        return [];
     }
 
     /**
@@ -126,7 +128,7 @@ final class Toolkit
 
         // All values were null, throw an exception.
         if ([] === $trimmed) {
-            if (null !== $exception) {
+            if ($exception instanceof Throwable) {
                 throw $exception;
             }
 

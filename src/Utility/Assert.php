@@ -8,11 +8,11 @@ use const E_USER_DEPRECATED;
 use const FILTER_FLAG_IPV4;
 use const FILTER_FLAG_IPV6;
 use const FILTER_VALIDATE_IP;
+
 use ArrayAccess;
 use BadMethodCallException;
 use Closure;
 use Countable;
-use DateTime;
 use DateTimeImmutable;
 use Exception;
 use InvalidArgumentException;
@@ -20,6 +20,7 @@ use ResourceBundle;
 use SimpleXMLElement;
 use Throwable;
 use Traversable;
+
 use function array_key_exists;
 use function call_user_func_array;
 use function count;
@@ -69,7 +70,7 @@ final class Assert
             self::isIterable($arguments[0]);
 
             $method = lcfirst(mb_substr($name, 3));
-            $args   = $arguments;
+            $args = $arguments;
 
             foreach ($arguments[0] as $entry) {
                 $args[0] = $entry;
@@ -81,89 +82,6 @@ final class Assert
         }
 
         throw new BadMethodCallException('No such method: ' . $name);
-    }
-
-    /**
-     * @param string $message
-     *
-     * @throws InvalidArgumentException
-     *
-     * @psalm-pure this method is not supposed to perform side-effects
-     *
-     * @psalm-return never
-     *
-     * @return never
-     */
-    private static function reportInvalidArgument($message): void
-    {
-        throw new InvalidArgumentException($message);
-    }
-
-    private static function strlen($value): int
-    {
-        if (! function_exists('mb_detect_encoding')) {
-            return mb_strlen($value);
-        }
-
-        if (false === $encoding = mb_detect_encoding($value, mb_detect_order(), true)) {
-            return mb_strlen($value);
-        }
-
-        return mb_strlen($value, $encoding);
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private static function typeToString($value): string
-    {
-        return get_debug_type($value);
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return string
-     */
-    private static function valueToString($value)
-    {
-        if (null === $value) {
-            return 'null';
-        }
-
-        if (true === $value) {
-            return 'true';
-        }
-
-        if (false === $value) {
-            return 'false';
-        }
-
-        if (is_array($value)) {
-            return 'array';
-        }
-
-        if (is_object($value)) {
-            if (method_exists($value, '__toString')) {
-                return $value::class . ': ' . self::valueToString($value->__toString());
-            }
-
-            if ($value instanceof DateTime || $value instanceof DateTimeImmutable) {
-                return $value::class . ': ' . self::valueToString($value->format('c'));
-            }
-
-            return $value::class;
-        }
-
-        if (is_resource($value)) {
-            return 'resource';
-        }
-
-        if (is_string($value)) {
-            return '"' . $value . '"';
-        }
-
-        return (string) $value;
     }
 
     /**
@@ -3133,7 +3051,7 @@ final class Assert
         self::isIterable($expression);
 
         foreach ($expression as $entry) {
-            if (null !== $entry) {
+            if ($entry instanceof Closure) {
                 self::throws($entry, $class, $message);
             }
         }
@@ -6547,7 +6465,7 @@ final class Assert
      */
     public static function nullOrThrows($expression, $class = 'Exception', $message = ''): void
     {
-        if (null !== $expression) {
+        if ($expression instanceof Closure) {
             self::throws($expression, $class, $message);
         }
     }
@@ -7100,7 +7018,7 @@ final class Assert
      */
     public static function uniqueValues(array $values, $message = ''): void
     {
-        $allValues    = count($values);
+        $allValues = count($values);
         $uniqueValues = count(array_unique($values));
 
         if ($allValues !== $uniqueValues) {
@@ -7201,5 +7119,88 @@ final class Assert
                 self::valueToString($value),
             ));
         }
+    }
+
+    /**
+     * @param string $message
+     *
+     * @throws InvalidArgumentException
+     *
+     * @psalm-pure this method is not supposed to perform side-effects
+     *
+     * @psalm-return never
+     *
+     * @return never
+     */
+    private static function reportInvalidArgument($message): void
+    {
+        throw new InvalidArgumentException($message);
+    }
+
+    private static function strlen($value): int
+    {
+        if (! function_exists('mb_detect_encoding')) {
+            return mb_strlen($value);
+        }
+
+        if (false === $encoding = mb_detect_encoding($value, mb_detect_order(), true)) {
+            return mb_strlen($value);
+        }
+
+        return mb_strlen($value, $encoding);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private static function typeToString($value): string
+    {
+        return get_debug_type($value);
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @return string
+     */
+    private static function valueToString($value)
+    {
+        if (null === $value) {
+            return 'null';
+        }
+
+        if (true === $value) {
+            return 'true';
+        }
+
+        if (false === $value) {
+            return 'false';
+        }
+
+        if (is_array($value)) {
+            return 'array';
+        }
+
+        if (is_object($value)) {
+            if (method_exists($value, '__toString')) {
+                return $value::class . ': ' . self::valueToString($value->__toString());
+            }
+
+            if ($value instanceof DateTimeImmutable) {
+                return $value::class . ': ' . self::valueToString($value->format('c'));
+            }
+
+            return $value::class;
+        }
+
+        if (is_resource($value)) {
+            return 'resource';
+        }
+
+        if (is_string($value)) {
+            return '"' . $value . '"';
+        }
+
+        return (string) $value;
     }
 }

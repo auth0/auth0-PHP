@@ -8,6 +8,7 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Token;
 use JsonException;
 use Psr\Cache\CacheItemPoolInterface;
+
 use function count;
 use function is_array;
 
@@ -62,75 +63,6 @@ final class Parser
         private string $token,
     ) {
         $this->parse();
-    }
-
-    /**
-     * Decodes and returns the claims portion of a JWT as an array.
-     *
-     * @param string $claims string representing the claims portion of the JWT
-     *
-     * @throws JsonException when claims portion cannot be decoded properly
-     *
-     * @return null|array<array<int|string>|int|string>
-     *
-     * @codeCoverageIgnore
-     */
-    private function decodeClaims(
-        string $claims,
-    ): ?array {
-        $decoded  = base64_decode(strtr($claims, '-_', '+/'), true);
-        $response = null;
-
-        if (false !== $decoded) {
-            /** @var null|array<array<int|string>|int|string> $response */
-            $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Decodes and returns the headers portion of a JWT as an array.
-     *
-     * @param string $headers string representing the headers portion of the JWT
-     *
-     * @throws JsonException when headers portion cannot be decoded properly
-     *
-     * @return null|array<int|string>
-     *
-     * @codeCoverageIgnore
-     */
-    private function decodeHeaders(
-        string $headers,
-    ): ?array {
-        $decoded  = base64_decode(strtr($headers, '-_', '+/'), true);
-        $response = null;
-
-        if (false !== $decoded) {
-            /** @var null|array<int|string> $response */
-            $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Decodes and returns the signature portion of a JWT as a string.
-     *
-     * @param string $signature string representing the signature portion of the JWT
-     *
-     * @codeCoverageIgnore
-     */
-    private function decodeSignature(
-        string $signature,
-    ): ?string {
-        $decoded = base64_decode(strtr($signature, '-_', '+/'), true);
-
-        if (false !== $decoded) {
-            return $decoded;
-        }
-
-        return null;
     }
 
     /**
@@ -276,12 +208,12 @@ final class Parser
                 throw \Auth0\SDK\Exception\InvalidTokenException::badSeparators();
             }
 
-            $this->tokenRaw   = $this->token;
+            $this->tokenRaw = $this->token;
             $this->tokenParts = $parts;
 
             try {
                 $this->tokenHeaders = $this->decodeHeaders($parts[0]);
-                $this->tokenClaims  = $this->decodeClaims($parts[1]);
+                $this->tokenClaims = $this->decodeClaims($parts[1]);
             } catch (JsonException $jsonException) {
                 throw \Auth0\SDK\Exception\InvalidTokenException::jsonError($jsonException->getMessage());
             }
@@ -329,9 +261,9 @@ final class Parser
     ): self {
         $this->parse();
 
-        $parts     = $this->getParts();
+        $parts = $this->getParts();
         $signature = $this->getSignature() ?? '';
-        $headers   = $this->getHeaders();
+        $headers = $this->getHeaders();
 
         $verifier = new Verifier(
             $this->configuration,
@@ -348,5 +280,74 @@ final class Parser
         $verifier->verify();
 
         return $this;
+    }
+
+    /**
+     * Decodes and returns the claims portion of a JWT as an array.
+     *
+     * @param string $claims string representing the claims portion of the JWT
+     *
+     * @throws JsonException when claims portion cannot be decoded properly
+     *
+     * @return null|array<array<int|string>|int|string>
+     *
+     * @codeCoverageIgnore
+     */
+    private function decodeClaims(
+        string $claims,
+    ): ?array {
+        $decoded = base64_decode(strtr($claims, '-_', '+/'), true);
+        $response = null;
+
+        if (false !== $decoded) {
+            /** @var null|array<array<int|string>|int|string> $response */
+            $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Decodes and returns the headers portion of a JWT as an array.
+     *
+     * @param string $headers string representing the headers portion of the JWT
+     *
+     * @throws JsonException when headers portion cannot be decoded properly
+     *
+     * @return null|array<int|string>
+     *
+     * @codeCoverageIgnore
+     */
+    private function decodeHeaders(
+        string $headers,
+    ): ?array {
+        $decoded = base64_decode(strtr($headers, '-_', '+/'), true);
+        $response = null;
+
+        if (false !== $decoded) {
+            /** @var null|array<int|string> $response */
+            $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Decodes and returns the signature portion of a JWT as a string.
+     *
+     * @param string $signature string representing the signature portion of the JWT
+     *
+     * @codeCoverageIgnore
+     */
+    private function decodeSignature(
+        string $signature,
+    ): ?string {
+        $decoded = base64_decode(strtr($signature, '-_', '+/'), true);
+
+        if (false !== $decoded) {
+            return $decoded;
+        }
+
+        return null;
     }
 }

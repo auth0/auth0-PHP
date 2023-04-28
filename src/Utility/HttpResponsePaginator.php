@@ -9,6 +9,7 @@ use Iterator;
 use Psr\Http\Message\{RequestInterface, ResponseInterface};
 use ReturnTypeWillChange;
 use Throwable;
+
 use function count;
 use function is_array;
 
@@ -76,16 +77,16 @@ final class HttpResponsePaginator implements Countable, Iterator
     public function __construct(
         private HttpClient $httpClient,
     ) {
-        $lastRequest  = $this->lastRequest();
+        $lastRequest = $this->lastRequest();
         $lastResponse = $this->lastResponse();
 
         // Did the network request return a successful response?
-        if (! $lastResponse instanceof \Psr\Http\Message\ResponseInterface || ! HttpResponse::wasSuccessful($lastResponse)) {
+        if (! $lastResponse instanceof ResponseInterface || ! HttpResponse::wasSuccessful($lastResponse)) {
             throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
         }
 
         // Was the last request a GET request?
-        if (! $lastRequest instanceof \Psr\Http\Message\RequestInterface || 'get' !== mb_strtolower($lastRequest->getMethod())) {
+        if (! $lastRequest instanceof RequestInterface || 'get' !== mb_strtolower($lastRequest->getMethod())) {
             throw \Auth0\SDK\Exception\PaginatorException::httpMethodUnsupported();
         }
 
@@ -117,202 +118,6 @@ final class HttpResponsePaginator implements Countable, Iterator
         }
 
         $this->processLastResponse();
-    }
-
-    /**
-     * Make a network request for the next page of results.
-     */
-    private function getNextResults(): bool
-    {
-        // Retrieve the active HttpRequest instance to repeat the request.
-        $lastBuilder = $this->lastBuilder();
-
-        if (null !== $lastBuilder && null !== $this->lastResponse()) {
-            // Ensure basic pagination details are included in the request.
-            if ($this->usingCheckpointPagination) {
-                // @codeCoverageIgnoreStart
-                if (null === $this->nextCheckpoint) {
-                    return false;
-                }
-                // @codeCoverageIgnoreEnd
-
-                $lastBuilder->withParam('from', $this->nextCheckpoint);
-            } else {
-                // Get the next page.
-                $page = (int) ceil($this->position / $this->requestLimit);
-
-                // Set the next page.
-                $lastBuilder->withParam('page', $page);
-            }
-
-            // Increment our network request tracker for reference.
-            ++$this->requestCount;
-
-            // Issue next paged request.
-            try {
-                $lastBuilder->call();
-            } catch (\Auth0\SDK\Exception\NetworkException) {
-                return false;
-            }
-
-            // Process the response.
-            return $this->processLastResponse();
-        }
-
-        // @codeCoverageIgnoreStart
-        return false;
-        // @codeCoverageIgnoreEnd
-    }
-
-    /**
-     * Return the current instance of the HttpRequest.
-     */
-    private function lastBuilder(): ?HttpRequest
-    {
-        return $this->httpClient->getLastRequest();
-    }
-
-    /**
-     * Return a RequestInterface representing the most recent sent HTTP request.
-     */
-    private function lastRequest(): ?RequestInterface
-    {
-        $lastBuilder = $this->lastBuilder();
-
-        if (null !== $lastBuilder) {
-            return $lastBuilder->getLastRequest();
-        }
-
-        return null;
-    }
-
-    /**
-     * Return a ResponseInterface representing the most recently returned HTTP response.
-     */
-    private function lastResponse(): ?ResponseInterface
-    {
-        $lastBuilder = $this->lastBuilder();
-
-        if (null !== $lastBuilder) {
-            return $lastBuilder->getLastResponse();
-        }
-
-        return null;
-    }
-
-    /**
-     * Process the previous HttpResponse results and cache them for iterator content.
-     */
-    private function processLastResponse(): bool
-    {
-        $lastRequest  = $this->lastRequest();
-        $lastResponse = $this->lastResponse();
-
-        if (null !== $lastRequest && null !== $lastResponse) {
-            // Was the HTTP request successful?
-            if (HttpResponse::wasSuccessful($lastResponse)) {
-                // Decode the response.
-                try {
-                    $results = HttpResponse::decodeContent($lastResponse);
-                } catch (Throwable) {
-                    throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
-                }
-
-                // No results, abort processing.
-                if (! is_array($results) || [] === $results) {
-                    // @codeCoverageIgnoreStart
-                    return false;
-                    // @codeCoverageIgnoreEnd
-                }
-
-                /** @var array{start?: null|int|string, limit?: null|int|string, total?: null|int|string, length?: null|int|string, next?: null|string} $results */
-
-                // If not using checkpoint pagination, grab the 'start' value.
-                $start = $results['start'] ?? null;
-
-                // There is no 'start' key, the request was probably made without the include_totals param.
-                if (null === $start && ! $this->usingCheckpointPagination) {
-                    throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
-                }
-
-                if (null === $start) {
-                    $start = $this->position;
-                }
-
-                $start = (int) $start;
-
-                $hadResults     = false;
-                $nextCheckpoint = null;
-
-                foreach ($results as $resultKey => $result) {
-                    if (! $this->usingCheckpointPagination) {
-                        if ('limit' === $resultKey) {
-                            $this->requestLimit = (int) $result;
-
-                            continue;
-                        }
-
-                        if ('total' === $resultKey) {
-                            $this->requestTotal = (int) $result;
-
-                            continue;
-                        }
-
-                        if ('length' === $resultKey) {
-                            continue;
-                        }
-                    } elseif ('next' === $resultKey) {
-                        $nextCheckpoint = (string) $result;
-
-                        continue;
-                    }
-
-                    if ('start' !== $resultKey) {
-                        /** @var mixed $result */
-                        $resultCount = is_array($result) ? count($result) : 0;
-
-                        /** @var array<array<mixed>> $result */
-                        for ($i = 0; $i < $resultCount; ++$i) {
-                            $hadResults = true;
-
-                            if (! $this->usingCheckpointPagination) {
-                                $this->results[$start + $i] = $result[$i];
-
-                                continue;
-                            }
-
-                            $this->results[] = $result[$i];
-                        }
-                    }
-                }
-
-                // Using checkpoint-pagination, track the value of 'next' in responses. If none was provided, set our internal cursor to null to indicate no more results available.
-                if ($this->usingCheckpointPagination) {
-                    $this->nextCheckpoint = $nextCheckpoint;
-                }
-
-                // We successfully retrieved results.
-                if ($hadResults) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        // @codeCoverageIgnoreStart
-        return false;
-        // @codeCoverageIgnoreEnd
-    }
-
-    /**
-     * Return the current result at our position, if available.
-     *
-     * @return null|array<mixed>
-     */
-    private function result()
-    {
-        return $this->results[$this->position] ?? null;
     }
 
     /**
@@ -404,5 +209,201 @@ final class HttpResponsePaginator implements Countable, Iterator
         }
 
         return false;
+    }
+
+    /**
+     * Make a network request for the next page of results.
+     */
+    private function getNextResults(): bool
+    {
+        // Retrieve the active HttpRequest instance to repeat the request.
+        $lastBuilder = $this->lastBuilder();
+
+        if ($lastBuilder instanceof HttpRequest && $this->lastResponse() instanceof ResponseInterface) {
+            // Ensure basic pagination details are included in the request.
+            if ($this->usingCheckpointPagination) {
+                // @codeCoverageIgnoreStart
+                if (null === $this->nextCheckpoint) {
+                    return false;
+                }
+                // @codeCoverageIgnoreEnd
+
+                $lastBuilder->withParam('from', $this->nextCheckpoint);
+            } else {
+                // Get the next page.
+                $page = (int) ceil($this->position / $this->requestLimit);
+
+                // Set the next page.
+                $lastBuilder->withParam('page', $page);
+            }
+
+            // Increment our network request tracker for reference.
+            ++$this->requestCount;
+
+            // Issue next paged request.
+            try {
+                $lastBuilder->call();
+            } catch (\Auth0\SDK\Exception\NetworkException) {
+                return false;
+            }
+
+            // Process the response.
+            return $this->processLastResponse();
+        }
+
+        // @codeCoverageIgnoreStart
+        return false;
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * Return the current instance of the HttpRequest.
+     */
+    private function lastBuilder(): ?HttpRequest
+    {
+        return $this->httpClient->getLastRequest();
+    }
+
+    /**
+     * Return a RequestInterface representing the most recent sent HTTP request.
+     */
+    private function lastRequest(): ?RequestInterface
+    {
+        $lastBuilder = $this->lastBuilder();
+
+        if ($lastBuilder instanceof HttpRequest) {
+            return $lastBuilder->getLastRequest();
+        }
+
+        return null;
+    }
+
+    /**
+     * Return a ResponseInterface representing the most recently returned HTTP response.
+     */
+    private function lastResponse(): ?ResponseInterface
+    {
+        $lastBuilder = $this->lastBuilder();
+
+        if ($lastBuilder instanceof HttpRequest) {
+            return $lastBuilder->getLastResponse();
+        }
+
+        return null;
+    }
+
+    /**
+     * Process the previous HttpResponse results and cache them for iterator content.
+     */
+    private function processLastResponse(): bool
+    {
+        $lastRequest = $this->lastRequest();
+        $lastResponse = $this->lastResponse();
+
+        if ($lastRequest instanceof RequestInterface && $lastResponse instanceof ResponseInterface) {
+            // Was the HTTP request successful?
+            if (HttpResponse::wasSuccessful($lastResponse)) {
+                // Decode the response.
+                try {
+                    $results = HttpResponse::decodeContent($lastResponse);
+                } catch (Throwable) {
+                    throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
+                }
+
+                // No results, abort processing.
+                if (! is_array($results) || [] === $results) {
+                    // @codeCoverageIgnoreStart
+                    return false;
+                    // @codeCoverageIgnoreEnd
+                }
+
+                /** @var array{start?: null|int|string, limit?: null|int|string, total?: null|int|string, length?: null|int|string, next?: null|string} $results */
+
+                // If not using checkpoint pagination, grab the 'start' value.
+                $start = $results['start'] ?? null;
+
+                // There is no 'start' key, the request was probably made without the include_totals param.
+                if (null === $start && ! $this->usingCheckpointPagination) {
+                    throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
+                }
+
+                if (null === $start) {
+                    $start = $this->position;
+                }
+
+                $start = (int) $start;
+
+                $hadResults = false;
+                $nextCheckpoint = null;
+
+                foreach ($results as $resultKey => $result) {
+                    if (! $this->usingCheckpointPagination) {
+                        if ('limit' === $resultKey) {
+                            $this->requestLimit = (int) $result;
+
+                            continue;
+                        }
+
+                        if ('total' === $resultKey) {
+                            $this->requestTotal = (int) $result;
+
+                            continue;
+                        }
+
+                        if ('length' === $resultKey) {
+                            continue;
+                        }
+                    } elseif ('next' === $resultKey) {
+                        $nextCheckpoint = (string) $result;
+
+                        continue;
+                    }
+
+                    if ('start' !== $resultKey) {
+                        /** @var mixed $result */
+                        $resultCount = is_array($result) ? count($result) : 0;
+
+                        /** @var array<array<mixed>> $result */
+                        for ($i = 0; $i < $resultCount; ++$i) {
+                            $hadResults = true;
+
+                            if (! $this->usingCheckpointPagination) {
+                                $this->results[$start + $i] = $result[$i];
+
+                                continue;
+                            }
+
+                            $this->results[] = $result[$i];
+                        }
+                    }
+                }
+
+                // Using checkpoint-pagination, track the value of 'next' in responses. If none was provided, set our internal cursor to null to indicate no more results available.
+                if ($this->usingCheckpointPagination) {
+                    $this->nextCheckpoint = $nextCheckpoint;
+                }
+
+                // We successfully retrieved results.
+                if ($hadResults) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // @codeCoverageIgnoreStart
+        return false;
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * Return the current result at our position, if available.
+     *
+     * @return null|array<mixed>
+     */
+    private function result()
+    {
+        return $this->results[$this->position] ?? null;
     }
 }

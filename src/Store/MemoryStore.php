@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Store;
 
 use Auth0\SDK\Contract\StoreInterface;
+
 use function array_key_exists;
 
 /**

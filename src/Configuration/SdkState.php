@@ -7,6 +7,7 @@ namespace Auth0\SDK\Configuration;
 use Auth0\SDK\Contract\ConfigurableContract;
 use Auth0\SDK\Mixins\ConfigurableMixin;
 use Throwable;
+
 use function is_array;
 use function is_int;
 use function is_string;
@@ -40,38 +41,6 @@ final class SdkState implements ConfigurableContract
         }
 
         $this->validateProperties();
-    }
-
-    /**
-     * @return array{idToken: null, accessToken: null, accessTokenScope: null, refreshToken: null, user: null, accessTokenExpiration: null}
-     */
-    private function getPropertyDefaults(): array
-    {
-        return [
-            'idToken'               => null,
-            'accessToken'           => null,
-            'accessTokenScope'      => null,
-            'refreshToken'          => null,
-            'user'                  => null,
-            'accessTokenExpiration' => null,
-        ];
-    }
-
-    /**
-     * @return array<callable>
-     *
-     * @psalm-suppress MissingClosureParamType
-     */
-    private function getPropertyValidators(): array
-    {
-        return [
-            'idToken'               => static fn ($value): bool => is_string($value) || null === $value,
-            'accessToken'           => static fn ($value): bool => is_string($value) || null === $value,
-            'accessTokenScope'      => static fn ($value): bool => is_array($value) || null === $value,
-            'refreshToken'          => static fn ($value): bool => is_string($value) || null === $value,
-            'user'                  => static fn ($value): bool => is_array($value) || null === $value,
-            'accessTokenExpiration' => static fn ($value): bool => is_int($value) || null === $value,
-        ];
     }
 
     public function getAccessToken(?Throwable $exceptionIfNull = null): ?string
@@ -244,5 +213,37 @@ final class SdkState implements ConfigurableContract
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @return array{idToken: null, accessToken: null, accessTokenScope: null, refreshToken: null, user: null, accessTokenExpiration: null}
+     */
+    private function getPropertyDefaults(): array
+    {
+        return [
+            'idToken' => null,
+            'accessToken' => null,
+            'accessTokenScope' => null,
+            'refreshToken' => null,
+            'user' => null,
+            'accessTokenExpiration' => null,
+        ];
+    }
+
+    /**
+     * @return array<callable>
+     *
+     * @psalm-suppress MissingClosureParamType
+     */
+    private function getPropertyValidators(): array
+    {
+        return [
+            'idToken' => static fn ($value): bool => is_string($value) || null === $value,
+            'accessToken' => static fn ($value): bool => is_string($value) || null === $value,
+            'accessTokenScope' => static fn ($value): bool => is_array($value) || null === $value,
+            'refreshToken' => static fn ($value): bool => is_string($value) || null === $value,
+            'user' => static fn ($value): bool => is_array($value) || null === $value,
+            'accessTokenExpiration' => static fn ($value): bool => is_int($value) || null === $value,
+        ];
     }
 }

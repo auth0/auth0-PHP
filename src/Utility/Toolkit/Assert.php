@@ -6,6 +6,7 @@ namespace Auth0\SDK\Utility\Toolkit;
 
 use Exception;
 use Throwable;
+
 use function is_array;
 use function is_string;
 

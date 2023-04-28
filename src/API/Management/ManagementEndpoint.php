@@ -45,7 +45,7 @@ abstract class ManagementEndpoint
         return new HttpResponsePaginator($this->getHttpClient());
     }
 
-    public static function instance(
+    final public static function instance(
         HttpClient $httpClient,
     ): static {
         return new static($httpClient);

@@ -17,3 +17,5 @@ uses()
             $this->paginatedRequest
         );
     })->in('Unit' . DIRECTORY_SEPARATOR   . 'API' . DIRECTORY_SEPARATOR . 'Management');
+
+uses()->compact();

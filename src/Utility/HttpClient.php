@@ -6,6 +6,7 @@ namespace Auth0\SDK\Utility;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Psr\Http\Message\ResponseInterface;
+
 use function in_array;
 
 final class HttpClient
@@ -18,12 +19,12 @@ final class HttpClient
     /**
      * @var int
      */
-    public const CONTEXT_GENERIC_CLIENT        = 1;
+    public const CONTEXT_GENERIC_CLIENT = 1;
 
     /**
      * @var int
      */
-    public const CONTEXT_MANAGEMENT_CLIENT     = 3;
+    public const CONTEXT_MANAGEMENT_CLIENT = 3;
 
     /**
      * Instance of most recent HttpRequest.
@@ -69,7 +70,7 @@ final class HttpClient
     public function method(
         string $method,
     ): HttpRequest {
-        $method  = mb_strtolower($method);
+        $method = mb_strtolower($method);
         $builder = new HttpRequest($this->configuration, $this->context, $method, $this->basePath, $this->headers, null, $this->mockedResponses);
 
         if (in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
@@ -96,8 +97,8 @@ final class HttpClient
         ?\Exception $exception = null,
     ): self {
         $this->mockedResponses[] = (object) [
-            'response'  => $response,
-            'callback'  => $callback,
+            'response' => $response,
+            'callback' => $callback,
             'exception' => $exception,
         ];
 

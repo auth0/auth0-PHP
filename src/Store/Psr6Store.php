@@ -7,6 +7,7 @@ namespace Auth0\SDK\Store;
 use Auth0\SDK\Contract\StoreInterface;
 use Exception;
 use Psr\Cache\CacheItemPoolInterface;
+
 use function array_key_exists;
 use function is_array;
 use function is_string;
@@ -32,39 +33,6 @@ final class Psr6Store implements StoreInterface
         private CacheItemPoolInterface $privateStore,
         private string $storageKey = 'storage_key',
     ) {
-    }
-
-    /**
-     * Generate a cryptographically-secure random string.
-     *
-     * @codeCoverageIgnore
-     */
-    private function generateKey(): string
-    {
-        try {
-            $randomBytes = random_bytes(32);
-        } catch (Exception) {
-            $randomBytes = openssl_random_pseudo_bytes(32);
-        }
-
-        return bin2hex($randomBytes);
-    }
-
-    /**
-     * Generate a cryptographically-secure random string.
-     *
-     * @codeCoverageIgnore
-     */
-    private function getCacheKey(): string
-    {
-        $key = $this->publicStore->get($this->storageKey);
-
-        if (! is_string($key)) {
-            $key = $this->generateKey();
-            $this->publicStore->set($this->storageKey, $key);
-        }
-
-        return 'auth0_' . $key;
     }
 
     /**
@@ -155,5 +123,38 @@ final class Psr6Store implements StoreInterface
         $data[$key] = $value;
         $item->set($data);
         $this->privateStore->saveDeferred($item);
+    }
+
+    /**
+     * Generate a cryptographically-secure random string.
+     *
+     * @codeCoverageIgnore
+     */
+    private function generateKey(): string
+    {
+        try {
+            $randomBytes = random_bytes(32);
+        } catch (Exception) {
+            $randomBytes = openssl_random_pseudo_bytes(32);
+        }
+
+        return bin2hex($randomBytes);
+    }
+
+    /**
+     * Generate a cryptographically-secure random string.
+     *
+     * @codeCoverageIgnore
+     */
+    private function getCacheKey(): string
+    {
+        $key = $this->publicStore->get($this->storageKey);
+
+        if (! is_string($key)) {
+            $key = $this->generateKey();
+            $this->publicStore->set($this->storageKey, $key);
+        }
+
+        return 'auth0_' . $key;
     }
 }

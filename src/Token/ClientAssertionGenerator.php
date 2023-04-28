@@ -8,6 +8,7 @@ use Auth0\SDK\Exception\TokenException;
 use Auth0\SDK\Token;
 use InvalidArgumentException;
 use OpenSSLAsymmetricKey;
+
 use function in_array;
 
 final class ClientAssertionGenerator
@@ -19,7 +20,7 @@ final class ClientAssertionGenerator
      */
     public const CONST_SUPPORTED_ALGORITHMS = [
         Token::ALGO_RS256,
-        Token::ALGO_RS384
+        Token::ALGO_RS384,
     ];
 
     /**
@@ -53,7 +54,7 @@ final class ClientAssertionGenerator
             'aud' => $domain,
             'iat' => $now,
             'exp' => $now + 180,
-            'jti' => hash('sha256', implode(':', [uniqid(microtime(), true), bin2hex(random_bytes(32))]))
+            'jti' => hash('sha256', implode(':', [uniqid(microtime(), true), bin2hex(random_bytes(32))])),
         ];
 
         return Generator::create(

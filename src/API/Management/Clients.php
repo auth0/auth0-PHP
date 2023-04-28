@@ -48,7 +48,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$clientId] = Toolkit::filter([$clientId])->string()->trim();
-        [$body]     = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
@@ -152,7 +152,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         ?array $parameters = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$clientId]   = Toolkit::filter([$clientId])->string()->trim();
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
         Toolkit::assert([
@@ -173,7 +173,7 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([

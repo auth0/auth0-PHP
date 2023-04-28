@@ -9,7 +9,7 @@ use Auth0\SDK\Utility\{HttpClient, HttpRequest};
 
 abstract class ClientAbstract implements ClientInterface
 {
-    public function getLastRequest(): ?HttpRequest
+    final public function getLastRequest(): ?HttpRequest
     {
         return $this->getHttpClient()->getLastRequest();
     }

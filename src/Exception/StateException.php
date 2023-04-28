@@ -15,17 +15,17 @@ final class StateException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_BAD_ACCESS_TOKEN                         = 'Invalid access_token';
+    public const MSG_BAD_ACCESS_TOKEN = 'Invalid access_token';
 
     /**
      * @var string
      */
-    public const MSG_FAILED_CODE_EXCHANGE                     = 'Code exchange was unsuccessful; network error resulted in unfulfilled request';
+    public const MSG_FAILED_CODE_EXCHANGE = 'Code exchange was unsuccessful; network error resulted in unfulfilled request';
 
     /**
      * @var string
      */
-    public const MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN  = 'Token did not refresh successfully; access token was not returned';
+    public const MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN = 'Token did not refresh successfully; access token was not returned';
 
     /**
      * @var string
@@ -35,22 +35,22 @@ final class StateException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_INVALID_STATE                            = 'Invalid state';
+    public const MSG_INVALID_STATE = 'Invalid state';
 
     /**
      * @var string
      */
-    public const MSG_MISSING_CODE                             = 'Missing code';
+    public const MSG_MISSING_CODE = 'Missing code';
 
     /**
      * @var string
      */
-    public const MSG_MISSING_CODE_VERIFIER                    = 'Missing code_verifier';
+    public const MSG_MISSING_CODE_VERIFIER = 'Missing code_verifier';
 
     /**
      * @var string
      */
-    public const MSG_MISSING_NONCE                            = 'Nonce was not found in the application storage';
+    public const MSG_MISSING_NONCE = 'Nonce was not found in the application storage';
 
     public static function badAccessToken(
         ?Throwable $previous = null,

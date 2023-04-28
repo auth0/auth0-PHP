@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Token;
 
 use Auth0\SDK\Contract\Token\ValidatorInterface;
+
 use function in_array;
 use function is_array;
 use function is_string;
@@ -19,23 +20,6 @@ final class Validator implements ValidatorInterface
     public function __construct(
         private array $claims,
     ) {
-    }
-
-    /**
-     * Return a claim by it's key. Null if not present.
-     *
-     * @param string $key the claim key to search for
-     *
-     * @return null|array<mixed>|int|string
-     */
-    private function getClaim(
-        string $key,
-    ) {
-        if (! isset($this->claims[$key])) {
-            return null;
-        }
-
-        return $this->claims[$key];
     }
 
     /**
@@ -253,5 +237,22 @@ final class Validator implements ValidatorInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Return a claim by it's key. Null if not present.
+     *
+     * @param string $key the claim key to search for
+     *
+     * @return null|array<mixed>|int|string
+     */
+    private function getClaim(
+        string $key,
+    ) {
+        if (! isset($this->claims[$key])) {
+            return null;
+        }
+
+        return $this->claims[$key];
     }
 }

@@ -36,10 +36,10 @@ final class PaginatedRequest
     {
         $response = [];
 
-        $page          = $this->page ?? 0;
-        $take          = $this->take;
-        $from          = $this->from;
-        $perPage       = $this->perPage;
+        $page = $this->page ?? 0;
+        $take = $this->take;
+        $from = $this->from;
+        $perPage = $this->perPage;
         $includeTotals = $this->includeTotals;
 
         // Are we using checkpoint pagination's ?take param?
@@ -59,7 +59,7 @@ final class PaginatedRequest
 
         // If we aren't using checkpoint pagination, and have set per_page ...
         if (null === $take && null === $from && null !== $perPage) {
-            $response['page']     = $page;
+            $response['page'] = $page;
             $response['per_page'] = $perPage;
 
             if (null !== $includeTotals) {

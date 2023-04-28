@@ -22,7 +22,7 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$userId] = Toolkit::filter([$userId])->string()->trim();
-        [$body]   = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],

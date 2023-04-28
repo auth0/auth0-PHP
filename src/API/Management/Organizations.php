@@ -23,7 +23,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $connectionId] = Toolkit::filter([$id, $connectionId])->string()->trim();
-        [$body]              = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
@@ -54,7 +54,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $userId] = Toolkit::filter([$id, $userId])->string()->trim();
-        [$roles]       = Toolkit::filter([$roles])->array()->trim();
+        [$roles] = Toolkit::filter([$roles])->array()->trim();
 
         Toolkit::assert([
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
@@ -81,7 +81,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         array $members,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]      = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$members] = Toolkit::filter([$members])->array()->trim();
 
         Toolkit::assert([
@@ -111,9 +111,9 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$name, $displayName]         = Toolkit::filter([$name, $displayName])->string()->trim();
+        [$name, $displayName] = Toolkit::filter([$name, $displayName])->string()->trim();
         [$branding, $metadata, $body] = Toolkit::filter([$branding, $metadata, $body])->array()->trim();
-        [$branding, $metadata]        = Toolkit::filter([$branding, $metadata])->array()->object();
+        [$branding, $metadata] = Toolkit::filter([$branding, $metadata])->array()->object();
 
         Toolkit::assert([
             [$name, \Auth0\SDK\Exception\ArgumentException::missing('name')],
@@ -127,10 +127,10 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             ->addPath(['organizations'])
             ->withBody(
                 (object) Toolkit::merge([[
-                    'name'         => $name,
+                    'name' => $name,
                     'display_name' => $displayName,
-                    'branding'     => $branding,
-                    'metadata'     => $metadata,
+                    'branding' => $branding,
+                    'metadata' => $metadata,
                 ], $body]),
             )
             ->withOptions($options)
@@ -145,7 +145,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id, $clientId]            = Toolkit::filter([$id, $clientId])->string()->trim();
+        [$id, $clientId] = Toolkit::filter([$id, $clientId])->string()->trim();
         [$inviter, $invitee, $body] = Toolkit::filter([$inviter, $invitee, $body])->array()->trim();
 
         /** @var array{name?: string} $inviter */
@@ -175,8 +175,8 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             ->withBody(
                 (object) Toolkit::merge([[
                     'client_id' => $clientId,
-                    'inviter'   => (object) $inviter,
-                    'invitee'   => (object) $invitee,
+                    'inviter' => (object) $inviter,
+                    'invitee' => (object) $invitee,
                 ], $body]),
             )
             ->withOptions($options)
@@ -386,7 +386,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $userId] = Toolkit::filter([$id, $userId])->string()->trim();
-        [$roles]       = Toolkit::filter([$roles])->array()->trim();
+        [$roles] = Toolkit::filter([$roles])->array()->trim();
 
         Toolkit::assert([
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
@@ -413,7 +413,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         array $members,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]      = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$members] = Toolkit::filter([$members])->array()->trim();
 
         Toolkit::assert([
@@ -444,9 +444,9 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?array $body = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id, $name, $displayName]    = Toolkit::filter([$id, $name, $displayName])->string()->trim();
+        [$id, $name, $displayName] = Toolkit::filter([$id, $name, $displayName])->string()->trim();
         [$branding, $metadata, $body] = Toolkit::filter([$branding, $metadata, $body])->array()->trim();
-        [$branding, $metadata]        = Toolkit::filter([$branding, $metadata])->array()->object();
+        [$branding, $metadata] = Toolkit::filter([$branding, $metadata])->array()->object();
 
         Toolkit::assert([
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
@@ -459,10 +459,10 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             ->method('patch')->addPath(['organizations', $id])
             ->withBody(
                 (object) Toolkit::merge([[
-                    'name'         => $name,
+                    'name' => $name,
                     'display_name' => $displayName,
-                    'branding'     => $branding,
-                    'metadata'     => $metadata,
+                    'branding' => $branding,
+                    'metadata' => $metadata,
                 ], $body]),
             )
             ->withOptions($options)
@@ -476,7 +476,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id, $connectionId] = Toolkit::filter([$id, $connectionId])->string()->trim();
-        [$body]              = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],

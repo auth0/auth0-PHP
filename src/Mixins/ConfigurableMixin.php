@@ -6,7 +6,9 @@ namespace Auth0\SDK\Mixins;
 
 use const ENT_QUOTES;
 use const ENT_SUBSTITUTE;
+
 use Throwable;
+
 use function array_key_exists;
 use function count;
 use function in_array;
@@ -29,7 +31,7 @@ trait ConfigurableMixin
         }
 
         $validators = $this->getPropertyValidators();
-        $defaults   = $this->getPropertyDefaults();
+        $defaults = $this->getPropertyDefaults();
 
         foreach ($configuration as $configKey => $configuredValue) {
             if (! property_exists($this, $configKey)) {
@@ -76,7 +78,7 @@ trait ConfigurableMixin
      */
     private function exceptionIfNull($value, ?Throwable $throwable = null): void
     {
-        if (null === $value && null !== $throwable) {
+        if (null === $value && $throwable instanceof Throwable) {
             throw $throwable;
         }
     }

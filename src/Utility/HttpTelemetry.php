@@ -6,6 +6,8 @@ namespace Auth0\SDK\Utility;
 
 use Auth0\SDK\Auth0;
 
+use function is_array;
+
 /**
  * Builds, extends, modifies, and formats SDK telemetry data.
  */
@@ -47,16 +49,17 @@ final class HttpTelemetry
             self::setCorePackage();
         }
 
-        $response = Toolkit::filter([
+        if (is_array($response = Toolkit::filter([
             [
-                'name'    => self::$packageName,
+                'name' => self::$packageName,
                 'version' => self::$packageVersion,
-                'env'     => self::$environment,
+                'env' => self::$environment,
             ],
-        ])->array()->trim()[0];
+        ])->array()->trim()[0])) {
+            return $response;
+        }
 
-        /** @var array<mixed> $response */
-        return $response;
+        return [];
     }
 
     /**
@@ -116,7 +119,7 @@ final class HttpTelemetry
         string $name,
         string $version,
     ): void {
-        self::$packageName    = $name;
+        self::$packageName = $name;
         self::$packageVersion = $version;
     }
 }

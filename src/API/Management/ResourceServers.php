@@ -22,7 +22,7 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$identifier] = Toolkit::filter([$identifier])->string()->trim();
-        [$body]       = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$identifier, \Auth0\SDK\Exception\ArgumentException::missing('identifier')],
@@ -93,7 +93,7 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
         array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([

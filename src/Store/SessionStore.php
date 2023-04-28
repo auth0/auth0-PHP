@@ -7,6 +7,7 @@ namespace Auth0\SDK\Store;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Utility\Toolkit;
+
 use function defined;
 
 /**
@@ -100,7 +101,7 @@ final class SessionStore implements StoreInterface
         $this->start();
 
         $session = $_SESSION ?? [];
-        $prefix  = $this->sessionPrefix . '_';
+        $prefix = $this->sessionPrefix . '_';
 
         if ([] !== $session) {
             while ($sessionKey = key($session)) {
@@ -140,9 +141,9 @@ final class SessionStore implements StoreInterface
             if (! defined('AUTH0_TESTS_DIR')) {
                 session_set_cookie_params([
                     'lifetime' => $this->configuration->getCookieExpires(),
-                    'domain'   => $this->configuration->getCookieDomain(),
-                    'path'     => $this->configuration->getCookiePath(),
-                    'secure'   => $this->configuration->getCookieSecure(),
+                    'domain' => $this->configuration->getCookieDomain(),
+                    'path' => $this->configuration->getCookiePath(),
+                    'secure' => $this->configuration->getCookieSecure(),
                     'httponly' => true,
                     'samesite' => 'form_post' === $this->configuration->getResponseMode() ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax',
                 ]);

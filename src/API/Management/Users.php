@@ -21,7 +21,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         array $permissions,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]          = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$permissions] = Toolkit::filter([$permissions])->array()->trim();
 
         Toolkit::assert([
@@ -46,7 +46,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         array $roles,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]    = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$roles] = Toolkit::filter([$roles])->array()->trim();
 
         Toolkit::assert([
@@ -74,7 +74,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$connection] = Toolkit::filter([$connection])->string()->trim();
-        [$body]       = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$connection, \Auth0\SDK\Exception\ArgumentException::missing('connection')],
@@ -388,7 +388,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
@@ -411,7 +411,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         array $permissions,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]          = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$permissions] = Toolkit::filter([$permissions])->array()->trim();
 
         Toolkit::assert([
@@ -436,7 +436,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         array $roles,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]    = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$roles] = Toolkit::filter([$roles])->array()->trim();
 
         Toolkit::assert([
@@ -506,7 +506,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
@@ -531,7 +531,7 @@ final class Users extends ManagementEndpoint implements UsersInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$user, $method] = Toolkit::filter([$user, $method])->string()->trim();
-        [$body]          = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],

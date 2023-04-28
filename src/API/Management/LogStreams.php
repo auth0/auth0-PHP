@@ -23,7 +23,7 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$type, $name] = Toolkit::filter([$type, $name])->string()->trim();
-        [$sink]        = Toolkit::filter([$sink])->array()->trim();
+        [$sink] = Toolkit::filter([$sink])->array()->trim();
 
         Toolkit::assert([
             [$type, \Auth0\SDK\Exception\ArgumentException::missing('type')],
@@ -96,7 +96,7 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
         array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$id]   = Toolkit::filter([$id])->string()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
         [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([

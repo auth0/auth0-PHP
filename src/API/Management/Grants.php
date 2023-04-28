@@ -53,7 +53,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
         ?array $parameters = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$audience]   = Toolkit::filter([$audience])->string()->trim();
+        [$audience] = Toolkit::filter([$audience])->string()->trim();
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
         Toolkit::assert([
@@ -74,7 +74,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
         ?array $parameters = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$clientId]   = Toolkit::filter([$clientId])->string()->trim();
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
         Toolkit::assert([
@@ -95,7 +95,7 @@ final class Grants extends ManagementEndpoint implements GrantsInterface
         ?array $parameters = null,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$userId]     = Toolkit::filter([$userId])->string()->trim();
+        [$userId] = Toolkit::filter([$userId])->string()->trim();
         [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
         Toolkit::assert([

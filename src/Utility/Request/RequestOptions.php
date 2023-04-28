@@ -27,11 +27,11 @@ final class RequestOptions
     {
         $response = [];
 
-        if (null !== $this->fields) {
+        if ($this->fields instanceof FilteredRequest) {
             $response += $this->fields->build();
         }
 
-        if (null !== $this->pagination) {
+        if ($this->pagination instanceof PaginatedRequest) {
             $response += $this->pagination->build();
         }
 

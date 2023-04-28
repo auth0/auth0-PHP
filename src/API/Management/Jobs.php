@@ -40,7 +40,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$filePath, $connectionId] = Toolkit::filter([$filePath, $connectionId])->string()->trim();
-        [$parameters]              = Toolkit::filter([$parameters])->array()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
 
         Toolkit::assert([
             [$filePath, \Auth0\SDK\Exception\ArgumentException::missing('filePath')],
@@ -64,7 +64,7 @@ final class Jobs extends ManagementEndpoint implements JobsInterface
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$userId] = Toolkit::filter([$userId])->string()->trim();
-        [$body]   = Toolkit::filter([$body])->array()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
         Toolkit::assert([
             [$userId, \Auth0\SDK\Exception\ArgumentException::missing('userId')],
