@@ -209,3 +209,75 @@ test('toJson() returns a valid JSON-encoded string', function(
     fn() => $this->configuration,
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256)
 ]]);
+
+test('getAudience() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['aud' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getAudience())
+        ->toBeNull();
+});
+
+test('getAuthorizedParty() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['azp' => 123]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getAuthorizedParty())
+        ->toBeNull();
+});
+
+test('getAuthTime() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['auth_time' => 'testing']);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getAuthTime())
+        ->toBeNull();
+});
+
+test('getExpiration() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['exp' => 'testing']);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getExpiration())
+        ->toBeNull();
+});
+
+test('getIssued() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['iat' => 'testing']);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getIssued())
+        ->toBeNull();
+});
+
+test('getIssuer() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['iss' => 123]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getIssuer())
+        ->toBeNull();
+});
+
+test('getNonce() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['nonce' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getNonce())
+        ->toBeNull();
+});
+
+test('getOrganization() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['org_id' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getOrganization())
+        ->toBeNull();
+});
+
+test('getSubject() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['sub' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getSubject())
+        ->toBeNull();
+});

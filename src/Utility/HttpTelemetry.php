@@ -42,6 +42,8 @@ final class HttpTelemetry
      * Get the current header data as an array.
      *
      * @return array<mixed>
+     *
+     * @codeCoverageIgnore
      */
     public static function get(): array
     {

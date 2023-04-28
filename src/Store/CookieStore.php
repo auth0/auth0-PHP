@@ -135,11 +135,7 @@ final class CookieStore implements StoreInterface
 
         $data = json_decode($data, true);
 
-        if (is_array($data)) {
-            return $data;
-        }
-
-        return null;
+        return is_array($data) ? $data : null;
     }
 
     /**

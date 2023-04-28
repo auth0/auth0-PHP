@@ -85,6 +85,8 @@ final class Toolkit
      * @param mixed[] $arrays one or more arrays to merge
      *
      * @return array<mixed>
+     *
+     * @codeCoverageIgnore
      */
     public static function merge(
         array $arrays = [],
