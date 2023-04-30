@@ -165,8 +165,6 @@ test('post() supports client assertion', function(): void {
 
     parse_str((string) $request->getBody(), $requestBody);
 
-    ray($requestBody);
-
     expect($requestBody)
         ->toBeArray()
         ->toHaveKey('client_id', $this->configuration->getClientId())
