@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\API\Authentication;
+use Auth0\SDK\API\Authentication\PushedAuthorizationRequest;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Exception\ArgumentException;
@@ -558,4 +559,11 @@ test('dbConnectionsChangePassword() is properly formatted', function(): void {
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
     expect($requestHeaders['header_testing'][0])->toEqual(123);
+});
+
+test('pushedAuthorizationRequest() returns an instance of Auth0\SDK\API\Authentication\PushedAuthorizationRequest', function () {
+    $authentication = $this->sdk->authentication();
+    $pushedAuthorizationRequest = $authentication->pushedAuthorizationRequest();
+
+    expect($pushedAuthorizationRequest)->toBeInstanceOf(PushedAuthorizationRequest::class);
 });
