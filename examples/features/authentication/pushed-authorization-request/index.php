@@ -72,7 +72,7 @@ function setupSdk(): Auth0Interface {
         clientSecret: $env['CLIENT_SECRET'] ?? null,
         cookieSecret: $env['COOKIE_SECRET'] ?? null,
         cookieExpires: 3600, // Session will expire in 1 hour
-        audience: $env['API_IDENTIFIER'] !== null && $env['API_IDENTIFIER'] !== '{API_AUDIENCE}' ? [$env['API_IDENTIFIER']] : null,
+        audience: $env['API_IDENTIFIER'] !== null && $env['API_IDENTIFIER'] !== '' ? [$env['API_IDENTIFIER']] : null,
         pushedAuthorizationRequest: true,
     );
 
