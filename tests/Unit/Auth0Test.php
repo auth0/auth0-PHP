@@ -788,6 +788,7 @@ test('renew() succeeds under expected and valid conditions', function(): void {
 test('getCredentials() returns null when a session is not available', function(): void {
     $auth0 = new Auth0($this->configuration);
     expect($auth0->getCredentials())->toBeNull();
+    expect($auth0->isAuthenticated())->toBeFalse();
 });
 
 test('getCredentials() returns the expected object structure when a session is available', function(): void {
@@ -798,6 +799,9 @@ test('getCredentials() returns the expected object structure when a session is a
     $auth0 = new Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
     ]);
+
+    expect($auth0->getCredentials())->toBeNull();
+    expect($auth0->isAuthenticated())->toBeFalse();
 
     $httpClient = $auth0->authentication()->getHttpClient();
 
@@ -827,8 +831,8 @@ test('getCredentials() returns the expected object structure when a session is a
         ->toHaveProperty('accessTokenExpired')
         ->toHaveProperty('refreshToken');
 
-    expect($credentials->user)
-        ->toBeArray();
+    expect($credentials->user)->toBeArray();
+    expect($auth0->isAuthenticated())->toBeTrue();
 });
 
 test('setIdToken() properly stores data', function(): void {
