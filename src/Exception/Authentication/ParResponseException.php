@@ -6,8 +6,7 @@ namespace Auth0\SDK\Exception\Authentication;
 
 use Auth0\SDK\Exception\ExtendedExceptionInterface;
 use Exception;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\{RequestInterface, ResponseInterface};
 use Throwable;
 
 /**
@@ -32,16 +31,16 @@ final class ParResponseException extends Exception implements ExtendedExceptionI
         return $this->request;
     }
 
+    public function getResponse(): ?ResponseInterface
+    {
+        return $this->response;
+    }
+
     public function setRequest(RequestInterface $request): self
     {
         $this->request = $request;
 
         return $this;
-    }
-
-    public function getResponse(): ?ResponseInterface
-    {
-        return $this->response;
     }
 
     public function setResponse(ResponseInterface $response): self

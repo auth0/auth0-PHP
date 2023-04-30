@@ -41,13 +41,7 @@ final class PushedAuthorizationRequest implements PushedAuthorizationRequestInte
         $parExpiresIn = is_array($response) ? $response['expires_in'] ?? null : null;
 
         if (! is_string($parRequestUri) || ! is_int($parExpiresIn)) {
-            throw new ParResponseException(
-                response: $httpResponse,
-                request: $this->authentication
-                    ->getHttpClient()
-                    ->getLastRequest()
-                    ->getLastRequest(),
-            );
+            throw new ParResponseException(response: $httpResponse, request: $this->authentication->getHttpClient()->getLastRequest()?->getLastRequest());
         }
 
         return sprintf(
