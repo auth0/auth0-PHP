@@ -490,6 +490,15 @@ final class Auth0 implements Auth0Interface
 
         $this->deferStateSaving(false);
 
+        if ($this->configuration()->getPushedAuthorizationRequest()) {
+            $params['state'] = (string) $state;
+            $params['redirect_uri'] = $redirectUrl;
+
+            return $this->authentication()
+                ->pushedAuthorizationRequest()
+                ->create($params);
+        }
+
         return $this->authentication()->getLoginLink((string) $state, $redirectUrl, $params);
     }
 

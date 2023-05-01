@@ -471,6 +471,11 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             ->call();
     }
 
+    public function pushedAuthorizationRequest(): PushedAuthorizationRequest
+    {
+        return new PushedAuthorizationRequest($this);
+    }
+
     public function refreshToken(
         string $refreshToken,
         ?array $params = null,

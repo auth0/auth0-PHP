@@ -107,6 +107,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param null|ListenerProviderInterface   $eventListenerProvider           a PSR-14 compatible event listener provider, for interfacing with events triggered by the SDK
      * @param null|OpenSSLAsymmetricKey|string $clientAssertionSigningKey       An OpenSSLAsymmetricKey (or string representing equivalent, such as a PEM) to use for signing the client assertion. If not specified, the SDK will attempt to use the $clientSecret.
      * @param string                           $clientAssertionSigningAlgorithm Defaults to RS256. Algorithm to use for signing the client assertion.
+     * @param bool                             $pushedAuthorizationRequest      Defaults to false. If true, the SDK will attempt to use the Pushed Authorization Requests for authentication. See https://www.rfc-editor.org/rfc/rfc9126.html#.
      *
      * @throws ConfigurationException when a valid `$strategy` is not specified
      */
@@ -156,6 +157,7 @@ final class SdkConfiguration implements ConfigurableContract
         private ?ListenerProviderInterface $eventListenerProvider = null,
         private OpenSSLAsymmetricKey | string | null $clientAssertionSigningKey = null,
         private string $clientAssertionSigningAlgorithm = Token::ALGO_RS256,
+        private bool $pushedAuthorizationRequest = false,
     ) {
         if (null !== $configuration && [] !== $configuration) {
             $this->applyConfiguration($configuration);
@@ -450,6 +452,11 @@ final class SdkConfiguration implements ConfigurableContract
     public function getPersistUser(): bool
     {
         return $this->persistUser;
+    }
+
+    public function getPushedAuthorizationRequest(): bool
+    {
+        return $this->pushedAuthorizationRequest;
     }
 
     public function getQueryUserInfo(): bool
@@ -1127,6 +1134,11 @@ final class SdkConfiguration implements ConfigurableContract
         return $this;
     }
 
+    public function setPushedAuthorizationRequest(bool $pushedAuthorizationRequest): void
+    {
+        $this->pushedAuthorizationRequest = $pushedAuthorizationRequest;
+    }
+
     public function setQueryUserInfo(bool $queryUserInfo = false): self
     {
         $this->queryUserInfo = $queryUserInfo;
@@ -1320,7 +1332,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string}
+     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string, pushedAuthorizationRequest: bool}
      */
     private function getPropertyDefaults(): array
     {
@@ -1369,6 +1381,7 @@ final class SdkConfiguration implements ConfigurableContract
             'eventListenerProvider' => null,
             'clientAssertionSigningKey' => null,
             'clientAssertionSigningAlgorithm' => Token::ALGO_RS256,
+            'pushedAuthorizationRequest' => false,
         ];
     }
 
@@ -1424,6 +1437,7 @@ final class SdkConfiguration implements ConfigurableContract
             'eventListenerProvider' => static fn ($value): bool => $value instanceof ListenerProviderInterface || null === $value,
             'clientAssertionSigningKey' => static fn ($value): bool => $value instanceof OpenSSLAsymmetricKey || is_string($value) || null === $value,
             'clientAssertionSigningAlgorithm' => static fn ($value): bool => is_string($value),
+            'pushedAuthorizationRequest' => static fn ($value): bool => is_bool($value),
         ];
     }
 

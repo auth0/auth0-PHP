@@ -301,6 +301,11 @@ interface AuthenticationInterface extends ClientInterface
     ): ResponseInterface;
 
     /**
+     * Returns an instance of the Pushed Authorization Request endpoint class.
+     */
+    public function pushedAuthorizationRequest(): PushedAuthorizationRequest;
+
+    /**
      * Use a refresh token grant to get new tokens.
      *
      * @param string                      $refreshToken refresh token to use

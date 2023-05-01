@@ -234,6 +234,30 @@ test('login() assigns a challenge and challenge method when PKCE is enabled', fu
             ->toContain('code_challenge_method=S256');
 });
 
+test('login() uses Pushed Authorization Requests when configured', function(): void {
+    $this->configuration['pushedAuthorizationRequest'] = true;
+
+    $auth0 = new Auth0($this->configuration);
+
+    $auth0->authentication()->getHttpClient()->mockResponse(
+        HttpResponseGenerator::create(
+            body: '{"request_uri": "https://example.com/par", "expires_in": 90}',
+            statusCode: 201,
+            headers: ['Content-Type' => 'application/json']
+        ),
+    );
+
+    $url = parse_url($auth0->login(uniqid()));
+
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual($this->configuration['domain'])
+        ->path->toEqual('/authorize')
+        ->query
+            ->toContain('client_id=')
+            ->toContain('request_uri=');
+});
+
 test('login() assigns `max_age` from default values', function(): void {
     $auth0 = new Auth0($this->configuration + [
         'tokenMaxAge' => 1000,
