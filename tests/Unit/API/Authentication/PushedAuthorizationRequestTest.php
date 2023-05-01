@@ -15,7 +15,7 @@ use Auth0\Tests\Utilities\TokenGenerator;
 uses()->group('authentication', 'authentication.pushedAuthorizationRequest');
 
 beforeEach(function(): void {
-    $this->secret = uniqid();;
+    $this->secret = uniqid();
 
     $this->configuration = new SdkConfiguration([
         'strategy' => SdkConfiguration::STRATEGY_NONE,
