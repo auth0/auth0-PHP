@@ -22,7 +22,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - run: composer install --no-progress --prefer-dist --optimize-autoloader
+      - run: composer install --no-progress
 
       - uses: snyk/actions/php@master
         continue-on-error: true
