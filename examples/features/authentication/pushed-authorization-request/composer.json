@@ -1,18 +1,9 @@
 {
   "name": "auth0-samples/pushed-authorization-request",
   "description": "Example of using Pushed Authorization Requests with Auth0 PHP",
-  "repositories": [
-    {
-      "type": "path",
-      "url": "vendor/auth0/auth0-php",
-      "options": {
-        "symlink": true
-      }
-    }
-  ],
   "require": {
     "php": "^8.0",
-    "auth0/auth0-php": "@dev",
+    "auth0/auth0-php": "^8.6",
     "nyholm/psr7": "^1.5",
     "symfony/http-client": "^6.2"
   },
@@ -27,20 +18,14 @@
     }
   },
   "scripts": {
-    "start": [
-      "chmod +x setup.sh",
-      "bash setup.sh",
+    "serve": [
       "php -S 127.0.0.1:3000 src/index.php"
     ],
-    "pre-update-cmd": [
-      "@symlink-package",
+    "pre-install-cmd": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
-    "symlink-package": [
-      "mkdir -p vendor/auth0",
-      "rm -rf vendor/auth0/auth0-php",
-      "ln -s ./../../../../../../ vendor/auth0/auth0-php"
-    ],
-    "pre-install-cmd": "@symlink-package"
+    "pre-update-cmd": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ]
   }
 }

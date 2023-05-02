@@ -1,6 +1,17 @@
 # Changelog
 
-## [Unreleased]
+## [8.6.0](https://github.com/auth0/auth0-PHP/tree/8.6.0) - 2023-05-02
+
+**Added**
+
+- **[PAR (Pushed Authorization Request)](https://www.rfc-editor.org/rfc/rfc6749) support¹** ([#714](https://github.com/auth0/auth0-PHP/pull/714)):
+  - `Auth0\SDK\API\Authentication\PushedAuthorizationRequest` is a new class for issuing Pushed Authorization Requests and producing authorization links for them.
+  - `Auth0\SDK\API\Authentication::pushedAuthorizationRequest()` has been added as a shortcut method for returning a configured instantiation of the above class.
+  - `Auth0\SDK\Auth0::login()` has been updated to support issuing Pushed Authorization Requests and returning authorization links for them.
+  - `Auth0\SDK\Configuration\SdkConfiguration` has been updated to accept a `pushedAuthorizationRequest` boolean to enable this feature.
+- `Auth0\SDK\Auth0::isAuthenticated()` shortcut method (alias for `isCredentials() !== null`)
+
+¹ **Note:** To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
 
 ## [8.5.0](https://github.com/auth0/auth0-PHP/tree/8.5.0) - 2023-03-27
 
