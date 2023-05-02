@@ -9,7 +9,7 @@
   - `Auth0\SDK\API\Authentication::pushedAuthorizationRequest()` has been added as a shortcut method for returning a configured instantiation of the above class.
   - `Auth0\SDK\Auth0::login()` has been updated to support issuing Pushed Authorization Requests and returning authorization links for them.
   - `Auth0\SDK\Configuration\SdkConfiguration` has been updated to accept a `pushedAuthorizationRequest` boolean to enable this feature.
-- `Auth0\SDK\Auth0::isAuthenticated()` shortcut method (alias for `isCredentials() !== null`)
+- `Auth0\SDK\Auth0::isAuthenticated()` has been added as a shortcut method. It is an alias for `getCredentials() !== null`.
 
 ¹ **Note:** To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
 
