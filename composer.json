@@ -30,7 +30,6 @@
   "require": {
     "php": "^8.0",
     "ext-json": "*",
-    "ext-mbstring": "*",
     "ext-openssl": "*",
     "php-http/multipart-stream-builder": "^1",
     "psr-discovery/all": "^1",
@@ -50,6 +49,7 @@
     "phpstan/phpstan-strict-rules": "^1",
     "psr-mock/http": "^1",
     "rector/rector": "^0",
+    "spatie/ray": "^1",
     "symfony/cache": "^4 || ^5 || ^6",
     "symfony/event-dispatcher": "^4 || ^5 || ^6",
     "vimeo/psalm": "^5",
