@@ -126,7 +126,7 @@ final class Management extends ClientAbstract implements ManagementInterface
             $response = $authentication->clientCredentials(['audience' => $this->getConfiguration()->formatDomain(true) . '/api/v2/']);
             $decoded = HttpResponse::decodeContent($response);
 
-            /** @var array{access_token?: (string|null), expires_in?: (int|string), error?: int|string, error_description?: int|string} $decoded */
+            /** @var array{access_token?: (null|string), expires_in?: (int|string), error?: int|string, error_description?: int|string} $decoded */
             if (HttpResponse::wasSuccessful($response)) {
                 if (isset($decoded['access_token'])) {
                     $managementToken = $decoded['access_token'];
