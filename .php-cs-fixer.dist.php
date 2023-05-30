@@ -80,7 +80,7 @@ return (new PhpCsFixer\Config())
         'lowercase_static_reference' => true,
         'magic_constant_casing' => true,
         'magic_method_casing' => true,
-        'mb_str_functions' => true,
+        'mb_str_functions' => false,
         'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline', 'after_heredoc' => true],
         'method_chaining_indentation' => true,
         'modernize_strpos' => true,
