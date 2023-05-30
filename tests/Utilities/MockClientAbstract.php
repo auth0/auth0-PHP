@@ -89,7 +89,7 @@ abstract class MockClientAbstract implements MockClientInterface
      */
     public function getRequestMethod(): string
     {
-        return mb_strtoupper($this->getRequest()->getMethod());
+        return strtoupper($this->getRequest()->getMethod());
     }
 
     /**
