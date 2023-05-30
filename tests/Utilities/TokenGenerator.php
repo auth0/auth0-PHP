@@ -203,8 +203,8 @@ class TokenGenerator
             $keys = self::generateRsaKeyPair();
             $headers = array_merge(['kid' => '__test_kid__'], $headers);
             $token = self::withRs256($claims, $keys['private'], $headers);
-            $keys['cert'] = trim(mb_substr($keys['cert'], strpos($keys['cert'], "\n")+1));
-            $keys['cert'] = str_replace("\n", '', mb_substr($keys['cert'], 0, strrpos($keys['cert'], "\n")));
+            $keys['cert'] = trim(substr($keys['cert'], strpos($keys['cert'], "\n")+1));
+            $keys['cert'] = str_replace("\n", '', substr($keys['cert'], 0, strrpos($keys['cert'], "\n")));
         }
 
         if ($algorithm === self::ALG_HS256) {
