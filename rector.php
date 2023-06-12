@@ -337,7 +337,7 @@ return static function (RectorConfig $rectorConfig): void {
         AddArrayDefaultToArrayPropertyRector::class,
         AddArrowFunctionReturnTypeRector::class,
         AddClosureReturnTypeRector::class,
-        AddFalseDefaultToBoolPropertyRector::class,
+        // AddFalseDefaultToBoolPropertyRector::class,
         AddMethodCallBasedStrictParamTypeRector::class,
         AddParamBasedOnParentClassMethodRector::class,
         AddParamTypeBasedOnPHPUnitDataProviderRector::class,
