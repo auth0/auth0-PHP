@@ -16,9 +16,9 @@ use Auth0\SDK\Configuration\SdkConfiguration;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -85,9 +85,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -130,9 +130,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -190,9 +190,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -253,9 +253,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -311,9 +311,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -368,9 +368,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -428,9 +428,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -485,9 +485,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -554,9 +554,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -618,9 +618,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -675,9 +675,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -737,9 +737,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -842,9 +842,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -904,9 +904,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -992,9 +992,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -1110,9 +1110,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -1221,9 +1221,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -1291,9 +1291,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -1362,9 +1362,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -1460,9 +1460,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -1514,9 +1514,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -1582,9 +1582,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
@@ -1654,9 +1654,9 @@ use Auth0\SDK\Utility\HttpResponse;
 
 // Set up the SDK configuration object.
 $configuration = new SdkConfiguration(
-  domain: '...,'
-  clientId: '...,'
-  clientSecret: '...,'
+  domain: '...',
+  clientId: '...',
+  clientSecret: '...',
 )
 
 // Instantiate the SDK using the configuration.
