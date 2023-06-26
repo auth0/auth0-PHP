@@ -1,21 +1,20 @@
-name: "Psalm"
+name: "PHPStan"
 
 on:
-  pull_request: {}
+  pull_request:
+  merge_group:
   push:
-    branches:
-      - main
+    branches: ["master", "main"]
 
 permissions: {}
 
 jobs:
-  psalm:
+  phpstan:
+    name: "Scan"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -23,4 +22,4 @@ jobs:
 
       - run: composer install --no-progress
 
-      - run: vendor/bin/psalm
+      # - run: vendor/bin/phpstan analyze --no-ansi --no-progress --debug

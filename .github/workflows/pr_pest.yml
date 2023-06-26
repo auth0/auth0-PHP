@@ -1,21 +1,20 @@
 name: "PEST"
 
 on:
-  pull_request: {}
+  pull_request:
+  merge_group:
   push:
-    branches:
-      - main
+    branches: ["master", "main"]
 
 permissions: {}
 
 jobs:
   pest:
+    name: "Scan"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -24,7 +23,7 @@ jobs:
 
       - run: composer install --no-progress
 
-      - run: vendor/bin/pest --order-by random --parallel
+      - run: vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel
 
       - uses: codecov/codecov-action@v3
         with:

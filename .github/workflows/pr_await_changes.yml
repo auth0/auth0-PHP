@@ -1,0 +1,17 @@
+name: "Pull Request Changes"
+
+# Monitor for changes to pull requests.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+permissions: {}
+
+jobs:
+  wait:
+    name: "Watching"
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Child workflows triggered."

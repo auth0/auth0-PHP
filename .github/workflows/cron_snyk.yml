@@ -1,0 +1,32 @@
+name: "Snyk (Scheduled)"
+
+# This workflow will run after a push to the main branch and as a scheduled job.
+
+on:
+  push:
+    branches: ["master", "main"]
+
+permissions: {}
+
+jobs:
+  snyk:
+    name: "Scan"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          coverage: none
+          extensions: mbstring
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/checkout@v3
+
+      - run: composer install --no-progress
+
+      - uses: snyk/actions/php@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

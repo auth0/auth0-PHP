@@ -1,0 +1,32 @@
+name: "Composer"
+
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches: ["master", "main"]
+
+permissions: {}
+
+jobs:
+  validate:
+    name: "Validate"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: composer validate
+
+  normalize:
+    name: "Normalize"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: composer require --dev ergebnis/composer-normalize
+
+      - run: composer config allow-plugins.ergebnis/composer-normalize true
+
+      - run: composer normalize

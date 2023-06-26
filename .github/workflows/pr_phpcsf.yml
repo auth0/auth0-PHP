@@ -1,21 +1,20 @@
 name: "PHP CS Fixer"
 
 on:
-  pull_request: {}
+  pull_request:
+  merge_group:
   push:
-    branches:
-      - main
+    branches: ["master", "main"]
 
 permissions: {}
 
 jobs:
   phpcsf:
+    name: "Scan"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          persist-credentials: false
 
       - uses: shivammathur/setup-php@v2
         with:
