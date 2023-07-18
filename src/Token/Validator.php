@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Token;
 
 use Auth0\SDK\Contract\Token\ValidatorInterface;
+use Auth0\SDK\Exception\InvalidTokenException;
 
 use Auth0\SDK\Exception\InvalidTokenException;
 
