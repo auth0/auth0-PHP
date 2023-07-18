@@ -167,11 +167,11 @@ final class Token implements TokenInterface
 
     public function getOrganization(): ?string
     {
-        if (is_string($claim = $this->getOrganizationId())) {
+        if (null !== ($claim = $this->getOrganizationId())) {
             return $claim;
         }
 
-        if (is_string($claim = $this->getOrganizationName())) {
+        if (null !== ($claim = $this->getOrganizationName())) {
             return $claim;
         }
 
