@@ -115,6 +115,26 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_ORGANIZATION_CLAIM_BAD = 'Token organization claim (`org_id` or `org_name`) must be a string';
+
+    /**
+     * @var string
+     */
+    public const MSG_ORGANIZATION_CLAIM_MISSING = 'Token organization claim (`org_id` or `org_name`) was not found';
+
+    /**
+     * @var string
+     */
+    public const MSG_ORGANIZATION_CLAIM_UNEXPECTED = 'Token organization claim (`org_id` or `org_name`) was not expected';
+
+    /**
+     * @var string
+     */
+    public const MSG_ORGANIZATION_CLAIM_UNMATCHED = 'Token organization claim (`org_id` or `org_name`) is not allowed';
+
+    /**
+     * @var string
+     */
     public const MSG_REQUIRES_CLIENT_SECRET = 'Cannot verify signature: Client secret must be configured to verify HS256 signatures';
 
     /**
@@ -131,26 +151,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      * @var string
      */
     public const MSG_UNSUPPORTED_SIGNING_ALGORITHM = 'Signature algorithm of "%s" is not supported. Expected the token to be signed with "RS256" or "HS256"';
-
-    /**
-     * @var string
-     */
-    public const MSG_ORGANIZATION_CLAIM_BAD = 'Token organization claim (`org_id` or `org_name`) must be a string';
-
-    /**
-     * @var string
-     */
-    public const MSG_ORGANIZATION_CLAIM_MISSING = 'Token organization claim (`org_id` or `org_name`) was not found';
-
-    /**
-     * @var string
-     */
-    public const MSG_ORGANIZATION_CLAIM_UNMATCHED = 'Token organization claim (`org_id` or `org_name`) is not allowed';
-
-    /**
-     * @var string
-     */
-    public const MSG_ORGANIZATION_CLAIM_UNEXPECTED = 'Token organization claim (`org_id` or `org_name`) was not expected';
 
     public static function badSeparators(
         ?Throwable $previous = null,
