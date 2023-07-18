@@ -1706,7 +1706,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function allNullOrInArray($value, $values, $message = ''): void
+    public static function allNullOrInArray($value, array $values, $message = ''): void
     {
         self::isIterable($value);
 
@@ -1840,7 +1840,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function allNullOrIsAnyOf($value, $classes, $message = ''): void
+    public static function allNullOrIsAnyOf($value, array $classes, $message = ''): void
     {
         self::isIterable($value);
 
@@ -2019,7 +2019,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function allNullOrIsInstanceOfAny($value, $classes, $message = ''): void
+    public static function allNullOrIsInstanceOfAny($value, array $classes, $message = ''): void
     {
         self::isIterable($value);
 
@@ -2733,7 +2733,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function allNullOrOneOf($value, $values, $message = ''): void
+    public static function allNullOrOneOf($value, array $values, $message = ''): void
     {
         self::isIterable($value);
 
@@ -5391,7 +5391,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function nullOrInArray($value, $values, $message = ''): void
+    public static function nullOrInArray($value, array $values, $message = ''): void
     {
         if (null !== $value) {
             self::inArray($value, $values, $message);
@@ -5497,7 +5497,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function nullOrIsAnyOf($value, $classes, $message = ''): void
+    public static function nullOrIsAnyOf($value, array $classes, $message = ''): void
     {
         if (null !== $value) {
             self::isAnyOf($value, $classes, $message);
@@ -5644,7 +5644,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function nullOrIsInstanceOfAny($value, $classes, $message = ''): void
+    public static function nullOrIsInstanceOfAny($value, array $classes, $message = ''): void
     {
         if (null !== $value) {
             self::isInstanceOfAny($value, $classes, $message);
@@ -6210,7 +6210,7 @@ final class Assert
      *
      * @throws InvalidArgumentException
      */
-    public static function nullOrOneOf($value, $values, $message = ''): void
+    public static function nullOrOneOf($value, array $values, $message = ''): void
     {
         if (null !== $value) {
             self::oneOf($value, $values, $message);
