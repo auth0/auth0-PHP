@@ -4,7 +4,10 @@ name: "Snyk (Scheduled)"
 
 on:
   push:
-    branches: ["master", "main"]
+    branches:
+      - main
+  schedule:
+    - cron: "30 0 1,15 * *"
 
 permissions: {}
 
@@ -14,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
         with:
           php-version: "8.1"
           coverage: none
@@ -26,7 +29,7 @@ jobs:
 
       - run: composer install --no-progress
 
-      - uses: snyk/actions/php@master
+      - uses: snyk/actions/php@b98d498629f1c368650224d6d212bf7dfa89e4bf # pin@0.4.0
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

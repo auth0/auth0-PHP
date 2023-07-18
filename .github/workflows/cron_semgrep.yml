@@ -1,0 +1,27 @@
+name: "Semgrep (Scheduled)"
+
+# This workflow will run after a push to the main branch and as a scheduled job.
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "30 0 1,15 * *"
+
+permissions: {}
+
+jobs:
+  semgrep:
+    name: "Scan"
+    runs-on: ubuntu-latest
+
+    container:
+      image: returntocorp/semgrep
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: semgrep ci
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}

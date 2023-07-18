@@ -4,7 +4,8 @@ on:
   pull_request:
   merge_group:
   push:
-    branches: ["master", "main"]
+    branches:
+      - main
 
 permissions: {}
 
@@ -16,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
         with:
           php-version: "8.1"
           coverage: pcov
@@ -25,7 +26,7 @@ jobs:
 
       - run: vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel
 
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
         with:
           directory: ./coverage/
           flags: unittests
