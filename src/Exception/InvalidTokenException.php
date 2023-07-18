@@ -65,11 +65,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_MISMATCHED_ORG_ID_CLAIM = 'Organization Id (org_id) claim value mismatch in the token; expected "%s", found "%s"';
-
-    /**
-     * @var string
-     */
     public const MSG_MISSING_ALG_HEADER = 'Provided token is missing a alg header';
 
     /**
@@ -115,11 +110,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_MISSING_ORG_ID_CLAIM = 'Organization Id (org_id) claim must be a string present in the token';
-
-    /**
-     * @var string
-     */
     public const MSG_MISSING_SUB_CLAIM = 'Subject (sub) claim must be a string present in the token';
 
     /**
@@ -141,6 +131,26 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      * @var string
      */
     public const MSG_UNSUPPORTED_SIGNING_ALGORITHM = 'Signature algorithm of "%s" is not supported. Expected the token to be signed with "RS256" or "HS256"';
+
+    /**
+     * @var string
+     */
+    public const MSG_ORGANIZATION_CLAIM_BAD = 'Token organization claim (`org_id` or `org_name`) must be a string';
+
+    /**
+     * @var string
+     */
+    public const MSG_ORGANIZATION_CLAIM_MISSING = 'Token organization claim (`org_id` or `org_name`) was not found';
+
+    /**
+     * @var string
+     */
+    public const MSG_ORGANIZATION_CLAIM_UNMATCHED = 'Token organization claim (`org_id` or `org_name`) is not allowed';
+
+    /**
+     * @var string
+     */
+    public const MSG_ORGANIZATION_CLAIM_UNEXPECTED = 'Token organization claim (`org_id` or `org_name`) was not expected';
 
     public static function badSeparators(
         ?Throwable $previous = null,
@@ -221,14 +231,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         return new self(sprintf(self::MSG_MISMATCHED_NONCE_CLAIM, $expected, $found), 0, $previous);
     }
 
-    public static function mismatchedOrgIdClaim(
-        string $expected,
-        string $found,
-        ?Throwable $previous = null,
-    ): self {
-        return new self(sprintf(self::MSG_MISMATCHED_ORG_ID_CLAIM, $expected, $found), 0, $previous);
-    }
-
     public static function missingAlgHeader(
         ?Throwable $previous = null,
     ): self {
@@ -281,12 +283,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(self::MSG_MISSING_NONCE_CLAIM, 0, $previous);
-    }
-
-    public static function missingOrgIdClaim(
-        ?Throwable $previous = null,
-    ): self {
-        return new self(self::MSG_MISSING_ORG_ID_CLAIM, 0, $previous);
     }
 
     public static function missingSubClaim(

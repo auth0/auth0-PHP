@@ -155,7 +155,7 @@ test('validate() returns a fluent interface', function(
     array $claims
 ): void {
     $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
-    expect($token->validate(null, null, ['__test_org__'], $claims['nonce'], 100))->toEqual($token);
+    expect($token->validate(null, null, ['org_123'], $claims['nonce'], 100))->toEqual($token);
 })->with(['mocked data' => [
     function(): SdkConfiguration {
         $this->configuration->setDomain('domain.test');
@@ -164,7 +164,7 @@ test('validate() returns a fluent interface', function(
         $this->configuration->setClientSecret('__test_client_secret__');
         return $this->configuration;
     },
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['org_id' => '__test_org__']),
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['org_id' => 'org_123']),
     fn() => ['nonce' => '__test_nonce__']
 ]]);
 
