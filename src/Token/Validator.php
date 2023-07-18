@@ -7,8 +7,6 @@ namespace Auth0\SDK\Token;
 use Auth0\SDK\Contract\Token\ValidatorInterface;
 use Auth0\SDK\Exception\InvalidTokenException;
 
-use Auth0\SDK\Exception\InvalidTokenException;
-
 use function in_array;
 use function is_array;
 use function is_string;
