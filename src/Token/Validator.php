@@ -241,12 +241,10 @@ final class Validator implements ValidatorInterface
             }
 
             if (null !== $organizationName) {
-                // Normalize the org_name claim to lowercase for case insensitive comparisons.
-                $lowercaseOrganizationName = strtolower($organizationName);
                 $allowedOrganizationNames = array_map('strtolower', array_filter($allowedOrganizations, static fn ($org): bool => ! str_starts_with($org, 'org_')));
 
                 // org_name claim is present and in the allowlist. Success.
-                if (in_array($lowercaseOrganizationName, $allowedOrganizationNames, true)) {
+                if (in_array($organizationName, $allowedOrganizationNames, true)) {
                     return $this;
                 }
             }
