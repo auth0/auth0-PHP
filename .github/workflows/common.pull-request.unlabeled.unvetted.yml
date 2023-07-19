@@ -26,6 +26,3 @@ jobs:
       # Is having the 'Vetted' label removed. Success.
       - if: ${{ github.event.label.name == 'Vetted' }}
         run: exit 0
-
-      # Otherwise, fail.
-      # - run: exit 1
