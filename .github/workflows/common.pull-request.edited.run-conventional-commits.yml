@@ -12,14 +12,12 @@ permissions:
 
 jobs:
   check:
+    if: ${{ github.event_name == 'pull_request' }}
+
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
-      # Not a pull request. Success.
-      - if: ${{ github.event_name != 'pull_request' }}
-        run: exit 0
-
       # Dependabot. Success.
       - if: ${{ github.actor == 'dependabot[bot]' }}
         run: exit 0

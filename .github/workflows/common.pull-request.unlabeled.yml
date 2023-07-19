@@ -24,6 +24,8 @@ permissions: {}
 
 jobs:
   check:
+    if: ${{ github.event_name == 'pull_request' }}
+
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
