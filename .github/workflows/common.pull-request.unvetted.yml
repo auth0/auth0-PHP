@@ -1,4 +1,5 @@
-name: "Pull Request"
+name: "Pull Request Unvetted"
+run-name: "Pull Request"
 
 on:
   merge_group:
