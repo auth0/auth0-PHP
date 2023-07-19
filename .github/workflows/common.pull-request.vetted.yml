@@ -1,4 +1,4 @@
-name: "(Common) Pull Request Vetted"
+name: "Pull Request"
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  wait:
+  vetted:
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 

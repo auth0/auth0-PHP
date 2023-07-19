@@ -1,4 +1,4 @@
-name: "(PR) PEST"
+name: "PEST Unit Tests"
 
 # This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
 
@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   pest:
-    name: "Run Tests"
+    name: "Run Checks"
     runs-on: ubuntu-latest
 
     steps:
