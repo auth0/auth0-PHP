@@ -1,16 +1,11 @@
-name: "Pull Request / Labeling"
+name: "Pull Request / Modified: Unvet"
 
 on:
-  merge_group:
-  push:
-    branches:
-      - main
-  pull_request_target:
+  workflow_run:
+    workflows:
+      - "Pull Request / Modified"
     types:
-      - opened
-      - synchronize
-      - closed
-      - reopened
+      - completed
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,17 +22,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Not a pull request. Success.
+      - if: ${{ github.event_name != 'pull_request' }}
+        run: exit 0
+
+      # Dependabot. Success.
       - if: ${{ github.actor == 'dependabot[bot]' }}
         run: exit 0
 
-      - if: ${{ github.event_name != 'pull_request_target' }}
+      # Doesn't have 'Vetted' label. Success.
+      - if: ${{ contains(github.event.pull_request.labels.*.name, 'Vetted') == false }}
         run: exit 0
 
-      - if: ${{ ! contains(github.event.pull_request.labels.*.name, 'Vetted') }}
-        run: exit 0
-
-      - if: ${{ github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name }}
-        uses: actions/github-script@v6
+      - uses: actions/github-script@v6
         with:
           script: |
             github.rest.issues.removeLabel({

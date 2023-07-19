@@ -5,8 +5,7 @@ name: "PHPStan"
 on:
   workflow_run:
     workflows:
-      - "Pull Request Vetted"
-      - "Pull Request Unvetted"
+      - "Pull Request / Run Checks"
     types:
       - completed
 

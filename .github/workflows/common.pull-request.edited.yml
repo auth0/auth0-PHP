@@ -1,0 +1,28 @@
+name: "Pull Request / Edited"
+
+# -----------------------------------------------------------------------------
+#
+# Fired when a pull request title or body is edited.
+#
+# -----------------------------------------------------------------------------
+
+on:
+  merge_group:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    types:
+      - opened
+      - edited
+
+permissions: {}
+
+jobs:
+  check:
+    name: "Maintainer Approval"
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: exit 0

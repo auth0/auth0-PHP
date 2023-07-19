@@ -1,0 +1,30 @@
+name: "Pull Request / Edited: Conventional Commits"
+
+on:
+  workflow_run:
+    workflows:
+      - "Pull Request / Edited"
+    types:
+      - completed
+
+permissions:
+  pull-requests: read
+
+jobs:
+  check:
+    name: "Maintainer Approval"
+    runs-on: ubuntu-latest
+
+    steps:
+      # Not a pull request. Success.
+      - if: ${{ github.event_name != 'pull_request' }}
+        run: exit 0
+
+      # Dependabot. Success.
+      - if: ${{ github.actor == 'dependabot[bot]' }}
+        run: exit 0
+
+      - if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        uses: amannn/action-semantic-pull-request@c3cd5d1ea3580753008872425915e343e351ab54 # pin@5.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

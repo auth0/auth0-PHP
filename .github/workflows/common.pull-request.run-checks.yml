@@ -1,0 +1,37 @@
+name: "Pull Request / Run Checks"
+
+on:
+  workflow_run:
+    workflows:
+      - "Pull Request / Labeled: Vetted"
+      - "Pull Request / Unlabelled: Unvetted"
+    types:
+      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  pull-requests: read
+
+jobs:
+  check:
+    name: "Maintainer Approval"
+    runs-on: ubuntu-latest
+
+    steps:
+      # Not a pull request. Success.
+      - if: ${{ github.event_name != 'pull_request' }}
+        run: exit 0
+
+      # Dependabot. Success.
+      - if: ${{ github.actor == 'dependabot[bot]' }}
+        run: exit 0
+
+      # Is receiving the 'Vetted' label. Success.
+      - if: ${{ github.event.action == "labeled" && github.event.label.name == 'Vetted' }}
+        run: exit 0
+
+      # Otherwise, fail.
+      - run: exit 1

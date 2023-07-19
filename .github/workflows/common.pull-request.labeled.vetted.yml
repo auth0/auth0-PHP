@@ -1,20 +1,17 @@
-name: "Pull Request / Checks"
+name: "Pull Request / Labeled: Vetted"
 
 on:
-  merge_group:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_run:
+    workflows:
+      - "Pull Request / Labeled"
     types:
-      - labeled
+      - completed
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  pull-requests: read
+permissions: {}
 
 jobs:
   check:
@@ -22,14 +19,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - if: ${{ github.actor == 'dependabot[bot]' }}
-        run: exit 0
-
+      # Not a pull request. Success.
       - if: ${{ github.event_name != 'pull_request' }}
         run: exit 0
 
-      - if: ${{ github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name }}
+      # Dependabot. Success.
+      - if: ${{ github.actor == 'dependabot[bot]' }}
         run: exit 0
 
+      # Is receiving the 'Vetted' label. Success.
       - if: ${{ github.event.label.name == 'Vetted' }}
         run: exit 0
