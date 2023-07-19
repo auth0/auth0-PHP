@@ -5,8 +5,7 @@ name: "PHP CS Fixer"
 on:
   workflow_run:
     workflows:
-      - "(Common) Pull Request Vetted"
-      - "(Common) Pull Request Unvetted"
+      - "Pull Request"
     types:
       - completed
 
