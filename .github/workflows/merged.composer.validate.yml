@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   validate:
-    name: "Run Tests"
+    name: "Run Checks"
     runs-on: ubuntu-latest
 
     steps:
