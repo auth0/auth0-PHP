@@ -5,7 +5,8 @@ name: "Rector"
 on:
   workflow_run:
     workflows:
-      - "Pull Request"
+      - "Pull Request Vetted"
+      - "Pull Request Unvetted"
     types:
       - completed
 
