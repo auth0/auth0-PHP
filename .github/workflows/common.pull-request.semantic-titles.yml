@@ -1,5 +1,4 @@
-name: "Pull Request Retitled"
-run-name: "Pull Request"
+name: "Pull Request / Conventional Commits"
 
 on:
   merge_group:
@@ -16,7 +15,7 @@ permissions:
 
 jobs:
   check:
-    name: "Conventional Commits"
+    name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
