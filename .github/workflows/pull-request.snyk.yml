@@ -5,8 +5,7 @@ name: "Snyk"
 on:
   workflow_run:
     workflows:
-      - "Pull Request Vetted"
-      - "Pull Request Unvetted"
+      - "Pull Request / Run Checks"
     types:
       - completed
 
@@ -19,13 +18,12 @@ permissions:
 
 jobs:
   snyk:
+    if: ${{ github.event_name == 'pull_request' }}
+
     name: "Run Checks"
     runs-on: ubuntu-latest
 
     steps:
-      - if: ${{ github.actor != 'dependabot[bot]' && ! contains(github.event.pull_request.labels.*.name, 'Vetted') }}
-        run: exit 1
-
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}

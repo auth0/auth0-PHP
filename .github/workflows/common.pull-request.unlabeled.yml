@@ -1,0 +1,33 @@
+name: "Pull Request / Unlabelled"
+
+# -----------------------------------------------------------------------------
+#
+# Fired when a pull request is labeled.
+#
+# -----------------------------------------------------------------------------
+
+on:
+  merge_group:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    types:
+      - unlabeled
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  check:
+    if: ${{ github.event_name == 'pull_request' }}
+
+    name: "Maintainer Approval"
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: exit 0

@@ -1,0 +1,36 @@
+name: "Pull Request / Modified"
+
+# -----------------------------------------------------------------------------
+#
+# Fired when a pull request's head branch is updated.
+#
+# -----------------------------------------------------------------------------
+
+on:
+  merge_group:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - closed
+      - reopened
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  check:
+    if: ${{ github.event_name == 'pull_request' }}
+
+    name: "Maintainer Approval"
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: exit 0
