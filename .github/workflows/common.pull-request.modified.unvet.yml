@@ -29,10 +29,8 @@ jobs:
         run: exit 0
 
       # Doesn't have 'Vetted' label. Success.
-      - if: ${{ contains(github.event.pull_request.labels.*.name, 'Vetted') == false }}
-        run: exit 0
-
-      - uses: actions/github-script@v6
+      - if: ${{ contains(github.event.pull_request.labels.*.name, 'Vetted') }}
+        uses: actions/github-script@v6
         with:
           script: |
             github.rest.issues.removeLabel({
