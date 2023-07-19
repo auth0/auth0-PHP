@@ -16,7 +16,7 @@ beforeEach(function() {
         'auth_time' => time() - 100,
         'exp' => time() + 1000,
         'iat' => time() - 1000,
-        'azp' => uniqid()
+        'azp' => uniqid(),
     ];
 });
 
@@ -92,3 +92,42 @@ test('subject() throws an exception when `sub` claim is missing', function(): vo
     unset($this->claims['sub']);
     (new Validator($this->claims))->subject();
 })->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_SUB_CLAIM);
+
+test('organization() throws an exception when a `org_id` claim is expected but not found', function(): void {
+    (new Validator($this->claims))->organization(['org_123']);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_MISSING);
+
+test('organization() throws an exception when a `org_name` claim is expected but not found', function(): void {
+    (new Validator($this->claims))->organization(['organizationTesting123']);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_MISSING);
+
+test('organization() does not throw an exception when wildcard organizations are configured', function(): void {
+    $this->claims['org_id'] = uniqid();
+    $validator = (new Validator($this->claims))->organization(['*']);
+    expect($validator)->toBeInstanceOf(Validator::class);
+});
+
+test('organization() throws an exception when either a `org_id` claim is an unexpected type', function(): void {
+    $this->claims['org_id'] = true;
+    (new Validator($this->claims))->organization(['org_123']);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_BAD);
+
+test('organization() throws an exception when either a `org_name` claim is an unexpected type', function(): void {
+    $this->claims['org_name'] = true;
+    (new Validator($this->claims))->organization(['organizationTesting123']);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_BAD);
+
+test('organization() throws an exception when an unexpected `org_id` claim is encountered', function(): void {
+    $this->claims['org_id'] = uniqid();
+    (new Validator($this->claims))->organization([]);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_UNEXPECTED);
+
+test('organization() throws an exception when an unexpected `org_name` claim is encountered', function(): void {
+    $this->claims['org_name'] = uniqid();
+    (new Validator($this->claims))->organization([]);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_UNEXPECTED);
+
+test('organization() does not throw an exception when there are no organization claims and no allowlist configured', function(): void {
+    $validator = (new Validator($this->claims))->organization([]);
+    expect($validator)->toBeInstanceOf(Validator::class);
+});

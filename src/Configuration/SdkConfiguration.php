@@ -70,7 +70,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param null|string                      $redirectUri                     authentication callback URI, as defined in your Auth0 Application settings
      * @param null|string                      $clientSecret                    client Secret, found in the Auth0 Application settings
      * @param null|array<string>               $audience                        One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
-     * @param null|array<string>               $organization                    One or more Organization IDs, found in your Auth0 Organization settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'org_id' claim to validate an ID Token successfully.
+     * @param null|array<string>               $organization                    Allowlist containing one or more organization IDs/names. Reference your Auth0 organization settings for these values. By default, the SDK will use the first value provided when generating authorization links.
      * @param bool                             $usePkce                         Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests. See https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce
      * @param null|array<string>               $scope                           One or more scopes to request for Tokens. See https://auth0.com/docs/scopes
      * @param string                           $responseMode                    Defaults to 'query.' Where to extract request parameters from, either 'query' for GET or 'form_post' for POST requests.
@@ -425,7 +425,7 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * @param ?Throwable $exceptionIfNull
      *
-     * @return null|array<string> the allowlist of Organization IDs
+     * @return null|array<string> The configured allowlist of organization IDs/names.
      */
     public function getOrganization(?Throwable $exceptionIfNull = null): ?array
     {
@@ -808,7 +808,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param array<string>|string $organizations a string or array of strings representing Organization IDs to add to the allowlist
+     * @param array<string>|string $organizations A string or array of strings representing organization IDs/names to add to the organization allowlist.
      *
      * @return null|array<string>
      */
@@ -1097,7 +1097,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param null|array<string> $organization an allowlist of Organization IDs
+     * @param null|array<string> $organization An allowlist of organizations IDs/names.
      */
     public function setOrganization(?array $organization = null): self
     {
