@@ -1,4 +1,4 @@
-name: "Pull Request: Labeling"
+name: "Pull Request"
 
 on:
   merge_group:
@@ -23,6 +23,7 @@ permissions:
 
 jobs:
   check:
+    name: "Labelling"
     runs-on: ubuntu-latest
 
     steps:
