@@ -1,4 +1,4 @@
-name: "(PR) Rector"
+name: "Rector"
 
 # This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
 
@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   rector:
-    name: "Run Tests"
+    name: "Run Checks"
     runs-on: ubuntu-latest
 
     steps:
