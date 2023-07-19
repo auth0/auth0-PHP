@@ -1,5 +1,4 @@
-name: "Pull Request Unvetted"
-run-name: "Pull Request"
+name: "Pull Request / Labeling"
 
 on:
   merge_group:
@@ -24,7 +23,7 @@ permissions:
 
 jobs:
   check:
-    name: "Labelling"
+    name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
