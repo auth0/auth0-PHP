@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   wait:
-    name: "Waiting for Maintainer Approval"
+    name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
