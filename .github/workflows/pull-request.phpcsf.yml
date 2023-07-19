@@ -23,8 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Fail if the pull request is not labeled with "Vetted" (or created by Dependabot.)
-      - if: ${{ github.actor != 'dependabot[bot]' && (github.event.workflow_run.conclusion != 'success' || ! contains(github.event.pull_request.labels.*.name, 'Vetted') }}
+      - if: ${{ github.actor != 'dependabot[bot]' && (github.event.workflow_run.conclusion != 'success' || ! contains(github.event.pull_request.labels.*.name, 'Vetted')) }}
         run: exit 1
 
       - uses: actions/checkout@v3
