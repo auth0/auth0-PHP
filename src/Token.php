@@ -167,7 +167,29 @@ final class Token implements TokenInterface
 
     public function getOrganization(): ?string
     {
+        if (null !== ($claim = $this->getOrganizationId())) {
+            return $claim;
+        }
+
+        if (null !== ($claim = $this->getOrganizationName())) {
+            return $claim;
+        }
+
+        return null;
+    }
+
+    public function getOrganizationId(): ?string
+    {
         if (is_string($claim = $this->getParser()->getClaim('org_id'))) {
+            return $claim;
+        }
+
+        return null;
+    }
+
+    public function getOrganizationName(): ?string
+    {
+        if (is_string($claim = $this->getParser()->getClaim('org_name'))) {
             return $claim;
         }
 

@@ -428,7 +428,7 @@ test('decode() converts a string `max_age` value from transient storage into an 
 })->throws(InvalidTokenException::class);
 
 test('decode() compares `org_id` against `organization` configuration', function(): void {
-    $orgId = 'org8675309';
+    $orgId = 'org_' . uniqid();
 
     $token = (new TokenGenerator())->withHs256([
         'org_id' => $orgId,
@@ -445,6 +445,42 @@ test('decode() compares `org_id` against `organization` configuration', function
     expect($decoded->getOrganization())->toEqual($orgId);
 });
 
+test('decode() compares `org_name` against `organization` configuration', function(): void {
+    $orgName = uniqid();
+
+    $token = (new TokenGenerator())->withHs256([
+        'org_name' => $orgName,
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+        'organization' => [$orgName],
+    ]);
+
+    $decoded = $auth0->decode($token);
+
+    expect($decoded->getOrganization())->toEqual($orgName);
+});
+
+test('decode() does not match strings beginning with `org_` from the `organization` configuration against an `org_name` claim check', function(): void {
+    $orgName = 'org_' . uniqid();
+
+    $token = (new TokenGenerator())->withHs256([
+        'org_name' => $orgName,
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+        'organization' => [$orgName],
+    ]);
+
+    $decoded = $auth0->decode($token);
+
+    expect($decoded->getOrganization())->toEqual($orgName);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_UNMATCHED);
+
 test('decode() throws an exception when `org_id` claim does not exist, but an `organization` is configured', function(): void {
     $token = (new TokenGenerator())->withHs256([
         'iss' => 'https://' . $this->configuration['domain'] . '/'
@@ -452,15 +488,15 @@ test('decode() throws an exception when `org_id` claim does not exist, but an `o
 
     $auth0 = new Auth0($this->configuration + [
         'tokenAlgorithm' => 'HS256',
-        'organization' => ['org8675309'],
+        'organization' => ['org_' . uniqid()],
     ]);
 
     $auth0->decode($token);
-})->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_ORG_ID_CLAIM);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_MISSING);
 
 test('decode() throws an exception when `org_id` does not match `organization` configuration', function(): void {
-    $expectedOrgId = uniqid();
-    $tokenOrgId = uniqid();
+    $expectedOrgId = 'org_' . uniqid();
+    $tokenOrgId = 'org_' . uniqid();
 
     $token = (new TokenGenerator())->withHs256([
         'org_id' => $tokenOrgId,
@@ -473,7 +509,7 @@ test('decode() throws an exception when `org_id` does not match `organization` c
     ]);
 
     $auth0->decode($token);
-})->throws(InvalidTokenException::class);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_ORGANIZATION_CLAIM_UNMATCHED);
 
 test('decode() can be used with access tokens', function (): void {
     $token = (new TokenGenerator())->withHs256([
