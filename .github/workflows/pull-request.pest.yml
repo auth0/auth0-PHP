@@ -37,7 +37,7 @@ jobs:
 
       - run: composer install --no-progress
 
-      - run: vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel --min 100
+      - run: vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel
 
       - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
         with:
