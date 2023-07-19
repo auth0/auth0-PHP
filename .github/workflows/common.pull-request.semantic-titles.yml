@@ -1,4 +1,4 @@
-name: "Pull Request"
+name: "Pull Request: Conventional Commits"
 
 on:
   merge_group:
@@ -14,8 +14,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  lint:
-    name: "Conventional Commits"
+  check:
     runs-on: ubuntu-latest
 
     steps:
