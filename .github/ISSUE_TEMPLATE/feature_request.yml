@@ -1,6 +1,5 @@
 name: Suggest a Feature
 description: Help us improve the SDK by suggest new features and improvements.
-labels: ["inbox"]
 
 body:
   - type: markdown
@@ -8,12 +7,14 @@ body:
       value: Thanks for taking the time to help us improve this SDK!
 
   - type: checkboxes
-    id: checklist
-    attributes:
-      label: Checklist
-      options:
-        - label: I agree to uphold [the Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md).
-          required: true
+      id: checklist
+      attributes:
+        label: Checklist
+        options:
+          - label: I agree to adhere to the [Auth0 General Contribution Guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md).
+            required: true
+          - label: I agree to uphold the [Auth0 Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md).
+            required: true
 
   - type: textarea
     id: feature-description
