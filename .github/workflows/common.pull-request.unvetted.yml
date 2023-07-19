@@ -1,6 +1,10 @@
 name: "Pull Request"
 
 on:
+  merge_group:
+  push:
+    branches:
+      - main
   pull_request_target:
     types:
       - opened
@@ -23,6 +27,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - if: ${{ github.event_name != 'pull_request_target' }}
+        run: exit 0
+
       - if: ${{ github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name && contains(github.event.pull_request.labels.*.name, 'Vetted') }}
         uses: actions/github-script@v6
         with:
