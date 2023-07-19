@@ -26,9 +26,11 @@ jobs:
       - if: ${{ github.actor == 'dependabot[bot]' }}
         run: exit 0
 
+      - if: ${{ ! contains(github.event.pull_request.labels.*.name, 'Vetted') }}
+        run: exit 0
+
       # Doesn't have 'Vetted' label. Success.
-      - if: ${{ contains(github.event.pull_request.labels.*.name, 'Vetted') }}
-        uses: actions/github-script@v6
+      - uses: actions/github-script@v6
         with:
           script: |
             github.rest.issues.removeLabel({
