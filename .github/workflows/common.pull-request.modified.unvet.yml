@@ -33,8 +33,10 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
+            const pull_request = context.payload.project_card.content_url.split('/').pop()
+
             github.rest.issues.removeLabel({
-              issue_number: context.issue.number,
+              issue_number: pull_request,
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: ["Vetted"]
