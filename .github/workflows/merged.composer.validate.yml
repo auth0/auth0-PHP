@@ -1,0 +1,26 @@
+name: "Composer Validate"
+
+# This workflow will run after a merge to the main branch from a pull request.
+
+on:
+  merge_group:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: "Run Tests"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: composer validate

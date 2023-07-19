@@ -1,0 +1,40 @@
+name: "(PR) Semgrep"
+
+# This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
+
+on:
+  workflow_run:
+    workflows:
+      - "(Common) Pull Request Vetted"
+      - "(Common) Pull Request Unvetted"
+    types:
+      - completed
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  wait:
+    name: "Run Tests"
+    runs-on: ubuntu-latest
+
+    container:
+      image: returntocorp/semgrep
+
+    steps:
+      # Fail if the pull request is not labeled with "Vetted" (or created by Dependabot.)
+      - if: ${{ github.actor != 'dependabot[bot]' && (github.event.workflow_run.conclusion != 'success' || ! contains(github.event.pull_request.labels.*.name, 'Vetted') }}
+        run: exit 1
+
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: semgrep ci
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}

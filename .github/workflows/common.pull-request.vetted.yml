@@ -1,0 +1,27 @@
+name: "(Common) Pull Request Vetted"
+
+on:
+  pull_request:
+    types:
+      - labeled
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  pull-requests: read
+
+jobs:
+  wait:
+    name: "Watching"
+    runs-on: ubuntu-latest
+
+    steps:
+      - if: ${{ github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name }}
+        run: exit 1
+
+      - if: ${{ github.actor == 'dependabot[bot]' || github.event.label.name == 'Vetted' }}
+        run: exit 0
+
+      - run: exit 1

@@ -1,26 +1,23 @@
-name: "Composer"
+name: "Composer Normalize"
+
+# This workflow will run after a merge to the main branch from a pull request.
 
 on:
-  pull_request:
   merge_group:
   push:
     branches:
       - main
 
-permissions: {}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-  validate:
-    name: "Validate"
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - run: composer validate
-
   normalize:
-    name: "Normalize"
+    name: "Run Tests"
     runs-on: ubuntu-latest
 
     steps:

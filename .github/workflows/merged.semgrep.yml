@@ -1,19 +1,25 @@
-name: "Semgrep (Scheduled)"
+name: "Semgrep"
 
-# This workflow will run after a push to the main branch and as a scheduled job.
+# This workflow will run after a merge to the main branch from a pull request, and as a scheduled job.
 
 on:
+  merge_group:
   push:
     branches:
       - main
   schedule:
     - cron: "30 0 1,15 * *"
 
-permissions: {}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   semgrep:
-    name: "Scan"
+    name: "Run Tests"
     runs-on: ubuntu-latest
 
     container:

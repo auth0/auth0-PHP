@@ -1,31 +1,37 @@
-name: "Snyk (Scheduled)"
+name: "Snyk"
 
-# This workflow will run after a push to the main branch and as a scheduled job.
+# This workflow will run after a merge to the main branch from a pull request, and as a scheduled job.
 
 on:
+  merge_group:
   push:
     branches:
       - main
   schedule:
     - cron: "30 0 1,15 * *"
 
-permissions: {}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   snyk:
-    name: "Scan"
+    name: "Run Tests"
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
+
       - uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
         with:
-          php-version: "8.1"
+          php-version: ${{ env.PHP_VERSION }}
           coverage: none
           extensions: mbstring
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/checkout@v3
 
       - run: composer install --no-progress
 

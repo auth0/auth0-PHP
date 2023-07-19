@@ -1,0 +1,38 @@
+name: "(Common) Pull Request Unvetted"
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - closed
+      - reopened
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  wait:
+    name: "Watching"
+    runs-on: ubuntu-latest
+
+    steps:
+      - if: ${{ github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name }}
+        run: exit 1
+
+      - if: ${{ contains(github.event.pull_request.labels.*.name, 'Vetted' }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: ["Vetted"]
+            })
