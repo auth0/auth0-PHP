@@ -23,10 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - if: ${{ github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name }}
-        run: exit 1
-
-      - if: ${{ contains(github.event.pull_request.labels.*.name, 'Vetted') }}
+      - if: ${{ github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name && contains(github.event.pull_request.labels.*.name, 'Vetted') }}
         uses: actions/github-script@v6
         with:
           script: |
