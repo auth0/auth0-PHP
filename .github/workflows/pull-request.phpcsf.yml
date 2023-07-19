@@ -18,8 +18,6 @@ permissions:
 
 jobs:
   phpcsf:
-    if: ${{ github.event_name == 'pull_request' }}
-
     name: "Run Checks"
     runs-on: ubuntu-latest
 
