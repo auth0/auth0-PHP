@@ -1,6 +1,10 @@
-name: "Pull Request"
+name: "Pull Request: Run Tests"
 
 on:
+  merge_group:
+  push:
+    branches:
+      - main
   pull_request:
     types:
       - labeled
@@ -13,10 +17,12 @@ permissions:
   pull-requests: read
 
 jobs:
-  vetted:
-    name: "Maintainer Approval"
+  check:
     runs-on: ubuntu-latest
 
     steps:
+      - if: ${{ github.event_name != 'pull_request' }}
+        run: exit 0
+
       - if: ${{ github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name && github.actor == 'dependabot[bot]' || github.event.label.name == 'Vetted' }}
         run: exit 0
