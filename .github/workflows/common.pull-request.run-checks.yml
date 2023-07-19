@@ -30,7 +30,7 @@ jobs:
         run: exit 0
 
       # Is receiving the 'Vetted' label. Success.
-      - if: ${{ github.event.action == "labeled" && github.event.label.name == 'Vetted' }}
+      - if: ${{ github.event.action == 'labeled' && github.event.label.name == 'Vetted' }}
         run: exit 0
 
       # Otherwise, fail.
