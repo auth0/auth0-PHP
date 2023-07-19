@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   snyk:
-    name: "Run Tests"
+    name: "Run Checks"
     runs-on: ubuntu-latest
 
     steps:

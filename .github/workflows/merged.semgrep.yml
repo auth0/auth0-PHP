@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   semgrep:
-    name: "Run Tests"
+    name: "Run Checks"
     runs-on: ubuntu-latest
 
     container:
