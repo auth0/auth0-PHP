@@ -33,7 +33,7 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const pull_request = context.payload.project_card.content_url.split('/').pop()
+            const pull_request = context.payload.pull_request.content_url.split('/').pop()
 
             github.rest.issues.removeLabel({
               issue_number: pull_request,
