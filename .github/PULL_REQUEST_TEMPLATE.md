@@ -1,28 +1,24 @@
-<!--
-  Please only send pull requests to branches that are actively supported.
-  Pull requests without an adequate title, description, or tests will be closed.
--->
-
 ### Changes
 
 <!--
-  What is changing, and why this is important?
+  Please outline the changes made in this pull request.
 -->
 
 ### References
 
 <!--
-  Link to any associated issues.
+  Link to any associated issues, pull requests, or other resources.
 -->
 
 ### Testing
 
 <!--
-  Tests must be added for new functionality, and existing tests should complete without errors.
+  Tests must be added for new functionality.
+  Existing tests should complete without errors.
   100% test coverage is required.
 -->
 
 ### Contributor Checklist
 
-- [ ] I have read the [Auth0 general contribution guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
-- [ ] I have read the [Auth0 code of conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
+- [ ] I agree to adhere to the [Auth0 General Contribution Guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md).
+- [ ] I agree to uphold the [Auth0 Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md).
