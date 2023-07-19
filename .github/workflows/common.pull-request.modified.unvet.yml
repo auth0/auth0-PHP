@@ -29,31 +29,12 @@ jobs:
       - if: ${{ ! contains(github.event.pull_request.labels.*.name, 'Vetted') }}
         run: exit 0
 
-      - uses: actions/github-script@v6
-        id: get_issue_number
-        with:
-          script: |
-            if (context.issue.number) {
-              return context.issue.number;
-            } else {
-              return (
-                await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  commit_sha: context.sha,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                })
-              ).data[0].number;
-            }
-          result-encoding: string
-
-      - run: echo '${{ steps.get_issue_number.outputs.result }}'
-
       # Doesn't have 'Vetted' label. Success.
       - uses: actions/github-script@v6
         with:
           script: |
             github.rest.issues.removeLabel({
-              issue_number: ${{ steps.get_issue_number.outputs.result}},
+              issue_number: ${{ github.event.number }},
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: ["Vetted"]
