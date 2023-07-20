@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: pr_number
+          name: pr_details
           path: pr/
 
       - run: exit 0
