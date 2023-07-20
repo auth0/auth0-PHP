@@ -7,14 +7,13 @@ on:
     types:
       - completed
 
+permissions:
+  checks: write
+
 jobs:
   check:
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
-
-    permissions:
-      issues: write
-      pull-requests: write
 
     steps:
       - uses: actions/github-script@v6
