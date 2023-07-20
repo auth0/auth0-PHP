@@ -11,10 +11,6 @@ on:
     types:
       - labeled
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions: {}
 
 jobs:
