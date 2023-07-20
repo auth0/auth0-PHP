@@ -14,8 +14,6 @@ permissions:
 
 jobs:
   check:
-    if: ${{ github.actor == 'dependabot[bot]' || (github.event.action == 'labeled' && github.event.label.name == 'Vetted') }}
-
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
