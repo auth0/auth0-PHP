@@ -1,3 +1,5 @@
+name: "CI"
+
 # This workflow will run after a merge to the main branch from a pull request.
 
 on:
