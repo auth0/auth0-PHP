@@ -29,4 +29,9 @@ jobs:
           echo $PR_NUMBER > ./pr/pr_number
           echo $PR_SHA > ./pr/pr_sha
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pr_details
+          path: pr/
+
       - run: exit 0
