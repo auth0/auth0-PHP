@@ -18,21 +18,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/github-script@v6
-        env:
-          parameter_url: '${{ github.event.workflow_run.html_url }}'
-        with:
-          script: |
-            await github.rest.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head_sha: context.sha,
-              name: "Snyk",
-              status: "in_progress",
-              conclusion: "${{ github.event.workflow_run.conclusion }}",
-              details_url: process.env.parameter_url
-            });
-
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
