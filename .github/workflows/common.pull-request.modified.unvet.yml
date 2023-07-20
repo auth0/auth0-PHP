@@ -36,7 +36,7 @@ jobs:
             });
 
             let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "pr_number"
+              return artifact.name == "pr_details"
             })[0];
 
             let download = await github.rest.actions.downloadArtifact({
@@ -47,10 +47,10 @@ jobs:
             });
 
             let fs = require('fs');
-            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/pr_number.zip`, Buffer.from(download.data));
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/pr_details.zip`, Buffer.from(download.data));
 
       - name: 'Unzip artifact'
-        run: unzip pr_number.zip
+        run: unzip pr_details.zip
 
       # Doesn't have 'Vetted' label. Success.
       - uses: actions/github-script@v6

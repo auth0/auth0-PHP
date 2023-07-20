@@ -18,19 +18,18 @@ permissions: {}
 
 jobs:
   check:
-    if: ${{ github.event_name == 'pull_request' }}
-
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Save PR number
+      - name: Save PR details
         env:
           PR_NUMBER: ${{ github.event.number }}
+          PR_SHA: ${{ github.sha }}
         run: |
           mkdir -p ./pr
           echo $PR_NUMBER > ./pr/pr_number
+          echo $PR_SHA > ./pr/pr_sha
 
       - uses: actions/upload-artifact@v3
         with:
