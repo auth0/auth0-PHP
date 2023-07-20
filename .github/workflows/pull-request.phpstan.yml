@@ -1,4 +1,4 @@
-name: "PHPStan"
+name: "CI"
 
 # This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
 
@@ -9,16 +9,12 @@ on:
     types:
       - completed
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
 jobs:
   phpstan:
-    name: "Run Checks"
+    name: "PHPStan"
     runs-on: ubuntu-latest
 
     steps:

@@ -1,4 +1,4 @@
-name: "PHP CS Fixer"
+name: "CI"
 
 # This workflow will run after a merge to the main branch from a pull request.
 
@@ -8,16 +8,12 @@ on:
     branches:
       - main
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
 jobs:
   phpcsf:
-    name: "Run Checks"
+    name: "PHP CS Fixer"
     runs-on: ubuntu-latest
 
     steps:

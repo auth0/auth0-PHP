@@ -1,4 +1,4 @@
-name: "Snyk"
+name: "CI"
 
 # This workflow will run after a merge to the main branch from a pull request, and as a scheduled job.
 
@@ -10,16 +10,12 @@ on:
   schedule:
     - cron: "30 0 1,15 * *"
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
 jobs:
   snyk:
-    name: "Run Checks"
+    name: "Snyk"
     runs-on: ubuntu-latest
 
     steps:

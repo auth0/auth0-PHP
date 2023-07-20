@@ -1,4 +1,4 @@
-name: "PHP CS Fixer"
+name: "CI"
 
 # This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
 
@@ -9,16 +9,12 @@ on:
     types:
       - completed
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
 jobs:
   phpcsf:
-    name: "Run Checks"
+    name: "PHP CS Fixer"
     runs-on: ubuntu-latest
 
     steps:

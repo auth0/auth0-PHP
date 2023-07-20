@@ -1,4 +1,4 @@
-name: "Composer Validate"
+name: "CI"
 
 # This workflow will run after a merge to the main branch from a pull request.
 
@@ -8,16 +8,12 @@ on:
     branches:
       - main
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
 jobs:
   validate:
-    name: "Run Checks"
+    name: "Composer Validate"
     runs-on: ubuntu-latest
 
     steps:
