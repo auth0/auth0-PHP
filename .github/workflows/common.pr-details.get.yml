@@ -1,0 +1,51 @@
+name: Get Pull Request Details
+
+on:
+  workflow_call:
+    outputs:
+      number:
+        value: ${{ jobs.get.outputs.pr_number }}
+      sha:
+        value: ${{ jobs.get.outputs.pr_sha }}
+
+jobs:
+  get:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "pr_details"
+            })[0];
+
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/pr_details.zip`, Buffer.from(download.data));
+
+      - run: unzip pr_details.zip
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            let fs = require('fs');
+            let number = Number(fs.readFileSync('./number'));
+            let sha = fs.readFileSync('./sha', 'utf-8');
+
+            core.setOutput('number', number);
+            core.setOutput('sha', sha);
+
+      - run: exit 0

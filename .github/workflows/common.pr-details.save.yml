@@ -1,0 +1,31 @@
+name: Store Pull Request Details
+
+on:
+  workflow_call:
+    inputs:
+      number:
+        required: true
+        type: number
+      sha:
+        required: true
+        type: string
+
+jobs:
+  save:
+    runs-on: ubuntu-latest
+
+    steps:
+      - env:
+          PR_NUMBER: ${{ inputs.number }}
+          PR_SHA: ${{ inputs.sha }}
+        run: |
+          mkdir -p ./pr
+          echo $PR_NUMBER > ./pr/number
+          echo $PR_SHA > ./pr/sha
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pr_details
+          path: pr/
+
+      - run: exit 0

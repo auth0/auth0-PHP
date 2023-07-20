@@ -22,18 +22,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Save PR details
-        env:
-          PR_NUMBER: ${{ github.event.number }}
-          PR_SHA: ${{ github.sha }}
-        run: |
-          mkdir -p ./pr
-          echo $PR_NUMBER > ./pr/pr_number
-          echo $PR_SHA > ./pr/pr_sha
-
-      - uses: actions/upload-artifact@v3
+      - uses: ./.github/workflows/common.pr-details.save.yml
         with:
-          name: pr_details
-          path: pr/
+          number: ${{ github.event.number }}
+          sha: ${{ github.sha }}
 
       - run: exit 0
