@@ -3,7 +3,7 @@ name: "Pull Request / Unlabelled: Unvetted"
 on:
   workflow_run:
     workflows:
-      - "Pull Request / Labeled"
+      - "Pull Request / Unlabelled"
     types:
       - completed
 
