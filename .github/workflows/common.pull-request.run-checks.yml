@@ -47,7 +47,7 @@ jobs:
         with:
           script: |
             let fs = require('fs');
-            let pr_sha = Number(fs.readFileSync('./pr_sha'));
+            let pr_sha = fs.readFileSync('./pr_sha', 'utf8');
 
             await github.rest.checks.create({
               owner: context.repo.owner,
