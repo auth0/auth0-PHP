@@ -21,4 +21,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Save PR number
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          mkdir -p ./pr
+          echo $PR_NUMBER > ./pr/pr_number
+
+      - name: Save commit SHA
+        env:
+          PR_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p ./pr
+          echo $PR_SHA > ./pr/pr_sha
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pr_details
+          path: pr/
+
       - run: exit 0
