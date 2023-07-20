@@ -4,18 +4,17 @@ on:
   workflow_run:
     workflows:
       - "Pull Request / Labeled: Vetted"
-      - "Pull Request / Unlabelled: Unvetted"
     types:
       - completed
-
-permissions:
-  issues: write
-  pull-requests: write
 
 jobs:
   check:
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
 
     steps:
       - uses: actions/github-script@v6
