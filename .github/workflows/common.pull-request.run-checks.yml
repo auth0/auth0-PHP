@@ -16,13 +16,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - echo "SHA: ${{ github.event.workflow_run.head_sha }}"
+
       - uses: actions/github-script@v6
         with:
           script: |
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: context.payload.workflow_run.head_sha,
               name: "Composer Normalize",
               status: "in_progress"
             });
@@ -33,7 +35,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: context.payload.workflow_run.head_sha,
               name: "Composer Validate",
               status: "in_progress"
             });
@@ -49,14 +51,13 @@ jobs:
               status: "in_progress"
             });
 
-
       - uses: actions/github-script@v6
         with:
           script: |
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: context.payload.workflow_run.head_sha,
               name: "PHP CS Fixer",
               status: "in_progress"
             });
@@ -67,7 +68,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: context.payload.workflow_run.head_sha,
               name: "PHPStan",
               status: "in_progress"
             });
@@ -78,7 +79,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: context.payload.workflow_run.head_sha,
               name: "Psalm",
               status: "in_progress"
             });
@@ -89,7 +90,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: context.payload.workflow_run.head_sha,
               name: "Rector",
               status: "in_progress"
             });
@@ -100,7 +101,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: context.payload.workflow_run.head_sha,
               name: "Semgrep",
               status: "in_progress"
             });
@@ -111,7 +112,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: context.payload.workflow_run.head_sha,
               name: "Snyk",
               status: "in_progress"
             });
