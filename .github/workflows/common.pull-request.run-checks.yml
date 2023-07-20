@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - echo "SHA: ${{ github.event.workflow_run.head_sha }}"
-
       - uses: actions/github-script@v6
         with:
           script: |
