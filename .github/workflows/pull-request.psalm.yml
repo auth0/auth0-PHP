@@ -1,5 +1,3 @@
-name: "Psalm"
-
 # This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
 
 on:
@@ -18,7 +16,7 @@ permissions:
 
 jobs:
   psalm:
-    name: "Run Checks"
+    name: "Psalm"
     runs-on: ubuntu-latest
 
     steps:

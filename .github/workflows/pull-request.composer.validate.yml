@@ -1,5 +1,3 @@
-name: "Composer Validate"
-
 # This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
 
 on:
@@ -18,7 +16,7 @@ permissions:
 
 jobs:
   validate:
-    name: "Run Checks"
+    name: "Composer Validate"
     runs-on: ubuntu-latest
 
     steps:

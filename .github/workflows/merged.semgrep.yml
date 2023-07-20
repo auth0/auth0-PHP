@@ -1,5 +1,3 @@
-name: "Semgrep"
-
 # This workflow will run after a merge to the main branch from a pull request, and as a scheduled job.
 
 on:
@@ -19,7 +17,7 @@ permissions:
 
 jobs:
   semgrep:
-    name: "Run Checks"
+    name: "Semgrep"
     runs-on: ubuntu-latest
 
     container:

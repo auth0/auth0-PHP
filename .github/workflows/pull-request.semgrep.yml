@@ -1,5 +1,3 @@
-name: "Semgrep"
-
 # This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
 
 on:
@@ -18,7 +16,7 @@ permissions:
 
 jobs:
   semgrep:
-    name: "Run Checks"
+    name: "Semgrep"
     runs-on: ubuntu-latest
 
     container:

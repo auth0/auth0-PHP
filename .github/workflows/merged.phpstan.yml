@@ -1,5 +1,3 @@
-name: "PHPStan"
-
 # This workflow will run after a merge to the main branch from a pull request.
 
 on:
@@ -17,7 +15,7 @@ permissions:
 
 jobs:
   phpstan:
-    name: "Run Checks"
+    name: "PHPStan"
     runs-on: ubuntu-latest
 
     steps:

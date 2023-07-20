@@ -1,5 +1,3 @@
-name: "PEST Unit Tests"
-
 # This workflow will run after a merge to the main branch from a pull request.
 
 on:
@@ -17,7 +15,7 @@ permissions:
 
 jobs:
   pest:
-    name: "Run Checks"
+    name: "PEST"
     runs-on: ubuntu-latest
 
     steps:

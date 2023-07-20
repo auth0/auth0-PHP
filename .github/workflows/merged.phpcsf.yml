@@ -1,5 +1,3 @@
-name: "PHP CS Fixer"
-
 # This workflow will run after a merge to the main branch from a pull request.
 
 on:
@@ -17,7 +15,7 @@ permissions:
 
 jobs:
   phpcsf:
-    name: "Run Checks"
+    name: "PHP CS Fixer"
     runs-on: ubuntu-latest
 
     steps:
