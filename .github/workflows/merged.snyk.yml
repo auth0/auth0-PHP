@@ -1,5 +1,4 @@
 name: "CI"
-run-name: "Snyk"
 
 # This workflow will run after a merge to the main branch from a pull request, and as a scheduled job.
 
