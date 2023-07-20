@@ -13,14 +13,107 @@ permissions:
 
 jobs:
   check:
+    - if: ${{ github.actor == 'dependabot[bot]' || (github.event.action == 'labeled' && github.event.label.name == 'Vetted') }}
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
-      # Dependabot. Success.
-      - if: ${{ github.actor == 'dependabot[bot]' }}
-        run: exit 0
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "Composer Normalize",
+              status: "in_progress"
+            });
 
-      # Is receiving the 'Vetted' label. Success.
-      - if: ${{ github.event.action == 'labeled' && github.event.label.name == 'Vetted' }}
-        run: exit 0
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "Composer Validate",
+              status: "in_progress"
+            });
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "PEST",
+              status: "in_progress"
+            });
+
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "PHP CS Fixer",
+              status: "in_progress"
+            });
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "PHPStan",
+              status: "in_progress"
+            });
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "Psalm",
+              status: "in_progress"
+            });
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "Rector",
+              status: "in_progress"
+            });
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "Semgrep",
+              status: "in_progress"
+            });
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: context.sha,
+              name: "Snyk",
+              status: "in_progress"
+            });
