@@ -6,8 +6,8 @@
 
 - Organization Name support added for Authentication API and token handling ¹ ([#719](https://github.com/auth0/auth0-PHP/pull/719))
 
-> **¹ Note**
-> To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
+> **Note**
+> ¹  To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
 
 ## [8.6.0](https://github.com/auth0/auth0-PHP/tree/8.6.0) - 2023-05-02
 
@@ -20,8 +20,8 @@
   - `Auth0\SDK\Configuration\SdkConfiguration` has been updated to accept a `pushedAuthorizationRequest` boolean to enable this feature.
 - `Auth0\SDK\Auth0::isAuthenticated()` has been added as a shortcut method. It is an alias for `getCredentials() !== null`.
 
-> **¹ Note**
-> To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
+> **Note**
+> ¹  To use this feature, an Auth0 tenant must have support for it enabled. This feature is not yet available to all tenants.
 
 ## [8.5.0](https://github.com/auth0/auth0-PHP/tree/8.5.0) - 2023-03-27
 
