@@ -204,7 +204,7 @@ test('deploy() issues valid requests', function(string $id): void {
     $this->endpoint->deploy($id);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/' . $id . '/deploy');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/actions/' . $id . '/deploy');
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid id' => [
     fn() => uniqid()
