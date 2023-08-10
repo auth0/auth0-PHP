@@ -70,7 +70,7 @@ final class Actions extends ManagementEndpoint implements ActionsInterface
         ])->isString();
 
         return $this->getHttpClient()
-            ->method('post')->addPath(['actions', $id, 'deploy'])
+            ->method('post')->addPath(['actions', 'actions', $id, 'deploy'])
             ->withOptions($options)
             ->call();
     }
