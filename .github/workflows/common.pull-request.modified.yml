@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: ./common.pr-details.save.yml
+      - uses: auth0/auth0-PHP/.github/workflows//common.pr-details.save.yml@main
         with:
           number: ${{ github.event.number }}
           sha: ${{ github.sha }}
