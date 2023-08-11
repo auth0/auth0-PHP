@@ -17,16 +17,14 @@ on:
 permissions: {}
 
 jobs:
+  pull-request:
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
+
   check:
+    needs: pull-request
+
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: auth0/auth0-PHP/.github/workflows//common.pr-details.save.yml@main
-        with:
-          number: ${{ github.event.number }}
-          sha: ${{ github.sha }}
-
       - run: exit 0

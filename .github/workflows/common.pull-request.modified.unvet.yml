@@ -13,7 +13,12 @@ permissions:
   pull-requests: write
 
 jobs:
+  pull-request:
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
+
   check:
+    needs: pull-request
+
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
@@ -27,14 +32,11 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - id: get-pr-details
-        uses: auth0/auth0-PHP/.github/workflows//common.pr-details.get.yml@main
-
       # Doesn't have 'Vetted' label. Success.
       - uses: actions/github-script@v6
         with:
           script: |
-            let number = ${{ steps.get-pr-details.outputs.number }};
+            let number = ${{ needs.pull-request.outputs.number }};
 
             github.rest.issues.removeLabel({
               issue_number: number,
