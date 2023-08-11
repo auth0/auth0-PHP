@@ -13,7 +13,18 @@ permissions:
   pull-requests: write
 
 jobs:
+  pull-request:
+    uses: auth0/auth0-PHP/.github/workflows//common.pr-details.get.yml@main
+      with:
+        number: ${{ github.event.number }}
+        sha: ${{ github.sha }}
+
+    outputs:
+      number: ${{ steps.step1.outputs.test }}
+
   check:
+    needs: pull-request
+
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
@@ -34,7 +45,7 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            let number = ${{ steps.get-pr-details.outputs.number }};
+            let number = ${{ needs.pull-request.outputs.number }};
 
             github.rest.issues.removeLabel({
               issue_number: number,
