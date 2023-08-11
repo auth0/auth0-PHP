@@ -18,10 +18,7 @@ permissions: {}
 
 jobs:
   pull-request:
-    - uses: auth0/auth0-PHP/.github/workflows//common.pr-details.save.yml@main
-      with:
-        number: ${{ github.event.number }}
-        sha: ${{ github.sha }}
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
 
   check:
     needs: pull-request
