@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: ./common.pr-details.save.yml
+      - uses: ./common.pr-details.save.yml@main
         with:
           number: ${{ github.event.number }}
           sha: ${{ github.sha }}
