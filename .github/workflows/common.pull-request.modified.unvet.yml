@@ -19,9 +19,6 @@ jobs:
       number: ${{ github.event.number }}
       sha: ${{ github.sha }}
 
-    outputs:
-      number: ${{ steps.step1.outputs.test }}
-
   check:
     needs: pull-request
 
