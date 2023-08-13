@@ -13,7 +13,13 @@ permissions:
   checks: write
 
 jobs:
+  pull-request:
+    name: "Details"
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
+
   snyk:
+    needs: pull-request
+
     name: "Snyk"
     runs-on: ubuntu-latest
 

@@ -13,7 +13,13 @@ permissions:
   contents: read
 
 jobs:
+  pull-request:
+    name: "Details"
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
+
   psalm:
+    needs: pull-request
+
     name: "Psalm"
     runs-on: ubuntu-latest
 
@@ -34,3 +40,15 @@ jobs:
       - run: composer install --no-progress
 
       - run: vendor/bin/psalm
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
+              name: "Psalm",
+              status: "complete",
+              conclusion: 'success'
+            });
