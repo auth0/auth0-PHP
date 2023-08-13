@@ -31,7 +31,7 @@ jobs:
       - if: ${{ github.actor == 'dependabot[bot]' }}
         run: exit 0
 
-      - if: ${{ ! contains(github.event.pull_request.labels.*.name, 'Vetted') }}
+      - if: ${{ contains(github.event.pull_request.labels.*.name, 'Vetted') }}
         run: exit 0
 
       - uses: actions/checkout@v3
@@ -44,4 +44,4 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: ["Vetted"]
-            })
+            }).catch(error => core.setFailed(error.message))

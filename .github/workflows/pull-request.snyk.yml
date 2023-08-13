@@ -41,6 +41,7 @@ jobs:
               name: "Snyk",
               status: "in_progress"
             })
+            console.log(JSON.stringify(check.data))
             return check.data.id
 
       - name: Get result
@@ -71,6 +72,8 @@ jobs:
           parameter_url: "${{ github.event.workflow_run.html_url }}"
         with:
           script: |
+            console.log(JSON.stringify(github))
+            console.log(JSON.stringify(process.env))
             await github.rest.checks.update({
               check_run_id: '${{steps.create-check.outputs.result}}',
               name: "Snyk",
