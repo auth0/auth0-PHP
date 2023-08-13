@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   pull-request:
-    name: "Get"
+    name: "Details"
     uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
 
   check:
@@ -35,10 +35,8 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            let pullRequestNumber = ${{ needs.pull-request.outputs.number }}
-
             github.rest.issues.removeLabel({
-              issue_number: pullRequestNumber,
+              issue_number: needs.pull-request.outputs.sha,
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: ["Vetted"]
