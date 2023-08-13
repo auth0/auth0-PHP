@@ -13,6 +13,10 @@ jobs:
     name: "Get"
     runs-on: ubuntu-latest
 
+    outputs:
+      number: ${{ steps.details.outputs.number }}
+      sha: ${{ steps.details.outputs.sha }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -22,7 +26,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - uses: actions/github-script@v6
+      - id: details
+        uses: actions/github-script@v6
         with:
           script: |
             let fs = require('fs');
