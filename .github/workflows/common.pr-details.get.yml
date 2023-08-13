@@ -34,7 +34,7 @@ jobs:
             let number = Number(fs.readFileSync('./number'));
             let sha = fs.readFileSync('./sha', 'utf-8');
 
-            core.setOutput('number', number);
-            core.setOutput('sha', sha);
+            core.setOutput('number', number.replace(/\r|\n/g, ''));
+            core.setOutput('sha', sha.replace(/\r|\n/g, ''));
 
       - run: exit 0
