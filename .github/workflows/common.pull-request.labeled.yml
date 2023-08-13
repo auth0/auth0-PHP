@@ -14,23 +14,17 @@ on:
 permissions: {}
 
 jobs:
+  pull-request:
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.save.yml@main
+    with:
+      number: ${{ github.event.number }}
+      sha: ${{ github.sha }}
+
   check:
+    needs: pull-request
+
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
-      - name: Save PR details
-        env:
-          PR_NUMBER: ${{ github.event.number }}
-          PR_SHA: ${{ github.sha }}
-        run: |
-          mkdir -p ./pr
-          echo $PR_NUMBER > ./pr/pr_number
-          echo $PR_SHA > ./pr/pr_sha
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: pr_details
-          path: pr/
-
       - run: exit 0

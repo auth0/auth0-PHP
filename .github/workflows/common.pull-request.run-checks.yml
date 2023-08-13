@@ -11,38 +11,16 @@ permissions:
   checks: write
 
 jobs:
+  pull-request:
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
+
   check:
+    needs: pull-request
+
     name: "Maintainer Approval"
     runs-on: ubuntu-latest
 
     steps:
-      - name: 'Retrieve Pull Request Details'
-        uses: actions/github-script@v6
-        with:
-          script: |
-            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               run_id: context.payload.workflow_run.id,
-            });
-
-            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
-              return artifact.name == "pr_details"
-            })[0];
-
-            let download = await github.rest.actions.downloadArtifact({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               artifact_id: matchArtifact.id,
-               archive_format: 'zip',
-            });
-
-            let fs = require('fs');
-            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/pr_details.zip`, Buffer.from(download.data));
-
-      - name: 'Extract Pull Request Details'
-        run: unzip pr_details.zip
-
       - uses: actions/github-script@v6
         with:
           script: |
@@ -52,7 +30,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: pr_sha,
+              head_sha: needs.pull-request.outputs.sha,
               name: "Composer Normalize",
               status: "in_progress"
             });
@@ -63,7 +41,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.payload.workflow_run.head_sha,
+              head_sha: needs.pull-request.outputs.sha,
               name: "Composer Validate",
               status: "in_progress"
             });
@@ -74,7 +52,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: needs.pull-request.outputs.sha,
               name: "PEST",
               status: "in_progress"
             });
@@ -85,7 +63,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.payload.workflow_run.head_sha,
+              head_sha: needs.pull-request.outputs.sha,
               name: "PHP CS Fixer",
               status: "in_progress"
             });
@@ -96,7 +74,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.payload.workflow_run.head_sha,
+              head_sha: needs.pull-request.outputs.sha,
               name: "PHPStan",
               status: "in_progress"
             });
@@ -107,7 +85,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.payload.workflow_run.head_sha,
+              head_sha: needs.pull-request.outputs.sha,
               name: "Psalm",
               status: "in_progress"
             });
@@ -118,7 +96,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.payload.workflow_run.head_sha,
+              head_sha: needs.pull-request.outputs.sha,
               name: "Rector",
               status: "in_progress"
             });
@@ -129,7 +107,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.payload.workflow_run.head_sha,
+              head_sha: needs.pull-request.outputs.sha,
               name: "Semgrep",
               status: "in_progress"
             });
@@ -140,7 +118,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.payload.workflow_run.head_sha,
+              head_sha: needs.pull-request.outputs.sha,3
               name: "Snyk",
               status: "in_progress"
             });
