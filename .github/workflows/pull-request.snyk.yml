@@ -41,8 +41,8 @@ jobs:
               name: "Snyk",
               status: "in_progress"
             })
-            console.log(check)
-            return check
+            console.log(JSON.stringify(check))
+            return JSON.stringify(check)
 
       - name: Get result
         run: echo "${{steps.create-check.outputs.result}}"
