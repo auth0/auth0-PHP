@@ -55,6 +55,6 @@ jobs:
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "PEST",
-              status: "complete",
+              status: "completed",
               conclusion: 'success'
             });
