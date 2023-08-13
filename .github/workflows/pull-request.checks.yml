@@ -1,11 +1,11 @@
-name: "CI Checks"
+name: "PR / CI Checks"
 
 # This workflow will be triggered after each CI workflow completes.
 
 on:
   workflow_run:
     workflows:
-      - "CI"
+      - "Pull Request CI"
     types:
       - completed
 
@@ -23,4 +23,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: exit 0
+      - id: request-status
+        uses: octokit/graphql-action@v2.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          query: |
+            query status($owner: String!, $repo: String!, $pull_number: Int!) {
+              repository(owner: $owner, name:$repo) {
+                pullRequest(number:$pull_number) {
+                  commits(last: 1) {
+                    nodes {
+                      commit {
+                        statusCheckRollup {
+                          state
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          owner: ${{ github.event.repository.owner.name }}
+          repo: ${{ github.event.repository.name }}
+          pull_number: ${{ github.event.repository.name }}
+
+      - id: extract-status
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const [{ commit: lastCommit }] = ${{ steps.request-status.outputs.data }};
+            return lastCommit.statusCheckRollup.state === "SUCCESS"
+
+      - id: report-failure
+        if: ${{ !steps.extract-status.outputs.result }}
+        run: exit 1
+
+      - id: report-success
+        run: exit 0
