@@ -4,9 +4,9 @@ on:
   workflow_call:
     outputs:
       number:
-        value: ${{ jobs.get.outputs.pr_number }}
+        value: ${{ jobs.get.outputs.number }}
       sha:
-        value: ${{ jobs.get.outputs.pr_sha }}
+        value: ${{ jobs.get.outputs.sha }}
 
 jobs:
   get:
