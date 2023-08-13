@@ -29,7 +29,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "Composer Normalize",
+              name: "CI / Composer Normalize",
               status: "in_progress"
             });
 
@@ -37,7 +37,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "Composer Validate",
+              name: "CI / Composer Validate",
               status: "in_progress"
             });
 
@@ -45,7 +45,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "PEST",
+              name: "CI / PEST",
               status: "in_progress"
             });
 
@@ -53,7 +53,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "PHP CS Fixer",
+              name: "CI / PHP CS Fixer",
               status: "in_progress"
             });
 
@@ -61,7 +61,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "PHPStan",
+              name: "CI / PHPStan",
               status: "in_progress"
             });
 
@@ -69,7 +69,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "Psalm",
+              name: "CI / Psalm",
               status: "in_progress"
             });
 
@@ -77,7 +77,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "Rector",
+              name: "CI / Rector",
               status: "in_progress"
             });
 
@@ -85,7 +85,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "Semgrep",
+              name: "CI / Semgrep",
               status: "in_progress"
             });
 
@@ -93,6 +93,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
-              name: "Snyk",
+              name: "CI / Snyk",
               status: "in_progress"
             });
