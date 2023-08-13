@@ -15,11 +15,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: pr_details
+      - run: |
+          RUN_ID=`gh run --repo ${OTHER_REPO} list --workflow common.pr-details.save.yml --json databaseId --jq .[0].databaseId`
+          gh run --repo ${OTHER_REPO} download ${RUN_ID} -n pr_details
+          # List the artifiact directory/files
+          ls -lR
+          unzip pr_details.zip
 
-      - run: unzip pr_details.zip
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: pr_details
+
+      # - run: unzip pr_details.zip
 
       - uses: actions/github-script@v6
         with:
