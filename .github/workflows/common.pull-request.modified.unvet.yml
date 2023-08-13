@@ -35,8 +35,10 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
+            let pullRequestNumber = ${{ needs.pull-request.outputs.number }}
+
             github.rest.issues.removeLabel({
-              issue_number: ${{ needs.pull-request.outputs.number }},
+              issue_number: pullRequestNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: ["Vetted"]
