@@ -11,9 +11,16 @@ on:
 
 permissions:
   contents: read
+  checks: write
 
 jobs:
+  pull-request:
+    name: "Details"
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
+
   phpcsf:
+    needs: pull-request
+
     name: "PHP CS Fixer"
     runs-on: ubuntu-latest
 
@@ -34,3 +41,15 @@ jobs:
       - run: composer install --no-progress
 
       - run: vendor/bin/php-cs-fixer fix src --dry-run --diff
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
+              name: "PHP CS Fixer",
+              status: "complete",
+              conclusion: 'success'
+            });
