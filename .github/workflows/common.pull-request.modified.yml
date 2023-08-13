@@ -23,7 +23,7 @@ concurrency:
 jobs:
   check:
     name: "Trigger"
-    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.save.yml@main
+    uses: ${{ github.repository }}/.github/workflows/common.pr-details.save.yml@main
     with:
       number: ${{ github.event.number }}
       sha: ${{ github.sha }}
