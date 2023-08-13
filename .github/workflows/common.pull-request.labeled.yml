@@ -20,7 +20,7 @@ concurrency:
 jobs:
   check:
     name: "Trigger"
-    uses: "${{ github.repository }}/.github/workflows/common.pr-details.save.yml@main"
+    uses: "./.github/workflows/common.pr-details.save.yml"
     with:
       number: ${{ github.event.number }}
       sha: ${{ github.sha }}
