@@ -28,7 +28,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Composer Normalize",
               status: "in_progress"
             });
@@ -36,7 +36,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Composer Validate",
               status: "in_progress"
             });
@@ -44,7 +44,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "PEST",
               status: "in_progress"
             });
@@ -52,7 +52,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "PHP CS Fixer",
               status: "in_progress"
             });
@@ -60,7 +60,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "PHPStan",
               status: "in_progress"
             });
@@ -68,7 +68,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Psalm",
               status: "in_progress"
             });
@@ -76,7 +76,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Rector",
               status: "in_progress"
             });
@@ -84,7 +84,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Semgrep",
               status: "in_progress"
             });
@@ -92,7 +92,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: ${{ needs.pull-request.outputs.sha }},
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Snyk",
               status: "in_progress"
             });
