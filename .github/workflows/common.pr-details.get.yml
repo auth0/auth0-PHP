@@ -18,7 +18,6 @@ jobs:
       - run: |
           RUN_ID=`gh run list --workflow "Pull Request / Modified" --json databaseId --jq .[0].databaseId`
           gh run download ${RUN_ID} -n pr_details
-          ls -lR
           unzip pr_details.zip
         env:
           GH_TOKEN: ${{ github.token }}
