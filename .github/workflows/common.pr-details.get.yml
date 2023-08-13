@@ -31,8 +31,8 @@ jobs:
         with:
           script: |
             let fs = require('fs');
-            let number = fs.readFileSync('./number');
-            let sha = fs.readFileSync('./sha', 'utf-8');
+            let number = fs.readFileSync('./number').toString('utf8');
+            let sha = fs.readFileSync('./sha').toString('utf8');
 
             core.setOutput('number', number.replace(/\r|\n/g, ''));
             core.setOutput('sha', sha.replace(/\r|\n/g, ''));
