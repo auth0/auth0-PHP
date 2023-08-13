@@ -1,6 +1,4 @@
-name: "PR / CI Checks"
-
-# This workflow will be triggered after each CI workflow completes.
+name: "Pull Request CI Status"
 
 on:
   workflow_run:
@@ -18,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  on-completed:
+  check:
     name: "Passed"
     runs-on: ubuntu-latest
 
