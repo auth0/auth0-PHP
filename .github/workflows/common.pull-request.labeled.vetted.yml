@@ -11,7 +11,7 @@ permissions: {}
 
 jobs:
   check:
-    name: "Maintainer Approval"
+    name: "Run"
     runs-on: ubuntu-latest
 
     steps:
