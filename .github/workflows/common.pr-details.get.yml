@@ -29,9 +29,6 @@ jobs:
             let number = Number(fs.readFileSync('./number'));
             let sha = fs.readFileSync('./sha', 'utf-8');
 
-            echo "::set-output name=number::${number}"
-            echo "::set-output name=sha::${sha}"
-
             core.setOutput('number', number);
             core.setOutput('sha', sha);
 
