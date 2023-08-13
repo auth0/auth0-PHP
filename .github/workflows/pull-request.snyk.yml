@@ -41,8 +41,7 @@ jobs:
               name: "Snyk",
               status: "in_progress"
             })
-            console.log(JSON.stringify(check))
-            return JSON.stringify(check)
+            return check.id
 
       - name: Get result
         run: echo "${{steps.create-check.outputs.result}}"
@@ -72,10 +71,8 @@ jobs:
           parameter_url: "${{ github.event.workflow_run.html_url }}"
         with:
           script: |
-            await github.rest.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head_sha: '${{ needs.pull-request.outputs.sha }}',
+            await github.rest.checks.update({
+              check_run_id: '${{steps.create-check.outputs.result}}',
               name: "Snyk",
               status: "completed",
               conclusion: "${{ github.event.workflow_run.conclusion }}",
