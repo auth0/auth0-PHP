@@ -41,7 +41,7 @@ jobs:
               name: "Snyk",
               status: "in_progress"
             })
-            return check.id
+            return check.data.id
 
       - name: Get result
         run: echo "${{steps.create-check.outputs.result}}"
