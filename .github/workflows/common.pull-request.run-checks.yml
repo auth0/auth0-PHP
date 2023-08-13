@@ -11,11 +11,15 @@ permissions:
   checks: write
 
 jobs:
+  pull-request:
+    name: "Get"
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
+
   check:
+    needs: pull-request
+
     name: "Run"
     runs-on: ubuntu-latest
-
-    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
 
     steps:
       - uses: actions/github-script@v6
