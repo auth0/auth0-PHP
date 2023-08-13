@@ -67,6 +67,6 @@ jobs:
               check_run_id: '${{steps.create-check.outputs.result}}',
               name: "Semgrep",
               status: "completed",
-              conclusion: "${{ github.event.workflow_run.conclusion }}",
+              conclusion: "success",
               details_url: process.env.parameter_url
             });
