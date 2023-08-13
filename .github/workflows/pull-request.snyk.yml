@@ -13,6 +13,10 @@ permissions:
   contents: read
   checks: write
 
+concurrency:
+  group: ${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   pull-request:
     name: "Details"
@@ -25,16 +29,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/github-script@v6
+      - id: create-check
+        uses: actions/github-script@v6
         with:
+          result-encoding: string
           script: |
-            await github.rest.checks.create({
+            const check = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Snyk",
               status: "in_progress"
-            });
+            })
+            console.log(check)
+            return check
+
+      - name: Get result
+        run: echo "${{steps.create-check.outputs.result}}"
 
       - uses: actions/checkout@v3
         with:
