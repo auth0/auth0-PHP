@@ -11,7 +11,7 @@ permissions:
   checks: write
 
 concurrency:
-  group: ${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  group: "common.pull-request.run-checks-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
