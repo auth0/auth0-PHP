@@ -1,4 +1,4 @@
-name: Store Pull Request Details
+name: Save Pull Request Details
 
 on:
   workflow_call:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   save:
-    name: "Save"
+    name: "Prepare"
     runs-on: ubuntu-latest
 
     steps:

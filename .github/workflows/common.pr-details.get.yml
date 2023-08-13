@@ -1,4 +1,4 @@
-name: Get Pull Request Details
+name: Retrieve Pull Request Details
 
 on:
   workflow_call:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   get:
-    name: "Get"
+    name: "Prepare"
     runs-on: ubuntu-latest
 
     outputs:
