@@ -20,12 +20,8 @@ jobs:
           gh run download ${RUN_ID} -n pr_details
           ls -lR
           unzip pr_details.zip
-
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: pr_details
-
-      # - run: unzip pr_details.zip
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - uses: actions/github-script@v6
         with:
