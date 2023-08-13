@@ -53,7 +53,7 @@ jobs:
             await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Snyk",
               status: "completed",
               conclusion: "${{ github.event.workflow_run.conclusion }}",
