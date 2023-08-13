@@ -51,6 +51,6 @@ jobs:
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "PHPStan",
-              status: "complete",
+              status: "completed",
               conclusion: 'success'
             });
