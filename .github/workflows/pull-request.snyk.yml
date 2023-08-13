@@ -75,6 +75,8 @@ jobs:
             console.log(JSON.stringify(github))
             console.log(JSON.stringify(process.env))
             await github.rest.checks.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               check_run_id: '${{steps.create-check.outputs.result}}',
               name: "Snyk",
               status: "completed",
