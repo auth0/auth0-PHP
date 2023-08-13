@@ -11,14 +11,11 @@ permissions:
   checks: write
 
 jobs:
-  pull-request:
-    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
-
   check:
-    needs: pull-request
-
-    name: "Maintainer Approval"
+    name: "Run"
     runs-on: ubuntu-latest
+
+    uses: auth0/auth0-PHP/.github/workflows/common.pr-details.get.yml@main
 
     steps:
       - uses: actions/github-script@v6
