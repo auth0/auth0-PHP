@@ -31,16 +31,19 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      - uses: actions/github-script@v6
+      - id: create-check
+        uses: actions/github-script@v6
         with:
+          result-encoding: string
           script: |
-            await github.rest.checks.create({
+            const check = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               head_sha: '${{ needs.pull-request.outputs.sha }}',
               name: "Psalm",
               status: "in_progress"
-            });
+            })
+            return check.data.id
 
       - uses: actions/checkout@v3
         with:
@@ -60,13 +63,16 @@ jobs:
       - run: vendor/bin/psalm
 
       - uses: actions/github-script@v6
+        env:
+          parameter_url: "${{ github.event.workflow_run.html_url }}"
         with:
           script: |
-            await github.rest.checks.create({
+            await github.rest.checks.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: '${{ needs.pull-request.outputs.sha }}',
+              check_run_id: '${{steps.create-check.outputs.result}}',
               name: "Psalm",
               status: "completed",
-              conclusion: 'success'
+              conclusion: "${{ github.event.workflow_run.conclusion }}",
+              details_url: process.env.parameter_url
             });
