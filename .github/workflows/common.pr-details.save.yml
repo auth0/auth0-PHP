@@ -12,6 +12,7 @@ on:
 
 jobs:
   save:
+    name: "Save"
     runs-on: ubuntu-latest
 
     steps:

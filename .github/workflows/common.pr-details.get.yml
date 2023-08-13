@@ -10,6 +10,7 @@ on:
 
 jobs:
   get:
+    name: "Get"
     runs-on: ubuntu-latest
 
     steps:

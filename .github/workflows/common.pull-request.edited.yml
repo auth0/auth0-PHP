@@ -16,7 +16,7 @@ permissions: {}
 
 jobs:
   pull-request:
-    name: "Save"
+    name: "Pull Request Details"
     uses: auth0/auth0-PHP/.github/workflows/common.pr-details.save.yml@main
     with:
       number: ${{ github.event.number }}
