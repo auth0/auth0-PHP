@@ -1,0 +1,22 @@
+name: "CI"
+
+# This workflow will be triggered after each CI workflow completes.
+
+on:
+  workflow_run:
+    workflows:
+      - "CI"
+    types:
+      - completed
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  pest:
+    name: "Checks Passed"
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: exit 0
