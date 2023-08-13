@@ -1,4 +1,5 @@
 name: "CI"
+run-name: "Composer Validate"
 
 # This workflow will run after a merge to the main branch from a pull request.
 
