@@ -19,7 +19,7 @@ concurrency:
 jobs:
   pull-request:
     name: "Details"
-    uses: ${{ github.repository }}/.github/workflows/common.pr-details.get.yml@main
+    uses: "./.github/workflows/common.pr-details.get.yml"
 
   check:
     needs: pull-request
