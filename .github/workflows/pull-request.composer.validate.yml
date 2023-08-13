@@ -14,7 +14,7 @@ permissions:
   checks: write
 
 concurrency:
-  group: ${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  group: "pull-request.composer.validate-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:

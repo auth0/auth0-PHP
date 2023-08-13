@@ -10,7 +10,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: ${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  group: "common.pull-request.labeled.vetted-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:

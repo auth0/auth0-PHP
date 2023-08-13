@@ -14,7 +14,7 @@ permissions:
   checks: write
 
 concurrency:
-  group: ${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  group: "pull-request.snyk-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -69,7 +69,7 @@ jobs:
 
       - uses: actions/github-script@v6
         env:
-          parameter_url: '${{ github.event.workflow_run.html_url }}'
+          parameter_url: "${{ github.event.workflow_run.html_url }}"
         with:
           script: |
             await github.rest.checks.create({

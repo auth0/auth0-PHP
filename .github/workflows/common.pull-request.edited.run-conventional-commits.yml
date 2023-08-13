@@ -11,7 +11,7 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: ${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.ref }}
+  group: "common.pull-request.edited.run-conventional-commits-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
