@@ -25,6 +25,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head_sha: '${{ needs.pull-request.outputs.sha }}',
+              name: "Rector",
+              status: "in_progress"
+            });
+
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
