@@ -10,6 +10,7 @@ on:
       - completed
 
 permissions:
+  contents: read
   checks: write
 
 jobs:
