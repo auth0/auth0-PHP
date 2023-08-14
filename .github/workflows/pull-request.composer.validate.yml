@@ -1,5 +1,4 @@
-name: "Pull Request CI"
-run-name: "Composer Validate"
+name: "Pull Request CI / Composer Validate"
 
 # This workflow will run after a pull request is opened or updated, assuming the pull request is labeled with "Vetted".
 

@@ -1,9 +1,16 @@
-name: "Pull Request CI Status"
+name: "Pull Request CI / Status"
 
 on:
   workflow_run:
     workflows:
-      - "Pull Request CI"
+      - "Pull Request CI / Composer Normalize"
+      - "Pull Request CI / Composer Validate"
+      - "Pull Request CI / PEST"
+      - "Pull Request CI / PHPStan"
+      - "Pull Request CI / Psalm"
+      - "Pull Request CI / Rector"
+      - "Pull Request CI / Semgrep"
+      - "Pull Request CI / Snyk"
     types:
       - completed
 
