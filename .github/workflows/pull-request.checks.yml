@@ -3,14 +3,14 @@ name: "Pull Request CI / Status"
 on:
   workflow_run:
     workflows:
-      - "Pull Request CI / Composer Normalize"
-      - "Pull Request CI / Composer Validate"
-      - "Pull Request CI / PEST"
-      - "Pull Request CI / PHPStan"
-      - "Pull Request CI / Psalm"
-      - "Pull Request CI / Rector"
-      - "Pull Request CI / Semgrep"
-      - "Pull Request CI / Snyk"
+      - "pull-request.composer.normalize.yml"
+      - "pull-request.composer.validate.yml"
+      - "pull-request.pest.yml"
+      - "pull-request.phpstan.yml"
+      - "pull-request.psalm.yml"
+      - "pull-request.rector.yml"
+      - "pull-request.semgrep.yml"
+      - "pull-request.snyk.yml"
     types:
       - completed
 
