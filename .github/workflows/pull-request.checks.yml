@@ -36,8 +36,6 @@ jobs:
     steps:
       - id: request-status
         uses: octokit/graphql-action@v2.x
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           query: |
             query status($owner: String!, $repo: String!, $pull_number: Int!) {
@@ -58,12 +56,14 @@ jobs:
           owner: ${{ github.event.repository.owner.name }}
           repo: ${{ github.event.repository.name }}
           pull_number: ${{ github.event.repository.name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - id: extract-status
         uses: actions/github-script@v6
         with:
           script: |
-            const [{ commit: lastCommit }] = ${{ steps.request-status.outputs.data }};
+            const [{ commit: lastCommit }] = ${{ steps.request-status.outputs.data }}
             return lastCommit.statusCheckRollup.state === "SUCCESS"
 
       - id: report-failure
