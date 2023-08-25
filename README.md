@@ -9,6 +9,8 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :computer: [API Reference](#api-reference) :speech_balloon: [Feedback](#feedback)
 
+# Testing
+
 ## Documentation
 
 We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0), [Symfony](https://github.com/auth0/symfony), and [WordPress](https://github.com/auth0/wordpress). If you are using one of these frameworks, use the tailored SDK for the best integration experience.
