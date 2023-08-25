@@ -28,6 +28,7 @@ jobs:
       - run: true
 
   check:
+    needs: authorize
     name: Check for Vulnerabilities
     runs-on: ubuntu-latest
 
