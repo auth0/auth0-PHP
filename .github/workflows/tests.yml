@@ -68,7 +68,7 @@ jobs:
 
   composer-validate:
     needs: [configure, prepare]
-    name: Composer Normalize
+    name: Composer Validate
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
