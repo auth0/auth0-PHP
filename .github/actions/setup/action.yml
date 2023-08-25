@@ -12,7 +12,7 @@ inputs:
   extensions:
     description: The PHP extensions to use
     required: false
-    default: 'none, mbstring, tokenizer'
+    default: 'none, mbstring, curl, tokenizer'
 
 runs:
   using: composite
@@ -39,4 +39,4 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: composer install --prefer-dist --no-progress
+      run: composer install --prefer-dist
