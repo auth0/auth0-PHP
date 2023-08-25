@@ -1,0 +1,40 @@
+name: Prepare PHP
+description: Prepare the PHP environment
+
+inputs:
+  php:
+    description: The PHP version to use
+    required: true
+  coverage:
+    description: The coverage extension to use
+    required: false
+    default: 'none'
+  extensions:
+    description: The PHP extensions to use
+    required: false
+    default: 'none, mbstring'
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
+      with:
+        php-version: ${{ input.php }}
+        extensions: ${{ input.extensions }}
+        coverage: ${{ input.coverage }}
+
+    - name: Get Composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ input.php }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-${{ input.php }}-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress

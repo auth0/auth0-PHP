@@ -1,0 +1,156 @@
+name: Build and Test
+
+on:
+  merge_group:
+  workflow_dispatch:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+  push:
+    branches:
+      - main
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  authorize:
+    name: Authorize
+    environment: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository && 'external' || 'internal' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: true
+
+  configure:
+    needs: authorize
+    name: Configure
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: set-matrix
+        run: echo "matrix=$(jq -c . < ./.github/workflows/matrix.json)" >> $GITHUB_OUTPUT
+
+  prepare:
+    needs: configure
+    name: Prepare Dependencies
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+
+  composer-normalize:
+    needs: prepare
+    name: Composer Normalize
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+      - run: composer require --dev ergebnis/composer-normalize
+      - run: composer config allow-plugins.ergebnis/composer-normalize true
+      - run: composer normalize
+
+  composer-validate:
+    needs: prepare
+    name: Composer Normalize
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+      - run: composer validate
+
+  pest:
+    needs: prepare
+    name: PEST
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+          coverage: pcov
+      - run: vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel
+      - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
+        with:
+          directory: ./coverage/
+          flags: unittestsvalidate
+
+  phpstan:
+    needs: prepare
+    name: PHPStan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+      - run: vendor/bin/phpstan analyze --no-ansi --no-progress --debug
+
+  psalm:
+    needs: prepare
+    name: Psalm
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+      - run: vendor/bin/psalm
+
+  rector:
+    needs: prepare
+    name: Rector
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+      - run: vendor/bin/rector process --dry-run
+
+  php-cs-fixer:
+    needs: prepare
+    name: PHP CS Fixer
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+      - run: vendor/bin/php-cs-fixer fix --dry-run --diff --ansi --verbose
