@@ -16,7 +16,7 @@ inputs:
   runner:
     description: The runner OS
     required: false
-    default: ''
+    default: 'ubuntu-latest'
 
 runs:
   using: composite
@@ -28,6 +28,7 @@ runs:
         php-version: ${{ inputs.php }}
         extensions: ${{ inputs.extensions }}
         coverage: ${{ inputs.coverage }}
+      env:
         runner: ${{ inputs.runner }}
 
     - name: Get Composer cache directory
