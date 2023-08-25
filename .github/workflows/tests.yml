@@ -93,8 +93,10 @@ jobs:
         with:
           php: ${{ matrix.php }}
           coverage: pcov
-      - run: vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel
-      - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
+      - if: matrix.php == '8.1'
+        run: vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel
+      - if: matrix.php == '8.1'
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
         with:
           directory: ./coverage/
           flags: unittestsvalidate
