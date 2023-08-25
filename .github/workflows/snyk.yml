@@ -35,6 +35,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: 8.0
@@ -42,6 +43,5 @@ jobs:
           extensions: mbstring
 
       - uses: snyk/actions/php@b98d498629f1c368650224d6d212bf7dfa89e4bf # pin@0.4.0
-        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
