@@ -26,11 +26,13 @@ jobs:
       - run: true
 
   configure:
-    needs: authorize
     name: Configure
+    needs: [authorize]
     runs-on: ubuntu-latest
+
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
+
     steps:
       - uses: actions/checkout@v3
 
@@ -38,63 +40,77 @@ jobs:
         run: echo "matrix=$(jq -c . < ./.github/workflows/matrix.json)" >> $GITHUB_OUTPUT
 
   prepare:
-    needs: configure
     name: Prepare Dependencies
+    needs: [configure]
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
 
   composer-normalize:
-    needs: [configure, prepare]
     name: Composer Normalize
+    needs: [configure, prepare]
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
-      - run: composer require --dev ergebnis/composer-normalize
-      - run: composer config allow-plugins.ergebnis/composer-normalize true
-      - run: composer normalize
+
+      - run: composer normalize --dry-run --diff
 
   composer-validate:
-    needs: [configure, prepare]
     name: Composer Validate
+    needs: [configure, prepare]
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
-      - run: composer validate
+
+      - run: composer validate --strict --with-dependencies
 
   pest:
-    needs: [configure, prepare]
     name: PEST
+    needs: [configure, prepare]
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
           coverage: pcov
+
       - if: matrix.php == '8.1'
-        run: vendor/bin/pest --order-by random --fail-on-risky --stop-on-defect --coverage --parallel
+        run: composer pest:coverage
+
       - if: matrix.php == '8.1'
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
         with:
@@ -102,57 +118,73 @@ jobs:
           flags: unittestsvalidate
 
   phpstan:
-    needs: [configure, prepare]
     name: PHPStan
+    needs: [configure, prepare]
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
-      - run: vendor/bin/phpstan analyze --no-ansi --no-progress --debug
+
+      - run: composer phpstan
 
   psalm:
-    needs: [configure, prepare]
     name: Psalm
+    needs: [configure, prepare]
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
-      - run: vendor/bin/psalm
+
+      - run: composer psalm
 
   rector:
-    needs: [configure, prepare]
     name: Rector
+    needs: [configure, prepare]
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
-      - run: vendor/bin/rector process --dry-run
+
+      - run: composer rector
 
   php-cs-fixer:
-    needs: [configure, prepare]
     name: PHP CS Fixer
+    needs: [configure, prepare]
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
-      - run: vendor/bin/php-cs-fixer fix --dry-run --diff --ansi --verbose
+
+      - run: composer phpcs

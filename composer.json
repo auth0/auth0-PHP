@@ -37,11 +37,8 @@
     "psr/http-factory-implementation": "^1",
     "psr/http-message-implementation": "^1"
   },
-  "suggest": {
-    "psr/cache-implementation": "(PSR-6 Cache) Improve performance by avoiding making redundant network requests.",
-    "psr/event-dispatcher-implementation": "(PSR-14 Event Dispatcher) Observe and react to events when they occur."
-  },
   "require-dev": {
+    "ergebnis/composer-normalize": "^2",
     "friendsofphp/php-cs-fixer": "^3",
     "mockery/mockery": "^1",
     "pestphp/pest": "^2",
@@ -54,6 +51,10 @@
     "symfony/event-dispatcher": "^4 || ^5 || ^6",
     "vimeo/psalm": "^5",
     "wikimedia/composer-merge-plugin": "^2"
+  },
+  "suggest": {
+    "psr/cache-implementation": "(PSR-6 Cache) Improve performance by avoiding making redundant network requests.",
+    "psr/event-dispatcher-implementation": "(PSR-14 Event Dispatcher) Observe and react to events when they occur."
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -72,7 +73,8 @@
       "pestphp/pest-plugin": true,
       "wikimedia/composer-merge-plugin": true,
       "infection/extension-installer": false,
-      "php-http/discovery": false
+      "php-http/discovery": false,
+      "ergebnis/composer-normalize": true
     },
     "optimize-autoloader": true,
     "preferred-install": "dist",
@@ -94,17 +96,17 @@
     }
   },
   "scripts": {
-    "pest:coverage": "@php vendor/bin/pest --coverage --parallel --no-progress",
-    "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --fail-on-risky --stop-on-failure --display-errors",
+    "pest": "@php vendor/bin/pest --order-by random --fail-on-risky --parallel --no-progress",
+    "pest:coverage": "@php vendor/bin/pest --order-by random --fail-on-risky --coverage --parallel --no-progress",
+    "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --display-errors --fail-on-risky --no-progress",
     "pest:profile": "@php vendor/bin/pest --profile",
-    "pest": "@php vendor/bin/pest --order-by random --fail-on-risky",
-    "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
     "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
     "phpstan": "@php vendor/bin/phpstan analyze",
-    "psalm:fix": "@php vendor/bin/psalter --issues=all",
     "psalm": "@php vendor/bin/psalm",
-    "rector:fix": "@php vendor/bin/rector process src",
+    "psalm:fix": "@php vendor/bin/psalter --issues=all",
     "rector": "@php vendor/bin/rector process src --dry-run",
+    "rector:fix": "@php vendor/bin/rector process src",
     "test": [
       "@pest",
       "@phpstan",
