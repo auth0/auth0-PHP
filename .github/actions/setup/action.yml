@@ -12,7 +12,7 @@ inputs:
   extensions:
     description: The PHP extensions to use
     required: false
-    default: 'none, mbstring, curl, tokenizer'
+    default: 'none, mbstring, curl, simplexml, tokenizer'
 
 runs:
   using: composite
