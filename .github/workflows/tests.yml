@@ -51,7 +51,7 @@ jobs:
           php: ${{ matrix.php }}
 
   composer-normalize:
-    needs: prepare
+    needs: [configure, prepare]
     name: Composer Normalize
     runs-on: ubuntu-latest
     strategy:
@@ -67,7 +67,7 @@ jobs:
       - run: composer normalize
 
   composer-validate:
-    needs: prepare
+    needs: [configure, prepare]
     name: Composer Normalize
     runs-on: ubuntu-latest
     strategy:
@@ -81,7 +81,7 @@ jobs:
       - run: composer validate
 
   pest:
-    needs: prepare
+    needs: [configure, prepare]
     name: PEST
     runs-on: ubuntu-latest
     strategy:
@@ -102,7 +102,7 @@ jobs:
           flags: unittestsvalidate
 
   phpstan:
-    needs: prepare
+    needs: [configure, prepare]
     name: PHPStan
     runs-on: ubuntu-latest
     strategy:
@@ -116,7 +116,7 @@ jobs:
       - run: vendor/bin/phpstan analyze --no-ansi --no-progress --debug
 
   psalm:
-    needs: prepare
+    needs: [configure, prepare]
     name: Psalm
     runs-on: ubuntu-latest
     strategy:
@@ -130,7 +130,7 @@ jobs:
       - run: vendor/bin/psalm
 
   rector:
-    needs: prepare
+    needs: [configure, prepare]
     name: Rector
     runs-on: ubuntu-latest
     strategy:
@@ -144,7 +144,7 @@ jobs:
       - run: vendor/bin/rector process --dry-run
 
   php-cs-fixer:
-    needs: prepare
+    needs: [configure, prepare]
     name: PHP CS Fixer
     runs-on: ubuntu-latest
     strategy:
