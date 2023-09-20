@@ -284,12 +284,12 @@ final class Generator implements GeneratorInterface, Stringable
             throw TokenException::unableToProcessSigningKey($message, $failure);
         }
 
-        if (! is_array($details) || ! isset($details['type'])) {
+        if (! is_array($details) || ! isset($details['typ'])) {
             throw TokenException::unidentifiableKeyType();
         }
         // @codeCoverageIgnoreEnd
 
-        $keyType = $details['type'];
+        $keyType = $details['typ'];
 
         if ($keyType !== $this->getOpenSslKeyType()) {
             throw TokenException::keyTypeMismatch((string) $keyType, $this->algorithm);
