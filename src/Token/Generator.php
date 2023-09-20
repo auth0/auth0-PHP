@@ -88,7 +88,7 @@ final class Generator implements GeneratorInterface, Stringable
         }
 
         // Merge any provided headers with the defaults.
-        $this->headers = array_merge($this->headers, ['type' => 'JWT', 'alg' => $this->algorithm]);
+        $this->headers = array_merge($this->headers, ['typ' => 'JWT', 'alg' => $this->algorithm]);
 
         // Convert the provided signing key to the appropriate type.
         $this->signingKey = $this->loadSigningKey($this->signingKey, $this->signingKeyPassphrase);
