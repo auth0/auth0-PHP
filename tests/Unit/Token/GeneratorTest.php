@@ -548,7 +548,7 @@ it('assigns a correct `type` header value', function(): void {
     expect($token)
         ->toBeArray()->toHaveKeys(['headers'])
         ->headers->toBeArray()->toHaveKeys(['typ'])
-        ->headers->type->toBeString()->toEqual('JWT');
+        ->headers->typ->toBeString()->toEqual('JWT');
 
     $token = Generator::create(
         signingKey: $mockSigningKey['private'],
