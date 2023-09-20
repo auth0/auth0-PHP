@@ -547,31 +547,31 @@ it('assigns a correct `type` header value', function(): void {
 
     expect($token)
         ->toBeArray()->toHaveKeys(['headers'])
-        ->headers->toBeArray()->toHaveKeys(['type'])
+        ->headers->toBeArray()->toHaveKeys(['typ'])
         ->headers->type->toBeString()->toEqual('JWT');
 
     $token = Generator::create(
         signingKey: $mockSigningKey['private'],
         headers: [
-            'type' => null
+            'typ' => null
         ]
     )->toArray(false);
 
     expect($token)
         ->toBeArray()->toHaveKeys(['headers'])
-        ->headers->toBeArray()->toHaveKeys(['type'])
+        ->headers->toBeArray()->toHaveKeys(['typ'])
         ->headers->type->toBeString()->toEqual('JWT');
 
     $token = Generator::create(
         signingKey: $mockSigningKey['private'],
         headers: [
-            'type' => uniqid()
+            'typ' => uniqid()
         ]
     )->toArray(false);
 
     expect($token)
         ->toBeArray()->toHaveKeys(['headers'])
-        ->headers->toBeArray()->toHaveKeys(['type'])
+        ->headers->toBeArray()->toHaveKeys(['typ'])
         ->headers->type->toBeString()->toEqual('JWT');
 });
 
