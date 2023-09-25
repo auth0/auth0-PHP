@@ -30,6 +30,7 @@
   "require": {
     "php": "^8.0",
     "ext-json": "*",
+    "ext-mbstring": "*",
     "ext-openssl": "*",
     "php-http/multipart-stream-builder": "^1",
     "psr-discovery/all": "^1",
