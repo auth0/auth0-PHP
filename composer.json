@@ -107,7 +107,10 @@
     "pest:fast": [
       "@pest --parallel"
     ],
-    "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "phpcs": [
+      "@putenv PHP_CS_FIXER_IGNORE_ENV=1",
+      "@php vendor/bin/php-cs-fixer fix --dry-run --diff"
+    ],
     "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
     "phpstan": "@php vendor/bin/phpstan analyze",
     "psalm": "@php vendor/bin/psalm",
