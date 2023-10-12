@@ -9,6 +9,9 @@ use Auth0\SDK\Utility\Request\RequestOptions;
 use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
+use function array_key_exists;
+use function is_array;
+
 /**
  * Handles requests to the Clients endpoint of the v2 Management API.
  *
@@ -179,6 +182,10 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
         Toolkit::assert([
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
+
+        if (is_array($body) && array_key_exists('initiate_login_uri', $body) && null === $body['initiate_login_uri']) {
+            $body['initiate_login_uri'] = '';
+        }
 
         return $this->getHttpClient()
             ->method('patch')->addPath(['clients', $id])
