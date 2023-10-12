@@ -97,10 +97,16 @@
     }
   },
   "scripts": {
-    "pest": "@php vendor/bin/pest --order-by random --fail-on-risky --parallel --no-progress",
-    "pest:coverage": "@php vendor/bin/pest --order-by random --fail-on-risky --coverage --parallel --no-progress",
-    "pest:debug": "@php vendor/bin/pest --log-events-verbose-text pest.log --display-errors --fail-on-risky --no-progress",
-    "pest:profile": "@php vendor/bin/pest --profile",
+    "pest": [
+      "@putenv XDEBUG_MODE=coverage",
+      "@php vendor/bin/pest --colors=always --strict-global-state --fail-on-risky --fail-on-warning --coverage --strict-coverage --compact"
+    ],
+    "pest:fast": [
+      "@pest --parallel"
+    ],
+    "pest:ci": [
+      "@pest:fast --order-by=random --no-progress"
+    ],
     "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
     "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
     "phpstan": "@php vendor/bin/phpstan analyze",
