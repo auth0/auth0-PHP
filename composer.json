@@ -71,11 +71,11 @@
   },
   "config": {
     "allow-plugins": {
-      "pestphp/pest-plugin": true,
-      "wikimedia/composer-merge-plugin": true,
+      "ergebnis/composer-normalize": true,
       "infection/extension-installer": false,
+      "pestphp/pest-plugin": true,
       "php-http/discovery": false,
-      "ergebnis/composer-normalize": true
+      "wikimedia/composer-merge-plugin": true
     },
     "optimize-autoloader": true,
     "preferred-install": "dist",
@@ -101,11 +101,11 @@
       "@putenv XDEBUG_MODE=coverage",
       "@php vendor/bin/pest --colors=always --strict-global-state --fail-on-risky --fail-on-warning --coverage --strict-coverage --compact"
     ],
-    "pest:fast": [
-      "@pest --parallel"
-    ],
     "pest:ci": [
       "@pest:fast --order-by=random --no-progress"
+    ],
+    "pest:fast": [
+      "@pest --parallel"
     ],
     "phpcs": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
     "phpcs:fix": "@php vendor/bin/php-cs-fixer fix",
