@@ -206,5 +206,3 @@ jobs:
           php: ${{ matrix.php }}
 
       - run: composer phpcs
-        env:
-          PHP_CS_FIXER_IGNORE_ENV: 1
