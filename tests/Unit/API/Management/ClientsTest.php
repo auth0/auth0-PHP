@@ -68,6 +68,18 @@ test('update() issues an appropriate request', function(): void {
     expect($body['name'])->toEqual('__test_new_name__');
 });
 
+test('update() does NOT nullify empty `initiate_login_uri` values', function(): void {
+    $this->endpoint->update('__test_id__', ['name' => '__test_new_name__', 'initiate_login_uri' => '']);
+
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/clients/__test_id__');
+
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('name', $body);
+    expect($body['name'])->toEqual('__test_new_name__');
+    expect($body['initiate_login_uri'])->toEqual('');
+});
+
 test('getCredentials() issues an appropriate request', function(): void {
     $mockClientId = uniqid();
     $this->endpoint->getCredentials($mockClientId, ['client_id' => '__test_client_id__', 'app_type' => '__test_app_type__']);
