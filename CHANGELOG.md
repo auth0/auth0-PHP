@@ -1,5 +1,20 @@
 # Changelog
 
+## [8.8.0](https://github.com/auth0/auth0-PHP/tree/8.8.0) - 2023-10-18
+
+### Added
+
+- Support `initiate_login_uri` property for `PATCH` requests to the `/api/v2/clients/:id` Management API endpoint.
+
+### Fixed
+
+- Token generator typo in claim header. [#729](https://github.com/auth0/auth0-PHP/pull/729)
+
+### Changed
+
+- `composer.json` now identifies `mbstring` as a required extension. [#730](https://github.com/auth0/auth0-PHP/pull/730)
+- PHP 8.3 nightlies have been added to the continuous integration testing matrix. [#733](https://github.com/auth0/auth0-PHP/pull/733)
+
 ## [8.7.1](https://github.com/auth0/auth0-PHP/tree/8.7.1) - 2023-08-06
 
 **Fixed**
