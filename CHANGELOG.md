@@ -4,7 +4,7 @@
 
 ### Added
 
-- Support `initiate_login_uri` property for `PATCH` requests to the `/api/v2/clients/:id` Management API endpoint.
+- Support `initiate_login_uri` property for `PATCH` requests to the `/api/v2/clients/:id` Management API endpoint. [#732](https://github.com/auth0/auth0-PHP/pull/732)
 
 ### Fixed
 
