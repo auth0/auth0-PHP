@@ -1,11 +1,5 @@
 # Changelog
 
-## [8.7.1](https://github.com/auth0/auth0-PHP/tree/8.7.1) - 2023-08-06
-
-**Fixed**
-
-- Corrected Management API route for deploy action endpoint by [@speercy](https://github.com/speercy) ([#723](https://github.com/auth0/auth0-PHP/pull/723))
-
 ## [8.7.0](https://github.com/auth0/auth0-PHP/tree/8.7.0) - 2023-07-20
 
 **Added**
