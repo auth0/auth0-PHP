@@ -54,7 +54,7 @@ jobs:
       - uses: auth0/dx-sdk-actions/release-create@latest
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: ${{ github.event.pull_request.title }}
+          name: ${{ steps.get_version.outputs.version }}
           body: ${{ github.event.pull_request.body }}
           tag: ${{ steps.get_version.outputs.version }}
           commit: ${{ github.sha }}
