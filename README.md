@@ -77,7 +77,7 @@ Use the `getCredentials()` method to check if a user is authenticated.
 // getCredentials() returns null if the user is not authenticated.
 $session = $auth0->getCredentials();
 
-if (null === $session || $session->accessTokenExpired()) {
+if (null === $session || $session->accessTokenExpired) {
     // Redirect to Auth0 to authenticate the user.
     header('Location: ' . $auth0->login());
     exit;
