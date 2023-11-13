@@ -21,6 +21,8 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         string $audience,
         ?array $scope = null,
         ?RequestOptions $options = null,
+        ?string $organizationUsage = null,
+        ?bool $allowAnyOrganization = null,
     ): ResponseInterface {
         [$clientId, $audience] = Toolkit::filter([$clientId, $audience])->string()->trim();
         [$scope] = Toolkit::filter([$scope])->array()->trim();
@@ -30,16 +32,24 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             [$audience, \Auth0\SDK\Exception\ArgumentException::missing('audience')],
         ])->isString();
 
+        $body = [
+            'client_id' => $clientId,
+            'audience' => $audience,
+            'scope' => $scope,
+        ];
+
+        if (null !== $organizationUsage) {
+            $body['organization_usage'] = $organizationUsage;
+        }
+
+        if (null !== $allowAnyOrganization) {
+            $body['allow_any_organization'] = $allowAnyOrganization;
+        }
+
         return $this->getHttpClient()
             ->method('post')
             ->addPath(['client-grants'])
-            ->withBody(
-                (object) [
-                    'client_id' => $clientId,
-                    'audience' => $audience,
-                    'scope' => $scope,
-                ],
-            )
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }
@@ -120,10 +130,34 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
         return $this->getAll($params, $options);
     }
 
+    public function getOrganizations(
+        string $grantId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$grantId] = Toolkit::filter([$grantId])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        Toolkit::assert([
+            [$grantId, \Auth0\SDK\Exception\ArgumentException::missing('grantId')],
+        ])->isString();
+
+        /** @var array<null|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath(['client-grants', $grantId, 'organizations'])
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
+    }
+
     public function update(
         string $grantId,
         ?array $scope = null,
         ?RequestOptions $options = null,
+        ?string $organizationUsage = null,
+        ?bool $allowAnyOrganization = null,
     ): ResponseInterface {
         [$grantId] = Toolkit::filter([$grantId])->string()->trim();
         [$scope] = Toolkit::filter([$scope])->array()->trim();
@@ -132,13 +166,21 @@ final class ClientGrants extends ManagementEndpoint implements ClientGrantsInter
             [$grantId, \Auth0\SDK\Exception\ArgumentException::missing('grantId')],
         ])->isString();
 
+        $body = [
+            'scope' => $scope,
+        ];
+
+        if (null !== $organizationUsage) {
+            $body['organization_usage'] = $organizationUsage;
+        }
+
+        if (null !== $allowAnyOrganization) {
+            $body['allow_any_organization'] = $allowAnyOrganization;
+        }
+
         return $this->getHttpClient()
             ->method('patch')->addPath(['client-grants', $grantId])
-            ->withBody(
-                (object) [
-                    'scope' => $scope,
-                ],
-            )
+            ->withBody((object) $body)
             ->withOptions($options)
             ->call();
     }

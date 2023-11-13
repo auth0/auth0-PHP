@@ -16,6 +16,34 @@ use Psr\Http\Message\ResponseInterface;
  */
 final class Organizations extends ManagementEndpoint implements OrganizationsInterface
 {
+    public function addClientGrant(
+        string $id,
+        string $grantId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id, $grantId] = Toolkit::filter([$id, $grantId])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+            [$grantId, \Auth0\SDK\Exception\ArgumentException::missing('grantId')],
+        ])->isString();
+
+        $body = [
+            'grant_id' => $grantId,
+        ];
+
+        /** @var array<null|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('post')->addPath(['organizations', $id, 'client-grants'])
+            ->withBody((object) $body)
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
+    }
+
     public function addEnabledConnection(
         string $id,
         string $connectionId,
@@ -259,6 +287,22 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
             ->call();
     }
 
+    public function getClientGrants(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')->addPath(['organizations', $id, 'client-grants'])
+            ->withOptions($options)
+            ->call();
+    }
+
     public function getEnabledConnection(
         string $id,
         string $connectionId,
@@ -357,6 +401,29 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
 
         return $this->getHttpClient()
             ->method('get')->addPath(['organizations', $id, 'members'])
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function removeClientGrant(
+        string $id,
+        string $grantId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id, $grantId] = Toolkit::filter([$id, $grantId])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+            [$grantId, \Auth0\SDK\Exception\ArgumentException::missing('grantId')],
+        ])->isString();
+
+        /** @var array<null|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('delete')->addPath(['organizations', $id, 'client-grants', $grantId])
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }

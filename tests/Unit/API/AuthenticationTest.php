@@ -465,6 +465,32 @@ test('clientCredentials() is properly formatted', function(): void {
     expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
+test('clientCredentials() includes organization in request when configured', function(): void {
+    $clientSecret = uniqid();
+
+    $this->configuration->setClientSecret($clientSecret);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->clientCredentials(['organization' => 'org_xyz'], ['header_testing' => 123]);
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody =  explode('&', $request->getBody()->__toString());
+    $requestHeaders = $request->getHeaders();
+
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/oauth/token');
+
+    expect($requestBody)->toContain('grant_type=client_credentials');
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->toContain('client_secret=' . $clientSecret);
+    expect($requestBody)->toContain('audience=aud1');
+    expect($requestBody)->toContain('organization=org_xyz');
+
+    $this->assertArrayHasKey('header_testing', $requestHeaders);
+    expect($requestHeaders['header_testing'][0])->toEqual(123);
+});
+
 test('refreshToken() is properly formatted', function(): void {
     $clientSecret = uniqid();
     $refreshToken = uniqid();

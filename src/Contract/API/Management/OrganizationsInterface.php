@@ -10,6 +10,25 @@ use Psr\Http\Message\ResponseInterface;
 interface OrganizationsInterface
 {
     /**
+     * Associate a client grant to an organization.
+     * Required scope: `create:organization_client_grants`.
+     *
+     * @param string              $id         Organization (by ID) to associate the client grant with.
+     * @param string              $grantId    Client Grant (by ID) to associate with the organization.
+     * @param null|array<mixed>   $parameters Optional. Additional body content to send with the API request.
+     * @param null|RequestOptions $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these.
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException When an invalid `id` or `connectionId` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  When the API request fails due to a network error
+     */
+    public function addClientGrant(
+        string $id,
+        string $grantId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
      * Add a connection to an organization.
      * Required scope: `create:organization_connections`.
      *
@@ -207,6 +226,21 @@ interface OrganizationsInterface
     ): ResponseInterface;
 
     /**
+     * Get client grants associated to an organization.
+     * Required scope: `read:organization_client_grants`.
+     *
+     * @param string              $id      Organization (by ID) that the connection is associated with
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `connectionId` are provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     */
+    public function getClientGrants(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
      * Get a connection (by ID) associated with an organization.
      * Required scope: `read:organization_connections`.
      *
@@ -311,6 +345,22 @@ interface OrganizationsInterface
      */
     public function getMembers(
         string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Remove a client grant from an organization.
+     * Required scope: `delete:organization_client_grants`.
+     *
+     * @param string              $id         Organization (by ID) to remove client grant from.
+     * @param string              $grantId    Client Grant (by ID) to remove from the organization.
+     * @param null|array<mixed>   $parameters Optional. Additional body content to send with the API request.
+     * @param null|RequestOptions $options    Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these.)
+     */
+    public function removeClientGrant(
+        string $id,
+        string $grantId,
+        ?array $parameters = null,
         ?RequestOptions $options = null,
     ): ResponseInterface;
 
