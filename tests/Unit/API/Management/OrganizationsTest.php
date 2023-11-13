@@ -468,3 +468,43 @@ test('deleteInvitation() throws an exception when an invalid `id` is used', func
 test('deleteInvitation() throws an exception when an invalid `invitationId` is used', function(): void {
     $this->endpoint->deleteInvitation('test-organization', '');
 })->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'invitationId'));
+
+test('addClientGrant() issues an appropriate request', function(): void {
+    $organization = 'org_' . uniqid();
+    $grant = uniqid();
+
+    $this->endpoint->addClientGrant(
+        $organization,
+        $grant,
+    );
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations/' . $organization . '/client-grants');
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+
+    $body = $this->api->getRequestBody();
+
+    $this->assertArrayHasKey('grant_id', $body);
+    expect($body['grant_id'])->toEqual($grant);
+});
+
+test('getClientGrants() issues an appropriate request', function(): void {
+    $organization = 'org_' . uniqid();
+
+    $this->endpoint->getClientGrants($organization);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/' . $organization . '/client-grants');
+});
+
+test('removeClientGrant() issues an appropriate request', function(): void {
+    $organization = 'org_' . uniqid();
+    $grant = uniqid();
+
+    $this->endpoint->removeClientGrant($organization, $grant);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/' . $organization . '/client-grants/' . $grant);
+});
