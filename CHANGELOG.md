@@ -1,4 +1,10 @@
-# Changelog
+# Change Log
+
+## [8.9.0](https://github.com/auth0/auth0-PHP/tree/8.9.0) (2023-11-13)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.8.0...8.9.0)
+
+**Added**
+- feat(SDK-4543): Support Organizations with Client Grants [\#736](https://github.com/auth0/auth0-PHP/pull/736) ([evansims](https://github.com/evansims))
 
 ## [8.8.0](https://github.com/auth0/auth0-PHP/tree/8.8.0) - 2023-10-18
 
