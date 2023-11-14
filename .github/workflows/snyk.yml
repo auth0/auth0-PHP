@@ -70,7 +70,7 @@ jobs:
       - run: npm install snyk -g
 
       - if: github.ref == 'refs/heads/main'
-        run: snyk monitor --file=composer.lock --org=$SNYK_ORGANIZATION --project-name=$SNYK_PROJECT --project-tags=$SNYK_TAGS --remote-repo-url=$SNYK_REMOTE_REPO --target-reference=main
+        run: snyk monitor --file=composer.lock --org=$SNYK_ORGANIZATION --project-name=$SNYK_PROJECT --project-tags=$SNYK_TAGS --remote-repo-url=$SNYK_REMOTE_REPO --target-reference="$(git branch --show-current)"
         env:
           SNYK_TOKEN: ${{ secrets.DX_SDKS_SNYK_TOKEN }}
           SNYK_ORGANIZATION: ${{ env.DX_SDKS_SNYK_ORGANIZATION }}
@@ -79,7 +79,7 @@ jobs:
           SNYK_REMOTE_REPO: ${{ env.DX_SDKS_SNYK_REMOTE_REPO_URL }}
         continue-on-error: true
 
-      - run: snyk test --file=composer.lock --org=$SNYK_ORGANIZATION --project-name=$SNYK_PROJECT --project-tags=$SNYK_TAGS --remote-repo-url=$SNYK_REMOTE_REPO --target-reference=${{ github.event.pull_request.number || github.ref }}
+      - run: snyk test --file=composer.lock --org=$SNYK_ORGANIZATION --project-name=$SNYK_PROJECT --remote-repo-url=$SNYK_REMOTE_REPO
         env:
           SNYK_TOKEN: ${{ secrets.DX_SDKS_SNYK_TOKEN }}
           SNYK_ORGANIZATION: ${{ env.DX_SDKS_SNYK_ORGANIZATION }}
