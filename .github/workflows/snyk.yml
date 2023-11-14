@@ -47,7 +47,7 @@ jobs:
 
       - uses: ./.github/actions/setup
         with:
-          php: ${{ fromJson(needs.configure.outputs.matrix.include[0].php) }}
+          php: ${{ fromJson(needs.configure.outputs.matrix).include[0].php }}
 
       - run: npm install snyk -g
 
