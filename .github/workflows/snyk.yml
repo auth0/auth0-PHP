@@ -2,8 +2,7 @@ name: Snyk
 
 on:
   merge_group:
-  # pull_request_target:
-  pull_request: # TODO
+  pull_request:
     types:
       - opened
       - synchronize
@@ -21,16 +20,8 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  # authorize: # TODO
-  #   name: Authorize
-  #   environment: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository && 'external' || 'internal' }}
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: true
-
   configure:
     name: Configure
-    # needs: [authorize] # TODO
     runs-on: ubuntu-latest
 
     outputs:
@@ -38,8 +29,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        # with:
-        #   ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }} # TODO
 
       - id: set-matrix
         run: echo "matrix=$(jq -c . < ./.github/workflows/matrix.json)" >> $GITHUB_OUTPUT
@@ -55,8 +44,6 @@ jobs:
         run: exit 0
 
       - uses: actions/checkout@v4
-        # with:
-        #   ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }} # TODO
 
       - uses: ./.github/actions/setup
         with:
