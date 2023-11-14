@@ -15,6 +15,12 @@ on:
 permissions:
   contents: read
 
+env:
+  DX_SDKS_SNYK_ORGANIZATION: 8303ea71-ac72-4ae6-9cd0-ae2f3eda82b7
+  DX_SDKS_SNYK_PROJECT: auth0/auth0-PHP
+  DX_SDKS_SNYK_TAGS: Refactoring-target:DX,Refactoring-origin:auth0-sdks
+  DX_SDKS_SNYK_REMOTE_REPO_URL: https://github.com/auth0/auth0-PHP
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
@@ -64,11 +70,19 @@ jobs:
       - run: npm install snyk -g
 
       - if: github.ref == 'refs/heads/main'
-        run: snyk monitor --file=composer.lock
+        run: snyk monitor --file=composer.lock --org=$SNYK_ORGANIZATION --project-name=$SNYK_PROJECT --project-tags=$SNYK_TAGS --remote-repo-url=$SNYK_REMOTE_REPO --target-reference=main
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.DX_SDKS_SNYK_TOKEN }}
+          SNYK_ORGANIZATION: ${{ env.DX_SDKS_SNYK_ORGANIZATION }}
+          SNYK_PROJECT: ${{ env.DX_SDKS_SNYK_PROJECT }}
+          SNYK_TAGS: ${{ env.DX_SDKS_SNYK_TAGS }}
+          SNYK_REMOTE_REPO: ${{ env.DX_SDKS_SNYK_REMOTE_REPO_URL }}
         continue-on-error: true
 
-      - run: snyk test --file=composer.lock
+      - run: snyk test --file=composer.lock --org=$SNYK_ORGANIZATION --project-name=$SNYK_PROJECT --project-tags=$SNYK_TAGS --remote-repo-url=$SNYK_REMOTE_REPO --target-reference=${{ github.event.pull_request.number || github.ref }}
         env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_TOKEN: ${{ secrets.DX_SDKS_SNYK_TOKEN }}
+          SNYK_ORGANIZATION: ${{ env.DX_SDKS_SNYK_ORGANIZATION }}
+          SNYK_PROJECT: ${{ env.DX_SDKS_SNYK_PROJECT }}
+          SNYK_TAGS: ${{ env.DX_SDKS_SNYK_TAGS }}
+          SNYK_REMOTE_REPO: ${{ env.DX_SDKS_SNYK_REMOTE_REPO_URL }}
