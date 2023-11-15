@@ -2,7 +2,6 @@ name: Build and Test
 
 on:
   merge_group:
-  workflow_dispatch:
   pull_request_target:
     types:
       - opened
@@ -36,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
 
       - id: set-matrix
         run: echo "matrix=$(jq -c . < ./.github/workflows/matrix.json)" >> $GITHUB_OUTPUT
@@ -53,51 +52,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
-
-  composer-normalize:
-    name: Composer Normalize
-    needs: [configure, prepare]
-    runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
-
-      - uses: ./.github/actions/setup
-        with:
-          php: ${{ matrix.php }}
-
-      - run: composer normalize --dry-run --diff
-
-  composer-validate:
-    name: Composer Validate
-    needs: [configure, prepare]
-    runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
-
-      - uses: ./.github/actions/setup
-        with:
-          php: ${{ matrix.php }}
-
-      - run: composer validate --strict --with-dependencies
 
   pest:
     name: PEST
@@ -111,17 +70,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
           php: ${{ matrix.php }}
           coverage: pcov
 
-      - if: matrix.php != '8.0'
-        run: composer pest:ci
+      - run: composer pest:ci
 
-      - if: matrix.php == '8.1'
+      - if: ${{ matrix.php == fromJson(needs.configure.outputs.matrix).include[0].php }}
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
         with:
           directory: ./coverage/
@@ -139,7 +97,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
@@ -159,7 +117,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
@@ -172,18 +130,14 @@ jobs:
     needs: [configure, prepare]
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
-
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
-          php: ${{ matrix.php }}
+          php: ${{ fromJson(needs.configure.outputs.matrix).include[0].php }}
 
       - run: composer rector
 
@@ -192,17 +146,45 @@ jobs:
     needs: [configure, prepare]
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ fromJson(needs.configure.outputs.matrix).include[0].php }}
+
+      - run: composer phpcs
+
+  composer-normalize:
+    name: Composer Normalize
+    needs: [configure, prepare]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
 
       - uses: ./.github/actions/setup
         with:
-          php: ${{ matrix.php }}
+          php: ${{ fromJson(needs.configure.outputs.matrix).include[0].php }}
 
-      - run: composer phpcs
+      - run: composer normalize --dry-run --diff
+
+  composer-validate:
+    name: Composer Validate
+    needs: [configure, prepare]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ fromJson(needs.configure.outputs.matrix).include[0].php }}
+
+      - run: composer validate --strict --with-dependencies
