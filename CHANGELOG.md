@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.9.1](https://github.com/auth0/auth0-PHP/tree/8.9.1) (2023-11-20)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.9.0...8.9.1)
+
+**Fixed**
+- fix(SDK-4716): Resolve thrown exception when enumerating device cookies that include non-string keys/names [\#739](https://github.com/auth0/auth0-PHP/pull/739) ([evansims](https://github.com/evansims))
+
 ## [8.9.0](https://github.com/auth0/auth0-PHP/tree/8.9.0) (2023-11-13)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.8.0...8.9.0)
 
