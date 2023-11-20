@@ -249,3 +249,21 @@ test('encrypt() returns nothing with invalid crypto properties', function(): voi
     $this->store->setEncrypted(false);
     expect($this->store->encrypt($state, ['encoded1' => false]))->toEqual('');
 });
+
+it('enumerates $_COOKIE with non-string keys', function(array $state): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+
+    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
+
+    $_COOKIE[$cookieNamespace] = $encrypted;
+    $_COOKIE['123'] = uniqid();
+    $_COOKIE[456] = uniqid();
+    $_COOKIE['abc'] = uniqid();
+
+    $this->store->getState();
+    $this->store->setState(true);
+
+    expect($this->store->get($this->exampleKey))->toEqual($state);
+})->with(['mocked state' => [
+    fn() => MockDataset::state()
+]]);

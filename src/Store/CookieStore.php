@@ -438,7 +438,7 @@ final class CookieStore implements StoreInterface
     /**
      * Push our storage state to the source for persistence.
      *
-     * @psalm-suppress UnusedFunctionCall
+     * @psalm-suppress UnusedFunctionCall,DocblockTypeContradiction
      *
      * @param bool $force
      */
@@ -457,6 +457,10 @@ final class CookieStore implements StoreInterface
         // Iterate through the host device cookies and collect a list of ones that belong to us.
         foreach (array_keys($_COOKIE) as $cookieName) {
             $cookieBeginsWith = $this->namespace . self::KEY_SEPARATOR;
+
+            if (is_int($cookieName)) {
+                $cookieName = (string) $cookieName;
+            }
 
             if (mb_strlen($cookieName) >= mb_strlen($cookieBeginsWith)
                 && mb_substr($cookieName, 0, mb_strlen($cookieBeginsWith)) === $cookieBeginsWith) {
