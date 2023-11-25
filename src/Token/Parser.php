@@ -265,7 +265,7 @@ final class Parser
         $signature = $this->getSignature() ?? '';
         $headers = $this->getHeaders();
 
-        $verifier = new Verifier(
+        new Verifier(
             $this->configuration,
             implode('.', [$parts[0], $parts[1]]),
             $signature,
@@ -276,8 +276,6 @@ final class Parser
             $cacheExpires,
             $cache,
         );
-
-        $verifier->verify();
 
         return $this;
     }
