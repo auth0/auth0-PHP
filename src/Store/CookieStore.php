@@ -438,7 +438,7 @@ final class CookieStore implements StoreInterface
     /**
      * Push our storage state to the source for persistence.
      *
-     * @psalm-suppress UnusedFunctionCall,DocblockTypeContradiction
+     * @psalm-suppress UnusedFunctionCall,DocblockTypeContradiction,NoValue
      *
      * @param bool $force
      */
@@ -459,7 +459,7 @@ final class CookieStore implements StoreInterface
             $cookieBeginsWith = $this->namespace . self::KEY_SEPARATOR;
 
             if (is_int($cookieName)) {
-                $cookieName = (string) $cookieName;
+                $cookieName = strval($cookieName);
             }
 
             if (mb_strlen($cookieName) >= mb_strlen($cookieBeginsWith)
