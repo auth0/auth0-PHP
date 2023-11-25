@@ -438,7 +438,7 @@ final class CookieStore implements StoreInterface
     /**
      * Push our storage state to the source for persistence.
      *
-     * @psalm-suppress UnusedFunctionCall,DocblockTypeContradiction,NoValue
+     * @psalm-suppress UnusedFunctionCall,DocblockTypeContradiction,NoValue,InvalidCast
      *
      * @param bool $force
      */
