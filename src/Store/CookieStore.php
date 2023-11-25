@@ -459,7 +459,7 @@ final class CookieStore implements StoreInterface
             $cookieBeginsWith = $this->namespace . self::KEY_SEPARATOR;
 
             if (is_int($cookieName)) {
-                $cookieName = strval($cookieName);
+                $cookieName = (string) $cookieName;
             }
 
             if (mb_strlen($cookieName) >= mb_strlen($cookieBeginsWith)
