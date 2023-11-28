@@ -44,7 +44,7 @@ jobs:
         run: exit 1
 
       # Create a release for the tag
-      - uses: ./.github/actions/publish-package@latest
+      - uses: ./.github/actions/publish-package
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ steps.get_version.outputs.version }}
@@ -60,7 +60,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Create a release for the tag
-      - uses: ./.github/actions/release-create@latest
+      - uses: ./.github/actions/release-create
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ steps.get_version.outputs.version }}
