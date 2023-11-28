@@ -1,0 +1,29 @@
+name: Publish release to package manager
+
+inputs:
+  token:
+    required: true
+  files:
+    required: false
+  name:
+    required: true
+  body:
+    required: true
+  tag:
+    required: true
+  commit:
+    required: true
+  draft:
+    default: false
+    required: false
+  prerelease:
+    default: false
+    required: false
+
+runs:
+  using: composite
+
+  steps:
+    # Nothing to do for PHP.
+    - run: exit 0
+      shell: bash

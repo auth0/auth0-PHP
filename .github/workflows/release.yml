@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+### TODO: Replace instances of './.github/actions/' w/ `auth0/dx-sdk-actions/` and append `@latest` after the common `dx-sdk-actions` repo's visibility is made public.
+### TODO: Remove `get-prerelease`, `get-version`, `release-create`, `tag-create` and `tag-exists` actions once the common repo is public.
+
 jobs:
   release:
     if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
@@ -21,17 +24,17 @@ jobs:
 
       # Get the version from the branch name
       - id: get_version
-        uses: auth0/dx-sdk-actions/get-version@latest
+        uses: ./.github/actions/get-version
 
       # Get the prerelease flag from the branch name
       - id: get_prerelease
-        uses: auth0/dx-sdk-actions/get-prerelease@latest
+        uses: ./.github/actions/get-prerelease
         with:
           version: ${{ steps.get_version.outputs.version }}
 
       # Check if the tag already exists
       - id: tag_exists
-        uses: auth0/dx-sdk-actions/tag-exists@latest
+        uses: ./.github/actions/tag-exists
         with:
           tag: ${{ steps.get_version.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -40,18 +43,24 @@ jobs:
       - if: steps.tag_exists.outputs.exists == 'true'
         run: exit 1
 
-      #########################################################################
-      # Relevant build steps here
-      #########################################################################
+      # Create a release for the tag
+      - uses: ./.github/actions/publish-package@latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: ${{ steps.get_version.outputs.version }}
+          body: ${{ github.event.pull_request.body }}
+          tag: ${{ steps.get_version.outputs.version }}
+          commit: ${{ github.sha }}
+          prerelease: ${{ steps.get_prerelease.outputs.prerelease }}
 
       # Create a tag for the release
-      - uses: auth0/dx-sdk-actions/tag-create@latest
+      - uses: ./.github/actions/tag-create
         with:
           tag: ${{ steps.get_version.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # Create a release for the tag
-      - uses: auth0/dx-sdk-actions/release-create@latest
+      - uses: ./.github/actions/release-create@latest
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: ${{ steps.get_version.outputs.version }}
