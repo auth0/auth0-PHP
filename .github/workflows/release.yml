@@ -43,7 +43,7 @@ jobs:
       - if: steps.tag_exists.outputs.exists == 'true'
         run: exit 1
 
-      # Create a release for the tag
+      # Publish the release to our package manager
       - uses: ./.github/actions/publish-package
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
