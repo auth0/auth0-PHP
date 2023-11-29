@@ -29,5 +29,5 @@ runs:
         git tag -a ${TAG_NAME} -m "Version ${TAG_NAME}"
         git push --follow-tags
       env:
-        TAG_NAME: v${{ inputs.tag }}
+        TAG_NAME: ${{ inputs.tag }}
         GITHUB_TOKEN: ${{ inputs.token }}
