@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.9.3](https://github.com/auth0/auth0-PHP/tree/8.9.3) (2023-11-30)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.9.1...8.9.3)
+
+**Fixed**
+- fix: Remove redundant token verification step [\#742](https://github.com/auth0/auth0-PHP/pull/742) ([evansims](https://github.com/evansims))
+
 ## [8.9.2](https://github.com/auth0/auth0-PHP/tree/8.9.2) (2023-11-29)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.9.1...8.9.2)
 
