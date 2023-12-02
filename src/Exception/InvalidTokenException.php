@@ -20,11 +20,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_MISSING_SID_CLAIM = 'Identifier (sid) claim must be a number present in the token';
-
-    /**
-     * @var string
-     */
     public const MSG_BAD_SIGNATURE = 'Cannot verify signature';
 
     /**
@@ -36,6 +31,16 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      * @var string
      */
     public const MSG_BAD_SIGNATURE_MISSING_KID = 'Cannot verify signature: JWKS did not contain the key specified by the token';
+
+    /**
+     * @var string
+     */
+    public const MSG_LOGOUT_TOKEN_EVENTS_PRESENT = 'Valid logout tokens cannot include `events` claims';
+
+    /**
+     * @var string
+     */
+    public const MSG_LOGOUT_TOKEN_NONCE_PRESENT = 'Valid logout tokens cannot include `nonce` claims';
 
     /**
      * @var string
@@ -115,6 +120,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_MISSING_SID_CLAIM = 'Identifier (sid) claim must be a number present in the token';
+
+    /**
+     * @var string
+     */
     public const MSG_MISSING_SUB_CLAIM = 'Subject (sub) claim must be a string present in the token';
 
     /**
@@ -157,16 +167,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      */
     public const MSG_UNSUPPORTED_SIGNING_ALGORITHM = 'Signature algorithm of "%s" is not supported. Expected the token to be signed with "RS256" or "HS256"';
 
-    /**
-     * @var string
-     */
-    public const MSG_LOGOUT_TOKEN_EVENTS_PRESENT = 'Valid logout tokens cannot include `events` claims';
-
-    /**
-     * @var string
-     */
-    public const MSG_LOGOUT_TOKEN_NONCE_PRESENT = 'Valid logout tokens cannot include `nonce` claims';
-
     public static function badSeparators(
         ?Throwable $previous = null,
     ): self {
@@ -196,6 +196,18 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self($message, 0, $previous);
+    }
+
+    public static function logoutTokenEventsPresent(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_LOGOUT_TOKEN_EVENTS_PRESENT, 0, $previous);
+    }
+
+    public static function logoutTokenNoncePresent(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_LOGOUT_TOKEN_NONCE_PRESENT, 0, $previous);
     }
 
     public static function mismatchedAudClaim(
@@ -252,18 +264,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         return new self(self::MSG_MISSING_ALG_HEADER, 0, $previous);
     }
 
-    public static function logoutTokenEventsPresent(
-        ?\Throwable $previous = null,
-    ): self {
-        return new self(self::MSG_LOGOUT_TOKEN_EVENTS_PRESENT, 0, $previous);
-    }
-
-    public static function logoutTokenNoncePresent(
-        ?\Throwable $previous = null,
-    ): self {
-        return new self(self::MSG_LOGOUT_TOKEN_NONCE_PRESENT, 0, $previous);
-    }
-
     public static function missingAudienceClaim(
         ?Throwable $previous = null,
     ): self {
@@ -312,6 +312,12 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         return new self(self::MSG_MISSING_NONCE_CLAIM, 0, $previous);
     }
 
+    public static function missingSidClaim(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_MISSING_SID_CLAIM, 0, $previous);
+    }
+
     public static function missingSubClaim(
         ?Throwable $previous = null,
     ): self {
@@ -343,11 +349,5 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(sprintf(self::MSG_UNSUPPORTED_SIGNING_ALGORITHM, $algorithm), 0, $previous);
-    }
-
-    public static function missingSidClaim(
-        ?\Throwable $previous = null,
-    ): self {
-        return new self(self::MSG_MISSING_SID_CLAIM, 0, $previous);
     }
 }

@@ -91,6 +91,11 @@ interface Auth0Interface
     public function getAccessTokenScope(): ?array;
 
     /**
+     * Get the OIDC backchannel logout key generated during exchange(). This is used for session matching with getCredentials() calls, for comparison against cached requests from handleBackchannelLogout().
+     */
+    public function getBackchannel(): ?string;
+
+    /**
      * Get an available bearer token from a variety of input sources.
      *
      * @param null|array<string>        $get      Optional. An array of viable parameter names to search against $_GET as a token candidate.
@@ -106,32 +111,6 @@ interface Auth0Interface
         ?array $haystack = null,
         ?array $needles = null,
     ): ?TokenInterface;
-
-    /**
-     * Store a OIDC Backchannel Logout request in the cache. Matching sessions will be invalidated on future requests when getCredentials() is called.
-     *
-     * @param  string  $logoutToken  An encoded logout token to validate and process.
-     *
-     * @throws \Auth0\SDK\Exception\ConfigurationException when used without statefulness being configured
-     * @throws \Auth0\SDK\Exception\InvalidTokenException when token validation fails. See the exception message for further details.
-     */
-    public function handleBackchannelLogout(
-        string $logoutToken,
-    ): TokenInterface;
-
-    /**
-     * Sets and persists an identifier used for OIDC backchannel logout requests.
-     *
-     * @param  string  $backchannel  an OIDC backchannel logout identifier composed of the sub, iss and sid claims from the source ID Token.
-     */
-    public function setBackchannel(
-        string $backchannel,
-    ): self;
-
-    /**
-     * Get the OIDC backchannel logout key generated during exchange(). This is used for session matching with getCredentials() calls, for comparison against cached requests from handleBackchannelLogout().
-     */
-    public function getBackchannel(): ?string;
 
     /**
      * Return an object representing the current session credentials (including id token, access token, access token expiration, refresh token and user data) without triggering an authorization flow. Returns null when session data is not available.
@@ -179,6 +158,18 @@ interface Auth0Interface
      * @return null|array<mixed>
      */
     public function getUser(): ?array;
+
+    /**
+     * Store a OIDC Backchannel Logout request in the cache. Matching sessions will be invalidated on future requests when getCredentials() is called.
+     *
+     * @param string $logoutToken An encoded logout token to validate and process.
+     *
+     * @throws \Auth0\SDK\Exception\ConfigurationException when used without statefulness being configured
+     * @throws \Auth0\SDK\Exception\InvalidTokenException  when token validation fails. See the exception message for further details.
+     */
+    public function handleBackchannelLogout(
+        string $logoutToken,
+    ): TokenInterface;
 
     /**
      * If invitation parameters are present in the request, handle extraction and return a URL for redirection to Universal Login to accept. Returns null if no invitation parameters were found.
@@ -286,6 +277,15 @@ interface Auth0Interface
      */
     public function setAccessTokenScope(
         array $accessTokenScope,
+    ): self;
+
+    /**
+     * Sets and persists an identifier used for OIDC backchannel logout requests.
+     *
+     * @param string $backchannel an OIDC backchannel logout identifier composed of the sub, iss and sid claims from the source ID Token.
+     */
+    public function setBackchannel(
+        string $backchannel,
     ): self;
 
     /**

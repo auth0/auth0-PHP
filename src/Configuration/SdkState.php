@@ -26,6 +26,7 @@ final class SdkState implements ConfigurableContract
      * @param null|string        $refreshToken          Optional. The refresh token currently in use for the session, if available.
      * @param null|array<mixed>  $user                  Optional. An array representing the user data, if available.
      * @param null|int           $accessTokenExpiration Optional. When the $accessToken is expected to expire, if available.
+     * @param ?string            $backchannel
      */
     public function __construct(
         ?array $configuration = null,
@@ -70,6 +71,13 @@ final class SdkState implements ConfigurableContract
         return $this->accessTokenScope;
     }
 
+    public function getBackchannel(?Throwable $exceptionIfNull = null): ?string
+    {
+        $this->exceptionIfNull($this->backchannel, $exceptionIfNull);
+
+        return $this->backchannel;
+    }
+
     public function getIdToken(?Throwable $exceptionIfNull = null): ?string
     {
         $this->exceptionIfNull($this->idToken, $exceptionIfNull);
@@ -109,6 +117,11 @@ final class SdkState implements ConfigurableContract
     public function hasAccessTokenScope(): bool
     {
         return null !== $this->accessTokenScope;
+    }
+
+    public function hasBackchannel(): bool
+    {
+        return null !== $this->backchannel;
     }
 
     public function hasIdToken(): bool
@@ -176,6 +189,17 @@ final class SdkState implements ConfigurableContract
         return $this;
     }
 
+    public function setBackchannel(?string $backchannel = null): self
+    {
+        if (null !== $backchannel && '' === trim($backchannel)) {
+            $backchannel = null;
+        }
+
+        $this->backchannel = $backchannel;
+
+        return $this;
+    }
+
     public function setIdToken(?string $idToken = null): self
     {
         $idToken = trim($idToken ?? '');
@@ -229,29 +253,6 @@ final class SdkState implements ConfigurableContract
             'user' => null,
             'accessTokenExpiration' => null,
         ];
-    }
-
-    public function setBackchannel(?string $backchannel = null): self
-    {
-        if (null !== $backchannel && '' === trim($backchannel)) {
-            $backchannel = null;
-        }
-
-        $this->backchannel = $backchannel;
-
-        return $this;
-    }
-
-    public function getBackchannel(?\Throwable $exceptionIfNull = null): ?string
-    {
-        $this->exceptionIfNull($this->backchannel, $exceptionIfNull);
-
-        return $this->backchannel;
-    }
-
-    public function hasBackchannel(): bool
-    {
-        return null !== $this->backchannel;
     }
 
     /**

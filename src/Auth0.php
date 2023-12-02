@@ -282,6 +282,11 @@ final class Auth0 implements Auth0Interface
         return $this->getState()->getAccessTokenScope();
     }
 
+    public function getBackchannel(): ?string
+    {
+        return $this->getState()->getBackchannel();
+    }
+
     public function getBearerToken(
         ?array $get = null,
         ?array $post = null,
@@ -454,6 +459,46 @@ final class Auth0 implements Auth0Interface
     public function getUser(): ?array
     {
         return $this->getState()->getUser();
+    }
+
+    public function handleBackchannelLogout(
+        string $logoutToken,
+    ): TokenInterface {
+        $cache = $this->configuration()->getBackchannelLogoutCache();
+
+        // The SDK must be configured for authentication (statefulness) to invoke this method.
+        if (! $this->configuration()->usingStatefulness() || ! $cache instanceof \Psr\Cache\CacheItemPoolInterface) {
+            throw ConfigurationException::requiresStatefulness('Auth0->handleBackchannelLogout()');
+        }
+
+        // Decode the logout token. If this ste fails, an exception will be thrown.
+        $token = $this->decode(
+            token: $logoutToken,
+            tokenType: \Auth0\SDK\Token::TYPE_LOGOUT_TOKEN,
+        );
+
+        // Create a reference key for comparison against future requests.
+        $backchannel = hash('sha256', implode('|', [$token->getSubject() ?? '', $token->getIssuer() ?? '', $token->getIdentifier() ?? '']));
+
+        // Retrieve any existing reference, or silently create a new one.
+        $request = $cache->getItem($backchannel);
+
+        // Setup the backchannel logout request record:
+        $request->set(json_encode([
+            'sub' => $token->getSubject(),
+            'iss' => $token->getIssuer(),
+            'sid' => $token->getIdentifier(),
+            'iat' => $token->getIssued(),
+        ]));
+
+        // Let the backchannel logout request fall off after a reasonable amount of time.
+        $request->expiresAfter(time() + (86400 * 30));
+
+        // Finally, add this to the Backchannel Logout cache.
+        $cache->save($request);
+
+        // Inform the host application everything we successful.
+        return $token;
     }
 
     public function handleInvitation(
@@ -645,6 +690,18 @@ final class Auth0 implements Auth0Interface
         return $this;
     }
 
+    public function setBackchannel(
+        string $backchannel,
+    ): self {
+        $this->getState()->setBackchannel($backchannel);
+
+        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage()) {
+            $this->configuration()->getSessionStorage()->set('backchannel', $backchannel);
+        }
+
+        return $this;
+    }
+
     public function setConfiguration(
         SdkConfiguration | array $configuration,
     ): self {
@@ -801,62 +858,5 @@ final class Auth0 implements Auth0Interface
         }
 
         return null;
-    }
-
-    public function handleBackchannelLogout(
-        string $logoutToken,
-    ): TokenInterface {
-        $cache = $this->configuration()->getBackchannelLogoutCache();
-
-        // The SDK must be configured for authentication (statefulness) to invoke this method.
-        if (! $this->configuration()->usingStatefulness() || ! $cache instanceof \Psr\Cache\CacheItemPoolInterface) {
-            throw ConfigurationException::requiresStatefulness('Auth0->handleBackchannelLogout()');
-        }
-
-        // Decode the logout token. If this ste fails, an exception will be thrown.
-        $token = $this->decode(
-            token: $logoutToken,
-            tokenType: \Auth0\SDK\Token::TYPE_LOGOUT_TOKEN,
-        );
-
-        // Create a reference key for comparison against future requests.
-        $backchannel = hash('sha256', implode('|', [$token->getSubject() ?? '', $token->getIssuer() ?? '', $token->getIdentifier() ?? '']));
-
-        // Retrieve any existing reference, or silently create a new one.
-        $request = $cache->getItem($backchannel);
-
-        // Setup the backchannel logout request record:
-        $request->set(json_encode([
-            'sub' => $token->getSubject(),
-            'iss' => $token->getIssuer(),
-            'sid' => $token->getIdentifier(),
-            'iat' => $token->getIssued(),
-        ]));
-
-        // Let the backchannel logout request fall off after a reasonable amount of time.
-        $request->expiresAfter(time() + (86400 * 30));
-
-        // Finally, add this to the Backchannel Logout cache.
-        $cache->save($request);
-
-        // Inform the host application everything we successful.
-        return $token;
-    }
-
-    public function getBackchannel(): ?string
-    {
-        return $this->getState()->getBackchannel();
-    }
-
-    public function setBackchannel(
-        string $backchannel,
-    ): self {
-        $this->getState()->setBackchannel($backchannel);
-
-        if ($this->configuration()->usingStatefulness() && $this->configuration()->hasSessionStorage()) {
-            $this->configuration()->getSessionStorage()->set('backchannel', $backchannel);
-        }
-
-        return $this;
     }
 }

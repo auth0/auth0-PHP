@@ -62,7 +62,7 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * SdkConfiguration Constructor.
      *
-     * @param null|array<mixed>                $configuration                    An key-value array matching this constructor's arguments. Overrides any other passed arguments with the same key name.
+     * @param null|array<mixed>                $configuration                   An key-value array matching this constructor's arguments. Overrides any other passed arguments with the same key name.
      * @param string                           $strategy                        Defaults to 'webapp'. Should be assigned either 'api', 'management', or 'webapp' to specify the type of application the SDK is being applied to. Determines what configuration options will be required at initialization.
      * @param null|string                      $domain                          Auth0 domain for your tenant, found in your Auth0 Application settings
      * @param null|string                      $customDomain                    If you have configured Auth0 to use a custom domain, configure it here
@@ -270,6 +270,13 @@ final class SdkConfiguration implements ConfigurableContract
         $this->exceptionIfNull($this->audience, $exceptionIfNull);
 
         return $this->audience;
+    }
+
+    public function getBackchannelLogoutCache(?Throwable $exceptionIfNull = null): ?CacheItemPoolInterface
+    {
+        $this->exceptionIfNull($this->backchannelLogoutCache, $exceptionIfNull);
+
+        return $this->backchannelLogoutCache;
     }
 
     public function getClientAssertionSigningAlgorithm(): string
@@ -566,6 +573,11 @@ final class SdkConfiguration implements ConfigurableContract
     public function hasAudience(): bool
     {
         return null !== $this->audience;
+    }
+
+    public function hasBackchannelLogoutCache(): bool
+    {
+        return $this->backchannelLogoutCache instanceof \Psr\Cache\CacheItemPoolInterface;
     }
 
     public function hasClientAssertionSigningAlgorithm(): bool
@@ -867,6 +879,13 @@ final class SdkConfiguration implements ConfigurableContract
     public function setAudience(?array $audience = null): self
     {
         $this->audience = $this->filterArray($audience);
+
+        return $this;
+    }
+
+    public function setBackchannelTokenCache(?CacheItemPoolInterface $backchannelLogoutCache = null): self
+    {
+        $this->backchannelLogoutCache = $backchannelLogoutCache;
 
         return $this;
     }
@@ -1325,25 +1344,6 @@ final class SdkConfiguration implements ConfigurableContract
         return $this;
     }
 
-    public function setBackchannelTokenCache(?CacheItemPoolInterface $backchannelLogoutCache = null): self
-    {
-        $this->backchannelLogoutCache = $backchannelLogoutCache;
-
-        return $this;
-    }
-
-    public function getBackchannelLogoutCache(?\Throwable $exceptionIfNull = null): ?CacheItemPoolInterface
-    {
-        $this->exceptionIfNull($this->backchannelLogoutCache, $exceptionIfNull);
-
-        return $this->backchannelLogoutCache;
-    }
-
-    public function hasBackchannelLogoutCache(): bool
-    {
-        return null !== $this->backchannelLogoutCache;
-    }
-
     /**
      * Returns true when the configured `strategy` is 'stateful', meaning it requires an available and configured session.
      */
@@ -1460,7 +1460,7 @@ final class SdkConfiguration implements ConfigurableContract
             'clientAssertionSigningKey' => static fn ($value): bool => $value instanceof OpenSSLAsymmetricKey || is_string($value) || null === $value,
             'clientAssertionSigningAlgorithm' => static fn ($value): bool => is_string($value),
             'pushedAuthorizationRequest' => static fn ($value): bool => is_bool($value),
-            'backchannelLogoutCache' => static fn ($value) => $value instanceof CacheItemPoolInterface || null === $value,
+            'backchannelLogoutCache' => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
         ];
     }
 

@@ -48,12 +48,12 @@ final class Token implements TokenInterface
     /**
      * @var int
      */
-    public const TYPE_ID_TOKEN = 1;
+    public const TYPE_ACCESS_TOKEN = 2;
 
     /**
      * @var int
      */
-    public const TYPE_ACCESS_TOKEN = 2;
+    public const TYPE_ID_TOKEN = 1;
 
     /**
      * @var int
