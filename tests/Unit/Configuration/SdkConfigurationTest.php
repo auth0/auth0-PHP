@@ -1715,3 +1715,28 @@ test('setClientAssertionSigningKey() throws an exception when an invalid algorit
 
     $config->setClientAssertionSigningAlgorithm(Token::ALGO_HS256);
 })->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_INCOMPATIBLE_SIGNING_ALGORITHM, 'HS256'));
+
+test('getBackchannelLogoutCache methods function as expected', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $cache = new ArrayAdapter();
+
+    expect($config->hasBackchannelLogoutCache())->toBeFalse();
+    expect($config->getBackchannelLogoutCache())->toBeNull();
+
+    $config->setBackchannelTokenCache($cache);
+    expect($config->hasBackchannelLogoutCache())->toBeTrue();
+    expect($config->getBackchannelLogoutCache())->toEqual($cache);
+});
+
+test('getBackchannelLogoutCache() throws an assigned exception when not configured', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $config->getBackchannelLogoutCache(new Exception('This should be thrown'));
+})->throws(Exception::class, 'This should be thrown');

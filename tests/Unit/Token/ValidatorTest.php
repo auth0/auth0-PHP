@@ -10,6 +10,7 @@ uses()->group('token', 'token.validator');
 beforeEach(function() {
     $this->claims = [
         'sub' => uniqid(),
+        'sid' => uniqid(),
         'iss' => uniqid(),
         'sid' => uniqid(),
         'aud' => uniqid(),
@@ -66,10 +67,10 @@ test('expiration() throws an exception when `exp` claim is less than present tim
     (new Validator($this->claims))->expiration();
 })->throws(InvalidTokenException::class);
 
-test('issued() throws an exception when `sid` claim is missing', function(): void {
+test('identifier() throws an exception when `sid` claim is missing', function(): void {
     unset($this->claims['sid']);
     (new Validator($this->claims))->identifier();
-})->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_MISSING_SID_CLAIM);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_SID_CLAIM);
 
 test('issued() throws an exception when `iat` claim is missing', function(): void {
     unset($this->claims['iat']);

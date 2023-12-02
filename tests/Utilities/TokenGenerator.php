@@ -23,6 +23,7 @@ class TokenGenerator
     ): array {
         $defaults = [
             'sub' => '__test_sub__',
+            'sid' => '__test_sid__',
             'iss' => 'https://domain.test/',
             'aud' => '__test_client_id__',
             'nonce' => '__test_nonce__',
@@ -40,6 +41,7 @@ class TokenGenerator
     ): array {
         $defaults = [
             'iss' => 'https://domain.test/',
+            'sid' => '__test_sid__',
             'aud' => '__test_client_id__',
             'nonce' => '__test_nonce__',
             'auth_time' => time() - 100,
@@ -55,6 +57,7 @@ class TokenGenerator
     ): array {
         $defaults = [
             'sub' => '__test_sub__',
+            'sid' => '__test_sid__',
             'iss' => 'https://domain.test/',
             'aud' => '__test_client_id__',
             'auth_time' => time() - 100,

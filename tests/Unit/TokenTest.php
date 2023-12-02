@@ -46,6 +46,7 @@ it('accepts and successfully parses a valid RS256 ID Token', function(
     expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
     expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
     expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
+    expect($token->getIdentifier())->toEqual($jwt->claims['sid'] ?? null);
     expect($token->getIssued())->toEqual($jwt->claims['iat'] ?? null);
     expect($token->getIssuer())->toEqual($jwt->claims['iss'] ?? null);
     expect($token->getNonce())->toEqual($jwt->claims['nonce'] ?? null);
@@ -67,6 +68,7 @@ it('accepts and successfully parses a valid HS256 ID Token', function(
     expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
     expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
     expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
+    expect($token->getIdentifier())->toEqual($jwt->claims['sid'] ?? null);
     expect($token->getIssued())->toEqual($jwt->claims['iat'] ?? null);
     expect($token->getIssuer())->toEqual($jwt->claims['iss'] ?? null);
     expect($token->getNonce())->toEqual($jwt->claims['nonce'] ?? null);
@@ -88,6 +90,7 @@ it('accepts and successfully parses a valid RS256 Access Token', function(
     expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
     expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
     expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
+    expect($token->getIdentifier())->toEqual($jwt->claims['sid'] ?? null);
     expect($token->getIssued())->toEqual($jwt->claims['iat'] ?? null);
     expect($token->getIssuer())->toEqual($jwt->claims['iss'] ?? null);
     expect($token->getNonce())->toEqual($jwt->claims['nonce'] ?? null);
@@ -109,6 +112,7 @@ it('accepts and successfully parses a valid HS256 Access Token', function(
     expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
     expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
     expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
+    expect($token->getIdentifier())->toEqual($jwt->claims['sid'] ?? null);
     expect($token->getIssued())->toEqual($jwt->claims['iat'] ?? null);
     expect($token->getIssuer())->toEqual($jwt->claims['iss'] ?? null);
     expect($token->getNonce())->toEqual($jwt->claims['nonce'] ?? null);
@@ -130,6 +134,7 @@ it('accepts and successfully parses a valid RS256 Logout Token', function(
     expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
     expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
     expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
+    expect($token->getIdentifier())->toEqual($jwt->claims['sid'] ?? null);
     expect($token->getIssued())->toEqual($jwt->claims['iat'] ?? null);
     expect($token->getIssuer())->toEqual($jwt->claims['iss'] ?? null);
     expect($token->getOrganization())->toEqual($jwt->claims['org_id'] ?? null);
@@ -150,6 +155,7 @@ it('accepts and successfully parses a valid HS256 Logout Token', function(
     expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
     expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
     expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
+    expect($token->getIdentifier())->toEqual($jwt->claims['sid'] ?? null);
     expect($token->getIssued())->toEqual($jwt->claims['iat'] ?? null);
     expect($token->getIssuer())->toEqual($jwt->claims['iss'] ?? null);
     expect($token->getOrganization())->toEqual($jwt->claims['org_id'] ?? null);
@@ -347,6 +353,14 @@ test('getExpiration() rejects malformed claims', function(): void {
     $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
 
     expect($token->getExpiration())
+        ->toBeNull();
+});
+
+test('getIdentifier() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['sid' => 123]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getIdentifier())
         ->toBeNull();
 });
 
