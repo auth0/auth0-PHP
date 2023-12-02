@@ -138,3 +138,8 @@ test('organization() does not throw an exception when there are no organization 
     $validator = (new Validator($this->claims))->organization([]);
     expect($validator)->toBeInstanceOf(Validator::class);
 });
+
+test('identifier() returns a valid `sid` claim', function(): void {
+    $validator = (new Validator($this->claims))->identifier();
+    expect($validator)->toBeInstanceOf(Validator::class);
+});
