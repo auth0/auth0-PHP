@@ -371,6 +371,14 @@ test('logout() returns a a valid logout url', function(): void {
             ->toContain('rand=' . $randomParam);
 });
 
+test('getBackchannel() retrieves a setBackchannel() assignment', function(): void {
+    $auth0 = new \Auth0\SDK\Auth0($this->configuration);
+    $backchannel = hash('sha256', uniqid());
+
+    $auth0->setBackchannel($backchannel);
+    expect($auth0->getBackchannel())->toEqual($backchannel);
+});
+
 test('handleBackchannelLogout() requires statefulness', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
     $auth0->handleBackchannelLogout(uniqid());
