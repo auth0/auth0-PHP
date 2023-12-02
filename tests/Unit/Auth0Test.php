@@ -393,7 +393,7 @@ test('handleBackchannelLogout() handles a valid request', function(): void {
 
     $backchannel = hash('sha256', implode('|', [$sub, $iss . '/', $sid]));
 
-    $pool = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
+    $pool = new ArrayAdapter();
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'strategy' => \Auth0\SDK\Configuration\SdkConfiguration::STRATEGY_REGULAR,
@@ -572,7 +572,7 @@ test('decode() can be used with access tokens', function (): void {
         null,
         null,
         null,
-        \Auth0\SDK\Token::TYPE_ACCESS_TOKEN,
+        Token::TYPE_ACCESS_TOKEN,
     );
 
     expect($decoded->getAudience())->toContain('__test_client_id__');
@@ -589,7 +589,7 @@ test('decode() can be used with logout tokens', function (): void {
 
     $decoded = $auth0->decode(
         token: $mockLogoutToken->token,
-        tokenType: \Auth0\SDK\Token::TYPE_LOGOUT_TOKEN,
+        tokenType: Token::TYPE_LOGOUT_TOKEN,
     );
 
     expect($decoded->getAudience())->toContain('__test_client_id__');
@@ -967,7 +967,7 @@ test('getCredentials() returns null when matching backchannel request is queued'
         'iss' => $issuer,
     ]);
 
-    $pool = new \Symfony\Component\Cache\Adapter\ArrayAdapter();
+    $pool = new ArrayAdapter();
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
         'tokenAlgorithm' => 'HS256',

@@ -20,6 +20,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_MISSING_SID_CLAIM = 'Identifier (sid) claim must be a number present in the token';
+
+    /**
+     * @var string
+     */
     public const MSG_BAD_SIGNATURE = 'Cannot verify signature';
 
     /**
@@ -338,5 +343,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(sprintf(self::MSG_UNSUPPORTED_SIGNING_ALGORITHM, $algorithm), 0, $previous);
+    }
+
+    public static function missingSidClaim(
+        ?\Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_MISSING_SID_CLAIM, 0, $previous);
     }
 }

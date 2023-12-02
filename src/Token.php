@@ -140,6 +140,15 @@ final class Token implements TokenInterface
         return null;
     }
 
+    public function getIdentifier(): ?string
+    {
+        if (is_string($claim = $this->getParser()->getClaim('sid'))) {
+            return $claim;
+        }
+
+        return null;
+    }
+
     public function getIssued(): ?int
     {
         $claim = $this->getParser()->getClaim('iat');
