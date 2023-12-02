@@ -19,7 +19,7 @@ final class SdkState implements ConfigurableContract
     /**
      * SdkState Constructor.
      *
-     * @param null|array<mixed>  $configuration          Optional. Pass an array of parameter keys and values to define the internal state of the SDK.
+     * @param null|array<mixed>  $configuration         Optional. Pass an array of parameter keys and values to define the internal state of the SDK.
      * @param null|string        $idToken               Optional. The id token currently in use for the session, if available.
      * @param null|string        $accessToken           Optional. The access token currently in use for the session, if available.
      * @param null|array<string> $accessTokenScope      Optional. The scopes from the access token for the session, if available.
