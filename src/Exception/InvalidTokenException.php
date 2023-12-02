@@ -125,12 +125,12 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_MISSING_SUB_CLAIM = 'Subject (sub) claim must be a string present in the token';
+    public const MSG_MISSING_SUB_AND_SID_CLAIMS = 'Subject (sub) or Identifier (sid) claim must be a string present in the token';
 
     /**
      * @var string
      */
-    public const MSG_MISSING_SUB_AND_SID_CLAIMS = 'Subject (sub) or Identifier (sid) claim must be a string present in the token';
+    public const MSG_MISSING_SUB_CLAIM = 'Subject (sub) claim must be a string present in the token';
 
     /**
      * @var string
@@ -323,6 +323,12 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         return new self(self::MSG_MISSING_SID_CLAIM, 0, $previous);
     }
 
+    public static function missingSubAndSidClaims(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_MISSING_SUB_AND_SID_CLAIMS, 0, $previous);
+    }
+
     public static function missingSubClaim(
         ?Throwable $previous = null,
     ): self {
@@ -354,11 +360,5 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(sprintf(self::MSG_UNSUPPORTED_SIGNING_ALGORITHM, $algorithm), 0, $previous);
-    }
-
-    public static function missingSubAndSidClaims(
-        ?Throwable $previous = null,
-    ): self {
-        return new self(self::MSG_MISSING_SUB_AND_SID_CLAIMS, 0, $previous);
     }
 }
