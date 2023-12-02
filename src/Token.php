@@ -6,8 +6,8 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\TokenInterface;
-use Auth0\SDK\Token\Parser;
 use Auth0\SDK\Exception\InvalidTokenException;
+use Auth0\SDK\Token\Parser;
 use Psr\Cache\CacheItemPoolInterface;
 
 use function is_array;
@@ -283,7 +283,7 @@ final class Token implements TokenInterface
                 ->issued()
                 ->authorizedParty($tokenAudience);
 
-            if (! $this->getSubject() && ! $this->getIdentifier()) {
+            if (null === $this->getSubject() && null === $this->getIdentifier()) {
                 throw InvalidTokenException::missingSubAndSidClaims();
             }
         }
