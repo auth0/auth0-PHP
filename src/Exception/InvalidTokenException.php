@@ -130,6 +130,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_MISSING_SUB_AND_SID_CLAIMS = 'Subject (sub) or Identifier (sid) claim must be a string present in the token';
+
+    /**
+     * @var string
+     */
     public const MSG_ORGANIZATION_CLAIM_BAD = 'Token organization claim (`org_id` or `org_name`) must be a string';
 
     /**
@@ -349,5 +354,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(sprintf(self::MSG_UNSUPPORTED_SIGNING_ALGORITHM, $algorithm), 0, $previous);
+    }
+
+    public static function missingSubAndSidClaims(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_MISSING_SUB_AND_SID_CLAIMS, 0, $previous);
     }
 }
