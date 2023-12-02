@@ -7,6 +7,7 @@ namespace Auth0\SDK;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Token\Parser;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Psr\Cache\CacheItemPoolInterface;
 
 use function is_array;
@@ -257,11 +258,11 @@ final class Token implements TokenInterface
 
         if (self::TYPE_LOGOUT_TOKEN === $this->type) {
             if (null !== $this->getParser()->getClaim('nonce')) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::logoutTokenNoncePresent();
+                throw InvalidTokenException::logoutTokenNoncePresent();
             }
 
             if (null !== $this->getParser()->getClaim('events')) {
-                throw \Auth0\SDK\Exception\InvalidTokenException::logoutTokenEventsPresent();
+                throw InvalidTokenException::logoutTokenEventsPresent();
             }
         }
 
@@ -275,6 +276,16 @@ final class Token implements TokenInterface
                 ->subject()
                 ->issued()
                 ->authorizedParty($tokenAudience);
+        }
+
+        if (self::TYPE_LOGOUT_TOKEN === $this->type) {
+            $validator
+                ->issued()
+                ->authorizedParty($tokenAudience);
+
+            if (! $this->getSubject() && ! $this->getIdentifier()) {
+                throw InvalidTokenException::missingSubAndSidClaims();
+            }
         }
 
         if (null !== $tokenNonce) {
