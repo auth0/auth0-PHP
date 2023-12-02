@@ -19,14 +19,14 @@ final class SdkState implements ConfigurableContract
     /**
      * SdkState Constructor.
      *
-     * @param null|array<mixed>  $configuration         Optional. Pass an array of parameter keys and values to define the internal state of the SDK.
+     * @param null|array<mixed>  $configuration          Optional. Pass an array of parameter keys and values to define the internal state of the SDK.
      * @param null|string        $idToken               Optional. The id token currently in use for the session, if available.
      * @param null|string        $accessToken           Optional. The access token currently in use for the session, if available.
      * @param null|array<string> $accessTokenScope      Optional. The scopes from the access token for the session, if available.
      * @param null|string        $refreshToken          Optional. The refresh token currently in use for the session, if available.
      * @param null|array<mixed>  $user                  Optional. An array representing the user data, if available.
      * @param null|int           $accessTokenExpiration Optional. When the $accessToken is expected to expire, if available.
-     * @param ?string            $backchannel
+     * @param ?string            $backchannel           Optional. The backchannel logout token assigned for the session, if available.
      */
     public function __construct(
         ?array $configuration = null,
