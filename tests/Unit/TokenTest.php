@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token;
+use Auth0\SDK\Token\Generator;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -198,6 +199,41 @@ it('fails validating an otherwise valid Access Token as a Logout Token', functio
     },
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_HS256)
 ]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_LOGOUT_TOKEN_NONCE_PRESENT);
+
+it('fails validating a Logout Token without `sub` or `sid` claims', function(
+    SdkConfiguration $configuration
+): void {
+    $key = TokenGenerator::generateRsaKeyPair();
+
+    $claims = [
+        // 'sub' => '__test_sub__',
+        // 'sid' => '__test_sid__',
+        'iss' => 'https://domain.test/',
+        'aud' => '__test_client_id__',
+        'auth_time' => time() - 100,
+        'exp' => time() + 1000,
+        'iat' => time() - 1000,
+        'azp' => '__test_azp__'
+    ];
+
+    $jwt = (string) Generator::create(
+        signingKey: $key['private'],
+        algorithm: Token::ALGO_RS256,
+        claims: $claims,
+        headers: []
+    );
+
+    $token = new Token($configuration, $jwt, Token::TYPE_LOGOUT_TOKEN);
+    $token->validate();
+})->with(['mocked hs256 access token' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    }
+]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_SUB_AND_SID_CLAIMS);
 
 it('fails validating a Logout Token with a `nonce` claim', function(
     SdkConfiguration $configuration,
