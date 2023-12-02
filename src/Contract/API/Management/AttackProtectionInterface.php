@@ -7,16 +7,13 @@ namespace Auth0\SDK\Contract\API\Management;
 use Auth0\SDK\Utility\Request\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * Interface AttackProtectionInterface.
- */
 interface AttackProtectionInterface
 {
     /**
      * Get breached password detection settings.
      * Required scope: `read:attack_protection`.
      *
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *
@@ -30,7 +27,7 @@ interface AttackProtectionInterface
      * Get the brute force configuration.
      * Required scope: `read:attack_protection`.
      *
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *
@@ -44,7 +41,7 @@ interface AttackProtectionInterface
      * Get the suspicious IP throttling configuration.
      * Required scope: `read:attack_protection`.
      *
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *
@@ -58,8 +55,8 @@ interface AttackProtectionInterface
      * Update breached password detection settings.
      * Required scope: `update:attack_protection`.
      *
-     * @param  array<mixed>  $body  Body content to pass with the API request. See @see for supported options.
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param array<mixed>        $body    Body content to pass with the API request. See @see for supported options.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *
@@ -74,8 +71,8 @@ interface AttackProtectionInterface
      * Update the brute force configuration.
      * Required scope: `update:attack_protection`.
      *
-     * @param  array<mixed>  $body  Body content to pass with the API request. See @see for supported options.
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param array<mixed>        $body    Body content to pass with the API request. See @see for supported options.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *
@@ -90,8 +87,8 @@ interface AttackProtectionInterface
      * Update the suspicious IP throttling configuration.
      * Required scope: `update:attack_protection`.
      *
-     * @param  array<mixed>  $body  Body content to pass with the API request. See @see for supported options.
-     * @param  RequestOptions|null  $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     * @param array<mixed>        $body    Body content to pass with the API request. See @see for supported options.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
      *
      * @throws \Auth0\SDK\Exception\NetworkException when the API request fails due to a network error
      *

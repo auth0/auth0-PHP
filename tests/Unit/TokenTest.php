@@ -20,6 +20,21 @@ beforeEach(function() {
     ]);
 });
 
+test('parse() returns a static reference to the Token class', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+    expect($token)->toBeObject();
+
+    $parsed = $token->parse();
+    expect($parsed)->toBeInstanceOf(Token::class);
+    expect($parsed)->toEqual($token);
+})->with(['mocked rs256 id token' => [
+    fn() => $this->configuration,
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_RS256)
+]]);
+
 it('accepts and successfully parses a valid RS256 ID Token', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
@@ -48,7 +63,7 @@ it('accepts and successfully parses a valid HS256 ID Token', function(
     $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
 
     expect($token)->toBeObject();
-    expect($token->getAudience()[0] ?? null)->toEqual($jwt->claims['aud'] ?? null);
+    expect($token->getAudience())->toEqual($jwt->claims['aud'] ?? null);
     expect($token->getAuthorizedParty())->toEqual($jwt->claims['azp'] ?? null);
     expect($token->getAuthTime())->toEqual($jwt->claims['auth_time'] ?? null);
     expect($token->getExpiration())->toEqual($jwt->claims['exp'] ?? null);
@@ -59,7 +74,7 @@ it('accepts and successfully parses a valid HS256 ID Token', function(
     expect($token->getSubject())->toEqual($jwt->claims['sub'] ?? null);
 })->with(['mocked hs256 id token' => [
     fn() => $this->configuration,
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256)
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['aud' => ['123', '456']])
 ]]);
 
 it('accepts and successfully parses a valid RS256 Access Token', function(
@@ -240,7 +255,7 @@ test('verify() overrides globally configured algorithm', function(
         return $this->configuration;
     },
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256)
-]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, sprintf(\Auth0\SDK\Exception\InvalidTokenException::MSG_UNEXPECTED_SIGNING_ALGORITHM, 'RS256', 'HS256'));
+]])->throws(InvalidTokenException::class, sprintf(InvalidTokenException::MSG_UNEXPECTED_SIGNING_ALGORITHM, 'RS256', 'HS256'));
 
 test('validate() returns a fluent interface', function(
     SdkConfiguration $configuration,
@@ -248,7 +263,7 @@ test('validate() returns a fluent interface', function(
     array $claims
 ): void {
     $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
-    expect($token->validate(null, null, ['__test_org__'], $claims['nonce'], 100))->toEqual($token);
+    expect($token->validate(null, null, ['org_123'], $claims['nonce'], 100))->toEqual($token);
 })->with(['mocked data' => [
     function(): SdkConfiguration {
         $this->configuration->setDomain('domain.test');
@@ -257,7 +272,7 @@ test('validate() returns a fluent interface', function(
         $this->configuration->setClientSecret('__test_client_secret__');
         return $this->configuration;
     },
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['org_id' => '__test_org__']),
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['org_id' => 'org_123']),
     fn() => ['nonce' => '__test_nonce__']
 ]]);
 
@@ -277,7 +292,7 @@ test('validate() overrides globally configured algorithm', function(
     },
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256),
     fn() => ['aud' => uniqid()]
-]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class);
+]])->throws(InvalidTokenException::class);
 
 test('toArray() returns an array', function(
     SdkConfiguration $configuration,
@@ -302,3 +317,75 @@ test('toJson() returns a valid JSON-encoded string', function(
     fn() => $this->configuration,
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256)
 ]]);
+
+test('getAudience() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['aud' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getAudience())
+        ->toBeNull();
+});
+
+test('getAuthorizedParty() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['azp' => 123]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getAuthorizedParty())
+        ->toBeNull();
+});
+
+test('getAuthTime() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['auth_time' => 'testing']);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getAuthTime())
+        ->toBeNull();
+});
+
+test('getExpiration() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['exp' => 'testing']);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getExpiration())
+        ->toBeNull();
+});
+
+test('getIssued() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['iat' => 'testing']);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getIssued())
+        ->toBeNull();
+});
+
+test('getIssuer() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['iss' => 123]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getIssuer())
+        ->toBeNull();
+});
+
+test('getNonce() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['nonce' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getNonce())
+        ->toBeNull();
+});
+
+test('getOrganization() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['org_id' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getOrganization())
+        ->toBeNull();
+});
+
+test('getSubject() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['sub' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+
+    expect($token->getSubject())
+        ->toBeNull();
+});

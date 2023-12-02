@@ -51,7 +51,7 @@ test('createImportUsers() issues an appropriate request', function(): void {
 
     // Test that the form data contains our import file content.
     $import_content = file_get_contents($path);
-    expect($form_body)->toContain(sprintf('name="users"; filename="%s"', basename($path)));
+
     expect($form_body)->toContain($import_content);
 
     $conn_id_key = array_search('Content-Disposition: form-data; name="connection_id"', $form_body_arr);

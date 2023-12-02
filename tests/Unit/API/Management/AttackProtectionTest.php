@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Auth0\SDK\Exception\ArgumentException;
+
 uses()->group('management', 'management.attack_protection');
 
 beforeEach(function(): void {
@@ -34,15 +36,15 @@ test('getSuspiciousIpThrottling() issues valid requests', function(): void {
 
 test('updateBreachedPasswordDetection() throws an error with an empty body', function(): void {
     $this->endpoint->updateBreachedPasswordDetection([]);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('updateBruteForceProtection() throws an error with an empty body', function(): void {
     $this->endpoint->updateBruteForceProtection([]);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('updateSuspiciousIpThrottling() throws an error with an empty body', function(): void {
     $this->endpoint->updateSuspiciousIpThrottling([]);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('updateBreachedPasswordDetection() issues valid requests', function(array $body): void {
     $this->endpoint->updateBreachedPasswordDetection($body);

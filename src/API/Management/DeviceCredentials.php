@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class DeviceCredentials.
  * Handles requests to the Device Credentials endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Device_Credentials
@@ -37,19 +36,35 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('device-credentials')->
-            withBody(
-                (object) Toolkit::merge([
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath(['device-credentials'])
+            ->withBody(
+                (object) Toolkit::merge([[
                     'device_name' => $deviceName,
-                    'type'        => $type,
-                    'value'       => $value,
-                    'device_id'   => $deviceId,
-                ], $body),
-            )->
-            withOptions($options)->
-            call();
+                    'type' => $type,
+                    'value' => $value,
+                    'device_id' => $deviceId,
+                ], $body]),
+            )
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')->addPath(['device-credentials', $id])
+            ->withOptions($options)
+            ->call();
     }
 
     public function get(
@@ -68,36 +83,19 @@ final class DeviceCredentials extends ManagementEndpoint implements DeviceCreden
 
         $params = Toolkit::filter([
             [
-                'user_id'   => $userId,
+                'user_id' => $userId,
                 'client_id' => $clientId,
-                'type'      => $type,
+                'type' => $type,
             ],
         ])->array()->trim()[0];
 
-        /** @var array<int|string|null> $params */
+        /** @var array<null|int|string> $params */
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('device-credentials')->
-            withParams($params)->
-            withOptions($options)->
-            call();
-    }
-
-    public function delete(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('device-credentials', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath(['device-credentials'])
+            ->withParams($params)
+            ->withOptions($options)
+            ->call();
     }
 }

@@ -12,3 +12,7 @@ phpcs.xml
 .DS_Store
 coverage
 TODO.txt
+composer.local.json
+.php-cs-fixer.cache
+composer.local.old
+pest.log

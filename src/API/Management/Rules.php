@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Rules.
  * Handles requests to the Rules endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Rules
@@ -33,33 +32,33 @@ final class Rules extends ManagementEndpoint implements RulesInterface
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('rules')->
-            withBody(
-                (object) Toolkit::merge([
-                    'name'   => $name,
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath(['rules'])
+            ->withBody(
+                (object) Toolkit::merge([[
+                    'name' => $name,
                     'script' => $script,
-                ], $body),
-            )->
-            withOptions($options)->
-            call();
+                ], $body]),
+            )
+            ->withOptions($options)
+            ->call();
     }
 
-    public function getAll(
-        ?array $parameters = null,
+    public function delete(
+        string $id,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+        [$id] = Toolkit::filter([$id])->string()->trim();
 
-        /** @var array<int|string|null> $parameters */
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('rules')->
-            withParams($parameters)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('delete')->addPath(['rules', $id])
+            ->withOptions($options)
+            ->call();
     }
 
     public function get(
@@ -72,11 +71,26 @@ final class Rules extends ManagementEndpoint implements RulesInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('rules', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')->addPath(['rules', $id])
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getAll(
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        /** @var array<null|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath(['rules'])
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
     }
 
     public function update(
@@ -95,28 +109,10 @@ final class Rules extends ManagementEndpoint implements RulesInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('rules', $id)->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
-    }
-
-    public function delete(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('rules', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('patch')->addPath(['rules', $id])
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 }

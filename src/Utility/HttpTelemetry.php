@@ -6,12 +6,20 @@ namespace Auth0\SDK\Utility;
 
 use Auth0\SDK\Auth0;
 
+use function is_array;
+
 /**
- * Class Telemetry
  * Builds, extends, modifies, and formats SDK telemetry data.
  */
 final class HttpTelemetry
 {
+    /**
+     * Additional environmental data tp send with telemetry headers, such as PHP version.
+     *
+     * @var null|array<mixed>
+     */
+    private static ?array $environment = null;
+
     /**
      * Library package name to send with telemetry headers.
      */
@@ -23,24 +31,46 @@ final class HttpTelemetry
     private static ?string $packageVersion = null;
 
     /**
-     * Additional environmental data tp send with telemetry headers, such as PHP version.
-     *
-     * @var array<mixed>|null
+     * Return a header-formatted string.
      */
-    private static ?array $environment = null;
+    public static function build(): string
+    {
+        return base64_encode(json_encode(self::get(), JSON_THROW_ON_ERROR));
+    }
 
     /**
-     * Set the main SDK name and version.
+     * Get the current header data as an array.
      *
-     * @param  string  $name  SDK name
-     * @param  string  $version  SDK version number
+     * @return array<mixed>
+     *
+     * @codeCoverageIgnore
      */
-    public static function setPackage(
-        string $name,
-        string $version,
-    ): void {
-        self::$packageName = $name;
-        self::$packageVersion = $version;
+    public static function get(): array
+    {
+        if (null === self::$packageName) {
+            self::setCorePackage();
+        }
+
+        if (is_array($response = Toolkit::filter([
+            [
+                'name' => self::$packageName,
+                'version' => self::$packageVersion,
+                'env' => self::$environment,
+            ],
+        ])->array()->trim()[0])) {
+            return $response;
+        }
+
+        return [];
+    }
+
+    /**
+     * Reset Telemetry to defaults.
+     */
+    public static function reset(): void
+    {
+        self::$environment = null;
+        self::setCorePackage();
     }
 
     /**
@@ -54,10 +84,21 @@ final class HttpTelemetry
     }
 
     /**
+     * Replace the current env data with new data.
+     *
+     * @param array<mixed> $data env data to add
+     */
+    public static function setEnvironmentData(
+        array $data,
+    ): void {
+        self::$environment = $data;
+    }
+
+    /**
      * Add an optional env property for SDK telemetry.
      *
-     * @param  string  $name  property name to set, name of dependency or platform
-     * @param  string  $version  version number of dependency or platform
+     * @param string $name    property name to set, name of dependency or platform
+     * @param string $version version number of dependency or platform
      */
     public static function setEnvProperty(
         string $name,
@@ -71,53 +112,16 @@ final class HttpTelemetry
     }
 
     /**
-     * Replace the current env data with new data.
+     * Set the main SDK name and version.
      *
-     * @param  array<mixed>  $data  env data to add
+     * @param string $name    SDK name
+     * @param string $version SDK version number
      */
-    public static function setEnvironmentData(
-        array $data,
+    public static function setPackage(
+        string $name,
+        string $version,
     ): void {
-        self::$environment = $data;
-    }
-
-    /**
-     * Get the current header data as an array.
-     *
-     * @return array<mixed>
-     */
-    public static function get(): array
-    {
-        if (null === self::$packageName) {
-            self::setCorePackage();
-        }
-
-        /** @var array<mixed> $response */
-        $response = Toolkit::filter([
-            [
-                'name'    => self::$packageName,
-                'version' => self::$packageVersion,
-                'env'     => self::$environment,
-            ],
-        ])->array()->trim()[0];
-
-        return $response;
-    }
-
-    /**
-     * Return a header-formatted string.
-     */
-    public static function build(): string
-    {
-        return base64_encode(json_encode(self::get(), JSON_THROW_ON_ERROR));
-    }
-
-    /**
-     * Reset Telemetry to defaults.
-     */
-    public static function reset(): void
-    {
-        self::$environment = null;
-        self::setCorePackage();
+        self::$packageName = $name;
+        self::$packageVersion = $version;
     }
 }

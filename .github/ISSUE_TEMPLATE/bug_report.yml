@@ -1,6 +1,5 @@
 name: Report a Bug
 description: Encountering unexpected problems or unintended behavior? Let us know!
-labels: ["Type: 🐞 Bug (Unconfirmed)", "Status: 👀 Reviewing"]
 
 body:
   - type: markdown
@@ -13,19 +12,19 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: The issue can be reproduced in a a sample app (either [webapp](https://github.com/auth0-samples/auth0-php-web-app) or [api](https://github.com/auth0-samples/auth0-php-api-samples)) (or N/A).
+        - label: This can be reproduced in [the quickstart sample application](https://github.com/auth0-samples/auth0-php-web-app).
           required: true
-        - label: I have looked into the [README](https://github.com/auth0/auth0-PHP#readme) and have not found a suitable solution or answer.
+        - label: I have reviewed [the README.md](https://github.com/auth0/auth0-PHP/blob/main/README.md) and have not found a solution.
           required: true
-        - label: I have looked into the [examples](https://github.com/auth0/auth0-PHP/blob/main/EXAMPLES.md) and have not found a suitable solution or answer.
+        - label: I have reviewed [the EXAMPLES.md](https://github.com/auth0/auth0-PHP/blob/main/EXAMPLES.md) and have not found a solution.
           required: true
-        - label: I have looked into the [API documentation](https://auth0.github.io/auth0-PHP/) and have not found a suitable solution or answer.
+        - label: I have searched [previous issues](https://github.com/auth0/auth0-PHP/issues) and have not found a solution.
           required: true
-        - label: I have searched the [issues](https://github.com/auth0/auth0-PHP/issues) and have not found a suitable solution or answer.
+        - label: I have searched [the Auth0 Community](https://community.auth0.com/tag/auth0-php) and have not found a solution.
           required: true
-        - label: I have searched the [Auth0 Community](https://community.auth0.com/tag/auth0-php) forums and have not found a suitable solution or answer.
+        - label: I agree to adhere to the [Auth0 General Contribution Guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md).
           required: true
-        - label: I agree to the terms within the [Auth0 Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md).
+        - label: I agree to uphold the [Auth0 Code of Conduct](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md).
           required: true
 
   - type: dropdown
@@ -34,6 +33,10 @@ body:
       label: SDK Version
       description: What version of our SDK are you running? (`composer show | grep auth0/auth0-php`)
       options:
+        - 8.7
+        - 8.6
+        - 8.5
+        - 8.4
         - 8.3
         - 8.2
         - 8.1

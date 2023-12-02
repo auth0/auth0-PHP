@@ -1,0 +1,48 @@
+name: Prepare PHP
+description: Prepare the PHP environment
+
+inputs:
+  php:
+    description: The PHP version to use
+    required: true
+  coverage:
+    description: The coverage extension to use
+    required: false
+    default: 'none'
+  extensions:
+    description: The PHP extensions to use
+    required: false
+    default: 'none, mbstring, curl, simplexml, dom, xmlwriter, xml, tokenizer'
+  runner:
+    description: The runner OS
+    required: false
+    default: 'ubuntu-latest'
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
+      with:
+        php-version: ${{ inputs.php }}
+        extensions: ${{ inputs.extensions }}
+        coverage: ${{ inputs.coverage }}
+      env:
+        runner: ${{ inputs.runner }}
+
+    - name: Get Composer cache directory
+      id: composer-cache
+      shell: bash
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ inputs.php }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-${{ inputs.php }}-
+
+    - name: Install dependencies
+      shell: bash
+      run: composer install --prefer-dist

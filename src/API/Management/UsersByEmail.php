@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class UsersByEmail.
  * Handles requests to the Users by Email endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Users_By_Email
@@ -27,11 +26,11 @@ final class UsersByEmail extends ManagementEndpoint implements UsersByEmailInter
             [$email, \Auth0\SDK\Exception\ArgumentException::missing('email')],
         ])->isEmail();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('users-by-email')->
-            withParam('email', $email)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath(['users-by-email'])
+            ->withParam('email', $email)
+            ->withOptions($options)
+            ->call();
     }
 }

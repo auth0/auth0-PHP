@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Event;
 
 use Auth0\SDK\Contract\Auth0Event;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\{RequestInterface, ResponseInterface};
 
 final class HttpResponseReceived implements Auth0Event
 {

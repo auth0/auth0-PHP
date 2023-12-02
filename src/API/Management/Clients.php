@@ -9,8 +9,10 @@ use Auth0\SDK\Utility\Request\RequestOptions;
 use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
+use function array_key_exists;
+use function is_array;
+
 /**
- * Class Clients.
  * Handles requests to the Clients endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Clients
@@ -31,32 +33,71 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('clients')->
-            withBody(
-                (object) Toolkit::merge([
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath(['clients'])
+            ->withBody(
+                (object) Toolkit::merge([[
                     'name' => $name,
-                ], $body),
-            )->
-            withOptions($options)->
-            call();
+                ], $body]),
+            )
+            ->withOptions($options)
+            ->call();
     }
 
-    public function getAll(
-        ?array $parameters = null,
+    public function createCredentials(
+        string $clientId,
+        array $body,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
+        [$body] = Toolkit::filter([$body])->array()->trim();
 
-        /** @var array<int|string|null> $parameters */
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+        ])->isString();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('clients')->
-            withParams($parameters)->
-            withOptions($options)->
-            call();
+        /** @var array<mixed> $body */
+
+        return $this->getHttpClient()
+            ->method('post')->addPath(['clients', $clientId, 'credentials'])
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function delete(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')->addPath(['clients', $id])
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function deleteCredential(
+        string $clientId,
+        string $credentialId,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$clientId, $credentialId] = Toolkit::filter([$clientId, $credentialId])->string()->trim();
+
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+            [$credentialId, \Auth0\SDK\Exception\ArgumentException::missing('credentialId')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')->addPath(['clients', $clientId, 'credentials', $credentialId])
+            ->withOptions($options)
+            ->call();
     }
 
     public function get(
@@ -69,11 +110,65 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('clients', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')->addPath(['clients', $id])
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getAll(
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        /** @var array<null|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath(['clients'])
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getCredential(
+        string $clientId,
+        string $credentialId,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$clientId, $credentialId] = Toolkit::filter([$clientId, $credentialId])->string()->trim();
+
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+            [$credentialId, \Auth0\SDK\Exception\ArgumentException::missing('credentialId')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')->addPath(['clients', $clientId, 'credentials', $credentialId])
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getCredentials(
+        string $clientId,
+        ?array $parameters = null,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$clientId] = Toolkit::filter([$clientId])->string()->trim();
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        Toolkit::assert([
+            [$clientId, \Auth0\SDK\Exception\ArgumentException::missing('clientId')],
+        ])->isString();
+
+        /** @var array<null|int|string> $parameters */
+
+        return $this->getHttpClient()
+            ->method('get')->addPath(['clients', $clientId, 'credentials'])
+            ->withParams($parameters)
+            ->withOptions($options)
+            ->call();
     }
 
     public function update(
@@ -88,28 +183,14 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('clients', $id)->
-            withBody($body ?? [])->
-            withOptions($options)->
-            call();
-    }
+        if (is_array($body) && array_key_exists('initiate_login_uri', $body) && null === $body['initiate_login_uri']) {
+            $body['initiate_login_uri'] = '';
+        }
 
-    public function delete(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('clients', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('patch')->addPath(['clients', $id])
+            ->withBody($body ?? [])
+            ->withOptions($options)
+            ->call();
     }
 }

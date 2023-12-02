@@ -1,4 +1,4 @@
-# Examples using auth0-PHP
+# Auth0 PHP SDK Examples
 
 - [Strategy configurations](#strategy-configurations)
 - [Logging out](#logging-out)

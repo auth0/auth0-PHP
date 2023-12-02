@@ -3,8 +3,11 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\NetworkException;
 use Auth0\SDK\Utility\HttpClient;
 use Auth0\SDK\Utility\HttpRequest;
+use Auth0\SDK\Utility\Request\FilteredRequest;
+use Auth0\SDK\Utility\Request\PaginatedRequest;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\MockDomain;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -20,8 +23,8 @@ beforeEach(function(): void {
 
 it('builds url pathes correctly', function(HttpRequest $client): void {
     expect($client->getUrl())->toEqual('');
-    expect($client->addPath('path1')->getUrl())->toEqual('path1');
-    expect($client->addPath('path2', '3')->getUrl())->toEqual('path1/path2/3');
+    expect($client->addPath(['path1'])->getUrl())->toEqual('path1');
+    expect($client->addPath(['path2', '3'])->getUrl())->toEqual('path1/path2/3');
 })->with(['mocked client' => [
     fn() => new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid())
 ]]);
@@ -31,7 +34,7 @@ it('adds field filtering params when configured', function(HttpRequest $client):
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
-        $client->withFields(new \Auth0\SDK\Utility\Request\FilteredRequest(['a', 'b', 123], true));
+        $client->withFields(new FilteredRequest(['a', 'b', 123], true));
         return $client;
     }
 ]]);
@@ -41,7 +44,7 @@ it('adds classic pagination params when configured', function(HttpRequest $clien
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
-        $client->withPagination(new \Auth0\SDK\Utility\Request\PaginatedRequest(5, 10, true));
+        $client->withPagination(new PaginatedRequest(5, 10, true));
         return $client;
     }
 ]]);
@@ -51,7 +54,7 @@ it('adds checkpoints pagination params when configured', function(HttpRequest $c
 })->with(['mocked client' => [
     function(): HttpRequest {
         $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid());
-        $client->withPagination(new \Auth0\SDK\Utility\Request\PaginatedRequest(null, 25, null, '123456'));
+        $client->withPagination(new PaginatedRequest(null, 25, null, '123456'));
         return $client;
     }
 ]]);
@@ -130,10 +133,12 @@ test('withParam() replaces a parameter in the URL', function(string $parameter, 
 ]]);
 
 test('withFormParam() adds a form parameter to the request body with a `true` value', function(string $parameter, bool $value, HttpRequest $client): void {
+    $this->configuration->getHttpClient()->setFallbackResponse(HttpResponseGenerator::create());
+
     $client->withFormParam($parameter, $value);
     $client->call();
 
-    expect($client->getLastRequest()->getBody()->__toString())->toEqual($parameter . '=true');
+    expect((string) $client->getLastRequest()->getBody())->toEqual($parameter . '=true');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => true,
@@ -141,10 +146,12 @@ test('withFormParam() adds a form parameter to the request body with a `true` va
 ]]);
 
 test('withFormParam() adds a form parameter to the request body with a `false` value', function(string $parameter, bool $value, HttpRequest $client): void {
+    $this->configuration->getHttpClient()->setFallbackResponse(HttpResponseGenerator::create());
+
     $client->withFormParam($parameter, $value);
     $client->call();
 
-    expect($client->getLastRequest()->getBody()->__toString())->toEqual($parameter . '=false');
+    expect((string) $client->getLastRequest()->getBody())->toEqual($parameter . '=false');
 })->with(['mocked client and data' => [
     fn() => (string) uniqid(),
     fn() => false,
@@ -175,7 +182,7 @@ it('throws a NetworkException when the underlying client raises a ClientExceptio
     function(): HttpRequest {
         $responses = [
             (object) [
-                'exception' => new class () extends \Exception implements ClientExceptionInterface {},
+                'exception' => new class () extends Exception implements ClientExceptionInterface {},
                 'response' => HttpResponseGenerator::create('', 500)
 
             ]
@@ -183,4 +190,4 @@ it('throws a NetworkException when the underlying client raises a ClientExceptio
 
         return new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'get', '/' . uniqid(), [], null, $responses);
     }
-]])->throws(\Auth0\SDK\Exception\NetworkException::class);
+]])->throws(NetworkException::class);

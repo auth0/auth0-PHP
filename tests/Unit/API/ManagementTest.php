@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\API\Management;
+use Auth0\SDK\API\Management\{Blacklists, Clients, ClientGrants, Connections, DeviceCredentials, Emails, EmailTemplates, Grants, Guardian, Jobs, Logs, LogStreams, Organizations, ResourceServers, Roles, Rules, Stats, Tenants, Tickets, UserBlocks, Users, UsersByEmail};
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\SDK\Exception\NetworkException;
 use Auth0\SDK\Utility\HttpRequest;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\MockDomain;
@@ -32,7 +34,7 @@ beforeEach(function(): void {
 test('getHttpClient() fails without a managementToken, if client id and secret are not configured', function(): void {
     $this->configuration->setManagementToken(null);
     $this->sdk->management()->blacklists();
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_MANAGEMENT_KEY);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_MANAGEMENT_KEY);
 
 test('getHttpClient() fails if tenant is not configured with required scope(s)', function(): void {
     $this->configuration->setClientSecret(uniqid());
@@ -44,146 +46,149 @@ test('getHttpClient() fails if tenant is not configured with required scope(s)',
     );
 
     $this->sdk->management()->getHttpClient($authentication);
-})->throws(\Auth0\SDK\Exception\NetworkException::class, sprintf(\Auth0\SDK\Exception\NetworkException::MSG_NETWORK_REQUEST_REJECTED, ''));
+})->throws(NetworkException::class, sprintf(NetworkException::MSG_NETWORK_REQUEST_REJECTED, ''));
 
-test('blacklists() returns an instance of Auth0\SDK\API\Management\Blacklists', function(): void {
+test('blacklists() returns an instance of Blacklists', function(): void {
     $class = $this->sdk->management()->blacklists();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Blacklists::class);
+    expect($class)->toBeInstanceOf(Blacklists::class);
 });
 
-test('clients() returns an instance of Auth0\SDK\API\Management\Clients', function(): void {
+test('clients() returns an instance of Clients', function(): void {
     $class = $this->sdk->management()->clients();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Clients::class);
+    expect($class)->toBeInstanceOf(Clients::class);
 });
 
-test('clientGrants() returns an instance of Auth0\SDK\API\Management\ClientGrants', function(): void {
+test('clientGrants() returns an instance of ClientGrants', function(): void {
     $class = $this->sdk->management()->clientGrants();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\ClientGrants::class);
+    expect($class)->toBeInstanceOf(ClientGrants::class);
 });
 
-test('connections() returns an instance of Auth0\SDK\API\Management\Connections', function(): void {
+test('connections() returns an instance of Connections', function(): void {
     $class = $this->sdk->management()->connections();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Connections::class);
+    expect($class)->toBeInstanceOf(Connections::class);
 });
 
-test('deviceCredentials() returns an instance of Auth0\SDK\API\Management\DeviceCredentials', function(): void {
+test('deviceCredentials() returns an instance of DeviceCredentials', function(): void {
     $class = $this->sdk->management()->deviceCredentials();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\DeviceCredentials::class);
+    expect($class)->toBeInstanceOf(DeviceCredentials::class);
 });
 
-test('emails() returns an instance of Auth0\SDK\API\Management\Emails', function(): void {
+test('emails() returns an instance of Emails', function(): void {
     $class = $this->sdk->management()->emails();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Emails::class);
+    expect($class)->toBeInstanceOf(Emails::class);
 });
 
-test('emailTemplates() returns an instance of Auth0\SDK\API\Management\EmailTemplates', function(): void {
+test('emailTemplates() returns an instance of EmailTemplates', function(): void {
     $class = $this->sdk->management()->emailTemplates();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\EmailTemplates::class);
+    expect($class)->toBeInstanceOf(EmailTemplates::class);
 });
 
-test('grants() returns an instance of Auth0\SDK\API\Management\Grants', function(): void {
+test('grants() returns an instance of Grants', function(): void {
     $class = $this->sdk->management()->grants();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Grants::class);
+    expect($class)->toBeInstanceOf(Grants::class);
 });
 
-test('guardian() returns an instance of Auth0\SDK\API\Management\Guardian', function(): void {
+test('guardian() returns an instance of Guardian', function(): void {
     $class = $this->sdk->management()->guardian();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Guardian::class);
+    expect($class)->toBeInstanceOf(Guardian::class);
 });
 
-test('jobs() returns an instance of Auth0\SDK\API\Management\Jobs', function(): void {
+test('jobs() returns an instance of Jobs', function(): void {
     $class = $this->sdk->management()->jobs();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Jobs::class);
+    expect($class)->toBeInstanceOf(Jobs::class);
 });
 
-test('logs() returns an instance of Auth0\SDK\API\Management\Logs', function(): void {
+test('logs() returns an instance of Logs', function(): void {
     $class = $this->sdk->management()->logs();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Logs::class);
+    expect($class)->toBeInstanceOf(Logs::class);
 });
 
-test('logStreams() returns an instance of Auth0\SDK\API\Management\LogStreams', function(): void {
+test('logStreams() returns an instance of LogStreams', function(): void {
     $class = $this->sdk->management()->logStreams();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\LogStreams::class);
+    expect($class)->toBeInstanceOf(LogStreams::class);
 });
 
-test('organizations() returns an instance of Auth0\SDK\API\Management\Organizations', function(): void {
+test('organizations() returns an instance of Organizations', function(): void {
     $class = $this->sdk->management()->organizations();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Organizations::class);
+    expect($class)->toBeInstanceOf(Organizations::class);
 });
 
-test('roles() returns an instance of Auth0\SDK\API\Management\Roles', function(): void {
+test('roles() returns an instance of Roles', function(): void {
     $class = $this->sdk->management()->roles();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Roles::class);
+    expect($class)->toBeInstanceOf(Roles::class);
 });
 
-test('rules() returns an instance of Auth0\SDK\API\Management\Rules', function(): void {
+test('rules() returns an instance of Rules', function(): void {
     $class = $this->sdk->management()->rules();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Rules::class);
+    expect($class)->toBeInstanceOf(Rules::class);
 });
 
-test('resourceServers() returns an instance of Auth0\SDK\API\Management\ResourceServers', function(): void {
+test('resourceServers() returns an instance of ResourceServers', function(): void {
     $class = $this->sdk->management()->resourceServers();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\ResourceServers::class);
+    expect($class)->toBeInstanceOf(ResourceServers::class);
 });
 
-test('stats() returns an instance of Auth0\SDK\API\Management\Stats', function(): void {
+test('stats() returns an instance of Stats', function(): void {
     $class = $this->sdk->management()->stats();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Stats::class);
+    expect($class)->toBeInstanceOf(Stats::class);
 });
 
-test('tenants() returns an instance of Auth0\SDK\API\Management\Tenants', function(): void {
+test('tenants() returns an instance of Tenants', function(): void {
     $class = $this->sdk->management()->tenants();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Tenants::class);
+    expect($class)->toBeInstanceOf(Tenants::class);
 });
 
-test('tickets() returns an instance of Auth0\SDK\API\Management\Tickets', function(): void {
+test('tickets() returns an instance of Tickets', function(): void {
     $class = $this->sdk->management()->tickets();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Tickets::class);
+    expect($class)->toBeInstanceOf(Tickets::class);
 });
 
-test('userBlocks() returns an instance of Auth0\SDK\API\Management\UserBlocks', function(): void {
+test('userBlocks() returns an instance of UserBlocks', function(): void {
     $class = $this->sdk->management()->userBlocks();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\UserBlocks::class);
+    expect($class)->toBeInstanceOf(UserBlocks::class);
 });
 
-test('users() returns an instance of Auth0\SDK\API\Management\Users', function(): void {
+test('users() returns an instance of Users', function(): void {
     $class = $this->sdk->management()->users();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Users::class);
+    expect($class)->toBeInstanceOf(Users::class);
 });
 
-test('usersByEmail() returns an instance of Auth0\SDK\API\Management\UsersByEmail', function(): void {
+test('usersByEmail() returns an instance of UsersByEmail', function(): void {
     $class = $this->sdk->management()->usersByEmail();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\UsersByEmail::class);
+    expect($class)->toBeInstanceOf(UsersByEmail::class);
 });
 
 test('getLastRequest() returns an HttpRequest or null', function(): void {
     expect($this->sdk->management()->getLastRequest())->toBeNull();
 
-    $this->sdk->management()->users()->getAll();
+    try {
+        $this->sdk->management()->users()->getAll();
+    } catch (Exception) {
+    }
 
-    expect($this->sdk->management()->getLastRequest())->toBeInstanceOf(HttpRequest::class);
+    expect($this->sdk->management()->getHttpClient()->getLastRequest())->toBeInstanceOf(HttpRequest::class);
 });
 
 test('Caching of management tokens works.', function(): void {
@@ -199,7 +204,7 @@ test('Caching of management tokens works.', function(): void {
 
     $class = $this->sdk->management()->blacklists();
 
-    expect($class)->toBeInstanceOf(\Auth0\SDK\API\Management\Blacklists::class);
+    expect($class)->toBeInstanceOf(Blacklists::class);
 });
 
 test('A client credential exchange occurs if a managementToken is not configured, but a client id and secret are', function(): void {

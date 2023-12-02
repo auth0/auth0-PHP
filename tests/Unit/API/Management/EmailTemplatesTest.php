@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Auth0\SDK\Exception\ArgumentException;
+
 uses()->group('management', 'management.email_templates');
 
 beforeEach(function(): void {
@@ -10,27 +12,27 @@ beforeEach(function(): void {
 
 test('create() throws an error when missing `template`', function(): void {
     $this->endpoint->create('', '', '', '', '', false);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'template'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'template'));
 
 
 test('create() throws an error when missing `body`', function(): void {
     $this->endpoint->create(uniqid(), '', '', '' , '', false);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 
 test('create() throws an error when missing `from`', function(): void {
     $this->endpoint->create(uniqid(), uniqid(), '', '' , '', false);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'from'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'from'));
 
 
 test('create() throws an error when missing `subject`', function(): void {
     $this->endpoint->create(uniqid(), uniqid(), uniqid(), '', '', false);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'subject'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'subject'));
 
 
 test('create() throws an error when missing `syntax`', function(): void {
     $this->endpoint->create(uniqid(), uniqid(), uniqid(), uniqid(), '', false);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'syntax'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'syntax'));
 
 test('create() issues valid requests', function(): void {
     $template = uniqid();

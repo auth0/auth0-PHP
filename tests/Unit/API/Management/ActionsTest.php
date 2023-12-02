@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Auth0\SDK\Exception\ArgumentException;
 use Auth0\Tests\Utilities\MockDomain;
 
 uses()->group('management', 'management.actions');
@@ -68,7 +69,7 @@ test('create() issues valid requests', function(array $body): void {
 
 test('create() throws an error with an empty body', function(): void {
     $this->endpoint->create([]);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('getAll() issues valid requests', function(): void {
     $this->endpoint->getAll();
@@ -104,7 +105,7 @@ test('get() issues valid requests', function(string $id): void {
 
 test('get() throws an error with an empty id', function(): void {
     $this->endpoint->get('');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('update() issues valid requests', function(string $id, array $body): void {
     $this->endpoint->update($id, $body);
@@ -165,11 +166,11 @@ test('update() issues valid requests', function(string $id, array $body): void {
 
 test('update() throws an error with an empty id', function(): void {
     $this->endpoint->update('', ['testing' => true]);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('update() throws an error with an empty body', function(): void {
     $this->endpoint->update(uniqid(), []);
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('delete() issues valid requests', function(string $id, ?bool $force): void {
     $this->endpoint->delete($id, $force);
@@ -197,13 +198,13 @@ test('delete() throws an error with an empty id', function(string $id, ?bool $fo
 })->with(['empty id' => [
     fn() => '',
     fn() => null
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('deploy() issues valid requests', function(string $id): void {
     $this->endpoint->deploy($id);
 
     expect($this->api->getRequestMethod())->toEqual('POST');
-    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/' . $id . '/deploy');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/actions/actions/' . $id . '/deploy');
     expect($this->api->getRequestQuery())->toBeEmpty();
 })->with(['valid id' => [
     fn() => uniqid()
@@ -213,7 +214,7 @@ test('deploy() throws an error with an empty id', function(string $id): void {
     $this->endpoint->deploy($id);
 })->with(['empty id' => [
     fn() => ''
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('test() issues valid requests', function(string $id, array $body): void {
     $this->endpoint->test($id, $body);
@@ -252,14 +253,14 @@ test('test() throws an error with an empty id', function(string $id, array $body
             ],
         ],
     ]
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('test() throws an error with an empty body', function(string $id, array $body): void {
     $this->endpoint->test($id, $body);
 })->with(['empty body' => [
     fn() => uniqid(),
     fn() => []
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('getVersion() issues valid requests', function(string $id, string $actionId): void {
     $this->endpoint->getVersion($id, $actionId);
@@ -276,14 +277,14 @@ test('getVersion() throws an error with an empty id', function(string $id, strin
 })->with(['empty id' => [
     fn() => '',
     fn() => uniqid()
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('getVersion() throws an error with an empty action id', function(string $id, string $actionId): void {
     $this->endpoint->getVersion($id, $actionId);
 })->with(['empty action id' => [
     fn() => uniqid(),
     fn() => ''
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'actionId'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'actionId'));
 
 test('getVersions() issues valid requests', function(string $actionId): void {
     $this->endpoint->getVersions($actionId);
@@ -298,7 +299,7 @@ test('getVersions() throws an error with an empty action id', function(string $a
     $this->endpoint->getVersions($actionId);
 })->with(['empty action id' => [
     fn() => ''
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'actionId'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'actionId'));
 
 test('rollbackVersion() issues valid requests', function(string $id, string $actionId): void {
     $this->endpoint->rollbackVersion($id, $actionId);
@@ -316,14 +317,14 @@ test('rollbackVersion() throws an error with an empty id', function(string $id, 
 })->with(['empty id' => [
     fn() => '',
     fn() => uniqid(),
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
 
 test('rollbackVersion() throws an error with an action id', function(string $id, string $actionId): void {
     $this->endpoint->rollbackVersion($id, $actionId);
 })->with(['empty action id' => [
     fn() => uniqid(),
     fn() => '',
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'actionId'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'actionId'));
 
 test('getTriggers() issues valid requests', function(): void {
     $this->endpoint->getTriggers();
@@ -402,14 +403,14 @@ test('updateTriggerBindings() throws an error with an empty trigger id', functio
             ],
         ],
     ]
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'triggerId'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'triggerId'));
 
 test('updateTriggerBindings() throws an error with an empty body', function(string $triggerId, array $body): void {
     $this->endpoint->updateTriggerBindings($triggerId, $body);
 })->with(['empty id' => [
     fn() => uniqid(),
     fn() => [],
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'body'));
 
 test('getExecution() issues valid requests', function(string $id): void {
     $this->endpoint->getExecution($id);
@@ -425,4 +426,4 @@ test('getExecution() throws an error with an empty id', function(string $id): vo
     $this->endpoint->getExecution($id);
 })->with(['valid trigger id' => [
     fn() => '',
-]])->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));
+]])->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'id'));

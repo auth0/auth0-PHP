@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Auth0\SDK\Exception\ArgumentException;
+
 uses()->group('management', 'management.client_grants');
 
 beforeEach(function(): void {
@@ -10,11 +12,11 @@ beforeEach(function(): void {
 
 test('create() throws an error when clientId is missing', function(): void {
     $this->endpoint->create('', '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'clientId'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'clientId'));
 
 test('create() throws an error when audience is missing', function(): void {
     $this->endpoint->create(uniqid(), '');
-})->throws(\Auth0\SDK\Exception\ArgumentException::class, sprintf(\Auth0\SDK\Exception\ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'audience'));
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'audience'));
 
 test('create() issues an appropriate request', function(): void {
     $clientId = uniqid();
@@ -122,4 +124,63 @@ test('delete() issues an appropriate request', function(): void {
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/client-grants/' . $grantId);
+});
+
+test('getOrganizations() issues an appropriate request', function(): void {
+    $grantId = uniqid();
+
+    $this->endpoint->getOrganizations($grantId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/client-grants/' . $grantId . '/organizations');
+});
+
+test('getAll() issues an appropriate request with organization queries', function(): void {
+    $this->endpoint->getAll(['allow_any_organization' => true]);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/client-grants');
+
+    expect($this->api->getRequestQuery(null))->toEqual('allow_any_organization=true');
+});
+
+test('create() issues an appropriate request with organization queries', function(): void {
+    $clientId = uniqid();
+    $audience = uniqid();
+    $scope = uniqid();
+
+    $this->endpoint->create($clientId, $audience, [$scope], null, 'require', true);
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/client-grants');
+
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('client_id', $body);
+    $this->assertArrayHasKey('audience', $body);
+    $this->assertArrayHasKey('scope', $body);
+    expect($body['client_id'])->toEqual($clientId);
+    expect($body['audience'])->toEqual($audience);
+    expect($body['scope'])->toContain($scope);
+    expect($body['organization_usage'])->toEqual('require');
+    expect($body['allow_any_organization'])->toEqual(true);
+
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['client_id' => $clientId, 'audience' => $audience, 'scope' => [$scope], 'organization_usage' => 'require', 'allow_any_organization' => true]));
+});
+
+test('update() issues an appropriate request with organization queries', function(): void {
+    $grantId = uniqid();
+    $scope = uniqid();
+
+    $this->endpoint->update($grantId, [$scope], null, 'require', true);
+
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/client-grants/' . $grantId);
+
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('scope', $body);
+    expect($body['scope'])->toContain($scope);
+
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['scope' => [$scope], 'organization_usage' => 'require', 'allow_any_organization' => true]));
 });

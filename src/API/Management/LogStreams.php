@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class LogStreams.
  * Handles requests to the Log Streams endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Log_Streams
@@ -34,10 +33,10 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
             [$sink, \Auth0\SDK\Exception\ArgumentException::missing('sink')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('log-streams')->
-            withBody(
+        return $this->getHttpClient()
+            ->method('post')
+            ->addPath(['log-streams'])
+            ->withBody(
                 (object) Toolkit::filter([
                     [
                         'type' => $type,
@@ -45,19 +44,25 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
                         'name' => $name,
                     ],
                 ])->array()->trim()[0],
-            )->
-            withOptions($options)->
-            call();
+            )
+            ->withOptions($options)
+            ->call();
     }
 
-    public function getAll(
+    public function delete(
+        string $id,
         ?RequestOptions $options = null,
     ): ResponseInterface {
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('log-streams')->
-            withOptions($options)->
-            call();
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')->addPath(['log-streams', $id])
+            ->withOptions($options)
+            ->call();
     }
 
     public function get(
@@ -70,11 +75,20 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
             [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
         ])->isString();
 
-        return $this->getHttpClient()->
-            method('get')->
-            addPath('log-streams', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('get')->addPath(['log-streams', $id])
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getAll(
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        return $this->getHttpClient()
+            ->method('get')
+            ->addPath(['log-streams'])
+            ->withOptions($options)
+            ->call();
     }
 
     public function update(
@@ -93,28 +107,10 @@ final class LogStreams extends ManagementEndpoint implements LogStreamsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('patch')->
-            addPath('log-streams', $id)->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
-    }
-
-    public function delete(
-        string $id,
-        ?RequestOptions $options = null,
-    ): ResponseInterface {
-        [$id] = Toolkit::filter([$id])->string()->trim();
-
-        Toolkit::assert([
-            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
-        ])->isString();
-
-        return $this->getHttpClient()->
-            method('delete')->
-            addPath('log-streams', $id)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('patch')->addPath(['log-streams', $id])
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 }

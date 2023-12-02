@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Store\CookieStore;
 use Auth0\Tests\Utilities\MockCrypto;
 use Auth0\Tests\Utilities\MockDataset;
@@ -60,18 +61,6 @@ it('populates state from a chunked $_COOKIE correctly', function(array $state): 
     $this->store->getState();
 
     expect($this->store->get($this->exampleKey))->toEqual($state);
-})->with(['mocked state' => [
-    fn() => MockDataset::state()
-]]);
-
-it('does not populate state from a malformed $_COOKIE', function(array $state): void {
-    $cookieNamespace = $this->store->getNamespace() . '_0';
-
-    $_COOKIE[$cookieNamespace] = [$this->exampleKey => $state];
-
-    $this->store->getState();
-
-    expect($this->store->get($this->exampleKey))->toBeNull();
 })->with(['mocked state' => [
     fn() => MockDataset::state()
 ]]);
@@ -160,7 +149,7 @@ test('encrypt() throws an exception if a cookie secret is not configured', funct
     $this->store = new CookieStore($this->configuration, $this->namespace);
 
     $this->store->set('testing', 'this should throw an error');
-})->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
+})->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
 
 test('decrypt() throws an exception if a cookie secret is not configured', function(array $state): void {
     $this->configuration = new SdkConfiguration([
@@ -176,7 +165,7 @@ test('decrypt() throws an exception if a cookie secret is not configured', funct
     $this->store->getState();
 })->with(['mocked state' => [
     fn() => MockDataset::state()
-]])->throws(\Auth0\SDK\Exception\ConfigurationException::class, \Auth0\SDK\Exception\ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
+]])->throws(ConfigurationException::class, ConfigurationException::MSG_REQUIRES_COOKIE_SECRET);
 
 test('decrypt() returns null if malformed JSON is encoded', function(): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
@@ -260,3 +249,21 @@ test('encrypt() returns nothing with invalid crypto properties', function(): voi
     $this->store->setEncrypted(false);
     expect($this->store->encrypt($state, ['encoded1' => false]))->toEqual('');
 });
+
+it('enumerates $_COOKIE with non-string keys', function(array $state): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+
+    $encrypted = MockCrypto::cookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
+
+    $_COOKIE[$cookieNamespace] = $encrypted;
+    $_COOKIE['123'] = uniqid();
+    $_COOKIE[456] = uniqid();
+    $_COOKIE['abc'] = uniqid();
+
+    $this->store->getState();
+    $this->store->setState(true);
+
+    expect($this->store->get($this->exampleKey))->toEqual($state);
+})->with(['mocked state' => [
+    fn() => MockDataset::state()
+]]);

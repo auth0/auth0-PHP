@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token\Parser;
 use Auth0\Tests\Utilities\TokenGenerator;
 use Auth0\Tests\Utilities\TokenGeneratorResponse;
@@ -25,7 +26,7 @@ it('throws an exception with json error on decoding headers', function(
     new Parser($configuration, sprintf('1234567879.%s.%s', uniqid(), uniqid()));
 })->with(['mocked configured' => [
     fn() => $this->configuration
-]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, 'Malformed UTF-8 characters, possibly incorrectly encoded');
+]])->throws(InvalidTokenException::class, 'Malformed UTF-8 characters, possibly incorrectly encoded');
 
 it('throws an exception with json error on decoding claims', function(
     SdkConfiguration $configuration
@@ -33,7 +34,7 @@ it('throws an exception with json error on decoding claims', function(
      new Parser($configuration, sprintf('%s.1234567879.%s', uniqid(), uniqid()));
 })->with(['mocked configured' => [
     fn() => $this->configuration
-]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, 'Malformed UTF-8 characters, possibly incorrectly encoded');
+]])->throws(InvalidTokenException::class, 'Malformed UTF-8 characters, possibly incorrectly encoded');
 
 it('throws an exception with malformed token separators', function(
     SdkConfiguration $configuration
@@ -41,7 +42,7 @@ it('throws an exception with malformed token separators', function(
     $token = new Parser($configuration, uniqid() . uniqid());
 })->with(['mocked configured' => [
     fn() => $this->configuration
-]])->throws(\Auth0\SDK\Exception\InvalidTokenException::class, \Auth0\SDK\Exception\InvalidTokenException::MSG_BAD_SEPARATORS);
+]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_BAD_SEPARATORS);
 
 it('accepts and successfully parses a valid RS256 ID Token', function(
     SdkConfiguration $configuration,

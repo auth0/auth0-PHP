@@ -10,7 +10,6 @@ use Auth0\SDK\Utility\Toolkit;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Tickets.
  * Handles requests to the Tickets endpoint of the v2 Management API.
  *
  * @see https://auth0.com/docs/api/management/v2#!/Tickets
@@ -31,16 +30,15 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
 
         /** @var array<mixed> $body */
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('tickets', 'email-verification')->
-            withBody(
-                (object) Toolkit::merge([
+        return $this->getHttpClient()
+            ->method('post')->addPath(['tickets', 'email-verification'])
+            ->withBody(
+                (object) Toolkit::merge([[
                     'user_id' => $userId,
-                ], $body),
-            )->
-            withOptions($options)->
-            call();
+                ], $body]),
+            )
+            ->withOptions($options)
+            ->call();
     }
 
     public function createPasswordChange(
@@ -53,11 +51,10 @@ final class Tickets extends ManagementEndpoint implements TicketsInterface
             [$body, \Auth0\SDK\Exception\ArgumentException::missing('body')],
         ])->isArray();
 
-        return $this->getHttpClient()->
-            method('post')->
-            addPath('tickets', 'password-change')->
-            withBody((object) $body)->
-            withOptions($options)->
-            call();
+        return $this->getHttpClient()
+            ->method('post')->addPath(['tickets', 'password-change'])
+            ->withBody((object) $body)
+            ->withOptions($options)
+            ->call();
     }
 }

@@ -37,7 +37,7 @@ test('issue() assigns data correctly', function(string $key): void {
     $value = $this->transient->issue($key);
 
     expect($this->store->get($key))->toEqual($value);
-    expect(mb_strlen($value))->toBeGreaterThanOrEqual(16);
+    expect(strlen($value))->toBeGreaterThanOrEqual(16);
 })->with(['random key' => [
     fn() => uniqid(),
 ]]);

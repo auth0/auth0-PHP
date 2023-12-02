@@ -1,0 +1,88 @@
+name: Snyk
+
+on:
+  merge_group:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "30 0 1,15 * *"
+
+permissions:
+  contents: read
+
+env:
+  DX_SDKS_SNYK_ORGANIZATION: 8303ea71-ac72-4ae6-9cd0-ae2f3eda82b7
+  DX_SDKS_SNYK_PROJECT: auth0/auth0-PHP
+  DX_SDKS_SNYK_TAGS: Refactoring-target:DX,Refactoring-origin:auth0-sdks
+  DX_SDKS_SNYK_REMOTE_REPO_URL: https://github.com/auth0/auth0-PHP
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  authorize:
+    name: Authorize
+    environment: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request_target' && github.event.pull_request.head.repo.full_name != github.repository && 'external' || 'internal' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: true
+
+  configure:
+    name: Configure
+    needs: [authorize]
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+
+      - id: set-matrix
+        run: echo "matrix=$(jq -c . < ./.github/workflows/matrix.json)" >> $GITHUB_OUTPUT
+
+  check:
+    needs: [configure]
+
+    name: Check for Vulnerabilities
+    runs-on: ubuntu-latest
+
+    steps:
+      - if: github.actor == 'dependabot[bot]' || github.event_name == 'merge_group'
+        run: exit 0
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ fromJson(needs.configure.outputs.matrix).include[0].php }}
+
+      - run: npm install snyk -g
+
+      - if: github.ref == 'refs/heads/main'
+        run: snyk monitor --file=composer.lock --org=$SNYK_ORGANIZATION --project-name=$SNYK_PROJECT --project-tags=$SNYK_TAGS --remote-repo-url=$SNYK_REMOTE_REPO --target-reference="$(git branch --show-current)"
+        env:
+          SNYK_TOKEN: ${{ secrets.DX_SDKS_SNYK_TOKEN }}
+          SNYK_ORGANIZATION: ${{ env.DX_SDKS_SNYK_ORGANIZATION }}
+          SNYK_PROJECT: ${{ env.DX_SDKS_SNYK_PROJECT }}
+          SNYK_TAGS: ${{ env.DX_SDKS_SNYK_TAGS }}
+          SNYK_REMOTE_REPO: ${{ env.DX_SDKS_SNYK_REMOTE_REPO_URL }}
+        continue-on-error: true
+
+      - run: snyk test --file=composer.lock --org=$SNYK_ORGANIZATION --project-name=$SNYK_PROJECT --remote-repo-url=$SNYK_REMOTE_REPO
+        env:
+          SNYK_TOKEN: ${{ secrets.DX_SDKS_SNYK_TOKEN }}
+          SNYK_ORGANIZATION: ${{ env.DX_SDKS_SNYK_ORGANIZATION }}
+          SNYK_PROJECT: ${{ env.DX_SDKS_SNYK_PROJECT }}
+          SNYK_TAGS: ${{ env.DX_SDKS_SNYK_TAGS }}
+          SNYK_REMOTE_REPO: ${{ env.DX_SDKS_SNYK_REMOTE_REPO_URL }}
