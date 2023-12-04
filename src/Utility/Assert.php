@@ -7125,14 +7125,8 @@ final class Assert
      * @param string $message
      *
      * @throws InvalidArgumentException
-     *
-     * @psalm-pure this method is not supposed to perform side-effects
-     *
-     * @psalm-return never
-     *
-     * @return never
      */
-    private static function reportInvalidArgument($message): void
+    private static function reportInvalidArgument($message): never
     {
         throw new InvalidArgumentException($message);
     }
