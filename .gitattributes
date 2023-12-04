@@ -3,10 +3,10 @@ docs/                  export-ignore
 examples/              export-ignore
 tests/                 export-ignore
 vendor/                export-ignore
-.editorconfig          export-ignore
+.editorconfig           export-ignore
 .gitattributes         export-ignore
 .gitignore             export-ignore
-.php-cs-fixer.dist.php export-ignore
+.php-cs-fixer.dist.php  export-ignore
 .semgrepignore         export-ignore
 .shiprc                export-ignore
 CHANGELOG.ARCHIVE.md   export-ignore
