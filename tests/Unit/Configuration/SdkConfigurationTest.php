@@ -1727,7 +1727,7 @@ test('getBackchannelLogoutCache methods function as expected', function(): void
     expect($config->hasBackchannelLogoutCache())->toBeFalse();
     expect($config->getBackchannelLogoutCache())->toBeNull();
 
-    $config->setBackchannelTokenCache($cache);
+    $config->setBackchannelLogoutCache($cache);
     expect($config->hasBackchannelLogoutCache())->toBeTrue();
     expect($config->getBackchannelLogoutCache())->toEqual($cache);
 });
@@ -1740,3 +1740,26 @@ test('getBackchannelLogoutCache() throws an assigned exception when not configur
 
     $config->getBackchannelLogoutCache(new Exception('This should be thrown'));
 })->throws(Exception::class, 'This should be thrown');
+
+test('getBackchannelLogoutExpires methods function as expected', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $randomExpiration = random_int(1, 1000);
+
+    expect($config->getBackchannelLogoutExpires())->toEqual(2592000);
+
+    $config->setBackchannelLogoutExpires($randomExpiration);
+    expect($config->getBackchannelLogoutExpires())->toEqual($randomExpiration);
+});
+
+test('setBackchannelLogoutExpires() throws an assigned exception when set to 0', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $config->setBackchannelLogoutExpires(0);
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_VALIDATION_FAILED, 'backchannelLogoutExpires'));

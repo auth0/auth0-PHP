@@ -492,7 +492,7 @@ final class Auth0 implements Auth0Interface
         ]));
 
         // Let the backchannel logout request fall off after a reasonable amount of time.
-        $request->expiresAfter(time() + (86400 * 30));
+        $request->expiresAfter(time() + $this->configuration()->getBackchannelLogoutExpires());
 
         // Finally, add this to the Backchannel Logout cache.
         $cache->save($request);

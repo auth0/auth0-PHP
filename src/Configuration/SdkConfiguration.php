@@ -109,6 +109,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param string                           $clientAssertionSigningAlgorithm Defaults to RS256. Algorithm to use for signing the client assertion.
      * @param bool                             $pushedAuthorizationRequest      Defaults to false. If true, the SDK will attempt to use the Pushed Authorization Requests for authentication. See https://www.rfc-editor.org/rfc/rfc9126.html#.
      * @param null|CacheItemPoolInterface      $backchannelLogoutCache          A PSR-6 compatible cache adapter for storing backchannel logout tokens.
+     * @param int                              $backchannelLogoutExpires        Defaults to 2592000 (30 days). How long, in seconds, before a backchannel logout request expires from the cache. This should be greater than your $cookieExpires value, particularly if you are using rolling sessions.
      *
      * @throws ConfigurationException when a valid `$strategy` is not specified
      */
@@ -160,6 +161,7 @@ final class SdkConfiguration implements ConfigurableContract
         private string $clientAssertionSigningAlgorithm = Token::ALGO_RS256,
         private bool $pushedAuthorizationRequest = false,
         private ?CacheItemPoolInterface $backchannelLogoutCache = null,
+        private int $backchannelLogoutExpires = 2592000,
     ) {
         if (null !== $configuration && [] !== $configuration) {
             $this->applyConfiguration($configuration);
@@ -277,6 +279,11 @@ final class SdkConfiguration implements ConfigurableContract
         $this->exceptionIfNull($this->backchannelLogoutCache, $exceptionIfNull);
 
         return $this->backchannelLogoutCache;
+    }
+
+    public function getBackchannelLogoutExpires(): int
+    {
+        return $this->backchannelLogoutExpires;
     }
 
     public function getClientAssertionSigningAlgorithm(): string
@@ -883,9 +890,20 @@ final class SdkConfiguration implements ConfigurableContract
         return $this;
     }
 
-    public function setBackchannelTokenCache(?CacheItemPoolInterface $backchannelLogoutCache = null): self
+    public function setBackchannelLogoutCache(?CacheItemPoolInterface $backchannelLogoutCache = null): self
     {
         $this->backchannelLogoutCache = $backchannelLogoutCache;
+
+        return $this;
+    }
+
+    public function setBackchannelLogoutExpires(int $backchannelLogoutExpires = 2592000): self
+    {
+        if ($backchannelLogoutExpires <= 0) {
+            throw ConfigurationException::validationFailed('backchannelLogoutExpires');
+        }
+
+        $this->backchannelLogoutExpires = $backchannelLogoutExpires;
 
         return $this;
     }
