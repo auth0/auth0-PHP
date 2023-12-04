@@ -1,6 +1,6 @@
 {
   "name": "auth0-samples/pushed-authorization-request",
-  "description": "Example of using Pushed Authorization Requests with Auth0 PHP",
+  "description": "Example of using Backchannel Logout with Auth0 PHP",
   "require": {
     "php": "^8.1",
     "auth0/auth0-php": "^8.10",
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "serve": [
-      "php -S 127.0.0.1:3000 src/index.php"
+      "php -S 127.0.0.1:3000 index.php"
     ],
     "pre-install-cmd": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
