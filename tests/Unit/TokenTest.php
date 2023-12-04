@@ -213,7 +213,10 @@ it('fails validating a Logout Token without `sub` or `sid` claims', function(
         'auth_time' => time() - 100,
         'exp' => time() + 1000,
         'iat' => time() - 1000,
-        'azp' => '__test_azp__'
+        'azp' => '__test_azp__',
+        'events' => [
+            'http://schemas.openid.net/event/backchannel-logout' => [],
+        ],
     ];
 
     $jwt = (string) Generator::create(
@@ -252,7 +255,7 @@ it('fails validating a Logout Token with a `nonce` claim', function(
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256, ['nonce' => '__test_nonce__'])
 ]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_LOGOUT_TOKEN_NONCE_PRESENT);
 
-it('fails validating a Logout Token with an `events` claim', function(
+it('fails validating a Logout Token without an `events` claim', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
 ): void {
@@ -266,8 +269,25 @@ it('fails validating a Logout Token with an `events` claim', function(
         $this->configuration->setClientSecret('__test_client_secret__');
         return $this->configuration;
     },
-    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256, ['events' => ['__test_event_1', '__test_event_2']])
-]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_LOGOUT_TOKEN_EVENTS_PRESENT);
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256, ['events' => null])
+]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_EVENTS_CLAIM);
+
+it('fails validating a Logout Token with a malformed `events` claim', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+    $token->validate();
+})->with(['mocked hs256 access token' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256, ['events' => ['http://schemas.openid.net/event/backchannel-logout' => true]])
+]])->throws(InvalidTokenException::class, sprintf(InvalidTokenException::MSG_BAD_EVENT_CLAIM, 'http://schemas.openid.net/event/backchannel-logout', 'object'));
 
 test('verify() returns a fluent interface', function(
     SdkConfiguration $configuration,
@@ -437,5 +457,13 @@ test('getSubject() rejects malformed claims', function(): void {
     $token = new Token($this->configuration, $jwt->token, Token::TYPE_ID_TOKEN);
 
     expect($token->getSubject())
+        ->toBeNull();
+});
+
+test('getEvents() rejects malformed claims', function(): void {
+    $jwt = TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['events' => true]);
+    $token = new Token($this->configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+
+    expect($token->getEvents())
         ->toBeNull();
 });

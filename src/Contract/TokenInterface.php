@@ -29,6 +29,13 @@ interface TokenInterface
     public function getAuthTime(): ?int;
 
     /**
+     * Get the contents of the 'events' claim. Null if not present.
+     *
+     * @return null|array<array-key, mixed>
+     */
+    public function getEvents(): ?array;
+
+    /**
      * Get the contents of the 'exp' claim. Null if not present.
      */
     public function getExpiration(): ?int;

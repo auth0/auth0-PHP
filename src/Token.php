@@ -130,6 +130,15 @@ final class Token implements TokenInterface
         return null;
     }
 
+    public function getEvents(): ?array
+    {
+        if (is_array($claim = $this->getParser()->getClaim('events'))) {
+            return $claim;
+        }
+
+        return null;
+    }
+
     public function getExpiration(): ?int
     {
         $claim = $this->getParser()->getClaim('exp');
@@ -261,8 +270,8 @@ final class Token implements TokenInterface
                 throw InvalidTokenException::logoutTokenNoncePresent();
             }
 
-            if (null !== $this->getParser()->getClaim('events')) {
-                throw InvalidTokenException::logoutTokenEventsPresent();
+            if (null === $this->getParser()->getClaim('events')) {
+                throw InvalidTokenException::missingEventsClaim();
             }
         }
 
@@ -281,7 +290,14 @@ final class Token implements TokenInterface
         if (self::TYPE_LOGOUT_TOKEN === $this->type) {
             $validator
                 ->issued()
-                ->authorizedParty($tokenAudience);
+                ->authorizedParty($tokenAudience)
+                ->events(['http://schemas.openid.net/event/backchannel-logout']);
+
+            $events = $this->getEvents();
+
+            if (! is_array($events['http://schemas.openid.net/event/backchannel-logout'] ?? null)) {
+                throw InvalidTokenException::badEventClaim('http://schemas.openid.net/event/backchannel-logout', 'object');
+            }
 
             if (null === $this->getSubject() && null === $this->getIdentifier()) {
                 throw InvalidTokenException::missingSubAndSidClaims();

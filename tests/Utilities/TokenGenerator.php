@@ -63,7 +63,10 @@ class TokenGenerator
             'auth_time' => time() - 100,
             'exp' => time() + 1000,
             'iat' => time() - 1000,
-            'azp' => '__test_azp__'
+            'azp' => '__test_azp__',
+            'events' => [
+                'http://schemas.openid.net/event/backchannel-logout' => [],
+            ],
         ];
 
         return array_merge($defaults, $overrides);

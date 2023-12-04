@@ -143,3 +143,16 @@ test('identifier() returns a valid `sid` claim', function(): void {
     $validator = (new Validator($this->claims))->identifier();
     expect($validator)->toBeInstanceOf(Validator::class);
 });
+
+test('events() throws an exception when `events` claim is missing', function(): void {
+    unset($this->claims['events']);
+    (new Validator($this->claims))->events(['missing']);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_EVENTS_CLAIM);
+
+test('events() throws an exception when `events` claim is malformed', function(): void {
+    $this->claims['events'] = [
+        // 'http://schemas.openid.net/event/backchannel-logout' => 'not an array',
+    ];
+
+    (new Validator($this->claims))->events(['http://schemas.openid.net/event/backchannel-logout']);
+})->throws(InvalidTokenException::class, sprintf(InvalidTokenException::MSG_MISMATCHED_EVENTS_CLAIM, 'http://schemas.openid.net/event/backchannel-logout', ''));

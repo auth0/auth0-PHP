@@ -15,6 +15,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_BAD_EVENT_CLAIM = '`%s` member in the `events` claim must be an %s';
+
+    /**
+     * @var string
+     */
     public const MSG_BAD_SEPARATORS = 'The JWT string must contain two dots';
 
     /**
@@ -35,11 +40,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_LOGOUT_TOKEN_EVENTS_PRESENT = 'Valid logout tokens cannot include `events` claims';
-
-    /**
-     * @var string
-     */
     public const MSG_LOGOUT_TOKEN_NONCE_PRESENT = 'Valid logout tokens cannot include `nonce` claims';
 
     /**
@@ -56,6 +56,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      * @var string
      */
     public const MSG_MISMATCHED_AZP_CLAIM = 'Authorized Party (azp) claim mismatch in the ID token; expected "%s", found "%s"';
+
+    /**
+     * @var string
+     */
+    public const MSG_MISMATCHED_EVENTS_CLAIM = 'Events (events) claim mismatch in the token; expected "%s", found "%s"';
 
     /**
      * @var string
@@ -91,6 +96,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      * @var string
      */
     public const MSG_MISSING_AZP_CLAIM = 'Authorized Party (azp) claim must be a string present in the token when Audience (aud) claim has multiple values';
+
+    /**
+     * @var string
+     */
+    public const MSG_MISSING_EVENTS_CLAIM = 'Events (events) claim must be an array of strings present in the token';
 
     /**
      * @var string
@@ -172,6 +182,14 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      */
     public const MSG_UNSUPPORTED_SIGNING_ALGORITHM = 'Signature algorithm of "%s" is not supported. Expected the token to be signed with "RS256" or "HS256"';
 
+    public static function badEventClaim(
+        string $claim,
+        string $format,
+        ?Throwable $previous = null,
+    ): self {
+        return new self(sprintf(self::MSG_BAD_EVENT_CLAIM, $claim, $format), 0, $previous);
+    }
+
     public static function badSeparators(
         ?Throwable $previous = null,
     ): self {
@@ -203,12 +221,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         return new self($message, 0, $previous);
     }
 
-    public static function logoutTokenEventsPresent(
-        ?Throwable $previous = null,
-    ): self {
-        return new self(self::MSG_LOGOUT_TOKEN_EVENTS_PRESENT, 0, $previous);
-    }
-
     public static function logoutTokenNoncePresent(
         ?Throwable $previous = null,
     ): self {
@@ -237,6 +249,14 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(sprintf(self::MSG_MISMATCHED_AZP_CLAIM, $expected, $found), 0, $previous);
+    }
+
+    public static function mismatchedEventsClaim(
+        string $expected,
+        string $found,
+        ?Throwable $previous = null,
+    ): self {
+        return new self(sprintf(self::MSG_MISMATCHED_EVENTS_CLAIM, $expected, $found), 0, $previous);
     }
 
     public static function mismatchedExpClaim(
@@ -285,6 +305,12 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(self::MSG_MISSING_AZP_CLAIM, 0, $previous);
+    }
+
+    public static function missingEventsClaim(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_MISSING_EVENTS_CLAIM, 0, $previous);
     }
 
     public static function missingExpClaim(

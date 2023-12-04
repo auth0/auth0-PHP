@@ -112,6 +112,31 @@ final class Validator implements ValidatorInterface
     }
 
     /**
+     * Validate the 'events' claim.
+     *
+     * @param array<string> $expects An array of allowed values for the 'events' claim. Successful if ANY match.
+     *
+     * @throws InvalidTokenException when claim validation fails
+     */
+    public function events(
+        array $expects,
+    ): self {
+        $events = $this->getClaim('events');
+
+        if (null === $events || ! is_array($events)) {
+            throw InvalidTokenException::missingEventsClaim();
+        }
+
+        foreach ($expects as $expect) {
+            if (! isset($events[$expect])) {
+                throw InvalidTokenException::mismatchedEventsClaim(implode(', ', $expects), implode(', ', $events));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Validate the 'exp' claim.
      *
      * @param int      $leeway leeway in seconds to allow during time calculations
@@ -137,6 +162,23 @@ final class Validator implements ValidatorInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Return a claim by it's key. Null if not present.
+     *
+     * @param string $key the claim key to search for
+     *
+     * @return null|array<mixed>|int|string
+     */
+    public function getClaim(
+        string $key,
+    ) {
+        if (! isset($this->claims[$key])) {
+            return null;
+        }
+
+        return $this->claims[$key];
     }
 
     /**
@@ -290,22 +332,5 @@ final class Validator implements ValidatorInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Return a claim by it's key. Null if not present.
-     *
-     * @param string $key the claim key to search for
-     *
-     * @return null|array<mixed>|int|string
-     */
-    private function getClaim(
-        string $key,
-    ) {
-        if (! isset($this->claims[$key])) {
-            return null;
-        }
-
-        return $this->claims[$key];
     }
 }
