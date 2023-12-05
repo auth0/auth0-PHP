@@ -144,7 +144,7 @@ $auth0 = new Auth0($configuration);
 
 $token = $auth0->decode(
   token: '...',
-  tokenType: Token::TYPE_TOKEN,
+  tokenType: Token::TYPE_ACCESS_TOKEN,
 );
 
 print_r($token);

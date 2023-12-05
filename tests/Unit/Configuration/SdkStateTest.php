@@ -189,6 +189,23 @@ test('RefreshToken methods function as expected', function(): void
     expect($state->getRefreshToken())->toEqual($refreshToken);
 });
 
+test('Backchannel methods function as expected', function(): void
+{
+    $state = new SdkState();
+    $logoutToken = uniqid();
+
+    expect($state->hasBackchannel())->toBeFalse();
+    expect($state->getBackchannel())->toBeNull();
+
+    $state->setBackchannel('');
+
+    expect($state->hasBackchannel())->toBeFalse();
+    expect($state->getBackchannel())->toBeNull();
+
+    $state->setBackchannel($logoutToken);
+    expect($state->getBackchannel())->toEqual($logoutToken);
+});
+
 test('getRefreshToken() throws an assigned exception when not configured', function(): void
 {
     $state = new SdkState();

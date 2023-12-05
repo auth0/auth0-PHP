@@ -26,6 +26,7 @@ final class SdkState implements ConfigurableContract
      * @param null|string        $refreshToken          Optional. The refresh token currently in use for the session, if available.
      * @param null|array<mixed>  $user                  Optional. An array representing the user data, if available.
      * @param null|int           $accessTokenExpiration Optional. When the $accessToken is expected to expire, if available.
+     * @param ?string            $backchannel           Optional. The backchannel logout token assigned for the session, if available.
      */
     public function __construct(
         ?array $configuration = null,
@@ -35,6 +36,7 @@ final class SdkState implements ConfigurableContract
         public ?string $refreshToken = null,
         public ?array $user = null,
         public ?int $accessTokenExpiration = null,
+        public ?string $backchannel = null,
     ) {
         if (null !== $configuration && [] !== $configuration) {
             $this->applyConfiguration($configuration);
@@ -67,6 +69,13 @@ final class SdkState implements ConfigurableContract
         $this->exceptionIfNull($this->accessTokenScope, $exceptionIfNull);
 
         return $this->accessTokenScope;
+    }
+
+    public function getBackchannel(?Throwable $exceptionIfNull = null): ?string
+    {
+        $this->exceptionIfNull($this->backchannel, $exceptionIfNull);
+
+        return $this->backchannel;
     }
 
     public function getIdToken(?Throwable $exceptionIfNull = null): ?string
@@ -108,6 +117,11 @@ final class SdkState implements ConfigurableContract
     public function hasAccessTokenScope(): bool
     {
         return null !== $this->accessTokenScope;
+    }
+
+    public function hasBackchannel(): bool
+    {
+        return null !== $this->backchannel;
     }
 
     public function hasIdToken(): bool
@@ -171,6 +185,17 @@ final class SdkState implements ConfigurableContract
     public function setAccessTokenScope(?array $accessTokenScope): self
     {
         $this->accessTokenScope = $this->filterArray($accessTokenScope);
+
+        return $this;
+    }
+
+    public function setBackchannel(?string $backchannel = null): self
+    {
+        if (null !== $backchannel && '' === trim($backchannel)) {
+            $backchannel = null;
+        }
+
+        $this->backchannel = $backchannel;
 
         return $this;
     }

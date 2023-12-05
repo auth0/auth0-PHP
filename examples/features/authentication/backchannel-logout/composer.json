@@ -1,9 +1,10 @@
 {
   "name": "auth0-samples/pushed-authorization-request",
-  "description": "Example of using Pushed Authorization Requests with Auth0 PHP",
+  "description": "Example of using Backchannel Logout with Auth0 PHP",
   "require": {
     "php": "^8.1",
-    "auth0/auth0-php": "^8.6",
+    "auth0/auth0-php": "^8.10",
+    "cache/filesystem-adapter": "^1.2",
     "nyholm/psr7": "^1.5",
     "symfony/http-client": "^6.2"
   },

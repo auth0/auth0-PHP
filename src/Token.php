@@ -6,6 +6,7 @@ namespace Auth0\SDK;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\TokenInterface;
+use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Token\Parser;
 use Psr\Cache\CacheItemPoolInterface;
 
@@ -15,7 +16,6 @@ use function is_string;
 
 final class Token implements TokenInterface
 {
-    // TODO: Replace these with an enum when PHP 8.1 is our min supported version.
     /**
      * @var string
      */
@@ -58,6 +58,11 @@ final class Token implements TokenInterface
 
     /**
      * @var int
+     */
+    public const TYPE_LOGOUT_TOKEN = 3;
+
+    /**
+     * @deprecated Use TYPE_ACCESS_TOKEN instead.
      */
     public const TYPE_TOKEN = 2;
 
@@ -125,12 +130,30 @@ final class Token implements TokenInterface
         return null;
     }
 
+    public function getEvents(): ?array
+    {
+        if (is_array($claim = $this->getParser()->getClaim('events'))) {
+            return $claim;
+        }
+
+        return null;
+    }
+
     public function getExpiration(): ?int
     {
         $claim = $this->getParser()->getClaim('exp');
 
         if (is_int($claim) || is_string($claim) && ctype_digit($claim)) {
             return (int) $claim;
+        }
+
+        return null;
+    }
+
+    public function getIdentifier(): ?string
+    {
+        if (is_string($claim = $this->getParser()->getClaim('sid'))) {
+            return $claim;
         }
 
         return null;
@@ -242,6 +265,16 @@ final class Token implements TokenInterface
         $validator = $this->getParser()->validate();
         $tokenNow ??= time();
 
+        if (self::TYPE_LOGOUT_TOKEN === $this->type) {
+            if (null !== $this->getParser()->getClaim('nonce')) {
+                throw InvalidTokenException::logoutTokenNoncePresent();
+            }
+
+            if (null === $this->getParser()->getClaim('events')) {
+                throw InvalidTokenException::missingEventsClaim();
+            }
+        }
+
         $validator
             ->issuer($tokenIssuer)
             ->audience($tokenAudience)
@@ -252,6 +285,23 @@ final class Token implements TokenInterface
                 ->subject()
                 ->issued()
                 ->authorizedParty($tokenAudience);
+        }
+
+        if (self::TYPE_LOGOUT_TOKEN === $this->type) {
+            $validator
+                ->issued()
+                ->authorizedParty($tokenAudience)
+                ->events(['http://schemas.openid.net/event/backchannel-logout']);
+
+            $events = $this->getEvents();
+
+            if (! is_array($events['http://schemas.openid.net/event/backchannel-logout'] ?? null)) {
+                throw InvalidTokenException::badEventClaim('http://schemas.openid.net/event/backchannel-logout', 'object');
+            }
+
+            if (null === $this->getSubject() && null === $this->getIdentifier()) {
+                throw InvalidTokenException::missingSubAndSidClaims();
+            }
         }
 
         if (null !== $tokenNonce) {

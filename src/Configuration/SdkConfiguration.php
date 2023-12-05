@@ -64,11 +64,11 @@ final class SdkConfiguration implements ConfigurableContract
      *
      * @param null|array<mixed>                $configuration                   An key-value array matching this constructor's arguments. Overrides any other passed arguments with the same key name.
      * @param string                           $strategy                        Defaults to 'webapp'. Should be assigned either 'api', 'management', or 'webapp' to specify the type of application the SDK is being applied to. Determines what configuration options will be required at initialization.
-     * @param null|string                      $domain                          auth0 domain for your tenant, found in your Auth0 Application settings
-     * @param null|string                      $customDomain                    if you have configured Auth0 to use a custom domain, configure it here
-     * @param null|string                      $clientId                        client ID, found in the Auth0 Application settings
-     * @param null|string                      $redirectUri                     authentication callback URI, as defined in your Auth0 Application settings
-     * @param null|string                      $clientSecret                    client Secret, found in the Auth0 Application settings
+     * @param null|string                      $domain                          Auth0 domain for your tenant, found in your Auth0 Application settings
+     * @param null|string                      $customDomain                    If you have configured Auth0 to use a custom domain, configure it here
+     * @param null|string                      $clientId                        Client ID, found in the Auth0 Application settings
+     * @param null|string                      $redirectUri                     Authentication callback URI, as defined in your Auth0 Application settings
+     * @param null|string                      $clientSecret                    Client Secret, found in the Auth0 Application settings
      * @param null|array<string>               $audience                        One or more API identifiers, found in your Auth0 API settings. The SDK uses the first value for building links. If provided, at least one of these values must match the 'aud' claim to validate an ID Token successfully.
      * @param null|array<string>               $organization                    Allowlist containing one or more organization IDs/names. Reference your Auth0 organization settings for these values. By default, the SDK will use the first value provided when generating authorization links.
      * @param bool                             $usePkce                         Defaults to true. Use PKCE (Proof Key of Code Exchange) with Authorization Code Flow requests. See https://auth0.com/docs/flows/call-your-api-using-the-authorization-code-flow-with-pkce
@@ -77,19 +77,19 @@ final class SdkConfiguration implements ConfigurableContract
      * @param string                           $responseType                    Defaults to 'code.' Use 'code' for server-side flows and 'token' for application side flow.
      * @param string                           $tokenAlgorithm                  Defaults to 'RS256'. Algorithm to use for Token verification. Expects either 'RS256' or 'HS256'.
      * @param null|string                      $tokenJwksUri                    URI to the JWKS when verifying RS256 tokens
-     * @param null|int                         $tokenMaxAge                     the maximum window of time (in seconds) since the 'auth_time' to accept during Token validation
+     * @param null|int                         $tokenMaxAge                     The maximum window of time (in seconds) since the 'auth_time' to accept during Token validation
      * @param int                              $tokenLeeway                     Defaults to 60. Leeway (in seconds) to allow during time calculations with Token validation.
-     * @param null|CacheItemPoolInterface      $tokenCache                      a PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS)
-     * @param int                              $tokenCacheTtl                   how long (in seconds) to keep a JWKS cached
-     * @param null|ClientInterface             $httpClient                      a PSR-18 compatible HTTP client to use for API requests
-     * @param int                              $httpMaxRetries                  when a rate-limit (429 status code) response is returned from the Auth0 API, automatically retry the request up to this many times
-     * @param null|RequestFactoryInterface     $httpRequestFactory              a PSR-17 compatible request factory to generate HTTP requests
-     * @param null|ResponseFactoryInterface    $httpResponseFactory             a PSR-17 compatible response factory to generate HTTP responses
-     * @param null|StreamFactoryInterface      $httpStreamFactory               a PSR-17 compatible stream factory to create request body streams
+     * @param null|CacheItemPoolInterface      $tokenCache                      A PSR-6 compatible cache adapter for storing JSON Web Key Sets (JWKS)
+     * @param int                              $tokenCacheTtl                   How long (in seconds) to keep a JWKS cached
+     * @param null|ClientInterface             $httpClient                      A PSR-18 compatible HTTP client to use for API requests
+     * @param int                              $httpMaxRetries                  When a rate-limit (429 status code) response is returned from the Auth0 API, automatically retry the request up to this many times
+     * @param null|RequestFactoryInterface     $httpRequestFactory              A PSR-17 compatible request factory to generate HTTP requests
+     * @param null|ResponseFactoryInterface    $httpResponseFactory             A PSR-17 compatible response factory to generate HTTP responses
+     * @param null|StreamFactoryInterface      $httpStreamFactory               A PSR-17 compatible stream factory to create request body streams
      * @param bool                             $httpTelemetry                   Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
      * @param null|StoreInterface              $sessionStorage                  Defaults to use cookies. A StoreInterface-compatible class for storing Token state.
      * @param string                           $sessionStorageId                Defaults to 'auth0_session'. The namespace to prefix session items under.
-     * @param null|string                      $cookieSecret                    the secret used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback
+     * @param null|string                      $cookieSecret                    The secret used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback
      * @param null|string                      $cookieDomain                    Defaults to value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
      * @param int                              $cookieExpires                   Defaults to 0. How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
      * @param string                           $cookiePath                      Defaults to '/'. Specifies path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
@@ -103,11 +103,13 @@ final class SdkConfiguration implements ConfigurableContract
      * @param string                           $transientStorageId              Defaults to 'auth0_transient'. The namespace to prefix transient items under.
      * @param bool                             $queryUserInfo                   Defaults to false. If true, query the /userinfo endpoint during an authorization code exchange.
      * @param null|string                      $managementToken                 An Access Token to use for Management API calls. If there isn't one specified, the SDK will attempt to get one for you using your $clientSecret.
-     * @param null|CacheItemPoolInterface      $managementTokenCache            a PSR-6 compatible cache adapter for storing generated management access tokens
-     * @param null|ListenerProviderInterface   $eventListenerProvider           a PSR-14 compatible event listener provider, for interfacing with events triggered by the SDK
+     * @param null|CacheItemPoolInterface      $managementTokenCache            A PSR-6 compatible cache adapter for storing generated management access tokens
+     * @param null|ListenerProviderInterface   $eventListenerProvider           A PSR-14 compatible event listener provider, for interfacing with events triggered by the SDK
      * @param null|OpenSSLAsymmetricKey|string $clientAssertionSigningKey       An OpenSSLAsymmetricKey (or string representing equivalent, such as a PEM) to use for signing the client assertion. If not specified, the SDK will attempt to use the $clientSecret.
      * @param string                           $clientAssertionSigningAlgorithm Defaults to RS256. Algorithm to use for signing the client assertion.
      * @param bool                             $pushedAuthorizationRequest      Defaults to false. If true, the SDK will attempt to use the Pushed Authorization Requests for authentication. See https://www.rfc-editor.org/rfc/rfc9126.html#.
+     * @param null|CacheItemPoolInterface      $backchannelLogoutCache          A PSR-6 compatible cache adapter for storing backchannel logout tokens.
+     * @param int                              $backchannelLogoutExpires        Defaults to 2592000 (30 days). How long, in seconds, before a backchannel logout request expires from the cache. This should be greater than your $cookieExpires value, particularly if you are using rolling sessions.
      *
      * @throws ConfigurationException when a valid `$strategy` is not specified
      */
@@ -158,6 +160,8 @@ final class SdkConfiguration implements ConfigurableContract
         private OpenSSLAsymmetricKey | string | null $clientAssertionSigningKey = null,
         private string $clientAssertionSigningAlgorithm = Token::ALGO_RS256,
         private bool $pushedAuthorizationRequest = false,
+        private ?CacheItemPoolInterface $backchannelLogoutCache = null,
+        private int $backchannelLogoutExpires = 2592000,
     ) {
         if (null !== $configuration && [] !== $configuration) {
             $this->applyConfiguration($configuration);
@@ -268,6 +272,18 @@ final class SdkConfiguration implements ConfigurableContract
         $this->exceptionIfNull($this->audience, $exceptionIfNull);
 
         return $this->audience;
+    }
+
+    public function getBackchannelLogoutCache(?Throwable $exceptionIfNull = null): ?CacheItemPoolInterface
+    {
+        $this->exceptionIfNull($this->backchannelLogoutCache, $exceptionIfNull);
+
+        return $this->backchannelLogoutCache;
+    }
+
+    public function getBackchannelLogoutExpires(): int
+    {
+        return $this->backchannelLogoutExpires;
     }
 
     public function getClientAssertionSigningAlgorithm(): string
@@ -564,6 +580,11 @@ final class SdkConfiguration implements ConfigurableContract
     public function hasAudience(): bool
     {
         return null !== $this->audience;
+    }
+
+    public function hasBackchannelLogoutCache(): bool
+    {
+        return $this->backchannelLogoutCache instanceof \Psr\Cache\CacheItemPoolInterface;
     }
 
     public function hasClientAssertionSigningAlgorithm(): bool
@@ -865,6 +886,24 @@ final class SdkConfiguration implements ConfigurableContract
     public function setAudience(?array $audience = null): self
     {
         $this->audience = $this->filterArray($audience);
+
+        return $this;
+    }
+
+    public function setBackchannelLogoutCache(?CacheItemPoolInterface $backchannelLogoutCache = null): self
+    {
+        $this->backchannelLogoutCache = $backchannelLogoutCache;
+
+        return $this;
+    }
+
+    public function setBackchannelLogoutExpires(int $backchannelLogoutExpires = 2592000): self
+    {
+        if ($backchannelLogoutExpires <= 0) {
+            throw ConfigurationException::validationFailed('backchannelLogoutExpires');
+        }
+
+        $this->backchannelLogoutExpires = $backchannelLogoutExpires;
 
         return $this;
     }
@@ -1332,7 +1371,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string, pushedAuthorizationRequest: bool}
+     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string, pushedAuthorizationRequest: bool, backchannelLogoutCache: null}
      */
     private function getPropertyDefaults(): array
     {
@@ -1382,6 +1421,7 @@ final class SdkConfiguration implements ConfigurableContract
             'clientAssertionSigningKey' => null,
             'clientAssertionSigningAlgorithm' => Token::ALGO_RS256,
             'pushedAuthorizationRequest' => false,
+            'backchannelLogoutCache' => null,
         ];
     }
 
@@ -1438,6 +1478,7 @@ final class SdkConfiguration implements ConfigurableContract
             'clientAssertionSigningKey' => static fn ($value): bool => $value instanceof OpenSSLAsymmetricKey || is_string($value) || null === $value,
             'clientAssertionSigningAlgorithm' => static fn ($value): bool => is_string($value),
             'pushedAuthorizationRequest' => static fn ($value): bool => is_bool($value),
+            'backchannelLogoutCache' => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
         ];
     }
 

@@ -1715,3 +1715,51 @@ test('setClientAssertionSigningKey() throws an exception when an invalid algorit
 
     $config->setClientAssertionSigningAlgorithm(Token::ALGO_HS256);
 })->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_INCOMPATIBLE_SIGNING_ALGORITHM, 'HS256'));
+
+test('getBackchannelLogoutCache methods function as expected', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $cache = new ArrayAdapter();
+
+    expect($config->hasBackchannelLogoutCache())->toBeFalse();
+    expect($config->getBackchannelLogoutCache())->toBeNull();
+
+    $config->setBackchannelLogoutCache($cache);
+    expect($config->hasBackchannelLogoutCache())->toBeTrue();
+    expect($config->getBackchannelLogoutCache())->toEqual($cache);
+});
+
+test('getBackchannelLogoutCache() throws an assigned exception when not configured', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $config->getBackchannelLogoutCache(new Exception('This should be thrown'));
+})->throws(Exception::class, 'This should be thrown');
+
+test('getBackchannelLogoutExpires methods function as expected', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $randomExpiration = random_int(1, 1000);
+
+    expect($config->getBackchannelLogoutExpires())->toEqual(2592000);
+
+    $config->setBackchannelLogoutExpires($randomExpiration);
+    expect($config->getBackchannelLogoutExpires())->toEqual($randomExpiration);
+});
+
+test('setBackchannelLogoutExpires() throws an assigned exception when set to 0', function(): void
+{
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE
+    ]);
+
+    $config->setBackchannelLogoutExpires(0);
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_VALIDATION_FAILED, 'backchannelLogoutExpires'));

@@ -10,7 +10,9 @@ uses()->group('token', 'token.validator');
 beforeEach(function() {
     $this->claims = [
         'sub' => uniqid(),
+        'sid' => uniqid(),
         'iss' => uniqid(),
+        'sid' => uniqid(),
         'aud' => uniqid(),
         'nonce' => uniqid(),
         'auth_time' => time() - 100,
@@ -64,6 +66,11 @@ test('expiration() throws an exception when `exp` claim is less than present tim
     $this->claims['exp'] = time() - 1000;
     (new Validator($this->claims))->expiration();
 })->throws(InvalidTokenException::class);
+
+test('identifier() throws an exception when `sid` claim is missing', function(): void {
+    unset($this->claims['sid']);
+    (new Validator($this->claims))->identifier();
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_SID_CLAIM);
 
 test('issued() throws an exception when `iat` claim is missing', function(): void {
     unset($this->claims['iat']);
@@ -131,3 +138,21 @@ test('organization() does not throw an exception when there are no organization 
     $validator = (new Validator($this->claims))->organization([]);
     expect($validator)->toBeInstanceOf(Validator::class);
 });
+
+test('identifier() returns a valid `sid` claim', function(): void {
+    $validator = (new Validator($this->claims))->identifier();
+    expect($validator)->toBeInstanceOf(Validator::class);
+});
+
+test('events() throws an exception when `events` claim is missing', function(): void {
+    unset($this->claims['events']);
+    (new Validator($this->claims))->events(['missing']);
+})->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_EVENTS_CLAIM);
+
+test('events() throws an exception when `events` claim is malformed', function(): void {
+    $this->claims['events'] = [
+        // 'http://schemas.openid.net/event/backchannel-logout' => 'not an array',
+    ];
+
+    (new Validator($this->claims))->events(['http://schemas.openid.net/event/backchannel-logout']);
+})->throws(InvalidTokenException::class, sprintf(InvalidTokenException::MSG_MISMATCHED_EVENTS_CLAIM, 'http://schemas.openid.net/event/backchannel-logout', ''));
