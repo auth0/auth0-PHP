@@ -1,5 +1,14 @@
 # Change Log
 
+## [8.10.0](https://github.com/auth0/auth0-PHP/tree/8.10.0) (2023-12-05)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.9.3...8.10.0)
+
+**Added**
+- feat(SDK-4731): Implement support for Back-Channel Logout [\#747](https://github.com/auth0/auth0-PHP/pull/747) ([evansims](https://github.com/evansims))
+
+**Changed**
+- PHP 8.1 is now the minimum supported runtime [\#748](https://github.com/auth0/auth0-PHP/pull/748) ([evansims](https://github.com/evansims))
+
 ## [8.9.3](https://github.com/auth0/auth0-PHP/tree/8.9.3) (2023-11-30)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.9.1...8.9.3)
 
