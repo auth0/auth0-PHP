@@ -254,6 +254,7 @@ final class Token implements TokenInterface
         ?int $tokenLeeway = null,
         ?int $tokenNow = null,
     ): self {
+        $tenantDomain = $this->configuration->formatDomain(true) . '/';
         $tokenIssuer ??= $this->configuration->formatDomain() . '/';
         $tokenAudience ??= $this->configuration->getAudience() ?? [];
         $tokenOrganization ??= $this->configuration->getOrganization() ?? null;
@@ -275,8 +276,17 @@ final class Token implements TokenInterface
             }
         }
 
+        try {
+            $validator->issuer($tokenIssuer);
+        } catch (InvalidTokenException $invalidTokenException) {
+            if ($tenantDomain !== $tokenIssuer) {
+                $validator->issuer($tenantDomain);
+            }
+
+            throw $invalidTokenException;
+        }
+
         $validator
-            ->issuer($tokenIssuer)
             ->audience($tokenAudience)
             ->expiration($tokenLeeway, $tokenNow);
 
