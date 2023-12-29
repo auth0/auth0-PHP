@@ -178,19 +178,19 @@ final class Auth0 implements Auth0Interface
         if (null === $code) {
             $this->clear();
 
-            throw \Auth0\SDK\Exception\StateException::missingCode();
+            throw Exception\StateException::missingCode();
         }
 
         if (null === $state || ! $verified) {
             $this->clear();
 
-            throw \Auth0\SDK\Exception\StateException::invalidState();
+            throw Exception\StateException::invalidState();
         }
 
         if (null === $pkce && $this->configuration()->getUsePkce()) {
             $this->clear();
 
-            throw \Auth0\SDK\Exception\StateException::missingCodeVerifier();
+            throw Exception\StateException::missingCodeVerifier();
         }
 
         $response = $this->authentication()->codeExchange($code, $redirectUri, $pkce);
@@ -198,7 +198,7 @@ final class Auth0 implements Auth0Interface
         if (! HttpResponse::wasSuccessful($response)) {
             $this->clear();
 
-            throw \Auth0\SDK\Exception\StateException::failedCodeExchange();
+            throw Exception\StateException::failedCodeExchange();
         }
 
         $response = HttpResponse::decodeContent($response);
@@ -209,7 +209,7 @@ final class Auth0 implements Auth0Interface
             if (! $nonce) {
                 $this->clear();
 
-                throw \Auth0\SDK\Exception\StateException::missingNonce();
+                throw Exception\StateException::missingNonce();
             }
 
             try {
@@ -232,7 +232,7 @@ final class Auth0 implements Auth0Interface
         if (! isset($response['access_token']) || '' === trim($response['access_token'])) {
             $this->clear();
 
-            throw \Auth0\SDK\Exception\StateException::badAccessToken();
+            throw Exception\StateException::badAccessToken();
         }
 
         $this->setAccessToken($response['access_token']);
@@ -474,7 +474,7 @@ final class Auth0 implements Auth0Interface
         // Decode the logout token. If this ste fails, an exception will be thrown.
         $token = $this->decode(
             token: $logoutToken,
-            tokenType: \Auth0\SDK\Token::TYPE_LOGOUT_TOKEN,
+            tokenType: Token::TYPE_LOGOUT_TOKEN,
         );
 
         // Create a reference key for comparison against future requests.
@@ -616,7 +616,7 @@ final class Auth0 implements Auth0Interface
         if (null === $refreshToken) {
             $this->clear();
 
-            throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingRefreshToken();
+            throw Exception\StateException::failedRenewTokenMissingRefreshToken();
         }
 
         $response = $this->authentication()->refreshToken($refreshToken, $params);
@@ -627,7 +627,7 @@ final class Auth0 implements Auth0Interface
         if (! isset($response['access_token']) || '' === trim($response['access_token'])) {
             $this->clear();
 
-            throw \Auth0\SDK\Exception\StateException::failedRenewTokenMissingAccessToken();
+            throw Exception\StateException::failedRenewTokenMissingAccessToken();
         }
 
         $this->setAccessToken($response['access_token']);
@@ -851,8 +851,8 @@ final class Auth0 implements Auth0Interface
 
         if ('' !== $token) {
             try {
-                return $this->decode($token, null, null, null, null, null, null, \Auth0\SDK\Token::TYPE_ACCESS_TOKEN);
-            } catch (\Auth0\SDK\Exception\InvalidTokenException) {
+                return $this->decode($token, null, null, null, null, null, null, Token::TYPE_ACCESS_TOKEN);
+            } catch (Exception\InvalidTokenException) {
                 return null;
             }
         }

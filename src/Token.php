@@ -75,7 +75,7 @@ final class Token implements TokenInterface
      * @param string           $jwt           a JWT string to parse, and prepare for verification and validation
      * @param int              $type          Specify the Token type to toggle specific claim validations. Defaults to 1 for ID Token. See TYPE_ consts for options.
      *
-     * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
+     * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
         private SdkConfiguration $configuration,
