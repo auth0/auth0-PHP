@@ -272,6 +272,42 @@ it('fails validating a Logout Token without an `events` claim', function(
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256, ['events' => null])
 ]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_EVENTS_CLAIM);
 
+it('fails validating a Logout Token with a mismatch `issuer` claim', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+    $token->validate();
+})->with(['mocked hs256 access token' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('invalid-domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256)
+]])->throws(InvalidTokenException::class, sprintf(InvalidTokenException::MSG_MISMATCHED_ISS_CLAIM, "https://invalid-domain.test/", "https://domain.test/"));
+
+it('fails validating a Logout Token with a mismatch `issuer` claim with custom domain', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_LOGOUT_TOKEN);
+    $token->validate();
+})->with(['mocked hs256 access token' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('invalid-domain.test');
+        $this->configuration->setCustomDomain('invalid-custom-domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_LOGOUT, TokenGenerator::ALG_HS256)
+]])->throws(InvalidTokenException::class, sprintf(InvalidTokenException::MSG_MISMATCHED_ISS_CLAIM, "https://invalid-domain.test/", "https://domain.test/"));
+
+
 it('fails validating a Logout Token with a malformed `events` claim', function(
     SdkConfiguration $configuration,
     TokenGeneratorResponse $jwt
@@ -329,6 +365,46 @@ test('validate() returns a fluent interface', function(
 })->with(['mocked data' => [
     function(): SdkConfiguration {
         $this->configuration->setDomain('domain.test');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['org_id' => 'org_123']),
+    fn() => ['nonce' => '__test_nonce__']
+]]);
+
+test('validate() with custom domain as token issuer fails, but succeeds with tenant domain', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt,
+    array $claims
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+    expect($token->validate(null, null, ['org_123'], $claims['nonce'], 100))->toEqual($token);
+})->with(['mocked data' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('domain.test');
+        $this->configuration->setCustomDomain('not-the-issuer.domain');
+        $this->configuration->setClientId('__test_client_id__');
+        $this->configuration->setTokenAlgorithm('HS256');
+        $this->configuration->setClientSecret('__test_client_secret__');
+        return $this->configuration;
+    },
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ID, TokenGenerator::ALG_HS256, ['org_id' => 'org_123']),
+    fn() => ['nonce' => '__test_nonce__']
+]]);
+
+test('validate() with custom domain as token issuer succeeds, tenant domain is thereby irrelevant', function(
+    SdkConfiguration $configuration,
+    TokenGeneratorResponse $jwt,
+    array $claims
+): void {
+    $token = new Token($configuration, $jwt->token, Token::TYPE_ID_TOKEN);
+    expect($token->validate(null, null, ['org_123'], $claims['nonce'], 100))->toEqual($token);
+})->with(['mocked data' => [
+    function(): SdkConfiguration {
+        $this->configuration->setDomain('invalid-domain.test');
+        $this->configuration->setCustomDomain('domain.test');
         $this->configuration->setClientId('__test_client_id__');
         $this->configuration->setTokenAlgorithm('HS256');
         $this->configuration->setClientSecret('__test_client_secret__');
