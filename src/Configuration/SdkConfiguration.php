@@ -584,7 +584,7 @@ final class SdkConfiguration implements ConfigurableContract
 
     public function hasBackchannelLogoutCache(): bool
     {
-        return $this->backchannelLogoutCache instanceof \Psr\Cache\CacheItemPoolInterface;
+        return $this->backchannelLogoutCache instanceof CacheItemPoolInterface;
     }
 
     public function hasClientAssertionSigningAlgorithm(): bool
