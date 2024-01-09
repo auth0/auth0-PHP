@@ -281,9 +281,9 @@ final class Token implements TokenInterface
         } catch (InvalidTokenException $invalidTokenException) {
             if ($tenantDomain !== $tokenIssuer) {
                 $validator->issuer($tenantDomain);
+            } else {
+                throw $invalidTokenException;
             }
-
-            throw $invalidTokenException;
         }
 
         $validator
