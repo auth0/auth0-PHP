@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.11.0](https://github.com/auth0/auth0-PHP/tree/8.11.0) (2024-01-08)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.10.0...8.11.0)
+
+**Added**
+- feat: Support validating tokens with tenant domain in the case of custom domains [\#753](https://github.com/auth0/auth0-PHP/pull/753) ([ramonschriks](https://github.com/ramonschriks))
+
 ## [8.10.0](https://github.com/auth0/auth0-PHP/tree/8.10.0) (2023-12-05)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.9.3...8.10.0)
 
