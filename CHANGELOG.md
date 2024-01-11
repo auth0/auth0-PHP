@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.11.1](https://github.com/auth0/auth0-PHP/tree/8.11.1) (2024-01-10)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.11.0...8.11.1)
+
+**Fixed**
+- fix: Resolve erroneous exception throw on tenant domain validation [\#755](https://github.com/auth0/auth0-PHP/pull/755) ([ramonschriks](https://github.com/ramonschriks))
+
 ## [8.11.0](https://github.com/auth0/auth0-PHP/tree/8.11.0) (2024-01-08)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.10.0...8.11.0)
 
