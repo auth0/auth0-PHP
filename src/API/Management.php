@@ -8,7 +8,7 @@ use Auth0\SDK\API\Management\{Actions, AttackProtection, Blacklists, ClientGrant
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\Management\{ActionsInterface, AttackProtectionInterface, BlacklistsInterface, ClientGrantsInterface, ClientsInterface, ConnectionsInterface, DeviceCredentialsInterface, EmailTemplatesInterface, EmailsInterface, GrantsInterface, GuardianInterface, JobsInterface, LogStreamsInterface, LogsInterface, OrganizationsInterface, ResourceServersInterface, RolesInterface, RulesInterface, StatsInterface, TenantsInterface, TicketsInterface, UserBlocksInterface, UsersByEmailInterface, UsersInterface};
 use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
-use Auth0\SDK\Utility\{HttpClient, HttpRequest, HttpResponse, HttpResponsePaginator};
+use Auth0\SDK\Utility\{HttpClient, HttpResponse, HttpResponsePaginator};
 use Psr\Cache\CacheItemPoolInterface;
 
 use function is_array;
