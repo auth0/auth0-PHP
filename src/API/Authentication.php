@@ -7,10 +7,9 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Authentication\PushedAuthorizationRequest;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\AuthenticationInterface;
-use Auth0\SDK\Exception\Authentication\{ParRequestException, ParResponseException, ParUnexpectedResponseException};
-use Auth0\SDK\Exception\{ConfigurationException, NetworkException, TokenException};
+use Auth0\SDK\Exception\{ConfigurationException};
 use Auth0\SDK\Token\ClientAssertionGenerator;
-use Auth0\SDK\Utility\{HttpClient, HttpResponse, Toolkit};
+use Auth0\SDK\Utility\{HttpClient, Toolkit};
 use Psr\Http\Message\ResponseInterface;
 
 use function is_array;
