@@ -39,7 +39,7 @@ We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0)
 Ensure you have [the necessary dependencies](#requirements) installed, then add the SDK to your application using [Composer](https://getcomposer.org/):
 
 ```
-composer require auth0/auth0-php
+composer require auth0/auth0-php --no-dev
 ```
 
 ### Configure Auth0
