@@ -113,7 +113,8 @@ final class CookieStore implements StoreInterface
 
         $decoded = rawurldecode((string) $data);
         $stripped = stripslashes($decoded);
-        $data = json_decode($stripped, true, 512);
+        $htmldecoded = html_entity_decode($stripped);
+        $data = json_decode($htmldecoded, true, 512);
 
         /** @var array{iv?: null|int|string, tag?: null|int|string, data: string} $data */
         if (! isset($data['iv']) || ! isset($data['tag']) || ! is_string($data['iv']) || ! is_string($data['tag'])) {
