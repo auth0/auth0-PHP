@@ -102,6 +102,10 @@ print_r($auth0->getCredentials()?->user);
 
 If you have questions, the [Auth0 Community](https://community.auth0.com/) is a fantastic resource to ask questions and get help.
 
+## Input from Untrusted Sources
+
+If your application accepts input from untrusted sources (such as query parameters from HTTP requests) please ensure you are following best practices for data validation and sanitization. It is your application's responsibility to ensure any data provided to the SDK is valid and safe. For more information, see the [OWASP Data Validation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html).
+
 ## API Reference
 
 - [API Reference](https://auth0.github.io/auth0-PHP/)
@@ -112,9 +116,9 @@ Our support lifecycle mirrors the [PHP release support schedule](https://www.php
 
 | SDK Version | PHP Version | Support Ends |
 | ----------- | ----------- | ------------ |
-| 8           | 8.3         | Nov 2026     |
-|             | 8.2         | Nov 2025     |
-|             | 8.1         | Nov 2024     |
+| 8           | 8.3         | Dec 2027     |
+|             | 8.2         | Dec 2026     |
+|             | 8.1         | Dec 2025     |
 
 We drop support for PHP versions when they reach end-of-life and cease receiving security fixes from the PHP Foundation. Please ensure your environment remains up to date so you can continue receiving updates for PHP and this SDK.
 
