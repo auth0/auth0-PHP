@@ -39,19 +39,19 @@
     "psr/http-message-implementation": "^1"
   },
   "require-dev": {
-    "ergebnis/composer-normalize": "^2",
-    "friendsofphp/php-cs-fixer": "^3",
-    "mockery/mockery": "^1",
-    "pestphp/pest": "^2",
-    "phpstan/phpstan": "^1",
-    "phpstan/phpstan-strict-rules": "^1",
-    "psr-mock/http": "^1",
-    "rector/rector": "0.17.6",
-    "spatie/ray": "^1",
+    "ergebnis/composer-normalize": "2.43.*",
+    "friendsofphp/php-cs-fixer": "3.59.*",
+    "mockery/mockery": "1.6.*",
+    "pestphp/pest": "2.34.*",
+    "phpstan/phpstan": "1.11.*",
+    "phpstan/phpstan-strict-rules": "1.6.*",
+    "psr-mock/http": "1.0.*",
+    "rector/rector": "0.17.*",
+    "spatie/ray": "1.41.*",
     "symfony/cache": "^4 || ^5 || ^6",
     "symfony/event-dispatcher": "^4 || ^5 || ^6",
-    "vimeo/psalm": "^5",
-    "wikimedia/composer-merge-plugin": "^2"
+    "vimeo/psalm": "5.25.*",
+    "wikimedia/composer-merge-plugin": "2.1.*"
   },
   "suggest": {
     "psr/cache-implementation": "(PSR-6 Cache) Improve performance by avoiding making redundant network requests.",
