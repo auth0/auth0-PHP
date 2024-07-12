@@ -18,7 +18,8 @@ use Rector\CodeQuality\Rector\Class_\{CompleteDynamicPropertiesRector,
 use Rector\CodeQuality\Rector\ClassMethod\{InlineArrayReturnAssignRector,
     NarrowUnionTypeDocRector,
     OptionalParametersAfterRequiredRector,
-    ReturnTypeFromStrictScalarReturnExprRector};
+    // ReturnTypeFromStrictScalarReturnExprRector
+    };
 use Rector\CodeQuality\Rector\Concat\JoinStringConcatRector;
 use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\CodeQuality\Rector\Equal\UseIdenticalOverEqualWithSameTypeRector;
@@ -207,10 +208,10 @@ use Rector\TypeDeclaration\Rector\ClassMethod\{AddMethodCallBasedStrictParamType
     AddReturnTypeDeclarationBasedOnParentClassMethodRector,
     AddVoidReturnTypeWhereNoReturnRector,
     ArrayShapeFromConstantArrayReturnRector,
-    ParamAnnotationIncorrectNullableRector,
+    // ParamAnnotationIncorrectNullableRector,
     ParamTypeByMethodCallTypeRector,
     ParamTypeByParentCallTypeRector,
-    ReturnAnnotationIncorrectNullableRector,
+    // ReturnAnnotationIncorrectNullableRector,
     ReturnNeverTypeRector,
     ReturnTypeFromReturnDirectArrayRector,
     ReturnTypeFromReturnNewRector,
@@ -220,7 +221,7 @@ use Rector\TypeDeclaration\Rector\ClassMethod\{AddMethodCallBasedStrictParamType
     ReturnTypeFromStrictNewArrayRector,
     ReturnTypeFromStrictTypedCallRector,
     ReturnTypeFromStrictTypedPropertyRector};
-use Rector\TypeDeclaration\Rector\Closure\AddClosureReturnTypeRector;
+// use Rector\TypeDeclaration\Rector\Closure\AddClosureReturnTypeRector;
 use Rector\TypeDeclaration\Rector\Empty_\EmptyOnNullableObjectToInstanceOfRector;
 use Rector\TypeDeclaration\Rector\FunctionLike\{AddParamTypeSplFixedArrayRector,
     AddReturnTypeDeclarationFromYieldsRector};
@@ -336,7 +337,7 @@ return static function (RectorConfig $rectorConfig): void {
         // ActionInjectionToConstructorInjectionRector::class,
         AddArrayDefaultToArrayPropertyRector::class,
         AddArrowFunctionReturnTypeRector::class,
-        AddClosureReturnTypeRector::class,
+        // AddClosureReturnTypeRector::class,
         // AddFalseDefaultToBoolPropertyRector::class,
         AddMethodCallBasedStrictParamTypeRector::class,
         AddParamBasedOnParentClassMethodRector::class,
@@ -412,7 +413,7 @@ return static function (RectorConfig $rectorConfig): void {
         // NormalizeNamespaceByPSR4ComposerAutoloadRector::class,
         NullableCompareToNullRector::class,
         OptionalParametersAfterRequiredRector::class,
-        ParamAnnotationIncorrectNullableRector::class,
+        // ParamAnnotationIncorrectNullableRector::class,
         ParamTypeByMethodCallTypeRector::class,
         ParamTypeByParentCallTypeRector::class,
         ParamTypeFromStrictTypedPropertyRector::class,
@@ -466,7 +467,7 @@ return static function (RectorConfig $rectorConfig): void {
         RenameForeachValueVariableToMatchExprVariableRector::class,
         RenameForeachValueVariableToMatchMethodCallReturnTypeRector::class,
         ReplaceMultipleBooleanNotRector::class,
-        ReturnAnnotationIncorrectNullableRector::class,
+        // ReturnAnnotationIncorrectNullableRector::class,
         // ReturnBinaryAndToEarlyReturnRector::class,
         ReturnBinaryOrToEarlyReturnRector::class,
         ReturnEarlyIfVariableRector::class,
@@ -477,7 +478,7 @@ return static function (RectorConfig $rectorConfig): void {
         ReturnTypeFromStrictConstantReturnRector::class,
         ReturnTypeFromStrictNativeCallRector::class,
         ReturnTypeFromStrictNewArrayRector::class,
-        ReturnTypeFromStrictScalarReturnExprRector::class,
+        // ReturnTypeFromStrictScalarReturnExprRector::class,
         ReturnTypeFromStrictTernaryRector::class,
         ReturnTypeFromStrictTypedCallRector::class,
         ReturnTypeFromStrictTypedPropertyRector::class,
