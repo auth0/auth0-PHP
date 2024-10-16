@@ -493,7 +493,7 @@ test('addClientGrant() issues an appropriate request', function(): void {
 test('getClientGrants() issues an appropriate request', function(): void {
     $organization = 'org_' . uniqid();
 
-    $this->endpoint->getClientGrants($organization);
+    $this->endpoint->getClientGrants($organization, '');
 
     expect($this->api->getRequestMethod())->toEqual('GET');
     expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/' . $organization . '/client-grants');
@@ -507,4 +507,17 @@ test('removeClientGrant() issues an appropriate request', function(): void {
 
     expect($this->api->getRequestMethod())->toEqual('DELETE');
     expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/' . $organization . '/client-grants/' . $grant);
+});
+
+test('getClientGrants() issues an appropriate request with grant_ids', function (): void {
+    $orgId = uniqid();
+    $grantIds = 'cgr_12345,cgr_67890'; // Comma-separated grant IDs
+  
+    $this->endpoint->getClientGrants($orgId, $grantIds);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/organizations/' . $orgId . '/client-grants');
+
+    $query = $this->api->getRequestQuery(null);
+    expect($query)->toContain('grant_ids=' . rawurlencode($grantIds));
 });
