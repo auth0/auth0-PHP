@@ -141,3 +141,73 @@ test('createCredentials() issues an appropriate request', function(): void {
     $body = $this->api->getRequestBodyAsString();
     expect($body)->toEqual(json_encode((object) $mockRequestBody));
 });
+
+test('getAll() issues an appropriate request with organization queries', function(): void {
+    $this->endpoint->getAll(['q' => 'allow_any_organization=true']);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/clients');
+
+    expect($this->api->getRequestQuery(null))->toEqual('q=' . rawurlencode('allow_any_organization=true'));
+});
+
+test('create() issues an appropriate request with default_organization', function(): void {
+    $mock = (object) [
+        'name' => uniqid(),
+        'body' => [
+            'default_organization' => [
+                'flows' => ["client_credentials"],
+                'organization_id' => "org_" . uniqid()
+            ]
+        ]
+    ];
+   
+    $this->endpoint->create($mock->name, $mock->body);
+  
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/clients');
+
+    $body = $this->api->getRequestBody();
+
+    $this->assertArrayHasKey('name', $body);
+    expect($body['name'])->toEqual($mock->name);
+
+    // Check for default_organization
+    $this->assertArrayHasKey('default_organization', $body);
+    expect($body['default_organization']['organization_id'])->toEqual($mock->body['default_organization']['organization_id']);
+    expect($body['default_organization']['flows'])->toEqual($mock->body['default_organization']['flows']);
+
+    // Ensure the request body matches the expected format
+    expect($this->api->getRequestBodyAsString())->toEqual(json_encode(array_merge(['name' => $mock->name], $mock->body)));
+});
+
+test('update() issues an appropriate request with organization queries', function(): void {
+    $clientId = uniqid();
+    $mock = (object) [
+        'body' => [
+            'default_organization' => [
+                'flows' => ["client_credentials"],
+                'organization_id' => "org_" . uniqid()
+            ]
+        ]
+    ];
+   
+    $this->endpoint->update($clientId, $mock->body);
+  
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/clients/' . $clientId);
+
+    $body = $this->api->getRequestBody();
+
+    // Check for default_organization
+    $this->assertArrayHasKey('default_organization', $body);
+    expect($body['default_organization']['organization_id'])->toEqual($mock->body['default_organization']['organization_id']);
+    expect($body['default_organization']['flows'])->toEqual($mock->body['default_organization']['flows']);
+
+    // Ensure the request body matches the expected format
+    expect($this->api->getRequestBodyAsString())->toEqual(json_encode($mock->body));
+});
+
+
+
+
