@@ -41,11 +41,13 @@ jobs:
       - name: Build PHP Package
         shell: bash
         run: |
-          zip -r auth0-php-package.zip 
+          zip -r auth0-php-package.zip src composer.json README.md LICENSE.txt
 
       - name: Get Artifact Version
         id: get_version
-        run: echo "::set-output name=version::$(cat .version)"
+        run: |
+          version=$(cat .version)
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Output build artifact
         id: output_build_artifact
