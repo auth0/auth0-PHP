@@ -11,7 +11,12 @@ on:
       - main
   schedule:
     - cron: "30 0 1,15 * *"
-  workflow_dispatch:
+   workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Pull Request number to run the workflow on (for fork PRs)'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -54,7 +59,9 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: |
+            ${{ github.event.pull_request.merge_commit_sha || 
+                (github.event_name == 'workflow_dispatch' && inputs.pr_number != '' ? 'refs/pull/' + inputs.pr_number + '/head' : github.ref) }}
 
       - uses: ./.github/actions/setup
         with:
