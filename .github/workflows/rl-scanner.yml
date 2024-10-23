@@ -65,7 +65,7 @@ jobs:
           pip install boto3 requests
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.PRODSEC_TOOLS_ARN }}
           aws-region: us-east-1
@@ -79,7 +79,7 @@ jobs:
           WRAPPER_INDEX_URL: "https://${{ secrets.PRODSEC_TOOLS_USER }}:${{ secrets.PRODSEC_TOOLS_TOKEN }}@a0us.jfrog.io/artifactory/api/pypi/python-local/simple"
           PYTHONUNBUFFERED: 1
         run: |
-          pip install rl-wrapper --index-url "$WRAPPER_INDEX_URL" && \
+          pip install rl-wrapper==0.0.2 --index-url "$WRAPPER_INDEX_URL" && \
           rl-wrapper \
             --artifact "${{ steps.output_build_artifact.outputs.scanfile }}" \
             --version "${{ steps.get_version.outputs.version }}" \
