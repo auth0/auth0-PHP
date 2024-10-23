@@ -53,8 +53,8 @@ interface AuthenticationInterface extends ClientInterface
      * @throws ConfigurationException when a redirect uri is not configured
      * @throws NetworkException       when the API request fails due to a network error
      *
-     * @see https://auth0.com/docs/api/authentication#authorization-code-flow45
-     * @see https://auth0.com/docs/api/authentication#authorization-code-flow-with-pkce46
+     * @see https://auth0.com/docs/api/authentication#authorization-code-flow
+     * @see https://auth0.com/docs/api/authentication#authorization-code-flow-with-pkce
      */
     public function codeExchange(
         string $code,
