@@ -11,7 +11,7 @@ on:
       - main
   schedule:
     - cron: "30 0 1,15 * *"
-   workflow_dispatch:
+  workflow_dispatch:
     inputs:
       pr_number:
         description: 'Pull Request number to run the workflow on (for fork PRs)'
