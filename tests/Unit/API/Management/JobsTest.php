@@ -28,7 +28,7 @@ test('createImportUsers() issues an appropriate request', function(): void {
     fwrite($import, '[{"email":"php-sdk-test-import-user-job@auth0.com","email_verified":true,"app_metadata":{"roles":["admin","super"],"plan":"premium"},"user_metadata":{"theme":"dark"}}]');
 
     $path = stream_get_meta_data($import)['uri'];
-    $keyOffset = 3;
+    $keyOffset = 2;
 
     $this->endpoint->createImportUsers(
         $path,
