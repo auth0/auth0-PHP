@@ -289,6 +289,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
 
     public function getClientGrants(
         string $id,
+        string $grantIds,
         ?RequestOptions $options = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
@@ -299,6 +300,7 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
 
         return $this->getHttpClient()
             ->method('get')->addPath(['organizations', $id, 'client-grants'])
+            ->withParams(['grant_ids' => $grantIds])
             ->withOptions($options)
             ->call();
     }
