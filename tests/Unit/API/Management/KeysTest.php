@@ -28,8 +28,6 @@ test('postEncryptionRekey() issues an appropriate request', function(): void {
 
     $this->endpoint->postEncryptionRekey();
 
-    $a =$this->api->getRequestUrl();
-    print_r($a);
     expect($this->api->getRequestMethod())->toEqual('POST');
     expect($this->api->getRequestUrl())->toEndWith('/api/v2/keys/encryption/rekey');
 
@@ -39,10 +37,10 @@ test('postEncryptionRekey() issues an appropriate request', function(): void {
 
 test('postEncryptionRekey() returns 204 on success', function(): void {
 
-    // Mock the API response for successful rekey with status 204
+    // Mocked the API response for successful rekey with status 204
     $this->httpResponse204 = HttpResponseGenerator::create('success', 204);
 
-    // Mock the client to return the mocked 204 response
+    // Mocked the client to return the mocked 204 response
     $this->client->mockResponse($this->httpResponse204);
     $response = $this->client->method('post')
         ->addPath(['keys', 'encryption', 'rekey'])
