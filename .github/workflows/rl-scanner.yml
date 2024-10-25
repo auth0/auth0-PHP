@@ -3,7 +3,7 @@ name: RL-Secure Workflow
 on:
   workflow_call:
     inputs:
-      node-version:
+      php-version:
         required: true
         type: string
       artifact-name:
@@ -43,7 +43,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
         with:
-          php-version: ${{ inputs.node-version }}
+          php-version: ${{ inputs.php-version }}
 
       - name: Build PHP Package
         shell: bash
