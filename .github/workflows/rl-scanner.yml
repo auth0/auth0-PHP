@@ -48,10 +48,10 @@ jobs:
         run: |
           ls -la ${{ github.workspace }}
 
-      - name: List files in current working directory (pwd)
+      - name: Build PHP Package
+        shell: bash
         run: |
-          echo "Current working directory: $(pwd)"
-          ls -la $(pwd)
+          zip -r auth0-php-package.zip ./*
           
       - name: Get Artifact Version
         id: get_version
