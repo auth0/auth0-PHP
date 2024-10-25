@@ -38,11 +38,21 @@ jobs:
         run: |
           composer install --prefer-dist
 
-      - name: Build PHP Package
+      - name: List all files
         shell: bash
         run: |
-          zip -r auth0-php-package.zip src composer.json README.md LICENSE.txt
+          ls -la ${{ github.workspace }}
 
+      - name: List all files
+        shell: bash
+        run: |
+          ls -la ${{ github.workspace }}
+
+      - name: List files in current working directory (pwd)
+        run: |
+          echo "Current working directory: $(pwd)"
+          ls -la $(pwd)
+          
       - name: Get Artifact Version
         id: get_version
         run: |
