@@ -1,25 +1,37 @@
-name: RL-Secure
-run-name: rl-scanner
+name: RL-Secure Workflow
 
 on:
-  merge_group:
-  workflow_dispatch:
-  push:
-    branches: ["main"]
-  pull_request:
-    types:
-      - opened
-      - synchronize
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+      artifact-name:
+        required: true
+        type: string
+    secrets:
+      RLSECURE_LICENSE:
+        required: true
+      RLSECURE_SITE_KEY:
+        required: true
+      SIGNAL_HANDLER_TOKEN:
+        required: true
+      PRODSEC_TOOLS_USER:
+        required: true
+      PRODSEC_TOOLS_TOKEN:
+        required: true
+      PRODSEC_TOOLS_ARN:
+        required: true
 
 jobs:
   rl-scanner:
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request')
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/'))
     runs-on: ubuntu-latest
-
-    environment: security
+    outputs:
+      scan-status: ${{ steps.rl-scan-conclusion.outcome }}
 
     permissions:
-      pull-requests: write
+      php-version: write
       id-token: write # This is required for requesting the JWT
 
     steps:
@@ -31,71 +43,30 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
         with:
-          php-version: 8.1
-
-      - name: Install dependencies
-        shell: bash
-        run: |
-          composer install --prefer-dist
-
-      - name: List all files
-        shell: bash
-        run: |
-          ls -la ${{ github.workspace }}
-
-      - name: List all files
-        shell: bash
-        run: |
-          ls -la ${{ github.workspace }}
+          php-version: ${{ inputs.node-version }}
 
       - name: Build PHP Package
         shell: bash
         run: |
-          zip -r auth0-php-package.zip ./*
-          
+          zip -r ${{ inputs.artifact-name }} ./*
+
       - name: Get Artifact Version
         id: get_version
-        run: |
-          version=$(cat .version)
-          echo "version=$version" >> $GITHUB_OUTPUT
+        uses: ./.github/actions/get-version
 
-      - name: Output build artifact
-        id: output_build_artifact
-        run: |
-          echo "scanfile=$(ls auth0-php-package.zip)" >> $GITHUB_OUTPUT
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Run RL Scanner
+        id: rl-scan-conclusion
+        uses: ./.github/actions/rl-scanner
         with:
-          python-version: "3.10"
-
-      - name: Install Python dependencies
-        run: |
-          pip install --upgrade pip
-          pip install boto3 requests
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.PRODSEC_TOOLS_ARN }}
-          aws-region: us-east-1
-          mask-aws-account-id: true
-
-      - name: Run Reversing Labs Wrapper Scanner
+          artifact-path: "$(pwd)/${{ inputs.artifact-name }}"
+          version: "${{ steps.get_version.outputs.version }}"
         env:
           RLSECURE_LICENSE: ${{ secrets.RLSECURE_LICENSE }}
           RLSECURE_SITE_KEY: ${{ secrets.RLSECURE_SITE_KEY }}
           SIGNAL_HANDLER_TOKEN: ${{ secrets.SIGNAL_HANDLER_TOKEN }}
-          WRAPPER_INDEX_URL: "https://${{ secrets.PRODSEC_TOOLS_USER }}:${{ secrets.PRODSEC_TOOLS_TOKEN }}@a0us.jfrog.io/artifactory/api/pypi/python-local/simple"
-          PYTHONUNBUFFERED: 1
-        run: |
-          pip install rl-wrapper==0.0.2 --index-url "$WRAPPER_INDEX_URL" && \
-          rl-wrapper \
-            --artifact "${{ steps.output_build_artifact.outputs.scanfile }}" \
-            --version "${{ steps.get_version.outputs.version }}" \
-            --name "${{ github.event.repository.name }}" \
-            --repository "${{ github.repository }}" \
-            --commit "${{ github.sha }}" \
-            --build-env "github_actions" \
-            --suppress_output
-        continue-on-error: true
+          PRODSEC_TOOLS_USER: ${{ secrets.PRODSEC_TOOLS_USER }}
+          PRODSEC_TOOLS_TOKEN: ${{ secrets.PRODSEC_TOOLS_TOKEN }}
+          PRODSEC_TOOLS_ARN: ${{ secrets.PRODSEC_TOOLS_ARN }}
+
+      - name: Output scan result
+        run: echo "scan-status=${{ steps.rl-scan-conclusion.outcome }}" >> $GITHUB_ENV
