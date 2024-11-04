@@ -289,8 +289,8 @@ final class Organizations extends ManagementEndpoint implements OrganizationsInt
 
     public function getClientGrants(
         string $id,
-        string $grantIds,
         ?RequestOptions $options = null,
+        ?string $grantIds = null,
     ): ResponseInterface {
         [$id] = Toolkit::filter([$id])->string()->trim();
 
