@@ -1,5 +1,17 @@
 # Change Log
 
+## [8.12.0](https://github.com/auth0/auth0-PHP/tree/8.12.0) (2024-11-05)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.11.1...8.12.0)
+
+**Added**
+- feat: Adding client credentials support [\#775](https://github.com/auth0/auth0-PHP/pull/775) ([kishore7snehil](https://github.com/kishore7snehil))
+
+- feat: Adding Support For CYOK [\#779](https://github.com/auth0/auth0-PHP/pull/779) ([kishore7snehil](https://github.com/kishore7snehil))
+
+**Fixed**
+
+- fix: fix jobs test fail [\#773](https://github.com/auth0/auth0-PHP/pull/773) ([yasuaki640](https://github.com/ramonschriks))
+
 ## [8.11.1](https://github.com/auth0/auth0-PHP/tree/8.11.1) (2024-01-10)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.11.0...8.11.1)
 
