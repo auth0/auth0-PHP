@@ -80,10 +80,16 @@ final class ResourceServers extends ManagementEndpoint implements ResourceServer
 
     public function getAll(
         ?RequestOptions $options = null,
+        ?array $parameters = null,
     ): ResponseInterface {
+        [$parameters] = Toolkit::filter([$parameters])->array()->trim();
+
+        /** @var array<null|int|string> $parameters */
+
         return $this->getHttpClient()
             ->method('get')
             ->addPath(['resource-servers'])
+            ->withParams($parameters)
             ->withOptions($options)
             ->call();
     }

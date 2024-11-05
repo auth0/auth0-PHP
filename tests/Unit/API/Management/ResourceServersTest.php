@@ -73,3 +73,27 @@ test('delete() issues an appropriate request', function(string $id): void {
 })->with(['mocked id' => [
     fn() => uniqid(),
 ]]);
+
+test('getAll() issues an appropriate request with identifiers array', function(): void {
+    $identifiers = ['https://tst.api.com/api/v1/', 'https://tst.api.com/api/v2/'];
+    
+    $this->endpoint->getAll(null, ['identifiers' => $identifiers]);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/resource-servers');
+
+    expect($this->api->getRequestUrl())->toContain(rawurlencode('identifiers[0]') .'='. rawurlencode('https://tst.api.com/api/v1/'));
+    expect($this->api->getRequestUrl())->toContain(rawurlencode('identifiers[1]') .'='. rawurlencode('https://tst.api.com/api/v2/'));
+});
+
+test('getAll() supports checkpoint pagination parameters', function(): void {
+    $this->paginatedRequest->setFrom('indexIdentifier')->setTake(50);
+    
+    $this->endpoint->getAll($this->requestOptions, null);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/resource-servers');
+
+    expect($this->api->getRequestQuery())->toContain('&from=indexIdentifier');
+    expect($this->api->getRequestQuery())->toContain('&take=50');
+});
