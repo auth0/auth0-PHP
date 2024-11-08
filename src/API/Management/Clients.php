@@ -124,6 +124,11 @@ final class Clients extends ManagementEndpoint implements ClientsInterface
 
         /** @var array<null|int|string> $parameters */
 
+        // If the 'q' parameter is provided, ensure it's correctly passed in the query
+        if (isset($parameters['q'])) {
+            [$parameters['q']] = Toolkit::filter([$parameters['q']])->string()->trim();
+        }
+
         return $this->getHttpClient()
             ->method('get')
             ->addPath(['clients'])

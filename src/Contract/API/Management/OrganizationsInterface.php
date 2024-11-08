@@ -229,8 +229,9 @@ interface OrganizationsInterface
      * Get client grants associated to an organization.
      * Required scope: `read:organization_client_grants`.
      *
-     * @param string              $id      Organization (by ID) that the connection is associated with
-     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these.)
+     * @param string              $id       Organization (by ID) that the connection is associated with
+     * @param null|RequestOptions $options  Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these.)
+     * @param string              $grantIds Client Grant (by ID) to associate with the organization.
      *
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` or `connectionId` are provided
      * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
@@ -238,6 +239,7 @@ interface OrganizationsInterface
     public function getClientGrants(
         string $id,
         ?RequestOptions $options = null,
+        ?string $grantIds = null,
     ): ResponseInterface;
 
     /**

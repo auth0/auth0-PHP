@@ -21,7 +21,7 @@ final class Auth0 implements Auth0Interface
     /**
      * @var string
      */
-    public const VERSION = '8.9.2';
+    public const VERSION = '8.12.0';
 
     /**
      * Authentication Client.
