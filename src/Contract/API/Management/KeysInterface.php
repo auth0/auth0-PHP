@@ -87,7 +87,7 @@ interface KeysInterface
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `body` are provided
      * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @see https://auth0.com/docs/api/management/v2#!/keys/post-encryption-wrapping-key
+     * @see https://auth0.com/docs/api/management/v2#!/keys/post-encryption-key
      */
     public function postEncryptionKey(
         string $kId,
@@ -119,7 +119,7 @@ interface KeysInterface
      * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `body` are provided
      * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
      *
-     * @see https://auth0.com/docs/api/management/v2#!/keys/post-encryption
+     * @see https://auth0.com/docs/api/management/v2#!/keys/post-encryption-wrapping-key
      */
     public function postEncryptionWrappingKey(
         string $kId,
