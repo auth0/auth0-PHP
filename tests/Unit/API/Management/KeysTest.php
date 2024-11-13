@@ -24,6 +24,66 @@ beforeEach(function(): void {
     $this->endpoint = $this->api->mock()->keys();
 });
 
+test('getEncryptionKey() issues an appropriate request', function(): void {
+    $keyId = uniqid();
+
+    $this->endpoint->getEncryptionKey($keyId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/keys/encryption/' . $keyId);
+});
+
+test('getEncryptionKeys() issues an appropriate request', function(): void {
+    $this->endpoint->getEncryptionKeys();
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/keys/encryption');
+    expect($this->api->getRequestQuery())->toBeEmpty();
+});
+
+test('postEncryption() issues an appropriate request', function(): void {
+    $type = 'environment-root-key';
+    $mock = (object) [
+        'body' => [
+            'type' => $type
+        ]
+    ];
+
+    $this->endpoint->postEncryption($mock->body);
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/keys/encryption');
+
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('type', $body);;
+    expect($body['type'])->toEqual($type);
+
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['type' => $type]));
+});
+
+test('postEncryptionKey() issues an appropriate request', function(): void {
+    $keyId = uniqid();
+    $wrappedKey = 'base64 encoded ciphertext of wrapped key';
+    $mock = (object) [
+        'body' => [
+            'wrappedKey' => $wrappedKey
+        ]
+    ];
+
+    $this->endpoint->postEncryptionKey($keyId, $mock->body);
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/keys/encryption/' . $keyId);
+
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('wrappedKey', $body);;
+    expect($body['wrappedKey'])->toEqual($wrappedKey);
+
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(['wrappedKey' => $wrappedKey]));
+});
+
 test('postEncryptionRekey() issues an appropriate request', function(): void {
 
     $this->endpoint->postEncryptionRekey();
@@ -47,3 +107,22 @@ test('postEncryptionRekey() returns 204 on success', function(): void {
         ->call();
     expect($response->getStatusCode())->toEqual(204);
 });
+
+test('postEncryptionWrappingKey() issues an appropriate request', function(): void {
+    $keyId = uniqid();
+
+    $this->endpoint->postEncryptionWrappingKey($keyId);
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/keys/encryption/' . $keyId . '/wrapping-key');
+});
+
+test('deleteEncryptionKey() issues an appropriate request', function(): void {
+    $keyId = uniqid();
+
+    $this->endpoint->deleteEncryptionKey($keyId);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/keys/encryption/' . $keyId);
+});
+
