@@ -1,5 +1,17 @@
 # Change Log
 
+## [8.13.0](https://github.com/auth0/auth0-PHP/tree/8.13.0) (2024-11-15)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.12.0...8.13.0)
+
+**Added**
+- feat: Adding Support For BYOK [\#782](https://github.com/auth0/auth0-PHP/pull/782) ([kishore7snehil](https://github.com/kishore7snehil))
+
+- feat: Validation Test Case For Show as Button Parameter [\#783](https://github.com/auth0/auth0-PHP/pull/783) ([kishore7snehil](https://github.com/kishore7snehil))
+
+**Fixed**
+
+- docs: Adjusted link typo on codeExchange method to the right url [\#782](https://github.com/auth0/auth0-PHP/pull/782) ([GabrielBrittoDev](https://github.com/GabrielBrittoDev))
+
 ## [8.12.0](https://github.com/auth0/auth0-PHP/tree/8.12.0) (2024-11-05)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.11.1...8.12.0)
 
