@@ -521,3 +521,36 @@ test('getClientGrants() issues an appropriate request with grant_ids', function 
     $query = $this->api->getRequestQuery(null);
     expect($query)->toContain('grant_ids=' . rawurlencode($grantIds));
 });
+
+test('create() issues an appropriate request with show as button parameter in enabled connections', function(): void {
+    $mock = (object) [
+        'id' => uniqid(),
+        'name' => uniqid(),
+        'branding' => [
+            'logo_url' => uniqid(),
+        ],
+        'metadata' => [
+            'test' => uniqid()
+        ],
+        'body' => [
+            'enabled_connections' => [
+                'connection_id' => uniqid(),
+                'show_as_button' => true
+            ]
+        ]
+    ];
+
+    $this->endpoint->create($mock->id, $mock->name, $mock->branding, $mock->metadata, $mock->body);
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations');
+
+    $body = $this->api->getRequestBody();
+
+    $this->assertArrayHasKey('enabled_connections', $body);
+    $this->assertArrayHasKey('show_as_button', $body['enabled_connections']);
+    expect($body['enabled_connections']['show_as_button'])->toEqual($mock->body['enabled_connections']['show_as_button']);
+
+    $body = $this->api->getRequestBodyAsString();
+    expect($body)->toEqual(json_encode(array_merge(['name' => $mock->id, 'display_name' => $mock->name, 'branding' => $mock->branding, 'metadata' => $mock->metadata], $mock->body)));
+});
