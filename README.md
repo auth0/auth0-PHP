@@ -128,7 +128,7 @@ We drop support for PHP versions when they reach end-of-life and cease receiving
 
 We appreciate feedback and contribution to this repo! Before you get started, please see the following:
 
-- [Contribution Guide](./CONTRIBUTING.md)
+- [Contribution Guide](./.github/CONTRIBUTING.md)
 - [Auth0's General Contribution Guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
 - [Auth0's Code of Conduct Guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 
