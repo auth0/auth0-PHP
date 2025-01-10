@@ -476,3 +476,45 @@ test('deleteAuthenticationMethod() issues an appropriate request', function(): v
     $headers = $this->api->getRequestHeaders();
     expect($headers['Content-Type'][0])->toEqual('application/json');
 });
+
+test('getRefreshTokens() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
+
+    $this->endpoint->getRefreshTokens($mockupId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/users/' . $mockupId . '/refresh-tokens');
+});
+
+test('getSessions() issues an appropriate request', function(): void {
+    $mockupId = uniqid();
+
+    $this->endpoint->getSessions($mockupId);
+
+    expect($this->api->getRequestMethod())->toEqual('GET');
+    expect($this->api->getRequestUrl())->toStartWith('https://' . $this->api->mock()->getConfiguration()->getDomain() . '/api/v2/users/' . $mockupId . '/sessions');
+});
+
+test('deleteRefreshTokens() issues an appropriate request', function(): void {
+    $userId = uniqid();
+
+    $this->endpoint->deleteRefreshTokens($userId);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/refresh-tokens');
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});
+
+test('deleteSessions() issues an appropriate request', function(): void {
+    $userId = uniqid();
+
+    $this->endpoint->deleteSessions($userId);
+
+    expect($this->api->getRequestMethod())->toEqual('DELETE');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/users/' . $userId . '/sessions');
+
+    $headers = $this->api->getRequestHeaders();
+    expect($headers['Content-Type'][0])->toEqual('application/json');
+});

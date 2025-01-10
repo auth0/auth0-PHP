@@ -190,6 +190,36 @@ interface UsersInterface
     ): ResponseInterface;
 
     /**
+     * Delete all refresh tokens for a user.
+     *
+     * Required scope: `delete:refresh_tokens`.
+     *
+     * @param string              $user    ID of user to query.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_refresh_tokens_for_user
+     */
+    public function deleteRefreshTokens(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Delete all sessions for a user.
+     *
+     * Required scope: `delete:sessions`.
+     *
+     * @param string              $user    ID of user to query.
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/delete_sessions_for_user
+     */
+    public function deleteSessions(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
      * Get a User.
      * Required scopes:
      * - `read:users` for any call to this endpoint.
@@ -331,6 +361,24 @@ interface UsersInterface
     ): ResponseInterface;
 
     /**
+     * Retrieve details for a user's refresh tokens.
+     * Required scopes:
+     * - `read:refresh_tokens`.
+     *
+     * @param string              $id      user ID to get refresh tokens for
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_refresh_tokens_for_user
+     */
+    public function getRefreshTokens(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
      * Get all roles assigned to a specific user.
      * Required scopes:
      * - `read:users`
@@ -345,6 +393,24 @@ interface UsersInterface
      * @see https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
      */
     public function getRoles(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface;
+
+    /**
+     * Retrieve details for a user's sessions.
+     * Required scopes:
+     * - `read: sessions`.
+     *
+     * @param string              $id      user ID to get session details for
+     * @param null|RequestOptions $options Optional. Additional request options to use, such as a field filtering or pagination. (Not all endpoints support these. See @see for supported options.)
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException when an invalid `id` is provided
+     * @throws \Auth0\SDK\Exception\NetworkException  when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/api/management/v2#!/Users/get_sessions_for_user
+     */
+    public function getSessions(
         string $id,
         ?RequestOptions $options = null,
     ): ResponseInterface;

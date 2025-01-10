@@ -221,6 +221,38 @@ final class Users extends ManagementEndpoint implements UsersInterface
             ->call();
     }
 
+    public function deleteRefreshTokens(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user] = Toolkit::filter([$user])->string()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')->addPath(['users', $user, 'refresh-tokens'])
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function deleteSessions(
+        string $user,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$user] = Toolkit::filter([$user])->string()->trim();
+
+        Toolkit::assert([
+            [$user, \Auth0\SDK\Exception\ArgumentException::missing('user')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('delete')->addPath(['users', $user, 'sessions'])
+            ->withOptions($options)
+            ->call();
+    }
+
     public function get(
         string $id,
         ?RequestOptions $options = null,
@@ -351,6 +383,22 @@ final class Users extends ManagementEndpoint implements UsersInterface
             ->call();
     }
 
+    public function getRefreshTokens(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')->addPath(['users', $id, 'refresh-tokens'])
+            ->withOptions($options)
+            ->call();
+    }
+
     public function getRoles(
         string $id,
         ?RequestOptions $options = null,
@@ -363,6 +411,22 @@ final class Users extends ManagementEndpoint implements UsersInterface
 
         return $this->getHttpClient()
             ->method('get')->addPath(['users', $id, 'roles'])
+            ->withOptions($options)
+            ->call();
+    }
+
+    public function getSessions(
+        string $id,
+        ?RequestOptions $options = null,
+    ): ResponseInterface {
+        [$id] = Toolkit::filter([$id])->string()->trim();
+
+        Toolkit::assert([
+            [$id, \Auth0\SDK\Exception\ArgumentException::missing('id')],
+        ])->isString();
+
+        return $this->getHttpClient()
+            ->method('get')->addPath(['users', $id, 'sessions'])
             ->withOptions($options)
             ->call();
     }
