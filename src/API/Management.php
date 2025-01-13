@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API;
 
-use Auth0\SDK\API\Management\{Actions, AttackProtection, Blacklists, ClientGrants, Clients, Connections, DeviceCredentials, EmailTemplates, Emails, Grants, Guardian, Jobs, Keys, LogStreams, Logs, Organizations, ResourceServers, Roles, Rules, Stats, Tenants, Tickets, UserBlocks, Users, UsersByEmail};
+use Auth0\SDK\API\Management\{Actions, AttackProtection, Blacklists, ClientGrants, Clients, Connections, DeviceCredentials, EmailTemplates, Emails, Grants, Guardian, Jobs, Keys, LogStreams, Logs, Organizations, RefreshTokens, ResourceServers, Roles, Rules, Sessions, Stats, Tenants, Tickets, UserBlocks, Users, UsersByEmail};
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\Management\{ActionsInterface, AttackProtectionInterface, BlacklistsInterface, ClientGrantsInterface, ClientsInterface, ConnectionsInterface, DeviceCredentialsInterface, EmailTemplatesInterface, EmailsInterface, GrantsInterface, GuardianInterface, JobsInterface, KeysInterface, LogStreamsInterface, LogsInterface, OrganizationsInterface, ResourceServersInterface, RolesInterface, RulesInterface, StatsInterface, TenantsInterface, TicketsInterface, UserBlocksInterface, UsersByEmailInterface, UsersInterface};
+use Auth0\SDK\Contract\API\Management\{ActionsInterface, AttackProtectionInterface, BlacklistsInterface, ClientGrantsInterface, ClientsInterface, ConnectionsInterface, DeviceCredentialsInterface, EmailTemplatesInterface, EmailsInterface, GrantsInterface, GuardianInterface, JobsInterface, KeysInterface, LogStreamsInterface, LogsInterface, OrganizationsInterface, RefreshTokensInterface, ResourceServersInterface, RolesInterface, RulesInterface, SessionsInterface, StatsInterface, TenantsInterface, TicketsInterface, UserBlocksInterface, UsersByEmailInterface, UsersInterface};
 use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
 use Auth0\SDK\Utility\{HttpClient, HttpResponse, HttpResponsePaginator};
 use Psr\Cache\CacheItemPoolInterface;
@@ -202,6 +202,11 @@ final class Management extends ClientAbstract implements ManagementInterface
         return Organizations::instance($this->getHttpClient());
     }
 
+    public function refreshTokens(): RefreshTokensInterface
+    {
+        return RefreshTokens::instance($this->getHttpClient());
+    }
+
     public function resourceServers(): ResourceServersInterface
     {
         return ResourceServers::instance($this->getHttpClient());
@@ -215,6 +220,11 @@ final class Management extends ClientAbstract implements ManagementInterface
     public function rules(): RulesInterface
     {
         return Rules::instance($this->getHttpClient());
+    }
+
+    public function sessions(): SessionsInterface
+    {
+        return Sessions::instance($this->getHttpClient());
     }
 
     public function stats(): StatsInterface
