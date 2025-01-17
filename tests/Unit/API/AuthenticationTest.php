@@ -554,6 +554,52 @@ test('dbConnectionsSignup() is properly formatted', function(): void {
     expect($requestHeaders['header_testing'][0])->toEqual(123);
 });
 
+test('dbConnectionsSignup handles phone_number correctly', function (): void {
+    $clientSecret = uniqid();
+    $email = 'someone@somewhere.somehow';
+    $password = uniqid();
+    $connection = uniqid();
+    $phoneNumber = '+1234567890';
+
+    $this->configuration->setClientSecret($clientSecret);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+
+    // Test with phone_number
+    $authentication->dbConnectionsSignup($email, $password, $connection, ['phone_number' => $phoneNumber]);
+    $requestWithPhone = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBodyWithPhone = json_decode($requestWithPhone->getBody()->__toString(), true);
+
+    $this->assertArrayHasKey('phone_number', $requestBodyWithPhone);
+    expect($requestBodyWithPhone['phone_number'])->toEqual($phoneNumber);
+
+    // Test without phone_number
+    $authentication->dbConnectionsSignup($email, $password, $connection);
+    $requestWithoutPhone = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBodyWithoutPhone = json_decode($requestWithoutPhone->getBody()->__toString(), true);
+
+    $this->assertArrayNotHasKey('phone_number', $requestBodyWithoutPhone);
+});
+
+test('dbConnectionsSignup handles flexible identifiers and precedence', function (): void {
+    $clientSecret = uniqid();
+    $email = 'someone@somewhere.somehow';
+    $password = uniqid();
+    $connection = uniqid();
+    $phoneNumber = '+1234567890';
+
+    $this->configuration->setClientSecret($clientSecret);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+
+    $authentication->dbConnectionsSignup($email, $password, $connection, ['phone_number' => $phoneNumber]);
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = json_decode($request->getBody()->__toString(), true);
+
+    expect($requestBody['email'])->toEqual($email);
+    expect($requestBody['phone_number'])->toEqual($phoneNumber);
+});
+
 test('dbConnectionsChangePassword() is properly formatted', function(): void {
     $clientSecret = uniqid();
 
@@ -585,6 +631,33 @@ test('dbConnectionsChangePassword() is properly formatted', function(): void {
 
     $this->assertArrayHasKey('header_testing', $requestHeaders);
     expect($requestHeaders['header_testing'][0])->toEqual(123);
+});
+
+test('dbConnectionsChangePassword handles phone_number correctly', function (): void {
+    $clientSecret = uniqid();
+
+    $email = 'someone@somewhere.somehow';
+    $connection = uniqid();
+    $phoneNumber = '+1234567890';
+
+    $this->configuration->setClientSecret($clientSecret);
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+
+    // Test with phone_number
+    $authentication->dbConnectionsChangePassword($email, $connection, ['phone_number' => $phoneNumber]);
+    $requestWithPhone = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBodyWithPhone = json_decode($requestWithPhone->getBody()->__toString(), true);
+
+    $this->assertArrayHasKey('phone_number', $requestBodyWithPhone);
+    expect($requestBodyWithPhone['phone_number'])->toEqual($phoneNumber);
+
+    // Test without phone_number
+    $authentication->dbConnectionsChangePassword($email, $connection);
+    $requestWithoutPhone = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBodyWithoutPhone = json_decode($requestWithoutPhone->getBody()->__toString(), true);
+
+    $this->assertArrayNotHasKey('phone_number', $requestBodyWithoutPhone);
 });
 
 test('pushedAuthorizationRequest() returns an instance of Auth0\SDK\API\Authentication\PushedAuthorizationRequest', function () {

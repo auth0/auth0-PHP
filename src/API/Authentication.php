@@ -139,6 +139,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
                 'client_id' => $this->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'email' => $email,
                 'connection' => $connection,
+                'phone_number' => $body['phone_number'] ?? null,
             ], $body]))
             ->withHeaders($headers)
             ->call();
@@ -170,6 +171,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
                 'email' => $email,
                 'password' => $password,
                 'connection' => $connection,
+                'phone_number' => $body['phone_number'] ?? null,
             ], $body]))
             ->withHeaders($headers)
             ->call();
