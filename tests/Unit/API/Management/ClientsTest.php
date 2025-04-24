@@ -208,6 +208,189 @@ test('update() issues an appropriate request with organization queries', functio
     expect($this->api->getRequestBodyAsString())->toEqual(json_encode($mock->body));
 });
 
+test('create() issues an appropriate request with full token_quota client_credentials', function(): void {
+    $mock = (object)[
+        'name' => uniqid(),
+        'body' => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_day'  => 100,
+                    'per_hour' => 20,
+                    'enforce'  => true,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->create($mock->name, $mock->body);
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/clients');
+
+    $body = $this->api->getRequestBody();
+    $this->assertArrayHasKey('name', $body);
+    expect($body['name'])->toEqual($mock->name);
+
+    $this->assertArrayHasKey('token_quota', $body);
+    $qc = $body['token_quota']['client_credentials'];
+    expect($qc['per_day'])->toEqual(100);
+    expect($qc['per_hour'])->toEqual(20);
+    expect($qc['enforce'])->toEqual(true);
+
+    expect($this->api->getRequestBodyAsString())
+        ->toEqual(json_encode(array_merge(['name' => $mock->name], $mock->body)));
+});
+
+test('create() issues an appropriate request with token_quota enforce=false only', function(): void {
+    $mock = (object)[
+        'name' => uniqid(),
+        'body' => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'enforce' => false,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->create($mock->name, $mock->body);
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['enforce'])->toEqual(false);
+    $this->assertArrayNotHasKey('per_day', $qc);
+    $this->assertArrayNotHasKey('per_hour', $qc);
+});
+
+test('create() issues an appropriate request with token_quota per_hour only', function(): void {
+    $mock = (object)[
+        'name' => uniqid(),
+        'body' => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_hour' => 50,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->create($mock->name, $mock->body);
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['per_hour'])->toEqual(50);
+    $this->assertArrayNotHasKey('per_day', $qc);
+    $this->assertArrayNotHasKey('enforce', $qc);
+});
+
+test('create() issues an appropriate request with token_quota per_day only', function(): void {
+    $mock = (object)[
+        'name' => uniqid(),
+        'body' => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_day' => 200,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->create($mock->name, $mock->body);
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['per_day'])->toEqual(200);
+    $this->assertArrayNotHasKey('per_hour', $qc);
+    $this->assertArrayNotHasKey('enforce', $qc);
+});
+
+test('update() issues an appropriate PATCH with full token_quota client_credentials', function(): void {
+    $clientId = uniqid('client_');
+    $mock     = (object)[
+        'body' => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_day'  => 100,
+                    'per_hour' => 20,
+                    'enforce'  => true,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->update($clientId, $mock->body);
+
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEndWith("/api/v2/clients/{$clientId}");
+
+    $body = $this->api->getRequestBody();
+
+    $this->assertArrayHasKey('token_quota', $body);
+    $qc = $body['token_quota']['client_credentials'];
+    expect($qc['per_day'])->toEqual(100);
+    expect($qc['per_hour'])->toEqual(20);
+    expect($qc['enforce'])->toEqual(true);
+
+ 
+    expect($this->api->getRequestBodyAsString())->toEqual(json_encode($mock->body));
+});
+
+test('update() issues an appropriate PATCH with token_quota enforce=false only', function(): void {
+    $clientId = uniqid('client_');
+    $mock     = (object)[
+        'body' => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'enforce' => false,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->update($clientId, $mock->body);
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['enforce'])->toEqual(false);
+    $this->assertArrayNotHasKey('per_day', $qc);
+    $this->assertArrayNotHasKey('per_hour', $qc);
+});
+
+test('update() issues an appropriate PATCH with token_quota per_hour only', function(): void {
+    $clientId = uniqid('client_');
+    $mock     = (object)[
+        'body' => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_hour' => 50,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->update($clientId, $mock->body);
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['per_hour'])->toEqual(50);
+    $this->assertArrayNotHasKey('per_day', $qc);
+    $this->assertArrayNotHasKey('enforce', $qc);
+});
+
+test('update() issues an appropriate PATCH with token_quota per_day only', function(): void {
+    $clientId = uniqid('client_');
+    $mock     = (object)[
+        'body' => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_day' => 200,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->update($clientId, $mock->body);
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['per_day'])->toEqual(200);
+    $this->assertArrayNotHasKey('per_hour', $qc);
+    $this->assertArrayNotHasKey('enforce', $qc);
+});
 
 
 
