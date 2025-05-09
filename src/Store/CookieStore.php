@@ -13,6 +13,7 @@ use function in_array;
 use function is_array;
 use function is_int;
 use function is_string;
+use function strlen;
 
 /**
  * This class provides a layer to persist transient auth data using cookies.
@@ -123,7 +124,7 @@ final class CookieStore implements StoreInterface
         $iv = base64_decode($data['iv'], true);
         $tag = base64_decode($data['tag'], true);
 
-        if (! is_string($iv) || ! is_string($tag)) {
+        if (! is_string($iv) || ! is_string($tag) || 16 !== strlen($tag)) {
             return null;
         }
 
