@@ -13,6 +13,7 @@ use function in_array;
 use function is_array;
 use function is_int;
 use function is_string;
+use function strlen;
 
 /**
  * This class provides a layer to persist transient auth data using cookies.
@@ -38,6 +39,11 @@ final class CookieStore implements StoreInterface
      * @var string
      */
     public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
+
+    /**
+     * @var int
+     */
+    public const VAL_CRYPTO_TAG_LENGTH_BYTES = 16;
 
     /**
      * When true, CookieStore will not setState() itself. You will need manually call the method to persist state to storage.
@@ -123,7 +129,7 @@ final class CookieStore implements StoreInterface
         $iv = base64_decode($data['iv'], true);
         $tag = base64_decode($data['tag'], true);
 
-        if (! is_string($iv) || ! is_string($tag)) {
+        if (! is_string($iv) || ! is_string($tag) || self::VAL_CRYPTO_TAG_LENGTH_BYTES !== strlen($tag)) {
             return null;
         }
 
