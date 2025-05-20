@@ -1,5 +1,12 @@
 # Change Log
 
+## [8.14.0](https://github.com/auth0/auth0-PHP/tree/8.14.0) (2025-05-16)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.13.0...8.14.0)
+
+**Fixed**
+
+- Security fix: Resolve CVE-2025-47275
+
 ## [8.13.0](https://github.com/auth0/auth0-PHP/tree/8.13.0) (2024-11-15)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.12.0...8.13.0)
 
