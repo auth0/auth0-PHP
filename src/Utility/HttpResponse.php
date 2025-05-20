@@ -73,13 +73,13 @@ final class HttpResponse
      * Helper function to parse "b=per_hour;q=100;r=99;t=1,b=per_day;q=300;r=299;t=1"
      * into an array like:
      * [
-     *    'per_hour' => [ 'quota' => 100, 'remaining' => 99, 'time' => 1 ],
-     *    'per_day'  => [ 'quota' => 300, 'remaining' => 299, 'time' => 1 ]
+     *    'per_hour' => [ 'quota' => 100, 'remaining' => 99, 'resetAfter' => 1 ],
+     *    'per_day'  => [ 'quota' => 300, 'remaining' => 299, 'resetAfter' => 1 ]
      * ].
      *
      * @param string $rawValue
      *
-     * @return array<string,array{quota:null|int,remaining:null|int,time:null|int}>
+     * @return array<string,array{quota:null|int,remaining:null|int,resetAfter:null|int}>
      */
     public static function parseQuotaBuckets(string $rawValue): array
     {
@@ -95,7 +95,7 @@ final class HttpResponse
             $bucketData = [
                 'quota' => null,
                 'remaining' => null,
-                'time' => null,
+                'resetAfter' => null,
             ];
 
             foreach ($pairs as $pair) {
@@ -122,9 +122,9 @@ final class HttpResponse
                         $bucketData['remaining'] = (int) $value;
                     }
                 } elseif ('t' === $key) {
-                    // "time"
+                    // "resetAfter"
                     if (is_numeric($value)) {
-                        $bucketData['time'] = (int) $value;
+                        $bucketData['resetAfter'] = (int) $value;
                     }
                 }
             }
@@ -144,8 +144,8 @@ final class HttpResponse
      * The returned array looks like:
      * [
      *   'client' => [
-     *       'per_hour' => [ 'quota' => ..., 'remaining' => ..., 'time' => ... ],
-     *       'per_day'  => [ 'quota' => ..., 'remaining' => ..., 'time' => ... ],
+     *       'per_hour' => [ 'quota' => ..., 'remaining' => ..., 'resetAfter' => ... ],
+     *       'per_day'  => [ 'quota' => ..., 'remaining' => ..., 'resetAfter' => ... ],
      *   ],
      *   'organization' => [
      *       'per_hour' => [...],
@@ -158,8 +158,8 @@ final class HttpResponse
      * @param ResponseInterface $response a ResponseInterface instance to extract from
      *
      * @return array{
-     *   client?: array<string,array{quota:int|null,remaining:int|null,time:int|null}>,
-     *   organization?: array<string,array{quota:int|null,remaining:int|null,time:int|null}>,
+     *   client?: array<string,array{quota:int|null,remaining:int|null,resetAfter:int|null}>,
+     *   organization?: array<string,array{quota:int|null,remaining:int|null,resetAfter:int|null}>,
      *   retryAfter?: int,
      *   rateLimit?: array{limit?:int,remaining?:int,reset?:int}
      * }

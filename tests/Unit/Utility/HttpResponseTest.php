@@ -66,11 +66,11 @@ test('parseQuotaBuckets() returns expected buckets array for full input', functi
     // And their values must match
     expect($buckets['per_hour']['quota'])->toEqual(100);
     expect($buckets['per_hour']['remaining'])->toEqual(99);
-    expect($buckets['per_hour']['time'])->toEqual(1);
+    expect($buckets['per_hour']['resetAfter'])->toEqual(1);
 
     expect($buckets['per_day']['quota'])->toEqual(300);
     expect($buckets['per_day']['remaining'])->toEqual(299);
-    expect($buckets['per_day']['time'])->toEqual(1);
+    expect($buckets['per_day']['resetAfter'])->toEqual(1);
 });
 
 test('parseQuotaBuckets() handles missing parts', function(): void {
@@ -82,7 +82,7 @@ test('parseQuotaBuckets() handles missing parts', function(): void {
 
     expect($buckets['per_minute']['quota'])->toBeNull();
     expect($buckets['per_minute']['remaining'])->toEqual(50);
-    expect($buckets['per_minute']['time'])->toBeNull();
+    expect($buckets['per_minute']['resetAfter'])->toBeNull();
 });
 
 test('parseQuotaHeaders() returns structured data for client + organization + rateLimit', function(): void {
@@ -114,13 +114,13 @@ test('parseQuotaHeaders() returns structured data for client + organization + ra
     $client = $parsed['client'];
     expect($client['per_hour']['quota'])->toEqual(10);
     expect($client['per_hour']['remaining'])->toEqual(5);
-    expect($client['per_hour']['time'])->toEqual(2);
+    expect($client['per_hour']['resetAfter'])->toEqual(2);
 
     // Org bucket values
     $org = $parsed['organization'];
     expect($org['per_day']['quota'])->toEqual(20);
     expect($org['per_day']['remaining'])->toEqual(18);
-    expect($org['per_day']['time'])->toEqual(24);
+    expect($org['per_day']['resetAfter'])->toEqual(24);
 
     // Rate limit
     $rl = $parsed['rateLimit'];
