@@ -3,7 +3,7 @@
     "description": "Example of using M2M Quota Headers with Auth0 PHP",
     "require": {
         "php": "^8.1",
-        "auth0/auth0-php": "8.13",
+        "auth0/auth0-php": "8.14.0",
         "nyholm/psr7": "^1.5",
         "symfony/http-client": "^6.2",
         "vlucas/phpdotenv": "^5.5"
