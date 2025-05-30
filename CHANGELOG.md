@@ -1,5 +1,11 @@
 # Change Log
 
+## [8.15.0](https://github.com/auth0/auth0-PHP/tree/8.15.0) (2025-05-30)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.14.0...8.15.0)
+
+**Added**
+- feat: Adding M2M Quota Support [\#788](https://github.com/auth0/auth0-PHP/pull/788) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [8.14.0](https://github.com/auth0/auth0-PHP/tree/8.14.0) (2025-05-16)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.13.0...8.14.0)
 
