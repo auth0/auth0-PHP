@@ -554,3 +554,288 @@ test('create() issues an appropriate request with show as button parameter in en
     $body = $this->api->getRequestBodyAsString();
     expect($body)->toEqual(json_encode(array_merge(['name' => $mock->id, 'display_name' => $mock->name, 'branding' => $mock->branding, 'metadata' => $mock->metadata], $mock->body)));
 });
+
+test('create() issues an appropriate request with full token_quota client_credentials', function(): void {
+    $mock = (object) [
+        'name'        => 'org_' . uniqid(),
+        'displayName' => 'Display ' . uniqid(),
+        'body'        => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_day'  => 100,
+                    'per_hour' => 20,
+                    'enforce'  => true,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->create(
+        $mock->name,
+        $mock->displayName,
+        null,
+        null,
+        $mock->body
+    );
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations');
+
+    $body = $this->api->getRequestBody();
+
+    $this->assertArrayHasKey('token_quota', $body);
+    $this->assertArrayHasKey('client_credentials', $body['token_quota']);
+
+    $qc = $body['token_quota']['client_credentials'];
+    expect($qc['per_day'])->toEqual(100);
+    expect($qc['per_hour'])->toEqual(20);
+    expect($qc['enforce'])->toEqual(true);
+
+    $expected = array_merge([
+        'name'         => $mock->name,
+        'display_name' => $mock->displayName,
+    ], $mock->body);
+
+    expect($this->api->getRequestBodyAsString())->toEqual(json_encode($expected));
+});
+
+test('create() issues an appropriate request with token_quota enforce=false only', function(): void {
+    $mock = (object) [
+        'name'        => 'org_' . uniqid(),
+        'displayName' => 'Display ' . uniqid(),
+        'body'        => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'enforce' => false,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->create(
+        $mock->name,
+        $mock->displayName,
+        null,
+        null,
+        $mock->body
+    );
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations');
+
+    $body = $this->api->getRequestBody();
+
+    $qc = $body['token_quota']['client_credentials'];
+    $this->assertArrayHasKey('enforce', $qc);
+    expect($qc['enforce'])->toEqual(false);
+
+
+    $this->assertArrayNotHasKey('per_day', $qc);
+    $this->assertArrayNotHasKey('per_hour', $qc);
+
+    $expected = array_merge([
+        'name'         => $mock->name,
+        'display_name' => $mock->displayName,
+    ], $mock->body);
+
+    expect($this->api->getRequestBodyAsString())->toEqual(json_encode($expected));
+});
+
+test('create() issues an appropriate request with token_quota per_hour only', function(): void {
+    $mock = (object) [
+        'name'        => 'org_' . uniqid(),
+        'displayName' => 'Display ' . uniqid(),
+        'body'        => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_hour' => 100,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->create(
+        $mock->name,
+        $mock->displayName,
+        null,
+        null,
+        $mock->body
+    );
+
+    expect($this->api->getRequestMethod())->toEqual('POST');
+    expect($this->api->getRequestUrl())->toEndWith('/api/v2/organizations');
+
+    $body = $this->api->getRequestBody();
+
+    $qc = $body['token_quota']['client_credentials'];
+    $this->assertArrayHasKey('per_hour', $qc);
+    expect($qc['per_hour'])->toEqual(100);
+
+
+    $this->assertArrayNotHasKey('enforce', $qc);
+
+    $expected = array_merge([
+        'name'         => $mock->name,
+        'display_name' => $mock->displayName,
+    ], $mock->body);
+
+    expect($this->api->getRequestBodyAsString())->toEqual(json_encode($expected));
+});
+
+/**
+ * 1. Full quota (per_day, per_hour & enforce=true)
+ */
+test('update() issues an appropriate PATCH with full token_quota client_credentials', function(): void {
+    $mock = (object)[
+        'id'          => uniqid('org_'),
+        'name'        => uniqid(),
+        'displayName' => uniqid(),
+        'branding'    => ['logo_url' => uniqid()],
+        'metadata'    => ['foo' => uniqid()],
+        'body'        => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_day'  => 100,
+                    'per_hour' => 20,
+                    'enforce'  => true,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->update(
+        $mock->id,
+        $mock->name,
+        $mock->displayName,
+        $mock->branding,
+        $mock->metadata,
+        $mock->body
+    );
+
+    expect($this->api->getRequestMethod())->toEqual('PATCH');
+    expect($this->api->getRequestUrl())->toEndWith("/api/v2/organizations/{$mock->id}");
+
+    $body = $this->api->getRequestBody();
+    // merge of the “base” & our custom body
+    $this->assertArrayHasKey('name', $body);
+    expect($body['name'])->toEqual($mock->name);
+
+    $this->assertArrayHasKey('display_name', $body);
+    expect($body['display_name'])->toEqual($mock->displayName);
+
+    $this->assertArrayHasKey('branding', $body);
+    expect($body['branding'])->toEqual($mock->branding);
+
+    $this->assertArrayHasKey('metadata', $body);
+    expect($body['metadata'])->toEqual($mock->metadata);
+
+    $this->assertArrayHasKey('token_quota', $body);
+    $qc = $body['token_quota']['client_credentials'];
+    expect($qc['per_day'])->toEqual(100);
+    expect($qc['per_hour'])->toEqual(20);
+    expect($qc['enforce'])->toEqual(true);
+
+    // final JSON string
+    $expected = array_merge([
+        'name'         => $mock->name,
+        'display_name' => $mock->displayName,
+        'branding'     => $mock->branding,
+        'metadata'     => $mock->metadata,
+    ], $mock->body);
+
+    expect($this->api->getRequestBodyAsString())
+        ->toEqual(json_encode($expected));
+});
+
+test('update() issues an appropriate PATCH with token_quota enforce=false only', function(): void {
+    $mock = (object)[
+        'id'          => uniqid('org_'),
+        'name'        => uniqid(),
+        'displayName' => uniqid(),
+        'branding'    => ['logo_url' => uniqid()],
+        'metadata'    => ['foo' => uniqid()],
+        'body'        => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'enforce' => false,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->update(
+        $mock->id,
+        $mock->name,
+        $mock->displayName,
+        $mock->branding,
+        $mock->metadata,
+        $mock->body
+    );
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['enforce'])->toEqual(false);
+    $this->assertArrayNotHasKey('per_day', $qc);
+    $this->assertArrayNotHasKey('per_hour', $qc);
+});
+
+test('update() issues an appropriate PATCH with token_quota per_hour only', function(): void {
+    $mock = (object)[
+        'id'          => uniqid('org_'),
+        'name'        => uniqid(),
+        'displayName' => uniqid(),
+        'branding'    => ['logo_url' => uniqid()],
+        'metadata'    => ['foo' => uniqid()],
+        'body'        => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_hour' => 50,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->update(
+        $mock->id,
+        $mock->name,
+        $mock->displayName,
+        $mock->branding,
+        $mock->metadata,
+        $mock->body
+    );
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['per_hour'])->toEqual(50);
+    $this->assertArrayNotHasKey('per_day', $qc);
+    $this->assertArrayNotHasKey('enforce', $qc);
+});
+
+test('update() issues an appropriate PATCH with token_quota per_day only', function(): void {
+    $mock = (object)[
+        'id'          => uniqid('org_'),
+        'name'        => uniqid(),
+        'displayName' => uniqid(),
+        'branding'    => ['logo_url' => uniqid()],
+        'metadata'    => ['foo' => uniqid()],
+        'body'        => [
+            'token_quota' => [
+                'client_credentials' => [
+                    'per_day' => 200,
+                ],
+            ],
+        ],
+    ];
+
+    $this->endpoint->update(
+        $mock->id,
+        $mock->name,
+        $mock->displayName,
+        $mock->branding,
+        $mock->metadata,
+        $mock->body
+    );
+
+    $qc = $this->api->getRequestBody()['token_quota']['client_credentials'];
+    expect($qc['per_day'])->toEqual(200);
+    $this->assertArrayNotHasKey('per_hour', $qc);
+    $this->assertArrayNotHasKey('enforce', $qc);
+});
