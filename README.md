@@ -39,7 +39,7 @@ We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0)
 Ensure you have [the necessary dependencies](#requirements) installed, then add the SDK to your application using [Composer](https://getcomposer.org/):
 
 ```
-composer require auth0/auth0-php --no-dev
+composer require auth0/auth0-php
 ```
 
 ### Configure Auth0
@@ -128,7 +128,7 @@ We drop support for PHP versions when they reach end-of-life and cease receiving
 
 We appreciate feedback and contribution to this repo! Before you get started, please see the following:
 
-- [Contribution Guide](./CONTRIBUTING.md)
+- [Contribution Guide](./.github/CONTRIBUTING.md)
 - [Auth0's General Contribution Guidelines](https://github.com/auth0/open-source-template/blob/master/GENERAL-CONTRIBUTING.md)
 - [Auth0's Code of Conduct Guidelines](https://github.com/auth0/open-source-template/blob/master/CODE-OF-CONDUCT.md)
 
