@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\Contract\API;
 
-use Auth0\SDK\Contract\API\Management\{ActionsInterface, BlacklistsInterface, ClientGrantsInterface, ClientsInterface, ConnectionsInterface, DeviceCredentialsInterface, EmailTemplatesInterface, EmailsInterface, GrantsInterface, GuardianInterface, JobsInterface, LogStreamsInterface, LogsInterface, OrganizationsInterface, ResourceServersInterface, RolesInterface, RulesInterface, StatsInterface, TenantsInterface, TicketsInterface, UserBlocksInterface, UsersByEmailInterface, UsersInterface};
+use Auth0\SDK\Contract\API\Management\{ActionsInterface, BlacklistsInterface, ClientGrantsInterface, ClientsInterface, ConnectionsInterface, DeviceCredentialsInterface, EmailTemplatesInterface, EmailsInterface, GrantsInterface, GuardianInterface, JobsInterface, LogStreamsInterface, LogsInterface, OrganizationsInterface, ResourceServersInterface, RolesInterface, RulesInterface, SelfServiceProfilesInterface, StatsInterface, TenantsInterface, TicketsInterface, UserBlocksInterface, UsersByEmailInterface, UsersInterface};
 use Auth0\SDK\Utility\HttpResponsePaginator;
 
 interface ManagementInterface extends ClientInterface
@@ -47,6 +47,8 @@ interface ManagementInterface extends ClientInterface
     public function roles(): RolesInterface;
 
     public function rules(): RulesInterface;
+
+    public function selfServiceProfiles(): SelfServiceProfilesInterface;
 
     public function stats(): StatsInterface;
 
