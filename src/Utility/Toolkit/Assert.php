@@ -8,6 +8,8 @@ use Exception;
 use Throwable;
 
 use function is_array;
+use function is_bool;
+use function is_int;
 use function is_string;
 
 final class Assert
@@ -41,6 +43,20 @@ final class Assert
     }
 
     /**
+     * Check that a variable is a boolean and is not null.
+     *
+     * @throws Exception when subject is not a boolean or is null
+     */
+    public function isBoolean(): void
+    {
+        foreach ($this->subjects as [$value, $exception]) {
+            if (! is_bool($value)) {
+                throw $exception;
+            }
+        }
+    }
+
+    /**
      * Check that a variable is a non-empty string that contains a valid email address.
      *
      * @throws Exception when subject is not a valid email address
@@ -49,6 +65,20 @@ final class Assert
     {
         foreach ($this->subjects as [$value, $exception]) {
             if (false === filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                throw $exception;
+            }
+        }
+    }
+
+    /**
+     * Check that a variable is an integer and is not null.
+     *
+     * @throws Exception when subject is not an integer or is null
+     */
+    public function isInteger(): void
+    {
+        foreach ($this->subjects as [$value, $exception]) {
+            if (! is_int($value)) {
                 throw $exception;
             }
         }

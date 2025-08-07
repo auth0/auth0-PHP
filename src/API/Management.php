@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API;
 
-use Auth0\SDK\API\Management\{Actions, AttackProtection, Blacklists, ClientGrants, Clients, Connections, DeviceCredentials, EmailTemplates, Emails, Grants, Guardian, Jobs, Keys, LogStreams, Logs, Organizations, RefreshTokens, ResourceServers, Roles, Rules, Sessions, Stats, Tenants, Tickets, UserBlocks, Users, UsersByEmail};
+use Auth0\SDK\API\Management\{Actions, AttackProtection, Blacklists, ClientGrants, Clients, Connections, DeviceCredentials, EmailTemplates, Emails, Grants, Guardian, Jobs, Keys, LogStreams, Logs, NetworkAcls, Organizations, RefreshTokens, ResourceServers, Roles, Rules, Sessions, Stats, Tenants, Tickets, UserBlocks, Users, UsersByEmail};
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\Management\{ActionsInterface, AttackProtectionInterface, BlacklistsInterface, ClientGrantsInterface, ClientsInterface, ConnectionsInterface, DeviceCredentialsInterface, EmailTemplatesInterface, EmailsInterface, GrantsInterface, GuardianInterface, JobsInterface, KeysInterface, LogStreamsInterface, LogsInterface, OrganizationsInterface, RefreshTokensInterface, ResourceServersInterface, RolesInterface, RulesInterface, SessionsInterface, StatsInterface, TenantsInterface, TicketsInterface, UserBlocksInterface, UsersByEmailInterface, UsersInterface};
+use Auth0\SDK\Contract\API\Management\{ActionsInterface, AttackProtectionInterface, BlacklistsInterface, ClientGrantsInterface, ClientsInterface, ConnectionsInterface, DeviceCredentialsInterface, EmailTemplatesInterface, EmailsInterface, GrantsInterface, GuardianInterface, JobsInterface, KeysInterface, LogStreamsInterface, LogsInterface, NetworkAclsInterface, OrganizationsInterface, RefreshTokensInterface, ResourceServersInterface, RolesInterface, RulesInterface, SessionsInterface, StatsInterface, TenantsInterface, TicketsInterface, UserBlocksInterface, UsersByEmailInterface, UsersInterface};
 use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
 use Auth0\SDK\Utility\{HttpClient, HttpResponse, HttpResponsePaginator};
 use Psr\Cache\CacheItemPoolInterface;
@@ -195,6 +195,11 @@ final class Management extends ClientAbstract implements ManagementInterface
     public function logStreams(): LogStreamsInterface
     {
         return LogStreams::instance($this->getHttpClient());
+    }
+
+    public function networkAcls(): NetworkAclsInterface
+    {
+        return NetworkAcls::instance($this->getHttpClient());
     }
 
     public function organizations(): OrganizationsInterface
