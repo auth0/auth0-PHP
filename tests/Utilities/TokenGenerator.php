@@ -26,7 +26,7 @@ class TokenGenerator
             'sid' => '__test_sid__',
             'iss' => 'https://domain.test/',
             'aud' => '__test_client_id__',
-            // 'nonce' => '__test_nonce__', Only ID tokens should have nonce claims
+            'nonce' => '__test_nonce__',
             'auth_time' => time() - 100,
             'exp' => time() + 1000,
             'iat' => time() - 1000,
@@ -43,8 +43,7 @@ class TokenGenerator
             'iss' => 'https://domain.test/',
             'sid' => '__test_sid__',
             'aud' => '__test_client_id__',
-            // Note: nonce is NOT included for access tokens (OAuth 2.0 spec)
-            // Only ID tokens should have nonce claims (OpenID Connect spec)
+            // 'nonce' => '__test_nonce__', Only ID tokens should have nonce claims
             'auth_time' => time() - 100,
             'exp' => time() + 1000,
             'iat' => time() - 1000,
