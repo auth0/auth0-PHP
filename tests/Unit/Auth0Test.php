@@ -575,7 +575,7 @@ test('decode() can be used with access tokens', function (): void {
 
     $decoded = $auth0->decode($token,
         null,
-        null,
+        ['__test_client_id__'],  // Explicitly pass expected audience for access tokens
         null,
         null,
         null,
@@ -1128,7 +1128,8 @@ test('getBearerToken() successfully finds a candidate token in $_GET', function(
     $auth0 = new Auth0(array_merge($this->configuration, [
         'domain' => 'https://domain.test',
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
+        'audience' => ['__test_client_id__']  // Access tokens need explicit audience
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
@@ -1149,7 +1150,8 @@ test('getBearerToken() successfully finds a candidate token in $_POST', function
     $auth0 = new Auth0(array_merge($this->configuration, [
         'domain' => 'https://domain.test',
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
+        'audience' => ['__test_client_id__']  // Access tokens need explicit audience
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
@@ -1171,7 +1173,8 @@ test('getBearerToken() successfully finds a candidate token in $_SERVER', functi
     $auth0 = new Auth0(array_merge($this->configuration, [
         'domain' => 'https://domain.test',
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
+        'audience' => ['__test_client_id__']  // Access tokens need explicit audience
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
@@ -1193,7 +1196,8 @@ test('getBearerToken() successfully finds a candidate token needle in a haystack
     $auth0 = new Auth0(array_merge($this->configuration, [
         'domain' => 'https://domain.test',
         'tokenJwksUri' => $candidate->jwks,
-        'tokenCache' => $candidate->cached
+        'tokenCache' => $candidate->cached,
+        'audience' => ['__test_client_id__']  // Access tokens need explicit audience
     ]));
 
     $this->assertIsObject($auth0->getBearerToken(
