@@ -182,6 +182,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      */
     public const MSG_UNSUPPORTED_SIGNING_ALGORITHM = 'Signature algorithm of "%s" is not supported. Expected the token to be signed with "RS256" or "HS256"';
 
+    /**
+     * @var string
+     */
+    public const MSG_ID_TOKEN_USED_AS_ACCESS_TOKEN = 'ID token cannot be validated as an access token (detected nonce claim)';
+
     public static function badEventClaim(
         string $claim,
         string $format,
@@ -212,6 +217,12 @@ final class InvalidTokenException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(self::MSG_BAD_SIGNATURE_MISSING_KID, 0, $previous);
+    }
+
+    public static function idTokenUsedAsAccessToken(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_ID_TOKEN_USED_AS_ACCESS_TOKEN, 0, $previous);
     }
 
     public static function jsonError(

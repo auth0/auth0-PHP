@@ -260,7 +260,15 @@ final class Token implements TokenInterface
         $tokenOrganization ??= $this->configuration->getOrganization() ?? null;
         $tokenMaxAge ??= $this->configuration->getTokenMaxAge() ?? null;
         $tokenLeeway ??= $this->configuration->getTokenLeeway() ?? 60;
-        if ($this->type !== self::TYPE_ACCESS_TOKEN) {
+
+        if ($this->type === self::TYPE_ACCESS_TOKEN) {
+            if (null !== $this->getParser()->getClaim('nonce')) {
+                throw InvalidTokenException::idTokenUsedAsAccessToken();
+            }
+            if (empty($tokenAudience)) {
+                $tokenAudience[] = (string) $this->configuration->getClientId();
+            }
+        } else {
             $tokenAudience[] = (string) $this->configuration->getClientId();
         }
         $tokenAudience = array_unique($tokenAudience);
