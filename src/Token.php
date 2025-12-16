@@ -260,7 +260,9 @@ final class Token implements TokenInterface
         $tokenOrganization ??= $this->configuration->getOrganization() ?? null;
         $tokenMaxAge ??= $this->configuration->getTokenMaxAge() ?? null;
         $tokenLeeway ??= $this->configuration->getTokenLeeway() ?? 60;
-        $tokenAudience[] = (string) $this->configuration->getClientId();
+        if ($this->type !== self::TYPE_ACCESS_TOKEN) {
+            $tokenAudience[] = (string) $this->configuration->getClientId();
+        }
         $tokenAudience = array_unique($tokenAudience);
 
         $validator = $this->getParser()->validate();
