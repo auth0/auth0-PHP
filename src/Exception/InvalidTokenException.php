@@ -40,6 +40,11 @@ final class InvalidTokenException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_ID_TOKEN_USED_AS_ACCESS_TOKEN = 'ID token cannot be validated as an access token (detected nonce claim)';
+
+    /**
+     * @var string
+     */
     public const MSG_LOGOUT_TOKEN_NONCE_PRESENT = 'Valid logout tokens cannot include `nonce` claims';
 
     /**
@@ -181,11 +186,6 @@ final class InvalidTokenException extends Exception implements Auth0Exception
      * @var string
      */
     public const MSG_UNSUPPORTED_SIGNING_ALGORITHM = 'Signature algorithm of "%s" is not supported. Expected the token to be signed with "RS256" or "HS256"';
-
-    /**
-     * @var string
-     */
-    public const MSG_ID_TOKEN_USED_AS_ACCESS_TOKEN = 'ID token cannot be validated as an access token (detected nonce claim)';
 
     public static function badEventClaim(
         string $claim,

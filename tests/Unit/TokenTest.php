@@ -198,7 +198,7 @@ it('fails validating an otherwise valid Access Token as a Logout Token', functio
         return $this->configuration;
     },
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_HS256)
-]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_LOGOUT_TOKEN_NONCE_PRESENT);
+]])->throws(InvalidTokenException::class, InvalidTokenException::MSG_MISSING_EVENTS_CLAIM);
 
 it('fails validating a Logout Token without `sub` or `sid` claims', function(
     SdkConfiguration $configuration
