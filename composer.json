@@ -29,7 +29,6 @@
   "homepage": "https://github.com/auth0/auth0-PHP",
   "require": {
     "php": "^8.1",
-    "ext-json": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "php-http/multipart-stream-builder": "^1",
@@ -42,15 +41,15 @@
     "ergebnis/composer-normalize": "~2.43.0",
     "friendsofphp/php-cs-fixer": "~3.59.0",
     "mockery/mockery": "~1.6.0",
-    "pestphp/pest": "~2.34.0",
-    "phpstan/phpstan": "~1.11.0",
+    "pestphp/pest": "~2.35.0",
+    "phpstan/phpstan": "~1.12.0",
     "phpstan/phpstan-strict-rules": "~1.6.0",
     "psr-mock/http": "~1.0.0",
     "rector/rector": "~0.17.0",
     "spatie/ray": "~1.41.0",
-    "symfony/cache": "^4 || ^5 || ^6",
-    "symfony/event-dispatcher": "^4 || ^5 || ^6",
-    "vimeo/psalm": "~5.25.0",
+    "symfony/cache": "^5.4 || ^6.4",
+    "symfony/event-dispatcher": "^5.4 || ^6.4",
+    "vimeo/psalm": "~5.26.0",
     "wikimedia/composer-merge-plugin": "~2.1.0"
   },
   "suggest": {
