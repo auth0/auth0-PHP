@@ -202,7 +202,6 @@ final class Auth0 implements Auth0Interface
         }
 
         $response = HttpResponse::decodeContent($response);
-        $token = null;
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
         if (isset($response['id_token'])) {
