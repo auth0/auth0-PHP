@@ -282,25 +282,26 @@ it('decrypts legacy cookies via fallback (aes-128-gcm, raw key, no version marke
     fn() => MockDataset::state()
 ]]);
 
-it('encrypts new cookies with v2 scheme (aes-256-gcm + HKDF + version marker)', function(array $state): void {
+it('encrypts new cookies with v2 scheme (aes-256-gcm + HKDF + version marker)', function(): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
 
-    $this->store->getState([$this->exampleKey => $state]);
+    // Use a small fixed state to avoid cookie chunking.
+    $this->store->getState([$this->exampleKey => 'test-value']);
     $this->store->setState(true);
 
     $this->assertNotEmpty($_COOKIE[$cookieNamespace]);
 
-    $raw = rawurldecode($_COOKIE[$cookieNamespace]);
-    $decoded = json_decode($raw, true);
+    $decoded = json_decode(rawurldecode($_COOKIE[$cookieNamespace]), true);
 
     expect($decoded)->toHaveKey('v');
     expect($decoded['v'])->toEqual(CookieStore::VAL_CRYPTO_VERSION);
-})->with(['mocked state' => [
-    fn() => MockDataset::state()
-]]);
+});
 
-it('auto-upgrades legacy cookies to v2 on next setState()', function(array $state): void {
+it('auto-upgrades legacy cookies to v2 on next setState()', function(): void {
     $cookieNamespace = $this->store->getNamespace() . '_0';
+
+    // Use a small fixed state to avoid cookie chunking.
+    $state = 'test-value';
 
     // Load a legacy cookie (no version marker).
     $encrypted = MockCrypto::legacyCookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
@@ -309,26 +310,22 @@ it('auto-upgrades legacy cookies to v2 on next setState()', function(array $stat
     $this->store->getState();
 
     // Verify legacy cookie has no version marker.
-    $legacyRaw = rawurldecode($encrypted);
-    $legacyDecoded = json_decode($legacyRaw, true);
+    $legacyDecoded = json_decode(rawurldecode($encrypted), true);
     expect($legacyDecoded)->not->toHaveKey('v');
 
     // Force re-encryption.
     $this->store->setState(true);
 
     // Verify the re-encrypted cookie now has a v2 marker.
-    $newRaw = rawurldecode($_COOKIE[$cookieNamespace]);
-    $newDecoded = json_decode($newRaw, true);
+    $newDecoded = json_decode(rawurldecode($_COOKIE[$cookieNamespace]), true);
 
     expect($newDecoded)->toHaveKey('v');
     expect($newDecoded['v'])->toEqual(CookieStore::VAL_CRYPTO_VERSION);
 
-    // Verify the data is still correct after re-encryption.
+    // Verify the data survived the round-trip.
     $this->store->getState();
     expect($this->store->get($this->exampleKey))->toEqual($state);
-})->with(['mocked state' => [
-    fn() => MockDataset::state()
-]]);
+});
 
 test('short cookie secret triggers deprecation warning', function(): void {
     $shortSecret = 'too-short';
