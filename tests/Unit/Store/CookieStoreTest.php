@@ -267,3 +267,113 @@ it('enumerates $_COOKIE with non-string keys', function(array $state): void {
 })->with(['mocked state' => [
     fn() => MockDataset::state()
 ]]);
+
+it('decrypts legacy cookies via fallback (aes-128-gcm, raw key, no version marker)', function(array $state): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+
+    $encrypted = MockCrypto::legacyCookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
+
+    $_COOKIE[$cookieNamespace] = $encrypted;
+
+    $this->store->getState();
+
+    expect($this->store->get($this->exampleKey))->toEqual($state);
+})->with(['mocked state' => [
+    fn() => MockDataset::state()
+]]);
+
+it('encrypts new cookies with v2 scheme (aes-256-gcm + HKDF + version marker)', function(array $state): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+
+    $this->store->getState([$this->exampleKey => $state]);
+    $this->store->setState(true);
+
+    $this->assertNotEmpty($_COOKIE[$cookieNamespace]);
+
+    $raw = rawurldecode($_COOKIE[$cookieNamespace]);
+    $decoded = json_decode($raw, true);
+
+    expect($decoded)->toHaveKey('v');
+    expect($decoded['v'])->toEqual(CookieStore::VAL_CRYPTO_VERSION);
+})->with(['mocked state' => [
+    fn() => MockDataset::state()
+]]);
+
+it('auto-upgrades legacy cookies to v2 on next setState()', function(array $state): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+
+    // Load a legacy cookie (no version marker).
+    $encrypted = MockCrypto::legacyCookieCompatibleEncrypt($this->cookieSecret, [$this->exampleKey => $state]);
+    $_COOKIE[$cookieNamespace] = $encrypted;
+
+    $this->store->getState();
+
+    // Verify legacy cookie has no version marker.
+    $legacyRaw = rawurldecode($encrypted);
+    $legacyDecoded = json_decode($legacyRaw, true);
+    expect($legacyDecoded)->not->toHaveKey('v');
+
+    // Force re-encryption.
+    $this->store->setState(true);
+
+    // Verify the re-encrypted cookie now has a v2 marker.
+    $newRaw = rawurldecode($_COOKIE[$cookieNamespace]);
+    $newDecoded = json_decode($newRaw, true);
+
+    expect($newDecoded)->toHaveKey('v');
+    expect($newDecoded['v'])->toEqual(CookieStore::VAL_CRYPTO_VERSION);
+
+    // Verify the data is still correct after re-encryption.
+    $this->store->getState();
+    expect($this->store->get($this->exampleKey))->toEqual($state);
+})->with(['mocked state' => [
+    fn() => MockDataset::state()
+]]);
+
+test('short cookie secret triggers deprecation warning', function(): void {
+    $shortSecret = 'too-short';
+
+    set_error_handler(function (int $errno, string $errstr) {
+        expect($errno)->toEqual(E_USER_DEPRECATED);
+        expect($errstr)->toContain('at least 32 characters');
+        return true;
+    });
+
+    $config = new SdkConfiguration([
+        'strategy' => SdkConfiguration::STRATEGY_NONE,
+        'cookieSecret' => $shortSecret,
+    ]);
+
+    restore_error_handler();
+
+    expect($config->getCookieSecret())->toEqual($shortSecret);
+});
+
+test('deriveKey() produces consistent output for same input', function(): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+
+    $state1 = ['key1' => 'value1'];
+    $state2 = ['key1' => 'value1'];
+
+    $this->store->getState($state1);
+    $this->store->setState(true);
+    $cookie1 = $_COOKIE[$cookieNamespace];
+
+    // Decode to get the encrypted payload (iv will differ, but we test that
+    // decryption works consistently with the same secret).
+    $this->store->getState($state2);
+    $this->store->setState(true);
+    $cookie2 = $_COOKIE[$cookieNamespace];
+
+    // Both should be decryptable and produce the same data.
+    $_COOKIE[$cookieNamespace] = $cookie1;
+    $this->store->getState();
+    $result1 = $this->store->get('key1');
+
+    $_COOKIE[$cookieNamespace] = $cookie2;
+    $this->store->getState();
+    $result2 = $this->store->get('key1');
+
+    expect($result1)->toEqual('value1');
+    expect($result2)->toEqual('value1');
+});

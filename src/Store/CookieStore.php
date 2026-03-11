@@ -21,6 +21,16 @@ use function strlen;
 final class CookieStore implements StoreInterface
 {
     /**
+     * @var string
+     */
+    private const KEY_DERIVATION_ALGO = 'sha256';
+
+    /**
+     * @var string
+     */
+    private const KEY_DERIVATION_INFO = 'auth0-php-cookie-encryption';
+
+    /**
      * @var int
      */
     public const KEY_CHUNKING_THRESHOLD = 2048;
@@ -41,9 +51,24 @@ final class CookieStore implements StoreInterface
     public const VAL_CRYPTO_ALGO = 'aes-128-gcm';
 
     /**
+     * @var string
+     */
+    public const VAL_CRYPTO_ALGO_V2 = 'aes-256-gcm';
+
+    /**
+     * @var int
+     */
+    public const VAL_CRYPTO_KEY_LENGTH = 32;
+
+    /**
      * @var int
      */
     public const VAL_CRYPTO_TAG_LENGTH_BYTES = 16;
+
+    /**
+     * @var int
+     */
+    public const VAL_CRYPTO_VERSION = 2;
 
     /**
      * When true, CookieStore will not setState() itself. You will need manually call the method to persist state to storage.
@@ -121,7 +146,7 @@ final class CookieStore implements StoreInterface
         $stripped = stripslashes($decoded);
         $data = json_decode($stripped, true, 512);
 
-        /** @var array{iv?: null|int|string, tag?: null|int|string, data: string} $data */
+        /** @var array{v?: int, iv?: null|int|string, tag?: null|int|string, data: string} $data */
         if (! isset($data['iv']) || ! isset($data['tag']) || ! is_string($data['iv']) || ! is_string($data['tag'])) {
             return null;
         }
@@ -133,15 +158,23 @@ final class CookieStore implements StoreInterface
             return null;
         }
 
-        $data = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+        // Determine encryption scheme based on version marker.
+        if (isset($data['v']) && self::VAL_CRYPTO_VERSION === $data['v']) {
+            // v2: aes-256-gcm with HKDF-derived key
+            $key = self::deriveKey($secret);
+            $decrypted = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO_V2, $key, 0, $iv, $tag);
+        } else {
+            // fallback for pre-KDF cookies
+            $decrypted = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+        }
 
-        if (! is_string($data)) {
+        if (! is_string($decrypted)) {
             return null;
         }
 
-        $data = json_decode($data, true);
+        $decrypted = json_decode($decrypted, true);
 
-        return is_array($data) ? $data : null;
+        return is_array($decrypted) ? $decrypted : null;
     }
 
     /**
@@ -208,12 +241,15 @@ final class CookieStore implements StoreInterface
         }
 
         $secret = $this->configuration->getCookieSecret();
-        $ivLen = $options['ivLen'] ?? openssl_cipher_iv_length(self::VAL_CRYPTO_ALGO);
+        $algo = self::VAL_CRYPTO_ALGO_V2;
+        $ivLen = $options['ivLen'] ?? openssl_cipher_iv_length($algo);
         $tag = null;
 
         if (null === $secret) {
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
+
+        $key = self::deriveKey($secret);
 
         if (! is_int($ivLen)) {
             return '';
@@ -231,8 +267,8 @@ final class CookieStore implements StoreInterface
             return '';
         }
 
-        // Encrypt the PHP array.
-        $encrypted = $options['encrypted'] ?? openssl_encrypt($data, self::VAL_CRYPTO_ALGO, $secret, 0, $iv, $tag);
+        // Encrypt the PHP array using the HKDF-derived key.
+        $encrypted = $options['encrypted'] ?? openssl_encrypt($data, $algo, $key, 0, $iv, $tag);
         $iv = $options['iv'] ?? $iv;
         $tag = $options['tag'] ?? $tag;
 
@@ -244,8 +280,8 @@ final class CookieStore implements StoreInterface
             return '';
         }
 
-        // Return a JSON encoded object containing the crypto tag and iv, and the encrypted data.
-        $encoded = $options['encoded2'] ?? json_encode(['tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]);
+        // Return a JSON encoded object containing the version, crypto tag, iv, and the encrypted data.
+        $encoded = $options['encoded2'] ?? json_encode(['v' => self::VAL_CRYPTO_VERSION, 'tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]);
 
         if (is_string($encoded)) {
             return rawurlencode($encoded);
@@ -533,5 +569,17 @@ final class CookieStore implements StoreInterface
         $this->dirty = false;
 
         return $this;
+    }
+
+    /**
+     * Derive an encryption key from the cookie secret using HKDF.
+     *
+     * @param string $secret the raw cookie secret
+     *
+     * @return string the derived key bytes
+     */
+    private static function deriveKey(string $secret): string
+    {
+        return hash_hkdf(self::KEY_DERIVATION_ALGO, $secret, self::VAL_CRYPTO_KEY_LENGTH, self::KEY_DERIVATION_INFO);
     }
 }
