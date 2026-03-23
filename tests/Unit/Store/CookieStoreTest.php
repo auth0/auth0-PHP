@@ -332,7 +332,7 @@ test('short cookie secret triggers deprecation warning', function(): void {
 
     set_error_handler(function (int $errno, string $errstr) {
         expect($errno)->toEqual(E_USER_DEPRECATED);
-        expect($errstr)->toContain('at least 32 characters');
+        expect($errstr)->toContain('at least 32 bytes');
         return true;
     });
 
