@@ -7,6 +7,10 @@
 
 - Security fix: Resolve CVE-2026-34236
 
+**Changed**
+
+- Dropped support for PHP 8.1 (EOL since Dec 2025). The minimum supported PHP version is now 8.2.
+
 ## [8.18.0](https://github.com/auth0/auth0-PHP/tree/8.18.0) (2025-12-16)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.17.0...8.18.0)
 
