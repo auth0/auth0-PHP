@@ -16,3 +16,6 @@ composer.local.json
 .php-cs-fixer.cache
 composer.local.old
 pest.log
+
+# AI tools
+.claude
