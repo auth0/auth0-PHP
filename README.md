@@ -23,7 +23,7 @@ We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0)
 
 ### Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 - [Composer](https://getcomposer.org/)
 - PHP Extensions:
   - [mbstring](https://www.php.net/manual/en/book.mbstring.php)
@@ -118,7 +118,6 @@ Our support lifecycle mirrors the [PHP release support schedule](https://www.php
 | ----------- | ----------- | ------------ |
 | 8           | 8.3         | Dec 2027     |
 |             | 8.2         | Dec 2026     |
-|             | 8.1         | Dec 2025     |
 
 We drop support for PHP versions when they reach end-of-life and cease receiving security fixes from the PHP Foundation. Please ensure your environment remains up to date so you can continue receiving updates for PHP and this SDK.
 
