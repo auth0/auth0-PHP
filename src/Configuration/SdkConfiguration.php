@@ -1017,7 +1017,7 @@ final class SdkConfiguration implements ConfigurableContract
 
         if (null !== $cookieSecret && strlen($cookieSecret) < 32) {
             @trigger_error(
-                'Auth0 SDK: Cookie secret should be at least 32 characters for adequate security (OWASP recommendation). '
+                'Auth0 SDK: Cookie secret should be at least 32 bytes for adequate security (OWASP recommendation). '
                 . 'Short secrets will cause an exception in a future major version.',
                 E_USER_DEPRECATED,
             );

@@ -60,7 +60,7 @@ it('stores data in private', function(string $key, string $value): void {
         ->getMock();
 
     $item->expects($this->once())->method('set')->with([$key=>$value]);
-    $item->method('get')->willReturnOnConsecutiveCalls(null, [$key=>$value]);
+    $item->method('get')->willReturnOnConsecutiveCalls(null, [$key=>$value], [$key=>$value]);
 
     $private->method('getItem')->with('auth0_foobar')->willReturn($item);
     $private->method('saveDeferred')->willReturn(true);
