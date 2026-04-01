@@ -42,7 +42,7 @@
     "ergebnis/composer-normalize": "~2.43.0",
     "friendsofphp/php-cs-fixer": "~3.59.0",
     "mockery/mockery": "~1.6.0",
-    "pestphp/pest": "~2.34.0",
+    "pestphp/pest": "~2.36.0",
     "phpstan/phpstan": "~1.11.0",
     "phpstan/phpstan-strict-rules": "~1.6.0",
     "psr-mock/http": "~1.0.0",
