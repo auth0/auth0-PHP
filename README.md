@@ -116,8 +116,7 @@ Our support lifecycle mirrors the [PHP release support schedule](https://www.php
 
 | SDK Version | PHP Version | Support Ends |
 | ----------- | ----------- | ------------ |
-| 8           | 8.4         | Dec 2028     |
-|             | 8.3         | Dec 2027     |
+| 8           | 8.3         | Dec 2027     |
 |             | 8.2         | Dec 2026     |
 
 We drop support for PHP versions when they reach end-of-life and cease receiving security fixes from the PHP Foundation. Please ensure your environment remains up to date so you can continue receiving updates for PHP and this SDK.
