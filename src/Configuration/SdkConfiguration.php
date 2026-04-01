@@ -24,6 +24,7 @@ use function is_array;
 use function is_bool;
 use function is_int;
 use function is_string;
+use function strlen;
 
 final class SdkConfiguration implements ConfigurableContract
 {
@@ -89,7 +90,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param bool                             $httpTelemetry                   Defaults to true. If true, API requests will include telemetry about the SDK and PHP runtime version to help us improve our services.
      * @param null|StoreInterface              $sessionStorage                  Defaults to use cookies. A StoreInterface-compatible class for storing Token state.
      * @param string                           $sessionStorageId                Defaults to 'auth0_session'. The namespace to prefix session items under.
-     * @param null|string                      $cookieSecret                    The secret used to derive an encryption key for the user identity in a session cookie and to sign the transient cookies used by the login callback
+     * @param null|string                      $cookieSecret                    The secret used to derive an encryption key (via HKDF-SHA256) for the user identity in a session cookie and to sign the transient cookies used by the login callback. Should be at least 32 bytes.
      * @param null|string                      $cookieDomain                    Defaults to value of HTTP_HOST server environment information. Cookie domain, for example 'www.example.com', for use with PHP sessions and SDK cookies. To make cookies visible on all subdomains then the domain must be prefixed with a dot like '.example.com'.
      * @param int                              $cookieExpires                   Defaults to 0. How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
      * @param string                           $cookiePath                      Defaults to '/'. Specifies path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
@@ -1012,6 +1013,14 @@ final class SdkConfiguration implements ConfigurableContract
     {
         if (null !== $cookieSecret && '' === trim($cookieSecret)) {
             $cookieSecret = null;
+        }
+
+        if (null !== $cookieSecret && strlen($cookieSecret) < 32) {
+            @trigger_error(
+                'Auth0 SDK: Cookie secret should be at least 32 characters for adequate security (OWASP recommendation). '
+                . 'Short secrets will cause an exception in a future major version.',
+                E_USER_DEPRECATED,
+            );
         }
 
         $this->cookieSecret = $cookieSecret;

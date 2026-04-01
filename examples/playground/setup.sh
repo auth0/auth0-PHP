@@ -77,7 +77,7 @@ else
       sed -i '' "s/API_IDENTIFIER=null/API_IDENTIFIER=$AUTH0_API_AUDIENCE/g" "${CONFIG_FILE}"
     fi
 
-    AUTH0_COOKIE_SECRET=$(openssl rand 32 -hex)
+    AUTH0_COOKIE_SECRET=$(openssl rand -base64 32)
     sed -i '' "s/{COOKIE_SECRET}/$AUTH0_COOKIE_SECRET/g" "${CONFIG_FILE}"
 fi
 
