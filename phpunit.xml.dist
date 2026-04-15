@@ -2,15 +2,10 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          bootstrap="vendor/autoload.php">
-  <coverage>
-    <report>
-      <clover outputFile="coverage/clover.xml"/>
-      <cobertura outputFile="coverage/cobertura.xml"/>
-    </report>
-  </coverage>
   <testsuites>
     <testsuite name="management">
-      <directory>tests/API/Management</directory>
+      <directory suffix="Test.php">tests/API/Management</directory>
+      <directory suffix="Test.php">tests/Unit/API/Management/Wrapper</directory>
     </testsuite>
   </testsuites>
   <source>

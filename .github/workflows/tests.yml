@@ -126,10 +126,6 @@ jobs:
     needs: [configure, prepare]
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -137,7 +133,7 @@ jobs:
 
       - uses: ./.github/actions/setup
         with:
-          php: ${{ matrix.php }}
+          php: ${{ fromJson(needs.configure.outputs.matrix).include[0].php }}
 
       - run: composer psalm
 
