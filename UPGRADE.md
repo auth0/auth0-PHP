@@ -1,5 +1,325 @@
 # Migration Guide
 
+## Upgrading from v8.x → v9.0
+
+The v9 release introduces a fully auto-generated Management API client, built with [Fern](https://buildwithfern.com/). The Authentication API, session handling, and token management are unchanged.
+
+### What's changed
+
+- **Management API is now auto-generated** from the Auth0 OpenAPI specification, providing complete API coverage and strongly-typed request/response objects.
+- **New `ManagementClient` wrapper** with built-in token management (automatic client credentials grant, token caching, custom providers).
+- **Typed responses** instead of raw PSR-7 `ResponseInterface` objects. Methods return domain objects like `UserResponseSchema` and `CreateUserResponseContent`.
+- **Typed request parameters** instead of associative arrays. Methods accept classes like `ListUsersRequestParameters` and `CreateUserRequestContent`.
+- **Built-in pagination** via `Pager<T>` that implements `IteratorAggregate`, replacing `HttpResponsePaginator`.
+- **Automatic exception throwing** on non-2xx responses via `Auth0ApiException`, replacing manual status code checking.
+
+### New minimum PHP version: 8.2
+
+SDK v9.0 requires PHP 8.2 or higher. PHP 8.3 and 8.4 are supported.
+
+### Authentication API: No changes
+
+The Authentication API (`Auth0\SDK\API\Authentication`), session handling, token management, and the `Auth0\SDK\Auth0` entry point class are unchanged. Existing authentication code works without modification.
+
+### Management API client initialization
+
+#### Standalone usage (recommended for Management-only applications)
+
+The new `ManagementClient` wrapper replaces the need to configure a full `SdkConfiguration` when you only need the Management API:
+
+```php
+// v8
+use Auth0\SDK\Auth0;
+
+$auth0 = new Auth0([
+    'domain' => 'tenant.auth0.com',
+    'clientId' => 'CLIENT_ID',
+    'clientSecret' => 'CLIENT_SECRET',
+    'strategy' => 'management',
+]);
+$management = $auth0->management();
+```
+
+```php
+// v9
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
+use Auth0\SDK\API\Management\Wrapper\ManagementClientOptions;
+
+$client = new ManagementClient(new ManagementClientOptions(
+    domain: 'tenant.auth0.com',
+    clientId: 'CLIENT_ID',
+    clientSecret: 'CLIENT_SECRET',
+));
+```
+
+#### Via `Auth0::management()` (for applications using authentication + management)
+
+If your application uses both the Authentication and Management APIs, `Auth0::management()` continues to work:
+
+```php
+// v9 — still works
+$auth0 = new Auth0([
+    'domain' => 'tenant.auth0.com',
+    'clientId' => 'CLIENT_ID',
+    'clientSecret' => 'CLIENT_SECRET',
+    'redirectUri' => 'https://app.example.com/callback',
+]);
+
+$management = $auth0->management();
+$users = $management->users; // property access (not method call)
+```
+
+### Accessing domain sub-clients
+
+Sub-clients are now accessed as **public properties** instead of method calls:
+
+```php
+// v8
+$management->users()->getAll();
+$management->clients()->getAll();
+$management->roles()->getAll();
+$management->connections()->getAll();
+
+// v9
+$client->users->list();
+$client->clients->list();
+$client->roles->list();
+$client->connections->list();
+```
+
+### Method renames
+
+List methods have been renamed from `getAll()` to `list()`:
+
+| v8 | v9 |
+|----|-----|
+| `->users()->getAll()` | `->users->list()` |
+| `->users()->get($id)` | `->users->get($id)` |
+| `->users()->create($connection, $body)` | `->users->create($request)` |
+| `->users()->update($id, $body)` | `->users->update($id, $request)` |
+| `->users()->delete($id)` | `->users->delete($id)` |
+| `->users()->addRoles($id, $roles)` | `->users->roles->assign($id, $request)` |
+| `->users()->getRoles($id)` | `->users->roles->list($id)` |
+| `->users()->getPermissions($id)` | `->users->permissions->list($id)` |
+
+Nested resources (roles, permissions, logs, organizations, etc.) are now accessed through sub-client properties rather than flat methods on the parent client.
+
+### Request parameters: arrays to typed objects
+
+#### v8: Associative arrays
+
+```php
+use Auth0\SDK\Utility\Request\{RequestOptions, PaginatedRequest};
+
+$response = $management->users()->getAll(
+    parameters: ['q' => 'email:"jane@example.com"'],
+    request: new RequestOptions(
+        pagination: new PaginatedRequest(page: 0, perPage: 50, includeTotals: true)
+    )
+);
+```
+
+#### v9: Typed request classes
+
+```php
+use Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters;
+
+$pager = $client->users->list(new ListUsersRequestParameters([
+    'q' => 'email:"jane@example.com"',
+    'page' => 0,
+    'perPage' => 50,
+    'includeTotals' => true,
+]));
+```
+
+Request classes are located under each domain's `Requests` namespace:
+- `Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters`
+- `Auth0\SDK\API\Management\Users\Requests\CreateUserRequestContent`
+- `Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent`
+- `Auth0\SDK\API\Management\Clients\Requests\ListClientsRequestParameters`
+- etc.
+
+### Response handling: PSR-7 to typed objects
+
+#### v8: Manual JSON decoding
+
+```php
+$response = $management->users()->get('auth0|123');
+
+if ($response->getStatusCode() === 200) {
+    $user = json_decode($response->getBody()->__toString(), true);
+    echo $user['email'];
+}
+```
+
+#### v9: Typed response objects
+
+```php
+$user = $client->users->get('auth0|123');
+
+echo $user->getEmail();
+echo $user->getUserId();
+echo $user->getName();
+```
+
+Response types are located in `Auth0\SDK\API\Management\Types\`:
+- `UserResponseSchema`
+- `CreateUserResponseContent`
+- `UpdateUserResponseContent`
+- `GetUserResponseContent`
+- etc.
+
+### Pagination
+
+#### v8: `HttpResponsePaginator`
+
+```php
+$response = $management->users()->getAll(
+    request: new RequestOptions(
+        pagination: new PaginatedRequest(page: 0, perPage: 50, includeTotals: true)
+    )
+);
+$paginator = $management->getResponsePaginator();
+foreach ($paginator as $user) {
+    print_r($user); // associative array
+}
+```
+
+#### v9: `Pager<T>`
+
+```php
+use Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters;
+
+$pager = $client->users->list(new ListUsersRequestParameters([
+    'page' => 0,
+    'perPage' => 50,
+    'includeTotals' => true,
+]));
+
+// Iterate over all items across all pages automatically
+foreach ($pager as $user) {
+    echo $user->getEmail(); // typed object
+}
+
+// Or iterate page-by-page
+foreach ($pager->getPages() as $page) {
+    foreach ($page->getItems() as $user) {
+        echo $user->getEmail();
+    }
+}
+```
+
+### Error handling
+
+#### v8: Manual status code checks
+
+```php
+$response = $management->users()->get('auth0|nonexistent');
+
+if ($response->getStatusCode() >= 400) {
+    $error = json_decode($response->getBody()->__toString(), true);
+    echo $error['message'];
+}
+```
+
+#### v9: Exceptions thrown automatically
+
+```php
+use Auth0\SDK\API\Management\Exceptions\Auth0ApiException;
+
+try {
+    $user = $client->users->get('auth0|nonexistent');
+} catch (Auth0ApiException $e) {
+    echo $e->getMessage();  // Error message
+    echo $e->getCode();     // HTTP status code (e.g. 404)
+    echo $e->getBody();     // Response body
+}
+```
+
+### Token management options
+
+The new `ManagementClient` wrapper provides built-in token management:
+
+```php
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
+use Auth0\SDK\API\Management\Wrapper\ManagementClientOptions;
+
+// Static token
+$client = new ManagementClient(new ManagementClientOptions(
+    domain: 'tenant.auth0.com',
+    token: 'YOUR_MANAGEMENT_TOKEN',
+));
+
+// Client credentials (auto-fetched)
+$client = new ManagementClient(new ManagementClientOptions(
+    domain: 'tenant.auth0.com',
+    clientId: 'CLIENT_ID',
+    clientSecret: 'CLIENT_SECRET',
+));
+
+// With PSR-6 token caching
+$client = new ManagementClient(new ManagementClientOptions(
+    domain: 'tenant.auth0.com',
+    clientId: 'CLIENT_ID',
+    clientSecret: 'CLIENT_SECRET',
+    tokenCache: $psr6CachePool,
+));
+
+// Custom token provider
+$client = new ManagementClient(new ManagementClientOptions(
+    domain: 'tenant.auth0.com',
+    tokenProvider: fn(): string => getTokenFromVault(),
+));
+```
+
+### Additional options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `httpClient` | `?ClientInterface` | Custom PSR-18 HTTP client |
+| `timeout` | `?float` | Request timeout in seconds |
+| `maxRetries` | `?int` | Max retries for rate-limited requests |
+| `additionalHeaders` | `?array<string, string>` | Extra headers on every request |
+
+### Namespace changes
+
+| Component | v8 | v9 |
+|-----------|----|----|
+| Entry point | `Auth0\SDK\API\Management` | `Auth0\SDK\API\Management` (unchanged) |
+| Users | `Auth0\SDK\API\Management\Users` | `Auth0\SDK\API\Management\Users\UsersClient` |
+| Clients | `Auth0\SDK\API\Management\Clients` | `Auth0\SDK\API\Management\Clients\ClientsClient` |
+| Roles | `Auth0\SDK\API\Management\Roles` | `Auth0\SDK\API\Management\Roles\RolesClient` |
+| Request params | `array` | `Auth0\SDK\API\Management\{Domain}\Requests\*` |
+| Response types | `ResponseInterface` | `Auth0\SDK\API\Management\Types\*` |
+| Exceptions | N/A (manual checking) | `Auth0\SDK\API\Management\Exceptions\Auth0ApiException` |
+| Wrapper | N/A | `Auth0\SDK\API\Management\Wrapper\ManagementClient` |
+| Pagination | `Auth0\SDK\Utility\HttpResponsePaginator` | `Auth0\SDK\API\Management\Core\Pagination\Pager` |
+
+### Classes removed
+
+These v8 Management API classes have been replaced by the auto-generated client:
+
+- `Auth0\SDK\API\Management\ManagementEndpoint` — base class for all v8 endpoint classes.
+- `Auth0\SDK\API\Management\Users` — replaced by `Auth0\SDK\API\Management\Users\UsersClient`.
+- `Auth0\SDK\API\Management\Clients` — replaced by `Auth0\SDK\API\Management\Clients\ClientsClient`.
+- `Auth0\SDK\API\Management\Connections` — replaced by `Auth0\SDK\API\Management\Connections\ConnectionsClient`.
+- All other `Auth0\SDK\API\Management\{Name}` endpoint classes follow the same pattern.
+- `Auth0\SDK\Utility\HttpResponsePaginator` — replaced by `Auth0\SDK\API\Management\Core\Pagination\Pager`.
+- `Auth0\SDK\Utility\Request\RequestOptions`, `FilteredRequest`, `PaginatedRequest` — replaced by typed request parameter classes per endpoint.
+
+### Migration checklist
+
+1. Update `composer.json`: `"auth0/auth0-php": "^9.0"`
+2. **Management initialization**: Replace `$auth0->management()` with `new ManagementClient(new ManagementClientOptions(...))` if using standalone, or continue using `$auth0->management()` if using both auth + management.
+3. **Sub-client access**: Change method calls to property access: `->users()` becomes `->users`.
+4. **Method names**: Rename `getAll()` to `list()`.
+5. **Request parameters**: Replace associative arrays with typed request classes.
+6. **Response handling**: Replace `json_decode($response->getBody()...)` with typed getters (e.g., `$user->getEmail()`).
+7. **Pagination**: Replace `HttpResponsePaginator` with `foreach ($pager as $item)`.
+8. **Error handling**: Add `try/catch` for `Auth0ApiException` instead of checking `$response->getStatusCode()`.
+
+---
+
 ## Upgrading from v7.x → v8.0
 
 Our version 8 release includes many significant improvements:
