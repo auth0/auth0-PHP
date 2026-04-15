@@ -43,7 +43,7 @@
         "psr/http-message-implementation": "^1"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "~2.43.0",
+        "ergebnis/composer-normalize": "^2.43",
         "friendsofphp/php-cs-fixer": "^3.59",
         "guzzlehttp/guzzle": "^7.4",
         "mockery/mockery": "^1.6",
