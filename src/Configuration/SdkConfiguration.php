@@ -258,14 +258,12 @@ final class SdkConfiguration implements ConfigurableContract
     /**
      * Return the configured scopes as a space-delimited string.
      */
-    public function formatScope(): ?string
+    public function formatScope(): string
     {
         return implode(' ', $this->getScope());
     }
 
     /**
-     * @param ?Throwable $exceptionIfNull
-     *
      * @return null|array<string>
      */
     public function getAudience(?Throwable $exceptionIfNull = null): ?array
@@ -317,9 +315,9 @@ final class SdkConfiguration implements ConfigurableContract
             return $this->cookieDomain;
         }
 
-        $domain = (isset($_SERVER['HTTP_HOST']) && '' !== trim($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : null;
+        $domain = (isset($_SERVER['HTTP_HOST']) && '' !== trim((string) $_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : null;
         $domain ??= $this->getRedirectUri();
-        $domain ??= (isset($_SERVER['SERVER_NAME']) && '' !== trim($_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : null;
+        $domain ??= (isset($_SERVER['SERVER_NAME']) && '' !== trim((string) $_SERVER['SERVER_NAME'])) ? $_SERVER['SERVER_NAME'] : null;
         $domain = trim($domain ?? '');
 
         if (mb_strlen($domain) > 0) {
@@ -440,8 +438,6 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @param ?Throwable $exceptionIfNull
-     *
      * @return null|array<string> The configured allowlist of organization IDs/names.
      */
     public function getOrganization(?Throwable $exceptionIfNull = null): ?array
@@ -547,7 +543,7 @@ final class SdkConfiguration implements ConfigurableContract
         return $this->tokenJwksUri;
     }
 
-    public function getTokenLeeway(?Throwable $exceptionIfNull = null): ?int
+    public function getTokenLeeway(?Throwable $exceptionIfNull = null): int
     {
         $this->exceptionIfNull($this->tokenLeeway, $exceptionIfNull);
 
@@ -1442,7 +1438,7 @@ final class SdkConfiguration implements ConfigurableContract
     private function getPropertyValidators(): array
     {
         return [
-            'strategy' => static fn ($value): bool => is_string($value),
+            'strategy' => is_string(...),
             'domain' => static fn ($value): bool => is_string($value) || null === $value,
             'customDomain' => static fn ($value): bool => is_string($value) || null === $value,
             'clientId' => static fn ($value): bool => is_string($value) || null === $value,
@@ -1450,43 +1446,43 @@ final class SdkConfiguration implements ConfigurableContract
             'clientSecret' => static fn ($value): bool => is_string($value) || null === $value,
             'audience' => static fn ($value): bool => is_array($value) || null === $value,
             'organization' => static fn ($value): bool => is_array($value) || null === $value,
-            'usePkce' => static fn ($value): bool => is_bool($value),
+            'usePkce' => is_bool(...),
             'scope' => static fn ($value): bool => is_array($value) || null === $value,
-            'responseMode' => static fn ($value): bool => is_string($value),
-            'responseType' => static fn ($value): bool => is_string($value),
-            'tokenAlgorithm' => static fn ($value): bool => is_string($value),
+            'responseMode' => is_string(...),
+            'responseType' => is_string(...),
+            'tokenAlgorithm' => is_string(...),
             'tokenJwksUri' => static fn ($value): bool => is_string($value) || null === $value,
             'tokenMaxAge' => static fn ($value): bool => is_int($value) || null === $value,
-            'tokenLeeway' => static fn ($value): bool => is_int($value),
+            'tokenLeeway' => is_int(...),
             'tokenCache' => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
-            'tokenCacheTtl' => static fn ($value): bool => is_int($value),
+            'tokenCacheTtl' => is_int(...),
             'httpClient' => static fn ($value): bool => $value instanceof ClientInterface || null === $value,
-            'httpMaxRetries' => static fn ($value): bool => is_int($value),
+            'httpMaxRetries' => is_int(...),
             'httpRequestFactory' => static fn ($value): bool => $value instanceof RequestFactoryInterface || null === $value,
             'httpResponseFactory' => static fn ($value): bool => $value instanceof ResponseFactoryInterface || null === $value,
             'httpStreamFactory' => static fn ($value): bool => $value instanceof StreamFactoryInterface || null === $value,
-            'httpTelemetry' => static fn ($value): bool => is_bool($value),
+            'httpTelemetry' => is_bool(...),
             'sessionStorage' => static fn ($value): bool => $value instanceof StoreInterface || null === $value,
-            'sessionStorageId' => static fn ($value): bool => is_string($value),
+            'sessionStorageId' => is_string(...),
             'cookieSecret' => static fn ($value): bool => is_string($value) || null === $value,
             'cookieDomain' => static fn ($value): bool => is_string($value) || null === $value,
-            'cookieExpires' => static fn ($value): bool => is_int($value),
-            'cookiePath' => static fn ($value): bool => is_string($value),
-            'cookieSecure' => static fn ($value): bool => is_bool($value),
+            'cookieExpires' => is_int(...),
+            'cookiePath' => is_string(...),
+            'cookieSecure' => is_bool(...),
             'cookieSameSite' => static fn ($value): bool => is_string($value) || null === $value,
-            'persistUser' => static fn ($value): bool => is_bool($value),
-            'persistIdToken' => static fn ($value): bool => is_bool($value),
-            'persistAccessToken' => static fn ($value): bool => is_bool($value),
-            'persistRefreshToken' => static fn ($value): bool => is_bool($value),
+            'persistUser' => is_bool(...),
+            'persistIdToken' => is_bool(...),
+            'persistAccessToken' => is_bool(...),
+            'persistRefreshToken' => is_bool(...),
             'transientStorage' => static fn ($value): bool => $value instanceof StoreInterface || null === $value,
-            'transientStorageId' => static fn ($value): bool => is_string($value),
-            'queryUserInfo' => static fn ($value): bool => is_bool($value),
+            'transientStorageId' => is_string(...),
+            'queryUserInfo' => is_bool(...),
             'managementToken' => static fn ($value): bool => is_string($value) || null === $value,
             'managementTokenCache' => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
             'eventListenerProvider' => static fn ($value): bool => $value instanceof ListenerProviderInterface || null === $value,
             'clientAssertionSigningKey' => static fn ($value): bool => $value instanceof OpenSSLAsymmetricKey || is_string($value) || null === $value,
-            'clientAssertionSigningAlgorithm' => static fn ($value): bool => is_string($value),
-            'pushedAuthorizationRequest' => static fn ($value): bool => is_bool($value),
+            'clientAssertionSigningAlgorithm' => is_string(...),
+            'pushedAuthorizationRequest' => is_bool(...),
             'backchannelLogoutCache' => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
         ];
     }
@@ -1511,12 +1507,15 @@ final class SdkConfiguration implements ConfigurableContract
         if (! $this->hasHttpClient()) {
             $this->setHttpClient($httpClient);
         }
+
         if (! $this->hasHttpRequestFactory()) {
             $this->setHttpRequestFactory($requestFactory);
         }
+
         if (! $this->hasHttpResponseFactory()) {
             $this->setHttpResponseFactory($responseFactory);
         }
+
         if (! $this->hasHttpStreamFactory()) {
             $this->setHttpStreamFactory($streamFactory);
         }
@@ -1538,8 +1537,6 @@ final class SdkConfiguration implements ConfigurableContract
 
     /**
      * Setup SDK validators based on strategy type.
-     *
-     * @param ?string $strategy
      */
     private function validateState(
         ?string $strategy = null,

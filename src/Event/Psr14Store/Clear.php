@@ -11,7 +11,7 @@ final class Clear implements Auth0Event
     private ?bool $success = null;
 
     public function __construct(
-        private StoreInterface $store,
+        private readonly StoreInterface $store,
     ) {
     }
 

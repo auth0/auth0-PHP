@@ -35,6 +35,7 @@ use function is_object;
 use function is_resource;
 use function is_scalar;
 use function is_string;
+use function sprintf;
 
 /**
  * Utility class for assertions.
@@ -55,7 +56,7 @@ final class Assert
      *
      * @throws BadMethodCallException
      */
-    public static function __callStatic($name, $arguments): void
+    public static function __callStatic(string $name, array $arguments): void
     {
         if ('nullOr' === mb_substr($name, 0, 6)) {
             if (null !== $arguments[0]) {
@@ -395,13 +396,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $interface
-     *
      * @psalm-assert iterable<class-string<ExpectedType>> $value
      *
      * @param mixed  $value
      * @param mixed  $interface
      * @param string $message
+     *
+     * @psalm-param class-string<ExpectedType> $interface
      *
      * @throws InvalidArgumentException
      */
@@ -418,7 +419,6 @@ final class Assert
      * @psalm-pure
      *
      * @param mixed  $value
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -535,11 +535,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param array<class-string> $classes
-     *
      * @param iterable<object|string> $value
      * @param string[]                $classes
      * @param string                  $message
+     *
+     * @psalm-param array<class-string> $classes
      *
      * @throws InvalidArgumentException
      */
@@ -557,13 +557,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert iterable<ExpectedType|class-string<ExpectedType>> $value
      *
      * @param iterable<object|string> $value
      * @param string                  $class
      * @param string                  $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -676,13 +676,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert iterable<ExpectedType> $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -698,11 +698,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param array<class-string> $classes
-     *
      * @param mixed                $value
      * @param array<object|string> $classes
      * @param string               $message
+     *
+     * @psalm-param array<class-string> $classes
      *
      * @throws InvalidArgumentException
      */
@@ -758,12 +758,12 @@ final class Assert
      *
      * @psalm-template T
      *
-     * @psalm-param iterable<mixed|array<T>> $array
-     *
      * @psalm-assert iterable<array<string, T>> $array
      *
      * @param mixed  $array
      * @param string $message
+     *
+     * @psalm-param iterable<mixed|array<T>> $array
      *
      * @throws InvalidArgumentException
      */
@@ -800,10 +800,10 @@ final class Assert
      *
      * @psalm-template T
      *
-     * @psalm-param iterable<mixed|array<T>> $array
-     *
      * @param mixed  $array
      * @param string $message
+     *
+     * @psalm-param iterable<mixed|array<T>> $array
      *
      * @throws InvalidArgumentException
      */
@@ -821,11 +821,11 @@ final class Assert
      *
      * @psalm-template UnexpectedType of object
      *
-     * @psalm-param class-string<UnexpectedType> $class
-     *
      * @param iterable<object|string> $value
      * @param string                  $class
      * @param string                  $message
+     *
+     * @psalm-param class-string<UnexpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -1024,11 +1024,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param iterable<class-string|object> $classOrObject
-     *
      * @param iterable<object|string> $classOrObject
      * @param mixed                   $method
      * @param string                  $message
+     *
+     * @psalm-param iterable<class-string|object> $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -1044,11 +1044,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param iterable<class-string|object> $classOrObject
-     *
      * @param iterable<object|string> $classOrObject
      * @param mixed                   $method
      * @param string                  $message
+     *
+     * @psalm-param iterable<class-string|object> $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -1205,11 +1205,11 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -1676,13 +1676,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $interface
-     *
      * @psalm-assert iterable<class-string<ExpectedType>|null> $value
      *
      * @param mixed  $value
      * @param mixed  $interface
      * @param string $message
+     *
+     * @psalm-param class-string<ExpectedType> $interface
      *
      * @throws InvalidArgumentException
      */
@@ -1701,7 +1701,6 @@ final class Assert
      * @psalm-pure
      *
      * @param mixed  $value
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -1832,11 +1831,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param array<class-string> $classes
-     *
      * @param iterable<null|object|string> $value
      * @param string[]                     $classes
      * @param string                       $message
+     *
+     * @psalm-param array<class-string> $classes
      *
      * @throws InvalidArgumentException
      */
@@ -1856,13 +1855,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert iterable<ExpectedType|class-string<ExpectedType>|null> $value
      *
      * @param iterable<null|object|string> $value
      * @param string                       $class
      * @param string                       $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -1987,13 +1986,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert iterable<ExpectedType|null> $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -2011,11 +2010,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param array<class-string> $classes
-     *
      * @param mixed                $value
      * @param array<object|string> $classes
      * @param string               $message
+     *
+     * @psalm-param array<class-string> $classes
      *
      * @throws InvalidArgumentException
      */
@@ -2077,12 +2076,12 @@ final class Assert
      *
      * @psalm-template T
      *
-     * @psalm-param iterable<mixed|array<T>|null> $array
-     *
      * @psalm-assert iterable<array<string, T>|null> $array
      *
      * @param mixed  $array
      * @param string $message
+     *
+     * @psalm-param iterable<mixed|array<T>|null> $array
      *
      * @throws InvalidArgumentException
      */
@@ -2123,13 +2122,13 @@ final class Assert
      *
      * @psalm-template T
      *
-     * @psalm-param iterable<mixed|array<T>|null> $array
-     *
      * @psalm-assert iterable<array<string, T>|null> $array
      * @psalm-assert iterable<!empty|null> $array
      *
      * @param mixed  $array
      * @param string $message
+     *
+     * @psalm-param iterable<mixed|array<T>|null> $array
      *
      * @throws InvalidArgumentException
      */
@@ -2149,14 +2148,14 @@ final class Assert
      *
      * @psalm-template UnexpectedType of object
      *
-     * @psalm-param class-string<UnexpectedType> $class
-     *
      * @psalm-assert iterable<!UnexpectedType|null> $value
      * @psalm-assert iterable<!class-string<UnexpectedType>|null> $value
      *
      * @param iterable<null|object|string> $value
      * @param string                       $class
      * @param string                       $message
+     *
+     * @psalm-param class-string<UnexpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -2377,11 +2376,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param iterable<class-string|object|null> $classOrObject
-     *
      * @param iterable<null|object|string> $classOrObject
      * @param mixed                        $method
      * @param string                       $message
+     *
+     * @psalm-param iterable<class-string|object|null> $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -2399,11 +2398,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param iterable<class-string|object|null> $classOrObject
-     *
      * @param iterable<null|object|string> $classOrObject
      * @param mixed                        $method
      * @param string                       $message
+     *
+     * @psalm-param iterable<class-string|object|null> $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -2582,13 +2581,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert iterable<!ExpectedType|null> $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -2728,7 +2727,6 @@ final class Assert
      * @psalm-pure
      *
      * @param mixed  $value
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -2768,11 +2766,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param iterable<class-string|object|null> $classOrObject
-     *
      * @param iterable<null|object|string> $classOrObject
      * @param mixed                        $property
      * @param string                       $message
+     *
+     * @psalm-param iterable<class-string|object|null> $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -2790,11 +2788,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param iterable<class-string|object|null> $classOrObject
-     *
      * @param iterable<null|object|string> $classOrObject
      * @param mixed                        $property
      * @param string                       $message
+     *
+     * @psalm-param iterable<class-string|object|null> $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -3016,13 +3014,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert iterable<class-string<ExpectedType>|ExpectedType|null> $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -3038,11 +3036,11 @@ final class Assert
     }
 
     /**
-     * @psalm-param class-string<Throwable> $class
-     *
      * @param iterable<null|Closure> $expression
      * @param string                 $class
      * @param string                 $message
+     *
+     * @psalm-param class-string<Throwable> $class
      *
      * @throws InvalidArgumentException
      */
@@ -3234,7 +3232,6 @@ final class Assert
      * @psalm-pure
      *
      * @param mixed  $value
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -3270,11 +3267,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param iterable<class-string|object> $classOrObject
-     *
      * @param iterable<object|string> $classOrObject
      * @param mixed                   $property
      * @param string                  $message
+     *
+     * @psalm-param iterable<class-string|object> $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -3290,11 +3287,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param iterable<class-string|object> $classOrObject
-     *
      * @param iterable<object|string> $classOrObject
      * @param mixed                   $property
      * @param string                  $message
+     *
+     * @psalm-param iterable<class-string|object> $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -3494,13 +3491,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert iterable<class-string<ExpectedType>|ExpectedType> $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -3514,11 +3511,11 @@ final class Assert
     }
 
     /**
-     * @psalm-param class-string<Throwable> $class
-     *
      * @param iterable<Closure> $expression
      * @param string            $class
      * @param string            $message
+     *
+     * @psalm-param class-string<Throwable> $class
      *
      * @throws InvalidArgumentException
      */
@@ -3949,7 +3946,7 @@ final class Assert
         self::string($value);
 
         // Reject paths containing protocol separators to prevent arbitrary file read
-        if (str_contains((string) $value, '://')) {
+        if (str_contains($value, '://')) {
             self::reportInvalidArgument(sprintf(
                 $message ?: 'File paths with protocol separators ("://") are not allowed: %s',
                 self::valueToString($value),
@@ -4029,13 +4026,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $interface
-     *
      * @psalm-assert class-string<ExpectedType> $value
      *
      * @param mixed  $value
      * @param mixed  $interface
      * @param string $message
+     *
+     * @psalm-param class-string<ExpectedType> $interface
      *
      * @throws InvalidArgumentException
      */
@@ -4056,7 +4053,6 @@ final class Assert
      * @psalm-pure
      *
      * @param mixed  $value
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -4067,7 +4063,7 @@ final class Assert
             self::reportInvalidArgument(sprintf(
                 $message ?: 'Expected one of: %2$s. Got: %s',
                 self::valueToString($value),
-                implode(', ', array_map(static fn ($value): string => self::valueToString($value), $values)),
+                implode(', ', array_map(self::valueToString(...), $values)),
             ));
         }
     }
@@ -4181,11 +4177,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param array<class-string> $classes
-     *
      * @param object|string $value
      * @param string[]      $classes
      * @param string        $message
+     *
+     * @psalm-param array<class-string> $classes
      *
      * @throws InvalidArgumentException
      */
@@ -4211,13 +4207,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert ExpectedType|class-string<ExpectedType> $value
      *
      * @param object|string $value
      * @param string        $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -4344,13 +4340,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert ExpectedType $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -4368,11 +4364,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param array<class-string> $classes
-     *
      * @param mixed                $value
      * @param array<object|string> $classes
      * @param string               $message
+     *
+     * @psalm-param array<class-string> $classes
      *
      * @throws InvalidArgumentException
      */
@@ -4387,7 +4383,7 @@ final class Assert
         self::reportInvalidArgument(sprintf(
             $message ?: 'Expected an instance of any of %2$s. Got: %s',
             self::typeToString($value),
-            implode(', ', array_map(static fn ($value): string => self::valueToString($value), $classes)),
+            implode(', ', array_map(self::valueToString(...), $classes)),
         ));
     }
 
@@ -4448,12 +4444,12 @@ final class Assert
      *
      * @psalm-template T
      *
-     * @psalm-param mixed|array<T> $array
-     *
      * @psalm-assert array<string, T> $array
      *
      * @param mixed  $array
      * @param string $message
+     *
+     * @psalm-param mixed|array<T> $array
      *
      * @throws InvalidArgumentException
      */
@@ -4461,7 +4457,7 @@ final class Assert
     {
         if (
             ! is_array($array)
-            || array_keys($array) !== array_filter(array_keys($array), '\is_string')
+            || array_keys($array) !== array_filter(array_keys($array), is_string(...))
         ) {
             self::reportInvalidArgument(
                 $message ?: 'Expected map - associative array with string keys.',
@@ -4490,13 +4486,13 @@ final class Assert
      *
      * @psalm-template T
      *
-     * @psalm-param mixed|array<T> $array
-     *
      * @psalm-assert array<string, T> $array
      * @psalm-assert !empty $array
      *
      * @param mixed  $array
      * @param string $message
+     *
+     * @psalm-param mixed|array<T> $array
      *
      * @throws InvalidArgumentException
      */
@@ -4511,14 +4507,14 @@ final class Assert
      *
      * @psalm-template UnexpectedType of object
      *
-     * @psalm-param class-string<UnexpectedType> $class
-     *
      * @psalm-assert !UnexpectedType $value
      * @psalm-assert !class-string<UnexpectedType> $value
      *
      * @param object|string $value
      * @param string        $class
      * @param string        $message
+     *
+     * @psalm-param class-string<UnexpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -4568,13 +4564,12 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @param array      $array
      * @param int|string $key
      * @param string     $message
      *
      * @throws InvalidArgumentException
      */
-    public static function keyExists($array, $key, $message = ''): void
+    public static function keyExists(array $array, $key, $message = ''): void
     {
         if (! isset($array[$key]) && ! array_key_exists($key, $array)) {
             self::reportInvalidArgument(sprintf(
@@ -4587,13 +4582,12 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @param array      $array
      * @param int|string $key
      * @param string     $message
      *
      * @throws InvalidArgumentException
      */
-    public static function keyNotExists($array, $key, $message = ''): void
+    public static function keyNotExists(array $array, $key, $message = ''): void
     {
         if (isset($array[$key]) || array_key_exists($key, $array)) {
             self::reportInvalidArgument(sprintf(
@@ -4759,11 +4753,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param class-string|object $classOrObject
-     *
      * @param object|string $classOrObject
      * @param mixed         $method
      * @param string        $message
+     *
+     * @psalm-param class-string|object $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -4780,11 +4774,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param class-string|object $classOrObject
-     *
      * @param object|string $classOrObject
      * @param mixed         $method
      * @param string        $message
+     *
+     * @psalm-param class-string|object $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -4961,13 +4955,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert !ExpectedType $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -5374,13 +5368,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $interface
-     *
      * @psalm-assert class-string<ExpectedType>|null $value
      *
      * @param mixed  $value
      * @param mixed  $interface
      * @param string $message
+     *
+     * @psalm-param class-string<ExpectedType> $interface
      *
      * @throws InvalidArgumentException
      */
@@ -5395,7 +5389,6 @@ final class Assert
      * @psalm-pure
      *
      * @param mixed  $value
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -5498,11 +5491,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param array<class-string> $classes
-     *
      * @param null|object|string $value
      * @param string[]           $classes
      * @param string             $message
+     *
+     * @psalm-param array<class-string> $classes
      *
      * @throws InvalidArgumentException
      */
@@ -5518,13 +5511,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert ExpectedType|class-string<ExpectedType>|null $value
      *
      * @param null|object|string $value
      * @param string             $class
      * @param string             $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -5625,13 +5618,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert ExpectedType|null $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -5645,11 +5638,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param array<class-string> $classes
-     *
      * @param mixed                $value
      * @param array<object|string> $classes
      * @param string               $message
+     *
+     * @psalm-param array<class-string> $classes
      *
      * @throws InvalidArgumentException
      */
@@ -5699,12 +5692,12 @@ final class Assert
      *
      * @psalm-template T
      *
-     * @psalm-param mixed|array<T>|null $array
-     *
      * @psalm-assert array<string, T>|null $array
      *
      * @param mixed  $array
      * @param string $message
+     *
+     * @psalm-param mixed|array<T>|null $array
      *
      * @throws InvalidArgumentException
      */
@@ -5737,10 +5730,10 @@ final class Assert
      *
      * @psalm-template T
      *
-     * @psalm-param mixed|array<T>|null $array
-     *
      * @param mixed  $array
      * @param string $message
+     *
+     * @psalm-param mixed|array<T>|null $array
      *
      * @throws InvalidArgumentException
      */
@@ -5756,11 +5749,11 @@ final class Assert
      *
      * @psalm-template UnexpectedType of object
      *
-     * @psalm-param class-string<UnexpectedType> $class
-     *
      * @param null|object|string $value
      * @param string             $class
      * @param string             $message
+     *
+     * @psalm-param class-string<UnexpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -5937,11 +5930,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param class-string|object|null $classOrObject
-     *
      * @param null|object|string $classOrObject
      * @param mixed              $method
      * @param string             $message
+     *
+     * @psalm-param class-string|object|null $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -5955,11 +5948,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param class-string|object|null $classOrObject
-     *
      * @param null|object|string $classOrObject
      * @param mixed              $method
      * @param string             $message
+     *
+     * @psalm-param class-string|object|null $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -6098,11 +6091,11 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -6214,7 +6207,6 @@ final class Assert
      * @psalm-pure
      *
      * @param mixed  $value
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -6246,11 +6238,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param class-string|object|null $classOrObject
-     *
      * @param null|object|string $classOrObject
      * @param mixed              $property
      * @param string             $message
+     *
+     * @psalm-param class-string|object|null $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -6264,11 +6256,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param class-string|object|null $classOrObject
-     *
      * @param null|object|string $classOrObject
      * @param mixed              $property
      * @param string             $message
+     *
+     * @psalm-param class-string|object|null $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -6446,13 +6438,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert class-string<ExpectedType>|ExpectedType|null $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -6464,11 +6456,11 @@ final class Assert
     }
 
     /**
-     * @psalm-param class-string<Throwable> $class
-     *
      * @param null|Closure $expression
      * @param string       $class
      * @param string       $message
+     *
+     * @psalm-param class-string<Throwable> $class
      *
      * @throws InvalidArgumentException
      */
@@ -6630,7 +6622,6 @@ final class Assert
      * @psalm-pure
      *
      * @param mixed  $value
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -6663,11 +6654,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param class-string|object $classOrObject
-     *
      * @param object|string $classOrObject
      * @param mixed         $property
      * @param string        $message
+     *
+     * @psalm-param class-string|object $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -6684,11 +6675,11 @@ final class Assert
     /**
      * @psalm-pure
      *
-     * @psalm-param class-string|object $classOrObject
-     *
      * @param object|string $classOrObject
      * @param mixed         $property
      * @param string        $message
+     *
+     * @psalm-param class-string|object $classOrObject
      *
      * @throws InvalidArgumentException
      */
@@ -6920,13 +6911,13 @@ final class Assert
      *
      * @psalm-template ExpectedType of object
      *
-     * @psalm-param class-string<ExpectedType> $class
-     *
      * @psalm-assert class-string<ExpectedType>|ExpectedType $value
      *
      * @param mixed         $value
      * @param object|string $class
      * @param string        $message
+     *
+     * @psalm-param class-string<ExpectedType> $class
      *
      * @throws InvalidArgumentException
      */
@@ -6942,11 +6933,10 @@ final class Assert
     }
 
     /**
-     * @psalm-param class-string<Throwable> $class
+     * @param string $class
+     * @param string $message
      *
-     * @param Closure $expression
-     * @param string  $class
-     * @param string  $message
+     * @psalm-param class-string<Throwable> $class
      *
      * @throws InvalidArgumentException
      */
@@ -7020,7 +7010,6 @@ final class Assert
     /**
      * Does non strict comparisons on the items, so ['3', 3] will not pass the assertion.
      *
-     * @param array  $values
      * @param string $message
      *
      * @throws InvalidArgumentException
@@ -7143,14 +7132,14 @@ final class Assert
     private static function strlen($value): int
     {
         if (! function_exists('mb_detect_encoding')) {
-            return mb_strlen($value);
+            return mb_strlen((string) $value);
         }
 
-        if (false === $encoding = mb_detect_encoding($value, mb_detect_order(), true)) {
-            return mb_strlen($value);
+        if (false === $encoding = mb_detect_encoding((string) $value, mb_detect_order(), true)) {
+            return mb_strlen((string) $value);
         }
 
-        return mb_strlen($value, $encoding);
+        return mb_strlen((string) $value, $encoding);
     }
 
     /**
@@ -7163,10 +7152,8 @@ final class Assert
 
     /**
      * @param mixed $value
-     *
-     * @return string
      */
-    private static function valueToString($value)
+    private static function valueToString($value): string
     {
         if (null === $value) {
             return 'null';

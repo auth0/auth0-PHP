@@ -36,15 +36,15 @@ final class Verifier
      * @param null|array<object>          $mockedHttpResponses Optional. Only intended for unit testing purposes.
      */
     public function __construct(
-        private SdkConfiguration $configuration,
-        private string $payload,
-        private string $signature,
+        private readonly SdkConfiguration $configuration,
+        private readonly string $payload,
+        private readonly string $signature,
         private array $headers,
-        private ?string $algorithm = null,
-        private ?string $jwksUri = null,
-        private ?string $clientSecret = null,
-        private ?int $cacheExpires = null,
-        private ?CacheItemPoolInterface $cache = null,
+        private readonly ?string $algorithm = null,
+        private readonly ?string $jwksUri = null,
+        private readonly ?string $clientSecret = null,
+        private readonly ?int $cacheExpires = null,
+        private readonly ?CacheItemPoolInterface $cache = null,
         private ?array &$mockedHttpResponses = null,
     ) {
         $this->verify();
@@ -182,7 +182,7 @@ final class Verifier
         $jwksUri = parse_url($this->jwksUri);
 
         // @phpstan-ignore-next-line
-        if (! $jwksCacheKey || ! is_array($jwksUri)) {
+        if (! is_array($jwksUri)) {
             return [];
         }
 

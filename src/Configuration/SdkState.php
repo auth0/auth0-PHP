@@ -60,8 +60,6 @@ final class SdkState implements ConfigurableContract
     }
 
     /**
-     * @param ?Throwable $exceptionIfNull
-     *
      * @return null|array<string>
      */
     public function getAccessTokenScope(?Throwable $exceptionIfNull = null): ?array
@@ -93,8 +91,6 @@ final class SdkState implements ConfigurableContract
     }
 
     /**
-     * @param ?Throwable $exceptionIfNull
-     *
      * @return null|array<mixed> $user an array representing user data
      */
     public function getUser(?Throwable $exceptionIfNull = null): ?array

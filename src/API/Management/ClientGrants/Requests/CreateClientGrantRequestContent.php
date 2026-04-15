@@ -1,0 +1,229 @@
+<?php
+
+namespace Auth0\SDK\API\Management\ClientGrants\Requests;
+
+use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
+use Auth0\SDK\API\Management\Core\Json\JsonProperty;
+use Auth0\SDK\API\Management\Types\ClientGrantOrganizationUsageEnum;
+use Auth0\SDK\API\Management\Core\Types\ArrayType;
+use Auth0\SDK\API\Management\Types\ClientGrantSubjectTypeEnum;
+
+class CreateClientGrantRequestContent extends JsonSerializableType
+{
+    /**
+     * @var ?string $clientId ID of the client.
+     */
+    #[JsonProperty('client_id')]
+    private ?string $clientId;
+
+    /**
+     * @var string $audience The audience (API identifier) of this client grant
+     */
+    #[JsonProperty('audience')]
+    private string $audience;
+
+    /**
+     * @var ?value-of<ClientGrantOrganizationUsageEnum> $organizationUsage
+     */
+    #[JsonProperty('organization_usage')]
+    private ?string $organizationUsage;
+
+    /**
+     * @var ?bool $allowAnyOrganization If enabled, any organization can be used with this grant. If disabled (default), the grant must be explicitly assigned to the desired organizations.
+     */
+    #[JsonProperty('allow_any_organization')]
+    private ?bool $allowAnyOrganization;
+
+    /**
+     * @var ?array<string> $scope Scopes allowed for this client grant.
+     */
+    #[JsonProperty('scope'), ArrayType(['string'])]
+    private ?array $scope;
+
+    /**
+     * @var ?value-of<ClientGrantSubjectTypeEnum> $subjectType
+     */
+    #[JsonProperty('subject_type')]
+    private ?string $subjectType;
+
+    /**
+     * @var ?array<string> $authorizationDetailsTypes Types of authorization_details allowed for this client grant.
+     */
+    #[JsonProperty('authorization_details_types'), ArrayType(['string'])]
+    private ?array $authorizationDetailsTypes;
+
+    /**
+     * @var ?bool $allowAllScopes If enabled, all scopes configured on the resource server are allowed for this grant.
+     */
+    #[JsonProperty('allow_all_scopes')]
+    private ?bool $allowAllScopes;
+
+    /**
+     * @param array{
+     *   audience: string,
+     *   clientId?: ?string,
+     *   organizationUsage?: ?value-of<ClientGrantOrganizationUsageEnum>,
+     *   allowAnyOrganization?: ?bool,
+     *   scope?: ?array<string>,
+     *   subjectType?: ?value-of<ClientGrantSubjectTypeEnum>,
+     *   authorizationDetailsTypes?: ?array<string>,
+     *   allowAllScopes?: ?bool,
+     * } $values
+     */
+    public function __construct(
+        array $values,
+    ) {
+        $this->clientId = $values['clientId'] ?? null;
+        $this->audience = $values['audience'];
+        $this->organizationUsage = $values['organizationUsage'] ?? null;
+        $this->allowAnyOrganization = $values['allowAnyOrganization'] ?? null;
+        $this->scope = $values['scope'] ?? null;
+        $this->subjectType = $values['subjectType'] ?? null;
+        $this->authorizationDetailsTypes = $values['authorizationDetailsTypes'] ?? null;
+        $this->allowAllScopes = $values['allowAllScopes'] ?? null;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getClientId(): ?string
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setClientId(?string $value = null): self
+    {
+        $this->clientId = $value;
+        $this->_setField('clientId');
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAudience(): string
+    {
+        return $this->audience;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setAudience(string $value): self
+    {
+        $this->audience = $value;
+        $this->_setField('audience');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientGrantOrganizationUsageEnum>
+     */
+    public function getOrganizationUsage(): ?string
+    {
+        return $this->organizationUsage;
+    }
+
+    /**
+     * @param ?value-of<ClientGrantOrganizationUsageEnum> $value
+     */
+    public function setOrganizationUsage(?string $value = null): self
+    {
+        $this->organizationUsage = $value;
+        $this->_setField('organizationUsage');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getAllowAnyOrganization(): ?bool
+    {
+        return $this->allowAnyOrganization;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setAllowAnyOrganization(?bool $value = null): self
+    {
+        $this->allowAnyOrganization = $value;
+        $this->_setField('allowAnyOrganization');
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getScope(): ?array
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param ?array<string> $value
+     */
+    public function setScope(?array $value = null): self
+    {
+        $this->scope = $value;
+        $this->_setField('scope');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientGrantSubjectTypeEnum>
+     */
+    public function getSubjectType(): ?string
+    {
+        return $this->subjectType;
+    }
+
+    /**
+     * @param ?value-of<ClientGrantSubjectTypeEnum> $value
+     */
+    public function setSubjectType(?string $value = null): self
+    {
+        $this->subjectType = $value;
+        $this->_setField('subjectType');
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getAuthorizationDetailsTypes(): ?array
+    {
+        return $this->authorizationDetailsTypes;
+    }
+
+    /**
+     * @param ?array<string> $value
+     */
+    public function setAuthorizationDetailsTypes(?array $value = null): self
+    {
+        $this->authorizationDetailsTypes = $value;
+        $this->_setField('authorizationDetailsTypes');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getAllowAllScopes(): ?bool
+    {
+        return $this->allowAllScopes;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setAllowAllScopes(?bool $value = null): self
+    {
+        $this->allowAllScopes = $value;
+        $this->_setField('allowAllScopes');
+        return $this;
+    }
+}

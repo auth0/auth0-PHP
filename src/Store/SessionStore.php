@@ -13,7 +13,7 @@ use function defined;
 /**
  * This class provides a layer to persist data using PHP Sessions.
  */
-final class SessionStore implements StoreInterface
+final readonly class SessionStore implements StoreInterface
 {
     /**
      * SessionStore constructor.
@@ -69,11 +69,7 @@ final class SessionStore implements StoreInterface
 
         $keyName = $this->getSessionName($key);
 
-        if (isset($_SESSION[$keyName])) {
-            return $_SESSION[$keyName];
-        }
-
-        return $default;
+        return $_SESSION[$keyName] ?? $default;
     }
 
     /**
@@ -105,7 +101,7 @@ final class SessionStore implements StoreInterface
 
         if ([] !== $session) {
             while ($sessionKey = key($session)) {
-                if (mb_substr($sessionKey, 0, mb_strlen($prefix)) === $prefix) {
+                if (mb_substr((string) $sessionKey, 0, mb_strlen($prefix)) === $prefix) {
                     unset($_SESSION[$sessionKey]);
                 }
 
@@ -148,6 +144,7 @@ final class SessionStore implements StoreInterface
                     'samesite' => 'form_post' === $this->configuration->getResponseMode() ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax',
                 ]);
             }
+
             // @codeCoverageIgnoreEnd
 
             session_register_shutdown();

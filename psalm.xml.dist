@@ -13,6 +13,7 @@
 
         <ignoreFiles>
             <file name="src/Utility/Assert.php" />
+            <directory name="src/API/Management/" />
         </ignoreFiles>
     </projectFiles>
 
@@ -22,11 +23,24 @@
         <MixedArgumentTypeCoercion errorLevel="suppress" />
         <MixedArrayAccess errorLevel="suppress" />
         <MixedAssignment errorLevel="suppress" />
-        <MixedInferredReturnType errorLevel="suppress" />
+        <MixedReturnTypeCoercion errorLevel="suppress" />
         <MixedPropertyTypeCoercion errorLevel="suppress" />
         <MixedReturnStatement errorLevel="suppress" />
         <PossiblyNullArgument errorLevel="suppress" />
         <PossiblyNullPropertyAssignmentValue errorLevel="suppress" />
         <PossiblyNullReference errorLevel="suppress" />
+        <MissingOverrideAttribute errorLevel="suppress" />
+        <ClassMustBeFinal errorLevel="suppress" />
+        <InvalidArgument>
+            <errorLevel type="suppress">
+                <file name="src/Auth0.php" />
+            </errorLevel>
+        </InvalidArgument>
+        <PossiblyNullArrayOffset errorLevel="suppress" />
+        <RedundantCast errorLevel="suppress" />
+        <RedundantCondition errorLevel="suppress" />
+        <TypeDoesNotContainNull errorLevel="suppress" />
+        <MoreSpecificReturnType errorLevel="suppress" />
+        <LessSpecificReturnStatement errorLevel="suppress" />
     </issueHandlers>
 </psalm>

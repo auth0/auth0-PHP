@@ -51,14 +51,13 @@ trait ConfigurableMixin
                 throw \Auth0\SDK\Exception\ConfigurationException::validationFailed($configKey);
             }
 
-            $method = 'set' . ucfirst($configKey);
+            $method = 'set' . ucfirst((string) $configKey);
 
             if (method_exists($this, $method)) {
                 /** @phpstan-ignore-next-line */
-                $callback = function ($configuredValue) use ($method) {
+                $callback
                     // @phpstan-ignore-next-line
-                    return $this->{$method}($configuredValue);
-                };
+                    = (fn ($configuredValue) => $this->{$method}($configuredValue));
 
                 $callback($configuredValue);
 
@@ -163,18 +162,19 @@ trait ConfigurableMixin
         $domain = $this->filterString($domain);
 
         if ('' !== $domain) {
-            $scheme = parse_url($domain, PHP_URL_SCHEME);
+            $scheme = parse_url((string) $domain, PHP_URL_SCHEME);
 
             if (! is_string($scheme) || '' === $scheme) {
                 return $this->filterDomain('https://' . $domain);
             }
 
-            $host = parse_url($domain, PHP_URL_HOST);
+            $host = parse_url((string) $domain, PHP_URL_HOST);
 
             // @codeCoverageIgnoreStart
             if (! is_string($host) || '' === $host) {
                 return null;
             }
+
             // @codeCoverageIgnoreEnd
 
             $parts = explode('.', $host);
@@ -230,14 +230,13 @@ trait ConfigurableMixin
                 continue;
             }
 
-            $method = 'set' . ucfirst($configKey);
+            $method = 'set' . ucfirst((string) $configKey);
 
             if (method_exists($this, $method)) {
                 /** @phpstan-ignore-next-line */
-                $callback = function ($value) use ($method) {
+                $callback
                     // @phpstan-ignore-next-line
-                    return $this->{$method}($value);
-                };
+                    = (fn ($value) => $this->{$method}($value));
 
                 // @phpstan-ignore-next-line
                 $callback($this->{$configKey});

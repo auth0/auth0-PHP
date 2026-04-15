@@ -7,12 +7,13 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Authentication\PushedAuthorizationRequest;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\AuthenticationInterface;
-use Auth0\SDK\Exception\{ConfigurationException};
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Token\ClientAssertionGenerator;
 use Auth0\SDK\Utility\{HttpClient, Toolkit};
 use Psr\Http\Message\ResponseInterface;
 
 use function is_array;
+use function sprintf;
 
 final class Authentication extends ClientAbstract implements AuthenticationInterface
 {
@@ -41,7 +42,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
      * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(
-        private SdkConfiguration | array $configuration,
+        private readonly SdkConfiguration | array $configuration,
     ) {
         $this->getConfiguration();
     }

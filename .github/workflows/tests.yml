@@ -6,15 +6,19 @@ on:
     types:
       - opened
       - synchronize
+    branches:
+      - main
+      - v9
   push:
     branches:
       - main
+      - v9
 
 permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/v9' }}
 
 jobs:
   configure:
@@ -76,6 +80,26 @@ jobs:
         with:
           directory: ./coverage/
           flags: unittestsvalidate
+
+  phpunit:
+    name: PHPUnit (Management)
+    needs: [configure, prepare]
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.configure.outputs.matrix) }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
+
+      - uses: ./.github/actions/setup
+        with:
+          php: ${{ matrix.php }}
+
+      - run: composer test-management
 
   phpstan:
     name: PHPStan

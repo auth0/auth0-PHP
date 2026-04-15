@@ -71,15 +71,16 @@ final class Generator implements GeneratorInterface, Stringable
      */
     private function __construct(
         private OpenSSLAsymmetricKey | string $signingKey,
-        private string $algorithm = Token::ALGO_RS256,
-        private array $claims = [],
+        private readonly string $algorithm = Token::ALGO_RS256,
+        private readonly array $claims = [],
         private array $headers = [],
-        private null | string $signingKeyPassphrase = null,
+        private readonly null | string $signingKeyPassphrase = null,
     ) {
         // @codeCoverageIgnoreStart
         if (! extension_loaded('openssl')) {
             throw TokenException::openSslMissing();
         }
+
         // @codeCoverageIgnoreEnd
 
         // Ensure the provided algorithm is supported.
@@ -185,6 +186,7 @@ final class Generator implements GeneratorInterface, Stringable
             } catch (Throwable $throwable) {
                 throw TokenException::unableToEncodeSegment($segment, $throwable->getMessage());
             }
+
             // @codeCoverageIgnoreEnd
         }
 
@@ -272,6 +274,7 @@ final class Generator implements GeneratorInterface, Stringable
             if ($signingKey instanceof OpenSSLAsymmetricKey) {
                 $details = openssl_pkey_get_details($signingKey);
             }
+
             // @codeCoverageIgnoreStart
         } catch (Throwable $throwable) {
             $failure = $throwable;
@@ -287,6 +290,7 @@ final class Generator implements GeneratorInterface, Stringable
         if (! is_array($details) || ! isset($details['type'])) {
             throw TokenException::unidentifiableKeyType();
         }
+
         // @codeCoverageIgnoreEnd
 
         $keyType = $details['type'];
@@ -299,6 +303,7 @@ final class Generator implements GeneratorInterface, Stringable
         if (OPENSSL_KEYTYPE_RSA === $keyType && ! isset($details['rsa'])) {
             throw TokenException::unidentifiableKeyType();
         }
+
         // @codeCoverageIgnoreEnd
 
         return $signingKey;
@@ -342,6 +347,7 @@ final class Generator implements GeneratorInterface, Stringable
             if (! is_string($this->signingKey)) {
                 throw TokenException::unableToSignData(TokenException::MSG_UNKNOWN_ERROR);
             }
+
             // @codeCoverageIgnoreEnd
 
             return $this->encode(
@@ -351,8 +357,8 @@ final class Generator implements GeneratorInterface, Stringable
                     key: $this->signingKey,
                     binary: true,
                 ),
-                json: false,
                 segment: 'signature',
+                json: false,
             );
         }
 
@@ -375,6 +381,7 @@ final class Generator implements GeneratorInterface, Stringable
 
             throw TokenException::unableToSignData($message, $failure);
         }
+
         // @codeCoverageIgnoreEnd
 
         return $this->encode(

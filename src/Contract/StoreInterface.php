@@ -8,8 +8,6 @@ interface StoreInterface
 {
     /**
      * Defer saving state changes to destination to improve performance during blocks of changes.
-     *
-     * @param bool $deferring
      */
     public function defer(
         bool $deferring,

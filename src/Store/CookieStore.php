@@ -101,8 +101,8 @@ final class CookieStore implements StoreInterface
      * @psalm-suppress RedundantCondition
      */
     public function __construct(
-        private SdkConfiguration $configuration,
-        private string $namespace = 'auth0',
+        private readonly SdkConfiguration $configuration,
+        private readonly string $namespace = 'auth0',
     ) {
         $this->getState();
     }
@@ -161,7 +161,7 @@ final class CookieStore implements StoreInterface
         // Determine encryption scheme based on version marker.
         if (isset($data['v']) && self::VAL_CRYPTO_VERSION === $data['v']) {
             // v2: aes-256-gcm with HKDF-derived key
-            $key = self::deriveKey($secret);
+            $key = $this->deriveKey($secret);
             $decrypted = openssl_decrypt($data['data'], self::VAL_CRYPTO_ALGO_V2, $key, 0, $iv, $tag);
         } else {
             // fallback for pre-KDF cookies
@@ -249,7 +249,7 @@ final class CookieStore implements StoreInterface
             throw \Auth0\SDK\Exception\ConfigurationException::requiresCookieSecret();
         }
 
-        $key = self::deriveKey($secret);
+        $key = $this->deriveKey($secret);
 
         if (! is_int($ivLen)) {
             return '';
@@ -281,7 +281,7 @@ final class CookieStore implements StoreInterface
         }
 
         // Return a JSON encoded object containing the version, crypto tag, iv, and the encrypted data.
-        $encoded = $options['encoded2'] ?? json_encode(['v' => self::VAL_CRYPTO_VERSION, 'tag' => base64_encode($tag), 'iv' => base64_encode($iv), 'data' => $encrypted]);
+        $encoded = $options['encoded2'] ?? json_encode(['v' => self::VAL_CRYPTO_VERSION, 'tag' => base64_encode($tag), 'iv' => base64_encode((string) $iv), 'data' => $encrypted]);
 
         if (is_string($encoded)) {
             return rawurlencode($encoded);
@@ -314,8 +314,6 @@ final class CookieStore implements StoreInterface
 
     /**
      * Build options array for use with setcookie().
-     *
-     * @param ?int $expires
      *
      * @return array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: string, url_encode?: int}
      */
@@ -481,8 +479,6 @@ final class CookieStore implements StoreInterface
      * Push our storage state to the source for persistence.
      *
      * @psalm-suppress UnusedFunctionCall,DocblockTypeContradiction,NoValue,InvalidCast
-     *
-     * @param bool $force
      */
     public function setState(
         bool $force = false,
@@ -539,6 +535,7 @@ final class CookieStore implements StoreInterface
                         /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $setOptions */
                         setrawcookie($cookieName, $chunk, $setOptions);
                     }
+
                     // @codeCoverageIgnoreEnd
 
                     // Keep track of the cookie names in use., _1, _2, _3, and so on.
@@ -560,6 +557,7 @@ final class CookieStore implements StoreInterface
                 /** @var array{expires?: int, path?: string, domain?: string, secure?: bool, httponly?: bool, samesite?: 'Lax'|'lax'|'None'|'none'|'Strict'|'strict', url_encode?: int} $deleteOptions */
                 setrawcookie($cookieName, '', $deleteOptions);
             }
+
             // @codeCoverageIgnoreEnd
 
             // Clear PHP's internal COOKIE global of the orphaned cookie.
@@ -578,7 +576,7 @@ final class CookieStore implements StoreInterface
      *
      * @return string the derived key bytes
      */
-    private static function deriveKey(string $secret): string
+    private function deriveKey(string $secret): string
     {
         return hash_hkdf(self::KEY_DERIVATION_ALGO, $secret, self::VAL_CRYPTO_KEY_LENGTH, self::KEY_DERIVATION_INFO);
     }

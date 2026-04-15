@@ -11,7 +11,7 @@ use function array_slice;
 use function is_array;
 use function is_string;
 
-final class ArrayFilter
+final readonly class ArrayFilter
 {
     /**
      * StringFilter constructor.
@@ -64,9 +64,11 @@ final class ArrayFilter
             if (! is_array($subject)) {
                 continue;
             }
+
             if ([] === $subject) {
                 continue;
             }
+
             $values = Toolkit::some($exception, $subject);
 
             if (false !== $values) {

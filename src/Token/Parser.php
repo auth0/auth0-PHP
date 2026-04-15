@@ -59,8 +59,8 @@ final class Parser
      * @throws \Auth0\SDK\Exception\InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
-        private SdkConfiguration $configuration,
-        private string $token,
+        private readonly SdkConfiguration $configuration,
+        private readonly string $token,
     ) {
         $this->parse();
     }
@@ -106,6 +106,7 @@ final class Parser
         if (! is_array($claims)) {
             return [];
         }
+
         // @codeCoverageIgnoreEnd
 
         return $claims;
@@ -225,6 +226,7 @@ final class Parser
             if (! isset($this->tokenHeaders['typ'])) {
                 $this->tokenHeaders['typ'] = 'JWT';
             }
+
             // @codeCoverageIgnoreEnd
         }
 
@@ -295,14 +297,11 @@ final class Parser
         string $claims,
     ): ?array {
         $decoded = base64_decode(strtr($claims, '-_', '+/'), true);
-        $response = null;
-
         if (false !== $decoded) {
-            /** @var null|array<array<int|string>|int|string> $response */
-            $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+            return json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
         }
 
-        return $response;
+        return null;
     }
 
     /**
@@ -320,14 +319,11 @@ final class Parser
         string $headers,
     ): ?array {
         $decoded = base64_decode(strtr($headers, '-_', '+/'), true);
-        $response = null;
-
         if (false !== $decoded) {
-            /** @var null|array<int|string> $response */
-            $response = json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
+            return json_decode($decoded, true, 512, JSON_THROW_ON_ERROR);
         }
 
-        return $response;
+        return null;
     }
 
     /**

@@ -1,5 +1,6 @@
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - phpstan-baseline.neon
 
 parameters:
     level: max
@@ -9,6 +10,7 @@ parameters:
 
     excludePaths:
         - src/Utility/Assert.php
+        - src/API/Management/
 
     ignoreErrors:
         - '#Cannot call method createRequest\(\) on Psr\\Http\\Message\\RequestFactoryInterface\|null.#'

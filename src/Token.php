@@ -78,9 +78,9 @@ final class Token implements TokenInterface
      * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
-        private SdkConfiguration $configuration,
-        private string $jwt,
-        private int $type = self::TYPE_ID_TOKEN,
+        private readonly SdkConfiguration $configuration,
+        private readonly string $jwt,
+        private readonly int $type = self::TYPE_ID_TOKEN,
     ) {
     }
 
@@ -265,12 +265,14 @@ final class Token implements TokenInterface
             if (null !== $this->getParser()->getClaim('nonce')) {
                 throw InvalidTokenException::idTokenUsedAsAccessToken();
             }
+
             if ([] === $tokenAudience) {
                 $tokenAudience[] = (string) $this->configuration->getClientId();
             }
         } else {
             $tokenAudience[] = (string) $this->configuration->getClientId();
         }
+
         $tokenAudience = array_unique($tokenAudience);
 
         $validator = $this->getParser()->validate();

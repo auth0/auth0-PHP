@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         bootstrap="vendor/autoload.php">
   <coverage>
     <report>
       <clover outputFile="coverage/clover.xml"/>
@@ -7,8 +9,8 @@
     </report>
   </coverage>
   <testsuites>
-    <testsuite name="unit">
-      <directory>tests/Unit</directory>
+    <testsuite name="management">
+      <directory>tests/API/Management</directory>
     </testsuite>
   </testsuites>
   <source>

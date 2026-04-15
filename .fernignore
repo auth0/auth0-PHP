@@ -1,0 +1,50 @@
+# =============================================================================
+# .fernignore - Files to preserve during Fern SDK regeneration
+# =============================================================================
+
+# Project Configuration
+.github/workflows/ci.yml
+phpstan.neon
+phpunit.xml
+.editorconfig
+.php-cs-fixer.dist.php
+phpunit.xml.dist
+psalm.xml.dist
+rector.php
+
+# Project Documentation
+README.md
+EXAMPLES.md
+v9_MIGRATION_GUIDE.md
+
+# Core SDK Classes (Auth0 SDK entry point and token handling)
+src/Auth0.php
+src/Token.php
+
+# Authentication API (hand-written, not generated)
+src/API/Authentication.php
+src/API/Authentication/
+src/API/ClientAbstract.php
+
+# Authentication API modules
+src/Configuration/
+src/Contract/
+src/Event/
+src/Exception/
+src/Mixins/
+src/Mock/
+src/Store/
+src/Token/
+src/Utility/
+
+# Authentication API tests
+tests/Pest.php
+tests/Data/
+tests/Unit/
+tests/Utilities/
+
+# Management API Wrapper (allows `use Auth0\SDK\API\Management` imports)
+src/API/Management.php
+
+# Management Client Wrapper (domain-based client with automatic token management)
+src/API/Management/Wrapper/

@@ -47,7 +47,7 @@ final class PKCE
 
         while (($len = mb_strlen($string)) < $length) {
             $size = $length - $len;
-            $size = $size >= 1 ? $size : 1;
+            $size = max($size, 1);
 
             // @codeCoverageIgnoreStart
             try {
@@ -55,6 +55,7 @@ final class PKCE
             } catch (Exception) {
                 $bytes = openssl_random_pseudo_bytes($size);
             }
+
             // @codeCoverageIgnoreEnd
 
             $string .= mb_substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);

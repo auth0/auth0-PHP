@@ -7,7 +7,7 @@ namespace Auth0\SDK\Utility;
 use Auth0\SDK\Contract\StoreInterface;
 use Exception;
 
-final class TransientStoreHandler
+final readonly class TransientStoreHandler
 {
     /**
      * TransientStoreHandler constructor.
@@ -53,7 +53,7 @@ final class TransientStoreHandler
     public function getNonce(
         int $length = 16,
     ): string {
-        $length = $length >= 1 ? $length : 1;
+        $length = max($length, 1);
 
         try {
             $randomBytes = random_bytes($length);
@@ -73,7 +73,7 @@ final class TransientStoreHandler
         string $key,
     ): ?string {
         /** @var null|int|string $value */
-        $value = $this->store->get($key, null);
+        $value = $this->store->get($key);
 
         $this->store->delete($key);
 

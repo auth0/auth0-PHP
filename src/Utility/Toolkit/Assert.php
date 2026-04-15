@@ -12,7 +12,7 @@ use function is_bool;
 use function is_int;
 use function is_string;
 
-final class Assert
+final readonly class Assert
 {
     /**
      * ArrayProcessor Constructor.

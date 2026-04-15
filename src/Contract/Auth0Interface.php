@@ -38,7 +38,6 @@ interface Auth0Interface
      * @param null|int           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
      * @param null|int           $tokenLeeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
      * @param null|int           $tokenNow          Optional. Unix timestamp representing the current point in time to use for time calculations.
-     * @param ?int               $tokenType
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When token validation fails. See the exception message for further details.
      */

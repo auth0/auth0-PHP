@@ -15,12 +15,10 @@ final class HttpResponse
      * @param ResponseInterface $response a ResponseInterface instance to extract from
      *
      * @throws JsonException when JSON decoding fails
-     *
-     * @return mixed
      */
     public static function decodeContent(
         ResponseInterface $response,
-    ) {
+    ): mixed {
         return json_decode(self::getContent($response), true, 512, JSON_THROW_ON_ERROR);
     }
 
@@ -76,8 +74,6 @@ final class HttpResponse
      *    'per_hour' => [ 'quota' => 100, 'remaining' => 99, 'resetAfter' => 1 ],
      *    'per_day'  => [ 'quota' => 300, 'remaining' => 299, 'resetAfter' => 1 ]
      * ].
-     *
-     * @param string $rawValue
      *
      * @return array<string,array{quota:null|int,remaining:null|int,resetAfter:null|int}>
      */
@@ -158,8 +154,8 @@ final class HttpResponse
      * @param ResponseInterface $response a ResponseInterface instance to extract from
      *
      * @return array{
-     *   client?: array<string,array{quota:int|null,remaining:int|null,resetAfter:int|null}>,
-     *   organization?: array<string,array{quota:int|null,remaining:int|null,resetAfter:int|null}>,
+     *   client?: array<string,array{quota:null|int,remaining:null|int,resetAfter:null|int}>,
+     *   organization?: array<string,array{quota:null|int,remaining:null|int,resetAfter:null|int}>,
      *   retryAfter?: int,
      *   rateLimit?: array{limit?:int,remaining?:int,reset?:int}
      * }
@@ -180,9 +176,11 @@ final class HttpResponse
         if ([] !== $client) {
             $result['client'] = $client;
         }
+
         if ([] !== $org) {
             $result['organization'] = $org;
         }
+
         if (null !== $retryAfter) {
             $result['retryAfter'] = $retryAfter;
 
@@ -194,9 +192,11 @@ final class HttpResponse
             if (is_numeric($limitRaw)) {
                 $rateLimit['limit'] = (int) $limitRaw;
             }
+
             if (is_numeric($remainingRaw)) {
                 $rateLimit['remaining'] = (int) $remainingRaw;
             }
+
             if (is_numeric($resetRaw)) {
                 $rateLimit['reset'] = (int) $resetRaw;
             }

@@ -11,8 +11,8 @@ final class Delete implements Auth0Event
     private ?bool $success = null;
 
     public function __construct(
-        private StoreInterface $store,
-        private string $key,
+        private readonly StoreInterface $store,
+        private readonly string $key,
     ) {
     }
 

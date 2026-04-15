@@ -13,6 +13,7 @@ use Auth0\SDK\Utility\{HttpResponse, PKCE, Toolkit, TransientStoreHandler};
 use Throwable;
 
 use function count;
+use function in_array;
 use function is_array;
 use function is_string;
 
@@ -420,7 +421,7 @@ final class Auth0 implements Auth0Interface
         $orgId = $this->getRequestParameter('organization');
         $orgName = $this->getRequestParameter('organization_name');
 
-        if (null !== $invite && null !== $orgId && null !== $orgName) {
+        if (! in_array(null, [$invite, $orgId, $orgName], true)) {
             return [
                 'invitation' => $invite,
                 'organization' => $orgId,
@@ -789,8 +790,6 @@ final class Auth0 implements Auth0Interface
 
     /**
      * Retrieve state from session storage and configure SDK state.
-     *
-     * @param bool $reset
      */
     private function getState(bool $reset = false): SdkState
     {
@@ -831,8 +830,6 @@ final class Auth0 implements Auth0Interface
 
     /**
      * Create a transient storage handler using the configured transientStorage medium.
-     *
-     * @param bool $reset
      */
     private function getTransientStore(bool $reset = false): ?TransientStoreHandler
     {

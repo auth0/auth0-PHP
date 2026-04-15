@@ -1,0 +1,8 @@
+parameters:
+    level: max
+
+    paths:
+        - src/API/Management/
+
+    reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false

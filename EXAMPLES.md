@@ -103,28 +103,115 @@ $api->emailPasswordlessStart(
 
 ## Management API
 
-Use `Auth0->management()` to retrieve endpoint classes for interacting with the Management API.
+Use the `ManagementClient` wrapper for automatic token management when interacting with the Management API.
 
-```PHP
-use Auth0\SDK\Auth0;
-use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Utility\HttpResponse;
+### Setup
 
-$configuration = new SdkConfiguration(
-    managementToken: '...'
-);
+```php
+use Auth0\SDK\API\Management\Wrapper\ManagementClient;
+use Auth0\SDK\API\Management\Wrapper\ManagementClientOptions;
 
-$auth0 = new Auth0($configuration);
+$client = new ManagementClient(new ManagementClientOptions(
+    domain: 'your-tenant.auth0.com',
+    clientId: 'YOUR_CLIENT_ID',
+    clientSecret: 'YOUR_CLIENT_SECRET',
+));
+```
 
-// Request users from the /users Management API endpoint
-$response = $auth0->management()->users()->getAll();
+### Listing users
 
-// Check if thee request successful:
-if (HttpResponse::wasSuccessful($response)) {
-    // Decode the JSON response into a PHP array:
-    print_r(HttpResponse::decodeContent($response));
+```php
+use Auth0\SDK\API\Management\Users\Requests\ListUsersRequestParameters;
+
+$pager = $client->users->list(new ListUsersRequestParameters([
+    'page' => 0,
+    'perPage' => 10,
+    'includeTotals' => true,
+]));
+
+foreach ($pager as $user) {
+    echo $user->getEmail() . "\n";
 }
 ```
+
+### Getting a user
+
+```php
+$user = $client->users->get('auth0|123');
+
+echo $user->getEmail();
+echo $user->getName();
+```
+
+### Creating a user
+
+```php
+use Auth0\SDK\API\Management\Users\Requests\CreateUserRequestContent;
+
+$user = $client->users->create(new CreateUserRequestContent([
+    'email' => 'user@example.com',
+    'password' => 'SecurePassword123!',
+    'connection' => 'Username-Password-Authentication',
+    'name' => 'John Doe',
+]));
+
+echo $user->getUserId();
+```
+
+### Updating a user
+
+```php
+use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
+
+$updated = $client->users->update(
+    id: 'auth0|123',
+    content: new UpdateUserRequestContent([
+        'nickname' => 'Johnny',
+    ]),
+);
+```
+
+### Deleting a user
+
+```php
+$client->users->delete('auth0|123');
+```
+
+### Pagination
+
+All list endpoints return a `Pager` that handles pagination automatically:
+
+```php
+$pager = $client->users->list();
+
+// Iterate through all items across all pages
+foreach ($pager as $user) {
+    echo $user->getEmail() . "\n";
+}
+
+// Or iterate page-by-page
+foreach ($pager->getPages() as $page) {
+    foreach ($page->getItems() as $user) {
+        echo $user->getEmail() . "\n";
+    }
+}
+```
+
+### Error handling
+
+```php
+use Auth0\SDK\API\Management\Exceptions\Auth0ApiException;
+
+try {
+    $user = $client->users->get('invalid-id');
+} catch (Auth0ApiException $e) {
+    echo 'Error: ' . $e->getMessage() . "\n";
+    echo 'Status: ' . $e->getCode() . "\n";
+    echo 'Body: ' . $e->getBody() . "\n";
+}
+```
+
+For the complete endpoint reference, see [reference.md](./reference.md).
 
 ## Manually decoding tokens
 

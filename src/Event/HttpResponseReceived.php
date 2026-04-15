@@ -11,7 +11,7 @@ final class HttpResponseReceived implements Auth0Event
 {
     public function __construct(
         private ResponseInterface $httpResponse,
-        private RequestInterface $httpRequest,
+        private readonly RequestInterface $httpRequest,
     ) {
     }
 

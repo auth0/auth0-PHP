@@ -14,8 +14,9 @@ use Psr\Http\Message\ResponseInterface;
 use function is_array;
 use function is_int;
 use function is_string;
+use function sprintf;
 
-final class PushedAuthorizationRequest implements PushedAuthorizationRequestInterface
+final readonly class PushedAuthorizationRequest implements PushedAuthorizationRequestInterface
 {
     /**
      * @param AuthenticationInterface $authentication A configured instance of the Authentication manager class.

@@ -173,7 +173,7 @@ final class Validator implements ValidatorInterface
      */
     public function getClaim(
         string $key,
-    ) {
+    ): null | int | string | array {
         if (! isset($this->claims[$key])) {
             return null;
         }
@@ -290,7 +290,7 @@ final class Validator implements ValidatorInterface
             }
 
             if (null !== $organizationId) {
-                $allowedOrganizationIds = array_filter($allowedOrganizations, static fn ($org): bool => str_starts_with($org, 'org_'));
+                $allowedOrganizationIds = array_filter($allowedOrganizations, static fn (string $org): bool => str_starts_with($org, 'org_'));
 
                 // org_id claim is present and in the allowlist. Success.
                 if (in_array($organizationId, $allowedOrganizationIds, true)) {
@@ -299,7 +299,7 @@ final class Validator implements ValidatorInterface
             }
 
             if (null !== $organizationName) {
-                $allowedOrganizationNames = array_map('strtolower', array_filter($allowedOrganizations, static fn ($org): bool => ! str_starts_with($org, 'org_')));
+                $allowedOrganizationNames = array_map(strtolower(...), array_filter($allowedOrganizations, static fn (string $org): bool => ! str_starts_with($org, 'org_')));
 
                 // org_name claim is present and in the allowlist. Success.
                 if (in_array($organizationName, $allowedOrganizationNames, true)) {
