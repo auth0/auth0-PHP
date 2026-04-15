@@ -1,5 +1,34 @@
 # Change Log
 
+## [9.0.0-beta.1](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.1) (2026-04-15)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.19.0...9.0.0-beta.1)
+
+**Breaking Changes**
+
+- Management API client has been completely rewritten using Fern code generation from the Auth0 OpenAPI specification
+- Management API methods now return strongly-typed response objects instead of PSR-7 `ResponseInterface`
+- Management API methods now accept typed request parameter classes instead of associative arrays
+- Management sub-clients are accessed as properties (`->users`) instead of methods (`->users()`)
+- List methods renamed from `getAll()` to `list()`
+- Pagination now uses built-in `Pager<T>` instead of `HttpResponsePaginator`
+- Non-2xx API responses now throw `Auth0ApiException` instead of returning error responses
+
+**Added**
+
+- New `ManagementClient` wrapper with built-in OAuth 2.0 client credentials token management
+- Support for static tokens, automatic client credentials grant, PSR-6 token caching, and custom token providers
+- Strongly-typed request and response objects for all Management API endpoints
+- Built-in `Pager<T>` pagination with automatic page fetching
+- Built-in retry middleware for rate-limited requests
+- Telemetry headers (`Auth0-Client`, `User-Agent`) on Management API requests
+- Complete API coverage auto-generated from the Auth0 OpenAPI specification
+- `UPGRADE.md` v8 to v9 migration guide
+
+**Unchanged**
+
+- Authentication API (`Auth0\SDK\API\Authentication`) — no changes
+- Session handling, token management, and the `Auth0\SDK\Auth0` entry point class — no changes
+
 ## [8.19.0](https://github.com/auth0/auth0-PHP/tree/8.19.0) (2026-04-01)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.18.0...8.19.0)
 
