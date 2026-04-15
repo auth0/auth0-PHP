@@ -46,6 +46,7 @@ use Auth0\SDK\API\Management\UserGrants\UserGrantsClient;
 use Auth0\SDK\API\Management\Users\UsersClient;
 use Auth0\SDK\API\Management\VerifiableCredentials\VerifiableCredentialsClient;
 use Auth0\SDK\API\Management\Core\Client\HttpClientBuilder;
+use Auth0\SDK\Auth0;
 use InvalidArgumentException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -127,9 +128,19 @@ final class ManagementClient
             $managementOptions['maxRetries'] = $options->maxRetries;
         }
 
-        if ($options->additionalHeaders !== null) {
-            $managementOptions['headers'] = $options->additionalHeaders;
-        }
+        $telemetryHeaders = [
+            'User-Agent' => 'auth0-php/' . Auth0::VERSION,
+            'Auth0-Client' => base64_encode(json_encode([
+                'name' => 'auth0-php',
+                'version' => Auth0::VERSION,
+                'env' => ['php' => PHP_VERSION],
+            ], JSON_THROW_ON_ERROR)),
+        ];
+
+        $managementOptions['headers'] = array_merge(
+            $telemetryHeaders,
+            $options->additionalHeaders ?? [],
+        );
 
         /** @phpstan-ignore argument.type */
         $this->management = new ApiManagement('', $managementOptions);
