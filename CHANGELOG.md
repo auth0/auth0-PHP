@@ -1,6 +1,6 @@
 # Change Log
 
-## [9.0.0-beta.0](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.0) (2026-04-16)
+## [9.0.0-beta.0](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.0) (2026-04-17)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.19.0...9.0.0-beta.0)
 
 **Breaking Changes**
