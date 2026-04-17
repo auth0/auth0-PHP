@@ -36,7 +36,7 @@ We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0)
 Ensure you have [the necessary dependencies](#requirements) installed, then add the SDK to your application using [Composer](https://getcomposer.org/):
 
 ```
-composer require auth0/auth0-php:9.0.0-beta.1
+composer require auth0/auth0-php:9.0.0-beta.0
 ```
 
 > **Note:** This is a pre-release version. To install it, you must specify the exact version as shown above. Running `composer require auth0/auth0-php` without a version constraint will install the latest stable v8 release.
