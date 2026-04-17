@@ -9,15 +9,19 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 :books: [Documentation](#documentation) - :rocket: [Getting Started](#getting-started) - :computer: [API Reference](#api-reference) :speech_balloon: [Feedback](#feedback)
 
-> :rocket: **[v9.0.0-beta.0](https://github.com/auth0/auth0-PHP/tree/v9) is now available!** This release features a completely rewritten Management API client - auto-generated from the Auth0 OpenAPI spec using [Fern](https://buildwithfern.com/) - with strongly-typed requests/responses, built-in pagination, and automatic token management. The Authentication API is unchanged.
->
-> ```
-> composer require auth0/auth0-php:9.0.0-beta.0
-> ```
->
-> We'd love for you to try it out and share your feedback! Please [open an issue](https://github.com/auth0/auth0-PHP/issues/new) if you encounter any problems or have suggestions.
->
-> :books: [Migration Guide](https://github.com/auth0/auth0-PHP/blob/v9/v9_MIGRATION_GUIDE.md) - :package: [v9 Changelog](https://github.com/auth0/auth0-PHP/blob/v9/CHANGELOG.md) - :page_facing_up: [API Reference](https://github.com/auth0/auth0-PHP/blob/v9/reference.md)
+## :rocket: v9 Beta Available
+
+**[v9.0.0-beta.0](https://github.com/auth0/auth0-PHP/releases/tag/9.0.0-beta.0)** features a completely rewritten Management API client, auto-generated from the Auth0 OpenAPI spec using [Fern](https://buildwithfern.com/), with strongly-typed requests/responses, built-in pagination, and automatic token management. The Authentication API is unchanged.
+
+```
+composer require auth0/auth0-php:9.0.0-beta.0
+```
+
+We'd love for you to try it out and share your feedback! Please [open an issue](https://github.com/auth0/auth0-PHP/issues/new) if you encounter any problems or have suggestions.
+
+:books: [Migration Guide](https://github.com/auth0/auth0-PHP/blob/v9/v9_MIGRATION_GUIDE.md) - :package: [v9 Changelog](https://github.com/auth0/auth0-PHP/blob/v9/CHANGELOG.md) - :page_facing_up: [API Reference](https://github.com/auth0/auth0-PHP/blob/v9/reference.md)
+
+---
 
 ## Documentation
 
