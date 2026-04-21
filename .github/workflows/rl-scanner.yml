@@ -37,7 +37,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha || github.ref }}
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@4bd44f22a98a19e0950cbad5f31095157cc9621b # pin@2.25.4
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # pin@2.37.0
         with:
           php-version: ${{ inputs.php-version }}
 
