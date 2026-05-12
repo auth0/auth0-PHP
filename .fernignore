@@ -27,6 +27,7 @@ phpdoc.dist.xml
 .editorconfig
 .php-cs-fixer.dist.php
 rector.php
+composer.json
 
 # Project Documentation
 README.md
