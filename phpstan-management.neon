@@ -6,3 +6,9 @@ parameters:
 
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        -
+            message: '#^Parameter \#1 \$data of static method Auth0\\SDK\\API\\Management\\Types\\EventStreamSubscribeEventsResponseContent\:\:jsonDeserialize\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
+            identifier: argument.type
+            path: src/API/Management/Types/EventStreamSubscribeEventsResponseContent.php
