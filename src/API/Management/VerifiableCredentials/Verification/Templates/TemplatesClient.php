@@ -59,7 +59,7 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
-     * List a verifiable credential templates.
+     * List verifiable credential templates.
      *
      * @param ListVerifiableCredentialTemplatesRequestParameters $request
      * @param ?array{
@@ -276,7 +276,7 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
-     * List a verifiable credential templates.
+     * List verifiable credential templates.
      *
      * @param ListVerifiableCredentialTemplatesRequestParameters $request
      * @param ?array{

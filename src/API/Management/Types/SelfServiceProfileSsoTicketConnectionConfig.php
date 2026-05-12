@@ -8,12 +8,12 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Core\Types\Union;
 
 /**
- * If provided, this will create a new connection for the SSO flow with the given configuration
+ * If provided, this will create a new connection for the Self-Service Enterprise Configuration flow with the given configuration
  */
 class SelfServiceProfileSsoTicketConnectionConfig extends JsonSerializableType
 {
     /**
-     * @var string $name The name of the connection that will be created as a part of the SSO flow.
+     * @var string $name The name of the connection that will be created as a part of the Self-Service Enterprise Configuration flow.
      */
     #[JsonProperty('name')]
     private string $name;

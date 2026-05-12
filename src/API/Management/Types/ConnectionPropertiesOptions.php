@@ -115,6 +115,12 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     private ?bool $apiEnableUsers;
 
     /**
+     * @var ?bool $apiEnableGroups
+     */
+    #[JsonProperty('api_enable_groups')]
+    private ?bool $apiEnableGroups;
+
+    /**
      * @var ?bool $basicProfile
      */
     #[JsonProperty('basic_profile')]
@@ -196,6 +202,36 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     private ?ConnectionPasswordOptions $passwordOptions;
 
     /**
+     * @var ?ConnectionAssertionDecryptionSettings $assertionDecryptionSettings
+     */
+    #[JsonProperty('assertion_decryption_settings')]
+    private ?ConnectionAssertionDecryptionSettings $assertionDecryptionSettings;
+
+    /**
+     * @var ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>> $idTokenSignedResponseAlgs
+     */
+    #[JsonProperty('id_token_signed_response_algs'), ArrayType(['string'])]
+    private ?array $idTokenSignedResponseAlgs;
+
+    /**
+     * @var ?value-of<ConnectionTokenEndpointAuthMethodEnum> $tokenEndpointAuthMethod
+     */
+    #[JsonProperty('token_endpoint_auth_method')]
+    private ?string $tokenEndpointAuthMethod;
+
+    /**
+     * @var ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum> $tokenEndpointAuthSigningAlg
+     */
+    #[JsonProperty('token_endpoint_auth_signing_alg')]
+    private ?string $tokenEndpointAuthSigningAlg;
+
+    /**
+     * @var ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $tokenEndpointJwtcaAudFormat
+     */
+    #[JsonProperty('token_endpoint_jwtca_aud_format')]
+    private ?string $tokenEndpointJwtcaAudFormat;
+
+    /**
      * @param array{
      *   validation?: ?ConnectionValidationOptions,
      *   nonPersistentAttrs?: ?array<string>,
@@ -214,6 +250,7 @@ class ConnectionPropertiesOptions extends JsonSerializableType
      *   passwordNoPersonalInfo?: ?ConnectionPasswordNoPersonalInfoOptions,
      *   passwordDictionary?: ?ConnectionPasswordDictionaryOptions,
      *   apiEnableUsers?: ?bool,
+     *   apiEnableGroups?: ?bool,
      *   basicProfile?: ?bool,
      *   extAdmin?: ?bool,
      *   extIsSuspended?: ?bool,
@@ -230,6 +267,11 @@ class ConnectionPropertiesOptions extends JsonSerializableType
      *   gatewayAuthentication?: ?ConnectionGatewayAuthentication,
      *   federatedConnectionsAccessTokens?: ?ConnectionFederatedConnectionsAccessTokens,
      *   passwordOptions?: ?ConnectionPasswordOptions,
+     *   assertionDecryptionSettings?: ?ConnectionAssertionDecryptionSettings,
+     *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
+     *   tokenEndpointAuthMethod?: ?value-of<ConnectionTokenEndpointAuthMethodEnum>,
+     *   tokenEndpointAuthSigningAlg?: ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>,
+     *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
      * } $values
      */
     public function __construct(
@@ -252,6 +294,7 @@ class ConnectionPropertiesOptions extends JsonSerializableType
         $this->passwordNoPersonalInfo = $values['passwordNoPersonalInfo'] ?? null;
         $this->passwordDictionary = $values['passwordDictionary'] ?? null;
         $this->apiEnableUsers = $values['apiEnableUsers'] ?? null;
+        $this->apiEnableGroups = $values['apiEnableGroups'] ?? null;
         $this->basicProfile = $values['basicProfile'] ?? null;
         $this->extAdmin = $values['extAdmin'] ?? null;
         $this->extIsSuspended = $values['extIsSuspended'] ?? null;
@@ -265,6 +308,11 @@ class ConnectionPropertiesOptions extends JsonSerializableType
         $this->gatewayAuthentication = $values['gatewayAuthentication'] ?? null;
         $this->federatedConnectionsAccessTokens = $values['federatedConnectionsAccessTokens'] ?? null;
         $this->passwordOptions = $values['passwordOptions'] ?? null;
+        $this->assertionDecryptionSettings = $values['assertionDecryptionSettings'] ?? null;
+        $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;
+        $this->tokenEndpointAuthMethod = $values['tokenEndpointAuthMethod'] ?? null;
+        $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
+        $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
     }
 
     /**
@@ -576,6 +624,24 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     /**
      * @return ?bool
      */
+    public function getApiEnableGroups(): ?bool
+    {
+        return $this->apiEnableGroups;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setApiEnableGroups(?bool $value = null): self
+    {
+        $this->apiEnableGroups = $value;
+        $this->_setField('apiEnableGroups');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
     public function getBasicProfile(): ?bool
     {
         return $this->basicProfile;
@@ -810,6 +876,96 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     {
         $this->passwordOptions = $value;
         $this->_setField('passwordOptions');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionAssertionDecryptionSettings
+     */
+    public function getAssertionDecryptionSettings(): ?ConnectionAssertionDecryptionSettings
+    {
+        return $this->assertionDecryptionSettings;
+    }
+
+    /**
+     * @param ?ConnectionAssertionDecryptionSettings $value
+     */
+    public function setAssertionDecryptionSettings(?ConnectionAssertionDecryptionSettings $value = null): self
+    {
+        $this->assertionDecryptionSettings = $value;
+        $this->_setField('assertionDecryptionSettings');
+        return $this;
+    }
+
+    /**
+     * @return ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>
+     */
+    public function getIdTokenSignedResponseAlgs(): ?array
+    {
+        return $this->idTokenSignedResponseAlgs;
+    }
+
+    /**
+     * @param ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>> $value
+     */
+    public function setIdTokenSignedResponseAlgs(?array $value = null): self
+    {
+        $this->idTokenSignedResponseAlgs = $value;
+        $this->_setField('idTokenSignedResponseAlgs');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionTokenEndpointAuthMethodEnum>
+     */
+    public function getTokenEndpointAuthMethod(): ?string
+    {
+        return $this->tokenEndpointAuthMethod;
+    }
+
+    /**
+     * @param ?value-of<ConnectionTokenEndpointAuthMethodEnum> $value
+     */
+    public function setTokenEndpointAuthMethod(?string $value = null): self
+    {
+        $this->tokenEndpointAuthMethod = $value;
+        $this->_setField('tokenEndpointAuthMethod');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>
+     */
+    public function getTokenEndpointAuthSigningAlg(): ?string
+    {
+        return $this->tokenEndpointAuthSigningAlg;
+    }
+
+    /**
+     * @param ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum> $value
+     */
+    public function setTokenEndpointAuthSigningAlg(?string $value = null): self
+    {
+        $this->tokenEndpointAuthSigningAlg = $value;
+        $this->_setField('tokenEndpointAuthSigningAlg');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>
+     */
+    public function getTokenEndpointJwtcaAudFormat(): ?string
+    {
+        return $this->tokenEndpointJwtcaAudFormat;
+    }
+
+    /**
+     * @param ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $value
+     */
+    public function setTokenEndpointJwtcaAudFormat(?string $value = null): self
+    {
+        $this->tokenEndpointJwtcaAudFormat = $value;
+        $this->_setField('tokenEndpointJwtcaAudFormat');
         return $this;
     }
 

@@ -22,6 +22,11 @@ class ListGroupsRequestParameters extends JsonSerializableType
     private ?string $externalId;
 
     /**
+     * @var ?string $search Search for groups by name or external ID.
+     */
+    private ?string $search;
+
+    /**
      * @var ?string $fields A comma separated list of fields to include or exclude (depending on include_fields) from the result, empty to retrieve all fields
      */
     private ?string $fields;
@@ -46,6 +51,7 @@ class ListGroupsRequestParameters extends JsonSerializableType
      *   connectionId?: ?string,
      *   name?: ?string,
      *   externalId?: ?string,
+     *   search?: ?string,
      *   fields?: ?string,
      *   includeFields?: ?bool,
      *   from?: ?string,
@@ -58,6 +64,7 @@ class ListGroupsRequestParameters extends JsonSerializableType
         $this->connectionId = $values['connectionId'] ?? null;
         $this->name = $values['name'] ?? null;
         $this->externalId = $values['externalId'] ?? null;
+        $this->search = $values['search'] ?? null;
         $this->fields = $values['fields'] ?? null;
         $this->includeFields = $values['includeFields'] ?? null;
         $this->from = $values['from'] ?? null;
@@ -115,6 +122,24 @@ class ListGroupsRequestParameters extends JsonSerializableType
     {
         $this->externalId = $value;
         $this->_setField('externalId');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getSearch(): ?string
+    {
+        return $this->search;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setSearch(?string $value = null): self
+    {
+        $this->search = $value;
+        $this->_setField('search');
         return $this;
     }
 

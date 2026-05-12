@@ -1,0 +1,122 @@
+{
+  "cliVersion": "5.20.1",
+  "generatorName": "fernapi/fern-php-sdk",
+  "generatorVersion": "2.4.0",
+  "generatorConfig": {
+    "clientName": "Management",
+    "namespace": "Auth0\\SDK\\API\\Management",
+    "packagePath": "API/Management",
+    "packageName": "auth0/auth0-php",
+    "propertyAccess": "private",
+    "inlinePathParameters": true,
+    "useDefaultRequestParameterValues": true,
+    "generateClientInterfaces": true,
+    "composerJson": {
+      "name": "auth0/auth0-php",
+      "description": "PHP SDK for Auth0 Authentication and Management APIs.",
+      "license": "MIT",
+      "type": "library",
+      "keywords": [
+        "auth0",
+        "authentication",
+        "authorization",
+        "login",
+        "auth",
+        "jwt",
+        "json web token",
+        "jwk",
+        "json web key",
+        "oauth",
+        "openid",
+        "secure",
+        "protect",
+        "api"
+      ],
+      "authors": [
+        {
+          "name": "Auth0",
+          "email": "support@auth0.com",
+          "homepage": "https://auth0.com/"
+        }
+      ],
+      "homepage": "https://github.com/auth0/auth0-PHP",
+      "require": {
+        "php": ">=8.2 <8.5",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "psr/http-client": "^1.0",
+        "psr/http-client-implementation": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-factory-implementation": "^1.0",
+        "psr/http-message": "^1.1 || ^2.0",
+        "php-http/discovery": "^1.0",
+        "php-http/multipart-stream-builder": "^1.0",
+        "psr-discovery/all": "^1",
+        "psr/http-message-implementation": "^1"
+      },
+      "require-dev": {
+        "phpunit/phpunit": "^11.0 || ^12.0",
+        "friendsofphp/php-cs-fixer": "^3.59",
+        "phpstan/phpstan": "^1.11 || ^2.0",
+        "guzzlehttp/guzzle": "^7.4",
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^3.0",
+        "phpstan/phpstan-strict-rules": "^1.6 || ^2.0",
+        "psr-mock/http": "^1.0",
+        "rector/rector": "^1.0 || ^2.0",
+        "symfony/cache": "^6 || ^7",
+        "symfony/event-dispatcher": "^6 || ^7",
+        "vimeo/psalm": "^5.25 || ^6.0"
+      },
+      "suggest": {
+        "psr/cache-implementation": "(PSR-6 Cache) Improve performance by avoiding making redundant network requests.",
+        "psr/event-dispatcher-implementation": "(PSR-14 Event Dispatcher) Observe and react to events when they occur."
+      },
+      "minimum-stability": "dev",
+      "prefer-stable": true,
+      "autoload": {
+        "psr-4": {
+          "Auth0\\SDK\\": "src/"
+        }
+      },
+      "autoload-dev": {
+        "psr-4": {
+          "Auth0\\Tests\\": "tests/"
+        }
+      },
+      "config": {
+        "allow-plugins": {
+          "pestphp/pest-plugin": true,
+          "php-http/discovery": false
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "process-timeout": 0,
+        "sort-packages": true
+      },
+      "scripts": {
+        "build": [
+          "@php -l src",
+          "@php -l tests"
+        ],
+        "test-authentication": [
+          "@putenv XDEBUG_MODE=coverage",
+          "@php vendor/bin/pest tests/Unit --colors=always"
+        ],
+        "test-management": "@php vendor/bin/phpunit",
+        "test": [
+          "@test-authentication",
+          "@test-management"
+        ],
+        "analyze": "phpstan analyze src/API/Management tests/API/Management --memory-limit=1G"
+      }
+    }
+  },
+  "originGitCommit": "219914accde9916f411f553a3e3eb35a8478eaaf",
+  "originGitCommitIsDirty": true,
+  "invokedBy": "manual",
+  "requestedVersion": "9.0.0-beta.0",
+  "ciProvider": null,
+  "sdkVersion": "9.0.0-beta.0"
+}

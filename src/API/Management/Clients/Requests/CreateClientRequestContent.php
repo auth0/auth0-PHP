@@ -24,7 +24,10 @@ use Auth0\SDK\API\Management\Types\ClientSignedRequestObjectWithPublicKey;
 use Auth0\SDK\API\Management\Types\ClientComplianceLevelEnum;
 use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfiguration;
 use Auth0\SDK\API\Management\Types\CreateTokenQuota;
+use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
+use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
 use Auth0\SDK\API\Management\Types\ExpressConfiguration;
+use Auth0\SDK\API\Management\Types\ClientMyOrganizationPostConfiguration;
 use Auth0\SDK\API\Management\Types\AsyncApprovalNotificationsChannelsEnum;
 
 class CreateClientRequestContent extends JsonSerializableType
@@ -322,10 +325,28 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?string $resourceServerIdentifier;
 
     /**
+     * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
+     */
+    #[JsonProperty('third_party_security_mode')]
+    private ?string $thirdPartySecurityMode;
+
+    /**
+     * @var ?value-of<ClientRedirectionPolicyEnum> $redirectionPolicy
+     */
+    #[JsonProperty('redirection_policy')]
+    private ?string $redirectionPolicy;
+
+    /**
      * @var ?ExpressConfiguration $expressConfiguration
      */
     #[JsonProperty('express_configuration')]
     private ?ExpressConfiguration $expressConfiguration;
+
+    /**
+     * @var ?ClientMyOrganizationPostConfiguration $myOrganizationConfiguration
+     */
+    #[JsonProperty('my_organization_configuration')]
+    private ?ClientMyOrganizationPostConfiguration $myOrganizationConfiguration;
 
     /**
      * @var ?array<value-of<AsyncApprovalNotificationsChannelsEnum>> $asyncApprovalNotificationChannels
@@ -383,7 +404,10 @@ class CreateClientRequestContent extends JsonSerializableType
      *   parRequestExpiry?: ?int,
      *   tokenQuota?: ?CreateTokenQuota,
      *   resourceServerIdentifier?: ?string,
+     *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
+     *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   expressConfiguration?: ?ExpressConfiguration,
+     *   myOrganizationConfiguration?: ?ClientMyOrganizationPostConfiguration,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      * } $values
      */
@@ -438,7 +462,10 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->parRequestExpiry = $values['parRequestExpiry'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
+        $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
+        $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
+        $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
     }
 
@@ -1307,6 +1334,42 @@ class CreateClientRequestContent extends JsonSerializableType
     }
 
     /**
+     * @return ?value-of<ClientThirdPartySecurityModeEnum>
+     */
+    public function getThirdPartySecurityMode(): ?string
+    {
+        return $this->thirdPartySecurityMode;
+    }
+
+    /**
+     * @param ?value-of<ClientThirdPartySecurityModeEnum> $value
+     */
+    public function setThirdPartySecurityMode(?string $value = null): self
+    {
+        $this->thirdPartySecurityMode = $value;
+        $this->_setField('thirdPartySecurityMode');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientRedirectionPolicyEnum>
+     */
+    public function getRedirectionPolicy(): ?string
+    {
+        return $this->redirectionPolicy;
+    }
+
+    /**
+     * @param ?value-of<ClientRedirectionPolicyEnum> $value
+     */
+    public function setRedirectionPolicy(?string $value = null): self
+    {
+        $this->redirectionPolicy = $value;
+        $this->_setField('redirectionPolicy');
+        return $this;
+    }
+
+    /**
      * @return ?ExpressConfiguration
      */
     public function getExpressConfiguration(): ?ExpressConfiguration
@@ -1321,6 +1384,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->expressConfiguration = $value;
         $this->_setField('expressConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientMyOrganizationPostConfiguration
+     */
+    public function getMyOrganizationConfiguration(): ?ClientMyOrganizationPostConfiguration
+    {
+        return $this->myOrganizationConfiguration;
+    }
+
+    /**
+     * @param ?ClientMyOrganizationPostConfiguration $value
+     */
+    public function setMyOrganizationConfiguration(?ClientMyOrganizationPostConfiguration $value = null): self
+    {
+        $this->myOrganizationConfiguration = $value;
+        $this->_setField('myOrganizationConfiguration');
         return $this;
     }
 

@@ -90,7 +90,7 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
     }
 
     /**
-     * Retrieve details about a single User Attribute Profile specified by ID.
+     * Create a User Attribute Profile
      *
      * @param CreateUserAttributeProfileRequestContent $request
      * @param ?array{

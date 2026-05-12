@@ -45,6 +45,12 @@ class CreateClientGrantResponseContent extends JsonSerializableType
     private ?bool $allowAnyOrganization;
 
     /**
+     * @var ?value-of<ClientGrantDefaultForEnum> $defaultFor
+     */
+    #[JsonProperty('default_for')]
+    private ?string $defaultFor;
+
+    /**
      * @var ?bool $isSystem If enabled, this grant is a special grant created by Auth0. It cannot be modified or deleted directly.
      */
     #[JsonProperty('is_system')]
@@ -76,6 +82,7 @@ class CreateClientGrantResponseContent extends JsonSerializableType
      *   scope?: ?array<string>,
      *   organizationUsage?: ?value-of<ClientGrantOrganizationUsageEnum>,
      *   allowAnyOrganization?: ?bool,
+     *   defaultFor?: ?value-of<ClientGrantDefaultForEnum>,
      *   isSystem?: ?bool,
      *   subjectType?: ?value-of<ClientGrantSubjectTypeEnum>,
      *   authorizationDetailsTypes?: ?array<string>,
@@ -91,6 +98,7 @@ class CreateClientGrantResponseContent extends JsonSerializableType
         $this->scope = $values['scope'] ?? null;
         $this->organizationUsage = $values['organizationUsage'] ?? null;
         $this->allowAnyOrganization = $values['allowAnyOrganization'] ?? null;
+        $this->defaultFor = $values['defaultFor'] ?? null;
         $this->isSystem = $values['isSystem'] ?? null;
         $this->subjectType = $values['subjectType'] ?? null;
         $this->authorizationDetailsTypes = $values['authorizationDetailsTypes'] ?? null;
@@ -202,6 +210,24 @@ class CreateClientGrantResponseContent extends JsonSerializableType
     {
         $this->allowAnyOrganization = $value;
         $this->_setField('allowAnyOrganization');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientGrantDefaultForEnum>
+     */
+    public function getDefaultFor(): ?string
+    {
+        return $this->defaultFor;
+    }
+
+    /**
+     * @param ?value-of<ClientGrantDefaultForEnum> $value
+     */
+    public function setDefaultFor(?string $value = null): self
+    {
+        $this->defaultFor = $value;
+        $this->_setField('defaultFor');
         return $this;
     }
 

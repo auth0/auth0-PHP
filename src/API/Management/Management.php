@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\CustomDomains\CustomDomainsClient;
 use Auth0\SDK\API\Management\DeviceCredentials\DeviceCredentialsClient;
 use Auth0\SDK\API\Management\EmailTemplates\EmailTemplatesClient;
 use Auth0\SDK\API\Management\EventStreams\EventStreamsClient;
+use Auth0\SDK\API\Management\Events\EventsClient;
 use Auth0\SDK\API\Management\Flows\FlowsClient;
 use Auth0\SDK\API\Management\Forms\FormsClient;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClient;
@@ -57,6 +58,7 @@ use Auth0\SDK\API\Management\CustomDomains\CustomDomainsClientInterface;
 use Auth0\SDK\API\Management\DeviceCredentials\DeviceCredentialsClientInterface;
 use Auth0\SDK\API\Management\EmailTemplates\EmailTemplatesClientInterface;
 use Auth0\SDK\API\Management\EventStreams\EventStreamsClientInterface;
+use Auth0\SDK\API\Management\Events\EventsClientInterface;
 use Auth0\SDK\API\Management\Flows\FlowsClientInterface;
 use Auth0\SDK\API\Management\Forms\FormsClientInterface;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClientInterface;
@@ -142,6 +144,11 @@ class Management implements ManagementInterface
      * @var EventStreamsClient $eventStreams
      */
     public EventStreamsClient $eventStreams;
+
+    /**
+     * @var EventsClient $events
+     */
+    public EventsClient $events;
 
     /**
      * @var FlowsClient $flows
@@ -342,8 +349,8 @@ class Management implements ManagementInterface
             'Authorization' => "Bearer $token",
             'X-Fern-Language' => 'PHP',
             'X-Fern-SDK-Name' => 'Auth0\SDK\API\Management',
-            'X-Fern-SDK-Version' => '0.0.0',
-            'User-Agent' => 'auth0/auth0-php/0.0.0',
+            'X-Fern-SDK-Version' => '9.0.0-beta.0',
+            'User-Agent' => 'auth0/auth0-php/9.0.0-beta.0',
         ];
 
         $this->options = $options ?? [];
@@ -367,6 +374,7 @@ class Management implements ManagementInterface
         $this->deviceCredentials = new DeviceCredentialsClient($this->client, $this->options);
         $this->emailTemplates = new EmailTemplatesClient($this->client, $this->options);
         $this->eventStreams = new EventStreamsClient($this->client, $this->options);
+        $this->events = new EventsClient($this->client, $this->options);
         $this->flows = new FlowsClient($this->client, $this->options);
         $this->forms = new FormsClient($this->client, $this->options);
         $this->userGrants = new UserGrantsClient($this->client, $this->options);
@@ -480,6 +488,14 @@ class Management implements ManagementInterface
     public function getEventStreams(): EventStreamsClientInterface
     {
         return $this->eventStreams;
+    }
+
+    /**
+     * @return EventsClientInterface
+     */
+    public function getEvents(): EventsClientInterface
+    {
+        return $this->events;
     }
 
     /**

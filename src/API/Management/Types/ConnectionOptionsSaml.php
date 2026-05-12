@@ -112,6 +112,7 @@ class ConnectionOptionsSaml extends JsonSerializableType
 
     /**
      * @param array{
+     *   assertionDecryptionSettings?: ?ConnectionAssertionDecryptionSettings,
      *   cert?: ?string,
      *   decryptionKey?: (
      *    ConnectionDecryptionKeySamlCert
@@ -157,6 +158,7 @@ class ConnectionOptionsSaml extends JsonSerializableType
     public function __construct(
         array $values = [],
     ) {
+        $this->assertionDecryptionSettings = $values['assertionDecryptionSettings'] ?? null;
         $this->cert = $values['cert'] ?? null;
         $this->decryptionKey = $values['decryptionKey'] ?? null;
         $this->digestAlgorithm = $values['digestAlgorithm'] ?? null;
