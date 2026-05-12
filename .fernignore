@@ -2,20 +2,47 @@
 # .fernignore - Files to preserve during Fern SDK regeneration
 # =============================================================================
 
+# Git & Repository Configuration
+.gitattributes
+.gitignore
+.version
+
+# GitHub (workflows, actions, templates, community health files)
+.github/
+
+# CI/CD & Security Configuration
+.semgrepignore
+.shiprc
+opslevel.yml
+
 # Project Configuration
-.github/workflows/ci.yml
 phpstan.neon
+phpstan.neon.dist
+phpstan-baseline.neon
+phpstan-management.neon
 phpunit.xml
-.editorconfig
-.php-cs-fixer.dist.php
 phpunit.xml.dist
 psalm.xml.dist
+phpdoc.dist.xml
+.editorconfig
+.php-cs-fixer.dist.php
 rector.php
+composer.json
 
 # Project Documentation
 README.md
 EXAMPLES.md
+CHANGELOG.md
+CHANGELOG.ARCHIVE.md
+CONTRIBUTING.md
+FAQ.md
+LICENSE.md
+UPGRADE.md
 v9_MIGRATION_GUIDE.md
+
+# Docs & Examples
+docs/
+examples/
 
 # Core SDK Classes (Auth0 SDK entry point and token handling)
 src/Auth0.php
