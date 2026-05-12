@@ -8,7 +8,7 @@ use Auth0\SDK\API\Management\Types\SelfServiceProfileCustomTextPageEnum;
 interface CustomTextClientInterface
 {
     /**
-     * Retrieves text customizations for a given self-service profile, language and Self Service SSO Flow page.
+     * Retrieves text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
      *
      * @param string $id The id of the self-service profile.
      * @param value-of<SelfServiceProfileCustomTextLanguageEnum> $language The language of the custom text.
@@ -26,7 +26,7 @@ interface CustomTextClientInterface
     public function list(string $id, string $language, string $page, ?array $options = null): ?array;
 
     /**
-     * Updates text customizations for a given self-service profile, language and Self Service SSO Flow page.
+     * Updates text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
      *
      * @param string $id The id of the self-service profile.
      * @param value-of<SelfServiceProfileCustomTextLanguageEnum> $language The language of the custom text.

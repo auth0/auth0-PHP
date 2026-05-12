@@ -217,6 +217,9 @@ class GroupsClient implements GroupsClientInterface
         if ($request->getExternalId() != null) {
             $query['external_id'] = $request->getExternalId();
         }
+        if ($request->getSearch() != null) {
+            $query['search'] = $request->getSearch();
+        }
         if ($request->getFields() != null) {
             $query['fields'] = $request->getFields();
         }

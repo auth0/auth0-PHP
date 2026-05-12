@@ -86,6 +86,12 @@ class UpdateUserAuthenticationMethodResponseContent extends JsonSerializableType
     private ?string $relyingPartyIdentifier;
 
     /**
+     * @var ?bool $confirmed Whether the authentication method has been confirmed.
+     */
+    #[JsonProperty('confirmed')]
+    private ?bool $confirmed;
+
+    /**
      * @var ?DateTime $createdAt Authentication method creation date
      */
     #[JsonProperty('created_at'), Date(Date::TYPE_DATETIME)]
@@ -105,6 +111,7 @@ class UpdateUserAuthenticationMethodResponseContent extends JsonSerializableType
      *   publicKey?: ?string,
      *   aaguid?: ?string,
      *   relyingPartyIdentifier?: ?string,
+     *   confirmed?: ?bool,
      *   createdAt?: ?DateTime,
      * } $values
      */
@@ -123,6 +130,7 @@ class UpdateUserAuthenticationMethodResponseContent extends JsonSerializableType
         $this->publicKey = $values['publicKey'] ?? null;
         $this->aaguid = $values['aaguid'] ?? null;
         $this->relyingPartyIdentifier = $values['relyingPartyIdentifier'] ?? null;
+        $this->confirmed = $values['confirmed'] ?? null;
         $this->createdAt = $values['createdAt'] ?? null;
     }
 
@@ -339,6 +347,24 @@ class UpdateUserAuthenticationMethodResponseContent extends JsonSerializableType
     {
         $this->relyingPartyIdentifier = $value;
         $this->_setField('relyingPartyIdentifier');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getConfirmed(): ?bool
+    {
+        return $this->confirmed;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setConfirmed(?bool $value = null): self
+    {
+        $this->confirmed = $value;
+        $this->_setField('confirmed');
         return $this;
     }
 

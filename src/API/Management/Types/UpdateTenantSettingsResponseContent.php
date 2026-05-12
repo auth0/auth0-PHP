@@ -229,6 +229,12 @@ class UpdateTenantSettingsResponseContent extends JsonSerializableType
     private ?bool $enableAiGuide;
 
     /**
+     * @var ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode> $dynamicClientRegistrationSecurityMode
+     */
+    #[JsonProperty('dynamic_client_registration_security_mode')]
+    private ?string $dynamicClientRegistrationSecurityMode;
+
+    /**
      * @param array{
      *   changePassword?: ?TenantSettingsPasswordPage,
      *   guardianMfaPage?: ?TenantSettingsGuardianPage,
@@ -266,6 +272,7 @@ class UpdateTenantSettingsResponseContent extends JsonSerializableType
      *   clientIdMetadataDocumentSupported?: ?bool,
      *   phoneConsolidatedExperience?: ?bool,
      *   enableAiGuide?: ?bool,
+     *   dynamicClientRegistrationSecurityMode?: ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode>,
      * } $values
      */
     public function __construct(
@@ -307,6 +314,7 @@ class UpdateTenantSettingsResponseContent extends JsonSerializableType
         $this->clientIdMetadataDocumentSupported = $values['clientIdMetadataDocumentSupported'] ?? null;
         $this->phoneConsolidatedExperience = $values['phoneConsolidatedExperience'] ?? null;
         $this->enableAiGuide = $values['enableAiGuide'] ?? null;
+        $this->dynamicClientRegistrationSecurityMode = $values['dynamicClientRegistrationSecurityMode'] ?? null;
     }
 
     /**
@@ -954,6 +962,24 @@ class UpdateTenantSettingsResponseContent extends JsonSerializableType
     {
         $this->enableAiGuide = $value;
         $this->_setField('enableAiGuide');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode>
+     */
+    public function getDynamicClientRegistrationSecurityMode(): ?string
+    {
+        return $this->dynamicClientRegistrationSecurityMode;
+    }
+
+    /**
+     * @param ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode> $value
+     */
+    public function setDynamicClientRegistrationSecurityMode(?string $value = null): self
+    {
+        $this->dynamicClientRegistrationSecurityMode = $value;
+        $this->_setField('dynamicClientRegistrationSecurityMode');
         return $this;
     }
 

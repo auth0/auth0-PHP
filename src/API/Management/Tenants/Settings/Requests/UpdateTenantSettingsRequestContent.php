@@ -17,6 +17,7 @@ use Auth0\SDK\API\Management\Types\TenantSettingsSessions;
 use Auth0\SDK\API\Management\Types\TenantOidcLogoutSettings;
 use Auth0\SDK\API\Management\Types\TenantSettingsMtls;
 use Auth0\SDK\API\Management\Types\TenantSettingsResourceParameterProfile;
+use Auth0\SDK\API\Management\Types\TenantSettingsDynamicClientRegistrationSecurityMode;
 
 class UpdateTenantSettingsRequestContent extends JsonSerializableType
 {
@@ -235,6 +236,12 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     private ?bool $phoneConsolidatedExperience;
 
     /**
+     * @var ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode> $dynamicClientRegistrationSecurityMode
+     */
+    #[JsonProperty('dynamic_client_registration_security_mode')]
+    private ?string $dynamicClientRegistrationSecurityMode;
+
+    /**
      * @param array{
      *   changePassword?: ?TenantSettingsPasswordPage,
      *   deviceFlow?: ?TenantSettingsDeviceFlow,
@@ -271,6 +278,7 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      *   clientIdMetadataDocumentSupported?: ?bool,
      *   enableAiGuide?: ?bool,
      *   phoneConsolidatedExperience?: ?bool,
+     *   dynamicClientRegistrationSecurityMode?: ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode>,
      * } $values
      */
     public function __construct(
@@ -311,6 +319,7 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
         $this->clientIdMetadataDocumentSupported = $values['clientIdMetadataDocumentSupported'] ?? null;
         $this->enableAiGuide = $values['enableAiGuide'] ?? null;
         $this->phoneConsolidatedExperience = $values['phoneConsolidatedExperience'] ?? null;
+        $this->dynamicClientRegistrationSecurityMode = $values['dynamicClientRegistrationSecurityMode'] ?? null;
     }
 
     /**
@@ -940,6 +949,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     {
         $this->phoneConsolidatedExperience = $value;
         $this->_setField('phoneConsolidatedExperience');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode>
+     */
+    public function getDynamicClientRegistrationSecurityMode(): ?string
+    {
+        return $this->dynamicClientRegistrationSecurityMode;
+    }
+
+    /**
+     * @param ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode> $value
+     */
+    public function setDynamicClientRegistrationSecurityMode(?string $value = null): self
+    {
+        $this->dynamicClientRegistrationSecurityMode = $value;
+        $this->_setField('dynamicClientRegistrationSecurityMode');
         return $this;
     }
 }

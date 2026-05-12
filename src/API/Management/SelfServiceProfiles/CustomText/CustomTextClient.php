@@ -53,7 +53,7 @@ class CustomTextClient implements CustomTextClientInterface
     }
 
     /**
-     * Retrieves text customizations for a given self-service profile, language and Self Service SSO Flow page.
+     * Retrieves text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
      *
      * @param string $id The id of the self-service profile.
      * @param value-of<SelfServiceProfileCustomTextLanguageEnum> $language The language of the custom text.
@@ -103,7 +103,7 @@ class CustomTextClient implements CustomTextClientInterface
     }
 
     /**
-     * Updates text customizations for a given self-service profile, language and Self Service SSO Flow page.
+     * Updates text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
      *
      * @param string $id The id of the self-service profile.
      * @param value-of<SelfServiceProfileCustomTextLanguageEnum> $language The language of the custom text.

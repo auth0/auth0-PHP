@@ -1,21 +1,5 @@
-bin
-build
-composer.phar
-composer.lock
-phpunit.xml
-vendor
 .idea
-.env
-.phpcs.xml
-phpcs.xml
-.phpunit.result.cache
-.DS_Store
-coverage
-TODO.txt
-composer.local.json
 .php-cs-fixer.cache
-composer.local.old
-pest.log
-
-# AI tools
-.claude
+.phpunit.result.cache
+composer.lock
+vendor/

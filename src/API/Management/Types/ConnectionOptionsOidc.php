@@ -54,6 +54,7 @@ class ConnectionOptionsOidc extends JsonSerializableType
      *   tokenEndpoint?: ?string,
      *   tokenEndpointAuthMethod?: ?value-of<ConnectionTokenEndpointAuthMethodEnum>,
      *   tokenEndpointAuthSigningAlg?: ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>,
+     *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
      *   upstreamParams?: ?array<string, (
      *    ConnectionUpstreamAlias
      *   |ConnectionUpstreamValue
@@ -87,6 +88,7 @@ class ConnectionOptionsOidc extends JsonSerializableType
         $this->tokenEndpoint = $values['tokenEndpoint'] ?? null;
         $this->tokenEndpointAuthMethod = $values['tokenEndpointAuthMethod'] ?? null;
         $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
+        $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->userinfoEndpoint = $values['userinfoEndpoint'] ?? null;
         $this->nonPersistentAttrs = $values['nonPersistentAttrs'] ?? null;

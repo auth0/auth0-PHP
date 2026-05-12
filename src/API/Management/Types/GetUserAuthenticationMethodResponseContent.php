@@ -119,6 +119,18 @@ class GetUserAuthenticationMethodResponseContent extends JsonSerializableType
     private ?string $userAgent;
 
     /**
+     * @var ?string $userHandle Applies to passkeys only. The user handle of the user identity.
+     */
+    #[JsonProperty('user_handle')]
+    private ?string $userHandle;
+
+    /**
+     * @var ?array<string> $transports Applies to passkeys only. The transports used by clients to communicate with the authenticator.
+     */
+    #[JsonProperty('transports'), ArrayType(['string'])]
+    private ?array $transports;
+
+    /**
      * @var ?string $aaguid Applies to passkey authentication methods only. Authenticator Attestation Globally Unique Identifier.
      */
     #[JsonProperty('aaguid')]
@@ -150,6 +162,8 @@ class GetUserAuthenticationMethodResponseContent extends JsonSerializableType
      *   credentialBackedUp?: ?bool,
      *   identityUserId?: ?string,
      *   userAgent?: ?string,
+     *   userHandle?: ?string,
+     *   transports?: ?array<string>,
      *   aaguid?: ?string,
      *   relyingPartyIdentifier?: ?string,
      * } $values
@@ -175,6 +189,8 @@ class GetUserAuthenticationMethodResponseContent extends JsonSerializableType
         $this->credentialBackedUp = $values['credentialBackedUp'] ?? null;
         $this->identityUserId = $values['identityUserId'] ?? null;
         $this->userAgent = $values['userAgent'] ?? null;
+        $this->userHandle = $values['userHandle'] ?? null;
+        $this->transports = $values['transports'] ?? null;
         $this->aaguid = $values['aaguid'] ?? null;
         $this->relyingPartyIdentifier = $values['relyingPartyIdentifier'] ?? null;
     }
@@ -500,6 +516,42 @@ class GetUserAuthenticationMethodResponseContent extends JsonSerializableType
     {
         $this->userAgent = $value;
         $this->_setField('userAgent');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getUserHandle(): ?string
+    {
+        return $this->userHandle;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setUserHandle(?string $value = null): self
+    {
+        $this->userHandle = $value;
+        $this->_setField('userHandle');
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getTransports(): ?array
+    {
+        return $this->transports;
+    }
+
+    /**
+     * @param ?array<string> $value
+     */
+    public function setTransports(?array $value = null): self
+    {
+        $this->transports = $value;
+        $this->_setField('transports');
         return $this;
     }
 

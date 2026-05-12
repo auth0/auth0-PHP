@@ -330,6 +330,9 @@ class ClientGrantsClient implements ClientGrantsClientInterface
         if ($request->getSubjectType() != null) {
             $query['subject_type'] = $request->getSubjectType();
         }
+        if ($request->getDefaultFor() != null) {
+            $query['default_for'] = $request->getDefaultFor();
+        }
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(

@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\CustomDomains\CustomDomainsClientInterface;
 use Auth0\SDK\API\Management\DeviceCredentials\DeviceCredentialsClientInterface;
 use Auth0\SDK\API\Management\EmailTemplates\EmailTemplatesClientInterface;
 use Auth0\SDK\API\Management\EventStreams\EventStreamsClientInterface;
+use Auth0\SDK\API\Management\Events\EventsClientInterface;
 use Auth0\SDK\API\Management\Flows\FlowsClientInterface;
 use Auth0\SDK\API\Management\Forms\FormsClientInterface;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClientInterface;
@@ -97,6 +98,11 @@ interface ManagementInterface
      * @return EventStreamsClientInterface
      */
     public function getEventStreams(): EventStreamsClientInterface;
+
+    /**
+     * @return EventsClientInterface
+     */
+    public function getEvents(): EventsClientInterface;
 
     /**
      * @return FlowsClientInterface
