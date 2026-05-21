@@ -80,7 +80,7 @@ final class Toolkit
     }
 
     /**
-     * Progressively merge one or more arrays, overwriting values from left to right. Null values is discarded.
+     * Progressively merge one or more arrays, overwriting values from left to right. Null values are discarded.
      *
      * @param mixed[] $arrays one or more arrays to merge
      *
