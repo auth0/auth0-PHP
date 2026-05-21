@@ -14,9 +14,9 @@ uses()->group('utility', 'utility.http_client', 'networking');
 beforeEach(function(): void {
     $this->config = new SdkConfiguration([
         'domain' => MockDomain::valid(),
-        'cookieSecret' => uniqid(),
-        'clientId' => uniqid(),
-        'redirectUri' => uniqid()
+        'cookieSecret' => uniqid( ),
+        'clientId' => uniqid( ),
+        'redirectUri' => uniqid( )
     ]);
 
     $this->client = new HttpClient($this->config, HttpClient::CONTEXT_MANAGEMENT_CLIENT);

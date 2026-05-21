@@ -18,11 +18,11 @@ class MockDomain
 
     public static function valid()
     {
-        return self::startsWith() . mt_rand() . '.' . uniqid() . self::endsWith();
+        return self::startsWith() . mt_rand() . '.' . uniqid( ) . self::endsWith();
     }
 
     public static function invalid()
     {
-        return uniqid();
+        return uniqid( );
     }
 }
