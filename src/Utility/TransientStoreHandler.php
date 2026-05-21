@@ -58,7 +58,7 @@ final class TransientStoreHandler
         try {
             $randomBytes = random_bytes($length);
         } catch (Exception) {
-            $randomBytes = openssl_random_pseudo_bytes($length);
+            $randomBytes = openssl_random_pseudo_bytes( $length );
         }
 
         return bin2hex($randomBytes);
