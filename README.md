@@ -17,7 +17,7 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 composer require auth0/auth0-php:9.0.0-beta.0
 ```
 
-We'd love for you to try it out and share your feedback! Please [open an issue](https://github.com/auth0/auth0-PHP/issues/new) if you encounter any problems or have suggestions.
+We'd love for you to try it out and share feedback. Please [open an issue](https://github.com/auth0/auth0-PHP/issues/new) if you encounter any problems or have suggestions.
 
 :books: [Migration Guide](https://github.com/auth0/auth0-PHP/blob/v9/v9_MIGRATION_GUIDE.md) - :package: [v9 Changelog](https://github.com/auth0/auth0-PHP/blob/v9/CHANGELOG.md) - :page_facing_up: [API Reference](https://github.com/auth0/auth0-PHP/blob/v9/reference.md)
 
