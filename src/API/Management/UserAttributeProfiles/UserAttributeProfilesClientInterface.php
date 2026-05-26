@@ -32,7 +32,7 @@ interface UserAttributeProfilesClientInterface
     public function list(ListUserAttributeProfileRequestParameters $request = new ListUserAttributeProfileRequestParameters(), ?array $options = null): Pager;
 
     /**
-     * Retrieve details about a single User Attribute Profile specified by ID.
+     * Create a User Attribute Profile.
      *
      * @param CreateUserAttributeProfileRequestContent $request
      * @param ?array{

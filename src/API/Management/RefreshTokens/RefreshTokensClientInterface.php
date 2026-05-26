@@ -5,6 +5,7 @@ namespace Auth0\SDK\API\Management\RefreshTokens;
 use Auth0\SDK\API\Management\RefreshTokens\Requests\GetRefreshTokensRequestParameters;
 use Auth0\SDK\API\Management\Core\Pagination\Pager;
 use Auth0\SDK\API\Management\Types\RefreshTokenResponseContent;
+use Auth0\SDK\API\Management\RefreshTokens\Requests\RevokeRefreshTokensRequestContent;
 use Auth0\SDK\API\Management\Types\GetRefreshTokenResponseContent;
 use Auth0\SDK\API\Management\RefreshTokens\Requests\UpdateRefreshTokenRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateRefreshTokenResponseContent;
@@ -26,6 +27,21 @@ interface RefreshTokensClientInterface
      * @return Pager<RefreshTokenResponseContent>
      */
     public function list(GetRefreshTokensRequestParameters $request, ?array $options = null): Pager;
+
+    /**
+     * Revoke refresh tokens in bulk by ID list, user, user+client, or client.
+     *
+     * @param RevokeRefreshTokensRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     */
+    public function revoke(RevokeRefreshTokensRequestContent $request = new RevokeRefreshTokensRequestContent(), ?array $options = null): void;
 
     /**
      * Retrieve refresh token information.

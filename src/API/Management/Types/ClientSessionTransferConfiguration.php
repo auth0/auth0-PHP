@@ -48,6 +48,12 @@ class ClientSessionTransferConfiguration extends JsonSerializableType
     private ?bool $enforceOnlineRefreshTokens;
 
     /**
+     * @var ?ClientSessionTransferDelegationConfiguration $delegation
+     */
+    #[JsonProperty('delegation')]
+    private ?ClientSessionTransferDelegationConfiguration $delegation;
+
+    /**
      * @param array{
      *   canCreateSessionTransferToken?: ?bool,
      *   enforceCascadeRevocation?: ?bool,
@@ -55,6 +61,7 @@ class ClientSessionTransferConfiguration extends JsonSerializableType
      *   enforceDeviceBinding?: ?value-of<ClientSessionTransferDeviceBindingEnum>,
      *   allowRefreshToken?: ?bool,
      *   enforceOnlineRefreshTokens?: ?bool,
+     *   delegation?: ?ClientSessionTransferDelegationConfiguration,
      * } $values
      */
     public function __construct(
@@ -66,6 +73,7 @@ class ClientSessionTransferConfiguration extends JsonSerializableType
         $this->enforceDeviceBinding = $values['enforceDeviceBinding'] ?? null;
         $this->allowRefreshToken = $values['allowRefreshToken'] ?? null;
         $this->enforceOnlineRefreshTokens = $values['enforceOnlineRefreshTokens'] ?? null;
+        $this->delegation = $values['delegation'] ?? null;
     }
 
     /**
@@ -173,6 +181,24 @@ class ClientSessionTransferConfiguration extends JsonSerializableType
     {
         $this->enforceOnlineRefreshTokens = $value;
         $this->_setField('enforceOnlineRefreshTokens');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientSessionTransferDelegationConfiguration
+     */
+    public function getDelegation(): ?ClientSessionTransferDelegationConfiguration
+    {
+        return $this->delegation;
+    }
+
+    /**
+     * @param ?ClientSessionTransferDelegationConfiguration $value
+     */
+    public function setDelegation(?ClientSessionTransferDelegationConfiguration $value = null): self
+    {
+        $this->delegation = $value;
+        $this->_setField('delegation');
         return $this;
     }
 

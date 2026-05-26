@@ -6,4 +6,5 @@ enum SynchronizeGroupsEnum: string
 {
     case All = "all";
     case Off = "off";
+    case Selected = "selected";
 }

@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\CustomDomains\CustomDomainsClient;
 use Auth0\SDK\API\Management\DeviceCredentials\DeviceCredentialsClient;
 use Auth0\SDK\API\Management\EmailTemplates\EmailTemplatesClient;
 use Auth0\SDK\API\Management\EventStreams\EventStreamsClient;
+use Auth0\SDK\API\Management\Events\EventsClient;
 use Auth0\SDK\API\Management\Flows\FlowsClient;
 use Auth0\SDK\API\Management\Forms\FormsClient;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClient;
@@ -23,6 +24,7 @@ use Auth0\SDK\API\Management\Logs\LogsClient;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClient;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClient;
 use Auth0\SDK\API\Management\Prompts\PromptsClient;
+use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClient;
 use Auth0\SDK\API\Management\RefreshTokens\RefreshTokensClient;
 use Auth0\SDK\API\Management\ResourceServers\ResourceServersClient;
 use Auth0\SDK\API\Management\Roles\RolesClient;
@@ -57,6 +59,7 @@ use Auth0\SDK\API\Management\CustomDomains\CustomDomainsClientInterface;
 use Auth0\SDK\API\Management\DeviceCredentials\DeviceCredentialsClientInterface;
 use Auth0\SDK\API\Management\EmailTemplates\EmailTemplatesClientInterface;
 use Auth0\SDK\API\Management\EventStreams\EventStreamsClientInterface;
+use Auth0\SDK\API\Management\Events\EventsClientInterface;
 use Auth0\SDK\API\Management\Flows\FlowsClientInterface;
 use Auth0\SDK\API\Management\Forms\FormsClientInterface;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClientInterface;
@@ -68,6 +71,7 @@ use Auth0\SDK\API\Management\Logs\LogsClientInterface;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClientInterface;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClientInterface;
 use Auth0\SDK\API\Management\Prompts\PromptsClientInterface;
+use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClientInterface;
 use Auth0\SDK\API\Management\RefreshTokens\RefreshTokensClientInterface;
 use Auth0\SDK\API\Management\ResourceServers\ResourceServersClientInterface;
 use Auth0\SDK\API\Management\Roles\RolesClientInterface;
@@ -144,6 +148,11 @@ class Management implements ManagementInterface
     public EventStreamsClient $eventStreams;
 
     /**
+     * @var EventsClient $events
+     */
+    public EventsClient $events;
+
+    /**
      * @var FlowsClient $flows
      */
     public FlowsClient $flows;
@@ -197,6 +206,11 @@ class Management implements ManagementInterface
      * @var PromptsClient $prompts
      */
     public PromptsClient $prompts;
+
+    /**
+     * @var RateLimitPoliciesClient $rateLimitPolicies
+     */
+    public RateLimitPoliciesClient $rateLimitPolicies;
 
     /**
      * @var RefreshTokensClient $refreshTokens
@@ -342,8 +356,8 @@ class Management implements ManagementInterface
             'Authorization' => "Bearer $token",
             'X-Fern-Language' => 'PHP',
             'X-Fern-SDK-Name' => 'Auth0\SDK\API\Management',
-            'X-Fern-SDK-Version' => '0.0.0',
-            'User-Agent' => 'auth0/auth0-php/0.0.0',
+            'X-Fern-SDK-Version' => '9.0.0-beta.0',
+            'User-Agent' => 'auth0/auth0-php/9.0.0-beta.0',
         ];
 
         $this->options = $options ?? [];
@@ -367,6 +381,7 @@ class Management implements ManagementInterface
         $this->deviceCredentials = new DeviceCredentialsClient($this->client, $this->options);
         $this->emailTemplates = new EmailTemplatesClient($this->client, $this->options);
         $this->eventStreams = new EventStreamsClient($this->client, $this->options);
+        $this->events = new EventsClient($this->client, $this->options);
         $this->flows = new FlowsClient($this->client, $this->options);
         $this->forms = new FormsClient($this->client, $this->options);
         $this->userGrants = new UserGrantsClient($this->client, $this->options);
@@ -378,6 +393,7 @@ class Management implements ManagementInterface
         $this->networkAcls = new NetworkAclsClient($this->client, $this->options);
         $this->organizations = new OrganizationsClient($this->client, $this->options);
         $this->prompts = new PromptsClient($this->client, $this->options);
+        $this->rateLimitPolicies = new RateLimitPoliciesClient($this->client, $this->options);
         $this->refreshTokens = new RefreshTokensClient($this->client, $this->options);
         $this->resourceServers = new ResourceServersClient($this->client, $this->options);
         $this->roles = new RolesClient($this->client, $this->options);
@@ -483,6 +499,14 @@ class Management implements ManagementInterface
     }
 
     /**
+     * @return EventsClientInterface
+     */
+    public function getEvents(): EventsClientInterface
+    {
+        return $this->events;
+    }
+
+    /**
      * @return FlowsClientInterface
      */
     public function getFlows(): FlowsClientInterface
@@ -568,6 +592,14 @@ class Management implements ManagementInterface
     public function getPrompts(): PromptsClientInterface
     {
         return $this->prompts;
+    }
+
+    /**
+     * @return RateLimitPoliciesClientInterface
+     */
+    public function getRateLimitPolicies(): RateLimitPoliciesClientInterface
+    {
+        return $this->rateLimitPolicies;
     }
 
     /**

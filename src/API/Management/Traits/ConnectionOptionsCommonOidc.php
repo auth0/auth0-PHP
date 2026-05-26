@@ -10,6 +10,7 @@ use Auth0\SDK\API\Management\Types\ConnectionOptionsOidcMetadata;
 use Auth0\SDK\API\Management\Types\ConnectionSetUserRootAttributesEnum;
 use Auth0\SDK\API\Management\Types\ConnectionTokenEndpointAuthMethodEnum;
 use Auth0\SDK\API\Management\Types\ConnectionTokenEndpointAuthSigningAlgEnum;
+use Auth0\SDK\API\Management\Types\ConnectionTokenEndpointJwtcaAudFormatEnumOidc;
 use Auth0\SDK\API\Management\Types\ConnectionUpstreamAlias;
 use Auth0\SDK\API\Management\Types\ConnectionUpstreamValue;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
@@ -38,6 +39,7 @@ use Auth0\SDK\API\Management\Core\Types\Union;
  * @property ?string $tokenEndpoint
  * @property ?value-of<ConnectionTokenEndpointAuthMethodEnum> $tokenEndpointAuthMethod
  * @property ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum> $tokenEndpointAuthSigningAlg
+ * @property ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $tokenEndpointJwtcaAudFormat
  * @property ?array<string, (
  *    ConnectionUpstreamAlias
  *   |ConnectionUpstreamValue
@@ -159,6 +161,12 @@ trait ConnectionOptionsCommonOidc
      */
     #[JsonProperty('token_endpoint_auth_signing_alg')]
     private ?string $tokenEndpointAuthSigningAlg;
+
+    /**
+     * @var ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $tokenEndpointJwtcaAudFormat
+     */
+    #[JsonProperty('token_endpoint_jwtca_aud_format')]
+    private ?string $tokenEndpointJwtcaAudFormat;
 
     /**
      * @var ?array<string, (
@@ -514,6 +522,24 @@ trait ConnectionOptionsCommonOidc
     {
         $this->tokenEndpointAuthSigningAlg = $value;
         $this->_setField('tokenEndpointAuthSigningAlg');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>
+     */
+    public function getTokenEndpointJwtcaAudFormat(): ?string
+    {
+        return $this->tokenEndpointJwtcaAudFormat;
+    }
+
+    /**
+     * @param ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $value
+     */
+    public function setTokenEndpointJwtcaAudFormat(?string $value = null): self
+    {
+        $this->tokenEndpointJwtcaAudFormat = $value;
+        $this->_setField('tokenEndpointJwtcaAudFormat');
         return $this;
     }
 

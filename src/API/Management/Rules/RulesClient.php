@@ -60,7 +60,7 @@ class RulesClient implements RulesClientInterface
     }
 
     /**
-     * Retrieve a filtered list of <a href="https://auth0.com/docs/rules">rules</a>. Accepts a list of fields to include or exclude.
+     * Retrieve a filtered list of [rules](https://auth0.com/docs/rules). Accepts a list of fields to include or exclude.
      *
      * @param ListRulesRequestParameters $request
      * @param ?array{
@@ -93,9 +93,9 @@ class RulesClient implements RulesClientInterface
     }
 
     /**
-     * Create a <a href="https://auth0.com/docs/rules#create-a-new-rule-using-the-management-api">new rule</a>.
+     * Create a [new rule](https://auth0.com/docs/rules#create-a-new-rule-using-the-management-api).
      *
-     * Note: Changing a rule's stage of execution from the default <code>login_success</code> can change the rule's function signature to have user omitted.
+     * Note: Changing a rule's stage of execution from the default `login_success` can change the rule's function signature to have user omitted.
      *
      * @param CreateRuleRequestContent $request
      * @param ?array{
@@ -144,7 +144,7 @@ class RulesClient implements RulesClientInterface
     }
 
     /**
-     * Retrieve <a href="https://auth0.com/docs/rules">rule</a> details. Accepts a list of fields to include or exclude in the result.
+     * Retrieve [rule](https://auth0.com/docs/rules) details. Accepts a list of fields to include or exclude in the result.
      *
      * @param string $id ID of the rule to retrieve.
      * @param GetRuleRequestParameters $request
@@ -292,7 +292,7 @@ class RulesClient implements RulesClientInterface
     }
 
     /**
-     * Retrieve a filtered list of <a href="https://auth0.com/docs/rules">rules</a>. Accepts a list of fields to include or exclude.
+     * Retrieve a filtered list of [rules](https://auth0.com/docs/rules). Accepts a list of fields to include or exclude.
      *
      * @param ListRulesRequestParameters $request
      * @param ?array{

@@ -11,6 +11,9 @@ use Auth0\SDK\API\Management\Types\CreateDirectoryProvisioningResponseContent;
 use Auth0\SDK\API\Management\Types\UpdateDirectoryProvisioningRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateDirectoryProvisioningResponseContent;
 use Auth0\SDK\API\Management\Types\GetDirectoryProvisioningDefaultMappingResponseContent;
+use Auth0\SDK\API\Management\Connections\DirectoryProvisioning\Requests\ListSynchronizedGroupsRequestParameters;
+use Auth0\SDK\API\Management\Types\SynchronizedGroupPayload;
+use Auth0\SDK\API\Management\Connections\DirectoryProvisioning\Requests\ReplaceSynchronizedGroupsRequestContent;
 use Auth0\SDK\API\Management\Connections\DirectoryProvisioning\Synchronizations\SynchronizationsClientInterface;
 
 interface DirectoryProvisioningClientInterface
@@ -111,6 +114,39 @@ interface DirectoryProvisioningClientInterface
      * @return ?GetDirectoryProvisioningDefaultMappingResponseContent
      */
     public function getDefaultMapping(string $id, ?array $options = null): ?GetDirectoryProvisioningDefaultMappingResponseContent;
+
+    /**
+     * Retrieve the configured synchronized groups for a connection directory provisioning configuration.
+     *
+     * @param string $id The id of the connection to list synchronized groups for.
+     * @param ListSynchronizedGroupsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<SynchronizedGroupPayload>
+     */
+    public function listSynchronizedGroups(string $id, ListSynchronizedGroupsRequestParameters $request = new ListSynchronizedGroupsRequestParameters(), ?array $options = null): Pager;
+
+    /**
+     * Create or replace the selected groups for a connection directory provisioning configuration.
+     *
+     * @param string $id The id of the connection to create or replace synchronized groups for
+     * @param ReplaceSynchronizedGroupsRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     */
+    public function set(string $id, ReplaceSynchronizedGroupsRequestContent $request, ?array $options = null): void;
 
     /**
      * @return SynchronizationsClientInterface

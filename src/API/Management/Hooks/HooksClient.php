@@ -68,7 +68,7 @@ class HooksClient implements HooksClientInterface
     }
 
     /**
-     * Retrieve all <a href="https://auth0.com/docs/hooks">hooks</a>. Accepts a list of fields to include or exclude in the result.
+     * Retrieve all [hooks](https://auth0.com/docs/hooks). Accepts a list of fields to include or exclude in the result.
      *
      * @param ListHooksRequestParameters $request
      * @param ?array{
@@ -150,7 +150,7 @@ class HooksClient implements HooksClientInterface
     }
 
     /**
-     * Retrieve <a href="https://auth0.com/docs/hooks">a hook</a> by its ID. Accepts a list of fields to include in the result.
+     * Retrieve [a hook](https://auth0.com/docs/hooks) by its ID. Accepts a list of fields to include in the result.
      *
      * @param string $id ID of the hook to retrieve.
      * @param GetHookRequestParameters $request
@@ -303,7 +303,7 @@ class HooksClient implements HooksClientInterface
     }
 
     /**
-     * Retrieve all <a href="https://auth0.com/docs/hooks">hooks</a>. Accepts a list of fields to include or exclude in the result.
+     * Retrieve all [hooks](https://auth0.com/docs/hooks). Accepts a list of fields to include or exclude in the result.
      *
      * @param ListHooksRequestParameters $request
      * @param ?array{

@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\CustomDomains\CustomDomainsClientInterface;
 use Auth0\SDK\API\Management\DeviceCredentials\DeviceCredentialsClientInterface;
 use Auth0\SDK\API\Management\EmailTemplates\EmailTemplatesClientInterface;
 use Auth0\SDK\API\Management\EventStreams\EventStreamsClientInterface;
+use Auth0\SDK\API\Management\Events\EventsClientInterface;
 use Auth0\SDK\API\Management\Flows\FlowsClientInterface;
 use Auth0\SDK\API\Management\Forms\FormsClientInterface;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClientInterface;
@@ -23,6 +24,7 @@ use Auth0\SDK\API\Management\Logs\LogsClientInterface;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClientInterface;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClientInterface;
 use Auth0\SDK\API\Management\Prompts\PromptsClientInterface;
+use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClientInterface;
 use Auth0\SDK\API\Management\RefreshTokens\RefreshTokensClientInterface;
 use Auth0\SDK\API\Management\ResourceServers\ResourceServersClientInterface;
 use Auth0\SDK\API\Management\Roles\RolesClientInterface;
@@ -99,6 +101,11 @@ interface ManagementInterface
     public function getEventStreams(): EventStreamsClientInterface;
 
     /**
+     * @return EventsClientInterface
+     */
+    public function getEvents(): EventsClientInterface;
+
+    /**
      * @return FlowsClientInterface
      */
     public function getFlows(): FlowsClientInterface;
@@ -152,6 +159,11 @@ interface ManagementInterface
      * @return PromptsClientInterface
      */
     public function getPrompts(): PromptsClientInterface;
+
+    /**
+     * @return RateLimitPoliciesClientInterface
+     */
+    public function getRateLimitPolicies(): RateLimitPoliciesClientInterface;
 
     /**
      * @return RefreshTokensClientInterface

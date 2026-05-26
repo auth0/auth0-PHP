@@ -86,6 +86,42 @@ class CreateUserAuthenticationMethodResponseContent extends JsonSerializableType
     private ?string $relyingPartyIdentifier;
 
     /**
+     * @var ?value-of<CredentialDeviceTypeEnum> $credentialDeviceType
+     */
+    #[JsonProperty('credential_device_type')]
+    private ?string $credentialDeviceType;
+
+    /**
+     * @var ?bool $credentialBackedUp Applies to passkeys only. Whether the credential was backed up.
+     */
+    #[JsonProperty('credential_backed_up')]
+    private ?bool $credentialBackedUp;
+
+    /**
+     * @var ?string $identityUserId Applies to passkeys only. The ID of the user identity linked with the authentication method.
+     */
+    #[JsonProperty('identity_user_id')]
+    private ?string $identityUserId;
+
+    /**
+     * @var ?string $userAgent Applies to passkeys only. The user-agent of the browser used to create the passkey.
+     */
+    #[JsonProperty('user_agent')]
+    private ?string $userAgent;
+
+    /**
+     * @var ?string $userHandle Applies to passkeys only. The user handle of the user identity.
+     */
+    #[JsonProperty('user_handle')]
+    private ?string $userHandle;
+
+    /**
+     * @var ?array<string> $transports Applies to passkeys only. The transports used by clients to communicate with the authenticator.
+     */
+    #[JsonProperty('transports'), ArrayType(['string'])]
+    private ?array $transports;
+
+    /**
      * @var ?DateTime $createdAt Authentication method creation date
      */
     #[JsonProperty('created_at'), Date(Date::TYPE_DATETIME)]
@@ -105,6 +141,12 @@ class CreateUserAuthenticationMethodResponseContent extends JsonSerializableType
      *   publicKey?: ?string,
      *   aaguid?: ?string,
      *   relyingPartyIdentifier?: ?string,
+     *   credentialDeviceType?: ?value-of<CredentialDeviceTypeEnum>,
+     *   credentialBackedUp?: ?bool,
+     *   identityUserId?: ?string,
+     *   userAgent?: ?string,
+     *   userHandle?: ?string,
+     *   transports?: ?array<string>,
      *   createdAt?: ?DateTime,
      * } $values
      */
@@ -123,6 +165,12 @@ class CreateUserAuthenticationMethodResponseContent extends JsonSerializableType
         $this->publicKey = $values['publicKey'] ?? null;
         $this->aaguid = $values['aaguid'] ?? null;
         $this->relyingPartyIdentifier = $values['relyingPartyIdentifier'] ?? null;
+        $this->credentialDeviceType = $values['credentialDeviceType'] ?? null;
+        $this->credentialBackedUp = $values['credentialBackedUp'] ?? null;
+        $this->identityUserId = $values['identityUserId'] ?? null;
+        $this->userAgent = $values['userAgent'] ?? null;
+        $this->userHandle = $values['userHandle'] ?? null;
+        $this->transports = $values['transports'] ?? null;
         $this->createdAt = $values['createdAt'] ?? null;
     }
 
@@ -339,6 +387,114 @@ class CreateUserAuthenticationMethodResponseContent extends JsonSerializableType
     {
         $this->relyingPartyIdentifier = $value;
         $this->_setField('relyingPartyIdentifier');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<CredentialDeviceTypeEnum>
+     */
+    public function getCredentialDeviceType(): ?string
+    {
+        return $this->credentialDeviceType;
+    }
+
+    /**
+     * @param ?value-of<CredentialDeviceTypeEnum> $value
+     */
+    public function setCredentialDeviceType(?string $value = null): self
+    {
+        $this->credentialDeviceType = $value;
+        $this->_setField('credentialDeviceType');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getCredentialBackedUp(): ?bool
+    {
+        return $this->credentialBackedUp;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setCredentialBackedUp(?bool $value = null): self
+    {
+        $this->credentialBackedUp = $value;
+        $this->_setField('credentialBackedUp');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getIdentityUserId(): ?string
+    {
+        return $this->identityUserId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setIdentityUserId(?string $value = null): self
+    {
+        $this->identityUserId = $value;
+        $this->_setField('identityUserId');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getUserAgent(): ?string
+    {
+        return $this->userAgent;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setUserAgent(?string $value = null): self
+    {
+        $this->userAgent = $value;
+        $this->_setField('userAgent');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getUserHandle(): ?string
+    {
+        return $this->userHandle;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setUserHandle(?string $value = null): self
+    {
+        $this->userHandle = $value;
+        $this->_setField('userHandle');
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getTransports(): ?array
+    {
+        return $this->transports;
+    }
+
+    /**
+     * @param ?array<string> $value
+     */
+    public function setTransports(?array $value = null): self
+    {
+        $this->transports = $value;
+        $this->_setField('transports');
         return $this;
     }
 

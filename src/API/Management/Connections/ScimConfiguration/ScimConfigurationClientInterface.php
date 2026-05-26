@@ -32,7 +32,7 @@ interface ScimConfigurationClientInterface
     public function list(ListScimConfigurationsRequestParameters $request = new ListScimConfigurationsRequestParameters(), ?array $options = null): Pager;
 
     /**
-     * Retrieves a scim configuration by its <code>connectionId</code>.
+     * Retrieves a scim configuration by its `connectionId`.
      *
      * @param string $id The id of the connection to retrieve its SCIM configuration
      * @param ?array{
@@ -65,7 +65,7 @@ interface ScimConfigurationClientInterface
     public function create(string $id, ?CreateScimConfigurationRequestContent $request = null, ?array $options = null): ?CreateScimConfigurationResponseContent;
 
     /**
-     * Deletes a scim configuration by its <code>connectionId</code>.
+     * Deletes a scim configuration by its `connectionId`.
      *
      * @param string $id The id of the connection to delete its SCIM configuration
      * @param ?array{
@@ -80,7 +80,7 @@ interface ScimConfigurationClientInterface
     public function delete(string $id, ?array $options = null): void;
 
     /**
-     * Update a scim configuration by its <code>connectionId</code>.
+     * Update a scim configuration by its `connectionId`.
      *
      * @param string $id The id of the connection to update its SCIM configuration
      * @param UpdateScimConfigurationRequestContent $request
@@ -97,7 +97,7 @@ interface ScimConfigurationClientInterface
     public function update(string $id, UpdateScimConfigurationRequestContent $request, ?array $options = null): ?UpdateScimConfigurationResponseContent;
 
     /**
-     * Retrieves a scim configuration's default mapping by its <code>connectionId</code>.
+     * Retrieves a scim configuration's default mapping by its `connectionId`.
      *
      * @param string $id The id of the connection to retrieve its default SCIM mapping
      * @param ?array{

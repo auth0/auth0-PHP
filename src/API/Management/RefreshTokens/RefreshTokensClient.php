@@ -9,14 +9,15 @@ use Auth0\SDK\API\Management\Core\Pagination\Pager;
 use Auth0\SDK\API\Management\Types\RefreshTokenResponseContent;
 use Auth0\SDK\API\Management\Core\Pagination\CursorPager;
 use Auth0\SDK\API\Management\Types\GetRefreshTokensPaginatedResponseContent;
-use Auth0\SDK\API\Management\Types\GetRefreshTokenResponseContent;
+use Auth0\SDK\API\Management\RefreshTokens\Requests\RevokeRefreshTokensRequestContent;
 use Auth0\SDK\API\Management\Exceptions\Auth0Exception;
 use Auth0\SDK\API\Management\Exceptions\Auth0ApiException;
 use Auth0\SDK\API\Management\Core\Json\JsonApiRequest;
 use Auth0\SDK\API\Management\Environments;
 use Auth0\SDK\API\Management\Core\Client\HttpMethod;
-use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
+use Auth0\SDK\API\Management\Types\GetRefreshTokenResponseContent;
+use JsonException;
 use Auth0\SDK\API\Management\RefreshTokens\Requests\UpdateRefreshTokenRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateRefreshTokenResponseContent;
 
@@ -82,6 +83,48 @@ class RefreshTokensClient implements RefreshTokensClientInterface
             getNextCursor: fn (?GetRefreshTokensPaginatedResponseContent $response) => $response?->getNext() ?? null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?GetRefreshTokensPaginatedResponseContent $response) => $response?->getRefreshTokens() ?? [],
+        );
+    }
+
+    /**
+     * Revoke refresh tokens in bulk by ID list, user, user+client, or client.
+     *
+     * @param RevokeRefreshTokensRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    public function revoke(RevokeRefreshTokensRequestContent $request = new RevokeRefreshTokensRequestContent(), ?array $options = null): void
+    {
+        $options = array_merge($this->options, $options ?? []);
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "refresh-tokens/revoke",
+                    method: HttpMethod::POST,
+                    body: $request,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                return;
+            }
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
         );
     }
 
