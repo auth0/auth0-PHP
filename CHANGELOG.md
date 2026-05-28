@@ -1,5 +1,13 @@
 # Change Log
 
+## [9.0.0-beta.1](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.1) (2026-05-28)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.0...9.0.0-beta.1)
+
+**Added**
+
+- feat: add Rate Limit Policies, Events SSE, Token Vault Orgs, and HRI Client Settings [\#820](https://github.com/auth0/auth0-PHP/pull/820) ([fern-api[bot]](https://github.com/apps/fern-api))
+- feat: add SCIM Groups RBAC, User Effective Permissions/Roles, and Tenant Country Codes [\#826](https://github.com/auth0/auth0-PHP/pull/826) ([fern-api[bot]](https://github.com/apps/fern-api))
+
 ## [9.0.0-beta.0](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.0) (2026-04-17)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.19.0...9.0.0-beta.0)
 
