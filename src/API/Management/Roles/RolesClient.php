@@ -2,6 +2,7 @@
 
 namespace Auth0\SDK\API\Management\Roles;
 
+use Auth0\SDK\API\Management\Roles\Groups\GroupsClient;
 use Auth0\SDK\API\Management\Roles\Permissions\PermissionsClient;
 use Auth0\SDK\API\Management\Roles\Users\UsersClient;
 use Psr\Http\Client\ClientInterface;
@@ -23,11 +24,17 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Auth0\SDK\API\Management\Types\GetRoleResponseContent;
 use Auth0\SDK\API\Management\Roles\Requests\UpdateRoleRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateRoleResponseContent;
+use Auth0\SDK\API\Management\Roles\Groups\GroupsClientInterface;
 use Auth0\SDK\API\Management\Roles\Permissions\PermissionsClientInterface;
 use Auth0\SDK\API\Management\Roles\Users\UsersClientInterface;
 
 class RolesClient implements RolesClientInterface
 {
+    /**
+     * @var GroupsClient $groups
+     */
+    public GroupsClient $groups;
+
     /**
      * @var PermissionsClient $permissions
      */
@@ -70,6 +77,7 @@ class RolesClient implements RolesClientInterface
     ) {
         $this->client = $client;
         $this->options = $options ?? [];
+        $this->groups = new GroupsClient($this->client, $this->options);
         $this->permissions = new PermissionsClient($this->client, $this->options);
         $this->users = new UsersClient($this->client, $this->options);
     }
@@ -297,6 +305,14 @@ class RolesClient implements RolesClientInterface
             statusCode: $statusCode,
             body: $response->getBody()->getContents(),
         );
+    }
+
+    /**
+     * @return GroupsClientInterface
+     */
+    public function getGroups(): GroupsClientInterface
+    {
+        return $this->groups;
     }
 
     /**

@@ -10,6 +10,7 @@ use Auth0\SDK\API\Management\Types\CreateRoleResponseContent;
 use Auth0\SDK\API\Management\Types\GetRoleResponseContent;
 use Auth0\SDK\API\Management\Roles\Requests\UpdateRoleRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateRoleResponseContent;
+use Auth0\SDK\API\Management\Roles\Groups\GroupsClientInterface;
 use Auth0\SDK\API\Management\Roles\Permissions\PermissionsClientInterface;
 use Auth0\SDK\API\Management\Roles\Users\UsersClientInterface;
 
@@ -98,6 +99,11 @@ interface RolesClientInterface
      * @return ?UpdateRoleResponseContent
      */
     public function update(string $id, UpdateRoleRequestContent $request = new UpdateRoleRequestContent(), ?array $options = null): ?UpdateRoleResponseContent;
+
+    /**
+     * @return GroupsClientInterface
+     */
+    public function getGroups(): GroupsClientInterface;
 
     /**
      * @return PermissionsClientInterface

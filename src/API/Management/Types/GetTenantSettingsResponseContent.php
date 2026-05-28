@@ -235,6 +235,12 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
     private ?string $dynamicClientRegistrationSecurityMode;
 
     /**
+     * @var ?TenantSettingsCountryCodesResponse $countryCodes
+     */
+    #[JsonProperty('country_codes')]
+    private ?TenantSettingsCountryCodesResponse $countryCodes;
+
+    /**
      * @param array{
      *   changePassword?: ?TenantSettingsPasswordPage,
      *   guardianMfaPage?: ?TenantSettingsGuardianPage,
@@ -273,6 +279,7 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
      *   phoneConsolidatedExperience?: ?bool,
      *   enableAiGuide?: ?bool,
      *   dynamicClientRegistrationSecurityMode?: ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode>,
+     *   countryCodes?: ?TenantSettingsCountryCodesResponse,
      * } $values
      */
     public function __construct(
@@ -315,6 +322,7 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
         $this->phoneConsolidatedExperience = $values['phoneConsolidatedExperience'] ?? null;
         $this->enableAiGuide = $values['enableAiGuide'] ?? null;
         $this->dynamicClientRegistrationSecurityMode = $values['dynamicClientRegistrationSecurityMode'] ?? null;
+        $this->countryCodes = $values['countryCodes'] ?? null;
     }
 
     /**
@@ -980,6 +988,24 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
     {
         $this->dynamicClientRegistrationSecurityMode = $value;
         $this->_setField('dynamicClientRegistrationSecurityMode');
+        return $this;
+    }
+
+    /**
+     * @return ?TenantSettingsCountryCodesResponse
+     */
+    public function getCountryCodes(): ?TenantSettingsCountryCodesResponse
+    {
+        return $this->countryCodes;
+    }
+
+    /**
+     * @param ?TenantSettingsCountryCodesResponse $value
+     */
+    public function setCountryCodes(?TenantSettingsCountryCodesResponse $value = null): self
+    {
+        $this->countryCodes = $value;
+        $this->_setField('countryCodes');
         return $this;
     }
 

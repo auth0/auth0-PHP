@@ -17,6 +17,8 @@ use Auth0\SDK\API\Management\Users\Requests\RevokeUserAccessRequestContent;
 use Auth0\SDK\API\Management\Users\AuthenticationMethods\AuthenticationMethodsClientInterface;
 use Auth0\SDK\API\Management\Users\Authenticators\AuthenticatorsClientInterface;
 use Auth0\SDK\API\Management\Users\ConnectedAccounts\ConnectedAccountsClientInterface;
+use Auth0\SDK\API\Management\Users\EffectivePermissions\EffectivePermissionsClientInterface;
+use Auth0\SDK\API\Management\Users\EffectiveRoles\EffectiveRolesClientInterface;
 use Auth0\SDK\API\Management\Users\Enrollments\EnrollmentsClientInterface;
 use Auth0\SDK\API\Management\Users\FederatedConnectionsTokensets\FederatedConnectionsTokensetsClientInterface;
 use Auth0\SDK\API\Management\Users\Groups\GroupsClientInterface;
@@ -288,6 +290,16 @@ interface UsersClientInterface
      * @return ConnectedAccountsClientInterface
      */
     public function getConnectedAccounts(): ConnectedAccountsClientInterface;
+
+    /**
+     * @return EffectivePermissionsClientInterface
+     */
+    public function getEffectivePermissions(): EffectivePermissionsClientInterface;
+
+    /**
+     * @return EffectiveRolesClientInterface
+     */
+    public function getEffectiveRoles(): EffectiveRolesClientInterface;
 
     /**
      * @return EnrollmentsClientInterface

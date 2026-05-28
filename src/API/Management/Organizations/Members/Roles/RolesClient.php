@@ -93,7 +93,7 @@ class RolesClient implements RolesClientInterface
     }
 
     /**
-     * Assign one or more <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> to a user to determine their access for a specific Organization.
+     * Assign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) to a user to determine their access for a specific Organization.
      *
      * Users can be members of multiple Organizations with unique roles assigned for each membership. This action assigns roles to a user only for the specified Organization. Roles cannot be assigned to a user across multiple Organizations in the same call.
      *
@@ -139,7 +139,7 @@ class RolesClient implements RolesClientInterface
     }
 
     /**
-     * Remove one or more Organization-specific <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> from a given user.
+     * Remove one or more Organization-specific [roles](https://auth0.com/docs/manage-users/access-control/rbac) from a given user.
      *
      * Users can be members of multiple Organizations with unique roles assigned for each membership. This action removes roles from a user in relation to the specified Organization. Roles assigned to the user within a different Organization cannot be managed in the same call.
      *

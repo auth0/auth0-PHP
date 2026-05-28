@@ -55,7 +55,7 @@ class UserGrantsClient implements UserGrantsClientInterface
     }
 
     /**
-     * Retrieve the <a href="https://auth0.com/docs/api-auth/which-oauth-flow-to-use">grants</a> associated with your account.
+     * Retrieve the [grants](https://auth0.com/docs/api-auth/which-oauth-flow-to-use) associated with your account.
      *
      * @param ListUserGrantsRequestParameters $request
      * @param ?array{
@@ -173,7 +173,7 @@ class UserGrantsClient implements UserGrantsClientInterface
     }
 
     /**
-     * Retrieve the <a href="https://auth0.com/docs/api-auth/which-oauth-flow-to-use">grants</a> associated with your account.
+     * Retrieve the [grants](https://auth0.com/docs/api-auth/which-oauth-flow-to-use) associated with your account.
      *
      * @param ListUserGrantsRequestParameters $request
      * @param ?array{
