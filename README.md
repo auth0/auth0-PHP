@@ -11,10 +11,10 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 
 ## :rocket: v9 Beta Available
 
-**[v9.0.0-beta.0](https://github.com/auth0/auth0-PHP/releases/tag/9.0.0-beta.0)** features a completely rewritten Management API client, auto-generated from the Auth0 OpenAPI spec using [Fern](https://buildwithfern.com/), with strongly-typed requests/responses, built-in pagination, and automatic token management. The Authentication API is unchanged.
+**[v9.0.0-beta.1](https://github.com/auth0/auth0-PHP/releases/tag/9.0.0-beta.1)** features a completely rewritten Management API client, auto-generated from the Auth0 OpenAPI spec using [Fern](https://buildwithfern.com/), with strongly-typed requests/responses, built-in pagination, and automatic token management. The Authentication API is unchanged.
 
 ```
-composer require auth0/auth0-php:9.0.0-beta.0
+composer require auth0/auth0-php:9.0.0-beta.1
 ```
 
 We'd love for you to try it out and share your feedback! Please [open an issue](https://github.com/auth0/auth0-PHP/issues/new) if you encounter any problems or have suggestions.
