@@ -140,9 +140,15 @@ enum OauthScope: string
     case ReadOrganizationDiscoveryDomains = "read:organization_discovery_domains";
     case UpdateOrganizationDiscoveryDomains = "update:organization_discovery_domains";
     case DeleteOrganizationDiscoveryDomains = "delete:organization_discovery_domains";
+    case CreateOrganizationGroupRoles = "create:organization_group_roles";
+    case ReadOrganizationGroupRoles = "read:organization_group_roles";
+    case DeleteOrganizationGroupRoles = "delete:organization_group_roles";
+    case ReadOrganizationGroups = "read:organization_groups";
     case CreateOrganizationInvitations = "create:organization_invitations";
     case ReadOrganizationInvitations = "read:organization_invitations";
     case DeleteOrganizationInvitations = "delete:organization_invitations";
+    case ReadOrganizationMemberEffectiveRoles = "read:organization_member_effective_roles";
+    case ReadOrganizationMemberRoleSourceGroups = "read:organization_member_role_source_groups";
     case CreateOrganizationMemberRoles = "create:organization_member_roles";
     case ReadOrganizationMemberRoles = "read:organization_member_roles";
     case DeleteOrganizationMemberRoles = "delete:organization_member_roles";
@@ -221,7 +227,11 @@ enum OauthScope: string
     case ReadUserAttributeProfiles = "read:user_attribute_profiles";
     case UpdateUserAttributeProfiles = "update:user_attribute_profiles";
     case DeleteUserAttributeProfiles = "delete:user_attribute_profiles";
+    case ReadUserEffectivePermissions = "read:user_effective_permissions";
+    case ReadUserEffectiveRoles = "read:user_effective_roles";
     case ReadUserIdpTokens = "read:user_idp_tokens";
+    case ReadUserPermissionSourceRoles = "read:user_permission_source_roles";
+    case ReadUserRoleSourceGroups = "read:user_role_source_groups";
     case CreateUserTickets = "create:user_tickets";
     case CreateUsers = "create:users";
     case ReadUsers = "read:users";

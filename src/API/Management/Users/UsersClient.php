@@ -5,6 +5,8 @@ namespace Auth0\SDK\API\Management\Users;
 use Auth0\SDK\API\Management\Users\AuthenticationMethods\AuthenticationMethodsClient;
 use Auth0\SDK\API\Management\Users\Authenticators\AuthenticatorsClient;
 use Auth0\SDK\API\Management\Users\ConnectedAccounts\ConnectedAccountsClient;
+use Auth0\SDK\API\Management\Users\EffectivePermissions\EffectivePermissionsClient;
+use Auth0\SDK\API\Management\Users\EffectiveRoles\EffectiveRolesClient;
 use Auth0\SDK\API\Management\Users\Enrollments\EnrollmentsClient;
 use Auth0\SDK\API\Management\Users\FederatedConnectionsTokensets\FederatedConnectionsTokensetsClient;
 use Auth0\SDK\API\Management\Users\Groups\GroupsClient;
@@ -44,6 +46,8 @@ use Auth0\SDK\API\Management\Users\Requests\RevokeUserAccessRequestContent;
 use Auth0\SDK\API\Management\Users\AuthenticationMethods\AuthenticationMethodsClientInterface;
 use Auth0\SDK\API\Management\Users\Authenticators\AuthenticatorsClientInterface;
 use Auth0\SDK\API\Management\Users\ConnectedAccounts\ConnectedAccountsClientInterface;
+use Auth0\SDK\API\Management\Users\EffectivePermissions\EffectivePermissionsClientInterface;
+use Auth0\SDK\API\Management\Users\EffectiveRoles\EffectiveRolesClientInterface;
 use Auth0\SDK\API\Management\Users\Enrollments\EnrollmentsClientInterface;
 use Auth0\SDK\API\Management\Users\FederatedConnectionsTokensets\FederatedConnectionsTokensetsClientInterface;
 use Auth0\SDK\API\Management\Users\Groups\GroupsClientInterface;
@@ -73,6 +77,16 @@ class UsersClient implements UsersClientInterface
      * @var ConnectedAccountsClient $connectedAccounts
      */
     public ConnectedAccountsClient $connectedAccounts;
+
+    /**
+     * @var EffectivePermissionsClient $effectivePermissions
+     */
+    public EffectivePermissionsClient $effectivePermissions;
+
+    /**
+     * @var EffectiveRolesClient $effectiveRoles
+     */
+    public EffectiveRolesClient $effectiveRoles;
 
     /**
      * @var EnrollmentsClient $enrollments
@@ -169,6 +183,8 @@ class UsersClient implements UsersClientInterface
         $this->authenticationMethods = new AuthenticationMethodsClient($this->client, $this->options);
         $this->authenticators = new AuthenticatorsClient($this->client, $this->options);
         $this->connectedAccounts = new ConnectedAccountsClient($this->client, $this->options);
+        $this->effectivePermissions = new EffectivePermissionsClient($this->client, $this->options);
+        $this->effectiveRoles = new EffectiveRolesClient($this->client, $this->options);
         $this->enrollments = new EnrollmentsClient($this->client, $this->options);
         $this->federatedConnectionsTokensets = new FederatedConnectionsTokensetsClient($this->client, $this->options);
         $this->groups = new GroupsClient($this->client, $this->options);
@@ -696,6 +712,22 @@ class UsersClient implements UsersClientInterface
     public function getConnectedAccounts(): ConnectedAccountsClientInterface
     {
         return $this->connectedAccounts;
+    }
+
+    /**
+     * @return EffectivePermissionsClientInterface
+     */
+    public function getEffectivePermissions(): EffectivePermissionsClientInterface
+    {
+        return $this->effectivePermissions;
+    }
+
+    /**
+     * @return EffectiveRolesClientInterface
+     */
+    public function getEffectiveRoles(): EffectiveRolesClientInterface
+    {
+        return $this->effectiveRoles;
     }
 
     /**

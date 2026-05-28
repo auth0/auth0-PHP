@@ -18,6 +18,7 @@ use Auth0\SDK\API\Management\Types\TenantOidcLogoutSettings;
 use Auth0\SDK\API\Management\Types\TenantSettingsMtls;
 use Auth0\SDK\API\Management\Types\TenantSettingsResourceParameterProfile;
 use Auth0\SDK\API\Management\Types\TenantSettingsDynamicClientRegistrationSecurityMode;
+use Auth0\SDK\API\Management\Types\TenantSettingsCountryCodes;
 
 class UpdateTenantSettingsRequestContent extends JsonSerializableType
 {
@@ -242,6 +243,12 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     private ?string $dynamicClientRegistrationSecurityMode;
 
     /**
+     * @var ?TenantSettingsCountryCodes $countryCodes
+     */
+    #[JsonProperty('country_codes')]
+    private ?TenantSettingsCountryCodes $countryCodes;
+
+    /**
      * @param array{
      *   changePassword?: ?TenantSettingsPasswordPage,
      *   deviceFlow?: ?TenantSettingsDeviceFlow,
@@ -279,6 +286,7 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      *   enableAiGuide?: ?bool,
      *   phoneConsolidatedExperience?: ?bool,
      *   dynamicClientRegistrationSecurityMode?: ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode>,
+     *   countryCodes?: ?TenantSettingsCountryCodes,
      * } $values
      */
     public function __construct(
@@ -320,6 +328,7 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
         $this->enableAiGuide = $values['enableAiGuide'] ?? null;
         $this->phoneConsolidatedExperience = $values['phoneConsolidatedExperience'] ?? null;
         $this->dynamicClientRegistrationSecurityMode = $values['dynamicClientRegistrationSecurityMode'] ?? null;
+        $this->countryCodes = $values['countryCodes'] ?? null;
     }
 
     /**
@@ -967,6 +976,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     {
         $this->dynamicClientRegistrationSecurityMode = $value;
         $this->_setField('dynamicClientRegistrationSecurityMode');
+        return $this;
+    }
+
+    /**
+     * @return ?TenantSettingsCountryCodes
+     */
+    public function getCountryCodes(): ?TenantSettingsCountryCodes
+    {
+        return $this->countryCodes;
+    }
+
+    /**
+     * @param ?TenantSettingsCountryCodes $value
+     */
+    public function setCountryCodes(?TenantSettingsCountryCodes $value = null): self
+    {
+        $this->countryCodes = $value;
+        $this->_setField('countryCodes');
         return $this;
     }
 }

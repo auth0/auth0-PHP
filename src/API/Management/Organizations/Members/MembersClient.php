@@ -2,6 +2,7 @@
 
 namespace Auth0\SDK\API\Management\Organizations\Members;
 
+use Auth0\SDK\API\Management\Organizations\Members\EffectiveRoles\EffectiveRolesClient;
 use Auth0\SDK\API\Management\Organizations\Members\Roles\RolesClient;
 use Psr\Http\Client\ClientInterface;
 use Auth0\SDK\API\Management\Core\Client\RawClient;
@@ -18,11 +19,17 @@ use Auth0\SDK\API\Management\Environments;
 use Auth0\SDK\API\Management\Core\Client\HttpMethod;
 use Psr\Http\Client\ClientExceptionInterface;
 use Auth0\SDK\API\Management\Organizations\Members\Requests\DeleteOrganizationMembersRequestContent;
+use Auth0\SDK\API\Management\Organizations\Members\EffectiveRoles\EffectiveRolesClientInterface;
 use Auth0\SDK\API\Management\Organizations\Members\Roles\RolesClientInterface;
 use JsonException;
 
 class MembersClient implements MembersClientInterface
 {
+    /**
+     * @var EffectiveRolesClient $effectiveRoles
+     */
+    public EffectiveRolesClient $effectiveRoles;
+
     /**
      * @var RolesClient $roles
      */
@@ -60,6 +67,7 @@ class MembersClient implements MembersClientInterface
     ) {
         $this->client = $client;
         $this->options = $options ?? [];
+        $this->effectiveRoles = new EffectiveRolesClient($this->client, $this->options);
         $this->roles = new RolesClient($this->client, $this->options);
     }
 
@@ -67,14 +75,8 @@ class MembersClient implements MembersClientInterface
      * List organization members.
      * This endpoint is subject to eventual consistency. New users may not be immediately included in the response and deleted users may not be immediately removed from it.
      *
-     * <ul>
-     *   <li>
-     *     Use the <code>fields</code> parameter to optionally define the specific member details retrieved. If <code>fields</code> is left blank, all fields (except roles) are returned.
-     *   </li>
-     *   <li>
-     *     Member roles are not sent by default. Use <code>fields=roles</code> to retrieve the roles assigned to each listed member. To use this parameter, you must include the <code>read:organization_member_roles</code> scope in the token.
-     *   </li>
-     * </ul>
+     * - Use the `fields` parameter to optionally define the specific member details retrieved. If `fields` is left blank, all fields (except roles) are returned.
+     * - Member roles are not sent by default. Use `fields=roles` to retrieve the roles assigned to each listed member. To use this parameter, you must include the `read:organization_member_roles` scope in the token.
      *
      * This endpoint supports two types of pagination:
      *
@@ -83,9 +85,9 @@ class MembersClient implements MembersClientInterface
      *
      * Checkpoint pagination must be used if you need to retrieve more than 1000 organization members.
      *
-     * <h2>Checkpoint Pagination</h2>
+     * **Checkpoint Pagination**
      *
-     * To search by checkpoint, use the following parameters: - from: Optional id from which to start selection. - take: The total amount of entries to retrieve when using the from parameter. Defaults to 50. Note: The first time you call this endpoint using Checkpoint Pagination, you should omit the <code>from</code> parameter. If there are more results, a <code>next</code> value will be included in the response. You can use this for subsequent API calls. When <code>next</code> is no longer included in the response, this indicates there are no more pages remaining.
+     * To search by checkpoint, use the following parameters: - from: Optional id from which to start selection. - take: The total amount of entries to retrieve when using the from parameter. Defaults to 50. Note: The first time you call this endpoint using Checkpoint Pagination, you should omit the `from` parameter. If there are more results, a `next` value will be included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, this indicates there are no more pages remaining.
      *
      * @param string $id Organization identifier.
      * @param ListOrganizationMembersRequestParameters $request
@@ -115,9 +117,9 @@ class MembersClient implements MembersClientInterface
     }
 
     /**
-     * Set one or more existing users as members of a specific <a href="https://auth0.com/docs/manage-users/organizations">Organization</a>.
+     * Set one or more existing users as members of a specific [Organization](https://auth0.com/docs/manage-users/organizations).
      *
-     * To add a user to an Organization through this action, the user must already exist in your tenant. If a user does not yet exist, you can <a href="https://auth0.com/docs/manage-users/organizations/configure-organizations/invite-members">invite them to create an account</a>, manually create them through the Auth0 Dashboard, or use the Management API.
+     * To add a user to an Organization through this action, the user must already exist in your tenant. If a user does not yet exist, you can [invite them to create an account](https://auth0.com/docs/manage-users/organizations/configure-organizations/invite-members), manually create them through the Auth0 Dashboard, or use the Management API.
      *
      * @param string $id Organization identifier.
      * @param CreateOrganizationMemberRequestContent $request
@@ -201,6 +203,14 @@ class MembersClient implements MembersClientInterface
     }
 
     /**
+     * @return EffectiveRolesClientInterface
+     */
+    public function getEffectiveRoles(): EffectiveRolesClientInterface
+    {
+        return $this->effectiveRoles;
+    }
+
+    /**
      * @return RolesClientInterface
      */
     public function getRoles(): RolesClientInterface
@@ -212,14 +222,8 @@ class MembersClient implements MembersClientInterface
      * List organization members.
      * This endpoint is subject to eventual consistency. New users may not be immediately included in the response and deleted users may not be immediately removed from it.
      *
-     * <ul>
-     *   <li>
-     *     Use the <code>fields</code> parameter to optionally define the specific member details retrieved. If <code>fields</code> is left blank, all fields (except roles) are returned.
-     *   </li>
-     *   <li>
-     *     Member roles are not sent by default. Use <code>fields=roles</code> to retrieve the roles assigned to each listed member. To use this parameter, you must include the <code>read:organization_member_roles</code> scope in the token.
-     *   </li>
-     * </ul>
+     * - Use the `fields` parameter to optionally define the specific member details retrieved. If `fields` is left blank, all fields (except roles) are returned.
+     * - Member roles are not sent by default. Use `fields=roles` to retrieve the roles assigned to each listed member. To use this parameter, you must include the `read:organization_member_roles` scope in the token.
      *
      * This endpoint supports two types of pagination:
      *
@@ -228,9 +232,9 @@ class MembersClient implements MembersClientInterface
      *
      * Checkpoint pagination must be used if you need to retrieve more than 1000 organization members.
      *
-     * <h2>Checkpoint Pagination</h2>
+     * **Checkpoint Pagination**
      *
-     * To search by checkpoint, use the following parameters: - from: Optional id from which to start selection. - take: The total amount of entries to retrieve when using the from parameter. Defaults to 50. Note: The first time you call this endpoint using Checkpoint Pagination, you should omit the <code>from</code> parameter. If there are more results, a <code>next</code> value will be included in the response. You can use this for subsequent API calls. When <code>next</code> is no longer included in the response, this indicates there are no more pages remaining.
+     * To search by checkpoint, use the following parameters: - from: Optional id from which to start selection. - take: The total amount of entries to retrieve when using the from parameter. Defaults to 50. Note: The first time you call this endpoint using Checkpoint Pagination, you should omit the `from` parameter. If there are more results, a `next` value will be included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, this indicates there are no more pages remaining.
      *
      * @param string $id Organization identifier.
      * @param ListOrganizationMembersRequestParameters $request
