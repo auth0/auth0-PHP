@@ -30,13 +30,13 @@ class CreateSelfServiceProfileRequestContent extends JsonSerializableType
     private ?SelfServiceProfileBrandingProperties $branding;
 
     /**
-     * @var ?array<value-of<SelfServiceProfileAllowedStrategyEnum>> $allowedStrategies List of IdP strategies that will be shown to users during the Self-Service SSO flow. Possible values: [`oidc`, `samlp`, `waad`, `google-apps`, `adfs`, `okta`, `auth0-samlp`, `okta-samlp`, `keycloak-samlp`, `pingfederate`]
+     * @var ?array<value-of<SelfServiceProfileAllowedStrategyEnum>> $allowedStrategies List of IdP strategies that will be shown to users during the Self-Service Enterprise Configuration flow. Possible values: [`oidc`, `samlp`, `waad`, `google-apps`, `adfs`, `okta`, `auth0-samlp`, `okta-samlp`, `keycloak-samlp`, `pingfederate`]
      */
     #[JsonProperty('allowed_strategies'), ArrayType(['string'])]
     private ?array $allowedStrategies;
 
     /**
-     * @var ?array<SelfServiceProfileUserAttribute> $userAttributes List of attributes to be mapped that will be shown to the user during the SS-SSO flow.
+     * @var ?array<SelfServiceProfileUserAttribute> $userAttributes List of attributes to be mapped that will be shown to the user during the Self-Service Enterprise Configuration flow.
      */
     #[JsonProperty('user_attributes'), ArrayType([SelfServiceProfileUserAttribute::class])]
     private ?array $userAttributes;

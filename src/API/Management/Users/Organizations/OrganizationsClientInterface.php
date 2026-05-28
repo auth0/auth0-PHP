@@ -9,7 +9,7 @@ use Auth0\SDK\API\Management\Types\Organization;
 interface OrganizationsClientInterface
 {
     /**
-     * Retrieve list of the specified user's current Organization memberships. User must be specified by user ID. For more information, review <a href="https://auth0.com/docs/manage-users/organizations">Auth0 Organizations</a>.
+     * Retrieve list of the specified user's current Organization memberships. User must be specified by user ID. For more information, review [Auth0 Organizations](https://auth0.com/docs/manage-users/organizations).
      *
      * @param string $id ID of the user to retrieve the organizations for.
      * @param ListUserOrganizationsRequestParameters $request

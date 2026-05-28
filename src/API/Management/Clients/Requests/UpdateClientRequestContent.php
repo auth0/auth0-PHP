@@ -15,6 +15,7 @@ use Auth0\SDK\API\Management\Types\UpdateTokenQuota;
 use Auth0\SDK\API\Management\Types\ClientAddons;
 use Auth0\SDK\API\Management\Types\ClientMobile;
 use Auth0\SDK\API\Management\Types\NativeSocialLogin;
+use Auth0\SDK\API\Management\Types\FedCmLogin;
 use Auth0\SDK\API\Management\Types\ClientRefreshTokenConfiguration;
 use Auth0\SDK\API\Management\Types\ClientDefaultOrganization;
 use Auth0\SDK\API\Management\Types\ClientOrganizationUsagePatchEnum;
@@ -25,7 +26,10 @@ use Auth0\SDK\API\Management\Types\ClientSignedRequestObjectWithCredentialId;
 use Auth0\SDK\API\Management\Types\ClientComplianceLevelEnum;
 use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfigurationOrNull;
 use Auth0\SDK\API\Management\Types\ExpressConfigurationOrNull;
+use Auth0\SDK\API\Management\Types\ClientMyOrganizationPatchConfiguration;
 use Auth0\SDK\API\Management\Types\AsyncApprovalNotificationsChannelsEnum;
+use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
+use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
 
 class UpdateClientRequestContent extends JsonSerializableType
 {
@@ -240,6 +244,12 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?NativeSocialLogin $nativeSocialLogin;
 
     /**
+     * @var ?FedCmLogin $fedcmLogin
+     */
+    #[JsonProperty('fedcm_login')]
+    private ?FedCmLogin $fedcmLogin;
+
+    /**
      * @var ?ClientRefreshTokenConfiguration $refreshToken
      */
     #[JsonProperty('refresh_token')]
@@ -328,10 +338,28 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?ExpressConfigurationOrNull $expressConfiguration;
 
     /**
+     * @var ?ClientMyOrganizationPatchConfiguration $myOrganizationConfiguration
+     */
+    #[JsonProperty('my_organization_configuration')]
+    private ?ClientMyOrganizationPatchConfiguration $myOrganizationConfiguration;
+
+    /**
      * @var ?array<value-of<AsyncApprovalNotificationsChannelsEnum>> $asyncApprovalNotificationChannels
      */
     #[JsonProperty('async_approval_notification_channels'), ArrayType(['string'])]
     private ?array $asyncApprovalNotificationChannels;
+
+    /**
+     * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
+     */
+    #[JsonProperty('third_party_security_mode')]
+    private ?string $thirdPartySecurityMode;
+
+    /**
+     * @var ?value-of<ClientRedirectionPolicyEnum> $redirectionPolicy
+     */
+    #[JsonProperty('redirection_policy')]
+    private ?string $redirectionPolicy;
 
     /**
      * @param array{
@@ -370,6 +398,7 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   mobile?: ?ClientMobile,
      *   initiateLoginUri?: ?string,
      *   nativeSocialLogin?: ?NativeSocialLogin,
+     *   fedcmLogin?: ?FedCmLogin,
      *   refreshToken?: ?ClientRefreshTokenConfiguration,
      *   defaultOrganization?: ?ClientDefaultOrganization,
      *   organizationUsage?: ?value-of<ClientOrganizationUsagePatchEnum>,
@@ -384,7 +413,10 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   tokenExchange?: ?ClientTokenExchangeConfigurationOrNull,
      *   parRequestExpiry?: ?int,
      *   expressConfiguration?: ?ExpressConfigurationOrNull,
+     *   myOrganizationConfiguration?: ?ClientMyOrganizationPatchConfiguration,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
+     *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
+     *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      * } $values
      */
     public function __construct(
@@ -425,6 +457,7 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->mobile = $values['mobile'] ?? null;
         $this->initiateLoginUri = $values['initiateLoginUri'] ?? null;
         $this->nativeSocialLogin = $values['nativeSocialLogin'] ?? null;
+        $this->fedcmLogin = $values['fedcmLogin'] ?? null;
         $this->refreshToken = $values['refreshToken'] ?? null;
         $this->defaultOrganization = $values['defaultOrganization'] ?? null;
         $this->organizationUsage = $values['organizationUsage'] ?? null;
@@ -439,7 +472,10 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->tokenExchange = $values['tokenExchange'] ?? null;
         $this->parRequestExpiry = $values['parRequestExpiry'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
+        $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
+        $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
+        $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
     }
 
     /**
@@ -1073,6 +1109,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     }
 
     /**
+     * @return ?FedCmLogin
+     */
+    public function getFedcmLogin(): ?FedCmLogin
+    {
+        return $this->fedcmLogin;
+    }
+
+    /**
+     * @param ?FedCmLogin $value
+     */
+    public function setFedcmLogin(?FedCmLogin $value = null): self
+    {
+        $this->fedcmLogin = $value;
+        $this->_setField('fedcmLogin');
+        return $this;
+    }
+
+    /**
      * @return ?ClientRefreshTokenConfiguration
      */
     public function getRefreshToken(): ?ClientRefreshTokenConfiguration
@@ -1325,6 +1379,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     }
 
     /**
+     * @return ?ClientMyOrganizationPatchConfiguration
+     */
+    public function getMyOrganizationConfiguration(): ?ClientMyOrganizationPatchConfiguration
+    {
+        return $this->myOrganizationConfiguration;
+    }
+
+    /**
+     * @param ?ClientMyOrganizationPatchConfiguration $value
+     */
+    public function setMyOrganizationConfiguration(?ClientMyOrganizationPatchConfiguration $value = null): self
+    {
+        $this->myOrganizationConfiguration = $value;
+        $this->_setField('myOrganizationConfiguration');
+        return $this;
+    }
+
+    /**
      * @return ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>
      */
     public function getAsyncApprovalNotificationChannels(): ?array
@@ -1339,6 +1411,42 @@ class UpdateClientRequestContent extends JsonSerializableType
     {
         $this->asyncApprovalNotificationChannels = $value;
         $this->_setField('asyncApprovalNotificationChannels');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientThirdPartySecurityModeEnum>
+     */
+    public function getThirdPartySecurityMode(): ?string
+    {
+        return $this->thirdPartySecurityMode;
+    }
+
+    /**
+     * @param ?value-of<ClientThirdPartySecurityModeEnum> $value
+     */
+    public function setThirdPartySecurityMode(?string $value = null): self
+    {
+        $this->thirdPartySecurityMode = $value;
+        $this->_setField('thirdPartySecurityMode');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientRedirectionPolicyEnum>
+     */
+    public function getRedirectionPolicy(): ?string
+    {
+        return $this->redirectionPolicy;
+    }
+
+    /**
+     * @param ?value-of<ClientRedirectionPolicyEnum> $value
+     */
+    public function setRedirectionPolicy(?string $value = null): self
+    {
+        $this->redirectionPolicy = $value;
+        $this->_setField('redirectionPolicy');
         return $this;
     }
 }

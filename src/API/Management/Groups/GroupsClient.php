@@ -3,6 +3,7 @@
 namespace Auth0\SDK\API\Management\Groups;
 
 use Auth0\SDK\API\Management\Groups\Members\MembersClient;
+use Auth0\SDK\API\Management\Groups\Roles\RolesClient;
 use Psr\Http\Client\ClientInterface;
 use Auth0\SDK\API\Management\Core\Client\RawClient;
 use Auth0\SDK\API\Management\Groups\Requests\ListGroupsRequestParameters;
@@ -19,6 +20,7 @@ use Auth0\SDK\API\Management\Core\Client\HttpMethod;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Auth0\SDK\API\Management\Groups\Members\MembersClientInterface;
+use Auth0\SDK\API\Management\Groups\Roles\RolesClientInterface;
 
 class GroupsClient implements GroupsClientInterface
 {
@@ -26,6 +28,11 @@ class GroupsClient implements GroupsClientInterface
      * @var MembersClient $members
      */
     public MembersClient $members;
+
+    /**
+     * @var RolesClient $roles
+     */
+    public RolesClient $roles;
 
     /**
      * @var array{
@@ -60,6 +67,7 @@ class GroupsClient implements GroupsClientInterface
         $this->client = $client;
         $this->options = $options ?? [];
         $this->members = new MembersClient($this->client, $this->options);
+        $this->roles = new RolesClient($this->client, $this->options);
     }
 
     /**
@@ -189,6 +197,14 @@ class GroupsClient implements GroupsClientInterface
     }
 
     /**
+     * @return RolesClientInterface
+     */
+    public function getRoles(): RolesClientInterface
+    {
+        return $this->roles;
+    }
+
+    /**
      * List all groups in your tenant.
      *
      * @param ListGroupsRequestParameters $request
@@ -216,6 +232,9 @@ class GroupsClient implements GroupsClientInterface
         }
         if ($request->getExternalId() != null) {
             $query['external_id'] = $request->getExternalId();
+        }
+        if ($request->getSearch() != null) {
+            $query['search'] = $request->getSearch();
         }
         if ($request->getFields() != null) {
             $query['fields'] = $request->getFields();

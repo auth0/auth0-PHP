@@ -9,7 +9,7 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 class UpdateEmailProviderResponseContent extends JsonSerializableType
 {
     /**
-     * @var ?string $name Name of the email provider. Can be `mailgun`, `mandrill`, `sendgrid`, `ses`, `sparkpost`, `smtp`, `azure_cs`, `ms365`, or `custom`.
+     * @var ?string $name Name of the email provider. Can be `mailgun`, `mandrill`, `sendgrid`, `resend`, `ses`, `sparkpost`, `smtp`, `azure_cs`, `ms365`, or `custom`.
      */
     #[JsonProperty('name')]
     private ?string $name;

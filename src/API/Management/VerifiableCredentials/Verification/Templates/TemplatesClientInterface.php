@@ -14,7 +14,7 @@ use Auth0\SDK\API\Management\Types\UpdateVerifiableCredentialTemplateResponseCon
 interface TemplatesClientInterface
 {
     /**
-     * List a verifiable credential templates.
+     * List verifiable credential templates.
      *
      * @param ListVerifiableCredentialTemplatesRequestParameters $request
      * @param ?array{

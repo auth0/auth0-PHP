@@ -59,6 +59,12 @@ class ConnectedAccount extends JsonSerializableType
     private ?DateTime $expiresAt;
 
     /**
+     * @var ?string $organizationId The identifier of the organization associated with the connected account.
+     */
+    #[JsonProperty('organization_id')]
+    private ?string $organizationId;
+
+    /**
      * @param array{
      *   id: string,
      *   connection: string,
@@ -68,6 +74,7 @@ class ConnectedAccount extends JsonSerializableType
      *   createdAt: DateTime,
      *   scopes?: ?array<string>,
      *   expiresAt?: ?DateTime,
+     *   organizationId?: ?string,
      * } $values
      */
     public function __construct(
@@ -81,6 +88,7 @@ class ConnectedAccount extends JsonSerializableType
         $this->scopes = $values['scopes'] ?? null;
         $this->createdAt = $values['createdAt'];
         $this->expiresAt = $values['expiresAt'] ?? null;
+        $this->organizationId = $values['organizationId'] ?? null;
     }
 
     /**
@@ -224,6 +232,24 @@ class ConnectedAccount extends JsonSerializableType
     {
         $this->expiresAt = $value;
         $this->_setField('expiresAt');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getOrganizationId(): ?string
+    {
+        return $this->organizationId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setOrganizationId(?string $value = null): self
+    {
+        $this->organizationId = $value;
+        $this->_setField('organizationId');
         return $this;
     }
 

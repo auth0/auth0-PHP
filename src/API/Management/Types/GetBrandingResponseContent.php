@@ -26,6 +26,12 @@ class GetBrandingResponseContent extends JsonSerializableType
     private ?string $logoUrl;
 
     /**
+     * @var ?BrandingIdentifiers $identifiers
+     */
+    #[JsonProperty('identifiers')]
+    private ?BrandingIdentifiers $identifiers;
+
+    /**
      * @var ?BrandingFont $font
      */
     #[JsonProperty('font')]
@@ -36,6 +42,7 @@ class GetBrandingResponseContent extends JsonSerializableType
      *   colors?: ?BrandingColors,
      *   faviconUrl?: ?string,
      *   logoUrl?: ?string,
+     *   identifiers?: ?BrandingIdentifiers,
      *   font?: ?BrandingFont,
      * } $values
      */
@@ -45,6 +52,7 @@ class GetBrandingResponseContent extends JsonSerializableType
         $this->colors = $values['colors'] ?? null;
         $this->faviconUrl = $values['faviconUrl'] ?? null;
         $this->logoUrl = $values['logoUrl'] ?? null;
+        $this->identifiers = $values['identifiers'] ?? null;
         $this->font = $values['font'] ?? null;
     }
 
@@ -99,6 +107,24 @@ class GetBrandingResponseContent extends JsonSerializableType
     {
         $this->logoUrl = $value;
         $this->_setField('logoUrl');
+        return $this;
+    }
+
+    /**
+     * @return ?BrandingIdentifiers
+     */
+    public function getIdentifiers(): ?BrandingIdentifiers
+    {
+        return $this->identifiers;
+    }
+
+    /**
+     * @param ?BrandingIdentifiers $value
+     */
+    public function setIdentifiers(?BrandingIdentifiers $value = null): self
+    {
+        $this->identifiers = $value;
+        $this->_setField('identifiers');
         return $this;
     }
 

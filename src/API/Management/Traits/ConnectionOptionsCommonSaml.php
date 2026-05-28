@@ -2,6 +2,7 @@
 
 namespace Auth0\SDK\API\Management\Traits;
 
+use Auth0\SDK\API\Management\Types\ConnectionAssertionDecryptionSettings;
 use Auth0\SDK\API\Management\Types\ConnectionDecryptionKeySamlCert;
 use Auth0\SDK\API\Management\Types\ConnectionDigestAlgorithmEnumSaml;
 use Auth0\SDK\API\Management\Types\ConnectionOptionsIdpinitiatedSaml;
@@ -17,6 +18,7 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 /**
  * Common options for SAML-based enterprise connections (shared by samlp and pingfederate).
  *
+ * @property ?ConnectionAssertionDecryptionSettings $assertionDecryptionSettings
  * @property ?string $cert
  * @property (
  *    ConnectionDecryptionKeySamlCert
@@ -41,6 +43,12 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
  */
 trait ConnectionOptionsCommonSaml
 {
+    /**
+     * @var ?ConnectionAssertionDecryptionSettings $assertionDecryptionSettings
+     */
+    #[JsonProperty('assertion_decryption_settings')]
+    private ?ConnectionAssertionDecryptionSettings $assertionDecryptionSettings;
+
     /**
      * @var ?string $cert
      */
@@ -136,6 +144,24 @@ trait ConnectionOptionsCommonSaml
      */
     #[JsonProperty('upstream_params'), ArrayType(['string' => new Union(new Union(ConnectionUpstreamAlias::class, ConnectionUpstreamValue::class), 'null')])]
     private ?array $upstreamParams;
+
+    /**
+     * @return ?ConnectionAssertionDecryptionSettings
+     */
+    public function getAssertionDecryptionSettings(): ?ConnectionAssertionDecryptionSettings
+    {
+        return $this->assertionDecryptionSettings;
+    }
+
+    /**
+     * @param ?ConnectionAssertionDecryptionSettings $value
+     */
+    public function setAssertionDecryptionSettings(?ConnectionAssertionDecryptionSettings $value = null): self
+    {
+        $this->assertionDecryptionSettings = $value;
+        $this->_setField('assertionDecryptionSettings');
+        return $this;
+    }
 
     /**
      * @return ?string

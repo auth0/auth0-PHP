@@ -7,6 +7,7 @@ use Auth0\SDK\API\Management\Core\Pagination\Pager;
 use Auth0\SDK\API\Management\Types\Group;
 use Auth0\SDK\API\Management\Types\GetGroupResponseContent;
 use Auth0\SDK\API\Management\Groups\Members\MembersClientInterface;
+use Auth0\SDK\API\Management\Groups\Roles\RolesClientInterface;
 
 interface GroupsClientInterface
 {
@@ -61,4 +62,9 @@ interface GroupsClientInterface
      * @return MembersClientInterface
      */
     public function getMembers(): MembersClientInterface;
+
+    /**
+     * @return RolesClientInterface
+     */
+    public function getRoles(): RolesClientInterface;
 }

@@ -106,6 +106,15 @@ class UpdateUserResponseContent extends JsonSerializableType
     private ?array $multifactor;
 
     /**
+     * @var (
+     *    string
+     *   |array<string, mixed>
+     * )|null $multifactorLastModified
+     */
+    #[JsonProperty('multifactor_last_modified'), Union('string', ['string' => 'mixed'], 'null')]
+    private string|array|null $multifactorLastModified;
+
+    /**
      * @var ?string $lastIp Last IP address from which this user logged in.
      */
     #[JsonProperty('last_ip')]
@@ -119,6 +128,15 @@ class UpdateUserResponseContent extends JsonSerializableType
      */
     #[JsonProperty('last_login'), Union('string', ['string' => 'mixed'], 'null')]
     private string|array|null $lastLogin;
+
+    /**
+     * @var (
+     *    string
+     *   |array<string, mixed>
+     * )|null $lastPasswordReset
+     */
+    #[JsonProperty('last_password_reset'), Union('string', ['string' => 'mixed'], 'null')]
+    private string|array|null $lastPasswordReset;
 
     /**
      * @var ?int $loginsCount Total number of logins this user has performed.
@@ -167,8 +185,16 @@ class UpdateUserResponseContent extends JsonSerializableType
      *   name?: ?string,
      *   nickname?: ?string,
      *   multifactor?: ?array<string>,
+     *   multifactorLastModified?: (
+     *    string
+     *   |array<string, mixed>
+     * )|null,
      *   lastIp?: ?string,
      *   lastLogin?: (
+     *    string
+     *   |array<string, mixed>
+     * )|null,
+     *   lastPasswordReset?: (
      *    string
      *   |array<string, mixed>
      * )|null,
@@ -196,8 +222,10 @@ class UpdateUserResponseContent extends JsonSerializableType
         $this->name = $values['name'] ?? null;
         $this->nickname = $values['nickname'] ?? null;
         $this->multifactor = $values['multifactor'] ?? null;
+        $this->multifactorLastModified = $values['multifactorLastModified'] ?? null;
         $this->lastIp = $values['lastIp'] ?? null;
         $this->lastLogin = $values['lastLogin'] ?? null;
+        $this->lastPasswordReset = $values['lastPasswordReset'] ?? null;
         $this->loginsCount = $values['loginsCount'] ?? null;
         $this->blocked = $values['blocked'] ?? null;
         $this->givenName = $values['givenName'] ?? null;
@@ -487,6 +515,30 @@ class UpdateUserResponseContent extends JsonSerializableType
     }
 
     /**
+     * @return (
+     *    string
+     *   |array<string, mixed>
+     * )|null
+     */
+    public function getMultifactorLastModified(): string|array|null
+    {
+        return $this->multifactorLastModified;
+    }
+
+    /**
+     * @param (
+     *    string
+     *   |array<string, mixed>
+     * )|null $value
+     */
+    public function setMultifactorLastModified(string|array|null $value = null): self
+    {
+        $this->multifactorLastModified = $value;
+        $this->_setField('multifactorLastModified');
+        return $this;
+    }
+
+    /**
      * @return ?string
      */
     public function getLastIp(): ?string
@@ -525,6 +577,30 @@ class UpdateUserResponseContent extends JsonSerializableType
     {
         $this->lastLogin = $value;
         $this->_setField('lastLogin');
+        return $this;
+    }
+
+    /**
+     * @return (
+     *    string
+     *   |array<string, mixed>
+     * )|null
+     */
+    public function getLastPasswordReset(): string|array|null
+    {
+        return $this->lastPasswordReset;
+    }
+
+    /**
+     * @param (
+     *    string
+     *   |array<string, mixed>
+     * )|null $value
+     */
+    public function setLastPasswordReset(string|array|null $value = null): self
+    {
+        $this->lastPasswordReset = $value;
+        $this->_setField('lastPasswordReset');
         return $this;
     }
 

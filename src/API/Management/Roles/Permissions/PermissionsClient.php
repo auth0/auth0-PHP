@@ -90,7 +90,7 @@ class PermissionsClient implements PermissionsClientInterface
     }
 
     /**
-     * Add one or more <a href="https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions">permissions</a> to a specified user role.
+     * Add one or more [permissions](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions) to a specified user role.
      *
      * @param string $id ID of the role to add permissions to.
      * @param AddRolePermissionsRequestContent $request
@@ -133,7 +133,7 @@ class PermissionsClient implements PermissionsClientInterface
     }
 
     /**
-     * Remove one or more <a href="https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions">permissions</a> from a specified user role.
+     * Remove one or more [permissions](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions) from a specified user role.
      *
      * @param string $id ID of the role to remove permissions from.
      * @param DeleteRolePermissionsRequestContent $request

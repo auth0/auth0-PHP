@@ -13,6 +13,12 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 class ConnectionOptionsCommonSaml extends JsonSerializableType
 {
     /**
+     * @var ?ConnectionAssertionDecryptionSettings $assertionDecryptionSettings
+     */
+    #[JsonProperty('assertion_decryption_settings')]
+    private ?ConnectionAssertionDecryptionSettings $assertionDecryptionSettings;
+
+    /**
      * @var ?string $cert
      */
     #[JsonProperty('cert')]
@@ -110,6 +116,7 @@ class ConnectionOptionsCommonSaml extends JsonSerializableType
 
     /**
      * @param array{
+     *   assertionDecryptionSettings?: ?ConnectionAssertionDecryptionSettings,
      *   cert?: ?string,
      *   decryptionKey?: (
      *    ConnectionDecryptionKeySamlCert
@@ -136,6 +143,7 @@ class ConnectionOptionsCommonSaml extends JsonSerializableType
     public function __construct(
         array $values = [],
     ) {
+        $this->assertionDecryptionSettings = $values['assertionDecryptionSettings'] ?? null;
         $this->cert = $values['cert'] ?? null;
         $this->decryptionKey = $values['decryptionKey'] ?? null;
         $this->digestAlgorithm = $values['digestAlgorithm'] ?? null;
@@ -151,6 +159,24 @@ class ConnectionOptionsCommonSaml extends JsonSerializableType
         $this->tenantDomain = $values['tenantDomain'] ?? null;
         $this->thumbprints = $values['thumbprints'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
+    }
+
+    /**
+     * @return ?ConnectionAssertionDecryptionSettings
+     */
+    public function getAssertionDecryptionSettings(): ?ConnectionAssertionDecryptionSettings
+    {
+        return $this->assertionDecryptionSettings;
+    }
+
+    /**
+     * @param ?ConnectionAssertionDecryptionSettings $value
+     */
+    public function setAssertionDecryptionSettings(?ConnectionAssertionDecryptionSettings $value = null): self
+    {
+        $this->assertionDecryptionSettings = $value;
+        $this->_setField('assertionDecryptionSettings');
+        return $this;
     }
 
     /**

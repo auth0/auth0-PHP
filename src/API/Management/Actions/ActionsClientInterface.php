@@ -86,7 +86,7 @@ interface ActionsClientInterface
     public function delete(string $id, DeleteActionRequestParameters $request = new DeleteActionRequestParameters(), ?array $options = null): void;
 
     /**
-     * Update an existing action. If this action is currently bound to a trigger, updating it will <strong>not</strong> affect any user flows until the action is deployed.
+     * Update an existing action. If this action is currently bound to a trigger, updating it will **not** affect any user flows until the action is deployed.
      *
      * @param string $id The id of the action to update.
      * @param UpdateActionRequestContent $request

@@ -4,6 +4,7 @@ namespace Auth0\SDK\API\Management\ClientGrants\Requests;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
+use Auth0\SDK\API\Management\Types\ClientGrantDefaultForEnum;
 use Auth0\SDK\API\Management\Types\ClientGrantOrganizationUsageEnum;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\ClientGrantSubjectTypeEnum;
@@ -21,6 +22,12 @@ class CreateClientGrantRequestContent extends JsonSerializableType
      */
     #[JsonProperty('audience')]
     private string $audience;
+
+    /**
+     * @var ?value-of<ClientGrantDefaultForEnum> $defaultFor
+     */
+    #[JsonProperty('default_for')]
+    private ?string $defaultFor;
 
     /**
      * @var ?value-of<ClientGrantOrganizationUsageEnum> $organizationUsage
@@ -62,6 +69,7 @@ class CreateClientGrantRequestContent extends JsonSerializableType
      * @param array{
      *   audience: string,
      *   clientId?: ?string,
+     *   defaultFor?: ?value-of<ClientGrantDefaultForEnum>,
      *   organizationUsage?: ?value-of<ClientGrantOrganizationUsageEnum>,
      *   allowAnyOrganization?: ?bool,
      *   scope?: ?array<string>,
@@ -75,6 +83,7 @@ class CreateClientGrantRequestContent extends JsonSerializableType
     ) {
         $this->clientId = $values['clientId'] ?? null;
         $this->audience = $values['audience'];
+        $this->defaultFor = $values['defaultFor'] ?? null;
         $this->organizationUsage = $values['organizationUsage'] ?? null;
         $this->allowAnyOrganization = $values['allowAnyOrganization'] ?? null;
         $this->scope = $values['scope'] ?? null;
@@ -116,6 +125,24 @@ class CreateClientGrantRequestContent extends JsonSerializableType
     {
         $this->audience = $value;
         $this->_setField('audience');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientGrantDefaultForEnum>
+     */
+    public function getDefaultFor(): ?string
+    {
+        return $this->defaultFor;
+    }
+
+    /**
+     * @param ?value-of<ClientGrantDefaultForEnum> $value
+     */
+    public function setDefaultFor(?string $value = null): self
+    {
+        $this->defaultFor = $value;
+        $this->_setField('defaultFor');
         return $this;
     }
 

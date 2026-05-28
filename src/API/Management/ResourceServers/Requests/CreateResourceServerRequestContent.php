@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\Types\ResourceServerTokenEncryption;
 use Auth0\SDK\API\Management\Types\ResourceServerConsentPolicyEnum;
 use Auth0\SDK\API\Management\Types\ResourceServerProofOfPossession;
 use Auth0\SDK\API\Management\Types\ResourceServerSubjectTypeAuthorization;
+use Auth0\SDK\API\Management\Types\ResourceServerAuthorizationPolicy;
 
 class CreateResourceServerRequestContent extends JsonSerializableType
 {
@@ -56,6 +57,12 @@ class CreateResourceServerRequestContent extends JsonSerializableType
      */
     #[JsonProperty('allow_online_access')]
     private ?bool $allowOnlineAccess;
+
+    /**
+     * @var ?bool $allowOnlineAccessWithEphemeralSessions Whether Online Refresh Tokens can be issued even when sessions are configured as ephemeral (true) or not (false).
+     */
+    #[JsonProperty('allow_online_access_with_ephemeral_sessions')]
+    private ?bool $allowOnlineAccessWithEphemeralSessions;
 
     /**
      * @var ?int $tokenLifetime Expiration value (in seconds) for access tokens issued for this API from the token endpoint.
@@ -112,6 +119,12 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     private ?ResourceServerSubjectTypeAuthorization $subjectTypeAuthorization;
 
     /**
+     * @var ?ResourceServerAuthorizationPolicy $authorizationPolicy
+     */
+    #[JsonProperty('authorization_policy')]
+    private ?ResourceServerAuthorizationPolicy $authorizationPolicy;
+
+    /**
      * @param array{
      *   identifier: string,
      *   name?: ?string,
@@ -120,6 +133,7 @@ class CreateResourceServerRequestContent extends JsonSerializableType
      *   signingSecret?: ?string,
      *   allowOfflineAccess?: ?bool,
      *   allowOnlineAccess?: ?bool,
+     *   allowOnlineAccessWithEphemeralSessions?: ?bool,
      *   tokenLifetime?: ?int,
      *   tokenDialect?: ?value-of<ResourceServerTokenDialectSchemaEnum>,
      *   skipConsentForVerifiableFirstPartyClients?: ?bool,
@@ -129,6 +143,7 @@ class CreateResourceServerRequestContent extends JsonSerializableType
      *   authorizationDetails?: ?array<mixed>,
      *   proofOfPossession?: ?ResourceServerProofOfPossession,
      *   subjectTypeAuthorization?: ?ResourceServerSubjectTypeAuthorization,
+     *   authorizationPolicy?: ?ResourceServerAuthorizationPolicy,
      * } $values
      */
     public function __construct(
@@ -141,6 +156,7 @@ class CreateResourceServerRequestContent extends JsonSerializableType
         $this->signingSecret = $values['signingSecret'] ?? null;
         $this->allowOfflineAccess = $values['allowOfflineAccess'] ?? null;
         $this->allowOnlineAccess = $values['allowOnlineAccess'] ?? null;
+        $this->allowOnlineAccessWithEphemeralSessions = $values['allowOnlineAccessWithEphemeralSessions'] ?? null;
         $this->tokenLifetime = $values['tokenLifetime'] ?? null;
         $this->tokenDialect = $values['tokenDialect'] ?? null;
         $this->skipConsentForVerifiableFirstPartyClients = $values['skipConsentForVerifiableFirstPartyClients'] ?? null;
@@ -150,6 +166,7 @@ class CreateResourceServerRequestContent extends JsonSerializableType
         $this->authorizationDetails = $values['authorizationDetails'] ?? null;
         $this->proofOfPossession = $values['proofOfPossession'] ?? null;
         $this->subjectTypeAuthorization = $values['subjectTypeAuthorization'] ?? null;
+        $this->authorizationPolicy = $values['authorizationPolicy'] ?? null;
     }
 
     /**
@@ -275,6 +292,24 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     {
         $this->allowOnlineAccess = $value;
         $this->_setField('allowOnlineAccess');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getAllowOnlineAccessWithEphemeralSessions(): ?bool
+    {
+        return $this->allowOnlineAccessWithEphemeralSessions;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setAllowOnlineAccessWithEphemeralSessions(?bool $value = null): self
+    {
+        $this->allowOnlineAccessWithEphemeralSessions = $value;
+        $this->_setField('allowOnlineAccessWithEphemeralSessions');
         return $this;
     }
 
@@ -437,6 +472,24 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     {
         $this->subjectTypeAuthorization = $value;
         $this->_setField('subjectTypeAuthorization');
+        return $this;
+    }
+
+    /**
+     * @return ?ResourceServerAuthorizationPolicy
+     */
+    public function getAuthorizationPolicy(): ?ResourceServerAuthorizationPolicy
+    {
+        return $this->authorizationPolicy;
+    }
+
+    /**
+     * @param ?ResourceServerAuthorizationPolicy $value
+     */
+    public function setAuthorizationPolicy(?ResourceServerAuthorizationPolicy $value = null): self
+    {
+        $this->authorizationPolicy = $value;
+        $this->_setField('authorizationPolicy');
         return $this;
     }
 }

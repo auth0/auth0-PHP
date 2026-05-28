@@ -30,6 +30,7 @@ class ConnectionOptionsPingFederate extends JsonSerializableType
     /**
      * @param array{
      *   pingFederateBaseUrl: string,
+     *   assertionDecryptionSettings?: ?ConnectionAssertionDecryptionSettings,
      *   cert?: ?string,
      *   decryptionKey?: (
      *    ConnectionDecryptionKeySamlCert
@@ -58,6 +59,7 @@ class ConnectionOptionsPingFederate extends JsonSerializableType
     public function __construct(
         array $values,
     ) {
+        $this->assertionDecryptionSettings = $values['assertionDecryptionSettings'] ?? null;
         $this->cert = $values['cert'] ?? null;
         $this->decryptionKey = $values['decryptionKey'] ?? null;
         $this->digestAlgorithm = $values['digestAlgorithm'] ?? null;

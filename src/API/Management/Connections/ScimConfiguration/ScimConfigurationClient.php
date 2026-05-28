@@ -97,7 +97,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     }
 
     /**
-     * Retrieves a scim configuration by its <code>connectionId</code>.
+     * Retrieves a scim configuration by its `connectionId`.
      *
      * @param string $id The id of the connection to retrieve its SCIM configuration
      * @param ?array{
@@ -195,7 +195,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     }
 
     /**
-     * Deletes a scim configuration by its <code>connectionId</code>.
+     * Deletes a scim configuration by its `connectionId`.
      *
      * @param string $id The id of the connection to delete its SCIM configuration
      * @param ?array{
@@ -236,7 +236,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     }
 
     /**
-     * Update a scim configuration by its <code>connectionId</code>.
+     * Update a scim configuration by its `connectionId`.
      *
      * @param string $id The id of the connection to update its SCIM configuration
      * @param UpdateScimConfigurationRequestContent $request
@@ -286,7 +286,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     }
 
     /**
-     * Retrieves a scim configuration's default mapping by its <code>connectionId</code>.
+     * Retrieves a scim configuration's default mapping by its `connectionId`.
      *
      * @param string $id The id of the connection to retrieve its default SCIM mapping
      * @param ?array{

@@ -83,6 +83,7 @@ enum OauthScope: string
     case ReadEventStreams = "read:event_streams";
     case UpdateEventStreams = "update:event_streams";
     case DeleteEventStreams = "delete:event_streams";
+    case ReadEvents = "read:events";
     case ReadFederatedConnectionsTokens = "read:federated_connections_tokens";
     case DeleteFederatedConnectionsTokens = "delete:federated_connections_tokens";
     case CreateFlows = "create:flows";
@@ -102,6 +103,9 @@ enum OauthScope: string
     case ReadGrants = "read:grants";
     case DeleteGrants = "delete:grants";
     case ReadGroupMembers = "read:group_members";
+    case CreateGroupRoles = "create:group_roles";
+    case ReadGroupRoles = "read:group_roles";
+    case DeleteGroupRoles = "delete:group_roles";
     case ReadGroups = "read:groups";
     case DeleteGroups = "delete:groups";
     case CreateGuardianEnrollmentTickets = "create:guardian_enrollment_tickets";
@@ -160,6 +164,10 @@ enum OauthScope: string
     case DeletePhoneTemplates = "delete:phone_templates";
     case ReadPrompts = "read:prompts";
     case UpdatePrompts = "update:prompts";
+    case CreateRateLimitPolicies = "create:rate_limit_policies";
+    case ReadRateLimitPolicies = "read:rate_limit_policies";
+    case UpdateRateLimitPolicies = "update:rate_limit_policies";
+    case DeleteRateLimitPolicies = "delete:rate_limit_policies";
     case ReadRefreshTokens = "read:refresh_tokens";
     case UpdateRefreshTokens = "update:refresh_tokens";
     case DeleteRefreshTokens = "delete:refresh_tokens";

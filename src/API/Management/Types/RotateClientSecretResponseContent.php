@@ -319,6 +319,24 @@ class RotateClientSecretResponseContent extends JsonSerializableType
     private ?ExpressConfiguration $expressConfiguration;
 
     /**
+     * @var ?ClientMyOrganizationResponseConfiguration $myOrganizationConfiguration
+     */
+    #[JsonProperty('my_organization_configuration')]
+    private ?ClientMyOrganizationResponseConfiguration $myOrganizationConfiguration;
+
+    /**
+     * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
+     */
+    #[JsonProperty('third_party_security_mode')]
+    private ?string $thirdPartySecurityMode;
+
+    /**
+     * @var ?value-of<ClientRedirectionPolicyEnum> $redirectionPolicy
+     */
+    #[JsonProperty('redirection_policy')]
+    private ?string $redirectionPolicy;
+
+    /**
      * @var ?string $resourceServerIdentifier The identifier of the resource server that this client is linked to.
      */
     #[JsonProperty('resource_server_identifier')]
@@ -407,6 +425,9 @@ class RotateClientSecretResponseContent extends JsonSerializableType
      *   parRequestExpiry?: ?int,
      *   tokenQuota?: ?TokenQuota,
      *   expressConfiguration?: ?ExpressConfiguration,
+     *   myOrganizationConfiguration?: ?ClientMyOrganizationResponseConfiguration,
+     *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
+     *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   resourceServerIdentifier?: ?string,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   externalMetadataType?: ?value-of<ClientExternalMetadataTypeEnum>,
@@ -469,6 +490,9 @@ class RotateClientSecretResponseContent extends JsonSerializableType
         $this->parRequestExpiry = $values['parRequestExpiry'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
+        $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
+        $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
+        $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->externalMetadataType = $values['externalMetadataType'] ?? null;
@@ -1392,6 +1416,60 @@ class RotateClientSecretResponseContent extends JsonSerializableType
     {
         $this->expressConfiguration = $value;
         $this->_setField('expressConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientMyOrganizationResponseConfiguration
+     */
+    public function getMyOrganizationConfiguration(): ?ClientMyOrganizationResponseConfiguration
+    {
+        return $this->myOrganizationConfiguration;
+    }
+
+    /**
+     * @param ?ClientMyOrganizationResponseConfiguration $value
+     */
+    public function setMyOrganizationConfiguration(?ClientMyOrganizationResponseConfiguration $value = null): self
+    {
+        $this->myOrganizationConfiguration = $value;
+        $this->_setField('myOrganizationConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientThirdPartySecurityModeEnum>
+     */
+    public function getThirdPartySecurityMode(): ?string
+    {
+        return $this->thirdPartySecurityMode;
+    }
+
+    /**
+     * @param ?value-of<ClientThirdPartySecurityModeEnum> $value
+     */
+    public function setThirdPartySecurityMode(?string $value = null): self
+    {
+        $this->thirdPartySecurityMode = $value;
+        $this->_setField('thirdPartySecurityMode');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientRedirectionPolicyEnum>
+     */
+    public function getRedirectionPolicy(): ?string
+    {
+        return $this->redirectionPolicy;
+    }
+
+    /**
+     * @param ?value-of<ClientRedirectionPolicyEnum> $value
+     */
+    public function setRedirectionPolicy(?string $value = null): self
+    {
+        $this->redirectionPolicy = $value;
+        $this->_setField('redirectionPolicy');
         return $this;
     }
 

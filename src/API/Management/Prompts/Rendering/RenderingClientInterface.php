@@ -32,7 +32,7 @@ interface RenderingClientInterface
     public function list(ListAculsRequestParameters $request = new ListAculsRequestParameters(), ?array $options = null): Pager;
 
     /**
-     * Learn more about <a href='https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens'>configuring render settings</a> for advanced customization.
+     * Learn more about [configuring render settings](https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens) for advanced customization.
      *
      * @param BulkUpdateAculRequestContent $request
      * @param ?array{
@@ -65,7 +65,7 @@ interface RenderingClientInterface
     public function get(string $prompt, string $screen, ?array $options = null): ?GetAculResponseContent;
 
     /**
-     * Learn more about <a href='https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens'>configuring render settings</a> for advanced customization.
+     * Learn more about [configuring render settings](https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens) for advanced customization.
      *
      * @param value-of<PromptGroupNameEnum> $prompt Name of the prompt
      * @param value-of<ScreenGroupNameEnum> $screen Name of the screen

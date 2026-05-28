@@ -127,6 +127,12 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     private ?string $tokenEndpointAuthSigningAlg;
 
     /**
+     * @var ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $tokenEndpointJwtcaAudFormat
+     */
+    #[JsonProperty('token_endpoint_jwtca_aud_format')]
+    private ?string $tokenEndpointJwtcaAudFormat;
+
+    /**
      * @var ?array<string, (
      *    ConnectionUpstreamAlias
      *   |ConnectionUpstreamValue
@@ -162,6 +168,7 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
      *   tokenEndpoint?: ?string,
      *   tokenEndpointAuthMethod?: ?value-of<ConnectionTokenEndpointAuthMethodEnum>,
      *   tokenEndpointAuthSigningAlg?: ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>,
+     *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
      *   upstreamParams?: ?array<string, (
      *    ConnectionUpstreamAlias
      *   |ConnectionUpstreamValue
@@ -191,6 +198,7 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
         $this->tokenEndpoint = $values['tokenEndpoint'] ?? null;
         $this->tokenEndpointAuthMethod = $values['tokenEndpointAuthMethod'] ?? null;
         $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
+        $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->userinfoEndpoint = $values['userinfoEndpoint'] ?? null;
     }
@@ -534,6 +542,24 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     {
         $this->tokenEndpointAuthSigningAlg = $value;
         $this->_setField('tokenEndpointAuthSigningAlg');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>
+     */
+    public function getTokenEndpointJwtcaAudFormat(): ?string
+    {
+        return $this->tokenEndpointJwtcaAudFormat;
+    }
+
+    /**
+     * @param ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $value
+     */
+    public function setTokenEndpointJwtcaAudFormat(?string $value = null): self
+    {
+        $this->tokenEndpointJwtcaAudFormat = $value;
+        $this->_setField('tokenEndpointJwtcaAudFormat');
         return $this;
     }
 

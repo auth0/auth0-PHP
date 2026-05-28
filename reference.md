@@ -357,7 +357,7 @@ $client->actions->delete(
 <dl>
 <dd>
 
-Update an existing action. If this action is currently bound to a trigger, updating it will <strong>not</strong> affect any user flows until the action is deployed.
+Update an existing action. If this action is currently bound to a trigger, updating it will **not** affect any user flows until the action is deployed.
 </dd>
 </dl>
 </dd>
@@ -691,6 +691,14 @@ $client->branding->update(
 <dl>
 <dd>
 
+**$identifiers:** `?UpdateBrandingIdentifiers` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$font:** `?UpdateBrandingFont` 
     
 </dd>
@@ -739,6 +747,7 @@ $client->clientGrants->list(
         'clientId' => 'client_id',
         'allowAnyOrganization' => true,
         'subjectType' => ClientGrantSubjectTypeEnum::Client->value,
+        'defaultFor' => ClientGrantDefaultForEnum::ThirdPartyClients->value,
     ]),
 );
 ```
@@ -796,6 +805,14 @@ $client->clientGrants->list(
 <dd>
 
 **$subjectType:** `?string` — The type of application access the client grant allows.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$defaultFor:** `?string` — Applies this client grant as the default for all clients in the specified group. The only accepted value is <a href="https://auth0.com/docs/get-started/applications/application-access-to-apis-client-grants#default-permissions-for-third-party-applications">`third_party_clients`</a>, which applies the grant to all third-party clients. Per-client grants for the same audience take precedence. Mutually exclusive with `client_id`.
     
 </dd>
 </dl>
@@ -862,6 +879,14 @@ $client->clientGrants->create(
 <dd>
 
 **$audience:** `string` — The audience (API identifier) of this client grant
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$defaultFor:** `?string` 
     
 </dd>
 </dl>
@@ -1626,6 +1651,14 @@ $client->clients->create(
 <dl>
 <dd>
 
+**$fedcmLogin:** `?FedCmLogin` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$refreshToken:** `?ClientRefreshTokenConfiguration` 
     
 </dd>
@@ -1750,7 +1783,31 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dl>
 <dd>
 
+**$thirdPartySecurityMode:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$redirectionPolicy:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$expressConfiguration:** `?ExpressConfiguration` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$myOrganizationConfiguration:** `?ClientMyOrganizationPostConfiguration` 
     
 </dd>
 </dl>
@@ -1844,10 +1901,19 @@ $client->clients->previewCimdMetadata(
 <dl>
 <dd>
 
+Idempotent registration for Client ID Metadata Document (CIMD) clients.
+Uses external_client_id as the unique identifier for upsert operations.
 
-      Idempotent registration for Client ID Metadata Document (CIMD) clients.
-      Uses external_client_id as the unique identifier for upsert operations.
-      **Create:** Returns 201 when a new client is created (requires \
+<strong>Create:</strong> Returns 201 when a new client is created (requires <code>create:clients</code> scope).
+<strong>Update:</strong> Returns 200 when an existing client is updated (requires <code>update:clients</code> scope).
+
+This endpoint automatically:
+<ul>
+  <li>Fetches and validates the metadata document</li>
+  <li>Maps CIMD fields to Auth0 client configuration</li>
+  <li>Creates/rotates credentials from the JWKS</li>
+  <li>Enforces CIMD security policies (HTTPS-only, no shared secrets)</li>
+</ul>
 </dd>
 </dl>
 </dd>
@@ -2396,6 +2462,14 @@ $client->clients->update(
 <dl>
 <dd>
 
+**$fedcmLogin:** `?FedCmLogin` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$refreshToken:** `?ClientRefreshTokenConfiguration` 
     
 </dd>
@@ -2512,7 +2586,31 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dl>
 <dd>
 
+**$myOrganizationConfiguration:** `?ClientMyOrganizationPatchConfiguration` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$asyncApprovalNotificationChannels:** `?array` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$thirdPartySecurityMode:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$redirectionPolicy:** `?string` 
     
 </dd>
 </dl>
@@ -3075,25 +3173,23 @@ $client->connectionProfiles->update(
 <dl>
 <dd>
 
-Retrieves detailed list of all <a href="https://auth0.com/docs/authenticate/identity-providers">connections</a> that match the specified strategy. If no strategy is provided, all connections within your tenant are retrieved. This action can accept a list of fields to include or exclude from the resulting list of connections. 
+Retrieves detailed list of all [connections](https://auth0.com/docs/authenticate/identity-providers) that match the specified strategy. If no strategy is provided, all connections within your tenant are retrieved. This action can accept a list of fields to include or exclude from the resulting list of connections. 
 
 This endpoint supports two types of pagination:
-<ul>
-<li>Offset pagination</li>
-<li>Checkpoint pagination</li>
-</ul>
+
+- Offset pagination
+- Checkpoint pagination
 
 Checkpoint pagination must be used if you need to retrieve more than 1000 connections.
 
-<h2>Checkpoint Pagination</h2>
+**Checkpoint Pagination**
 
 To search by checkpoint, use the following parameters:
-<ul>
-<li><code>from</code>: Optional id from which to start selection.</li>
-<li><code>take</code>: The total amount of entries to retrieve when using the from parameter. Defaults to 50.</li>
-</ul>
 
-<b>Note</b>: The first time you call this endpoint using checkpoint pagination, omit the <code>from</code> parameter. If there are more results, a <code>next</code> value is included in the response. You can use this for subsequent API calls. When <code>next</code> is no longer included in the response, no pages are remaining.
+- `from`: Optional id from which to start selection.
+- `take`: The total amount of entries to retrieve when using the from parameter. Defaults to 50.
+
+**Note**: The first time you call this endpoint using checkpoint pagination, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no pages are remaining.
 </dd>
 </dl>
 </dd>
@@ -3112,6 +3208,9 @@ $client->connections->list(
     new ListConnectionsQueryParameters([
         'from' => 'from',
         'take' => 1,
+        'strategy' => [
+            ConnectionStrategyEnum::Ad->value,
+        ],
         'name' => 'name',
         'fields' => 'fields',
         'includeFields' => true,
@@ -3195,9 +3294,9 @@ $client->connections->list(
 <dl>
 <dd>
 
-Creates a new connection according to the JSON object received in <code>body</code>.
+Creates a new connection according to the JSON object received in `body`.
 
-<b>Note:</b> If a connection with the same name was recently deleted and had a large number of associated users, the deletion may still be processing. Creating a new connection with that name before the deletion completes may fail or produce unexpected results. 
+**Note:** If a connection with the same name was recently deleted and had a large number of associated users, the deletion may still be processing. Creating a new connection with that name before the deletion completes may fail or produce unexpected results.
 </dd>
 </dl>
 </dd>
@@ -3336,7 +3435,7 @@ $client->connections->create(
 <dl>
 <dd>
 
-Retrieve details for a specified <a href="https://auth0.com/docs/authenticate/identity-providers">connection</a> along with options that can be used for identity provider configuration.
+Retrieve details for a specified [connection](https://auth0.com/docs/authenticate/identity-providers) along with options that can be used for identity provider configuration.
 </dd>
 </dl>
 </dd>
@@ -3412,9 +3511,9 @@ $client->connections->get(
 <dl>
 <dd>
 
-Removes a specific <a href="https://auth0.com/docs/authenticate/identity-providers">connection</a> from your tenant. This action cannot be undone. Once removed, users can no longer use this connection to authenticate.
+Removes a specific [connection](https://auth0.com/docs/authenticate/identity-providers) from your tenant. This action cannot be undone. Once removed, users can no longer use this connection to authenticate.
 
-<b>Note:</b> If your connection has a large amount of users associated with it, please be aware that this operation can be long running after the response is returned and may impact concurrent <a href="https://auth0.com/docs/api/management/v2/connections/post-connections">create connection</a> requests, if they use an identical connection name. 
+**Note:** If your connection has a large amount of users associated with it, please be aware that this operation can be long running after the response is returned and may impact concurrent [create connection](https://auth0.com/docs/api/management/v2/connections/post-connections) requests, if they use an identical connection name.
 </dd>
 </dl>
 </dd>
@@ -3470,9 +3569,9 @@ $client->connections->delete(
 <dl>
 <dd>
 
-Update details for a specific <a href="https://auth0.com/docs/authenticate/identity-providers">connection</a>, including option properties for identity provider configuration.
+Update details for a specific [connection](https://auth0.com/docs/authenticate/identity-providers), including option properties for identity provider configuration.
 
-<b>Note</b>: If you use the <code>options</code> parameter, the entire <code>options</code> object is overriden. To avoid partial data or other issues, ensure all parameters are present when using this option.
+**Note**: If you use the `options` parameter, the entire `options` object is overridden. To avoid partial data or other issues, ensure all parameters are present when using this option.
 </dd>
 </dl>
 </dd>
@@ -3601,7 +3700,7 @@ $client->connections->update(
 <dl>
 <dd>
 
-Retrieves the status of an ad/ldap connection referenced by its <code>ID</code>. <code>200 OK</code> http status code response is returned  when the connection is online, otherwise a <code>404</code> status code is returned along with an error message
+Retrieves the status of an ad/ldap connection referenced by its `ID`. `200 OK` http status code response is returned  when the connection is online, otherwise a `404` status code is returned along with an error message
 </dd>
 </dl>
 </dd>
@@ -3658,7 +3757,7 @@ $client->connections->checkStatus(
 <dl>
 <dd>
 
-Retrieve details on <a href="https://auth0.com/docs/custom-domains">custom domains</a>.
+Retrieve details on [custom domains](https://auth0.com/docs/custom-domains).
 </dd>
 </dl>
 </dd>
@@ -3752,7 +3851,6 @@ Optional attributes that can be updated:
 
 - custom_client_ip_header
 - tls_policy
-
 
 TLS Policies:
 
@@ -4079,23 +4177,31 @@ These are the attributes that can be updated:
 - custom_client_ip_header
 - tls_policy
 
-<h5>Updating CUSTOM_CLIENT_IP_HEADER for a custom domain</h5>To update the <code>custom_client_ip_header</code> for a domain, the body to
+**Updating CUSTOM_CLIENT_IP_HEADER for a custom domain**
+
+To update the `custom_client_ip_header` for a domain, the body to
 send should be:
-<pre><code>{ "custom_client_ip_header": "cf-connecting-ip" }</code></pre>
 
-<h5>Updating TLS_POLICY for a custom domain</h5>To update the <code>tls_policy</code> for a domain, the body to send should be:
-<pre><code>{ "tls_policy": "recommended" }</code></pre>
+```json
+{ "custom_client_ip_header": "cf-connecting-ip" }
+```
 
+**Updating TLS_POLICY for a custom domain**
+
+To update the `tls_policy` for a domain, the body to send should be:
+
+```json
+{ "tls_policy": "recommended" }
+```
 
 TLS Policies:
 
 - recommended - for modern usage this includes TLS 1.2 only
 
-
 Some considerations:
 
 - The TLS ciphers and protocols available in each TLS policy follow industry recommendations, and may be updated occasionally.
-- The <code>compatible</code> TLS policy is no longer supported.
+- The `compatible` TLS policy is no longer supported.
 </dd>
 </dl>
 </dd>
@@ -4242,12 +4348,12 @@ $client->customDomains->test(
 
 Run the verification process on a custom domain.
 
-Note: Check the <code>status</code> field to see its verification status. Once verification is complete, it may take up to 10 minutes before the custom domain can start accepting requests.
+Note: Check the `status` field to see its verification status. Once verification is complete, it may take up to 10 minutes before the custom domain can start accepting requests.
 
-For <code>self_managed_certs</code>, when the custom domain is verified for the first time, the response will also include the <code>cname_api_key</code> which you will need to configure your proxy. This key must be kept secret, and is used to validate the proxy requests.
+For `self_managed_certs`, when the custom domain is verified for the first time, the response will also include the `cname_api_key` which you will need to configure your proxy. This key must be kept secret, and is used to validate the proxy requests.
 
-<a href="https://auth0.com/docs/custom-domains#step-2-verify-ownership">Learn more</a> about verifying custom domains that use Auth0 Managed certificates.
-<a href="https://auth0.com/docs/custom-domains/self-managed-certificates#step-2-verify-ownership">Learn more</a> about verifying custom domains that use Self Managed certificates.
+[Learn more](https://auth0.com/docs/custom-domains#step-2-verify-ownership) about verifying custom domains that use Auth0 Managed certificates.
+[Learn more](https://auth0.com/docs/custom-domains/self-managed-certificates#step-2-verify-ownership) about verifying custom domains that use Self Managed certificates.
 </dd>
 </dl>
 </dd>
@@ -5330,6 +5436,85 @@ $client->eventStreams->test(
 </dl>
 </details>
 
+## Events
+<details><summary><code>$client-&gt;events-&gt;subscribe($request) -> SseStream</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Subscribe to events via Server-Sent Events (SSE)
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->events->subscribe(
+    new SubscribeEventsRequestParameters([
+        'from' => 'from',
+        'fromTimestamp' => 'from_timestamp',
+        'eventType' => [
+            EventStreamSubscribeEventsEventTypeEnum::GroupCreated->value,
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Opaque token representing position in the stream. If not provided, stream will start from the latest events.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$fromTimestamp:** `?string` — RFC-3339 timestamp indicating where to start streaming events from. This should only be used on the initial query when a cursor may not be available. Subsequent requests should use the cursor (from) as it will be more accurate.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$eventType:** `?string` — Event type(s) to listen for. Specify multiple times for multiple types (e.g., ?event_type=user.created&event_type=user.updated). If not provided, all event types will be streamed.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Flows
 <details><summary><code>$client-&gt;flows-&gt;list($request) -> ?ListFlowsOffsetPaginatedResponseContent</code></summary>
 <dl>
@@ -5349,6 +5534,9 @@ $client->flows->list(
         'page' => 1,
         'perPage' => 1,
         'includeTotals' => true,
+        'hydrate' => [
+            ListFlowsRequestParametersHydrateEnum::FormCount->value,
+        ],
         'synchronous' => true,
     ]),
 );
@@ -5477,7 +5665,11 @@ $client->flows->create(
 ```php
 $client->flows->get(
     'id',
-    new GetFlowRequestParameters([]),
+    new GetFlowRequestParameters([
+        'hydrate' => [
+            GetFlowRequestParametersHydrateEnum::FormCount->value,
+        ],
+    ]),
 );
 ```
 </dd>
@@ -5633,6 +5825,9 @@ $client->forms->list(
         'page' => 1,
         'perPage' => 1,
         'includeTotals' => true,
+        'hydrate' => [
+            FormsRequestParametersHydrateEnum::FlowCount->value,
+        ],
     ]),
 );
 ```
@@ -5800,7 +5995,11 @@ $client->forms->create(
 ```php
 $client->forms->get(
     'id',
-    new GetFormRequestParameters([]),
+    new GetFormRequestParameters([
+        'hydrate' => [
+            FormsRequestParametersHydrateEnum::FlowCount->value,
+        ],
+    ]),
 );
 ```
 </dd>
@@ -6236,6 +6435,7 @@ $client->groups->list(
         'connectionId' => 'connection_id',
         'name' => 'name',
         'externalId' => 'external_id',
+        'search' => 'search',
         'fields' => 'fields',
         'includeFields' => true,
         'from' => 'from',
@@ -6273,6 +6473,14 @@ $client->groups->list(
 <dd>
 
 **$externalId:** `?string` — Filter groups by external ID.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$search:** `?string` — Search for groups by name or external ID.
     
 </dd>
 </dl>
@@ -6441,7 +6649,7 @@ $client->groups->delete(
 <dl>
 <dd>
 
-Retrieve all <a href="https://auth0.com/docs/hooks">hooks</a>. Accepts a list of fields to include or exclude in the result.
+Retrieve all [hooks](https://auth0.com/docs/hooks). Accepts a list of fields to include or exclude in the result.
 </dd>
 </dl>
 </dd>
@@ -6636,7 +6844,7 @@ $client->hooks->create(
 <dl>
 <dd>
 
-Retrieve <a href="https://auth0.com/docs/hooks">a hook</a> by its ID. Accepts a list of fields to include in the result.
+Retrieve [a hook](https://auth0.com/docs/hooks) by its ID. Accepts a list of fields to include in the result.
 </dd>
 </dl>
 </dd>
@@ -6906,72 +7114,77 @@ $client->jobs->get(
 <dl>
 <dd>
 
-Retrieve details on <a href="https://auth0.com/docs/logs/streams">log streams</a>.
-<h5>Sample Response</h5><pre><code>[{
-	"id": "string",
-	"name": "string",
-	"type": "eventbridge",
-	"status": "active|paused|suspended",
-	"sink": {
-		"awsAccountId": "string",
-		"awsRegion": "string",
-		"awsPartnerEventSource": "string"
-	}
+Retrieve details on [log streams](https://auth0.com/docs/logs/streams).
+
+**Sample Response**
+
+```json
+[{
+  "id": "string",
+  "name": "string",
+  "type": "eventbridge",
+  "status": "active|paused|suspended",
+  "sink": {
+    "awsAccountId": "string",
+    "awsRegion": "string",
+    "awsPartnerEventSource": "string"
+  }
 }, {
-	"id": "string",
-	"name": "string",
-	"type": "http",
-	"status": "active|paused|suspended",
-	"sink": {
-		"httpContentFormat": "JSONLINES|JSONARRAY",
-		"httpContentType": "string",
-		"httpEndpoint": "string",
-		"httpAuthorization": "string"
-	}
+  "id": "string",
+  "name": "string",
+  "type": "http",
+  "status": "active|paused|suspended",
+  "sink": {
+    "httpContentFormat": "JSONLINES|JSONARRAY",
+    "httpContentType": "string",
+    "httpEndpoint": "string",
+    "httpAuthorization": "string"
+  }
 },
 {
-	"id": "string",
-	"name": "string",
-	"type": "eventgrid",
-	"status": "active|paused|suspended",
-	"sink": {
-		"azureSubscriptionId": "string",
-		"azureResourceGroup": "string",
-		"azureRegion": "string",
-		"azurePartnerTopic": "string"
-	}
+  "id": "string",
+  "name": "string",
+  "type": "eventgrid",
+  "status": "active|paused|suspended",
+  "sink": {
+    "azureSubscriptionId": "string",
+    "azureResourceGroup": "string",
+    "azureRegion": "string",
+    "azurePartnerTopic": "string"
+  }
 },
 {
-	"id": "string",
-	"name": "string",
-	"type": "splunk",
-	"status": "active|paused|suspended",
-	"sink": {
-		"splunkDomain": "string",
-		"splunkToken": "string",
-		"splunkPort": "string",
-		"splunkSecure": "boolean"
-	}
+  "id": "string",
+  "name": "string",
+  "type": "splunk",
+  "status": "active|paused|suspended",
+  "sink": {
+    "splunkDomain": "string",
+    "splunkToken": "string",
+    "splunkPort": "string",
+    "splunkSecure": "boolean"
+  }
 },
 {
-	"id": "string",
-	"name": "string",
-	"type": "sumo",
-	"status": "active|paused|suspended",
-	"sink": {
-		"sumoSourceAddress": "string",
-	}
+  "id": "string",
+  "name": "string",
+  "type": "sumo",
+  "status": "active|paused|suspended",
+  "sink": {
+    "sumoSourceAddress": "string"
+  }
 },
 {
-	"id": "string",
-	"name": "string",
-	"type": "datadog",
-	"status": "active|paused|suspended",
-	"sink": {
-		"datadogRegion": "string",
-		"datadogApiKey": "string"
-	}
-}]</code></pre>
+  "id": "string",
+  "name": "string",
+  "type": "datadog",
+  "status": "active|paused|suspended",
+  "sink": {
+    "datadogRegion": "string",
+    "datadogApiKey": "string"
+  }
+}]
+```
 </dd>
 </dl>
 </dd>
@@ -7011,131 +7224,202 @@ $client->logStreams->list();
 <dd>
 
 Create a log stream.
-<h5>Log Stream Types</h5> The <code>type</code> of log stream being created determines the properties required in the <code>sink</code> payload.
-<h5>HTTP Stream</h5> For an <code>http</code> Stream, the <code>sink</code> properties are listed in the payload below
-Request: <pre><code>{
-	"name": "string",
-	"type": "http",
-	"sink": {
-		"httpEndpoint": "string",
-		"httpContentType": "string",
-		"httpContentFormat": "JSONLINES|JSONARRAY",
-		"httpAuthorization": "string"
-	}
-}</code></pre>
-Response: <pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "http",
-	"status": "active",
-	"sink": {
-		"httpEndpoint": "string",
-		"httpContentType": "string",
-		"httpContentFormat": "JSONLINES|JSONARRAY",
-		"httpAuthorization": "string"
-	}
-}</code></pre>
-<h5>Amazon EventBridge Stream</h5> For an <code>eventbridge</code> Stream, the <code>sink</code> properties are listed in the payload below
-Request: <pre><code>{
-	"name": "string",
-	"type": "eventbridge",
-	"sink": {
-		"awsRegion": "string",
-		"awsAccountId": "string"
-	}
-}</code></pre>
-The response will include an additional field <code>awsPartnerEventSource</code> in the <code>sink</code>: <pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "eventbridge",
-	"status": "active",
-	"sink": {
-		"awsAccountId": "string",
-		"awsRegion": "string",
-		"awsPartnerEventSource": "string"
-	}
-}</code></pre>
-<h5>Azure Event Grid Stream</h5> For an <code>Azure Event Grid</code> Stream, the <code>sink</code> properties are listed in the payload below
-Request: <pre><code>{
-	"name": "string",
-	"type": "eventgrid",
-	"sink": {
-		"azureSubscriptionId": "string",
-		"azureResourceGroup": "string",
-		"azureRegion": "string"
-	}
-}</code></pre>
-Response: <pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "http",
-	"status": "active",
-	"sink": {
-		"azureSubscriptionId": "string",
-		"azureResourceGroup": "string",
-		"azureRegion": "string",
-		"azurePartnerTopic": "string"
-	}
-}</code></pre>
-<h5>Datadog Stream</h5> For a <code>Datadog</code> Stream, the <code>sink</code> properties are listed in the payload below
-Request: <pre><code>{
-	"name": "string",
-	"type": "datadog",
-	"sink": {
-		"datadogRegion": "string",
-		"datadogApiKey": "string"
-	}
-}</code></pre>
-Response: <pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "datadog",
-	"status": "active",
-	"sink": {
-		"datadogRegion": "string",
-		"datadogApiKey": "string"
-	}
-}</code></pre>
-<h5>Splunk Stream</h5> For a <code>Splunk</code> Stream, the <code>sink</code> properties are listed in the payload below
-Request: <pre><code>{
-	"name": "string",
-	"type": "splunk",
-	"sink": {
-		"splunkDomain": "string",
-		"splunkToken": "string",
-		"splunkPort": "string",
-		"splunkSecure": "boolean"
-	}
-}</code></pre>
-Response: <pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "splunk",
-	"status": "active",
-	"sink": {
-		"splunkDomain": "string",
-		"splunkToken": "string",
-		"splunkPort": "string",
-		"splunkSecure": "boolean"
-	}
-}</code></pre>
-<h5>Sumo Logic Stream</h5> For a <code>Sumo Logic</code> Stream, the <code>sink</code> properties are listed in the payload below
-Request: <pre><code>{
-	"name": "string",
-	"type": "sumo",
-	"sink": {
-		"sumoSourceAddress": "string",
-	}
-}</code></pre>
-Response: <pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "sumo",
-	"status": "active",
-	"sink": {
-		"sumoSourceAddress": "string",
-	}
-}</code></pre>
+
+**Log Stream Types**
+
+The `type` of log stream being created determines the properties required in the `sink` payload.
+
+**HTTP Stream**
+
+For an `http` Stream, the `sink` properties are listed in the payload below.
+
+**Request:**
+```json
+{
+  "name": "string",
+  "type": "http",
+  "sink": {
+    "httpEndpoint": "string",
+    "httpContentType": "string",
+    "httpContentFormat": "JSONLINES|JSONARRAY",
+    "httpAuthorization": "string"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "http",
+  "status": "active",
+  "sink": {
+    "httpEndpoint": "string",
+    "httpContentType": "string",
+    "httpContentFormat": "JSONLINES|JSONARRAY",
+    "httpAuthorization": "string"
+  }
+}
+```
+
+**Amazon EventBridge Stream**
+
+For an `eventbridge` Stream, the `sink` properties are listed in the payload below.
+
+**Request:**
+```json
+{
+  "name": "string",
+  "type": "eventbridge",
+  "sink": {
+    "awsRegion": "string",
+    "awsAccountId": "string"
+  }
+}
+```
+
+The response will include an additional field `awsPartnerEventSource` in the `sink`:
+
+**Response:**
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "eventbridge",
+  "status": "active",
+  "sink": {
+    "awsAccountId": "string",
+    "awsRegion": "string",
+    "awsPartnerEventSource": "string"
+  }
+}
+```
+
+**Azure Event Grid Stream**
+
+For an `Azure Event Grid` Stream, the `sink` properties are listed in the payload below.
+
+**Request:**
+```json
+{
+  "name": "string",
+  "type": "eventgrid",
+  "sink": {
+    "azureSubscriptionId": "string",
+    "azureResourceGroup": "string",
+    "azureRegion": "string"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "http",
+  "status": "active",
+  "sink": {
+    "azureSubscriptionId": "string",
+    "azureResourceGroup": "string",
+    "azureRegion": "string",
+    "azurePartnerTopic": "string"
+  }
+}
+```
+
+**Datadog Stream**
+
+For a `Datadog` Stream, the `sink` properties are listed in the payload below.
+
+**Request:**
+```json
+{
+  "name": "string",
+  "type": "datadog",
+  "sink": {
+    "datadogRegion": "string",
+    "datadogApiKey": "string"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "datadog",
+  "status": "active",
+  "sink": {
+    "datadogRegion": "string",
+    "datadogApiKey": "string"
+  }
+}
+```
+
+**Splunk Stream**
+
+For a `Splunk` Stream, the `sink` properties are listed in the payload below.
+
+**Request:**
+```json
+{
+  "name": "string",
+  "type": "splunk",
+  "sink": {
+    "splunkDomain": "string",
+    "splunkToken": "string",
+    "splunkPort": "string",
+    "splunkSecure": "boolean"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "splunk",
+  "status": "active",
+  "sink": {
+    "splunkDomain": "string",
+    "splunkToken": "string",
+    "splunkPort": "string",
+    "splunkSecure": "boolean"
+  }
+}
+```
+
+**Sumo Logic Stream**
+
+For a `Sumo Logic` Stream, the `sink` properties are listed in the payload below.
+
+**Request:**
+```json
+{
+  "name": "string",
+  "type": "sumo",
+  "sink": {
+    "sumoSourceAddress": "string"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "sumo",
+  "status": "active",
+  "sink": {
+    "sumoSourceAddress": "string"
+  }
+}
+```
 </dd>
 </dl>
 </dd>
@@ -7197,107 +7481,157 @@ $client->logStreams->create(
 <dd>
 
 Retrieve a log stream configuration and status.
-<h5>Sample responses</h5><h5>Amazon EventBridge Log Stream</h5><pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "eventbridge",
-	"status": "active|paused|suspended",
-	"sink": {
-		"awsAccountId": "string",
-		"awsRegion": "string",
-		"awsPartnerEventSource": "string"
-	}
-}</code></pre> <h5>HTTP Log Stream</h5><pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "http",
-	"status": "active|paused|suspended",
-	"sink": {
-		"httpContentFormat": "JSONLINES|JSONARRAY",
-		"httpContentType": "string",
-		"httpEndpoint": "string",
-		"httpAuthorization": "string"
-	}
-}</code></pre> <h5>Datadog Log Stream</h5><pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "datadog",
-	"status": "active|paused|suspended",
-	"sink": {
-		"datadogRegion": "string",
-		"datadogApiKey": "string"
-	}
 
-}</code></pre><h5>Mixpanel</h5>
-	
-	Request: <pre><code>{
-	  "name": "string",
-	  "type": "mixpanel",
-	  "sink": {
-		"mixpanelRegion": "string", // "us" | "eu",
-		"mixpanelProjectId": "string",
-		"mixpanelServiceAccountUsername": "string",
-		"mixpanelServiceAccountPassword": "string"
-	  }
-	} </code></pre>
-	
-	
-	Response: <pre><code>{
-		"id": "string",
-		"name": "string",
-		"type": "mixpanel",
-		"status": "active",
-		"sink": {
-		  "mixpanelRegion": "string", // "us" | "eu",
-		  "mixpanelProjectId": "string",
-		  "mixpanelServiceAccountUsername": "string",
-		  "mixpanelServiceAccountPassword": "string" // the following is redacted on return
-		}
-	  } </code></pre>
+**Sample responses**
 
-	<h5>Segment</h5>
+**Amazon EventBridge Log Stream**
 
-	Request: <pre><code> {
-	  "name": "string",
-	  "type": "segment",
-	  "sink": {
-		"segmentWriteKey": "string"
-	  }
-	}</code></pre>
-	
-	Response: <pre><code>{
-	  "id": "string",
-	  "name": "string",
-	  "type": "segment",
-	  "status": "active",
-	  "sink": {
-		"segmentWriteKey": "string"
-	  }
-	} </code></pre>
-	
-<h5>Splunk Log Stream</h5><pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "splunk",
-	"status": "active|paused|suspended",
-	"sink": {
-		"splunkDomain": "string",
-		"splunkToken": "string",
-		"splunkPort": "string",
-		"splunkSecure": "boolean"
-	}
-}</code></pre> <h5>Sumo Logic Log Stream</h5><pre><code>{
-	"id": "string",
-	"name": "string",
-	"type": "sumo",
-	"status": "active|paused|suspended",
-	"sink": {
-		"sumoSourceAddress": "string",
-	}
-}</code></pre> <h5>Status</h5> The <code>status</code> of a log stream maybe any of the following:
-1. <code>active</code> - Stream is currently enabled.
-2. <code>paused</code> - Stream is currently user disabled and will not attempt log delivery.
-3. <code>suspended</code> - Stream is currently disabled because of errors and will not attempt log delivery.
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "eventbridge",
+  "status": "active|paused|suspended",
+  "sink": {
+    "awsAccountId": "string",
+    "awsRegion": "string",
+    "awsPartnerEventSource": "string"
+  }
+}
+```
+
+**HTTP Log Stream**
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "http",
+  "status": "active|paused|suspended",
+  "sink": {
+    "httpContentFormat": "JSONLINES|JSONARRAY",
+    "httpContentType": "string",
+    "httpEndpoint": "string",
+    "httpAuthorization": "string"
+  }
+}
+```
+
+**Datadog Log Stream**
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "datadog",
+  "status": "active|paused|suspended",
+  "sink": {
+    "datadogRegion": "string",
+    "datadogApiKey": "string"
+  }
+}
+```
+
+**Mixpanel**
+
+**Request:**
+
+```json
+{
+  "name": "string",
+  "type": "mixpanel",
+  "sink": {
+    "mixpanelRegion": "string",
+    "mixpanelProjectId": "string",
+    "mixpanelServiceAccountUsername": "string",
+    "mixpanelServiceAccountPassword": "string"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "mixpanel",
+  "status": "active",
+  "sink": {
+    "mixpanelRegion": "string",
+    "mixpanelProjectId": "string",
+    "mixpanelServiceAccountUsername": "string",
+    "mixpanelServiceAccountPassword": "string"
+  }
+}
+```
+
+**Segment**
+
+**Request:**
+
+```json
+{
+  "name": "string",
+  "type": "segment",
+  "sink": {
+    "segmentWriteKey": "string"
+  }
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "segment",
+  "status": "active",
+  "sink": {
+    "segmentWriteKey": "string"
+  }
+}
+```
+
+**Splunk Log Stream**
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "splunk",
+  "status": "active|paused|suspended",
+  "sink": {
+    "splunkDomain": "string",
+    "splunkToken": "string",
+    "splunkPort": "string",
+    "splunkSecure": "boolean"
+  }
+}
+```
+
+**Sumo Logic Log Stream**
+
+```json
+{
+  "id": "string",
+  "name": "string",
+  "type": "sumo",
+  "status": "active|paused|suspended",
+  "sink": {
+    "sumoSourceAddress": "string"
+  }
+}
+```
+
+**Status**
+
+The `status` of a log stream maybe any of the following:
+
+1. `active` - Stream is currently enabled.
+2. `paused` - Stream is currently user disabled and will not attempt log delivery.
+3. `suspended` - Stream is currently disabled because of errors and will not attempt log delivery.
 </dd>
 </dl>
 </dd>
@@ -7410,40 +7744,79 @@ $client->logStreams->delete(
 <dd>
 
 Update a log stream.
-<h4>Examples of how to use the PATCH endpoint.</h4> The following fields may be updated in a PATCH operation: <ul><li>name</li><li>status</li><li>sink</li></ul> Note: For log streams of type <code>eventbridge</code> and <code>eventgrid</code>, updating the <code>sink</code> is not permitted.
-<h5>Update the status of a log stream</h5><pre><code>{
-	"status": "active|paused"
-}</code></pre>
-<h5>Update the name of a log stream</h5><pre><code>{
-	"name": "string"
-}</code></pre>
-<h5>Update the sink properties of a stream of type <code>http</code></h5><pre><code>{
+
+**Examples of how to use the PATCH endpoint.**
+
+The following fields may be updated in a PATCH operation:
+
+- name
+- status
+- sink
+
+Note: For log streams of type `eventbridge` and `eventgrid`, updating the `sink` is not permitted.
+
+**Update the status of a log stream**
+
+```json
+{
+  "status": "active|paused"
+}
+```
+
+**Update the name of a log stream**
+
+```json
+{
+  "name": "string"
+}
+```
+
+**Update the sink properties of a stream of type `http`**
+
+```json
+{
   "sink": {
     "httpEndpoint": "string",
     "httpContentType": "string",
     "httpContentFormat": "JSONARRAY|JSONLINES",
     "httpAuthorization": "string"
   }
-}</code></pre>
-<h5>Update the sink properties of a stream of type <code>datadog</code></h5><pre><code>{
+}
+```
+
+**Update the sink properties of a stream of type `datadog`**
+
+```json
+{
   "sink": {
-		"datadogRegion": "string",
-		"datadogApiKey": "string"
+    "datadogRegion": "string",
+    "datadogApiKey": "string"
   }
-}</code></pre>
-<h5>Update the sink properties of a stream of type <code>splunk</code></h5><pre><code>{
+}
+```
+
+**Update the sink properties of a stream of type `splunk`**
+
+```json
+{
   "sink": {
     "splunkDomain": "string",
     "splunkToken": "string",
     "splunkPort": "string",
     "splunkSecure": "boolean"
   }
-}</code></pre>
-<h5>Update the sink properties of a stream of type <code>sumo</code></h5><pre><code>{
+}
+```
+
+**Update the sink properties of a stream of type `sumo`**
+
+```json
+{
   "sink": {
     "sumoSourceAddress": "string"
   }
-}</code></pre> 
+}
+```
 </dd>
 </dl>
 </dd>
@@ -7551,33 +7924,30 @@ $client->logStreams->update(
 
 Retrieve log entries that match the specified search criteria (or all log entries if no criteria specified).
 
-Set custom search criteria using the <code>q</code> parameter, or search from a specific log ID (<i>"search from checkpoint"</i>).
+Set custom search criteria using the `q` parameter, or search from a specific log ID (_"search from checkpoint"_).
 
-For more information on all possible event types, their respective acronyms, and descriptions, see <a href="https://auth0.com/docs/logs/log-event-type-codes">Log Event Type Codes</a>.
+For more information on all possible event types, their respective acronyms, and descriptions, see [Log Event Type Codes](https://auth0.com/docs/logs/log-event-type-codes).
 
-<h5>To set custom search criteria, use the following parameters:</h5>
+**To set custom search criteria, use the following parameters:**
 
-<ul>
-    <li><b>q:</b> Search Criteria using <a href="https://auth0.com/docs/logs/log-search-query-syntax">Query String Syntax</a></li>
-    <li><b>page:</b> Page index of the results to return. First page is 0.</li>
-    <li><b>per_page:</b> Number of results per page.</li>
-    <li><b>sort:</b> Field to use for sorting appended with `:1` for ascending and `:-1` for descending. e.g. `date:-1`</li>
-    <li><b>fields:</b> Comma-separated list of fields to include or exclude (depending on include_fields) from the result, empty to retrieve all fields.</li>
-    <li><b>include_fields:</b> Whether specified fields are to be included (true) or excluded (false).</li>
-    <li><b>include_totals:</b> Return results inside an object that contains the total result count (true) or as a direct array of results (false, default). <b>Deprecated:</b> this field is deprecated and should be removed from use. See <a href="https://auth0.com/docs/product-lifecycle/deprecations-and-migrations/migrate-to-tenant-log-search-v3#pagination">Search Engine V3 Breaking Changes</a></li>
-</ul>
+- **q:** Search Criteria using [Query String Syntax](https://auth0.com/docs/logs/log-search-query-syntax)
+- **page:** Page index of the results to return. First page is 0.
+- **per_page:** Number of results per page.
+- **sort:** Field to use for sorting appended with `:1` for ascending and `:-1` for descending. e.g. `date:-1`
+- **fields:** Comma-separated list of fields to include or exclude (depending on include_fields) from the result, empty to retrieve all fields.
+- **include_fields:** Whether specified fields are to be included (true) or excluded (false).
+- **include_totals:** Return results inside an object that contains the total result count (true) or as a direct array of results (false, default). **Deprecated:** this field is deprecated and should be removed from use. See [Search Engine V3 Breaking Changes](https://auth0.com/docs/product-lifecycle/deprecations-and-migrations/migrate-to-tenant-log-search-v3#pagination)
 
-For more information on the list of fields that can be used in <code>fields</code> and <code>sort</code>, see <a href="https://auth0.com/docs/logs/log-search-query-syntax#searchable-fields">Searchable Fields</a>.
+For more information on the list of fields that can be used in `fields` and `sort`, see [Searchable Fields](https://auth0.com/docs/logs/log-search-query-syntax#searchable-fields).
 
-Auth0 <a href="https://auth0.com/docs/logs/retrieve-log-events-using-mgmt-api#limitations">limits the number of logs</a> you can return by search criteria to 100 logs per request. Furthermore, you may paginate only through 1,000 search results. If you exceed this threshold, please redefine your search or use the <a href="https://auth0.com/docs/logs/retrieve-log-events-using-mgmt-api#retrieve-logs-by-checkpoint">get logs by checkpoint method</a>.
+Auth0 [limits the number of logs](https://auth0.com/docs/logs/retrieve-log-events-using-mgmt-api#limitations) you can return by search criteria to 100 logs per request. Furthermore, you may paginate only through 1,000 search results. If you exceed this threshold, please redefine your search or use the [get logs by checkpoint method](https://auth0.com/docs/logs/retrieve-log-events-using-mgmt-api#retrieve-logs-by-checkpoint).
 
-<h5>To search from a checkpoint log ID, use the following parameters:</h5>
-<ul>
-    <li><b>from:</b> Log Event ID from which to start retrieving logs. You can limit the number of logs returned using the <code>take</code> parameter. If you use <code>from</code> at the same time as <code>q</code>, <code>from</code> takes precedence and <code>q</code> is ignored.</li>
-    <li><b>take:</b> Number of entries to retrieve when using the <code>from</code> parameter.</li>
-</ul>
+**To search from a checkpoint log ID, use the following parameters:**
 
-<strong>Important:</strong> When fetching logs from a checkpoint log ID, any parameter other than <code>from</code> and <code>take</code> will be ignored, and date ordering is not guaranteed.
+- **from:** Log Event ID from which to start retrieving logs. You can limit the number of logs returned using the `take` parameter. If you use `from` at the same time as `q`, `from` takes precedence and `q` is ignored.
+- **take:** Number of entries to retrieve when using the `from` parameter.
+
+**Important:** When fetching logs from a checkpoint log ID, any parameter other than `from` and `take` will be ignored, and date ordering is not guaranteed.
 </dd>
 </dl>
 </dd>
@@ -8770,6 +9140,299 @@ $client->prompts->updateSettings(
 </dl>
 </details>
 
+## RateLimitPolicies
+<details><summary><code>$client-&gt;rateLimitPolicies-&gt;list($request) -> ?ListRateLimitPoliciesPaginatedResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->rateLimitPolicies->list(
+    new ListRateLimitPoliciesRequestParameters([
+        'resource' => RateLimitPolicyResourceEnum::OauthAuthenticationApi->value,
+        'consumer' => RateLimitPolicyConsumerEnum::Client->value,
+        'consumerSelector' => 'consumer_selector',
+        'take' => 1,
+        'from' => 'from',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$resource:** `?string` — The API protected by the Rate Limit Policy.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$consumer:** `?string` — The consumer to which the rate limit policy applies.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$consumerSelector:** `?string` — Identifier or category within the consumer to which the policy applies. Supported values: `client_id:<client_id>` to target a specific client by ID, `client_id:<cimd_uri>` to target a CIMD client by URI, `cimd_clients` to target all CIMD clients, `third_party_clients` to target all third-party clients, or `default` to apply the policy to any consumer identifier not otherwise explicitly targeted.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 50.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Cursor for pagination.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;rateLimitPolicies-&gt;create($request) -> ?CreateRateLimitPolicyResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->rateLimitPolicies->create(
+    new CreateRateLimitPolicyRequestContent([
+        'resource' => RateLimitPolicyResourceEnum::OauthAuthenticationApi->value,
+        'consumer' => RateLimitPolicyConsumerEnum::Client->value,
+        'consumerSelector' => 'consumer_selector',
+        'configuration' => new RateLimitPolicyConfigurationZero([
+            'action' => RateLimitPolicyConfigurationZeroAction::Allow->value,
+        ]),
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$resource:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$consumer:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$consumerSelector:** `string` — Identifier or category within the consumer to which the policy applies. Supported values: `client_id:<client_id>` to target a specific client by ID, `client_id:<cimd_uri>` to target a CIMD client by URI, `cimd_clients` to target all CIMD clients, `third_party_clients` to target all third-party clients, or `default` to apply the policy to any consumer identifier not otherwise explicitly targeted.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$configuration:** `RateLimitPolicyConfigurationZero|RateLimitPolicyConfigurationOne|RateLimitPolicyConfigurationAction` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;rateLimitPolicies-&gt;get($id) -> ?GetRateLimitPolicyResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->rateLimitPolicies->get(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — Unique identifier for the Rate Limit Policy.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;rateLimitPolicies-&gt;delete($id)</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->rateLimitPolicies->delete(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — Unique identifier for the Rate Limit Policy.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;rateLimitPolicies-&gt;update($id, $request) -> ?UpdateRateLimitPolicyResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->rateLimitPolicies->update(
+    'id',
+    new PatchRateLimitPolicyRequestContent([
+        'configuration' => new PatchRateLimitPolicyConfigurationRequestContentZero([
+            'action' => PatchRateLimitPolicyConfigurationRequestContentZeroAction::Allow->value,
+        ]),
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — Unique identifier for the Rate Limit Policy.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$configuration:** `PatchRateLimitPolicyConfigurationRequestContentZero|PatchRateLimitPolicyConfigurationRequestContentOne|PatchRateLimitPolicyConfigurationRequestContentAction` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## RefreshTokens
 <details><summary><code>$client-&gt;refreshTokens-&gt;list($request) -> ?GetRefreshTokensPaginatedResponseContent</code></summary>
 <dl>
@@ -8863,6 +9526,86 @@ $client->refreshTokens->list(
 <dd>
 
 **$includeFields:** `?bool` — Whether specified fields are to be included (true) or excluded (false).
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;refreshTokens-&gt;revoke($request)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Revoke refresh tokens in bulk by ID list, user, user+client, or client.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->refreshTokens->revoke(
+    new RevokeRefreshTokensRequestContent([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$ids:** `?array` — Array of refresh token IDs to revoke. Limited to 100 at a time.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$userId:** `?string` — Revoke all refresh tokens for this user.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$clientId:** `?string` — Revoke all refresh tokens for this client.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$audience:** `?string` — Resource server identifier (audience) to scope the revocation. Must be used with both `user_id` and `client_id`.
     
 </dd>
 </dl>
@@ -9081,6 +9824,9 @@ Retrieve details of all APIs associated with your tenant.
 ```php
 $client->resourceServers->list(
     new ListResourceServerRequestParameters([
+        'identifiers' => [
+            'identifiers',
+        ],
         'page' => 1,
         'perPage' => 1,
         'includeTotals' => true,
@@ -9247,6 +9993,14 @@ $client->resourceServers->create(
 <dl>
 <dd>
 
+**$allowOnlineAccessWithEphemeralSessions:** `?bool` — Whether Online Refresh Tokens can be issued even when sessions are configured as ephemeral (true) or not (false).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$tokenLifetime:** `?int` — Expiration value (in seconds) for access tokens issued for this API from the token endpoint.
     
 </dd>
@@ -9312,6 +10066,14 @@ $client->resourceServers->create(
 <dd>
 
 **$subjectTypeAuthorization:** `?ResourceServerSubjectTypeAuthorization` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$authorizationPolicy:** `?ResourceServerAuthorizationPolicy` 
     
 </dd>
 </dl>
@@ -9555,6 +10317,14 @@ $client->resourceServers->update(
 <dl>
 <dd>
 
+**$allowOnlineAccessWithEphemeralSessions:** `?bool` — Whether Online Refresh Tokens can be issued even when sessions are configured as ephemeral (true) or not (false).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$tokenLifetime:** `?int` — Expiration value (in seconds) for access tokens issued for this API from the token endpoint.
     
 </dd>
@@ -9615,6 +10385,14 @@ $client->resourceServers->update(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$authorizationPolicy:** `?ResourceServerAuthorizationPolicy` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -9638,7 +10416,7 @@ $client->resourceServers->update(
 
 Retrieve detailed list of user roles created in your tenant.
 
-<b>Note</b>: The returned list does not include standard roles available for tenant members, such as Admin or Support Access.
+**Note**: The returned list does not include standard roles available for tenant members, such as Admin or Support Access.
 </dd>
 </dl>
 </dd>
@@ -9723,9 +10501,9 @@ $client->roles->list(
 <dl>
 <dd>
 
-Create a user role for <a href="https://auth0.com/docs/manage-users/access-control/rbac">Role-Based Access Control</a>.
+Create a user role for [Role-Based Access Control](https://auth0.com/docs/manage-users/access-control/rbac).
 
-<b>Note</b>: New roles are not associated with any permissions by default. To assign existing permissions to your role, review Associate Permissions with a Role. To create new permissions, review Add API Permissions.
+**Note**: New roles are not associated with any permissions by default. To assign existing permissions to your role, review Associate Permissions with a Role. To create new permissions, review Add API Permissions.
 </dd>
 </dl>
 </dd>
@@ -9791,7 +10569,7 @@ $client->roles->create(
 <dl>
 <dd>
 
-Retrieve details about a specific <a href="https://auth0.com/docs/manage-users/access-control/rbac">user role</a> specified by ID.
+Retrieve details about a specific [user role](https://auth0.com/docs/manage-users/access-control/rbac) specified by ID.
 </dd>
 </dl>
 </dd>
@@ -9847,7 +10625,7 @@ $client->roles->get(
 <dl>
 <dd>
 
-Delete a specific <a href="https://auth0.com/docs/manage-users/access-control/rbac">user role</a> from your tenant. Once deleted, it is removed from any user who was previously assigned that role. This action cannot be undone.
+Delete a specific [user role](https://auth0.com/docs/manage-users/access-control/rbac) from your tenant. Once deleted, it is removed from any user who was previously assigned that role. This action cannot be undone.
 </dd>
 </dl>
 </dd>
@@ -9903,7 +10681,7 @@ $client->roles->delete(
 <dl>
 <dd>
 
-Modify the details of a specific <a href="https://auth0.com/docs/manage-users/access-control/rbac">user role</a> specified by ID.
+Modify the details of a specific [user role](https://auth0.com/docs/manage-users/access-control/rbac) specified by ID.
 </dd>
 </dl>
 </dd>
@@ -9977,7 +10755,7 @@ $client->roles->update(
 <dl>
 <dd>
 
-Retrieve a filtered list of <a href="https://auth0.com/docs/rules">rules</a>. Accepts a list of fields to include or exclude.
+Retrieve a filtered list of [rules](https://auth0.com/docs/rules). Accepts a list of fields to include or exclude.
 </dd>
 </dl>
 </dd>
@@ -10080,9 +10858,9 @@ $client->rules->list(
 <dl>
 <dd>
 
-Create a <a href="https://auth0.com/docs/rules#create-a-new-rule-using-the-management-api">new rule</a>.
+Create a [new rule](https://auth0.com/docs/rules#create-a-new-rule-using-the-management-api).
 
-Note: Changing a rule's stage of execution from the default <code>login_success</code> can change the rule's function signature to have user omitted.
+Note: Changing a rule's stage of execution from the default `login_success` can change the rule's function signature to have user omitted.
 </dd>
 </dl>
 </dd>
@@ -10165,7 +10943,7 @@ $client->rules->create(
 <dl>
 <dd>
 
-Retrieve <a href="https://auth0.com/docs/rules">rule</a> details. Accepts a list of fields to include or exclude in the result.
+Retrieve [rule](https://auth0.com/docs/rules) details. Accepts a list of fields to include or exclude in the result.
 </dd>
 </dl>
 </dd>
@@ -10686,7 +11464,7 @@ $client->selfServiceProfiles->create(
 <dl>
 <dd>
 
-**$allowedStrategies:** `?array` — List of IdP strategies that will be shown to users during the Self-Service SSO flow. Possible values: [`oidc`, `samlp`, `waad`, `google-apps`, `adfs`, `okta`, `auth0-samlp`, `okta-samlp`, `keycloak-samlp`, `pingfederate`]
+**$allowedStrategies:** `?array` — List of IdP strategies that will be shown to users during the Self-Service Enterprise Configuration flow. Possible values: [`oidc`, `samlp`, `waad`, `google-apps`, `adfs`, `okta`, `auth0-samlp`, `okta-samlp`, `keycloak-samlp`, `pingfederate`]
     
 </dd>
 </dl>
@@ -10694,7 +11472,7 @@ $client->selfServiceProfiles->create(
 <dl>
 <dd>
 
-**$userAttributes:** `?array` — List of attributes to be mapped that will be shown to the user during the SS-SSO flow.
+**$userAttributes:** `?array` — List of attributes to be mapped that will be shown to the user during the Self-Service Enterprise Configuration flow.
     
 </dd>
 </dl>
@@ -10903,7 +11681,7 @@ $client->selfServiceProfiles->update(
 <dl>
 <dd>
 
-**$allowedStrategies:** `?array` — List of IdP strategies that will be shown to users during the Self-Service SSO flow. Possible values: [`oidc`, `samlp`, `waad`, `google-apps`, `adfs`, `okta`, `auth0-samlp`, `okta-samlp`, `keycloak-samlp`, `pingfederate`]
+**$allowedStrategies:** `?array` — List of IdP strategies that will be shown to users during the Self-Service Enterprise Configuration flow. Possible values: [`oidc`, `samlp`, `waad`, `google-apps`, `adfs`, `okta`, `auth0-samlp`, `okta-samlp`, `keycloak-samlp`, `pingfederate`]
     
 </dd>
 </dl>
@@ -11523,7 +12301,7 @@ $client->tickets->changePassword(
 <dl>
 <dd>
 
-**$resultUrl:** `?string` — URL the user will be redirected to in the classic Universal Login experience once the ticket is used. Cannot be specified when using client_id or organization_id.
+**$resultUrl:** `?string` — URL the user will be redirected to in the classic Universal Login experience once the ticket is used. Cannot be specified when using organization_id. May be specified together with client_id when the tenant has a custom password reset page enabled and a password-reset-post-challenge Action bound.
     
 </dd>
 </dl>
@@ -12045,7 +12823,7 @@ $client->userAttributeProfiles->list(
 <dl>
 <dd>
 
-Retrieve details about a single User Attribute Profile specified by ID. 
+Create a User Attribute Profile.
 </dd>
 </dl>
 </dd>
@@ -12222,7 +13000,7 @@ $client->userAttributeProfiles->getTemplate(
 <dl>
 <dd>
 
-Retrieve details about a single User Attribute Profile specified by ID. 
+Retrieve details about a single User Attribute Profile specified by ID.
 </dd>
 </dl>
 </dd>
@@ -12685,14 +13463,18 @@ Retrieve details of users. It is possible to:
 - Sort the users to be returned
 - Select the fields to be returned
 - Specify the number of users to retrieve per page and the page index
- <!-- only v3 is available -->
-The <code>q</code> query parameter can be used to get users that match the specified criteria <a href="https://auth0.com/docs/users/search/v3/query-syntax">using query string syntax.</a>
 
-<a href="https://auth0.com/docs/users/search/v3">Learn more about searching for users.</a>
 
-Read about <a href="https://auth0.com/docs/users/search/best-practices">best practices</a> when working with the API endpoints for retrieving users.
 
-Auth0 limits the number of users you can return. If you exceed this threshold, please redefine your search, use the <a href="https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports">export job</a>, or the <a href="https://auth0.com/docs/extensions/user-import-export">User Import / Export</a> extension.
+The `q` query parameter can be used to get users that match the specified criteria [using query string syntax.](https://auth0.com/docs/users/search/v3/query-syntax)
+
+[Learn more about searching for users.](https://auth0.com/docs/users/search/v3)
+
+Read about [best practices](https://auth0.com/docs/users/search/best-practices) when working with the API endpoints for retrieving users.
+
+
+
+Auth0 limits the number of users you can return. If you exceed this threshold, please redefine your search, use the [export job](https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports), or the [User Import / Export](https://auth0.com/docs/extensions/user-import-export) extension.
 </dd>
 </dl>
 </dd>
@@ -12831,9 +13613,9 @@ $client->users->list(
 <dl>
 <dd>
 
-Create a new user for a given <a href="https://auth0.com/docs/connections/database">database</a> or <a href="https://auth0.com/docs/connections/passwordless">passwordless</a> connection.
+Create a new user for a given [database](https://auth0.com/docs/connections/database) or [passwordless](https://auth0.com/docs/connections/passwordless) connection.
 
-Note: <code>connection</code> is required but other parameters such as <code>email</code> and <code>password</code> are dependent upon the type of connection.
+Note: `connection` is required but other parameters such as `email` and `password` are dependent upon the type of connection.
 </dd>
 </dl>
 </dd>
@@ -13099,7 +13881,7 @@ $client->users->listUsersByEmail(
 <dl>
 <dd>
 
-Retrieve user details. A list of fields to include or exclude may also be specified. For more information, see <a href="https://auth0.com/docs/manage-users/user-search/retrieve-users-with-get-users-endpoint">Retrieve Users with the Get Users Endpoint</a>.
+Retrieve user details. A list of fields to include or exclude may also be specified. For more information, see [Retrieve Users with the Get Users Endpoint](https://auth0.com/docs/manage-users/user-search/retrieve-users-with-get-users-endpoint).
 </dd>
 </dl>
 </dd>
@@ -13175,7 +13957,7 @@ $client->users->get(
 <dl>
 <dd>
 
-Delete a user by user ID. This action cannot be undone. For Auth0 Dashboard instructions, see <a href="https://auth0.com/docs/manage-users/user-accounts/delete-users">Delete Users</a>.
+Delete a user by user ID. This action cannot be undone. For Auth0 Dashboard instructions, see [Delete Users](https://auth0.com/docs/manage-users/user-accounts/delete-users).
 </dd>
 </dl>
 </dd>
@@ -13235,64 +14017,84 @@ Update a user.
 
 These are the attributes that can be updated at the root level:
 
-<ul>
-    <li>app_metadata</li>
-    <li>blocked</li>
-    <li>email</li>
-    <li>email_verified</li>
-    <li>family_name</li>
-    <li>given_name</li>
-    <li>name</li>
-    <li>nickname</li>
-    <li>password</li>
-    <li>phone_number</li>
-    <li>phone_verified</li>
-    <li>picture</li>
-    <li>username</li>
-    <li>user_metadata</li>
-    <li>verify_email</li>
-</ul>
+- app_metadata
+- blocked
+- email
+- email_verified
+- family_name
+- given_name
+- name
+- nickname
+- password
+- phone_number
+- phone_verified
+- picture
+- username
+- user_metadata
+- verify_email
 
 Some considerations:
-<ul>
-    <li>The properties of the new object will replace the old ones.</li>
-    <li>The metadata fields are an exception to this rule (<code>user_metadata</code> and <code>app_metadata</code>). These properties are merged instead of being replaced but be careful, the merge only occurs on the first level.</li>
-    <li>If you are updating <code>email</code>, <code>email_verified</code>, <code>phone_number</code>, <code>phone_verified</code>, <code>username</code> or <code>password</code> of a secondary identity, you need to specify the <code>connection</code> property too.</li>
-    <li>If you are updating <code>email</code> or <code>phone_number</code> you can specify, optionally, the <code>client_id</code> property.</li>
-    <li>Updating <code>email_verified</code> is not supported for enterprise and passwordless sms connections.</li>
-    <li>Updating the <code>blocked</code> to <code>false</code> does not affect the user's blocked state from an excessive amount of incorrectly provided credentials. Use the "Unblock a user" endpoint from the "User Blocks" API to change the user's state.</li>
-    <li>Supported attributes can be unset by supplying <code>null</code> as the value.</li>
-</ul>
 
-<h5>Updating a field (non-metadata property)</h5>
+- The properties of the new object will replace the old ones.
+- The metadata fields are an exception to this rule (`user_metadata` and `app_metadata`). These properties are merged instead of being replaced but be careful, the merge only occurs on the first level.
+- If you are updating `email`, `email_verified`, `phone_number`, `phone_verified`, `username` or `password` of a secondary identity, you need to specify the `connection` property too.
+- If you are updating `email` or `phone_number` you can specify, optionally, the `client_id` property.
+- Updating `email_verified` is not supported for enterprise and passwordless sms connections.
+- Updating the `blocked` to `false` does not affect the user's blocked state from an excessive amount of incorrectly provided credentials. Use the "Unblock a user" endpoint from the "User Blocks" API to change the user's state.
+- Supported attributes can be unset by supplying `null` as the value.
+
+**Updating a field (non-metadata property)**
+
 To mark the email address of a user as verified, the body to send should be:
-<pre><code>{ "email_verified": true }</code></pre>
 
-<h5>Updating a user metadata root property</h5>Let's assume that our test user has the following <code>user_metadata</code>:
-<pre><code>{ "user_metadata" : { "profileCode": 1479 } }</code></pre>
+```json
+{ "email_verified": true }
+```
 
-To add the field <code>addresses</code> the body to send should be:
-<pre><code>{ "user_metadata" : { "addresses": {"work_address": "100 Industrial Way"} }}</code></pre>
+**Updating a user metadata root property**
 
-The modified object ends up with the following <code>user_metadata</code> property:<pre><code>{
+Let's assume that our test user has the following `user_metadata`:
+
+```json
+{ "user_metadata" : { "profileCode": 1479 } }
+```
+
+To add the field `addresses` the body to send should be:
+
+```json
+{ "user_metadata" : { "addresses": {"work_address": "100 Industrial Way"} }}
+```
+
+The modified object ends up with the following `user_metadata` property:
+
+```json
+{
   "user_metadata": {
     "profileCode": 1479,
     "addresses": { "work_address": "100 Industrial Way" }
   }
-}</code></pre>
+}
+```
 
-<h5>Updating an inner user metadata property</h5>If there's existing user metadata to which we want to add  <code>"home_address": "742 Evergreen Terrace"</code> (using the <code>addresses</code> property) we should send the whole <code>addresses</code> object. Since this is a first-level object, the object will be merged in, but its own properties will not be. The body to send should be:
-<pre><code>{
+**Updating an inner user metadata property**
+
+If there's existing user metadata to which we want to add  `"home_address": "742 Evergreen Terrace"` (using the `addresses` property) we should send the whole `addresses` object. Since this is a first-level object, the object will be merged in, but its own properties will not be. The body to send should be:
+
+```json
+{
   "user_metadata": {
     "addresses": {
       "work_address": "100 Industrial Way",
       "home_address": "742 Evergreen Terrace"
     }
   }
-}</code></pre>
+}
+```
 
-The modified object ends up with the following <code>user_metadata</code> property:
-<pre><code>{
+The modified object ends up with the following `user_metadata` property:
+
+```json
+{
   "user_metadata": {
     "profileCode": 1479,
     "addresses": {
@@ -13300,7 +14102,8 @@ The modified object ends up with the following <code>user_metadata</code> proper
       "home_address": "742 Evergreen Terrace"
     }
   }
-}</code></pre>
+}
+```
 </dd>
 </dl>
 </dd>
@@ -13501,7 +14304,7 @@ $client->users->update(
 <dl>
 <dd>
 
-Remove an existing multi-factor authentication (MFA) <a href="https://auth0.com/docs/secure/multi-factor-authentication/reset-user-mfa">recovery code</a> and generate a new one. If a user cannot access the original device or account used for MFA enrollment, they can use a recovery code to authenticate. 
+Remove an existing multi-factor authentication (MFA) [recovery code](https://auth0.com/docs/secure/multi-factor-authentication/reset-user-mfa) and generate a new one. If a user cannot access the original device or account used for MFA enrollment, they can use a recovery code to authenticate.
 </dd>
 </dl>
 </dd>
@@ -15603,28 +16406,28 @@ $client->branding->templates->getUniversalLogin();
 
 Update the Universal Login branding template.
 
-<p>When <code>content-type</code> header is set to <code>application/json</code>:</p>
-<pre>
-{
-  "template": "&lt;!DOCTYPE html&gt;{% assign resolved_dir = dir | default: "auto" %}&lt;html lang="{{locale}}" dir="{{resolved_dir}}"&gt;&lt;head&gt;{%- auth0:head -%}&lt;/head&gt;&lt;body class="_widget-auto-layout"&gt;{%- auth0:widget -%}&lt;/body&gt;&lt;/html&gt;"
-}
-</pre>
+When `content-type` header is set to `application/json`:
 
-<p>
-  When <code>content-type</code> header is set to <code>text/html</code>:
-</p>
-<pre>
-&lt!DOCTYPE html&gt;
+```json
+{
+  "template": "<!DOCTYPE html>{% assign resolved_dir = dir | default: \"auto\" %}<html lang=\"{{locale}}\" dir=\"{{resolved_dir}}\"><head>{%- auth0:head -%}</head><body class=\"_widget-auto-layout\">{%- auth0:widget -%}</body></html>"
+}
+```
+
+When `content-type` header is set to `text/html`:
+
+```html
+<!DOCTYPE html>
 {% assign resolved_dir = dir | default: "auto" %}
-&lt;html lang="{{locale}}" dir="{{resolved_dir}}"&gt;
-  &lt;head&gt;
+<html lang="{{locale}}" dir="{{resolved_dir}}">
+  <head>
     {%- auth0:head -%}
-  &lt;/head&gt;
-  &lt;body class="_widget-auto-layout"&gt;
+  </head>
+  <body class="_widget-auto-layout">
     {%- auth0:widget -%}
-  &lt;/body&gt;
-&lt;/html&gt;
-</pre>
+  </body>
+</html>
+```
 </dd>
 </dl>
 </dd>
@@ -17478,6 +18281,9 @@ Retrieve all connections that are enabled for the specified <a href="https://www
 $client->clients->connections->get(
     'id',
     new ConnectionsGetRequest([
+        'strategy' => [
+            ConnectionStrategyEnum::Ad->value,
+        ],
         'from' => 'from',
         'take' => 1,
         'fields' => 'fields',
@@ -17916,6 +18722,153 @@ $client->connections->directoryProvisioning->getDefaultMapping(
 </dl>
 </details>
 
+<details><summary><code>$client-&gt;connections-&gt;directoryProvisioning-&gt;listSynchronizedGroups($id, $request) -> ?ListSynchronizedGroupsResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve the configured synchronized groups for a connection directory provisioning configuration.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->connections->directoryProvisioning->listSynchronizedGroups(
+    'id',
+    new ListSynchronizedGroupsRequestParameters([
+        'from' => 'from',
+        'take' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The id of the connection to list synchronized groups for.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Optional Id from which to start selection.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 50.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;connections-&gt;directoryProvisioning-&gt;set($id, $request)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create or replace the selected groups for a connection directory provisioning configuration.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->connections->directoryProvisioning->set(
+    'id',
+    new ReplaceSynchronizedGroupsRequestContent([
+        'groups' => [
+            new SynchronizedGroupPayload([
+                'id' => 'id',
+            ]),
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The id of the connection to create or replace synchronized groups for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `array` — Array of Google Workspace Directory group objects to synchronize.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Connections ScimConfiguration
 <details><summary><code>$client-&gt;connections-&gt;scimConfiguration-&gt;list($request) -> ?ListScimConfigurationsResponseContent</code></summary>
 <dl>
@@ -17996,7 +18949,7 @@ $client->connections->scimConfiguration->list(
 <dl>
 <dd>
 
-Retrieves a scim configuration by its <code>connectionId</code>.
+Retrieves a scim configuration by its `connectionId`.
 </dd>
 </dl>
 </dd>
@@ -18117,7 +19070,7 @@ $client->connections->scimConfiguration->create(
 <dl>
 <dd>
 
-Deletes a scim configuration by its <code>connectionId</code>.
+Deletes a scim configuration by its `connectionId`.
 </dd>
 </dl>
 </dd>
@@ -18173,7 +19126,7 @@ $client->connections->scimConfiguration->delete(
 <dl>
 <dd>
 
-Update a scim configuration by its <code>connectionId</code>.
+Update a scim configuration by its `connectionId`.
 </dd>
 </dl>
 </dd>
@@ -18251,7 +19204,7 @@ $client->connections->scimConfiguration->update(
 <dl>
 <dd>
 
-Retrieves a scim configuration's default mapping by its <code>connectionId</code>.
+Retrieves a scim configuration's default mapping by its `connectionId`.
 </dd>
 </dl>
 </dd>
@@ -18308,9 +19261,9 @@ $client->connections->scimConfiguration->getDefaultMapping(
 <dl>
 <dd>
 
-Retrieve all clients that have the specified <a href="https://auth0.com/docs/authenticate/identity-providers">connection</a> enabled.
+Retrieve all clients that have the specified [connection](https://auth0.com/docs/authenticate/identity-providers) enabled.
 
-<b>Note</b>: The first time you call this endpoint, omit the <code>from</code> parameter. If there are more results, a <code>next</code> value is included in the response. You can use this for subsequent API calls. When <code>next</code> is no longer included in the response, no further results are remaining.
+**Note**: The first time you call this endpoint, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no further results are remaining.
 </dd>
 </dl>
 </dd>
@@ -18755,7 +19708,7 @@ $client->connections->directoryProvisioning->synchronizations->create(
 <dl>
 <dd>
 
-Retrieves all scim tokens by its connection <code>id</code>.
+Retrieves all scim tokens by its connection `id`.
 </dd>
 </dl>
 </dd>
@@ -18884,7 +19837,7 @@ $client->connections->scimConfiguration->tokens->create(
 <dl>
 <dd>
 
-Deletes a scim token by its connection <code>id</code> and <code>tokenId</code>.
+Deletes a scim token by its connection `id` and `tokenId`.
 </dd>
 </dl>
 </dd>
@@ -19661,7 +20614,11 @@ $client->flows->executions->list(
 $client->flows->executions->get(
     'flow_id',
     'execution_id',
-    new GetFlowExecutionRequestParameters([]),
+    new GetFlowExecutionRequestParameters([
+        'hydrate' => [
+            GetFlowExecutionRequestParametersHydrateEnum::Debug->value,
+        ],
+    ]),
 );
 ```
 </dd>
@@ -20107,6 +21064,221 @@ $client->groups->members->get(
 </dl>
 </details>
 
+## Groups Roles
+<details><summary><code>$client-&gt;groups-&gt;roles-&gt;list($id, $request) -> ?ListGroupRolesResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Lists the <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> assigned to a group.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->groups->roles->list(
+    'id',
+    new ListGroupRolesRequestParameters([
+        'from' => 'from',
+        'take' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — Unique identifier for the group (service-generated).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Optional Id from which to start selection.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 50.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;groups-&gt;roles-&gt;create($id, $request)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Assign one or more <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> to a specified group.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->groups->roles->create(
+    'id',
+    new CreateGroupRolesRequestParameters([
+        'roles' => [
+            'roles',
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — Unique identifier for the group (service-generated).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$roles:** `array` — Array of role IDs to assign to the group.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;groups-&gt;roles-&gt;delete($id, $request)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Unassign one or more <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> from a specified group.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->groups->roles->delete(
+    'id',
+    new DeleteGroupRolesRequestContent([
+        'roles' => [
+            'roles',
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — Unique identifier for the group (service-generated).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$roles:** `array` — Array of role IDs to remove from the group.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Guardian Enrollments
 <details><summary><code>$client-&gt;guardian-&gt;enrollments-&gt;createTicket($request) -> ?CreateGuardianEnrollmentTicketResponseContent</code></summary>
 <dl>
@@ -20120,10 +21292,7 @@ $client->groups->members->get(
 <dl>
 <dd>
 
-Create a <a href="https://auth0.com/docs/secure/multi-factor-authentication/auth0-guardian/create-custom-enrollment-tickets">multi-factor authentication (MFA) enrollment ticket</a>, and optionally send an email with the created ticket, to a given user.
-Create a <a href="https://auth0.com/docs/secure/multi-factor-authentication/auth0-guardian/create-custom-enrollment-tickets">multi-factor authentication (MFA) enrollment ticket</a>, and optionally send an email with the created ticket to a given user. Enrollment tickets can specify which factor users must enroll with or allow existing MFA users to enroll in additional factors.<br/> 
-
-Note: Users cannot enroll in Email as a factor through custom enrollment tickets. 
+Create a [multi-factor authentication (MFA) enrollment ticket](https://auth0.com/docs/secure/multi-factor-authentication/auth0-guardian/create-custom-enrollment-tickets), and optionally send an email with the created ticket to a given user. Enrollment tickets can specify which factor users must enroll with or allow existing MFA users to enroll in additional factors.
 </dd>
 </dl>
 </dd>
@@ -20277,7 +21446,7 @@ $client->guardian->enrollments->get(
 <dl>
 <dd>
 
-Remove a specific multi-factor authentication (MFA) enrollment from a user's account. This allows the user to re-enroll with MFA. For more information, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/reset-user-mfa">Reset User Multi-Factor Authentication and Recovery Codes</a>.
+Remove a specific multi-factor authentication (MFA) enrollment from a user's account. This allows the user to re-enroll with MFA. For more information, review [Reset User Multi-Factor Authentication and Recovery Codes](https://auth0.com/docs/secure/multi-factor-authentication/reset-user-mfa).
 </dd>
 </dl>
 </dd>
@@ -20441,15 +21610,14 @@ $client->guardian->factors->set(
 <dl>
 <dd>
 
-Retrieve the <a href="https://auth0.com/docs/secure/multi-factor-authentication/enable-mfa">multi-factor authentication (MFA) policies</a> configured for your tenant.
+Retrieve the [multi-factor authentication (MFA) policies](https://auth0.com/docs/secure/multi-factor-authentication/enable-mfa) configured for your tenant.
 
 The following policies are supported:
-<ul>
-<li><code>all-applications</code> policy prompts with MFA for all logins.</li>
-<li><code>confidence-score</code> policy prompts with MFA only for low confidence logins.</li>
-</ul>
 
-<b>Note</b>: The <code>confidence-score</code> policy is part of the <a href="https://auth0.com/docs/secure/multi-factor-authentication/adaptive-mfa">Adaptive MFA feature</a>. Adaptive MFA requires an add-on for the Enterprise plan; review <a href="https://auth0.com/pricing">Auth0 Pricing</a> for more details.
+- `all-applications` policy prompts with MFA for all logins.
+- `confidence-score` policy prompts with MFA only for low confidence logins.
+
+**Note**: The `confidence-score` policy is part of the [Adaptive MFA feature](https://auth0.com/docs/secure/multi-factor-authentication/adaptive-mfa). Adaptive MFA requires an add-on for the Enterprise plan; review [Auth0 Pricing](https://auth0.com/pricing) for more details.
 </dd>
 </dl>
 </dd>
@@ -20488,15 +21656,14 @@ $client->guardian->policies->list();
 <dl>
 <dd>
 
-Set <a href="https://auth0.com/docs/secure/multi-factor-authentication/enable-mfa">multi-factor authentication (MFA) policies</a> for your tenant.
+Set [multi-factor authentication (MFA) policies](https://auth0.com/docs/secure/multi-factor-authentication/enable-mfa) for your tenant.
 
 The following policies are supported:
-<ul>
-<li><code>all-applications</code> policy prompts with MFA for all logins.</li>
-<li><code>confidence-score</code> policy prompts with MFA only for low confidence logins.</li>
-</ul>
 
-<b>Note</b>: The <code>confidence-score</code> policy is part of the <a href="https://auth0.com/docs/secure/multi-factor-authentication/adaptive-mfa">Adaptive MFA feature</a>. Adaptive MFA requires an add-on for the Enterprise plan; review <a href="https://auth0.com/pricing">Auth0 Pricing</a> for more details.
+- `all-applications` policy prompts with MFA for all logins.
+- `confidence-score` policy prompts with MFA only for low confidence logins.
+
+**Note**: The `confidence-score` policy is part of the [Adaptive MFA feature](https://auth0.com/docs/secure/multi-factor-authentication/adaptive-mfa). Adaptive MFA requires an add-on for the Enterprise plan; review [Auth0 Pricing](https://auth0.com/pricing) for more details.
 </dd>
 </dl>
 </dd>
@@ -21370,7 +22537,7 @@ $client->guardian->factors->pushNotification->updateFcmv1Provider(
 <dl>
 <dd>
 
-Retrieve configuration details for an AWS SNS push notification provider that has been enabled for MFA. To learn more, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-push-notifications-for-mfa">Configure Push Notifications for MFA</a>. 
+Retrieve configuration details for an AWS SNS push notification provider that has been enabled for MFA. To learn more, review [Configure Push Notifications for MFA](https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-push-notifications-for-mfa).
 </dd>
 </dl>
 </dd>
@@ -21409,7 +22576,7 @@ $client->guardian->factors->pushNotification->getSnsProvider();
 <dl>
 <dd>
 
-Configure the <a href="https://auth0.com/docs/multifactor-authentication/developer/sns-configuration">AWS SNS push notification provider configuration</a> (subscription required).
+Configure the [AWS SNS push notification provider configuration](https://auth0.com/docs/multifactor-authentication/developer/sns-configuration) (subscription required).
 </dd>
 </dl>
 </dd>
@@ -21497,7 +22664,7 @@ $client->guardian->factors->pushNotification->setSnsProvider(
 <dl>
 <dd>
 
-Configure the <a href="https://auth0.com/docs/multifactor-authentication/developer/sns-configuration">AWS SNS push notification provider configuration</a> (subscription required).
+Configure the [AWS SNS push notification provider configuration](https://auth0.com/docs/multifactor-authentication/developer/sns-configuration) (subscription required).
 </dd>
 </dl>
 </dd>
@@ -22188,7 +23355,7 @@ $client->guardian->factors->duo->settings->update(
 <dl>
 <dd>
 
-Retrieve a hook's secrets by the ID of the hook. 
+Retrieve a hook's secrets by the ID of the hook.
 </dd>
 </dl>
 </dd>
@@ -22244,7 +23411,7 @@ $client->hooks->secrets->get(
 <dl>
 <dd>
 
-Add one or more secrets to an existing hook. Accepts an object of key-value pairs, where the key is the name of the secret. A hook can have a maximum of 20 secrets. 
+Add one or more secrets to an existing hook. Accepts an object of key-value pairs, where the key is the name of the secret. A hook can have a maximum of 20 secrets.
 </dd>
 </dl>
 </dd>
@@ -22311,7 +23478,7 @@ $client->hooks->secrets->create(
 <dl>
 <dd>
 
-Delete one or more existing secrets for a given hook. Accepts an array of secret names to delete. 
+Delete one or more existing secrets for a given hook. Accepts an array of secret names to delete.
 </dd>
 </dl>
 </dd>
@@ -22378,7 +23545,7 @@ $client->hooks->secrets->delete(
 <dl>
 <dd>
 
-Update one or more existing secrets for an existing hook. Accepts an object of key-value pairs, where the key is the name of the existing secret. 
+Update one or more existing secrets for an existing hook. Accepts an object of key-value pairs, where the key is the name of the existing secret.
 </dd>
 </dl>
 </dd>
@@ -22572,7 +23739,7 @@ $client->jobs->usersImports->create(
 <dl>
 <dd>
 
-Send an email to the specified user that asks them to click a link to <a href="https://auth0.com/docs/email/custom#verification-email">verify their email address</a>.
+Send an email to the specified user that asks them to click a link to [verify their email address](https://auth0.com/docs/email/custom#verification-email).
 
 Note: You must have the `Status` toggle enabled for the verification email template for the email to be sent.
 </dd>
@@ -23461,6 +24628,9 @@ $client->organizations->clientGrants->list(
     new ListOrganizationClientGrantsRequestParameters([
         'audience' => 'audience',
         'clientId' => 'client_id',
+        'grantIds' => [
+            'grant_ids',
+        ],
         'page' => 1,
         'perPage' => 1,
         'includeTotals' => true,
@@ -25874,7 +27044,7 @@ $client->prompts->rendering->list(
 <dl>
 <dd>
 
-Learn more about <a href='https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens'>configuring render settings</a> for advanced customization.
+Learn more about [configuring render settings](https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens) for advanced customization.
 </dd>
 </dl>
 </dd>
@@ -26002,7 +27172,7 @@ $client->prompts->rendering->get(
 <dl>
 <dd>
 
-Learn more about <a href='https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens'>configuring render settings</a> for advanced customization.
+Learn more about [configuring render settings](https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens) for advanced customization.
 </dd>
 </dl>
 </dd>
@@ -26664,7 +27834,7 @@ $client->roles->permissions->list(
 <dl>
 <dd>
 
-Add one or more <a href="https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions">permissions</a> to a specified user role.
+Add one or more [permissions](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions) to a specified user role.
 </dd>
 </dl>
 </dd>
@@ -26736,7 +27906,7 @@ $client->roles->permissions->add(
 <dl>
 <dd>
 
-Remove one or more <a href="https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions">permissions</a> from a specified user role.
+Remove one or more [permissions](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions) from a specified user role.
 </dd>
 </dl>
 </dd>
@@ -26809,25 +27979,23 @@ $client->roles->permissions->delete(
 <dl>
 <dd>
 
-Retrieve list of users associated with a specific role. For Dashboard instructions, review <a href="https://auth0.com/docs/manage-users/access-control/configure-core-rbac/roles/view-users-assigned-to-roles">View Users Assigned to Roles</a>.
+Retrieve list of users associated with a specific role. For Dashboard instructions, review [View Users Assigned to Roles](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/roles/view-users-assigned-to-roles).
 
 This endpoint supports two types of pagination:
-<ul>
-<li>Offset pagination</li>
-<li>Checkpoint pagination</li>
-</ul>
+
+- Offset pagination
+- Checkpoint pagination
 
 Checkpoint pagination must be used if you need to retrieve more than 1000 organization members.
 
-<h2>Checkpoint Pagination</h2>
+**Checkpoint Pagination**
 
 To search by checkpoint, use the following parameters:
-<ul>
-<li><code>from</code>: Optional id from which to start selection.</li>
-<li><code>take</code>: The total amount of entries to retrieve when using the from parameter. Defaults to 50.</li>
-</ul>
 
-<b>Note</b>: The first time you call this endpoint using checkpoint pagination, omit the <code>from</code> parameter. If there are more results, a <code>next</code> value is included in the response. You can use this for subsequent API calls. When <code>next</code> is no longer included in the response, no pages are remaining.
+- `from`: Optional id from which to start selection.
+- `take`: The total amount of entries to retrieve when using the from parameter. Defaults to 50.
+
+**Note**: The first time you call this endpoint using checkpoint pagination, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no pages are remaining.
 </dd>
 </dl>
 </dd>
@@ -26903,9 +28071,9 @@ $client->roles->users->list(
 <dl>
 <dd>
 
-Assign one or more users to an existing user role. To learn more, review <a href="https://auth0.com/docs/manage-users/access-control/rbac">Role-Based Access Control</a>.
+Assign one or more users to an existing user role. To learn more, review [Role-Based Access Control](https://auth0.com/docs/manage-users/access-control/rbac).
 
-<b>Note</b>: New roles cannot be created through this action.
+**Note**: New roles cannot be created through this action.
 </dd>
 </dl>
 </dd>
@@ -26975,7 +28143,7 @@ $client->roles->users->assign(
 <dl>
 <dd>
 
-Retrieves text customizations for a given self-service profile, language and Self Service SSO Flow page.
+Retrieves text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
 </dd>
 </dl>
 </dd>
@@ -27049,7 +28217,7 @@ $client->selfServiceProfiles->customText->list(
 <dl>
 <dd>
 
-Updates text customizations for a given self-service profile, language and Self Service SSO Flow page.
+Updates text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
 </dd>
 </dl>
 </dd>
@@ -27135,7 +28303,7 @@ $client->selfServiceProfiles->customText->set(
 <dl>
 <dd>
 
-Creates an SSO access ticket to initiate the Self Service SSO Flow using a self-service profile.
+Creates an access ticket to initiate the Self-Service Enterprise Configuration flow using a self-service profile.
 </dd>
 </dl>
 </dd>
@@ -27176,7 +28344,7 @@ $client->selfServiceProfiles->ssoTicket->create(
 <dl>
 <dd>
 
-**$connectionId:** `?string` — If provided, this will allow editing of the provided connection during the SSO Flow
+**$connectionId:** `?string` — If provided, this will allow editing of the provided connection during the Self-Service Enterprise Configuration flow
     
 </dd>
 </dl>
@@ -27236,6 +28404,14 @@ $client->selfServiceProfiles->ssoTicket->create(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$enabledFeatures:** `?SelfServiceProfileSsoTicketEnabledFeatures` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -27256,7 +28432,7 @@ $client->selfServiceProfiles->ssoTicket->create(
 <dl>
 <dd>
 
-Revokes an SSO access ticket and invalidates associated sessions. The ticket will no longer be accepted to initiate a Self-Service SSO session. If any users have already started a session through this ticket, their session will be terminated. Clients should expect a `202 Accepted` response upon successful processing, indicating that the request has been acknowledged and that the revocation is underway but may not be fully completed at the time of response. If the specified ticket does not exist, a `202 Accepted` response is also returned, signaling that no further action is required.
+Revokes a Self-Service Enterprise Configuration access ticket and invalidates associated sessions. The ticket will no longer be accepted to initiate a Self-Service Enterprise Configuration session. If any users have already started a session through this ticket, their session will be terminated. Clients should expect a `202 Accepted` response upon successful processing, indicating that the request has been acknowledged and that the revocation is underway but may not be fully completed at the time of response. If the specified ticket does not exist, a `202 Accepted` response is also returned, signaling that no further action is required.
 Clients should treat these `202` responses as an acknowledgment that the request has been accepted and is in progress, even if the ticket was not found.
 </dd>
 </dl>
@@ -27702,6 +28878,14 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$dynamicClientRegistrationSecurityMode:** `?string` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -27899,7 +29083,7 @@ $client->users->authenticationMethods->create(
 <dl>
 <dd>
 
-**$keyId:** `?string` — Applies to webauthn authentication methods only. The id of the credential.
+**$keyId:** `?string` — Applies to webauthn/passkey authentication methods only. The id of the credential.
     
 </dd>
 </dl>
@@ -27907,7 +29091,15 @@ $client->users->authenticationMethods->create(
 <dl>
 <dd>
 
-**$publicKey:** `?string` — Applies to webauthn authentication methods only. The public key, which is encoded as base64.
+**$publicKey:** `?string` — Applies to webauthn/passkey authentication methods only. The public key, which is encoded as base64.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$aaguid:** `?string` — Applies to passkeys only. Authenticator Attestation Globally Unique Identifier
     
 </dd>
 </dl>
@@ -27916,6 +29108,54 @@ $client->users->authenticationMethods->create(
 <dd>
 
 **$relyingPartyIdentifier:** `?string` — Applies to webauthn authentication methods only. The relying party identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$credentialDeviceType:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$credentialBackedUp:** `?bool` — Applies to passkeys only. Whether the credential was backed up.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$identityUserId:** `?string` — Applies to passkeys only. The ID of the user identity linked with the authentication method.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$userAgent:** `?string` — Applies to passkeys only. The user-agent of the browser used to create the passkey.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$userHandle:** `?string` — Applies to passkeys only. The user handle of the user identity.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$transports:** `?array` — Applies to passkeys only. The transports used by clients to communicate with the authenticator.
     
 </dd>
 </dl>
@@ -28265,7 +29505,7 @@ $client->users->authenticationMethods->update(
 <dl>
 <dd>
 
-Remove all authenticators registered to a given user ID, such as OTP, email, phone, and push-notification. This action cannot be undone. For more information, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/manage-mfa-auth0-apis/manage-authentication-methods-with-management-api">Manage Authentication Methods with Management API</a>.
+Remove all authenticators registered to a given user ID, such as OTP, email, phone, and push-notification. This action cannot be undone. For more information, review [Manage Authentication Methods with Management API](https://auth0.com/docs/secure/multi-factor-authentication/manage-mfa-auth0-apis/manage-authentication-methods-with-management-api).
 </dd>
 </dl>
 </dd>
@@ -28399,7 +29639,7 @@ $client->users->connectedAccounts->list(
 <dl>
 <dd>
 
-Retrieve the first <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors">multi-factor authentication</a> enrollment that a specific user has confirmed.
+Retrieve the first [multi-factor authentication](https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors) enrollment that a specific user has confirmed.
 </dd>
 </dl>
 </dd>
@@ -28663,30 +29903,31 @@ Link two user accounts together forming a primary and secondary relationship. On
 
 Note: There are two ways of invoking the endpoint:
 
-<ul>
-  <li>With the authenticated primary account's JWT in the Authorization header, which has the <code>update:current_user_identities</code> scope:
-    <pre>
-      POST /api/v2/users/PRIMARY_ACCOUNT_USER_ID/identities
-      Authorization: "Bearer PRIMARY_ACCOUNT_JWT"
-      {
-        "link_with": "SECONDARY_ACCOUNT_JWT"
-      }
-    </pre>
-    In this case, only the <code>link_with</code> param is required in the body, which also contains the JWT obtained upon the secondary account's authentication.
-  </li>
-  <li>With a token generated by the API V2 containing the <code>update:users</code> scope:
-    <pre>
-    POST /api/v2/users/PRIMARY_ACCOUNT_USER_ID/identities
-    Authorization: "Bearer YOUR_API_V2_TOKEN"
-    {
-      "provider": "SECONDARY_ACCOUNT_PROVIDER",
-      "connection_id": "SECONDARY_ACCOUNT_CONNECTION_ID(OPTIONAL)",
-      "user_id": "SECONDARY_ACCOUNT_USER_ID"
-    }
-    </pre>
-    In this case you need to send <code>provider</code> and <code>user_id</code> in the body. Optionally you can also send the <code>connection_id</code> param which is suitable for identifying a particular database connection for the 'auth0' provider.
-  </li>
-</ul>
+- With the authenticated primary account's JWT in the Authorization header, which has the `update:current_user_identities` scope:
+
+  ```http
+  POST /api/v2/users/PRIMARY_ACCOUNT_USER_ID/identities
+  Authorization: "Bearer PRIMARY_ACCOUNT_JWT"
+  {
+    "link_with": "SECONDARY_ACCOUNT_JWT"
+  }
+  ```
+
+  In this case, only the `link_with` param is required in the body, which also contains the JWT obtained upon the secondary account's authentication.
+
+- With a token generated by the API V2 containing the `update:users` scope:
+
+  ```http
+  POST /api/v2/users/PRIMARY_ACCOUNT_USER_ID/identities
+  Authorization: "Bearer YOUR_API_V2_TOKEN"
+  {
+    "provider": "SECONDARY_ACCOUNT_PROVIDER",
+    "connection_id": "SECONDARY_ACCOUNT_CONNECTION_ID(OPTIONAL)",
+    "user_id": "SECONDARY_ACCOUNT_USER_ID"
+  }
+  ```
+
+  In this case you need to send `provider` and `user_id` in the body. Optionally you can also send the `connection_id` param which is suitable for identifying a particular database connection for the 'auth0' provider.
 </dd>
 </dl>
 </dd>
@@ -28777,7 +30018,7 @@ $client->users->identities->link(
 
 Unlink a specific secondary account from a target user. This action requires the ID of both the target user and the secondary account. 
 
-Unlinking the secondary account removes it from the identities array of the target user and creates a new standalone profile for the secondary account. To learn more, review <a href="https://auth0.com/docs/manage-users/user-accounts/user-account-linking/unlink-user-accounts">Unlink User Accounts</a>.
+Unlinking the secondary account removes it from the identities array of the target user and creates a new standalone profile for the secondary account. To learn more, review [Unlink User Accounts](https://auth0.com/docs/manage-users/user-accounts/user-account-linking/unlink-user-accounts).
 </dd>
 </dl>
 </dd>
@@ -28953,7 +30194,7 @@ $client->users->logs->list(
 <dl>
 <dd>
 
-Invalidate all remembered browsers across all <a href="https://auth0.com/docs/multifactor-authentication">authentication factors</a> for a user.
+Invalidate all remembered browsers across all [authentication factors](https://auth0.com/docs/multifactor-authentication) for a user.
 </dd>
 </dl>
 </dd>
@@ -29009,7 +30250,7 @@ $client->users->multifactor->invalidateRememberBrowser(
 <dl>
 <dd>
 
-Remove a <a href="https://auth0.com/docs/multifactor-authentication">multifactor</a> authentication configuration from a user's account. This forces the user to manually reconfigure the multi-factor provider.
+Remove a [multifactor](https://auth0.com/docs/multifactor-authentication) authentication configuration from a user's account. This forces the user to manually reconfigure the multi-factor provider.
 </dd>
 </dl>
 </dd>
@@ -29075,7 +30316,7 @@ $client->users->multifactor->deleteProvider(
 <dl>
 <dd>
 
-Retrieve list of the specified user's current Organization memberships. User must be specified by user ID. For more information, review <a href="https://auth0.com/docs/manage-users/organizations">Auth0 Organizations</a>.
+Retrieve list of the specified user's current Organization memberships. User must be specified by user ID. For more information, review [Auth0 Organizations](https://auth0.com/docs/manage-users/organizations).
 </dd>
 </dl>
 </dd>
@@ -29472,7 +30713,7 @@ $client->users->riskAssessments->clear(
 
 Retrieve detailed list of all user roles currently assigned to a user.
 
-<b>Note</b>: This action retrieves all roles assigned to a user in the context of your whole tenant. To retrieve Organization-specific roles, use the following endpoint: <a href="https://auth0.com/docs/api/management/v2/organizations/get-organization-member-roles">Get user roles assigned to an Organization member</a>.
+**Note**: This action retrieves all roles assigned to a user in the context of your whole tenant. To retrieve Organization-specific roles, use the following endpoint: [Get user roles assigned to an Organization member](https://auth0.com/docs/api/management/v2/organizations/get-organization-member-roles).
 </dd>
 </dl>
 </dd>
@@ -29557,9 +30798,9 @@ $client->users->roles->list(
 <dl>
 <dd>
 
-Assign one or more existing user roles to a user. For more information, review <a href="https://auth0.com/docs/manage-users/access-control/rbac">Role-Based Access Control</a>.
+Assign one or more existing user roles to a user. For more information, review [Role-Based Access Control](https://auth0.com/docs/manage-users/access-control/rbac).
 
-<b>Note</b>: New roles cannot be created through this action. Additionally, this action is used to assign roles to a user in the context of your whole tenant. To assign roles in the context of a specific Organization, use the following endpoint: <a href="https://auth0.com/docs/api/management/v2/organizations/post-organization-member-roles">Assign user roles to an Organization member</a>.
+**Note**: New roles cannot be created through this action. Additionally, this action is used to assign roles to a user in the context of your whole tenant. To assign roles in the context of a specific Organization, use the following endpoint: [Assign user roles to an Organization member](https://auth0.com/docs/api/management/v2/organizations/post-organization-member-roles).
 </dd>
 </dl>
 </dd>
@@ -29630,7 +30871,7 @@ $client->users->roles->assign(
 
 Remove one or more specified user roles assigned to a user.
 
-<b>Note</b>: This action removes a role from a user in the context of your whole tenant. If you want to unassign a role from a user in the context of a specific Organization, use the following endpoint: <a href="https://auth0.com/docs/api/management/v2/organizations/delete-organization-member-roles">Delete user roles from an Organization member</a>.
+**Note**: This action removes a role from a user in the context of your whole tenant. If you want to unassign a role from a user in the context of a specific Organization, use the following endpoint: [Delete user roles from an Organization member](https://auth0.com/docs/api/management/v2/organizations/delete-organization-member-roles).
 </dd>
 </dl>
 </dd>
@@ -29966,7 +31207,7 @@ $client->users->sessions->delete(
 <dl>
 <dd>
 
-List a verifiable credential templates.
+List verifiable credential templates.
 </dd>
 </dl>
 </dd>
