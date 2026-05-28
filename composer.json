@@ -29,7 +29,6 @@
   "homepage": "https://github.com/auth0/auth0-PHP",
   "require": {
     "php": "^8.2",
-    "ext-json": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
     "php-http/multipart-stream-builder": "^1",
