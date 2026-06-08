@@ -72,7 +72,7 @@ jobs:
       - run: composer pest:ci
 
       - if: ${{ matrix.php == fromJson(needs.configure.outputs.matrix).include[0].php }}
-        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # pin@3.1.4
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # pin@7.0.0
         with:
           directory: ./coverage/
           flags: unittestsvalidate
