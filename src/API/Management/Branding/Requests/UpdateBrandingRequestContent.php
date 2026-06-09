@@ -5,7 +5,6 @@ namespace Auth0\SDK\API\Management\Branding\Requests;
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Types\UpdateBrandingColors;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
-use Auth0\SDK\API\Management\Types\UpdateBrandingIdentifiers;
 use Auth0\SDK\API\Management\Types\UpdateBrandingFont;
 
 class UpdateBrandingRequestContent extends JsonSerializableType
@@ -29,12 +28,6 @@ class UpdateBrandingRequestContent extends JsonSerializableType
     private ?string $logoUrl;
 
     /**
-     * @var ?UpdateBrandingIdentifiers $identifiers
-     */
-    #[JsonProperty('identifiers')]
-    private ?UpdateBrandingIdentifiers $identifiers;
-
-    /**
      * @var ?UpdateBrandingFont $font
      */
     #[JsonProperty('font')]
@@ -45,7 +38,6 @@ class UpdateBrandingRequestContent extends JsonSerializableType
      *   colors?: ?UpdateBrandingColors,
      *   faviconUrl?: ?string,
      *   logoUrl?: ?string,
-     *   identifiers?: ?UpdateBrandingIdentifiers,
      *   font?: ?UpdateBrandingFont,
      * } $values
      */
@@ -55,7 +47,6 @@ class UpdateBrandingRequestContent extends JsonSerializableType
         $this->colors = $values['colors'] ?? null;
         $this->faviconUrl = $values['faviconUrl'] ?? null;
         $this->logoUrl = $values['logoUrl'] ?? null;
-        $this->identifiers = $values['identifiers'] ?? null;
         $this->font = $values['font'] ?? null;
     }
 
@@ -110,24 +101,6 @@ class UpdateBrandingRequestContent extends JsonSerializableType
     {
         $this->logoUrl = $value;
         $this->_setField('logoUrl');
-        return $this;
-    }
-
-    /**
-     * @return ?UpdateBrandingIdentifiers
-     */
-    public function getIdentifiers(): ?UpdateBrandingIdentifiers
-    {
-        return $this->identifiers;
-    }
-
-    /**
-     * @param ?UpdateBrandingIdentifiers $value
-     */
-    public function setIdentifiers(?UpdateBrandingIdentifiers $value = null): self
-    {
-        $this->identifiers = $value;
-        $this->_setField('identifiers');
         return $this;
     }
 

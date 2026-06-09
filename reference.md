@@ -691,14 +691,6 @@ $client->branding->update(
 <dl>
 <dd>
 
-**$identifiers:** `?UpdateBrandingIdentifiers` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **$font:** `?UpdateBrandingFont` 
     
 </dd>
@@ -1896,16 +1888,14 @@ $client->clients->previewCimdMetadata(
 Idempotent registration for Client ID Metadata Document (CIMD) clients.
 Uses external_client_id as the unique identifier for upsert operations.
 
-<strong>Create:</strong> Returns 201 when a new client is created (requires <code>create:clients</code> scope).
-<strong>Update:</strong> Returns 200 when an existing client is updated (requires <code>update:clients</code> scope).
+**Create:** Returns 201 when a new client is created (requires `create:clients` scope).
+**Update:** Returns 200 when an existing client is updated (requires `update:clients` scope).
 
 This endpoint automatically:
-<ul>
-  <li>Fetches and validates the metadata document</li>
-  <li>Maps CIMD fields to Auth0 client configuration</li>
-  <li>Creates/rotates credentials from the JWKS</li>
-  <li>Enforces CIMD security policies (HTTPS-only, no shared secrets)</li>
-</ul>
+- Fetches and validates the metadata document
+- Maps CIMD fields to Auth0 client configuration
+- Creates/rotates credentials from the JWKS
+- Enforces CIMD security policies (HTTPS-only, no shared secrets)
 </dd>
 </dl>
 </dd>
@@ -9532,7 +9522,7 @@ $client->refreshTokens->list(
 <dl>
 <dd>
 
-Revoke refresh tokens in bulk by ID list, user, user+client, or client.
+Revoke refresh tokens in bulk by ID list, user, user+client, or user+client+audience.
 </dd>
 </dl>
 </dd>
@@ -9580,7 +9570,7 @@ $client->refreshTokens->revoke(
 <dl>
 <dd>
 
-**$clientId:** `?string` — Revoke all refresh tokens for this client.
+**$clientId:** `?string` — Revoke refresh tokens for this client. Must be paired with `user_id`; optionally narrowed further with `audience`.
     
 </dd>
 </dl>
@@ -16984,7 +16974,7 @@ $client->branding->themes->update(
 <dl>
 <dd>
 
-Retrieve a list of <a href="https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers">phone providers</a> details set for a Tenant. A list of fields to include or exclude may also be specified.
+Retrieve a list of [phone providers](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers) details set for a Tenant. A list of fields to include or exclude may also be specified.
 </dd>
 </dl>
 </dd>
@@ -17042,8 +17032,8 @@ $client->branding->phone->providers->list(
 <dl>
 <dd>
 
-Create a <a href="https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers">phone provider</a>.
-The <code>credentials</code> object requires different properties depending on the phone provider (which is specified using the <code>name</code> property).
+Create a [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers).
+The `credentials` object requires different properties depending on the phone provider (which is specified using the `name` property).
 </dd>
 </dl>
 </dd>
@@ -17128,7 +17118,7 @@ $client->branding->phone->providers->create(
 <dl>
 <dd>
 
-Retrieve <a href="https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers">phone provider</a> details. A list of fields to include or exclude may also be specified.
+Retrieve [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers) details. A list of fields to include or exclude may also be specified.
 </dd>
 </dl>
 </dd>
@@ -17240,8 +17230,8 @@ $client->branding->phone->providers->delete(
 <dl>
 <dd>
 
-Update a <a href="https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers">phone provider</a>.
-The <code>credentials</code> object requires different properties depending on the phone provider (which is specified using the <code>name</code> property).
+Update a [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers).
+The `credentials` object requires different properties depending on the phone provider (which is specified using the `name` property).
 </dd>
 </dl>
 </dd>
@@ -19902,7 +19892,7 @@ $client->connections->scimConfiguration->tokens->delete(
 <dl>
 <dd>
 
-Retrieve details of the <a href="https://auth0.com/docs/customize/email/smtp-email-providers">email provider configuration</a> in your tenant. A list of fields to include or exclude may also be specified.
+Retrieve details of the [email provider configuration](https://auth0.com/docs/customize/email/smtp-email-providers) in your tenant. A list of fields to include or exclude may also be specified.
 </dd>
 </dl>
 </dd>
@@ -19969,48 +19959,31 @@ $client->emails->provider->get(
 <dl>
 <dd>
 
-Create an <a href="https://auth0.com/docs/email/providers">email provider</a>. The <code>credentials</code> object
-requires different properties depending on the email provider (which is specified using the <code>name</code> property):
-<ul>
-  <li><code>mandrill</code> requires <code>api_key</code></li>
-  <li><code>sendgrid</code> requires <code>api_key</code></li>
-  <li>
-    <code>sparkpost</code> requires <code>api_key</code>. Optionally, set <code>region</code> to <code>eu</code> to use
-    the SparkPost service hosted in Western Europe; set to <code>null</code> to use the SparkPost service hosted in
-    North America. <code>eu</code> or <code>null</code> are the only valid values for <code>region</code>.
-  </li>
-  <li>
-    <code>mailgun</code> requires <code>api_key</code> and <code>domain</code>. Optionally, set <code>region</code> to
-    <code>eu</code> to use the Mailgun service hosted in Europe; set to <code>null</code> otherwise. <code>eu</code> or
-    <code>null</code> are the only valid values for <code>region</code>.
-  </li>
-  <li><code>ses</code> requires <code>accessKeyId</code>, <code>secretAccessKey</code>, and <code>region</code></li>
-  <li>
-    <code>smtp</code> requires <code>smtp_host</code>, <code>smtp_port</code>, <code>smtp_user</code>, and
-    <code>smtp_pass</code>
-  </li>
-</ul>
-Depending on the type of provider it is possible to specify <code>settings</code> object with different configuration
+Create an [email provider](https://auth0.com/docs/email/providers). The `credentials` object
+requires different properties depending on the email provider (which is specified using the `name` property):
+
+- `mandrill` requires `api_key`
+- `sendgrid` requires `api_key`
+- `sparkpost` requires `api_key`. Optionally, set `region` to `eu` to use
+    the SparkPost service hosted in Western Europe; set to `null` to use the SparkPost service hosted in
+    North America. `eu` or `null` are the only valid values for `region`.
+- `mailgun` requires `api_key` and `domain`. Optionally, set `region` to
+    `eu` to use the Mailgun service hosted in Europe; set to `null` otherwise. `eu` or
+    `null` are the only valid values for `region`.
+- `ses` requires `accessKeyId`, `secretAccessKey`, and `region`
+- `smtp` requires `smtp_host`, `smtp_port`, `smtp_user`, and
+    `smtp_pass`
+
+Depending on the type of provider it is possible to specify `settings` object with different configuration
 options, which will be used when sending an email:
-<ul>
-  <li>
-    <code>smtp</code> provider, <code>settings</code> may contain <code>headers</code> object.
-    <ul>
-      <li>
-        When using AWS SES SMTP host, you may provide a name of configuration set in
-        <code>X-SES-Configuration-Set</code> header. Value must be a string.
-      </li>
-      <li>
-        When using Sparkpost host, you may provide value for
-        <code>X-MSYS_API</code> header. Value must be an object.
-      </li>
-    </ul>
-  </li>
-  <li>
-    for <code>ses</code> provider, <code>settings</code> may contain <code>message</code> object, where you can provide
-    a name of configuration set in <code>configuration_set_name</code> property. Value must be a string.
-  </li>
-</ul>
+
+- `smtp` provider, `settings` may contain `headers` object.
+    - When using AWS SES SMTP host, you may provide a name of configuration set in
+      `X-SES-Configuration-Set` header. Value must be a string.
+    - When using Sparkpost host, you may provide value for
+      `X-MSYS_API` header. Value must be an object.
+- For `ses` provider, `settings` may contain `message` object, where you can provide
+  a name of configuration set in `configuration_set_name` property. Value must be a string.
 </dd>
 </dl>
 </dd>
@@ -20142,46 +20115,32 @@ $client->emails->provider->delete();
 <dl>
 <dd>
 
-Update an <a href="https://auth0.com/docs/email/providers">email provider</a>. The <code>credentials</code> object
-requires different properties depending on the email provider (which is specified using the <code>name</code> property):
-<ul>
-  <li><code>mandrill</code> requires <code>api_key</code></li>
-  <li><code>sendgrid</code> requires <code>api_key</code></li>
-  <li>
-    <code>sparkpost</code> requires <code>api_key</code>. Optionally, set <code>region</code> to <code>eu</code> to use
-    the SparkPost service hosted in Western Europe; set to <code>null</code> to use the SparkPost service hosted in
-    North America. <code>eu</code> or <code>null</code> are the only valid values for <code>region</code>.
-  </li>
-  <li>
-    <code>mailgun</code> requires <code>api_key</code> and <code>domain</code>. Optionally, set <code>region</code> to
-    <code>eu</code> to use the Mailgun service hosted in Europe; set to <code>null</code> otherwise. <code>eu</code> or
-    <code>null</code> are the only valid values for <code>region</code>.
-  </li>
-  <li><code>ses</code> requires <code>accessKeyId</code>, <code>secretAccessKey</code>, and <code>region</code></li>
-  <li>
-    <code>smtp</code> requires <code>smtp_host</code>, <code>smtp_port</code>, <code>smtp_user</code>, and
-    <code>smtp_pass</code>
-  </li>
-</ul>
-Depending on the type of provider it is possible to specify <code>settings</code> object with different configuration
+Update an [email provider](https://auth0.com/docs/email/providers). The `credentials` object
+requires different properties depending on the email provider (which is specified using the `name` property):
+
+- `mandrill` requires `api_key`
+- `sendgrid` requires `api_key`
+- `sparkpost` requires `api_key`. Optionally, set `region` to `eu` to use
+    the SparkPost service hosted in Western Europe; set to `null` to use the SparkPost service hosted in
+    North America. `eu` or `null` are the only valid values for `region`.
+- `mailgun` requires `api_key` and `domain`. Optionally, set `region` to
+    `eu` to use the Mailgun service hosted in Europe; set to `null` otherwise. `eu` or
+    `null` are the only valid values for `region`.
+- `ses` requires `accessKeyId`, `secretAccessKey`, and `region`
+- `smtp` requires `smtp_host`, `smtp_port`, `smtp_user`, and
+    `smtp_pass`
+
+Depending on the type of provider it is possible to specify `settings` object with different configuration
 options, which will be used when sending an email:
-<ul>
-  <li>
-    <code>smtp</code> provider, <code>settings</code> may contain <code>headers</code> object.
-    <ul>
-      <li>
-        When using AWS SES SMTP host, you may provide a name of configuration set in
-        <code>X-SES-Configuration-Set</code> header. Value must be a string.
-      </li>
-      <li>
-        When using Sparkpost host, you may provide value for
-        <code>X-MSYS_API</code> header. Value must be an object.
-      </li>
-    </ul>
-    for <code>ses</code> provider, <code>settings</code> may contain <code>message</code> object, where you can provide
-    a name of configuration set in <code>configuration_set_name</code> property. Value must be a string.
-  </li>
-</ul>
+
+- `smtp` provider, `settings` may contain `headers` object.
+    - When using AWS SES SMTP host, you may provide a name of configuration set in
+      `X-SES-Configuration-Set` header. Value must be a string.
+    - When using Sparkpost host, you may provide value for
+      `X-MSYS_API` header. Value must be an object.
+
+  For `ses` provider, `settings` may contain `message` object, where you can provide
+  a name of configuration set in `configuration_set_name` property. Value must be a string.
 </dd>
 </dl>
 </dd>
@@ -21076,7 +21035,7 @@ $client->groups->members->get(
 <dl>
 <dd>
 
-Lists the <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> assigned to a group.
+Lists the [roles](https://auth0.com/docs/manage-users/access-control/rbac) assigned to a group.
 </dd>
 </dl>
 </dd>
@@ -21152,7 +21111,7 @@ $client->groups->roles->list(
 <dl>
 <dd>
 
-Assign one or more <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> to a specified group.
+Assign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) to a specified group.
 </dd>
 </dl>
 </dd>
@@ -21221,7 +21180,7 @@ $client->groups->roles->create(
 <dl>
 <dd>
 
-Unassign one or more <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> from a specified group.
+Unassign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) from a specified group.
 </dd>
 </dl>
 </dd>
@@ -29418,7 +29377,23 @@ $client->tenants->settings->update(
 <dl>
 <dd>
 
+**$sessionLifetimeInMinutes:** `?int` — Number of minutes a session will stay valid. Cannot be specified together with `session_lifetime`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$idleSessionLifetime:** `?int` — Number of hours for which a session can be inactive before the user must log in again.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$idleSessionLifetimeInMinutes:** `?int` — Number of minutes a session can be inactive before the user must log in again. Cannot be specified together with `idle_session_lifetime`.
     
 </dd>
 </dl>
@@ -29435,6 +29410,22 @@ $client->tenants->settings->update(
 <dd>
 
 **$idleEphemeralSessionLifetime:** `?int` — Number of hours for which an ephemeral (non-persistent) session can be inactive before the user must log in again.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ephemeralSessionLifetimeInMinutes:** `?int` — Number of minutes an ephemeral (non-persistent) session will stay valid. Cannot be specified together with `ephemeral_session_lifetime`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$idleEphemeralSessionLifetimeInMinutes:** `?int` — Number of minutes an ephemeral (non-persistent) session can be inactive before the user must log in again. Cannot be specified together with `idle_ephemeral_session_lifetime`.
     
 </dd>
 </dl>
@@ -29467,6 +29458,14 @@ $client->tenants->settings->update(
 <dd>
 
 **$enabledLocales:** `?array` — Supported locales for the user interface
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$securityHeaders:** `?TenantSettingsNullableSecurityHeaders` 
     
 </dd>
 </dl>
@@ -29583,6 +29582,14 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dd>
 
 **$phoneConsolidatedExperience:** `?bool` — Whether Phone Consolidated Experience is enabled for this tenant.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeSessionMetadataInTenantLogs:** `?bool` — Whether session metadata is included in specific tenant logs (slo, oidc_backchannel_logout_failed, oidc_backchannel_logout_succeeded).
     
 </dd>
 </dl>

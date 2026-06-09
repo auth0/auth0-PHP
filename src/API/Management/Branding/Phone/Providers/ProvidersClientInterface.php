@@ -15,7 +15,7 @@ use Auth0\SDK\API\Management\Types\CreatePhoneProviderSendTestResponseContent;
 interface ProvidersClientInterface
 {
     /**
-     * Retrieve a list of <a href="https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers">phone providers</a> details set for a Tenant. A list of fields to include or exclude may also be specified.
+     * Retrieve a list of [phone providers](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers) details set for a Tenant. A list of fields to include or exclude may also be specified.
      *
      * @param ListBrandingPhoneProvidersRequestParameters $request
      * @param ?array{
@@ -31,8 +31,8 @@ interface ProvidersClientInterface
     public function list(ListBrandingPhoneProvidersRequestParameters $request = new ListBrandingPhoneProvidersRequestParameters(), ?array $options = null): ?ListBrandingPhoneProvidersResponseContent;
 
     /**
-     * Create a <a href="https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers">phone provider</a>.
-     * The <code>credentials</code> object requires different properties depending on the phone provider (which is specified using the <code>name</code> property).
+     * Create a [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers).
+     * The `credentials` object requires different properties depending on the phone provider (which is specified using the `name` property).
      *
      * @param CreateBrandingPhoneProviderRequestContent $request
      * @param ?array{
@@ -48,7 +48,7 @@ interface ProvidersClientInterface
     public function create(CreateBrandingPhoneProviderRequestContent $request, ?array $options = null): ?CreateBrandingPhoneProviderResponseContent;
 
     /**
-     * Retrieve <a href="https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers">phone provider</a> details. A list of fields to include or exclude may also be specified.
+     * Retrieve [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers) details. A list of fields to include or exclude may also be specified.
      *
      * @param string $id
      * @param ?array{
@@ -79,8 +79,8 @@ interface ProvidersClientInterface
     public function delete(string $id, ?array $options = null): void;
 
     /**
-     * Update a <a href="https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers">phone provider</a>.
-     * The <code>credentials</code> object requires different properties depending on the phone provider (which is specified using the <code>name</code> property).
+     * Update a [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers).
+     * The `credentials` object requires different properties depending on the phone provider (which is specified using the `name` property).
      *
      * @param string $id
      * @param UpdateBrandingPhoneProviderRequestContent $request

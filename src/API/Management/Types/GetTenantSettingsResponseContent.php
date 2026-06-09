@@ -141,6 +141,12 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
     private ?array $enabledLocales;
 
     /**
+     * @var ?TenantSettingsNullableSecurityHeaders $securityHeaders
+     */
+    #[JsonProperty('security_headers')]
+    private ?TenantSettingsNullableSecurityHeaders $securityHeaders;
+
+    /**
      * @var ?SessionCookieSchema $sessionCookie
      */
     #[JsonProperty('session_cookie')]
@@ -229,6 +235,12 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
     private ?bool $enableAiGuide;
 
     /**
+     * @var ?bool $includeSessionMetadataInTenantLogs Whether session metadata is included in specific tenant logs (slo, oidc_backchannel_logout_failed, oidc_backchannel_logout_succeeded).
+     */
+    #[JsonProperty('include_session_metadata_in_tenant_logs')]
+    private ?bool $includeSessionMetadataInTenantLogs;
+
+    /**
      * @var ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode> $dynamicClientRegistrationSecurityMode
      */
     #[JsonProperty('dynamic_client_registration_security_mode')]
@@ -264,6 +276,7 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
      *   sandboxVersionsAvailable?: ?array<string>,
      *   defaultRedirectionUri?: ?string,
      *   enabledLocales?: ?array<value-of<SupportedLocales>>,
+     *   securityHeaders?: ?TenantSettingsNullableSecurityHeaders,
      *   sessionCookie?: ?SessionCookieSchema,
      *   sessions?: ?TenantSettingsSessions,
      *   oidcLogout?: ?TenantOidcLogoutSettings,
@@ -278,6 +291,7 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
      *   clientIdMetadataDocumentSupported?: ?bool,
      *   phoneConsolidatedExperience?: ?bool,
      *   enableAiGuide?: ?bool,
+     *   includeSessionMetadataInTenantLogs?: ?bool,
      *   dynamicClientRegistrationSecurityMode?: ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode>,
      *   countryCodes?: ?TenantSettingsCountryCodesResponse,
      * } $values
@@ -307,6 +321,7 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
         $this->sandboxVersionsAvailable = $values['sandboxVersionsAvailable'] ?? null;
         $this->defaultRedirectionUri = $values['defaultRedirectionUri'] ?? null;
         $this->enabledLocales = $values['enabledLocales'] ?? null;
+        $this->securityHeaders = $values['securityHeaders'] ?? null;
         $this->sessionCookie = $values['sessionCookie'] ?? null;
         $this->sessions = $values['sessions'] ?? null;
         $this->oidcLogout = $values['oidcLogout'] ?? null;
@@ -321,6 +336,7 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
         $this->clientIdMetadataDocumentSupported = $values['clientIdMetadataDocumentSupported'] ?? null;
         $this->phoneConsolidatedExperience = $values['phoneConsolidatedExperience'] ?? null;
         $this->enableAiGuide = $values['enableAiGuide'] ?? null;
+        $this->includeSessionMetadataInTenantLogs = $values['includeSessionMetadataInTenantLogs'] ?? null;
         $this->dynamicClientRegistrationSecurityMode = $values['dynamicClientRegistrationSecurityMode'] ?? null;
         $this->countryCodes = $values['countryCodes'] ?? null;
     }
@@ -722,6 +738,24 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
     }
 
     /**
+     * @return ?TenantSettingsNullableSecurityHeaders
+     */
+    public function getSecurityHeaders(): ?TenantSettingsNullableSecurityHeaders
+    {
+        return $this->securityHeaders;
+    }
+
+    /**
+     * @param ?TenantSettingsNullableSecurityHeaders $value
+     */
+    public function setSecurityHeaders(?TenantSettingsNullableSecurityHeaders $value = null): self
+    {
+        $this->securityHeaders = $value;
+        $this->_setField('securityHeaders');
+        return $this;
+    }
+
+    /**
      * @return ?SessionCookieSchema
      */
     public function getSessionCookie(): ?SessionCookieSchema
@@ -970,6 +1004,24 @@ class GetTenantSettingsResponseContent extends JsonSerializableType
     {
         $this->enableAiGuide = $value;
         $this->_setField('enableAiGuide');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIncludeSessionMetadataInTenantLogs(): ?bool
+    {
+        return $this->includeSessionMetadataInTenantLogs;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIncludeSessionMetadataInTenantLogs(?bool $value = null): self
+    {
+        $this->includeSessionMetadataInTenantLogs = $value;
+        $this->_setField('includeSessionMetadataInTenantLogs');
         return $this;
     }
 

@@ -238,6 +238,12 @@ class UpdateConnectionOptions extends JsonSerializableType
     private ?string $tokenEndpointJwtcaAudFormat;
 
     /**
+     * @var ?bool $idTokenSessionExpirySupported
+     */
+    #[JsonProperty('id_token_session_expiry_supported')]
+    private ?bool $idTokenSessionExpirySupported;
+
+    /**
      * @param array{
      *   validation?: ?ConnectionValidationOptions,
      *   nonPersistentAttrs?: ?array<string>,
@@ -279,6 +285,7 @@ class UpdateConnectionOptions extends JsonSerializableType
      *   tokenEndpointAuthMethod?: ?value-of<ConnectionTokenEndpointAuthMethodEnum>,
      *   tokenEndpointAuthSigningAlg?: ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>,
      *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
+     *   idTokenSessionExpirySupported?: ?bool,
      * } $values
      */
     public function __construct(
@@ -321,6 +328,7 @@ class UpdateConnectionOptions extends JsonSerializableType
         $this->tokenEndpointAuthMethod = $values['tokenEndpointAuthMethod'] ?? null;
         $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
+        $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
     }
 
     /**
@@ -992,6 +1000,24 @@ class UpdateConnectionOptions extends JsonSerializableType
     {
         $this->tokenEndpointJwtcaAudFormat = $value;
         $this->_setField('tokenEndpointJwtcaAudFormat');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIdTokenSessionExpirySupported(): ?bool
+    {
+        return $this->idTokenSessionExpirySupported;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIdTokenSessionExpirySupported(?bool $value = null): self
+    {
+        $this->idTokenSessionExpirySupported = $value;
+        $this->_setField('idTokenSessionExpirySupported');
         return $this;
     }
 

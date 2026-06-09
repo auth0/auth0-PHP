@@ -40,4 +40,5 @@ enum PromptGroupNameEnum: string
     case Captcha = "captcha";
     case BruteForceProtection = "brute-force-protection";
     case AsyncApprovalFlow = "async-approval-flow";
+    case Confirmation = "confirmation";
 }

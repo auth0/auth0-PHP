@@ -21,4 +21,5 @@ enum AculContextEnum: string
     case UntrustedDataAuthorizationParamsUiLocales = "untrusted_data.authorization_params.ui_locales";
     case UserOrganizations = "user.organizations";
     case TransactionCustomDomainDomain = "transaction.custom_domain.domain";
+    case Experiment = "experiment";
 }

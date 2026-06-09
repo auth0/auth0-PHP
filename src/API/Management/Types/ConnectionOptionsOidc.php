@@ -43,6 +43,7 @@ class ConnectionOptionsOidc extends JsonSerializableType
      *   dpopSigningAlg?: ?value-of<ConnectionDpopSigningAlgEnum>,
      *   federatedConnectionsAccessTokens?: ?ConnectionFederatedConnectionsAccessTokens,
      *   iconUrl?: ?string,
+     *   idTokenSessionExpirySupported?: ?bool,
      *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
      *   issuer?: ?string,
      *   jwksUri?: ?string,
@@ -77,6 +78,7 @@ class ConnectionOptionsOidc extends JsonSerializableType
         $this->dpopSigningAlg = $values['dpopSigningAlg'] ?? null;
         $this->federatedConnectionsAccessTokens = $values['federatedConnectionsAccessTokens'] ?? null;
         $this->iconUrl = $values['iconUrl'] ?? null;
+        $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
         $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;
         $this->issuer = $values['issuer'] ?? null;
         $this->jwksUri = $values['jwksUri'] ?? null;

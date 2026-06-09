@@ -8,10 +8,10 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 class CreatePhoneTemplateResponseContent extends JsonSerializableType
 {
     /**
-     * @var string $id
+     * @var ?string $id
      */
     #[JsonProperty('id')]
-    private string $id;
+    private ?string $id;
 
     /**
      * @var ?string $channel
@@ -51,10 +51,10 @@ class CreatePhoneTemplateResponseContent extends JsonSerializableType
 
     /**
      * @param array{
-     *   id: string,
      *   content: PhoneTemplateContent,
      *   type: value-of<PhoneTemplateNotificationTypeEnum>,
      *   disabled: bool,
+     *   id?: ?string,
      *   channel?: ?string,
      *   customizable?: ?bool,
      *   tenant?: ?string,
@@ -63,7 +63,7 @@ class CreatePhoneTemplateResponseContent extends JsonSerializableType
     public function __construct(
         array $values,
     ) {
-        $this->id = $values['id'];
+        $this->id = $values['id'] ?? null;
         $this->channel = $values['channel'] ?? null;
         $this->customizable = $values['customizable'] ?? null;
         $this->tenant = $values['tenant'] ?? null;
@@ -73,17 +73,17 @@ class CreatePhoneTemplateResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * @param string $value
+     * @param ?string $value
      */
-    public function setId(string $value): self
+    public function setId(?string $value = null): self
     {
         $this->id = $value;
         $this->_setField('id');

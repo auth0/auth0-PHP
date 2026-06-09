@@ -36,11 +36,18 @@ class ClientMyOrganizationPatchConfiguration extends JsonSerializableType
     private string $connectionDeletionBehavior;
 
     /**
+     * @var ?string $invitationLandingClientId The client ID this client uses while creating invitations through My Organization API.
+     */
+    #[JsonProperty('invitation_landing_client_id')]
+    private ?string $invitationLandingClientId;
+
+    /**
      * @param array{
      *   allowedStrategies: array<value-of<ClientMyOrganizationConfigurationAllowedStrategiesEnum>>,
      *   connectionDeletionBehavior: value-of<ClientMyOrganizationDeletionBehaviorEnum>,
      *   connectionProfileId?: ?string,
      *   userAttributeProfileId?: ?string,
+     *   invitationLandingClientId?: ?string,
      * } $values
      */
     public function __construct(
@@ -50,6 +57,7 @@ class ClientMyOrganizationPatchConfiguration extends JsonSerializableType
         $this->userAttributeProfileId = $values['userAttributeProfileId'] ?? null;
         $this->allowedStrategies = $values['allowedStrategies'];
         $this->connectionDeletionBehavior = $values['connectionDeletionBehavior'];
+        $this->invitationLandingClientId = $values['invitationLandingClientId'] ?? null;
     }
 
     /**
@@ -121,6 +129,24 @@ class ClientMyOrganizationPatchConfiguration extends JsonSerializableType
     {
         $this->connectionDeletionBehavior = $value;
         $this->_setField('connectionDeletionBehavior');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getInvitationLandingClientId(): ?string
+    {
+        return $this->invitationLandingClientId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setInvitationLandingClientId(?string $value = null): self
+    {
+        $this->invitationLandingClientId = $value;
+        $this->_setField('invitationLandingClientId');
         return $this;
     }
 
