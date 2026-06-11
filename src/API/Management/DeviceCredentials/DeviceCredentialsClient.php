@@ -79,8 +79,7 @@ class DeviceCredentialsClient implements DeviceCredentialsClientInterface
             setOffset: function (ListDeviceCredentialsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListDeviceCredentialsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListDeviceCredentialsOffsetPaginatedResponseContent $response) => $response?->getDeviceCredentials() ?? [],
             /* @phpstan-ignore-next-line */

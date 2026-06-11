@@ -78,8 +78,7 @@ class UserGrantsClient implements UserGrantsClientInterface
             setOffset: function (ListUserGrantsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListUserGrantsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListUserGrantsOffsetPaginatedResponseContent $response) => $response?->getGrants() ?? [],
             /* @phpstan-ignore-next-line */

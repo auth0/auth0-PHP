@@ -83,8 +83,7 @@ class ResourceServersClient implements ResourceServersClientInterface
             setOffset: function (ListResourceServerRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListResourceServerRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListResourceServerOffsetPaginatedResponseContent $response) => $response?->getResourceServers() ?? [],
             /* @phpstan-ignore-next-line */

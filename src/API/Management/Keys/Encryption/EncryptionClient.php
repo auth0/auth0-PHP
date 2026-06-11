@@ -83,8 +83,7 @@ class EncryptionClient implements EncryptionClientInterface
             setOffset: function (ListEncryptionKeysRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListEncryptionKeysRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListEncryptionKeyOffsetPaginatedResponseContent $response) => $response?->getKeys() ?? [],
             /* @phpstan-ignore-next-line */

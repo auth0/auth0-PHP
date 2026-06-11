@@ -78,8 +78,7 @@ class ClientGrantsClient implements ClientGrantsClientInterface
             setOffset: function (ListOrganizationClientGrantsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListOrganizationClientGrantsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListOrganizationClientGrantsOffsetPaginatedResponseContent $response) => $response?->getClientGrants() ?? [],
             /* @phpstan-ignore-next-line */

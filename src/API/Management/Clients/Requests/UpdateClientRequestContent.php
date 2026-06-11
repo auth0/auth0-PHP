@@ -14,8 +14,8 @@ use Auth0\SDK\API\Management\Types\ClientAppTypeEnum;
 use Auth0\SDK\API\Management\Types\UpdateTokenQuota;
 use Auth0\SDK\API\Management\Types\ClientAddons;
 use Auth0\SDK\API\Management\Types\ClientMobile;
-use Auth0\SDK\API\Management\Types\NativeSocialLogin;
-use Auth0\SDK\API\Management\Types\FedCmLogin;
+use Auth0\SDK\API\Management\Types\NativeSocialLoginPatch;
+use Auth0\SDK\API\Management\Types\FedCmLoginPatch;
 use Auth0\SDK\API\Management\Types\ClientRefreshTokenConfiguration;
 use Auth0\SDK\API\Management\Types\ClientDefaultOrganization;
 use Auth0\SDK\API\Management\Types\ClientOrganizationUsagePatchEnum;
@@ -238,16 +238,16 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?string $initiateLoginUri;
 
     /**
-     * @var ?NativeSocialLogin $nativeSocialLogin
+     * @var ?NativeSocialLoginPatch $nativeSocialLogin
      */
     #[JsonProperty('native_social_login')]
-    private ?NativeSocialLogin $nativeSocialLogin;
+    private ?NativeSocialLoginPatch $nativeSocialLogin;
 
     /**
-     * @var ?FedCmLogin $fedcmLogin
+     * @var ?FedCmLoginPatch $fedcmLogin
      */
     #[JsonProperty('fedcm_login')]
-    private ?FedCmLogin $fedcmLogin;
+    private ?FedCmLoginPatch $fedcmLogin;
 
     /**
      * @var ?ClientRefreshTokenConfiguration $refreshToken
@@ -397,8 +397,8 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   clientMetadata?: ?array<string, mixed>,
      *   mobile?: ?ClientMobile,
      *   initiateLoginUri?: ?string,
-     *   nativeSocialLogin?: ?NativeSocialLogin,
-     *   fedcmLogin?: ?FedCmLogin,
+     *   nativeSocialLogin?: ?NativeSocialLoginPatch,
+     *   fedcmLogin?: ?FedCmLoginPatch,
      *   refreshToken?: ?ClientRefreshTokenConfiguration,
      *   defaultOrganization?: ?ClientDefaultOrganization,
      *   organizationUsage?: ?value-of<ClientOrganizationUsagePatchEnum>,
@@ -1091,17 +1091,17 @@ class UpdateClientRequestContent extends JsonSerializableType
     }
 
     /**
-     * @return ?NativeSocialLogin
+     * @return ?NativeSocialLoginPatch
      */
-    public function getNativeSocialLogin(): ?NativeSocialLogin
+    public function getNativeSocialLogin(): ?NativeSocialLoginPatch
     {
         return $this->nativeSocialLogin;
     }
 
     /**
-     * @param ?NativeSocialLogin $value
+     * @param ?NativeSocialLoginPatch $value
      */
-    public function setNativeSocialLogin(?NativeSocialLogin $value = null): self
+    public function setNativeSocialLogin(?NativeSocialLoginPatch $value = null): self
     {
         $this->nativeSocialLogin = $value;
         $this->_setField('nativeSocialLogin');
@@ -1109,17 +1109,17 @@ class UpdateClientRequestContent extends JsonSerializableType
     }
 
     /**
-     * @return ?FedCmLogin
+     * @return ?FedCmLoginPatch
      */
-    public function getFedcmLogin(): ?FedCmLogin
+    public function getFedcmLogin(): ?FedCmLoginPatch
     {
         return $this->fedcmLogin;
     }
 
     /**
-     * @param ?FedCmLogin $value
+     * @param ?FedCmLoginPatch $value
      */
-    public function setFedcmLogin(?FedCmLogin $value = null): self
+    public function setFedcmLogin(?FedCmLoginPatch $value = null): self
     {
         $this->fedcmLogin = $value;
         $this->_setField('fedcmLogin');

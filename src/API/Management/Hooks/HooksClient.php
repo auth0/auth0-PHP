@@ -91,8 +91,7 @@ class HooksClient implements HooksClientInterface
             setOffset: function (ListHooksRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListHooksRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListHooksOffsetPaginatedResponseContent $response) => $response?->getHooks() ?? [],
             /* @phpstan-ignore-next-line */

@@ -97,8 +97,7 @@ class FlowsClient implements FlowsClientInterface
             setOffset: function (ListFlowsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListFlowsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListFlowsOffsetPaginatedResponseContent $response) => $response?->getFlows() ?? [],
             /* @phpstan-ignore-next-line */

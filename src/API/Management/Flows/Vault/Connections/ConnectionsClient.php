@@ -131,8 +131,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             setOffset: function (ListFlowsVaultConnectionsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListFlowsVaultConnectionsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListFlowsVaultConnectionsOffsetPaginatedResponseContent $response) => $response?->getConnections() ?? [],
             /* @phpstan-ignore-next-line */

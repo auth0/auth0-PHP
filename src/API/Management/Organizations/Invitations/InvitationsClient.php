@@ -82,8 +82,7 @@ class InvitationsClient implements InvitationsClientInterface
             setOffset: function (ListOrganizationInvitationsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListOrganizationInvitationsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListOrganizationInvitationsOffsetPaginatedResponseContent $response) => $response?->getInvitations() ?? [],
             /* @phpstan-ignore-next-line */

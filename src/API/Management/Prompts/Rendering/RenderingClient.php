@@ -84,8 +84,7 @@ class RenderingClient implements RenderingClientInterface
             setOffset: function (ListAculsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListAculsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListAculsOffsetPaginatedResponseContent $response) => $response?->getConfigs() ?? [],
             /* @phpstan-ignore-next-line */

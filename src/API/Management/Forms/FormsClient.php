@@ -81,8 +81,7 @@ class FormsClient implements FormsClientInterface
             setOffset: function (ListFormsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListFormsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListFormsOffsetPaginatedResponseContent $response) => $response?->getForms() ?? [],
             /* @phpstan-ignore-next-line */

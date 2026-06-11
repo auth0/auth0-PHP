@@ -80,8 +80,7 @@ class VersionsClient implements VersionsClientInterface
             setOffset: function (GetActionModuleVersionsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (GetActionModuleVersionsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?GetActionModuleVersionsResponseContent $response) => $response?->getVersions() ?? [],
             /* @phpstan-ignore-next-line */
