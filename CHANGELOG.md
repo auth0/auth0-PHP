@@ -1,5 +1,12 @@
 # Change Log
 
+## [9.0.0-beta.2](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.2) (2026-06-11)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.1...9.0.0-beta.2)
+
+**Added**
+
+- feat: add Tenant Security Headers and Connection Session Expiry; remove Branding Phone Display [\#830](https://github.com/auth0/auth0-PHP/pull/830) ([fern-api[bot]](https://github.com/apps/fern-api))
+
 ## [9.0.0-beta.1](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.1) (2026-05-28)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.0...9.0.0-beta.1)
 
