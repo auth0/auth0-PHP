@@ -28,6 +28,7 @@ use Auth0\SDK\API\Management\Core\Types\Union;
  * @property ?value-of<ConnectionDpopSigningAlgEnum> $dpopSigningAlg
  * @property ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens
  * @property ?string $iconUrl
+ * @property ?bool $idTokenSessionExpirySupported
  * @property ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>> $idTokenSignedResponseAlgs
  * @property ?string $issuer
  * @property ?string $jwksUri
@@ -95,6 +96,12 @@ trait ConnectionOptionsCommonOidc
      */
     #[JsonProperty('icon_url')]
     private ?string $iconUrl;
+
+    /**
+     * @var ?bool $idTokenSessionExpirySupported
+     */
+    #[JsonProperty('id_token_session_expiry_supported')]
+    private ?bool $idTokenSessionExpirySupported;
 
     /**
      * @var ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>> $idTokenSignedResponseAlgs
@@ -324,6 +331,24 @@ trait ConnectionOptionsCommonOidc
     {
         $this->iconUrl = $value;
         $this->_setField('iconUrl');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIdTokenSessionExpirySupported(): ?bool
+    {
+        return $this->idTokenSessionExpirySupported;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIdTokenSessionExpirySupported(?bool $value = null): self
+    {
+        $this->idTokenSessionExpirySupported = $value;
+        $this->_setField('idTokenSessionExpirySupported');
         return $this;
     }
 

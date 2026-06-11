@@ -87,7 +87,7 @@ class RefreshTokensClient implements RefreshTokensClientInterface
     }
 
     /**
-     * Revoke refresh tokens in bulk by ID list, user, user+client, or client.
+     * Revoke refresh tokens in bulk by ID list, user, user+client, or user+client+audience.
      *
      * @param RevokeRefreshTokensRequestContent $request
      * @param ?array{

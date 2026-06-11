@@ -61,6 +61,12 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     private ?string $iconUrl;
 
     /**
+     * @var ?bool $idTokenSessionExpirySupported
+     */
+    #[JsonProperty('id_token_session_expiry_supported')]
+    private ?bool $idTokenSessionExpirySupported;
+
+    /**
      * @var ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>> $idTokenSignedResponseAlgs
      */
     #[JsonProperty('id_token_signed_response_algs'), ArrayType(['string'])]
@@ -157,6 +163,7 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
      *   dpopSigningAlg?: ?value-of<ConnectionDpopSigningAlgEnum>,
      *   federatedConnectionsAccessTokens?: ?ConnectionFederatedConnectionsAccessTokens,
      *   iconUrl?: ?string,
+     *   idTokenSessionExpirySupported?: ?bool,
      *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
      *   issuer?: ?string,
      *   jwksUri?: ?string,
@@ -187,6 +194,7 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
         $this->dpopSigningAlg = $values['dpopSigningAlg'] ?? null;
         $this->federatedConnectionsAccessTokens = $values['federatedConnectionsAccessTokens'] ?? null;
         $this->iconUrl = $values['iconUrl'] ?? null;
+        $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
         $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;
         $this->issuer = $values['issuer'] ?? null;
         $this->jwksUri = $values['jwksUri'] ?? null;
@@ -344,6 +352,24 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     {
         $this->iconUrl = $value;
         $this->_setField('iconUrl');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIdTokenSessionExpirySupported(): ?bool
+    {
+        return $this->idTokenSessionExpirySupported;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIdTokenSessionExpirySupported(?bool $value = null): self
+    {
+        $this->idTokenSessionExpirySupported = $value;
+        $this->_setField('idTokenSessionExpirySupported');
         return $this;
     }
 

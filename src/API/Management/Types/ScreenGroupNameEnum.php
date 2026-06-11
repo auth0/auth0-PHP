@@ -92,5 +92,6 @@ enum ScreenGroupNameEnum: string
     case AsyncApprovalError = "async-approval-error";
     case AsyncApprovalAccepted = "async-approval-accepted";
     case AsyncApprovalDenied = "async-approval-denied";
+    case Confirmation = "confirmation";
     case AsyncApprovalWrongUser = "async-approval-wrong-user";
 }

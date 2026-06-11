@@ -11,7 +11,7 @@ use Auth0\SDK\API\Management\Groups\Roles\Requests\DeleteGroupRolesRequestConten
 interface RolesClientInterface
 {
     /**
-     * Lists the <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> assigned to a group.
+     * Lists the [roles](https://auth0.com/docs/manage-users/access-control/rbac) assigned to a group.
      *
      * @param string $id Unique identifier for the group (service-generated).
      * @param ListGroupRolesRequestParameters $request
@@ -28,7 +28,7 @@ interface RolesClientInterface
     public function list(string $id, ListGroupRolesRequestParameters $request = new ListGroupRolesRequestParameters(), ?array $options = null): Pager;
 
     /**
-     * Assign one or more <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> to a specified group.
+     * Assign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) to a specified group.
      *
      * @param string $id Unique identifier for the group (service-generated).
      * @param CreateGroupRolesRequestParameters $request
@@ -44,7 +44,7 @@ interface RolesClientInterface
     public function create(string $id, CreateGroupRolesRequestParameters $request, ?array $options = null): void;
 
     /**
-     * Unassign one or more <a href="https://auth0.com/docs/manage-users/access-control/rbac">roles</a> from a specified group.
+     * Unassign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) from a specified group.
      *
      * @param string $id Unique identifier for the group (service-generated).
      * @param DeleteGroupRolesRequestContent $request

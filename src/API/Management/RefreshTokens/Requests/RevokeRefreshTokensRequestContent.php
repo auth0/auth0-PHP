@@ -21,7 +21,7 @@ class RevokeRefreshTokensRequestContent extends JsonSerializableType
     private ?string $userId;
 
     /**
-     * @var ?string $clientId Revoke all refresh tokens for this client.
+     * @var ?string $clientId Revoke refresh tokens for this client. Must be paired with `user_id`; optionally narrowed further with `audience`.
      */
     #[JsonProperty('client_id')]
     private ?string $clientId;

@@ -14,7 +14,7 @@ class PatchRateLimitPolicyConfigurationRequestContentOne extends JsonSerializabl
     private string $action;
 
     /**
-     * @var int $limit The maximum number of requests allowed in a single refresh window.
+     * @var int $limit The maximum number of requests allowed per second.
      */
     #[JsonProperty('limit')]
     private int $limit;

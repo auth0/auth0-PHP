@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\Types\DefaultTokenQuota;
 use Auth0\SDK\API\Management\Types\TenantSettingsFlags;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\TenantSettingsSupportedLocalesEnum;
+use Auth0\SDK\API\Management\Types\TenantSettingsNullableSecurityHeaders;
 use Auth0\SDK\API\Management\Types\SessionCookieSchema;
 use Auth0\SDK\API\Management\Types\TenantSettingsSessions;
 use Auth0\SDK\API\Management\Types\TenantOidcLogoutSettings;
@@ -107,10 +108,22 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     private ?int $sessionLifetime;
 
     /**
+     * @var ?int $sessionLifetimeInMinutes Number of minutes a session will stay valid. Cannot be specified together with `session_lifetime`.
+     */
+    #[JsonProperty('session_lifetime_in_minutes')]
+    private ?int $sessionLifetimeInMinutes;
+
+    /**
      * @var ?int $idleSessionLifetime Number of hours for which a session can be inactive before the user must log in again.
      */
     #[JsonProperty('idle_session_lifetime')]
     private ?int $idleSessionLifetime;
+
+    /**
+     * @var ?int $idleSessionLifetimeInMinutes Number of minutes a session can be inactive before the user must log in again. Cannot be specified together with `idle_session_lifetime`.
+     */
+    #[JsonProperty('idle_session_lifetime_in_minutes')]
+    private ?int $idleSessionLifetimeInMinutes;
 
     /**
      * @var ?int $ephemeralSessionLifetime Number of hours an ephemeral (non-persistent) session will stay valid.
@@ -123,6 +136,18 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      */
     #[JsonProperty('idle_ephemeral_session_lifetime')]
     private ?int $idleEphemeralSessionLifetime;
+
+    /**
+     * @var ?int $ephemeralSessionLifetimeInMinutes Number of minutes an ephemeral (non-persistent) session will stay valid. Cannot be specified together with `ephemeral_session_lifetime`.
+     */
+    #[JsonProperty('ephemeral_session_lifetime_in_minutes')]
+    private ?int $ephemeralSessionLifetimeInMinutes;
+
+    /**
+     * @var ?int $idleEphemeralSessionLifetimeInMinutes Number of minutes an ephemeral (non-persistent) session can be inactive before the user must log in again. Cannot be specified together with `idle_ephemeral_session_lifetime`.
+     */
+    #[JsonProperty('idle_ephemeral_session_lifetime_in_minutes')]
+    private ?int $idleEphemeralSessionLifetimeInMinutes;
 
     /**
      * @var ?string $sandboxVersion Selected sandbox version for the extensibility environment
@@ -147,6 +172,12 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      */
     #[JsonProperty('enabled_locales'), ArrayType(['string'])]
     private ?array $enabledLocales;
+
+    /**
+     * @var ?TenantSettingsNullableSecurityHeaders $securityHeaders
+     */
+    #[JsonProperty('security_headers')]
+    private ?TenantSettingsNullableSecurityHeaders $securityHeaders;
 
     /**
      * @var ?SessionCookieSchema $sessionCookie
@@ -237,6 +268,12 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     private ?bool $phoneConsolidatedExperience;
 
     /**
+     * @var ?bool $includeSessionMetadataInTenantLogs Whether session metadata is included in specific tenant logs (slo, oidc_backchannel_logout_failed, oidc_backchannel_logout_succeeded).
+     */
+    #[JsonProperty('include_session_metadata_in_tenant_logs')]
+    private ?bool $includeSessionMetadataInTenantLogs;
+
+    /**
      * @var ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode> $dynamicClientRegistrationSecurityMode
      */
     #[JsonProperty('dynamic_client_registration_security_mode')]
@@ -264,13 +301,18 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      *   supportUrl?: ?string,
      *   allowedLogoutUrls?: ?array<string>,
      *   sessionLifetime?: ?int,
+     *   sessionLifetimeInMinutes?: ?int,
      *   idleSessionLifetime?: ?int,
+     *   idleSessionLifetimeInMinutes?: ?int,
      *   ephemeralSessionLifetime?: ?int,
      *   idleEphemeralSessionLifetime?: ?int,
+     *   ephemeralSessionLifetimeInMinutes?: ?int,
+     *   idleEphemeralSessionLifetimeInMinutes?: ?int,
      *   sandboxVersion?: ?string,
      *   legacySandboxVersion?: ?string,
      *   defaultRedirectionUri?: ?string,
      *   enabledLocales?: ?array<value-of<TenantSettingsSupportedLocalesEnum>>,
+     *   securityHeaders?: ?TenantSettingsNullableSecurityHeaders,
      *   sessionCookie?: ?SessionCookieSchema,
      *   sessions?: ?TenantSettingsSessions,
      *   oidcLogout?: ?TenantOidcLogoutSettings,
@@ -285,6 +327,7 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      *   clientIdMetadataDocumentSupported?: ?bool,
      *   enableAiGuide?: ?bool,
      *   phoneConsolidatedExperience?: ?bool,
+     *   includeSessionMetadataInTenantLogs?: ?bool,
      *   dynamicClientRegistrationSecurityMode?: ?value-of<TenantSettingsDynamicClientRegistrationSecurityMode>,
      *   countryCodes?: ?TenantSettingsCountryCodes,
      * } $values
@@ -306,13 +349,18 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
         $this->supportUrl = $values['supportUrl'] ?? null;
         $this->allowedLogoutUrls = $values['allowedLogoutUrls'] ?? null;
         $this->sessionLifetime = $values['sessionLifetime'] ?? null;
+        $this->sessionLifetimeInMinutes = $values['sessionLifetimeInMinutes'] ?? null;
         $this->idleSessionLifetime = $values['idleSessionLifetime'] ?? null;
+        $this->idleSessionLifetimeInMinutes = $values['idleSessionLifetimeInMinutes'] ?? null;
         $this->ephemeralSessionLifetime = $values['ephemeralSessionLifetime'] ?? null;
         $this->idleEphemeralSessionLifetime = $values['idleEphemeralSessionLifetime'] ?? null;
+        $this->ephemeralSessionLifetimeInMinutes = $values['ephemeralSessionLifetimeInMinutes'] ?? null;
+        $this->idleEphemeralSessionLifetimeInMinutes = $values['idleEphemeralSessionLifetimeInMinutes'] ?? null;
         $this->sandboxVersion = $values['sandboxVersion'] ?? null;
         $this->legacySandboxVersion = $values['legacySandboxVersion'] ?? null;
         $this->defaultRedirectionUri = $values['defaultRedirectionUri'] ?? null;
         $this->enabledLocales = $values['enabledLocales'] ?? null;
+        $this->securityHeaders = $values['securityHeaders'] ?? null;
         $this->sessionCookie = $values['sessionCookie'] ?? null;
         $this->sessions = $values['sessions'] ?? null;
         $this->oidcLogout = $values['oidcLogout'] ?? null;
@@ -327,6 +375,7 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
         $this->clientIdMetadataDocumentSupported = $values['clientIdMetadataDocumentSupported'] ?? null;
         $this->enableAiGuide = $values['enableAiGuide'] ?? null;
         $this->phoneConsolidatedExperience = $values['phoneConsolidatedExperience'] ?? null;
+        $this->includeSessionMetadataInTenantLogs = $values['includeSessionMetadataInTenantLogs'] ?? null;
         $this->dynamicClientRegistrationSecurityMode = $values['dynamicClientRegistrationSecurityMode'] ?? null;
         $this->countryCodes = $values['countryCodes'] ?? null;
     }
@@ -586,6 +635,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     /**
      * @return ?int
      */
+    public function getSessionLifetimeInMinutes(): ?int
+    {
+        return $this->sessionLifetimeInMinutes;
+    }
+
+    /**
+     * @param ?int $value
+     */
+    public function setSessionLifetimeInMinutes(?int $value = null): self
+    {
+        $this->sessionLifetimeInMinutes = $value;
+        $this->_setField('sessionLifetimeInMinutes');
+        return $this;
+    }
+
+    /**
+     * @return ?int
+     */
     public function getIdleSessionLifetime(): ?int
     {
         return $this->idleSessionLifetime;
@@ -598,6 +665,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     {
         $this->idleSessionLifetime = $value;
         $this->_setField('idleSessionLifetime');
+        return $this;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getIdleSessionLifetimeInMinutes(): ?int
+    {
+        return $this->idleSessionLifetimeInMinutes;
+    }
+
+    /**
+     * @param ?int $value
+     */
+    public function setIdleSessionLifetimeInMinutes(?int $value = null): self
+    {
+        $this->idleSessionLifetimeInMinutes = $value;
+        $this->_setField('idleSessionLifetimeInMinutes');
         return $this;
     }
 
@@ -634,6 +719,42 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     {
         $this->idleEphemeralSessionLifetime = $value;
         $this->_setField('idleEphemeralSessionLifetime');
+        return $this;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getEphemeralSessionLifetimeInMinutes(): ?int
+    {
+        return $this->ephemeralSessionLifetimeInMinutes;
+    }
+
+    /**
+     * @param ?int $value
+     */
+    public function setEphemeralSessionLifetimeInMinutes(?int $value = null): self
+    {
+        $this->ephemeralSessionLifetimeInMinutes = $value;
+        $this->_setField('ephemeralSessionLifetimeInMinutes');
+        return $this;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getIdleEphemeralSessionLifetimeInMinutes(): ?int
+    {
+        return $this->idleEphemeralSessionLifetimeInMinutes;
+    }
+
+    /**
+     * @param ?int $value
+     */
+    public function setIdleEphemeralSessionLifetimeInMinutes(?int $value = null): self
+    {
+        $this->idleEphemeralSessionLifetimeInMinutes = $value;
+        $this->_setField('idleEphemeralSessionLifetimeInMinutes');
         return $this;
     }
 
@@ -706,6 +827,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     {
         $this->enabledLocales = $value;
         $this->_setField('enabledLocales');
+        return $this;
+    }
+
+    /**
+     * @return ?TenantSettingsNullableSecurityHeaders
+     */
+    public function getSecurityHeaders(): ?TenantSettingsNullableSecurityHeaders
+    {
+        return $this->securityHeaders;
+    }
+
+    /**
+     * @param ?TenantSettingsNullableSecurityHeaders $value
+     */
+    public function setSecurityHeaders(?TenantSettingsNullableSecurityHeaders $value = null): self
+    {
+        $this->securityHeaders = $value;
+        $this->_setField('securityHeaders');
         return $this;
     }
 
@@ -958,6 +1097,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     {
         $this->phoneConsolidatedExperience = $value;
         $this->_setField('phoneConsolidatedExperience');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIncludeSessionMetadataInTenantLogs(): ?bool
+    {
+        return $this->includeSessionMetadataInTenantLogs;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIncludeSessionMetadataInTenantLogs(?bool $value = null): self
+    {
+        $this->includeSessionMetadataInTenantLogs = $value;
+        $this->_setField('includeSessionMetadataInTenantLogs');
         return $this;
     }
 
