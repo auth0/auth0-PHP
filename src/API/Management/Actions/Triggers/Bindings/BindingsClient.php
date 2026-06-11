@@ -81,8 +81,7 @@ class BindingsClient implements BindingsClientInterface
             setOffset: function (ListActionTriggerBindingsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListActionTriggerBindingsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListActionBindingsPaginatedResponseContent $response) => $response?->getBindings() ?? [],
             /* @phpstan-ignore-next-line */

@@ -95,8 +95,7 @@ class ModulesClient implements ModulesClientInterface
             setOffset: function (GetActionModulesRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (GetActionModulesRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?GetActionModulesResponseContent $response) => $response?->getModules() ?? [],
             /* @phpstan-ignore-next-line */
@@ -317,8 +316,7 @@ class ModulesClient implements ModulesClientInterface
             setOffset: function (GetActionModuleActionsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (GetActionModuleActionsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?GetActionModuleActionsResponseContent $response) => $response?->getActions() ?? [],
             /* @phpstan-ignore-next-line */

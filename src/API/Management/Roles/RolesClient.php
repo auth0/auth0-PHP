@@ -108,8 +108,7 @@ class RolesClient implements RolesClientInterface
             setOffset: function (ListRolesRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListRolesRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListRolesOffsetPaginatedResponseContent $response) => $response?->getRoles() ?? [],
             /* @phpstan-ignore-next-line */

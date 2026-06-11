@@ -87,8 +87,7 @@ class AuthenticationMethodsClient implements AuthenticationMethodsClientInterfac
             setOffset: function (ListUserAuthenticationMethodsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListUserAuthenticationMethodsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListUserAuthenticationMethodsOffsetPaginatedResponseContent $response) => $response?->getAuthenticators() ?? [],
             /* @phpstan-ignore-next-line */

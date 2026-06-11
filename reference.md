@@ -2429,7 +2429,7 @@ $client->clients->update(
 <dl>
 <dd>
 
-**$nativeSocialLogin:** `?NativeSocialLogin` 
+**$nativeSocialLogin:** `?NativeSocialLoginPatch` 
     
 </dd>
 </dl>
@@ -2437,7 +2437,7 @@ $client->clients->update(
 <dl>
 <dd>
 
-**$fedcmLogin:** `?FedCmLogin` 
+**$fedcmLogin:** `?FedCmLoginPatch` 
     
 </dd>
 </dl>

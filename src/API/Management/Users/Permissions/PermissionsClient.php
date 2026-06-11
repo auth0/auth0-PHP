@@ -80,8 +80,7 @@ class PermissionsClient implements PermissionsClientInterface
             setOffset: function (ListUserPermissionsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListUserPermissionsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListUserPermissionsOffsetPaginatedResponseContent $response) => $response?->getPermissions() ?? [],
             /* @phpstan-ignore-next-line */

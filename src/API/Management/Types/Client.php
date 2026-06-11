@@ -225,6 +225,18 @@ class Client extends JsonSerializableType
     private ?string $initiateLoginUri;
 
     /**
+     * @var ?NativeSocialLogin $nativeSocialLogin
+     */
+    #[JsonProperty('native_social_login')]
+    private ?NativeSocialLogin $nativeSocialLogin;
+
+    /**
+     * @var ?FedCmLogin $fedcmLogin
+     */
+    #[JsonProperty('fedcm_login')]
+    private ?FedCmLogin $fedcmLogin;
+
+    /**
      * @var ?ClientRefreshTokenConfiguration $refreshToken
      */
     #[JsonProperty('refresh_token')]
@@ -410,6 +422,8 @@ class Client extends JsonSerializableType
      *   clientMetadata?: ?array<string, mixed>,
      *   mobile?: ?ClientMobile,
      *   initiateLoginUri?: ?string,
+     *   nativeSocialLogin?: ?NativeSocialLogin,
+     *   fedcmLogin?: ?FedCmLogin,
      *   refreshToken?: ?ClientRefreshTokenConfiguration,
      *   defaultOrganization?: ?ClientDefaultOrganization,
      *   organizationUsage?: ?value-of<ClientOrganizationUsageEnum>,
@@ -475,6 +489,8 @@ class Client extends JsonSerializableType
         $this->clientMetadata = $values['clientMetadata'] ?? null;
         $this->mobile = $values['mobile'] ?? null;
         $this->initiateLoginUri = $values['initiateLoginUri'] ?? null;
+        $this->nativeSocialLogin = $values['nativeSocialLogin'] ?? null;
+        $this->fedcmLogin = $values['fedcmLogin'] ?? null;
         $this->refreshToken = $values['refreshToken'] ?? null;
         $this->defaultOrganization = $values['defaultOrganization'] ?? null;
         $this->organizationUsage = $values['organizationUsage'] ?? null;
@@ -1146,6 +1162,42 @@ class Client extends JsonSerializableType
     {
         $this->initiateLoginUri = $value;
         $this->_setField('initiateLoginUri');
+        return $this;
+    }
+
+    /**
+     * @return ?NativeSocialLogin
+     */
+    public function getNativeSocialLogin(): ?NativeSocialLogin
+    {
+        return $this->nativeSocialLogin;
+    }
+
+    /**
+     * @param ?NativeSocialLogin $value
+     */
+    public function setNativeSocialLogin(?NativeSocialLogin $value = null): self
+    {
+        $this->nativeSocialLogin = $value;
+        $this->_setField('nativeSocialLogin');
+        return $this;
+    }
+
+    /**
+     * @return ?FedCmLogin
+     */
+    public function getFedcmLogin(): ?FedCmLogin
+    {
+        return $this->fedcmLogin;
+    }
+
+    /**
+     * @param ?FedCmLogin $value
+     */
+    public function setFedcmLogin(?FedCmLogin $value = null): self
+    {
+        $this->fedcmLogin = $value;
+        $this->_setField('fedcmLogin');
         return $this;
     }
 

@@ -11,6 +11,7 @@
     "inlinePathParameters": true,
     "useDefaultRequestParameterValues": true,
     "generateClientInterfaces": true,
+    "offsetSemantics": "page-index",
     "composerJson": {
       "name": "auth0/auth0-php",
       "description": "PHP SDK for Auth0 Authentication and Management APIs.",
@@ -114,9 +115,9 @@
     }
   },
   "originGitCommit": "df7ae8a82270ede4f3c8a94464e34131cd03ddcc",
-  "originGitCommitIsDirty": false,
-  "invokedBy": "ci",
-  "requestedVersion": "9.0.0-beta.1",
-  "ciProvider": "github",
-  "sdkVersion": "9.0.0-beta.1"
+  "originGitCommitIsDirty": true,
+  "invokedBy": "manual",
+  "requestedVersion": "9.0.0-beta.2",
+  "ciProvider": null,
+  "sdkVersion": "9.0.0-beta.2"
 }

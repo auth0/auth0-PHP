@@ -83,8 +83,7 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
             setOffset: function (ListOrganizationConnectionsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListOrganizationConnectionsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListOrganizationConnectionsOffsetPaginatedResponseContent $response) => $response?->getEnabledConnections() ?? [],
             /* @phpstan-ignore-next-line */

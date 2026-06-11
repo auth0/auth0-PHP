@@ -128,8 +128,7 @@ class ClientsClient implements ClientsClientInterface
             setOffset: function (ListClientsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListClientsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListClientsOffsetPaginatedResponseContent $response) => $response?->getClients() ?? [],
             /* @phpstan-ignore-next-line */

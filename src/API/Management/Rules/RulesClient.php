@@ -83,8 +83,7 @@ class RulesClient implements RulesClientInterface
             setOffset: function (ListRulesRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListRulesRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListRulesOffsetPaginatedResponseContent $response) => $response?->getRules() ?? [],
             /* @phpstan-ignore-next-line */

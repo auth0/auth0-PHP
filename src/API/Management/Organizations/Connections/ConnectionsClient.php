@@ -81,8 +81,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             setOffset: function (ListOrganizationAllConnectionsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListOrganizationAllConnectionsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListOrganizationAllConnectionsOffsetPaginatedResponseContent $response) => $response?->getConnections() ?? [],
             /* @phpstan-ignore-next-line */

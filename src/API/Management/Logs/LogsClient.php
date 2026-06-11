@@ -103,8 +103,7 @@ class LogsClient implements LogsClientInterface
             setOffset: function (ListLogsRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListLogsRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListLogOffsetPaginatedResponseContent $response) => $response?->getLogs() ?? [],
             /* @phpstan-ignore-next-line */

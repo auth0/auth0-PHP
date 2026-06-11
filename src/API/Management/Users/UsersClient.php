@@ -240,8 +240,7 @@ class UsersClient implements UsersClientInterface
             setOffset: function (ListUsersRequestParameters $request, int $offset) {
                 $request->setPage($offset);
             },
-            /* @phpstan-ignore-next-line */
-            getStep: fn (ListUsersRequestParameters $request) => $request?->getPerPage() ?? 0,
+            getStep: null,
             /* @phpstan-ignore-next-line */
             getItems: fn (?ListUsersOffsetPaginatedResponseContent $response) => $response?->getUsers() ?? [],
             /* @phpstan-ignore-next-line */
