@@ -6,6 +6,7 @@ use Auth0\SDK\API\Management\AttackProtection\BotDetection\BotDetectionClientInt
 use Auth0\SDK\API\Management\AttackProtection\BreachedPasswordDetection\BreachedPasswordDetectionClientInterface;
 use Auth0\SDK\API\Management\AttackProtection\BruteForceProtection\BruteForceProtectionClientInterface;
 use Auth0\SDK\API\Management\AttackProtection\Captcha\CaptchaClientInterface;
+use Auth0\SDK\API\Management\AttackProtection\PhoneProviderProtection\PhoneProviderProtectionClientInterface;
 use Auth0\SDK\API\Management\AttackProtection\SuspiciousIpThrottling\SuspiciousIpThrottlingClientInterface;
 
 interface AttackProtectionClientInterface
@@ -29,6 +30,11 @@ interface AttackProtectionClientInterface
      * @return CaptchaClientInterface
      */
     public function getCaptcha(): CaptchaClientInterface;
+
+    /**
+     * @return PhoneProviderProtectionClientInterface
+     */
+    public function getPhoneProviderProtection(): PhoneProviderProtectionClientInterface;
 
     /**
      * @return SuspiciousIpThrottlingClientInterface

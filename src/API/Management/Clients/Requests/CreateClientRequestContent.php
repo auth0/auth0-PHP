@@ -22,6 +22,7 @@ use Auth0\SDK\API\Management\Types\ClientOrganizationRequireBehaviorEnum;
 use Auth0\SDK\API\Management\Types\ClientOrganizationDiscoveryEnum;
 use Auth0\SDK\API\Management\Types\ClientCreateAuthenticationMethod;
 use Auth0\SDK\API\Management\Types\ClientSignedRequestObjectWithPublicKey;
+use Auth0\SDK\API\Management\Types\ClientTokenVaultPrivilegedAccessWithPublicKey;
 use Auth0\SDK\API\Management\Types\ClientComplianceLevelEnum;
 use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfiguration;
 use Auth0\SDK\API\Management\Types\CreateTokenQuota;
@@ -292,6 +293,12 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?ClientSignedRequestObjectWithPublicKey $signedRequestObject;
 
     /**
+     * @var ?ClientTokenVaultPrivilegedAccessWithPublicKey $tokenVaultPrivilegedAccess
+     */
+    #[JsonProperty('token_vault_privileged_access')]
+    private ?ClientTokenVaultPrivilegedAccessWithPublicKey $tokenVaultPrivilegedAccess;
+
+    /**
      * @var ?value-of<ClientComplianceLevelEnum> $complianceLevel
      */
     #[JsonProperty('compliance_level')]
@@ -406,6 +413,7 @@ class CreateClientRequestContent extends JsonSerializableType
      *   requirePushedAuthorizationRequests?: ?bool,
      *   requireProofOfPossession?: ?bool,
      *   signedRequestObject?: ?ClientSignedRequestObjectWithPublicKey,
+     *   tokenVaultPrivilegedAccess?: ?ClientTokenVaultPrivilegedAccessWithPublicKey,
      *   complianceLevel?: ?value-of<ClientComplianceLevelEnum>,
      *   skipNonVerifiableCallbackUriConfirmationPrompt?: ?bool,
      *   tokenExchange?: ?ClientTokenExchangeConfiguration,
@@ -465,6 +473,7 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->requirePushedAuthorizationRequests = $values['requirePushedAuthorizationRequests'] ?? null;
         $this->requireProofOfPossession = $values['requireProofOfPossession'] ?? null;
         $this->signedRequestObject = $values['signedRequestObject'] ?? null;
+        $this->tokenVaultPrivilegedAccess = $values['tokenVaultPrivilegedAccess'] ?? null;
         $this->complianceLevel = $values['complianceLevel'] ?? null;
         $this->skipNonVerifiableCallbackUriConfirmationPrompt = $values['skipNonVerifiableCallbackUriConfirmationPrompt'] ?? null;
         $this->tokenExchange = $values['tokenExchange'] ?? null;
@@ -1249,6 +1258,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->signedRequestObject = $value;
         $this->_setField('signedRequestObject');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientTokenVaultPrivilegedAccessWithPublicKey
+     */
+    public function getTokenVaultPrivilegedAccess(): ?ClientTokenVaultPrivilegedAccessWithPublicKey
+    {
+        return $this->tokenVaultPrivilegedAccess;
+    }
+
+    /**
+     * @param ?ClientTokenVaultPrivilegedAccessWithPublicKey $value
+     */
+    public function setTokenVaultPrivilegedAccess(?ClientTokenVaultPrivilegedAccessWithPublicKey $value = null): self
+    {
+        $this->tokenVaultPrivilegedAccess = $value;
+        $this->_setField('tokenVaultPrivilegedAccess');
         return $this;
     }
 

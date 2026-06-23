@@ -1715,6 +1715,14 @@ $client->clients->create(
 <dl>
 <dd>
 
+**$tokenVaultPrivilegedAccess:** `?ClientTokenVaultPrivilegedAccessWithPublicKey` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$complianceLevel:** `?string` 
     
 </dd>
@@ -2510,6 +2518,14 @@ $client->clients->update(
 <dd>
 
 **$signedRequestObject:** `?ClientSignedRequestObjectWithCredentialId` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$tokenVaultPrivilegedAccess:** `?ClientTokenVaultPrivilegedAccessWithCredentialId` 
     
 </dd>
 </dl>
@@ -3390,6 +3406,14 @@ $client->connections->create(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$crossAppAccessRequestingApp:** `?CrossAppAccessRequestingApp` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -3652,6 +3676,14 @@ $client->connections->update(
 <dd>
 
 **$connectedAccounts:** `?ConnectionConnectedAccountsPurpose` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$crossAppAccessRequestingApp:** `?CrossAppAccessRequestingApp` 
     
 </dd>
 </dl>
@@ -4780,7 +4812,7 @@ $client->emailTemplates->create(
 <dl>
 <dd>
 
-Retrieve an email template by pre-defined name. These names are `verify_email`, `verify_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, and `async_approval`. The names `change_password`, and `password_reset` are also supported for legacy scenarios.
+Retrieve an email template by pre-defined name. These names are `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, and `async_approval`. The names `change_password`, and `password_reset` are also supported for legacy scenarios.
 </dd>
 </dl>
 </dd>
@@ -4812,7 +4844,7 @@ $client->emailTemplates->get(
 <dl>
 <dd>
 
-**$templateName:** `string` — Template name. Can be `verify_email`, `verify_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
+**$templateName:** `string` — Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
     
 </dd>
 </dl>
@@ -4871,7 +4903,7 @@ $client->emailTemplates->set(
 <dl>
 <dd>
 
-**$templateName:** `string` — Template name. Can be `verify_email`, `verify_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
+**$templateName:** `string` — Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
     
 </dd>
 </dl>
@@ -5000,7 +5032,7 @@ $client->emailTemplates->update(
 <dl>
 <dd>
 
-**$templateName:** `string` — Template name. Can be `verify_email`, `verify_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
+**$templateName:** `string` — Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
     
 </dd>
 </dl>
@@ -16202,6 +16234,104 @@ $client->attackProtection->captcha->update(
 <dd>
 
 **$simpleCaptcha:** `?array` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## AttackProtection PhoneProviderProtection
+<details><summary><code>$client-&gt;attackProtection-&gt;phoneProviderProtection-&gt;get() -> ?GetPhoneProviderProtectionResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get the phone provider protection configuration for a tenant.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->attackProtection->phoneProviderProtection->get();
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;attackProtection-&gt;phoneProviderProtection-&gt;patch($request) -> ?PatchPhoneProviderProtectionResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update the phone provider protection configuration for a tenant.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->attackProtection->phoneProviderProtection->patch(
+    new PatchPhoneProviderProtectionRequestContent([
+        'type' => PhoneProviderProtectionBackoffStrategyEnum::Exponential->value,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$type:** `string` 
     
 </dd>
 </dl>
@@ -30870,7 +31000,7 @@ $client->users->identities->link(
 <dl>
 <dd>
 
-**$userId:** `string|int|null` 
+**$userId:** `string|int|null` — user_id of the secondary user account being linked.
     
 </dd>
 </dl>

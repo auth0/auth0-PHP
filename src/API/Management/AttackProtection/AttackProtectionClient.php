@@ -6,6 +6,7 @@ use Auth0\SDK\API\Management\AttackProtection\BotDetection\BotDetectionClient;
 use Auth0\SDK\API\Management\AttackProtection\BreachedPasswordDetection\BreachedPasswordDetectionClient;
 use Auth0\SDK\API\Management\AttackProtection\BruteForceProtection\BruteForceProtectionClient;
 use Auth0\SDK\API\Management\AttackProtection\Captcha\CaptchaClient;
+use Auth0\SDK\API\Management\AttackProtection\PhoneProviderProtection\PhoneProviderProtectionClient;
 use Auth0\SDK\API\Management\AttackProtection\SuspiciousIpThrottling\SuspiciousIpThrottlingClient;
 use Psr\Http\Client\ClientInterface;
 use Auth0\SDK\API\Management\Core\Client\RawClient;
@@ -13,6 +14,7 @@ use Auth0\SDK\API\Management\AttackProtection\BotDetection\BotDetectionClientInt
 use Auth0\SDK\API\Management\AttackProtection\BreachedPasswordDetection\BreachedPasswordDetectionClientInterface;
 use Auth0\SDK\API\Management\AttackProtection\BruteForceProtection\BruteForceProtectionClientInterface;
 use Auth0\SDK\API\Management\AttackProtection\Captcha\CaptchaClientInterface;
+use Auth0\SDK\API\Management\AttackProtection\PhoneProviderProtection\PhoneProviderProtectionClientInterface;
 use Auth0\SDK\API\Management\AttackProtection\SuspiciousIpThrottling\SuspiciousIpThrottlingClientInterface;
 
 class AttackProtectionClient implements AttackProtectionClientInterface
@@ -36,6 +38,11 @@ class AttackProtectionClient implements AttackProtectionClientInterface
      * @var CaptchaClient $captcha
      */
     public CaptchaClient $captcha;
+
+    /**
+     * @var PhoneProviderProtectionClient $phoneProviderProtection
+     */
+    public PhoneProviderProtectionClient $phoneProviderProtection;
 
     /**
      * @var SuspiciousIpThrottlingClient $suspiciousIpThrottling
@@ -78,6 +85,7 @@ class AttackProtectionClient implements AttackProtectionClientInterface
         $this->breachedPasswordDetection = new BreachedPasswordDetectionClient($this->client, $this->options);
         $this->bruteForceProtection = new BruteForceProtectionClient($this->client, $this->options);
         $this->captcha = new CaptchaClient($this->client, $this->options);
+        $this->phoneProviderProtection = new PhoneProviderProtectionClient($this->client, $this->options);
         $this->suspiciousIpThrottling = new SuspiciousIpThrottlingClient($this->client, $this->options);
     }
 
@@ -111,6 +119,14 @@ class AttackProtectionClient implements AttackProtectionClientInterface
     public function getCaptcha(): CaptchaClientInterface
     {
         return $this->captcha;
+    }
+
+    /**
+     * @return PhoneProviderProtectionClientInterface
+     */
+    public function getPhoneProviderProtection(): PhoneProviderProtectionClientInterface
+    {
+        return $this->phoneProviderProtection;
     }
 
     /**

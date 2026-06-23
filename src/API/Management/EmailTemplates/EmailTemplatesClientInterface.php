@@ -30,9 +30,9 @@ interface EmailTemplatesClientInterface
     public function create(CreateEmailTemplateRequestContent $request, ?array $options = null): ?CreateEmailTemplateResponseContent;
 
     /**
-     * Retrieve an email template by pre-defined name. These names are `verify_email`, `verify_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, and `async_approval`. The names `change_password`, and `password_reset` are also supported for legacy scenarios.
+     * Retrieve an email template by pre-defined name. These names are `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, and `async_approval`. The names `change_password`, and `password_reset` are also supported for legacy scenarios.
      *
-     * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
+     * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -48,7 +48,7 @@ interface EmailTemplatesClientInterface
     /**
      * Update an email template.
      *
-     * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
+     * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
      * @param SetEmailTemplateRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -65,7 +65,7 @@ interface EmailTemplatesClientInterface
     /**
      * Modify an email template.
      *
-     * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
+     * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
      * @param UpdateEmailTemplateRequestContent $request
      * @param ?array{
      *   baseUrl?: string,

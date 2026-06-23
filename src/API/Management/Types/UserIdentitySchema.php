@@ -4,6 +4,7 @@ namespace Auth0\SDK\API\Management\Types;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
+use Auth0\SDK\API\Management\Core\Types\Union;
 
 class UserIdentitySchema extends JsonSerializableType
 {
@@ -14,10 +15,13 @@ class UserIdentitySchema extends JsonSerializableType
     private ?string $connection;
 
     /**
-     * @var ?string $userId Unique identifier of the user user for this identity.
+     * @var (
+     *    string
+     *   |int
+     * )|null $userId
      */
-    #[JsonProperty('user_id')]
-    private ?string $userId;
+    #[JsonProperty('user_id'), Union('string', 'integer', 'null')]
+    private string|int|null $userId;
 
     /**
      * @var ?value-of<UserIdentityProviderEnum> $provider
@@ -58,7 +62,10 @@ class UserIdentitySchema extends JsonSerializableType
     /**
      * @param array{
      *   connection?: ?string,
-     *   userId?: ?string,
+     *   userId?: (
+     *    string
+     *   |int
+     * )|null,
      *   provider?: ?value-of<UserIdentityProviderEnum>,
      *   isSocial?: ?bool,
      *   accessToken?: ?string,
@@ -99,17 +106,23 @@ class UserIdentitySchema extends JsonSerializableType
     }
 
     /**
-     * @return ?string
+     * @return (
+     *    string
+     *   |int
+     * )|null
      */
-    public function getUserId(): ?string
+    public function getUserId(): string|int|null
     {
         return $this->userId;
     }
 
     /**
-     * @param ?string $value
+     * @param (
+     *    string
+     *   |int
+     * )|null $value
      */
-    public function setUserId(?string $value = null): self
+    public function setUserId(string|int|null $value = null): self
     {
         $this->userId = $value;
         $this->_setField('userId');

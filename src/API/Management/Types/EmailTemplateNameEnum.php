@@ -6,6 +6,7 @@ enum EmailTemplateNameEnum: string
 {
     case VerifyEmail = "verify_email";
     case VerifyEmailByCode = "verify_email_by_code";
+    case AuthEmailByCode = "auth_email_by_code";
     case ResetEmail = "reset_email";
     case ResetEmailByCode = "reset_email_by_code";
     case WelcomeEmail = "welcome_email";

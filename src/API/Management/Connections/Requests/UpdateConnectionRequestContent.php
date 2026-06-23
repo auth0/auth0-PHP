@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Core\Types\Union;
 use Auth0\SDK\API\Management\Types\ConnectionAuthenticationPurpose;
 use Auth0\SDK\API\Management\Types\ConnectionConnectedAccountsPurpose;
+use Auth0\SDK\API\Management\Types\CrossAppAccessRequestingApp;
 
 class UpdateConnectionRequestContent extends JsonSerializableType
 {
@@ -67,6 +68,12 @@ class UpdateConnectionRequestContent extends JsonSerializableType
     private ?ConnectionConnectedAccountsPurpose $connectedAccounts;
 
     /**
+     * @var ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp
+     */
+    #[JsonProperty('cross_app_access_requesting_app')]
+    private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
+
+    /**
      * @param array{
      *   displayName?: ?string,
      *   options?: ?UpdateConnectionOptions,
@@ -77,6 +84,7 @@ class UpdateConnectionRequestContent extends JsonSerializableType
      *   metadata?: ?array<string, ?string>,
      *   authentication?: ?ConnectionAuthenticationPurpose,
      *   connectedAccounts?: ?ConnectionConnectedAccountsPurpose,
+     *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
      * } $values
      */
     public function __construct(
@@ -91,6 +99,7 @@ class UpdateConnectionRequestContent extends JsonSerializableType
         $this->metadata = $values['metadata'] ?? null;
         $this->authentication = $values['authentication'] ?? null;
         $this->connectedAccounts = $values['connectedAccounts'] ?? null;
+        $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
     }
 
     /**
@@ -252,6 +261,24 @@ class UpdateConnectionRequestContent extends JsonSerializableType
     {
         $this->connectedAccounts = $value;
         $this->_setField('connectedAccounts');
+        return $this;
+    }
+
+    /**
+     * @return ?CrossAppAccessRequestingApp
+     */
+    public function getCrossAppAccessRequestingApp(): ?CrossAppAccessRequestingApp
+    {
+        return $this->crossAppAccessRequestingApp;
+    }
+
+    /**
+     * @param ?CrossAppAccessRequestingApp $value
+     */
+    public function setCrossAppAccessRequestingApp(?CrossAppAccessRequestingApp $value = null): self
+    {
+        $this->crossAppAccessRequestingApp = $value;
+        $this->_setField('crossAppAccessRequestingApp');
         return $this;
     }
 }

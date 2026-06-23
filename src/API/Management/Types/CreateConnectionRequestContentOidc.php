@@ -32,6 +32,12 @@ class CreateConnectionRequestContentOidc extends JsonSerializableType
     private ?ConnectionConnectedAccountsPurposeXaa $connectedAccounts;
 
     /**
+     * @var ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp
+     */
+    #[JsonProperty('cross_app_access_requesting_app')]
+    private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
+
+    /**
      * @var ?ConnectionOptionsOidc $options
      */
     #[JsonProperty('options')]
@@ -53,6 +59,7 @@ class CreateConnectionRequestContentOidc extends JsonSerializableType
      *   metadata?: ?array<string, ?string>,
      *   authentication?: ?ConnectionAuthenticationPurpose,
      *   connectedAccounts?: ?ConnectionConnectedAccountsPurposeXaa,
+     *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
      *   options?: ?ConnectionOptionsOidc,
      *   showAsButton?: ?bool,
      * } $values
@@ -68,6 +75,7 @@ class CreateConnectionRequestContentOidc extends JsonSerializableType
         $this->strategy = $values['strategy'];
         $this->authentication = $values['authentication'] ?? null;
         $this->connectedAccounts = $values['connectedAccounts'] ?? null;
+        $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
         $this->options = $values['options'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
     }
@@ -123,6 +131,24 @@ class CreateConnectionRequestContentOidc extends JsonSerializableType
     {
         $this->connectedAccounts = $value;
         $this->_setField('connectedAccounts');
+        return $this;
+    }
+
+    /**
+     * @return ?CrossAppAccessRequestingApp
+     */
+    public function getCrossAppAccessRequestingApp(): ?CrossAppAccessRequestingApp
+    {
+        return $this->crossAppAccessRequestingApp;
+    }
+
+    /**
+     * @param ?CrossAppAccessRequestingApp $value
+     */
+    public function setCrossAppAccessRequestingApp(?CrossAppAccessRequestingApp $value = null): self
+    {
+        $this->crossAppAccessRequestingApp = $value;
+        $this->_setField('crossAppAccessRequestingApp');
         return $this;
     }
 
