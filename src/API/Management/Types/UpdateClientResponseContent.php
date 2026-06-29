@@ -291,6 +291,12 @@ class UpdateClientResponseContent extends JsonSerializableType
     private ?ClientSignedRequestObjectWithCredentialId $signedRequestObject;
 
     /**
+     * @var ?ClientTokenVaultPrivilegedAccessWithCredentialId $tokenVaultPrivilegedAccess
+     */
+    #[JsonProperty('token_vault_privileged_access')]
+    private ?ClientTokenVaultPrivilegedAccessWithCredentialId $tokenVaultPrivilegedAccess;
+
+    /**
      * @var ?value-of<ClientComplianceLevelEnum> $complianceLevel
      */
     #[JsonProperty('compliance_level')]
@@ -433,6 +439,7 @@ class UpdateClientResponseContent extends JsonSerializableType
      *   requirePushedAuthorizationRequests?: ?bool,
      *   requireProofOfPossession?: ?bool,
      *   signedRequestObject?: ?ClientSignedRequestObjectWithCredentialId,
+     *   tokenVaultPrivilegedAccess?: ?ClientTokenVaultPrivilegedAccessWithCredentialId,
      *   complianceLevel?: ?value-of<ClientComplianceLevelEnum>,
      *   skipNonVerifiableCallbackUriConfirmationPrompt?: ?bool,
      *   tokenExchange?: ?ClientTokenExchangeConfiguration,
@@ -500,6 +507,7 @@ class UpdateClientResponseContent extends JsonSerializableType
         $this->requirePushedAuthorizationRequests = $values['requirePushedAuthorizationRequests'] ?? null;
         $this->requireProofOfPossession = $values['requireProofOfPossession'] ?? null;
         $this->signedRequestObject = $values['signedRequestObject'] ?? null;
+        $this->tokenVaultPrivilegedAccess = $values['tokenVaultPrivilegedAccess'] ?? null;
         $this->complianceLevel = $values['complianceLevel'] ?? null;
         $this->skipNonVerifiableCallbackUriConfirmationPrompt = $values['skipNonVerifiableCallbackUriConfirmationPrompt'] ?? null;
         $this->tokenExchange = $values['tokenExchange'] ?? null;
@@ -1360,6 +1368,24 @@ class UpdateClientResponseContent extends JsonSerializableType
     {
         $this->signedRequestObject = $value;
         $this->_setField('signedRequestObject');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientTokenVaultPrivilegedAccessWithCredentialId
+     */
+    public function getTokenVaultPrivilegedAccess(): ?ClientTokenVaultPrivilegedAccessWithCredentialId
+    {
+        return $this->tokenVaultPrivilegedAccess;
+    }
+
+    /**
+     * @param ?ClientTokenVaultPrivilegedAccessWithCredentialId $value
+     */
+    public function setTokenVaultPrivilegedAccess(?ClientTokenVaultPrivilegedAccessWithCredentialId $value = null): self
+    {
+        $this->tokenVaultPrivilegedAccess = $value;
+        $this->_setField('tokenVaultPrivilegedAccess');
         return $this;
     }
 

@@ -22,6 +22,12 @@ class ConnectionResponseContentOkta extends JsonSerializableType
     private string $strategy;
 
     /**
+     * @var ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp
+     */
+    #[JsonProperty('cross_app_access_requesting_app')]
+    private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
+
+    /**
      * @var ?ConnectionOptionsOkta $options
      */
     #[JsonProperty('options')]
@@ -45,6 +51,7 @@ class ConnectionResponseContentOkta extends JsonSerializableType
      *   displayName?: ?string,
      *   isDomainConnection?: ?bool,
      *   metadata?: ?array<string, ?string>,
+     *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
      *   options?: ?ConnectionOptionsOkta,
      *   showAsButton?: ?bool,
      * } $values
@@ -62,6 +69,7 @@ class ConnectionResponseContentOkta extends JsonSerializableType
         $this->isDomainConnection = $values['isDomainConnection'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->strategy = $values['strategy'];
+        $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
         $this->options = $values['options'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
     }
@@ -81,6 +89,24 @@ class ConnectionResponseContentOkta extends JsonSerializableType
     {
         $this->strategy = $value;
         $this->_setField('strategy');
+        return $this;
+    }
+
+    /**
+     * @return ?CrossAppAccessRequestingApp
+     */
+    public function getCrossAppAccessRequestingApp(): ?CrossAppAccessRequestingApp
+    {
+        return $this->crossAppAccessRequestingApp;
+    }
+
+    /**
+     * @param ?CrossAppAccessRequestingApp $value
+     */
+    public function setCrossAppAccessRequestingApp(?CrossAppAccessRequestingApp $value = null): self
+    {
+        $this->crossAppAccessRequestingApp = $value;
+        $this->_setField('crossAppAccessRequestingApp');
         return $this;
     }
 

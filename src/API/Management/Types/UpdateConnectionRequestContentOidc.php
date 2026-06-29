@@ -32,6 +32,12 @@ class UpdateConnectionRequestContentOidc extends JsonSerializableType
     private ?ConnectionConnectedAccountsPurposeXaa $connectedAccounts;
 
     /**
+     * @var ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp
+     */
+    #[JsonProperty('cross_app_access_requesting_app')]
+    private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
+
+    /**
      * @var ?bool $showAsButton
      */
     #[JsonProperty('show_as_button')]
@@ -46,6 +52,7 @@ class UpdateConnectionRequestContentOidc extends JsonSerializableType
      *   options?: ?ConnectionOptionsOidc,
      *   authentication?: ?ConnectionAuthenticationPurpose,
      *   connectedAccounts?: ?ConnectionConnectedAccountsPurposeXaa,
+     *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
      *   showAsButton?: ?bool,
      * } $values
      */
@@ -59,6 +66,7 @@ class UpdateConnectionRequestContentOidc extends JsonSerializableType
         $this->options = $values['options'] ?? null;
         $this->authentication = $values['authentication'] ?? null;
         $this->connectedAccounts = $values['connectedAccounts'] ?? null;
+        $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
     }
 
@@ -113,6 +121,24 @@ class UpdateConnectionRequestContentOidc extends JsonSerializableType
     {
         $this->connectedAccounts = $value;
         $this->_setField('connectedAccounts');
+        return $this;
+    }
+
+    /**
+     * @return ?CrossAppAccessRequestingApp
+     */
+    public function getCrossAppAccessRequestingApp(): ?CrossAppAccessRequestingApp
+    {
+        return $this->crossAppAccessRequestingApp;
+    }
+
+    /**
+     * @param ?CrossAppAccessRequestingApp $value
+     */
+    public function setCrossAppAccessRequestingApp(?CrossAppAccessRequestingApp $value = null): self
+    {
+        $this->crossAppAccessRequestingApp = $value;
+        $this->_setField('crossAppAccessRequestingApp');
         return $this;
     }
 

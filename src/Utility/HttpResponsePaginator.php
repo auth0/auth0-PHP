@@ -96,7 +96,7 @@ final class HttpResponsePaginator implements Countable, Iterator
         // Get the last request query to check for checkpoint pagination params.
         $requestQuery = '&' . $lastRequest->getUri()->getQuery();
 
-        if (false !== mb_strpos($requestQuery, '&take=') || false !== mb_strpos($requestQuery, '&from=')) {
+        if (str_contains($requestQuery, '&take=') || str_contains($requestQuery, '&from=')) {
             $endpointSupported = false;
 
             // Iterate through SUPPORTED_ENDPOINTS to check if this endpoint will work for pagination.

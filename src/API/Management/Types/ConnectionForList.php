@@ -76,6 +76,12 @@ class ConnectionForList extends JsonSerializableType
     private ?ConnectionConnectedAccountsPurpose $connectedAccounts;
 
     /**
+     * @var ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp
+     */
+    #[JsonProperty('cross_app_access_requesting_app')]
+    private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
+
+    /**
      * @param array{
      *   name?: ?string,
      *   displayName?: ?string,
@@ -88,6 +94,7 @@ class ConnectionForList extends JsonSerializableType
      *   metadata?: ?array<string, ?string>,
      *   authentication?: ?ConnectionAuthenticationPurpose,
      *   connectedAccounts?: ?ConnectionConnectedAccountsPurpose,
+     *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
      * } $values
      */
     public function __construct(
@@ -104,6 +111,7 @@ class ConnectionForList extends JsonSerializableType
         $this->metadata = $values['metadata'] ?? null;
         $this->authentication = $values['authentication'] ?? null;
         $this->connectedAccounts = $values['connectedAccounts'] ?? null;
+        $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
     }
 
     /**
@@ -301,6 +309,24 @@ class ConnectionForList extends JsonSerializableType
     {
         $this->connectedAccounts = $value;
         $this->_setField('connectedAccounts');
+        return $this;
+    }
+
+    /**
+     * @return ?CrossAppAccessRequestingApp
+     */
+    public function getCrossAppAccessRequestingApp(): ?CrossAppAccessRequestingApp
+    {
+        return $this->crossAppAccessRequestingApp;
+    }
+
+    /**
+     * @param ?CrossAppAccessRequestingApp $value
+     */
+    public function setCrossAppAccessRequestingApp(?CrossAppAccessRequestingApp $value = null): self
+    {
+        $this->crossAppAccessRequestingApp = $value;
+        $this->_setField('crossAppAccessRequestingApp');
         return $this;
     }
 

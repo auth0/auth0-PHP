@@ -25,7 +25,7 @@ class LinkUserIdentityRequestContent extends JsonSerializableType
      * @var (
      *    string
      *   |int
-     * )|null $userId
+     * )|null $userId user_id of the secondary user account being linked.
      */
     #[JsonProperty('user_id'), Union('string', 'integer', 'null')]
     private string|int|null $userId;

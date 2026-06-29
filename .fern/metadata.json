@@ -114,10 +114,10 @@
       }
     }
   },
-  "originGitCommit": "df7ae8a82270ede4f3c8a94464e34131cd03ddcc",
-  "originGitCommitIsDirty": true,
-  "invokedBy": "manual",
+  "originGitCommit": "708e068ccaf8e7742dbd2e18dea25e4ba5b0ce91",
+  "originGitCommitIsDirty": false,
+  "invokedBy": "ci",
   "requestedVersion": "9.0.0-beta.2",
-  "ciProvider": null,
+  "ciProvider": "github",
   "sdkVersion": "9.0.0-beta.2"
 }

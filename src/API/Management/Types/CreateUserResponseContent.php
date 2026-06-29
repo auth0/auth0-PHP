@@ -4,7 +4,8 @@ namespace Auth0\SDK\API\Management\Types;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
-use Auth0\SDK\API\Management\Core\Types\Union;
+use DateTime;
+use Auth0\SDK\API\Management\Core\Types\Date;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 
 class CreateUserResponseContent extends JsonSerializableType
@@ -46,22 +47,16 @@ class CreateUserResponseContent extends JsonSerializableType
     private ?bool $phoneVerified;
 
     /**
-     * @var (
-     *    string
-     *   |array<string, mixed>
-     * )|null $createdAt
+     * @var ?DateTime $createdAt Date and time when this user was created.
      */
-    #[JsonProperty('created_at'), Union('string', ['string' => 'mixed'], 'null')]
-    private string|array|null $createdAt;
+    #[JsonProperty('created_at'), Date(Date::TYPE_DATETIME)]
+    private ?DateTime $createdAt;
 
     /**
-     * @var (
-     *    string
-     *   |array<string, mixed>
-     * )|null $updatedAt
+     * @var ?DateTime $updatedAt Date and time when this user was last updated/modified.
      */
-    #[JsonProperty('updated_at'), Union('string', ['string' => 'mixed'], 'null')]
-    private string|array|null $updatedAt;
+    #[JsonProperty('updated_at'), Date(Date::TYPE_DATETIME)]
+    private ?DateTime $updatedAt;
 
     /**
      * @var ?array<UserIdentitySchema> $identities Array of user identity objects when accounts are linked.
@@ -106,13 +101,10 @@ class CreateUserResponseContent extends JsonSerializableType
     private ?array $multifactor;
 
     /**
-     * @var (
-     *    string
-     *   |array<string, mixed>
-     * )|null $multifactorLastModified
+     * @var ?DateTime $multifactorLastModified Last date and time this user's multi-factor authentication providers were updated.
      */
-    #[JsonProperty('multifactor_last_modified'), Union('string', ['string' => 'mixed'], 'null')]
-    private string|array|null $multifactorLastModified;
+    #[JsonProperty('multifactor_last_modified'), Date(Date::TYPE_DATETIME)]
+    private ?DateTime $multifactorLastModified;
 
     /**
      * @var ?string $lastIp Last IP address from which this user logged in.
@@ -121,22 +113,16 @@ class CreateUserResponseContent extends JsonSerializableType
     private ?string $lastIp;
 
     /**
-     * @var (
-     *    string
-     *   |array<string, mixed>
-     * )|null $lastLogin
+     * @var ?DateTime $lastLogin Last date and time this user logged in.
      */
-    #[JsonProperty('last_login'), Union('string', ['string' => 'mixed'], 'null')]
-    private string|array|null $lastLogin;
+    #[JsonProperty('last_login'), Date(Date::TYPE_DATETIME)]
+    private ?DateTime $lastLogin;
 
     /**
-     * @var (
-     *    string
-     *   |array<string, mixed>
-     * )|null $lastPasswordReset
+     * @var ?DateTime $lastPasswordReset Last date and time this user had their password reset.
      */
-    #[JsonProperty('last_password_reset'), Union('string', ['string' => 'mixed'], 'null')]
-    private string|array|null $lastPasswordReset;
+    #[JsonProperty('last_password_reset'), Date(Date::TYPE_DATETIME)]
+    private ?DateTime $lastPasswordReset;
 
     /**
      * @var ?int $loginsCount Total number of logins this user has performed.
@@ -170,14 +156,8 @@ class CreateUserResponseContent extends JsonSerializableType
      *   username?: ?string,
      *   phoneNumber?: ?string,
      *   phoneVerified?: ?bool,
-     *   createdAt?: (
-     *    string
-     *   |array<string, mixed>
-     * )|null,
-     *   updatedAt?: (
-     *    string
-     *   |array<string, mixed>
-     * )|null,
+     *   createdAt?: ?DateTime,
+     *   updatedAt?: ?DateTime,
      *   identities?: ?array<UserIdentitySchema>,
      *   appMetadata?: ?array<string, mixed>,
      *   userMetadata?: ?array<string, mixed>,
@@ -185,19 +165,10 @@ class CreateUserResponseContent extends JsonSerializableType
      *   name?: ?string,
      *   nickname?: ?string,
      *   multifactor?: ?array<string>,
-     *   multifactorLastModified?: (
-     *    string
-     *   |array<string, mixed>
-     * )|null,
+     *   multifactorLastModified?: ?DateTime,
      *   lastIp?: ?string,
-     *   lastLogin?: (
-     *    string
-     *   |array<string, mixed>
-     * )|null,
-     *   lastPasswordReset?: (
-     *    string
-     *   |array<string, mixed>
-     * )|null,
+     *   lastLogin?: ?DateTime,
+     *   lastPasswordReset?: ?DateTime,
      *   loginsCount?: ?int,
      *   blocked?: ?bool,
      *   givenName?: ?string,
@@ -341,23 +312,17 @@ class CreateUserResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return (
-     *    string
-     *   |array<string, mixed>
-     * )|null
+     * @return ?DateTime
      */
-    public function getCreatedAt(): string|array|null
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
     /**
-     * @param (
-     *    string
-     *   |array<string, mixed>
-     * )|null $value
+     * @param ?DateTime $value
      */
-    public function setCreatedAt(string|array|null $value = null): self
+    public function setCreatedAt(?DateTime $value = null): self
     {
         $this->createdAt = $value;
         $this->_setField('createdAt');
@@ -365,23 +330,17 @@ class CreateUserResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return (
-     *    string
-     *   |array<string, mixed>
-     * )|null
+     * @return ?DateTime
      */
-    public function getUpdatedAt(): string|array|null
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
 
     /**
-     * @param (
-     *    string
-     *   |array<string, mixed>
-     * )|null $value
+     * @param ?DateTime $value
      */
-    public function setUpdatedAt(string|array|null $value = null): self
+    public function setUpdatedAt(?DateTime $value = null): self
     {
         $this->updatedAt = $value;
         $this->_setField('updatedAt');
@@ -515,23 +474,17 @@ class CreateUserResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return (
-     *    string
-     *   |array<string, mixed>
-     * )|null
+     * @return ?DateTime
      */
-    public function getMultifactorLastModified(): string|array|null
+    public function getMultifactorLastModified(): ?DateTime
     {
         return $this->multifactorLastModified;
     }
 
     /**
-     * @param (
-     *    string
-     *   |array<string, mixed>
-     * )|null $value
+     * @param ?DateTime $value
      */
-    public function setMultifactorLastModified(string|array|null $value = null): self
+    public function setMultifactorLastModified(?DateTime $value = null): self
     {
         $this->multifactorLastModified = $value;
         $this->_setField('multifactorLastModified');
@@ -557,23 +510,17 @@ class CreateUserResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return (
-     *    string
-     *   |array<string, mixed>
-     * )|null
+     * @return ?DateTime
      */
-    public function getLastLogin(): string|array|null
+    public function getLastLogin(): ?DateTime
     {
         return $this->lastLogin;
     }
 
     /**
-     * @param (
-     *    string
-     *   |array<string, mixed>
-     * )|null $value
+     * @param ?DateTime $value
      */
-    public function setLastLogin(string|array|null $value = null): self
+    public function setLastLogin(?DateTime $value = null): self
     {
         $this->lastLogin = $value;
         $this->_setField('lastLogin');
@@ -581,23 +528,17 @@ class CreateUserResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return (
-     *    string
-     *   |array<string, mixed>
-     * )|null
+     * @return ?DateTime
      */
-    public function getLastPasswordReset(): string|array|null
+    public function getLastPasswordReset(): ?DateTime
     {
         return $this->lastPasswordReset;
     }
 
     /**
-     * @param (
-     *    string
-     *   |array<string, mixed>
-     * )|null $value
+     * @param ?DateTime $value
      */
-    public function setLastPasswordReset(string|array|null $value = null): self
+    public function setLastPasswordReset(?DateTime $value = null): self
     {
         $this->lastPasswordReset = $value;
         $this->_setField('lastPasswordReset');
