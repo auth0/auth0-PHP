@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnections
 use Auth0\SDK\API\Management\Organizations\Invitations\InvitationsClient;
 use Auth0\SDK\API\Management\Organizations\Members\MembersClient;
 use Auth0\SDK\API\Management\Organizations\Groups\GroupsClient;
+use Auth0\SDK\API\Management\Organizations\Roles\RolesClient;
 use Psr\Http\Client\ClientInterface;
 use Auth0\SDK\API\Management\Core\Client\RawClient;
 use Auth0\SDK\API\Management\Organizations\Requests\ListOrganizationsRequestParameters;
@@ -36,6 +37,7 @@ use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnections
 use Auth0\SDK\API\Management\Organizations\Invitations\InvitationsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Members\MembersClientInterface;
 use Auth0\SDK\API\Management\Organizations\Groups\GroupsClientInterface;
+use Auth0\SDK\API\Management\Organizations\Roles\RolesClientInterface;
 
 class OrganizationsClient implements OrganizationsClientInterface
 {
@@ -73,6 +75,11 @@ class OrganizationsClient implements OrganizationsClientInterface
      * @var GroupsClient $groups
      */
     public GroupsClient $groups;
+
+    /**
+     * @var RolesClient $roles
+     */
+    public RolesClient $roles;
 
     /**
      * @var array{
@@ -113,6 +120,7 @@ class OrganizationsClient implements OrganizationsClientInterface
         $this->invitations = new InvitationsClient($this->client, $this->options);
         $this->members = new MembersClient($this->client, $this->options);
         $this->groups = new GroupsClient($this->client, $this->options);
+        $this->roles = new RolesClient($this->client, $this->options);
     }
 
     /**
@@ -452,6 +460,14 @@ class OrganizationsClient implements OrganizationsClientInterface
     public function getGroups(): GroupsClientInterface
     {
         return $this->groups;
+    }
+
+    /**
+     * @return RolesClientInterface
+     */
+    public function getRoles(): RolesClientInterface
+    {
+        return $this->roles;
     }
 
     /**

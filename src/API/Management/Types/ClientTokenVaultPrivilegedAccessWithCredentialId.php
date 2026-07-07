@@ -24,9 +24,16 @@ class ClientTokenVaultPrivilegedAccessWithCredentialId extends JsonSerializableT
     private ?array $ipAllowlist;
 
     /**
+     * @var ?array<TokenVaultPrivilegedAccessGrant> $grants
+     */
+    #[JsonProperty('grants'), ArrayType([TokenVaultPrivilegedAccessGrant::class])]
+    private ?array $grants;
+
+    /**
      * @param array{
      *   credentials: array<CredentialId>,
      *   ipAllowlist?: ?array<string>,
+     *   grants?: ?array<TokenVaultPrivilegedAccessGrant>,
      * } $values
      */
     public function __construct(
@@ -34,6 +41,7 @@ class ClientTokenVaultPrivilegedAccessWithCredentialId extends JsonSerializableT
     ) {
         $this->credentials = $values['credentials'];
         $this->ipAllowlist = $values['ipAllowlist'] ?? null;
+        $this->grants = $values['grants'] ?? null;
     }
 
     /**
@@ -69,6 +77,24 @@ class ClientTokenVaultPrivilegedAccessWithCredentialId extends JsonSerializableT
     {
         $this->ipAllowlist = $value;
         $this->_setField('ipAllowlist');
+        return $this;
+    }
+
+    /**
+     * @return ?array<TokenVaultPrivilegedAccessGrant>
+     */
+    public function getGrants(): ?array
+    {
+        return $this->grants;
+    }
+
+    /**
+     * @param ?array<TokenVaultPrivilegedAccessGrant> $value
+     */
+    public function setGrants(?array $value = null): self
+    {
+        $this->grants = $value;
+        $this->_setField('grants');
         return $this;
     }
 

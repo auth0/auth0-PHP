@@ -11,10 +11,10 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 class EmailAttribute extends JsonSerializableType
 {
     /**
-     * @var ?ConnectionAttributeIdentifier $identifier
+     * @var ?EmailAttributeIdentifier $identifier
      */
     #[JsonProperty('identifier')]
-    private ?ConnectionAttributeIdentifier $identifier;
+    private ?EmailAttributeIdentifier $identifier;
 
     /**
      * @var ?bool $unique Determines if the attribute is unique in a given connection
@@ -42,7 +42,7 @@ class EmailAttribute extends JsonSerializableType
 
     /**
      * @param array{
-     *   identifier?: ?ConnectionAttributeIdentifier,
+     *   identifier?: ?EmailAttributeIdentifier,
      *   unique?: ?bool,
      *   profileRequired?: ?bool,
      *   verificationMethod?: ?value-of<VerificationMethodEnum>,
@@ -60,17 +60,17 @@ class EmailAttribute extends JsonSerializableType
     }
 
     /**
-     * @return ?ConnectionAttributeIdentifier
+     * @return ?EmailAttributeIdentifier
      */
-    public function getIdentifier(): ?ConnectionAttributeIdentifier
+    public function getIdentifier(): ?EmailAttributeIdentifier
     {
         return $this->identifier;
     }
 
     /**
-     * @param ?ConnectionAttributeIdentifier $value
+     * @param ?EmailAttributeIdentifier $value
      */
-    public function setIdentifier(?ConnectionAttributeIdentifier $value = null): self
+    public function setIdentifier(?EmailAttributeIdentifier $value = null): self
     {
         $this->identifier = $value;
         $this->_setField('identifier');

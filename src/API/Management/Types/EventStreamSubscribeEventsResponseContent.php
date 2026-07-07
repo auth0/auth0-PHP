@@ -12,7 +12,10 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
 {
     /**
      * @var (
-     *    'group.created'
+     *    'connection.created'
+     *   |'connection.deleted'
+     *   |'connection.updated'
+     *   |'group.created'
      *   |'group.deleted'
      *   |'group.member.added'
      *   |'group.member.deleted'
@@ -43,7 +46,10 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
 
     /**
      * @var (
-     *    EventStreamCloudEventGroupCreated
+     *    EventStreamCloudEventConnectionCreated
+     *   |EventStreamCloudEventConnectionDeleted
+     *   |EventStreamCloudEventConnectionUpdated
+     *   |EventStreamCloudEventGroupCreated
      *   |EventStreamCloudEventGroupDeleted
      *   |EventStreamCloudEventGroupMemberAdded
      *   |EventStreamCloudEventGroupMemberDeleted
@@ -75,7 +81,10 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
     /**
      * @param array{
      *   type: (
-     *    'group.created'
+     *    'connection.created'
+     *   |'connection.deleted'
+     *   |'connection.updated'
+     *   |'group.created'
      *   |'group.deleted'
      *   |'group.member.added'
      *   |'group.member.deleted'
@@ -102,7 +111,10 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
      *   |'_unknown'
      * ),
      *   value: (
-     *    EventStreamCloudEventGroupCreated
+     *    EventStreamCloudEventConnectionCreated
+     *   |EventStreamCloudEventConnectionDeleted
+     *   |EventStreamCloudEventConnectionUpdated
+     *   |EventStreamCloudEventGroupCreated
      *   |EventStreamCloudEventGroupDeleted
      *   |EventStreamCloudEventGroupMemberAdded
      *   |EventStreamCloudEventGroupMemberDeleted
@@ -139,7 +151,10 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
 
     /**
      * @return (
-     *    'group.created'
+     *    'connection.created'
+     *   |'connection.deleted'
+     *   |'connection.updated'
+     *   |'group.created'
      *   |'group.deleted'
      *   |'group.member.added'
      *   |'group.member.deleted'
@@ -173,7 +188,10 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
 
     /**
      * @return (
-     *    EventStreamCloudEventGroupCreated
+     *    EventStreamCloudEventConnectionCreated
+     *   |EventStreamCloudEventConnectionDeleted
+     *   |EventStreamCloudEventConnectionUpdated
+     *   |EventStreamCloudEventGroupCreated
      *   |EventStreamCloudEventGroupDeleted
      *   |EventStreamCloudEventGroupMemberAdded
      *   |EventStreamCloudEventGroupMemberDeleted
@@ -203,6 +221,42 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
     public function getValue(): mixed
     {
         return $this->value;
+    }
+
+    /**
+     * @param EventStreamCloudEventConnectionCreated $connectionCreated
+     * @return EventStreamSubscribeEventsResponseContent
+     */
+    public static function connectionCreated(EventStreamCloudEventConnectionCreated $connectionCreated): EventStreamSubscribeEventsResponseContent
+    {
+        return new EventStreamSubscribeEventsResponseContent([
+            'type' => 'connection.created',
+            'value' => $connectionCreated,
+        ]);
+    }
+
+    /**
+     * @param EventStreamCloudEventConnectionDeleted $connectionDeleted
+     * @return EventStreamSubscribeEventsResponseContent
+     */
+    public static function connectionDeleted(EventStreamCloudEventConnectionDeleted $connectionDeleted): EventStreamSubscribeEventsResponseContent
+    {
+        return new EventStreamSubscribeEventsResponseContent([
+            'type' => 'connection.deleted',
+            'value' => $connectionDeleted,
+        ]);
+    }
+
+    /**
+     * @param EventStreamCloudEventConnectionUpdated $connectionUpdated
+     * @return EventStreamSubscribeEventsResponseContent
+     */
+    public static function connectionUpdated(EventStreamCloudEventConnectionUpdated $connectionUpdated): EventStreamSubscribeEventsResponseContent
+    {
+        return new EventStreamSubscribeEventsResponseContent([
+            'type' => 'connection.updated',
+            'value' => $connectionUpdated,
+        ]);
     }
 
     /**
@@ -491,6 +545,72 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
             'type' => 'offset-only',
             'value' => $offsetOnly,
         ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConnectionCreated(): bool
+    {
+        return $this->value instanceof EventStreamCloudEventConnectionCreated && $this->type === 'connection.created';
+    }
+
+    /**
+     * @return EventStreamCloudEventConnectionCreated
+     */
+    public function asConnectionCreated(): EventStreamCloudEventConnectionCreated
+    {
+        if (!($this->value instanceof EventStreamCloudEventConnectionCreated && $this->type === 'connection.created')) {
+            throw new Exception(
+                "Expected connection.created; got " . $this->type . " with value of type " . get_debug_type($this->value),
+            );
+        }
+
+        return $this->value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConnectionDeleted(): bool
+    {
+        return $this->value instanceof EventStreamCloudEventConnectionDeleted && $this->type === 'connection.deleted';
+    }
+
+    /**
+     * @return EventStreamCloudEventConnectionDeleted
+     */
+    public function asConnectionDeleted(): EventStreamCloudEventConnectionDeleted
+    {
+        if (!($this->value instanceof EventStreamCloudEventConnectionDeleted && $this->type === 'connection.deleted')) {
+            throw new Exception(
+                "Expected connection.deleted; got " . $this->type . " with value of type " . get_debug_type($this->value),
+            );
+        }
+
+        return $this->value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConnectionUpdated(): bool
+    {
+        return $this->value instanceof EventStreamCloudEventConnectionUpdated && $this->type === 'connection.updated';
+    }
+
+    /**
+     * @return EventStreamCloudEventConnectionUpdated
+     */
+    public function asConnectionUpdated(): EventStreamCloudEventConnectionUpdated
+    {
+        if (!($this->value instanceof EventStreamCloudEventConnectionUpdated && $this->type === 'connection.updated')) {
+            throw new Exception(
+                "Expected connection.updated; got " . $this->type . " with value of type " . get_debug_type($this->value),
+            );
+        }
+
+        return $this->value;
     }
 
     /**
@@ -1041,6 +1161,18 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
         $result = array_merge($base, $result);
 
         switch ($this->type) {
+            case 'connection.created':
+                $value = $this->asConnectionCreated()->jsonSerialize();
+                $result = array_merge($value, $result);
+                break;
+            case 'connection.deleted':
+                $value = $this->asConnectionDeleted()->jsonSerialize();
+                $result = array_merge($value, $result);
+                break;
+            case 'connection.updated':
+                $value = $this->asConnectionUpdated()->jsonSerialize();
+                $result = array_merge($value, $result);
+                break;
             case 'group.created':
                 $value = $this->asGroupCreated()->jsonSerialize();
                 $result = array_merge($value, $result);
@@ -1173,6 +1305,15 @@ class EventStreamSubscribeEventsResponseContent extends JsonSerializableType
 
         $args['type'] = $type;
         switch ($type) {
+            case 'connection.created':
+                $args['value'] = EventStreamCloudEventConnectionCreated::jsonDeserialize($data);
+                break;
+            case 'connection.deleted':
+                $args['value'] = EventStreamCloudEventConnectionDeleted::jsonDeserialize($data);
+                break;
+            case 'connection.updated':
+                $args['value'] = EventStreamCloudEventConnectionUpdated::jsonDeserialize($data);
+                break;
             case 'group.created':
                 $args['value'] = EventStreamCloudEventGroupCreated::jsonDeserialize($data);
                 break;

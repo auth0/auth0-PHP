@@ -39,12 +39,19 @@ class UserGrant extends JsonSerializableType
     private ?array $scope;
 
     /**
+     * @var ?string $organizationId ID of the organization associated with the grant.
+     */
+    #[JsonProperty('organization_id')]
+    private ?string $organizationId;
+
+    /**
      * @param array{
      *   id?: ?string,
      *   clientId?: ?string,
      *   userId?: ?string,
      *   audience?: ?string,
      *   scope?: ?array<string>,
+     *   organizationId?: ?string,
      * } $values
      */
     public function __construct(
@@ -55,6 +62,7 @@ class UserGrant extends JsonSerializableType
         $this->userId = $values['userId'] ?? null;
         $this->audience = $values['audience'] ?? null;
         $this->scope = $values['scope'] ?? null;
+        $this->organizationId = $values['organizationId'] ?? null;
     }
 
     /**
@@ -144,6 +152,24 @@ class UserGrant extends JsonSerializableType
     {
         $this->scope = $value;
         $this->_setField('scope');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getOrganizationId(): ?string
+    {
+        return $this->organizationId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setOrganizationId(?string $value = null): self
+    {
+        $this->organizationId = $value;
+        $this->_setField('organizationId');
         return $this;
     }
 

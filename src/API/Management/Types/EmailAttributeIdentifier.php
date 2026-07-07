@@ -5,7 +5,7 @@ namespace Auth0\SDK\API\Management\Types;
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 
-class ConnectionAttributeIdentifier extends JsonSerializableType
+class EmailAttributeIdentifier extends JsonSerializableType
 {
     /**
      * @var ?bool $active Determines if the attribute is used for identification

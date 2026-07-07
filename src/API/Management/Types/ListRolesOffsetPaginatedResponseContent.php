@@ -9,22 +9,22 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 class ListRolesOffsetPaginatedResponseContent extends JsonSerializableType
 {
     /**
-     * @var ?float $start
+     * @var float $start
      */
     #[JsonProperty('start')]
-    private ?float $start;
+    private float $start;
 
     /**
-     * @var ?float $limit
+     * @var float $limit
      */
     #[JsonProperty('limit')]
-    private ?float $limit;
+    private float $limit;
 
     /**
-     * @var ?float $total
+     * @var float $total
      */
     #[JsonProperty('total')]
-    private ?float $total;
+    private float $total;
 
     /**
      * @var ?array<Role> $roles
@@ -34,33 +34,33 @@ class ListRolesOffsetPaginatedResponseContent extends JsonSerializableType
 
     /**
      * @param array{
-     *   start?: ?float,
-     *   limit?: ?float,
-     *   total?: ?float,
+     *   start: float,
+     *   limit: float,
+     *   total: float,
      *   roles?: ?array<Role>,
      * } $values
      */
     public function __construct(
-        array $values = [],
+        array $values,
     ) {
-        $this->start = $values['start'] ?? null;
-        $this->limit = $values['limit'] ?? null;
-        $this->total = $values['total'] ?? null;
+        $this->start = $values['start'];
+        $this->limit = $values['limit'];
+        $this->total = $values['total'];
         $this->roles = $values['roles'] ?? null;
     }
 
     /**
-     * @return ?float
+     * @return float
      */
-    public function getStart(): ?float
+    public function getStart(): float
     {
         return $this->start;
     }
 
     /**
-     * @param ?float $value
+     * @param float $value
      */
-    public function setStart(?float $value = null): self
+    public function setStart(float $value): self
     {
         $this->start = $value;
         $this->_setField('start');
@@ -68,17 +68,17 @@ class ListRolesOffsetPaginatedResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return ?float
+     * @return float
      */
-    public function getLimit(): ?float
+    public function getLimit(): float
     {
         return $this->limit;
     }
 
     /**
-     * @param ?float $value
+     * @param float $value
      */
-    public function setLimit(?float $value = null): self
+    public function setLimit(float $value): self
     {
         $this->limit = $value;
         $this->_setField('limit');
@@ -86,17 +86,17 @@ class ListRolesOffsetPaginatedResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return ?float
+     * @return float
      */
-    public function getTotal(): ?float
+    public function getTotal(): float
     {
         return $this->total;
     }
 
     /**
-     * @param ?float $value
+     * @param float $value
      */
-    public function setTotal(?float $value = null): self
+    public function setTotal(float $value): self
     {
         $this->total = $value;
         $this->_setField('total');

@@ -46,6 +46,12 @@ class CreateOrganizationResponseContent extends JsonSerializableType
     private ?TokenQuota $tokenQuota;
 
     /**
+     * @var ?value-of<OrganizationThirdPartyClientAccessEnum> $thirdPartyClientAccess
+     */
+    #[JsonProperty('third_party_client_access')]
+    private ?string $thirdPartyClientAccess;
+
+    /**
      * @var ?array<OrganizationEnabledConnection> $enabledConnections
      */
     #[JsonProperty('enabled_connections'), ArrayType([OrganizationEnabledConnection::class])]
@@ -59,6 +65,7 @@ class CreateOrganizationResponseContent extends JsonSerializableType
      *   branding?: ?OrganizationBranding,
      *   metadata?: ?array<string, ?string>,
      *   tokenQuota?: ?TokenQuota,
+     *   thirdPartyClientAccess?: ?value-of<OrganizationThirdPartyClientAccessEnum>,
      *   enabledConnections?: ?array<OrganizationEnabledConnection>,
      * } $values
      */
@@ -71,6 +78,7 @@ class CreateOrganizationResponseContent extends JsonSerializableType
         $this->branding = $values['branding'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
+        $this->thirdPartyClientAccess = $values['thirdPartyClientAccess'] ?? null;
         $this->enabledConnections = $values['enabledConnections'] ?? null;
     }
 
@@ -179,6 +187,24 @@ class CreateOrganizationResponseContent extends JsonSerializableType
     {
         $this->tokenQuota = $value;
         $this->_setField('tokenQuota');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<OrganizationThirdPartyClientAccessEnum>
+     */
+    public function getThirdPartyClientAccess(): ?string
+    {
+        return $this->thirdPartyClientAccess;
+    }
+
+    /**
+     * @param ?value-of<OrganizationThirdPartyClientAccessEnum> $value
+     */
+    public function setThirdPartyClientAccess(?string $value = null): self
+    {
+        $this->thirdPartyClientAccess = $value;
+        $this->_setField('thirdPartyClientAccess');
         return $this;
     }
 

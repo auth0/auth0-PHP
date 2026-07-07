@@ -8,6 +8,7 @@ use Auth0\SDK\API\Management\Types\OrganizationBranding;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Core\Types\Union;
 use Auth0\SDK\API\Management\Types\UpdateTokenQuota;
+use Auth0\SDK\API\Management\Types\OrganizationThirdPartyClientAccessEnum;
 
 class UpdateOrganizationRequestContent extends JsonSerializableType
 {
@@ -42,12 +43,19 @@ class UpdateOrganizationRequestContent extends JsonSerializableType
     private ?UpdateTokenQuota $tokenQuota;
 
     /**
+     * @var ?value-of<OrganizationThirdPartyClientAccessEnum> $thirdPartyClientAccess
+     */
+    #[JsonProperty('third_party_client_access')]
+    private ?string $thirdPartyClientAccess;
+
+    /**
      * @param array{
      *   displayName?: ?string,
      *   name?: ?string,
      *   branding?: ?OrganizationBranding,
      *   metadata?: ?array<string, ?string>,
      *   tokenQuota?: ?UpdateTokenQuota,
+     *   thirdPartyClientAccess?: ?value-of<OrganizationThirdPartyClientAccessEnum>,
      * } $values
      */
     public function __construct(
@@ -58,6 +66,7 @@ class UpdateOrganizationRequestContent extends JsonSerializableType
         $this->branding = $values['branding'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
+        $this->thirdPartyClientAccess = $values['thirdPartyClientAccess'] ?? null;
     }
 
     /**
@@ -147,6 +156,24 @@ class UpdateOrganizationRequestContent extends JsonSerializableType
     {
         $this->tokenQuota = $value;
         $this->_setField('tokenQuota');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<OrganizationThirdPartyClientAccessEnum>
+     */
+    public function getThirdPartyClientAccess(): ?string
+    {
+        return $this->thirdPartyClientAccess;
+    }
+
+    /**
+     * @param ?value-of<OrganizationThirdPartyClientAccessEnum> $value
+     */
+    public function setThirdPartyClientAccess(?string $value = null): self
+    {
+        $this->thirdPartyClientAccess = $value;
+        $this->_setField('thirdPartyClientAccess');
         return $this;
     }
 }
