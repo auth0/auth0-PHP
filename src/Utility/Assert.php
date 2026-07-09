@@ -51,9 +51,6 @@ final class Assert
     }
 
     /**
-     * @param mixed $name
-     * @param mixed $arguments
-     *
      * @throws BadMethodCallException
      */
     public static function __callStatic(string $name, array $arguments): void
@@ -6643,7 +6640,7 @@ final class Assert
      */
     public static function positiveInteger($value, $message = ''): void
     {
-        if (! (is_int($value) && $value > 0)) {
+        if (! is_int($value) || $value <= 0) {
             self::reportInvalidArgument(sprintf(
                 $message ?: 'Expected a positive integer. Got: %s',
                 self::valueToString($value),
