@@ -244,6 +244,18 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     private ?bool $idTokenSessionExpirySupported;
 
     /**
+     * @var ?string $discoveryUrl
+     */
+    #[JsonProperty('discovery_url')]
+    private ?string $discoveryUrl;
+
+    /**
+     * @var ?ConnectionsOidcMetadata $oidcMetadata
+     */
+    #[JsonProperty('oidc_metadata')]
+    private ?ConnectionsOidcMetadata $oidcMetadata;
+
+    /**
      * @param array{
      *   validation?: ?ConnectionValidationOptions,
      *   nonPersistentAttrs?: ?array<string>,
@@ -286,6 +298,8 @@ class ConnectionPropertiesOptions extends JsonSerializableType
      *   tokenEndpointAuthSigningAlg?: ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>,
      *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
      *   idTokenSessionExpirySupported?: ?bool,
+     *   discoveryUrl?: ?string,
+     *   oidcMetadata?: ?ConnectionsOidcMetadata,
      * } $values
      */
     public function __construct(
@@ -329,6 +343,8 @@ class ConnectionPropertiesOptions extends JsonSerializableType
         $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
+        $this->discoveryUrl = $values['discoveryUrl'] ?? null;
+        $this->oidcMetadata = $values['oidcMetadata'] ?? null;
     }
 
     /**
@@ -1018,6 +1034,42 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     {
         $this->idTokenSessionExpirySupported = $value;
         $this->_setField('idTokenSessionExpirySupported');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getDiscoveryUrl(): ?string
+    {
+        return $this->discoveryUrl;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setDiscoveryUrl(?string $value = null): self
+    {
+        $this->discoveryUrl = $value;
+        $this->_setField('discoveryUrl');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionsOidcMetadata
+     */
+    public function getOidcMetadata(): ?ConnectionsOidcMetadata
+    {
+        return $this->oidcMetadata;
+    }
+
+    /**
+     * @param ?ConnectionsOidcMetadata $value
+     */
+    public function setOidcMetadata(?ConnectionsOidcMetadata $value = null): self
+    {
+        $this->oidcMetadata = $value;
+        $this->_setField('oidcMetadata');
         return $this;
     }
 

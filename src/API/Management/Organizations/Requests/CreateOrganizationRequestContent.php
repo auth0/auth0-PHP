@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Core\Types\Union;
 use Auth0\SDK\API\Management\Types\ConnectionForOrganization;
 use Auth0\SDK\API\Management\Types\CreateTokenQuota;
+use Auth0\SDK\API\Management\Types\OrganizationThirdPartyClientAccessEnum;
 
 class CreateOrganizationRequestContent extends JsonSerializableType
 {
@@ -49,6 +50,12 @@ class CreateOrganizationRequestContent extends JsonSerializableType
     private ?CreateTokenQuota $tokenQuota;
 
     /**
+     * @var ?value-of<OrganizationThirdPartyClientAccessEnum> $thirdPartyClientAccess
+     */
+    #[JsonProperty('third_party_client_access')]
+    private ?string $thirdPartyClientAccess;
+
+    /**
      * @param array{
      *   name: string,
      *   displayName?: ?string,
@@ -56,6 +63,7 @@ class CreateOrganizationRequestContent extends JsonSerializableType
      *   metadata?: ?array<string, ?string>,
      *   enabledConnections?: ?array<ConnectionForOrganization>,
      *   tokenQuota?: ?CreateTokenQuota,
+     *   thirdPartyClientAccess?: ?value-of<OrganizationThirdPartyClientAccessEnum>,
      * } $values
      */
     public function __construct(
@@ -67,6 +75,7 @@ class CreateOrganizationRequestContent extends JsonSerializableType
         $this->metadata = $values['metadata'] ?? null;
         $this->enabledConnections = $values['enabledConnections'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
+        $this->thirdPartyClientAccess = $values['thirdPartyClientAccess'] ?? null;
     }
 
     /**
@@ -174,6 +183,24 @@ class CreateOrganizationRequestContent extends JsonSerializableType
     {
         $this->tokenQuota = $value;
         $this->_setField('tokenQuota');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<OrganizationThirdPartyClientAccessEnum>
+     */
+    public function getThirdPartyClientAccess(): ?string
+    {
+        return $this->thirdPartyClientAccess;
+    }
+
+    /**
+     * @param ?value-of<OrganizationThirdPartyClientAccessEnum> $value
+     */
+    public function setThirdPartyClientAccess(?string $value = null): self
+    {
+        $this->thirdPartyClientAccess = $value;
+        $this->_setField('thirdPartyClientAccess');
         return $this;
     }
 }

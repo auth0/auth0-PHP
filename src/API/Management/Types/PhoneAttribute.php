@@ -11,10 +11,10 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 class PhoneAttribute extends JsonSerializableType
 {
     /**
-     * @var ?ConnectionAttributeIdentifier $identifier
+     * @var ?PhoneAttributeIdentifier $identifier
      */
     #[JsonProperty('identifier')]
-    private ?ConnectionAttributeIdentifier $identifier;
+    private ?PhoneAttributeIdentifier $identifier;
 
     /**
      * @var ?bool $profileRequired Determines if property should be required for users
@@ -30,7 +30,7 @@ class PhoneAttribute extends JsonSerializableType
 
     /**
      * @param array{
-     *   identifier?: ?ConnectionAttributeIdentifier,
+     *   identifier?: ?PhoneAttributeIdentifier,
      *   profileRequired?: ?bool,
      *   signup?: ?SignupVerified,
      * } $values
@@ -44,17 +44,17 @@ class PhoneAttribute extends JsonSerializableType
     }
 
     /**
-     * @return ?ConnectionAttributeIdentifier
+     * @return ?PhoneAttributeIdentifier
      */
-    public function getIdentifier(): ?ConnectionAttributeIdentifier
+    public function getIdentifier(): ?PhoneAttributeIdentifier
     {
         return $this->identifier;
     }
 
     /**
-     * @param ?ConnectionAttributeIdentifier $value
+     * @param ?PhoneAttributeIdentifier $value
      */
-    public function setIdentifier(?ConnectionAttributeIdentifier $value = null): self
+    public function setIdentifier(?PhoneAttributeIdentifier $value = null): self
     {
         $this->identifier = $value;
         $this->_setField('identifier');

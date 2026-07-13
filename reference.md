@@ -5398,7 +5398,7 @@ $client->eventStreams->update(
 $client->eventStreams->test(
     'id',
     new CreateEventStreamTestEventRequestContent([
-        'eventType' => EventStreamTestEventTypeEnum::GroupCreated->value,
+        'eventType' => EventStreamTestEventTypeEnum::ConnectionCreated->value,
     ]),
 );
 ```
@@ -5476,7 +5476,7 @@ $client->events->subscribe(
         'from' => 'from',
         'fromTimestamp' => 'from_timestamp',
         'eventType' => [
-            EventStreamSubscribeEventsEventTypeEnum::GroupCreated->value,
+            EventStreamSubscribeEventsEventTypeEnum::ConnectionCreated->value,
         ],
     ]),
 );
@@ -8758,6 +8758,14 @@ $client->organizations->create(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$thirdPartyClientAccess:** `?string` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -9022,6 +9030,14 @@ $client->organizations->update(
 <dd>
 
 **$tokenQuota:** `?UpdateTokenQuota` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$thirdPartyClientAccess:** `?string` 
     
 </dd>
 </dl>
@@ -27481,6 +27497,110 @@ $client->organizations->members->effectiveRoles->sources->groups->list(
 <dd>
 
 **$roleId:** `string` — The role ID to get group sources for.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Organizations Roles Members
+<details><summary><code>$client-&gt;organizations-&gt;roles-&gt;members-&gt;list($id, $roleId, $request) -> ?ListOrganizationRoleMembersResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the organization members assigned a specific role within the context of an organization.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->roles->members->list(
+    'id',
+    'role_id',
+    new ListOrganizationRoleMembersRequestParameters([
+        'from' => 'from',
+        'take' => 1,
+        'fields' => 'fields',
+        'includeFields' => true,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$roleId:** `string` — ID of the role to retrieve the assigned members for.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Optional Id from which to start selection.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 50. Values above the maximum permitted size are capped.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$fields:** `?string` — Comma-separated list of fields to include or exclude (based on value provided for include_fields) in the result. Leave empty to retrieve all fields.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeFields:** `?bool` — Whether specified fields are to be included (true) or excluded (false). Defaults to true.
     
 </dd>
 </dl>

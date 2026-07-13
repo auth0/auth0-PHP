@@ -11,10 +11,10 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 class UsernameAttribute extends JsonSerializableType
 {
     /**
-     * @var ?ConnectionAttributeIdentifier $identifier
+     * @var ?UsernameAttributeIdentifier $identifier
      */
     #[JsonProperty('identifier')]
-    private ?ConnectionAttributeIdentifier $identifier;
+    private ?UsernameAttributeIdentifier $identifier;
 
     /**
      * @var ?bool $profileRequired Determines if property should be required for users
@@ -36,7 +36,7 @@ class UsernameAttribute extends JsonSerializableType
 
     /**
      * @param array{
-     *   identifier?: ?ConnectionAttributeIdentifier,
+     *   identifier?: ?UsernameAttributeIdentifier,
      *   profileRequired?: ?bool,
      *   signup?: ?SignupSchema,
      *   validation?: ?UsernameValidation,
@@ -52,17 +52,17 @@ class UsernameAttribute extends JsonSerializableType
     }
 
     /**
-     * @return ?ConnectionAttributeIdentifier
+     * @return ?UsernameAttributeIdentifier
      */
-    public function getIdentifier(): ?ConnectionAttributeIdentifier
+    public function getIdentifier(): ?UsernameAttributeIdentifier
     {
         return $this->identifier;
     }
 
     /**
-     * @param ?ConnectionAttributeIdentifier $value
+     * @param ?UsernameAttributeIdentifier $value
      */
-    public function setIdentifier(?ConnectionAttributeIdentifier $value = null): self
+    public function setIdentifier(?UsernameAttributeIdentifier $value = null): self
     {
         $this->identifier = $value;
         $this->_setField('identifier');

@@ -4,6 +4,9 @@ namespace Auth0\SDK\API\Management\Types;
 
 enum EventStreamDeliveryEventTypeEnum: string
 {
+    case ConnectionCreated = "connection.created";
+    case ConnectionDeleted = "connection.deleted";
+    case ConnectionUpdated = "connection.updated";
     case GroupCreated = "group.created";
     case GroupDeleted = "group.deleted";
     case GroupMemberAdded = "group.member.added";

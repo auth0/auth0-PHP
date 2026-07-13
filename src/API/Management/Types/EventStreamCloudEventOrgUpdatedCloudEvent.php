@@ -13,7 +13,7 @@ use Auth0\SDK\API\Management\Core\Types\Date;
 class EventStreamCloudEventOrgUpdatedCloudEvent extends JsonSerializableType
 {
     /**
-     * @var string $specversion The version of the CloudEvents specification which the event uses.
+     * @var value-of<EventStreamCloudEventSpecVersionEnum> $specversion
      */
     #[JsonProperty('specversion')]
     private string $specversion;
@@ -68,7 +68,7 @@ class EventStreamCloudEventOrgUpdatedCloudEvent extends JsonSerializableType
 
     /**
      * @param array{
-     *   specversion: string,
+     *   specversion: value-of<EventStreamCloudEventSpecVersionEnum>,
      *   type: value-of<EventStreamCloudEventOrgUpdatedCloudEventTypeEnum>,
      *   source: string,
      *   id: string,
@@ -94,7 +94,7 @@ class EventStreamCloudEventOrgUpdatedCloudEvent extends JsonSerializableType
     }
 
     /**
-     * @return string
+     * @return value-of<EventStreamCloudEventSpecVersionEnum>
      */
     public function getSpecversion(): string
     {
@@ -102,7 +102,7 @@ class EventStreamCloudEventOrgUpdatedCloudEvent extends JsonSerializableType
     }
 
     /**
-     * @param string $value
+     * @param value-of<EventStreamCloudEventSpecVersionEnum> $value
      */
     public function setSpecversion(string $value): self
     {

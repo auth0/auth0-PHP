@@ -18,6 +18,7 @@ use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnections
 use Auth0\SDK\API\Management\Organizations\Invitations\InvitationsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Members\MembersClientInterface;
 use Auth0\SDK\API\Management\Organizations\Groups\GroupsClientInterface;
+use Auth0\SDK\API\Management\Organizations\Roles\RolesClientInterface;
 
 interface OrganizationsClientInterface
 {
@@ -169,4 +170,9 @@ interface OrganizationsClientInterface
      * @return GroupsClientInterface
      */
     public function getGroups(): GroupsClientInterface;
+
+    /**
+     * @return RolesClientInterface
+     */
+    public function getRoles(): RolesClientInterface;
 }
