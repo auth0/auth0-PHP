@@ -11,6 +11,7 @@ use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Exception\StateException;
+use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\TokenGenerator;
@@ -369,6 +370,21 @@ test('logout() returns a a valid logout url', function(): void {
             ->toContain('returnTo=' . $returnUrl)
             ->toContain('client_id=' . $this->configuration['clientId'])
             ->toContain('rand=' . $randomParam);
+});
+
+test('logout() succeeds when using SessionStore', function(): void {
+    $auth0 = new Auth0($this->configuration);
+    $auth0->configuration()->setSessionStorage(new SessionStore($auth0->configuration()));
+
+    $returnUrl = uniqid();
+
+    $url = parse_url($auth0->logout($returnUrl));
+
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual($this->configuration['domain'])
+        ->path->toEqual('/v2/logout')
+        ->query->toContain('returnTo=' . $returnUrl);
 });
 
 test('getBackchannel() retrieves a setBackchannel() assignment', function(): void {
@@ -760,6 +776,28 @@ test('exchange() succeeds with a valid id token', function(): void {
     expect($auth0->getAccessTokenScope())->toEqual(['test:part1','test:part2','test:part3']);
     expect($auth0->getAccessTokenExpiration())->toBeGreaterThan(time());
     expect($auth0->getRefreshToken())->toEqual('4.5.6');
+});
+
+test('exchange() succeeds and regenerates the session when using SessionStore', function(): void {
+    $auth0 = new Auth0($this->configuration);
+    $auth0->configuration()->setSessionStorage(new SessionStore($auth0->configuration()));
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
+        HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+    expect($auth0->getUser()['sub'])->toEqual('__test_sub__');
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
 });
 
 test('exchange() succeeds with no id token', function(): void {

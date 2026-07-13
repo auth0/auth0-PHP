@@ -9,6 +9,7 @@ use Auth0\SDK\Configuration\{SdkConfiguration, SdkState};
 use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
 use Auth0\SDK\Contract\{Auth0Interface, StoreInterface, TokenInterface};
 use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Utility\{HttpResponse, PKCE, Toolkit, TransientStoreHandler};
 use Throwable;
 
@@ -264,6 +265,14 @@ final class Auth0 implements Auth0Interface
         /** @var null|array<array<mixed>|int|string> $user */
         $this->setUser($user ?? []);
         $this->deferStateSaving(false);
+
+        // Rotate the session ID now that the auth state has changed, to prevent
+        // session fixation. Only applies when using PHP session-backed storage.
+        $sessionStorage = $this->configuration()->getSessionStorage();
+
+        if ($sessionStorage instanceof SessionStore) {
+            $sessionStorage->regenerate();
+        }
 
         return true;
     }
@@ -588,6 +597,14 @@ final class Auth0 implements Auth0Interface
         }
 
         $this->clear();
+
+        // Rotate the session ID on logout so a new ID is issued for the next
+        // authentication, preventing session fixation across login/logout cycles.
+        $sessionStorage = $this->configuration()->getSessionStorage();
+
+        if ($sessionStorage instanceof SessionStore) {
+            $sessionStorage->regenerate();
+        }
 
         return $this->authentication()->getLogoutLink($returnUri, $params);
     }

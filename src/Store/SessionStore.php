@@ -111,6 +111,22 @@ final readonly class SessionStore implements StoreInterface
     }
 
     /**
+     * Regenerate the session ID while preserving session data.
+     * Called on authentication state changes to prevent session fixation.
+     */
+    public function regenerate(): void
+    {
+        $this->start();
+
+        // @codeCoverageIgnoreStart
+        if (! defined('AUTH0_TESTS_DIR') && PHP_SESSION_ACTIVE === session_status()) {
+            session_regenerate_id(true);
+        }
+
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
      * Persists $value on $_SESSION, identified by $key.
      *
      * @param string $key   session key to set
