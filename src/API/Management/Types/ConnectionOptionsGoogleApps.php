@@ -114,12 +114,6 @@ class ConnectionOptionsGoogleApps extends JsonSerializableType
     private ?bool $extIsSuspended;
 
     /**
-     * @var ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens
-     */
-    #[JsonProperty('federated_connections_access_tokens')]
-    private ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens;
-
-    /**
      * @var ?bool $handleLoginFromSocial
      */
     #[JsonProperty('handle_login_from_social')]
@@ -189,7 +183,6 @@ class ConnectionOptionsGoogleApps extends JsonSerializableType
      *   extGroupsExtended?: ?bool,
      *   extIsAdmin?: ?bool,
      *   extIsSuspended?: ?bool,
-     *   federatedConnectionsAccessTokens?: ?ConnectionFederatedConnectionsAccessTokens,
      *   handleLoginFromSocial?: ?bool,
      *   iconUrl?: ?string,
      *   mapUserIdToId?: ?bool,
@@ -223,7 +216,6 @@ class ConnectionOptionsGoogleApps extends JsonSerializableType
         $this->extGroupsExtended = $values['extGroupsExtended'] ?? null;
         $this->extIsAdmin = $values['extIsAdmin'] ?? null;
         $this->extIsSuspended = $values['extIsSuspended'] ?? null;
-        $this->federatedConnectionsAccessTokens = $values['federatedConnectionsAccessTokens'] ?? null;
         $this->handleLoginFromSocial = $values['handleLoginFromSocial'] ?? null;
         $this->iconUrl = $values['iconUrl'] ?? null;
         $this->mapUserIdToId = $values['mapUserIdToId'] ?? null;
@@ -519,24 +511,6 @@ class ConnectionOptionsGoogleApps extends JsonSerializableType
     {
         $this->extIsSuspended = $value;
         $this->_setField('extIsSuspended');
-        return $this;
-    }
-
-    /**
-     * @return ?ConnectionFederatedConnectionsAccessTokens
-     */
-    public function getFederatedConnectionsAccessTokens(): ?ConnectionFederatedConnectionsAccessTokens
-    {
-        return $this->federatedConnectionsAccessTokens;
-    }
-
-    /**
-     * @param ?ConnectionFederatedConnectionsAccessTokens $value
-     */
-    public function setFederatedConnectionsAccessTokens(?ConnectionFederatedConnectionsAccessTokens $value = null): self
-    {
-        $this->federatedConnectionsAccessTokens = $value;
-        $this->_setField('federatedConnectionsAccessTokens');
         return $this;
     }
 

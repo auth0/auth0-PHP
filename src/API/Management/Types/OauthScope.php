@@ -84,8 +84,6 @@ enum OauthScope: string
     case UpdateEventStreams = "update:event_streams";
     case DeleteEventStreams = "delete:event_streams";
     case ReadEvents = "read:events";
-    case ReadFederatedConnectionsTokens = "read:federated_connections_tokens";
-    case DeleteFederatedConnectionsTokens = "delete:federated_connections_tokens";
     case CreateFlows = "create:flows";
     case ReadFlows = "read:flows";
     case UpdateFlows = "update:flows";

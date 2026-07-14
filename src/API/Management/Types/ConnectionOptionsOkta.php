@@ -42,7 +42,6 @@ class ConnectionOptionsOkta extends JsonSerializableType
      *   connectionSettings?: ?ConnectionConnectionSettings,
      *   domainAliases?: ?array<string>,
      *   dpopSigningAlg?: ?value-of<ConnectionDpopSigningAlgEnum>,
-     *   federatedConnectionsAccessTokens?: ?ConnectionFederatedConnectionsAccessTokens,
      *   iconUrl?: ?string,
      *   idTokenSessionExpirySupported?: ?bool,
      *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
@@ -77,7 +76,6 @@ class ConnectionOptionsOkta extends JsonSerializableType
         $this->connectionSettings = $values['connectionSettings'] ?? null;
         $this->domainAliases = $values['domainAliases'] ?? null;
         $this->dpopSigningAlg = $values['dpopSigningAlg'] ?? null;
-        $this->federatedConnectionsAccessTokens = $values['federatedConnectionsAccessTokens'] ?? null;
         $this->iconUrl = $values['iconUrl'] ?? null;
         $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
         $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;

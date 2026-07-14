@@ -20,7 +20,6 @@ use Auth0\SDK\API\Management\Users\ConnectedAccounts\ConnectedAccountsClientInte
 use Auth0\SDK\API\Management\Users\EffectivePermissions\EffectivePermissionsClientInterface;
 use Auth0\SDK\API\Management\Users\EffectiveRoles\EffectiveRolesClientInterface;
 use Auth0\SDK\API\Management\Users\Enrollments\EnrollmentsClientInterface;
-use Auth0\SDK\API\Management\Users\FederatedConnectionsTokensets\FederatedConnectionsTokensetsClientInterface;
 use Auth0\SDK\API\Management\Users\Groups\GroupsClientInterface;
 use Auth0\SDK\API\Management\Users\Identities\IdentitiesClientInterface;
 use Auth0\SDK\API\Management\Users\Logs\LogsClientInterface;
@@ -305,11 +304,6 @@ interface UsersClientInterface
      * @return EnrollmentsClientInterface
      */
     public function getEnrollments(): EnrollmentsClientInterface;
-
-    /**
-     * @return FederatedConnectionsTokensetsClientInterface
-     */
-    public function getFederatedConnectionsTokensets(): FederatedConnectionsTokensetsClientInterface;
 
     /**
      * @return GroupsClientInterface

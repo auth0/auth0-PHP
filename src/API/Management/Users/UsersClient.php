@@ -8,7 +8,6 @@ use Auth0\SDK\API\Management\Users\ConnectedAccounts\ConnectedAccountsClient;
 use Auth0\SDK\API\Management\Users\EffectivePermissions\EffectivePermissionsClient;
 use Auth0\SDK\API\Management\Users\EffectiveRoles\EffectiveRolesClient;
 use Auth0\SDK\API\Management\Users\Enrollments\EnrollmentsClient;
-use Auth0\SDK\API\Management\Users\FederatedConnectionsTokensets\FederatedConnectionsTokensetsClient;
 use Auth0\SDK\API\Management\Users\Groups\GroupsClient;
 use Auth0\SDK\API\Management\Users\Identities\IdentitiesClient;
 use Auth0\SDK\API\Management\Users\Logs\LogsClient;
@@ -49,7 +48,6 @@ use Auth0\SDK\API\Management\Users\ConnectedAccounts\ConnectedAccountsClientInte
 use Auth0\SDK\API\Management\Users\EffectivePermissions\EffectivePermissionsClientInterface;
 use Auth0\SDK\API\Management\Users\EffectiveRoles\EffectiveRolesClientInterface;
 use Auth0\SDK\API\Management\Users\Enrollments\EnrollmentsClientInterface;
-use Auth0\SDK\API\Management\Users\FederatedConnectionsTokensets\FederatedConnectionsTokensetsClientInterface;
 use Auth0\SDK\API\Management\Users\Groups\GroupsClientInterface;
 use Auth0\SDK\API\Management\Users\Identities\IdentitiesClientInterface;
 use Auth0\SDK\API\Management\Users\Logs\LogsClientInterface;
@@ -92,11 +90,6 @@ class UsersClient implements UsersClientInterface
      * @var EnrollmentsClient $enrollments
      */
     public EnrollmentsClient $enrollments;
-
-    /**
-     * @var FederatedConnectionsTokensetsClient $federatedConnectionsTokensets
-     */
-    public FederatedConnectionsTokensetsClient $federatedConnectionsTokensets;
 
     /**
      * @var GroupsClient $groups
@@ -186,7 +179,6 @@ class UsersClient implements UsersClientInterface
         $this->effectivePermissions = new EffectivePermissionsClient($this->client, $this->options);
         $this->effectiveRoles = new EffectiveRolesClient($this->client, $this->options);
         $this->enrollments = new EnrollmentsClient($this->client, $this->options);
-        $this->federatedConnectionsTokensets = new FederatedConnectionsTokensetsClient($this->client, $this->options);
         $this->groups = new GroupsClient($this->client, $this->options);
         $this->identities = new IdentitiesClient($this->client, $this->options);
         $this->logs = new LogsClient($this->client, $this->options);
@@ -735,14 +727,6 @@ class UsersClient implements UsersClientInterface
     public function getEnrollments(): EnrollmentsClientInterface
     {
         return $this->enrollments;
-    }
-
-    /**
-     * @return FederatedConnectionsTokensetsClientInterface
-     */
-    public function getFederatedConnectionsTokensets(): FederatedConnectionsTokensetsClientInterface
-    {
-        return $this->federatedConnectionsTokensets;
     }
 
     /**

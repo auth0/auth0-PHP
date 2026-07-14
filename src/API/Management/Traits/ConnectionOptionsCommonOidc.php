@@ -4,7 +4,6 @@ namespace Auth0\SDK\API\Management\Traits;
 
 use Auth0\SDK\API\Management\Types\ConnectionConnectionSettings;
 use Auth0\SDK\API\Management\Types\ConnectionDpopSigningAlgEnum;
-use Auth0\SDK\API\Management\Types\ConnectionFederatedConnectionsAccessTokens;
 use Auth0\SDK\API\Management\Types\ConnectionIdTokenSignedResponseAlgEnum;
 use Auth0\SDK\API\Management\Types\ConnectionOptionsOidcMetadata;
 use Auth0\SDK\API\Management\Types\ConnectionSetUserRootAttributesEnum;
@@ -26,7 +25,6 @@ use Auth0\SDK\API\Management\Core\Types\Union;
  * @property ?ConnectionConnectionSettings $connectionSettings
  * @property ?array<string> $domainAliases
  * @property ?value-of<ConnectionDpopSigningAlgEnum> $dpopSigningAlg
- * @property ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens
  * @property ?string $iconUrl
  * @property ?bool $idTokenSessionExpirySupported
  * @property ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>> $idTokenSignedResponseAlgs
@@ -84,12 +82,6 @@ trait ConnectionOptionsCommonOidc
      */
     #[JsonProperty('dpop_signing_alg')]
     private ?string $dpopSigningAlg;
-
-    /**
-     * @var ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens
-     */
-    #[JsonProperty('federated_connections_access_tokens')]
-    private ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens;
 
     /**
      * @var ?string $iconUrl
@@ -295,24 +287,6 @@ trait ConnectionOptionsCommonOidc
     {
         $this->dpopSigningAlg = $value;
         $this->_setField('dpopSigningAlg');
-        return $this;
-    }
-
-    /**
-     * @return ?ConnectionFederatedConnectionsAccessTokens
-     */
-    public function getFederatedConnectionsAccessTokens(): ?ConnectionFederatedConnectionsAccessTokens
-    {
-        return $this->federatedConnectionsAccessTokens;
-    }
-
-    /**
-     * @param ?ConnectionFederatedConnectionsAccessTokens $value
-     */
-    public function setFederatedConnectionsAccessTokens(?ConnectionFederatedConnectionsAccessTokens $value = null): self
-    {
-        $this->federatedConnectionsAccessTokens = $value;
-        $this->_setField('federatedConnectionsAccessTokens');
         return $this;
     }
 
