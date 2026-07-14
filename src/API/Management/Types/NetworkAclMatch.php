@@ -15,6 +15,12 @@ class NetworkAclMatch extends JsonSerializableType
     private ?array $asns;
 
     /**
+     * @var ?array<string> $auth0Managed
+     */
+    #[JsonProperty('auth0_managed'), ArrayType(['string'])]
+    private ?array $auth0Managed;
+
+    /**
      * @var ?array<string> $geoCountryCodes
      */
     #[JsonProperty('geo_country_codes'), ArrayType(['string'])]
@@ -77,6 +83,7 @@ class NetworkAclMatch extends JsonSerializableType
     /**
      * @param array{
      *   asns?: ?array<int>,
+     *   auth0Managed?: ?array<string>,
      *   geoCountryCodes?: ?array<string>,
      *   geoSubdivisionCodes?: ?array<string>,
      *   ipv4Cidrs?: ?array<string>,
@@ -93,6 +100,7 @@ class NetworkAclMatch extends JsonSerializableType
         array $values = [],
     ) {
         $this->asns = $values['asns'] ?? null;
+        $this->auth0Managed = $values['auth0Managed'] ?? null;
         $this->geoCountryCodes = $values['geoCountryCodes'] ?? null;
         $this->geoSubdivisionCodes = $values['geoSubdivisionCodes'] ?? null;
         $this->ipv4Cidrs = $values['ipv4Cidrs'] ?? null;
@@ -120,6 +128,24 @@ class NetworkAclMatch extends JsonSerializableType
     {
         $this->asns = $value;
         $this->_setField('asns');
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getAuth0Managed(): ?array
+    {
+        return $this->auth0Managed;
+    }
+
+    /**
+     * @param ?array<string> $value
+     */
+    public function setAuth0Managed(?array $value = null): self
+    {
+        $this->auth0Managed = $value;
+        $this->_setField('auth0Managed');
         return $this;
     }
 

@@ -75,3 +75,5 @@ src/API/Management.php
 
 # Management Client Wrapper (domain-based client with automatic token management)
 src/API/Management/Wrapper/
+.fern/replay.lock
+.fern/replay.yml

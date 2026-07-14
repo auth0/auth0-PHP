@@ -13,4 +13,5 @@ enum PartialGroupsEnum: string
     case SignupPassword = "signup-password";
     case CustomizedConsent = "customized-consent";
     case Passkeys = "passkeys";
+    case Confirmation = "confirmation";
 }

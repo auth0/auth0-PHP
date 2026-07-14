@@ -20,3 +20,4 @@ phpunit.xml.dist       export-ignore
 psalm.xml.dist         export-ignore
 rector.php             export-ignore
 UPGRADE.md             export-ignore
+.fern/replay.lock linguist-generated=true
