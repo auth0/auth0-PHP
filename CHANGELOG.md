@@ -1,5 +1,23 @@
 # Change Log
 
+## [9.0.0-beta.4](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.4) (2026-07-15)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.3...9.0.0-beta.4)
+
+**Added**
+
+- feat: add Organization Roles, Connection lifecycle events, and Token Vault access grants; rename Connection attribute identifier [\#838](https://github.com/auth0/auth0-PHP/pull/838) ([fern-api[bot]](https://github.com/apps/fern-api))
+- feat: add Network ACL curated-list match and Confirmation prompt partial [\#840](https://github.com/auth0/auth0-PHP/pull/840) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: regenerate session ID on login and logout to prevent session fixation [\#837](https://github.com/auth0/auth0-PHP/pull/837) ([kishore7snehil](https://github.com/kishore7snehil))
+
+**Breaking Changes**
+
+- feat!: remove Token Vault v1 federated connections access tokens [\#841](https://github.com/auth0/auth0-PHP/pull/841) ([fern-api[bot]](https://github.com/apps/fern-api))
+- Rename `ConnectionAttributeIdentifier` to `EmailAttributeIdentifier` [\#838](https://github.com/auth0/auth0-PHP/pull/838) ([fern-api[bot]](https://github.com/apps/fern-api))
+- Replace the `None` case on `PhoneProviderProtectionBackoffStrategyEnum` with `Default` [\#838](https://github.com/auth0/auth0-PHP/pull/838) ([fern-api[bot]](https://github.com/apps/fern-api))
+
 ## [9.0.0-beta.3](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.3) (2026-06-29)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.2...9.0.0-beta.3)
 
