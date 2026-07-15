@@ -49,12 +49,6 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     private ?string $dpopSigningAlg;
 
     /**
-     * @var ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens
-     */
-    #[JsonProperty('federated_connections_access_tokens')]
-    private ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens;
-
-    /**
      * @var ?string $iconUrl
      */
     #[JsonProperty('icon_url')]
@@ -161,7 +155,6 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
      *   connectionSettings?: ?ConnectionConnectionSettings,
      *   domainAliases?: ?array<string>,
      *   dpopSigningAlg?: ?value-of<ConnectionDpopSigningAlgEnum>,
-     *   federatedConnectionsAccessTokens?: ?ConnectionFederatedConnectionsAccessTokens,
      *   iconUrl?: ?string,
      *   idTokenSessionExpirySupported?: ?bool,
      *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
@@ -192,7 +185,6 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
         $this->connectionSettings = $values['connectionSettings'] ?? null;
         $this->domainAliases = $values['domainAliases'] ?? null;
         $this->dpopSigningAlg = $values['dpopSigningAlg'] ?? null;
-        $this->federatedConnectionsAccessTokens = $values['federatedConnectionsAccessTokens'] ?? null;
         $this->iconUrl = $values['iconUrl'] ?? null;
         $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
         $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;
@@ -316,24 +308,6 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     {
         $this->dpopSigningAlg = $value;
         $this->_setField('dpopSigningAlg');
-        return $this;
-    }
-
-    /**
-     * @return ?ConnectionFederatedConnectionsAccessTokens
-     */
-    public function getFederatedConnectionsAccessTokens(): ?ConnectionFederatedConnectionsAccessTokens
-    {
-        return $this->federatedConnectionsAccessTokens;
-    }
-
-    /**
-     * @param ?ConnectionFederatedConnectionsAccessTokens $value
-     */
-    public function setFederatedConnectionsAccessTokens(?ConnectionFederatedConnectionsAccessTokens $value = null): self
-    {
-        $this->federatedConnectionsAccessTokens = $value;
-        $this->_setField('federatedConnectionsAccessTokens');
         return $this;
     }
 

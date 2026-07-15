@@ -322,12 +322,6 @@ class ConnectionOptionsAzureAd extends JsonSerializableType
     private ?bool $extUserId;
 
     /**
-     * @var ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens
-     */
-    #[JsonProperty('federated_connections_access_tokens')]
-    private ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens;
-
-    /**
      * @var ?bool $granted Indicates whether admin consent has been granted for the required Azure AD permissions. Read-only status field managed by Auth0 during the OAuth authorization flow.
      */
     #[JsonProperty('granted')]
@@ -474,7 +468,6 @@ class ConnectionOptionsAzureAd extends JsonSerializableType
      *   extUpn?: ?bool,
      *   extUsageLocation?: ?bool,
      *   extUserId?: ?bool,
-     *   federatedConnectionsAccessTokens?: ?ConnectionFederatedConnectionsAccessTokens,
      *   granted?: ?bool,
      *   iconUrl?: ?string,
      *   identityApi?: ?value-of<ConnectionIdentityApiEnumAzureAd>,
@@ -550,7 +543,6 @@ class ConnectionOptionsAzureAd extends JsonSerializableType
         $this->extUpn = $values['extUpn'] ?? null;
         $this->extUsageLocation = $values['extUsageLocation'] ?? null;
         $this->extUserId = $values['extUserId'] ?? null;
-        $this->federatedConnectionsAccessTokens = $values['federatedConnectionsAccessTokens'] ?? null;
         $this->granted = $values['granted'] ?? null;
         $this->iconUrl = $values['iconUrl'] ?? null;
         $this->identityApi = $values['identityApi'] ?? null;
@@ -1483,24 +1475,6 @@ class ConnectionOptionsAzureAd extends JsonSerializableType
     {
         $this->extUserId = $value;
         $this->_setField('extUserId');
-        return $this;
-    }
-
-    /**
-     * @return ?ConnectionFederatedConnectionsAccessTokens
-     */
-    public function getFederatedConnectionsAccessTokens(): ?ConnectionFederatedConnectionsAccessTokens
-    {
-        return $this->federatedConnectionsAccessTokens;
-    }
-
-    /**
-     * @param ?ConnectionFederatedConnectionsAccessTokens $value
-     */
-    public function setFederatedConnectionsAccessTokens(?ConnectionFederatedConnectionsAccessTokens $value = null): self
-    {
-        $this->federatedConnectionsAccessTokens = $value;
-        $this->_setField('federatedConnectionsAccessTokens');
         return $this;
     }
 

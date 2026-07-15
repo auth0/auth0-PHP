@@ -190,12 +190,6 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     private ?ConnectionGatewayAuthentication $gatewayAuthentication;
 
     /**
-     * @var ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens
-     */
-    #[JsonProperty('federated_connections_access_tokens')]
-    private ?ConnectionFederatedConnectionsAccessTokens $federatedConnectionsAccessTokens;
-
-    /**
      * @var ?ConnectionPasswordOptions $passwordOptions
      */
     #[JsonProperty('password_options')]
@@ -289,7 +283,6 @@ class ConnectionPropertiesOptions extends JsonSerializableType
      * )|null>,
      *   setUserRootAttributes?: ?value-of<ConnectionSetUserRootAttributesEnum>,
      *   gatewayAuthentication?: ?ConnectionGatewayAuthentication,
-     *   federatedConnectionsAccessTokens?: ?ConnectionFederatedConnectionsAccessTokens,
      *   passwordOptions?: ?ConnectionPasswordOptions,
      *   assertionDecryptionSettings?: ?ConnectionAssertionDecryptionSettings,
      *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
@@ -334,7 +327,6 @@ class ConnectionPropertiesOptions extends JsonSerializableType
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->setUserRootAttributes = $values['setUserRootAttributes'] ?? null;
         $this->gatewayAuthentication = $values['gatewayAuthentication'] ?? null;
-        $this->federatedConnectionsAccessTokens = $values['federatedConnectionsAccessTokens'] ?? null;
         $this->passwordOptions = $values['passwordOptions'] ?? null;
         $this->assertionDecryptionSettings = $values['assertionDecryptionSettings'] ?? null;
         $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;
@@ -872,24 +864,6 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     {
         $this->gatewayAuthentication = $value;
         $this->_setField('gatewayAuthentication');
-        return $this;
-    }
-
-    /**
-     * @return ?ConnectionFederatedConnectionsAccessTokens
-     */
-    public function getFederatedConnectionsAccessTokens(): ?ConnectionFederatedConnectionsAccessTokens
-    {
-        return $this->federatedConnectionsAccessTokens;
-    }
-
-    /**
-     * @param ?ConnectionFederatedConnectionsAccessTokens $value
-     */
-    public function setFederatedConnectionsAccessTokens(?ConnectionFederatedConnectionsAccessTokens $value = null): self
-    {
-        $this->federatedConnectionsAccessTokens = $value;
-        $this->_setField('federatedConnectionsAccessTokens');
         return $this;
     }
 
