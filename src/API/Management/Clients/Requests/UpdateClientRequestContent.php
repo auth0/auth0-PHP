@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\Types\ClientEncryptionKey;
 use Auth0\SDK\API\Management\Types\ClientTokenEndpointAuthMethodOrNullEnum;
 use Auth0\SDK\API\Management\Types\ClientAppTypeEnum;
 use Auth0\SDK\API\Management\Types\UpdateTokenQuota;
+use Auth0\SDK\API\Management\Types\UpdateIdentityAssertionAuthorizationGrant;
 use Auth0\SDK\API\Management\Types\ClientAddons;
 use Auth0\SDK\API\Management\Types\ClientMobile;
 use Auth0\SDK\API\Management\Types\NativeSocialLoginPatch;
@@ -209,6 +210,12 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?UpdateTokenQuota $tokenQuota;
 
     /**
+     * @var ?UpdateIdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant
+     */
+    #[JsonProperty('identity_assertion_authorization_grant')]
+    private ?UpdateIdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant;
+
+    /**
      * @var ?string $formTemplate Form template for WS-Federation protocol
      */
     #[JsonProperty('form_template')]
@@ -399,6 +406,7 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   customLoginPage?: ?string,
      *   customLoginPagePreview?: ?string,
      *   tokenQuota?: ?UpdateTokenQuota,
+     *   identityAssertionAuthorizationGrant?: ?UpdateIdentityAssertionAuthorizationGrant,
      *   formTemplate?: ?string,
      *   addons?: ?ClientAddons,
      *   clientMetadata?: ?array<string, mixed>,
@@ -459,6 +467,7 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->customLoginPage = $values['customLoginPage'] ?? null;
         $this->customLoginPagePreview = $values['customLoginPagePreview'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
+        $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->formTemplate = $values['formTemplate'] ?? null;
         $this->addons = $values['addons'] ?? null;
         $this->clientMetadata = $values['clientMetadata'] ?? null;
@@ -1006,6 +1015,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     {
         $this->tokenQuota = $value;
         $this->_setField('tokenQuota');
+        return $this;
+    }
+
+    /**
+     * @return ?UpdateIdentityAssertionAuthorizationGrant
+     */
+    public function getIdentityAssertionAuthorizationGrant(): ?UpdateIdentityAssertionAuthorizationGrant
+    {
+        return $this->identityAssertionAuthorizationGrant;
+    }
+
+    /**
+     * @param ?UpdateIdentityAssertionAuthorizationGrant $value
+     */
+    public function setIdentityAssertionAuthorizationGrant(?UpdateIdentityAssertionAuthorizationGrant $value = null): self
+    {
+        $this->identityAssertionAuthorizationGrant = $value;
+        $this->_setField('identityAssertionAuthorizationGrant');
         return $this;
     }
 

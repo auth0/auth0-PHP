@@ -6,4 +6,5 @@ enum ClientGrantSubjectTypeEnum: string
 {
     case Client = "client";
     case User = "user";
+    case AnonymousUser = "anonymous_user";
 }

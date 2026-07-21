@@ -47,7 +47,7 @@ class ListClientsRequestParameters extends JsonSerializableType
     private ?string $appType;
 
     /**
-     * @var ?string $externalClientId Optional filter by the <a href="https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-04.html">Client ID Metadata Document</a> URI for CIMD-registered clients.
+     * @var ?string $externalClientId Optional filter by the <a href="https://drafts.oauth.net/draft-ietf-oauth-client-id-metadata-document/draft-ietf-oauth-client-id-metadata-document.html">Client ID Metadata Document</a> URI for CIMD-registered clients.
      */
     private ?string $externalClientId;
 

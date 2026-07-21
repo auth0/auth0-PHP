@@ -82,6 +82,12 @@ class ConnectionForList extends JsonSerializableType
     private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
 
     /**
+     * @var ?CrossAppAccessResourceApp $crossAppAccessResourceApp
+     */
+    #[JsonProperty('cross_app_access_resource_app')]
+    private ?CrossAppAccessResourceApp $crossAppAccessResourceApp;
+
+    /**
      * @param array{
      *   name?: ?string,
      *   displayName?: ?string,
@@ -95,6 +101,7 @@ class ConnectionForList extends JsonSerializableType
      *   authentication?: ?ConnectionAuthenticationPurpose,
      *   connectedAccounts?: ?ConnectionConnectedAccountsPurpose,
      *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
+     *   crossAppAccessResourceApp?: ?CrossAppAccessResourceApp,
      * } $values
      */
     public function __construct(
@@ -112,6 +119,7 @@ class ConnectionForList extends JsonSerializableType
         $this->authentication = $values['authentication'] ?? null;
         $this->connectedAccounts = $values['connectedAccounts'] ?? null;
         $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
+        $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
     }
 
     /**
@@ -327,6 +335,24 @@ class ConnectionForList extends JsonSerializableType
     {
         $this->crossAppAccessRequestingApp = $value;
         $this->_setField('crossAppAccessRequestingApp');
+        return $this;
+    }
+
+    /**
+     * @return ?CrossAppAccessResourceApp
+     */
+    public function getCrossAppAccessResourceApp(): ?CrossAppAccessResourceApp
+    {
+        return $this->crossAppAccessResourceApp;
+    }
+
+    /**
+     * @param ?CrossAppAccessResourceApp $value
+     */
+    public function setCrossAppAccessResourceApp(?CrossAppAccessResourceApp $value = null): self
+    {
+        $this->crossAppAccessResourceApp = $value;
+        $this->_setField('crossAppAccessResourceApp');
         return $this;
     }
 

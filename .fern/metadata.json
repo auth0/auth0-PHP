@@ -1,5 +1,5 @@
 {
-  "cliVersion": "5.66.1",
+  "cliVersion": "5.75.6",
   "generatorName": "fernapi/fern-php-sdk",
   "generatorVersion": "2.10.4",
   "generatorConfig": {
@@ -114,10 +114,10 @@
       }
     }
   },
-  "originGitCommit": "1c93e58c45b63276cecfd549533df0b3f663969a",
+  "originGitCommit": "e2027b1584b1668f39ed802f114e54458b09bb57",
   "originGitCommitIsDirty": false,
   "invokedBy": "ci",
-  "requestedVersion": "9.0.0-beta.3",
+  "requestedVersion": "9.0.0-beta.4",
   "ciProvider": "github",
-  "sdkVersion": "9.0.0-beta.3"
+  "sdkVersion": "9.0.0-beta.4"
 }

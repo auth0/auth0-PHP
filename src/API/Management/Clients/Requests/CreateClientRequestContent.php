@@ -26,6 +26,7 @@ use Auth0\SDK\API\Management\Types\ClientTokenVaultPrivilegedAccessWithPublicKey
 use Auth0\SDK\API\Management\Types\ClientComplianceLevelEnum;
 use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfiguration;
 use Auth0\SDK\API\Management\Types\CreateTokenQuota;
+use Auth0\SDK\API\Management\Types\CreateIdentityAssertionAuthorizationGrant;
 use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
 use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
 use Auth0\SDK\API\Management\Types\ExpressConfiguration;
@@ -339,6 +340,12 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?string $resourceServerIdentifier;
 
     /**
+     * @var ?CreateIdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant
+     */
+    #[JsonProperty('identity_assertion_authorization_grant')]
+    private ?CreateIdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant;
+
+    /**
      * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
      */
     #[JsonProperty('third_party_security_mode')]
@@ -420,6 +427,7 @@ class CreateClientRequestContent extends JsonSerializableType
      *   parRequestExpiry?: ?int,
      *   tokenQuota?: ?CreateTokenQuota,
      *   resourceServerIdentifier?: ?string,
+     *   identityAssertionAuthorizationGrant?: ?CreateIdentityAssertionAuthorizationGrant,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   expressConfiguration?: ?ExpressConfiguration,
@@ -480,6 +488,7 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->parRequestExpiry = $values['parRequestExpiry'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
+        $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
@@ -1384,6 +1393,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->resourceServerIdentifier = $value;
         $this->_setField('resourceServerIdentifier');
+        return $this;
+    }
+
+    /**
+     * @return ?CreateIdentityAssertionAuthorizationGrant
+     */
+    public function getIdentityAssertionAuthorizationGrant(): ?CreateIdentityAssertionAuthorizationGrant
+    {
+        return $this->identityAssertionAuthorizationGrant;
+    }
+
+    /**
+     * @param ?CreateIdentityAssertionAuthorizationGrant $value
+     */
+    public function setIdentityAssertionAuthorizationGrant(?CreateIdentityAssertionAuthorizationGrant $value = null): self
+    {
+        $this->identityAssertionAuthorizationGrant = $value;
+        $this->_setField('identityAssertionAuthorizationGrant');
         return $this;
     }
 
