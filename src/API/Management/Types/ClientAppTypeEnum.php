@@ -10,6 +10,7 @@ enum ClientAppTypeEnum: string
     case NonInteractive = "non_interactive";
     case ResourceServer = "resource_server";
     case ExpressConfiguration = "express_configuration";
+    case B2BIntegration = "b2b_integration";
     case Rms = "rms";
     case Box = "box";
     case Cloudbees = "cloudbees";

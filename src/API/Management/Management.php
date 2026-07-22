@@ -356,8 +356,8 @@ class Management implements ManagementInterface
             'Authorization' => "Bearer $token",
             'X-Fern-Language' => 'PHP',
             'X-Fern-SDK-Name' => 'Auth0\SDK\API\Management',
-            'X-Fern-SDK-Version' => '9.0.0-beta.3',
-            'User-Agent' => 'auth0/auth0-php/9.0.0-beta.3',
+            'X-Fern-SDK-Version' => '9.0.0-beta.4',
+            'User-Agent' => 'auth0/auth0-php/9.0.0-beta.4',
         ];
 
         $this->options = $options ?? [];

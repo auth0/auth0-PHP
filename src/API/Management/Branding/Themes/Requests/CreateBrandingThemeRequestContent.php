@@ -7,6 +7,7 @@ use Auth0\SDK\API\Management\Types\BrandingThemeBorders;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 use Auth0\SDK\API\Management\Types\BrandingThemeColors;
 use Auth0\SDK\API\Management\Types\BrandingThemeFonts;
+use Auth0\SDK\API\Management\Types\BrandingThemeIdentifiers;
 use Auth0\SDK\API\Management\Types\BrandingThemePageBackground;
 use Auth0\SDK\API\Management\Types\BrandingThemeWidget;
 
@@ -37,6 +38,12 @@ class CreateBrandingThemeRequestContent extends JsonSerializableType
     private BrandingThemeFonts $fonts;
 
     /**
+     * @var ?BrandingThemeIdentifiers $identifiers
+     */
+    #[JsonProperty('identifiers')]
+    private ?BrandingThemeIdentifiers $identifiers;
+
+    /**
      * @var BrandingThemePageBackground $pageBackground
      */
     #[JsonProperty('page_background')]
@@ -56,6 +63,7 @@ class CreateBrandingThemeRequestContent extends JsonSerializableType
      *   pageBackground: BrandingThemePageBackground,
      *   widget: BrandingThemeWidget,
      *   displayName?: ?string,
+     *   identifiers?: ?BrandingThemeIdentifiers,
      * } $values
      */
     public function __construct(
@@ -65,6 +73,7 @@ class CreateBrandingThemeRequestContent extends JsonSerializableType
         $this->colors = $values['colors'];
         $this->displayName = $values['displayName'] ?? null;
         $this->fonts = $values['fonts'];
+        $this->identifiers = $values['identifiers'] ?? null;
         $this->pageBackground = $values['pageBackground'];
         $this->widget = $values['widget'];
     }
@@ -138,6 +147,24 @@ class CreateBrandingThemeRequestContent extends JsonSerializableType
     {
         $this->fonts = $value;
         $this->_setField('fonts');
+        return $this;
+    }
+
+    /**
+     * @return ?BrandingThemeIdentifiers
+     */
+    public function getIdentifiers(): ?BrandingThemeIdentifiers
+    {
+        return $this->identifiers;
+    }
+
+    /**
+     * @param ?BrandingThemeIdentifiers $value
+     */
+    public function setIdentifiers(?BrandingThemeIdentifiers $value = null): self
+    {
+        $this->identifiers = $value;
+        $this->_setField('identifiers');
         return $this;
     }
 

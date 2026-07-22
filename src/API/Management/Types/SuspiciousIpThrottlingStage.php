@@ -23,9 +23,16 @@ class SuspiciousIpThrottlingStage extends JsonSerializableType
     private ?SuspiciousIpThrottlingPreUserRegistrationStage $preUserRegistration;
 
     /**
+     * @var ?SuspiciousIpThrottlingPreCustomTokenExchangeStage $preCustomTokenExchange
+     */
+    #[JsonProperty('pre-custom-token-exchange')]
+    private ?SuspiciousIpThrottlingPreCustomTokenExchangeStage $preCustomTokenExchange;
+
+    /**
      * @param array{
      *   preLogin?: ?SuspiciousIpThrottlingPreLoginStage,
      *   preUserRegistration?: ?SuspiciousIpThrottlingPreUserRegistrationStage,
+     *   preCustomTokenExchange?: ?SuspiciousIpThrottlingPreCustomTokenExchangeStage,
      * } $values
      */
     public function __construct(
@@ -33,6 +40,7 @@ class SuspiciousIpThrottlingStage extends JsonSerializableType
     ) {
         $this->preLogin = $values['preLogin'] ?? null;
         $this->preUserRegistration = $values['preUserRegistration'] ?? null;
+        $this->preCustomTokenExchange = $values['preCustomTokenExchange'] ?? null;
     }
 
     /**
@@ -68,6 +76,24 @@ class SuspiciousIpThrottlingStage extends JsonSerializableType
     {
         $this->preUserRegistration = $value;
         $this->_setField('preUserRegistration');
+        return $this;
+    }
+
+    /**
+     * @return ?SuspiciousIpThrottlingPreCustomTokenExchangeStage
+     */
+    public function getPreCustomTokenExchange(): ?SuspiciousIpThrottlingPreCustomTokenExchangeStage
+    {
+        return $this->preCustomTokenExchange;
+    }
+
+    /**
+     * @param ?SuspiciousIpThrottlingPreCustomTokenExchangeStage $value
+     */
+    public function setPreCustomTokenExchange(?SuspiciousIpThrottlingPreCustomTokenExchangeStage $value = null): self
+    {
+        $this->preCustomTokenExchange = $value;
+        $this->_setField('preCustomTokenExchange');
         return $this;
     }
 

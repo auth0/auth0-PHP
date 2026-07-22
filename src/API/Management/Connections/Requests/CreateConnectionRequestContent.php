@@ -11,6 +11,7 @@ use Auth0\SDK\API\Management\Core\Types\Union;
 use Auth0\SDK\API\Management\Types\ConnectionAuthenticationPurpose;
 use Auth0\SDK\API\Management\Types\ConnectionConnectedAccountsPurpose;
 use Auth0\SDK\API\Management\Types\CrossAppAccessRequestingApp;
+use Auth0\SDK\API\Management\Types\CreateCrossAppAccessResourceApp;
 
 class CreateConnectionRequestContent extends JsonSerializableType
 {
@@ -87,6 +88,12 @@ class CreateConnectionRequestContent extends JsonSerializableType
     private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
 
     /**
+     * @var ?CreateCrossAppAccessResourceApp $crossAppAccessResourceApp
+     */
+    #[JsonProperty('cross_app_access_resource_app')]
+    private ?CreateCrossAppAccessResourceApp $crossAppAccessResourceApp;
+
+    /**
      * @param array{
      *   name: string,
      *   strategy: value-of<ConnectionIdentityProviderEnum>,
@@ -100,6 +107,7 @@ class CreateConnectionRequestContent extends JsonSerializableType
      *   authentication?: ?ConnectionAuthenticationPurpose,
      *   connectedAccounts?: ?ConnectionConnectedAccountsPurpose,
      *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
+     *   crossAppAccessResourceApp?: ?CreateCrossAppAccessResourceApp,
      * } $values
      */
     public function __construct(
@@ -117,6 +125,7 @@ class CreateConnectionRequestContent extends JsonSerializableType
         $this->authentication = $values['authentication'] ?? null;
         $this->connectedAccounts = $values['connectedAccounts'] ?? null;
         $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
+        $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
     }
 
     /**
@@ -332,6 +341,24 @@ class CreateConnectionRequestContent extends JsonSerializableType
     {
         $this->crossAppAccessRequestingApp = $value;
         $this->_setField('crossAppAccessRequestingApp');
+        return $this;
+    }
+
+    /**
+     * @return ?CreateCrossAppAccessResourceApp
+     */
+    public function getCrossAppAccessResourceApp(): ?CreateCrossAppAccessResourceApp
+    {
+        return $this->crossAppAccessResourceApp;
+    }
+
+    /**
+     * @param ?CreateCrossAppAccessResourceApp $value
+     */
+    public function setCrossAppAccessResourceApp(?CreateCrossAppAccessResourceApp $value = null): self
+    {
+        $this->crossAppAccessResourceApp = $value;
+        $this->_setField('crossAppAccessResourceApp');
         return $this;
     }
 }

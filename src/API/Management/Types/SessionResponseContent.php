@@ -107,6 +107,12 @@ class SessionResponseContent extends JsonSerializableType
     private ?array $sessionMetadata;
 
     /**
+     * @var ?SessionActorMetadata $actor
+     */
+    #[JsonProperty('actor')]
+    private ?SessionActorMetadata $actor;
+
+    /**
      * @param array{
      *   id?: ?string,
      *   userId?: ?string,
@@ -139,6 +145,7 @@ class SessionResponseContent extends JsonSerializableType
      *   authentication?: ?SessionAuthenticationSignals,
      *   cookie?: ?SessionCookieMetadata,
      *   sessionMetadata?: ?array<string, mixed>,
+     *   actor?: ?SessionActorMetadata,
      * } $values
      */
     public function __construct(
@@ -157,6 +164,7 @@ class SessionResponseContent extends JsonSerializableType
         $this->authentication = $values['authentication'] ?? null;
         $this->cookie = $values['cookie'] ?? null;
         $this->sessionMetadata = $values['sessionMetadata'] ?? null;
+        $this->actor = $values['actor'] ?? null;
     }
 
     /**
@@ -426,6 +434,24 @@ class SessionResponseContent extends JsonSerializableType
     {
         $this->sessionMetadata = $value;
         $this->_setField('sessionMetadata');
+        return $this;
+    }
+
+    /**
+     * @return ?SessionActorMetadata
+     */
+    public function getActor(): ?SessionActorMetadata
+    {
+        return $this->actor;
+    }
+
+    /**
+     * @param ?SessionActorMetadata $value
+     */
+    public function setActor(?SessionActorMetadata $value = null): self
+    {
+        $this->actor = $value;
+        $this->_setField('actor');
         return $this;
     }
 

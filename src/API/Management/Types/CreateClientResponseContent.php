@@ -343,6 +343,12 @@ class CreateClientResponseContent extends JsonSerializableType
     private ?ClientMyOrganizationResponseConfiguration $myOrganizationConfiguration;
 
     /**
+     * @var ?IdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant
+     */
+    #[JsonProperty('identity_assertion_authorization_grant')]
+    private ?IdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant;
+
+    /**
      * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
      */
     #[JsonProperty('third_party_security_mode')]
@@ -447,6 +453,7 @@ class CreateClientResponseContent extends JsonSerializableType
      *   tokenQuota?: ?TokenQuota,
      *   expressConfiguration?: ?ExpressConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationResponseConfiguration,
+     *   identityAssertionAuthorizationGrant?: ?IdentityAssertionAuthorizationGrant,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   resourceServerIdentifier?: ?string,
@@ -515,6 +522,7 @@ class CreateClientResponseContent extends JsonSerializableType
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
+        $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
@@ -1512,6 +1520,24 @@ class CreateClientResponseContent extends JsonSerializableType
     {
         $this->myOrganizationConfiguration = $value;
         $this->_setField('myOrganizationConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?IdentityAssertionAuthorizationGrant
+     */
+    public function getIdentityAssertionAuthorizationGrant(): ?IdentityAssertionAuthorizationGrant
+    {
+        return $this->identityAssertionAuthorizationGrant;
+    }
+
+    /**
+     * @param ?IdentityAssertionAuthorizationGrant $value
+     */
+    public function setIdentityAssertionAuthorizationGrant(?IdentityAssertionAuthorizationGrant $value = null): self
+    {
+        $this->identityAssertionAuthorizationGrant = $value;
+        $this->_setField('identityAssertionAuthorizationGrant');
         return $this;
     }
 

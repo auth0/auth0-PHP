@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketEnabledOrganization;
 use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketDomainAliasesConfig;
 use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketProvisioningConfig;
+use Auth0\SDK\API\Management\Types\ThirdPartyClientAccessConfig;
 use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketEnabledFeatures;
 
 class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableType
@@ -62,6 +63,12 @@ class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableTy
     private ?bool $useForOrganizationDiscovery;
 
     /**
+     * @var ?ThirdPartyClientAccessConfig $thirdPartyClientAccessConfig
+     */
+    #[JsonProperty('third_party_client_access_config')]
+    private ?ThirdPartyClientAccessConfig $thirdPartyClientAccessConfig;
+
+    /**
      * @var ?SelfServiceProfileSsoTicketEnabledFeatures $enabledFeatures
      */
     #[JsonProperty('enabled_features')]
@@ -77,6 +84,7 @@ class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableTy
      *   domainAliasesConfig?: ?SelfServiceProfileSsoTicketDomainAliasesConfig,
      *   provisioningConfig?: ?SelfServiceProfileSsoTicketProvisioningConfig,
      *   useForOrganizationDiscovery?: ?bool,
+     *   thirdPartyClientAccessConfig?: ?ThirdPartyClientAccessConfig,
      *   enabledFeatures?: ?SelfServiceProfileSsoTicketEnabledFeatures,
      * } $values
      */
@@ -91,6 +99,7 @@ class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableTy
         $this->domainAliasesConfig = $values['domainAliasesConfig'] ?? null;
         $this->provisioningConfig = $values['provisioningConfig'] ?? null;
         $this->useForOrganizationDiscovery = $values['useForOrganizationDiscovery'] ?? null;
+        $this->thirdPartyClientAccessConfig = $values['thirdPartyClientAccessConfig'] ?? null;
         $this->enabledFeatures = $values['enabledFeatures'] ?? null;
     }
 
@@ -235,6 +244,24 @@ class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableTy
     {
         $this->useForOrganizationDiscovery = $value;
         $this->_setField('useForOrganizationDiscovery');
+        return $this;
+    }
+
+    /**
+     * @return ?ThirdPartyClientAccessConfig
+     */
+    public function getThirdPartyClientAccessConfig(): ?ThirdPartyClientAccessConfig
+    {
+        return $this->thirdPartyClientAccessConfig;
+    }
+
+    /**
+     * @param ?ThirdPartyClientAccessConfig $value
+     */
+    public function setThirdPartyClientAccessConfig(?ThirdPartyClientAccessConfig $value = null): self
+    {
+        $this->thirdPartyClientAccessConfig = $value;
+        $this->_setField('thirdPartyClientAccessConfig');
         return $this;
     }
 

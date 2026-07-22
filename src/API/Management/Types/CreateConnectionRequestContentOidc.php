@@ -38,6 +38,12 @@ class CreateConnectionRequestContentOidc extends JsonSerializableType
     private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
 
     /**
+     * @var ?ConnectionCrossAppAccessResourceApp $crossAppAccessResourceApp
+     */
+    #[JsonProperty('cross_app_access_resource_app')]
+    private ?ConnectionCrossAppAccessResourceApp $crossAppAccessResourceApp;
+
+    /**
      * @var ?ConnectionOptionsOidc $options
      */
     #[JsonProperty('options')]
@@ -60,6 +66,7 @@ class CreateConnectionRequestContentOidc extends JsonSerializableType
      *   authentication?: ?ConnectionAuthenticationPurpose,
      *   connectedAccounts?: ?ConnectionConnectedAccountsPurposeXaa,
      *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
+     *   crossAppAccessResourceApp?: ?ConnectionCrossAppAccessResourceApp,
      *   options?: ?ConnectionOptionsOidc,
      *   showAsButton?: ?bool,
      * } $values
@@ -76,6 +83,7 @@ class CreateConnectionRequestContentOidc extends JsonSerializableType
         $this->authentication = $values['authentication'] ?? null;
         $this->connectedAccounts = $values['connectedAccounts'] ?? null;
         $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
+        $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
         $this->options = $values['options'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
     }
@@ -149,6 +157,24 @@ class CreateConnectionRequestContentOidc extends JsonSerializableType
     {
         $this->crossAppAccessRequestingApp = $value;
         $this->_setField('crossAppAccessRequestingApp');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionCrossAppAccessResourceApp
+     */
+    public function getCrossAppAccessResourceApp(): ?ConnectionCrossAppAccessResourceApp
+    {
+        return $this->crossAppAccessResourceApp;
+    }
+
+    /**
+     * @param ?ConnectionCrossAppAccessResourceApp $value
+     */
+    public function setCrossAppAccessResourceApp(?ConnectionCrossAppAccessResourceApp $value = null): self
+    {
+        $this->crossAppAccessResourceApp = $value;
+        $this->_setField('crossAppAccessResourceApp');
         return $this;
     }
 

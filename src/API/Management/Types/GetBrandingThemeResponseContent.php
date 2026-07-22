@@ -32,6 +32,12 @@ class GetBrandingThemeResponseContent extends JsonSerializableType
     private BrandingThemeFonts $fonts;
 
     /**
+     * @var ?BrandingThemeIdentifiers $identifiers
+     */
+    #[JsonProperty('identifiers')]
+    private ?BrandingThemeIdentifiers $identifiers;
+
+    /**
      * @var BrandingThemePageBackground $pageBackground
      */
     #[JsonProperty('page_background')]
@@ -58,6 +64,7 @@ class GetBrandingThemeResponseContent extends JsonSerializableType
      *   pageBackground: BrandingThemePageBackground,
      *   themeId: string,
      *   widget: BrandingThemeWidget,
+     *   identifiers?: ?BrandingThemeIdentifiers,
      * } $values
      */
     public function __construct(
@@ -67,6 +74,7 @@ class GetBrandingThemeResponseContent extends JsonSerializableType
         $this->colors = $values['colors'];
         $this->displayName = $values['displayName'];
         $this->fonts = $values['fonts'];
+        $this->identifiers = $values['identifiers'] ?? null;
         $this->pageBackground = $values['pageBackground'];
         $this->themeId = $values['themeId'];
         $this->widget = $values['widget'];
@@ -141,6 +149,24 @@ class GetBrandingThemeResponseContent extends JsonSerializableType
     {
         $this->fonts = $value;
         $this->_setField('fonts');
+        return $this;
+    }
+
+    /**
+     * @return ?BrandingThemeIdentifiers
+     */
+    public function getIdentifiers(): ?BrandingThemeIdentifiers
+    {
+        return $this->identifiers;
+    }
+
+    /**
+     * @param ?BrandingThemeIdentifiers $value
+     */
+    public function setIdentifiers(?BrandingThemeIdentifiers $value = null): self
+    {
+        $this->identifiers = $value;
+        $this->_setField('identifiers');
         return $this;
     }
 
