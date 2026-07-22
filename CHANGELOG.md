@@ -1,5 +1,12 @@
 # Change Log
 
+## [9.0.0-beta.5](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.5) (2026-07-22)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.4...9.0.0-beta.5)
+
+**Added**
+
+- feat: add XAA Resource App config, ID-JAG, branding theme identifiers, and session actor metadata [\#843](https://github.com/auth0/auth0-PHP/pull/843) ([fern-api[bot]](https://github.com/apps/fern-api))
+
 ## [9.0.0-beta.4](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.4) (2026-07-15)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.3...9.0.0-beta.4)
 
