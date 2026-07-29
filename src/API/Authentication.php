@@ -272,7 +272,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         ])->array()->first(ConfigurationException::requiresRedirectUri());
 
         // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
-        $params = self::filterReservedParams($params);
+        $params = $this->filterReservedParams($params);
 
         return sprintf(
             '%s/authorize?%s',
@@ -288,22 +288,6 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
                 'response_type' => $this->getConfiguration()->getResponseType(),
             ], $params]), '', '&', PHP_QUERY_RFC3986),
         );
-    }
-
-    /**
-     * Strip reserved authorization parameters from a caller-supplied $params array.
-     *
-     * @param array<int|string, mixed> $params
-     *
-     * @return array<int|string, mixed>
-     */
-    private static function filterReservedParams(array $params): array
-    {
-        foreach (self::RESERVED_AUTHORIZE_PARAMS as $reserved) {
-            unset($params[$reserved]);
-        }
-
-        return $params;
     }
 
     public function getLogoutLink(
@@ -569,5 +553,21 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             ->addPath(['userinfo'])
             ->withHeader('Authorization', 'Bearer ' . ($accessToken ?? ''))
             ->call();
+    }
+
+    /**
+     * Strip reserved authorization parameters from a caller-supplied $params array.
+     *
+     * @param array<int|string, mixed> $params
+     *
+     * @return array<int|string, mixed>
+     */
+    private function filterReservedParams(array $params): array
+    {
+        foreach (self::RESERVED_AUTHORIZE_PARAMS as $reserved) {
+            unset($params[$reserved]);
+        }
+
+        return $params;
     }
 }
