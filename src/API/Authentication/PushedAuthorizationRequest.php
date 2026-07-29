@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Authentication;
 
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Contract\API\Authentication\PushedAuthorizationRequestInterface;
 use Auth0\SDK\Contract\API\AuthenticationInterface;
 use Auth0\SDK\Exception\Authentication\ParResponseException;
@@ -49,7 +50,7 @@ final readonly class PushedAuthorizationRequest implements PushedAuthorizationRe
             '%s/authorize?%s',
             $this->authentication->getConfiguration()->formatDomain(),
             http_build_query([
-                'client_id' => $parameters['client_id'] ?? $this->authentication->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
+                'client_id' => $this->authentication->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'request_uri' => $parRequestUri,
             ], '', '&', PHP_QUERY_RFC3986),
         );
@@ -61,6 +62,13 @@ final readonly class PushedAuthorizationRequest implements PushedAuthorizationRe
     ): ResponseInterface {
         [$parameters, $headers] = Toolkit::filter([$parameters, $headers])->array()->trim();
 
+        /** @var array<int|string, mixed> $filtered */
+        $filtered = $parameters;
+
+        foreach (Authentication::RESERVED_AUTHORIZE_PARAMS as $reserved) {
+            unset($filtered[$reserved]);
+        }
+
         $parameters = Toolkit::merge([[
             'audience' => $this->authentication->getConfiguration()->defaultAudience(),
             'organization' => $this->authentication->getConfiguration()->defaultOrganization(),
@@ -68,7 +76,7 @@ final readonly class PushedAuthorizationRequest implements PushedAuthorizationRe
             'response_type' => $this->authentication->getConfiguration()->getResponseType(),
             'redirect_uri' => $this->authentication->getConfiguration()->getRedirectUri(),
             'scope' => $this->authentication->getConfiguration()->formatScope(),
-        ], $parameters]);
+        ], $filtered]);
 
         $parameters = $this->authentication->addClientAuthentication($parameters);
 

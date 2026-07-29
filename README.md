@@ -121,6 +121,9 @@ $auth = new Authentication($config);
 
 ### Common Operations
 
+> [!WARNING]
+> Never pass unsanitized user input into the `$params` argument of `getLoginLink()`, `login()`, or `getLogoutLink()`. Caller-supplied values such as `redirect_uri` are used to build the authorization request, so always source them from trusted, explicit values.
+
 ```php
 // Get authorization URL for login
 $loginUrl = $auth->getLoginLink(state: 'random-state-string');

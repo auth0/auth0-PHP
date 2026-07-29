@@ -23,6 +23,17 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
     public const CONST_CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
 
     /**
+     * Authorization parameters callers may not override via $params.
+     *
+     * @var string[]
+     */
+    public const RESERVED_AUTHORIZE_PARAMS = [
+        'client_id',
+        'response_type',
+        'response_mode',
+    ];
+
+    /**
      * Instance of Auth0\SDK\API\Utility\HttpClient.
      */
     private ?HttpClient $httpClient = null;
@@ -260,6 +271,9 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             [$redirectUri, isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(ConfigurationException::requiresRedirectUri());
 
+        // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
+        $params = self::filterReservedParams($params);
+
         return sprintf(
             '%s/authorize?%s',
             $this->getConfiguration()->formatDomain(),
@@ -274,6 +288,22 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
                 'response_type' => $this->getConfiguration()->getResponseType(),
             ], $params]), '', '&', PHP_QUERY_RFC3986),
         );
+    }
+
+    /**
+     * Strip reserved authorization parameters from a caller-supplied $params array.
+     *
+     * @param array<int|string, mixed> $params
+     *
+     * @return array<int|string, mixed>
+     */
+    private static function filterReservedParams(array $params): array
+    {
+        foreach (self::RESERVED_AUTHORIZE_PARAMS as $reserved) {
+            unset($params[$reserved]);
+        }
+
+        return $params;
     }
 
     public function getLogoutLink(

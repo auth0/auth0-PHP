@@ -4,6 +4,19 @@
 
 See [v9_MIGRATION_GUIDE.md](v9_MIGRATION_GUIDE.md) for the complete v8 to v9 migration guide.
 
+### Authentication API: reserved authorization parameters
+
+The `$params` argument accepted by `Auth0::login()`, `Auth0::signup()`, `Auth0::handleInvitation()`, `Authentication::getLoginLink()`, and the Pushed Authorization Request flow no longer lets callers override the following keys. They are always resolved from your SDK configuration:
+
+- `client_id`
+- `response_type`
+- `response_mode`
+
+If you previously passed any of these through `$params`, the value was silently used to build the `/authorize` request. It is now ignored in favor of the configured value. Set them via `SdkConfiguration` instead. All other parameters (`scope`, `audience`, `organization`, `redirect_uri`, `prompt`, `login_hint`, etc.) continue to work as before.
+
+> [!WARNING]
+> `redirect_uri` remains overridable via `$params`. Never pass unsanitized user input into `$params`, because a caller-supplied `redirect_uri` is used to build the authorization request. Always source your redirect URI from a trusted, explicit value.
+
 ---
 
 ## Upgrading from v7.x → v8.0
