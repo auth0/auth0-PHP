@@ -90,7 +90,7 @@ final class CookieStore implements StoreInterface
      *
      * @var array<mixed>
      */
-    private array $store = [];
+    private array $store;
 
     /**
      * CookieStore constructor.
@@ -104,6 +104,7 @@ final class CookieStore implements StoreInterface
         private readonly SdkConfiguration $configuration,
         private readonly string $namespace = 'auth0',
     ) {
+        $this->store = [];
         $this->getState();
     }
 

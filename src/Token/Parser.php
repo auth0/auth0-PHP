@@ -17,7 +17,7 @@ final class Parser
     /**
      * State.
      */
-    private bool $parsed = false;
+    private bool $parsed;
 
     /**
      * Decoded claims contained within the JWT.
@@ -62,6 +62,7 @@ final class Parser
         private readonly SdkConfiguration $configuration,
         private readonly string $token,
     ) {
+        $this->parsed = false;
         $this->parse();
     }
 
