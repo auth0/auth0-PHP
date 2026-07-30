@@ -440,6 +440,45 @@ test('handleBackchannelLogout() handles a valid request', function(): void {
     expect($item->isHit())->toBeTrue();
 });
 
+test('handleBackchannelLogout() stores the cache entry with the configured relative TTL', function(): void {
+    $sub = 'SUB' . uniqid();
+    $iss = 'https://' . uniqid() . '.ISS';
+    $sid = 'SID' . uniqid();
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_RS256,
+        claims: [
+            'sub' => $sub,
+            'iss' => $iss . '/',
+            'sid' => $sid
+        ],
+    );
+
+    $backchannel = hash('sha256', implode('|', [$sub, $iss . '/', $sid]));
+
+    $expires = 2592000; // 30 days
+    $pool = new ArrayAdapter();
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'strategy' => \Auth0\SDK\Configuration\SdkConfiguration::STRATEGY_REGULAR,
+        'domain' => $iss,
+        'tokenJwksUri' => $logoutToken->jwks,
+        'tokenCache' => $logoutToken->cached,
+        'backchannelLogoutCache' => $pool,
+        'backchannelLogoutExpires' => $expires,
+    ]));
+
+    $auth0->handleBackchannelLogout($logoutToken->token);
+
+    // expiresAfter() is relative, so the stored absolute expiry must land ~30 days
+    // out, not ~56 years (regression guard for SEC-16860).
+    $expiry = $pool->getItem($backchannel)->getMetadata()['expiry'];
+    expect($expiry)->not->toBeNull();
+    expect($expiry - time())->toBeLessThanOrEqual($expires + 5);
+    expect($expiry - time())->toBeGreaterThan($expires - 60);
+});
+
 test('decode() uses the configured cache handler', function(
     TokenGeneratorResponse $candidate
 ): void {
