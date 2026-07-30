@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
@@ -10,6 +11,8 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         __DIR__ . '/src/API/Management',
+        // Conflicts with RemoveDefaultValueFromAssignedPropertyRector on properties initialized in the constructor.
+        InlineConstructorDefaultToPropertyRector::class,
     ])
     ->withPhpSets(php82: true)
     ->withPreparedSets(
