@@ -139,6 +139,6 @@
             "@rector",
             "@phpcs"
         ],
-        "test-management": "@php vendor/bin/phpunit"
+        "test-management": "@php vendor/bin/phpunit --testsuite management"
     }
 }

@@ -31,11 +31,6 @@
         <PossiblyNullReference errorLevel="suppress" />
         <MissingOverrideAttribute errorLevel="suppress" />
         <ClassMustBeFinal errorLevel="suppress" />
-        <InvalidArgument>
-            <errorLevel type="suppress">
-                <file name="src/Auth0.php" />
-            </errorLevel>
-        </InvalidArgument>
         <PossiblyNullArrayOffset errorLevel="suppress" />
         <RedundantCast errorLevel="suppress" />
         <RedundantCondition errorLevel="suppress" />
