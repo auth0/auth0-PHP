@@ -16,7 +16,7 @@ final class Validator implements ValidatorInterface
     /**
      * Constructor for the Token Validator class.
      *
-     * @param array<string,array<int|string>|int|string> $claims array representing the claims of a JWT
+     * @param array<string,array<int|string>|bool|int|string> $claims array representing the claims of a JWT
      */
     public function __construct(
         private array $claims,
@@ -169,11 +169,11 @@ final class Validator implements ValidatorInterface
      *
      * @param string $key the claim key to search for
      *
-     * @return null|array<mixed>|int|string
+     * @return null|array<mixed>|bool|int|string
      */
     public function getClaim(
         string $key,
-    ): null | int | string | array {
+    ): null | bool | int | string | array {
         if (! isset($this->claims[$key])) {
             return null;
         }
