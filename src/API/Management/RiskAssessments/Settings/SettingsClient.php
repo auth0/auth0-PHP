@@ -62,6 +62,11 @@ class SettingsClient implements SettingsClientInterface
     /**
      * Gets the tenant settings for risk assessments
      *
+     * Example:
+     * ```php
+     * $client->riskAssessments->settings->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -108,6 +113,15 @@ class SettingsClient implements SettingsClientInterface
 
     /**
      * Updates the tenant settings for risk assessments
+     *
+     * Example:
+     * ```php
+     * $client->riskAssessments->settings->update(
+     *     new UpdateRiskAssessmentsSettingsRequestContent([
+     *         'enabled' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param UpdateRiskAssessmentsSettingsRequestContent $request
      * @param ?array{

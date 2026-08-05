@@ -26,10 +26,17 @@ class GuardianFactor extends JsonSerializableType
     private ?string $name;
 
     /**
+     * @var ?GuardianFactorSettings $settings
+     */
+    #[JsonProperty('settings')]
+    private ?GuardianFactorSettings $settings;
+
+    /**
      * @param array{
      *   enabled: bool,
      *   trialExpired?: ?bool,
      *   name?: ?value-of<GuardianFactorNameEnum>,
+     *   settings?: ?GuardianFactorSettings,
      * } $values
      */
     public function __construct(
@@ -38,6 +45,7 @@ class GuardianFactor extends JsonSerializableType
         $this->enabled = $values['enabled'];
         $this->trialExpired = $values['trialExpired'] ?? null;
         $this->name = $values['name'] ?? null;
+        $this->settings = $values['settings'] ?? null;
     }
 
     /**
@@ -91,6 +99,24 @@ class GuardianFactor extends JsonSerializableType
     {
         $this->name = $value;
         $this->_setField('name');
+        return $this;
+    }
+
+    /**
+     * @return ?GuardianFactorSettings
+     */
+    public function getSettings(): ?GuardianFactorSettings
+    {
+        return $this->settings;
+    }
+
+    /**
+     * @param ?GuardianFactorSettings $value
+     */
+    public function setSettings(?GuardianFactorSettings $value = null): self
+    {
+        $this->settings = $value;
+        $this->_setField('settings');
         return $this;
     }
 

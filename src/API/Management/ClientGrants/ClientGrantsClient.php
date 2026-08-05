@@ -69,6 +69,22 @@ class ClientGrantsClient implements ClientGrantsClientInterface
     /**
      * Retrieve a list of [client grants](https://auth0.com/docs/get-started/applications/application-access-to-apis-client-grants), including the scopes associated with the application/API pair.
      *
+     * Example:
+     * ```php
+     * $client->clientGrants->list(
+     *     new ListClientGrantsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'audience' => 'audience',
+     *         'clientId' => 'client_id',
+     *         'allowAnyOrganization' => true,
+     *         'subjectType' => ClientGrantSubjectTypeEnum::Client->value,
+     *         'defaultFor' => ClientGrantDefaultForEnum::ThirdPartyClients->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListClientGrantsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -97,6 +113,15 @@ class ClientGrantsClient implements ClientGrantsClientInterface
 
     /**
      * Create a client grant for a machine-to-machine login flow. To learn more, read [Client Credential Flow](https://www.auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow).
+     *
+     * Example:
+     * ```php
+     * $client->clientGrants->create(
+     *     new CreateClientGrantRequestContent([
+     *         'audience' => 'audience',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateClientGrantRequestContent $request
      * @param ?array{
@@ -148,6 +173,13 @@ class ClientGrantsClient implements ClientGrantsClientInterface
      * Retrieve a single [client grant](https://auth0.com/docs/get-started/applications/application-access-to-apis-client-grants), including the
      * scopes associated with the application/API pair.
      *
+     * Example:
+     * ```php
+     * $client->clientGrants->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the client grant to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -168,7 +200,7 @@ class ClientGrantsClient implements ClientGrantsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "client-grants/{$id}",
+                    path: "client-grants/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -196,6 +228,13 @@ class ClientGrantsClient implements ClientGrantsClientInterface
     /**
      * Delete the [Client Credential Flow](https://www.auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow) from your machine-to-machine application.
      *
+     * Example:
+     * ```php
+     * $client->clientGrants->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the client grant to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -215,7 +254,7 @@ class ClientGrantsClient implements ClientGrantsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "client-grants/{$id}",
+                    path: "client-grants/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -236,6 +275,14 @@ class ClientGrantsClient implements ClientGrantsClientInterface
 
     /**
      * Update a client grant.
+     *
+     * Example:
+     * ```php
+     * $client->clientGrants->update(
+     *     'id',
+     *     new UpdateClientGrantRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the client grant to update.
      * @param UpdateClientGrantRequestContent $request
@@ -258,7 +305,7 @@ class ClientGrantsClient implements ClientGrantsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "client-grants/{$id}",
+                    path: "client-grants/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -312,6 +359,9 @@ class ClientGrantsClient implements ClientGrantsClientInterface
     {
         $options = array_merge($this->options, $options ?? []);
         $query = [];
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
+        }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();
         }

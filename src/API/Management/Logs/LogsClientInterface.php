@@ -37,6 +37,21 @@ interface LogsClientInterface
      *
      * **Important:** When fetching logs from a checkpoint log ID, any parameter other than `from` and `take` will be ignored, and date ordering is not guaranteed.
      *
+     * Example:
+     * ```php
+     * $client->logs->list(
+     *     new ListLogsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'sort' => 'sort',
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'includeTotals' => true,
+     *         'search' => 'search',
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListLogsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -52,6 +67,13 @@ interface LogsClientInterface
 
     /**
      * Retrieve an individual log event.
+     *
+     * Example:
+     * ```php
+     * $client->logs->get(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id log_id of the log to retrieve.
      * @param ?array{

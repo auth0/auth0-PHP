@@ -107,6 +107,24 @@ class ClientsClient implements ClientsClientInterface
      *     `encryption_key`, `encryption_key.pub`, `encryption_key.cert`,
      *     `client_secret`, `client_authentication_methods` and `signing_key`.
      *
+     * Example:
+     * ```php
+     * $client->clients->list(
+     *     new ListClientsRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'isGlobal' => true,
+     *         'isFirstParty' => true,
+     *         'appType' => 'app_type',
+     *         'externalClientId' => 'external_client_id',
+     *         'q' => 'q',
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListClientsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -151,6 +169,15 @@ class ClientsClient implements ClientsClientInterface
      * - To configure `client_authentication_methods`, the property `jwt_configuration.alg` must be set to RS256.
      *
      * SSO Integrations created via this endpoint will accept login requests and share user profile information.
+     *
+     * Example:
+     * ```php
+     * $client->clients->create(
+     *     new CreateClientRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateClientRequestContent $request
      * @param ?array{
@@ -204,6 +231,15 @@ class ClientsClient implements ClientsClientInterface
      *       Returns the raw metadata and how it would be mapped to Auth0 client fields.
      *       This endpoint is useful for testing metadata URIs before creating CIMD clients.
      *
+     *
+     * Example:
+     * ```php
+     * $client->clients->previewCimdMetadata(
+     *     new PreviewCimdMetadataRequestContent([
+     *         'externalClientId' => 'external_client_id',
+     *     ]),
+     * );
+     * ```
      *
      * @param PreviewCimdMetadataRequestContent $request
      * @param ?array{
@@ -263,6 +299,15 @@ class ClientsClient implements ClientsClientInterface
      * - Maps CIMD fields to Auth0 client configuration
      * - Creates/rotates credentials from the JWKS
      * - Enforces CIMD security policies (HTTPS-only, no shared secrets)
+     *
+     * Example:
+     * ```php
+     * $client->clients->registerCimdClient(
+     *     new RegisterCimdClientRequestContent([
+     *         'externalClientId' => 'external_client_id',
+     *     ]),
+     * );
+     * ```
      *
      * @param RegisterCimdClientRequestContent $request
      * @param ?array{
@@ -336,6 +381,17 @@ class ClientsClient implements ClientsClientInterface
      *     `encryption_key`, `encryption_key.pub`, `encryption_key.cert`,
      *     `client_secret`, `client_authentication_methods` and `signing_key`.
      *
+     * Example:
+     * ```php
+     * $client->clients->get(
+     *     'id',
+     *     new GetClientRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the client to retrieve.
      * @param GetClientRequestParameters $request
      * @param ?array{
@@ -364,7 +420,7 @@ class ClientsClient implements ClientsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$id}",
+                    path: "clients/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                     query: $query,
                 ),
@@ -393,6 +449,13 @@ class ClientsClient implements ClientsClientInterface
     /**
      * Delete a client and related configuration (rules, connections, etc).
      *
+     * Example:
+     * ```php
+     * $client->clients->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the client to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -412,7 +475,7 @@ class ClientsClient implements ClientsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$id}",
+                    path: "clients/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -442,6 +505,14 @@ class ClientsClient implements ClientsClientInterface
      * - To configure `client_authentication_methods`, the property `jwt_configuration.alg` must be set to RS256.
      * - To change a client's `is_first_party` property to `false`, the `organization_usage` and `organization_require_behavior` properties must be unset.
      *
+     * Example:
+     * ```php
+     * $client->clients->update(
+     *     'id',
+     *     new UpdateClientRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id ID of the client to update.
      * @param UpdateClientRequestContent $request
      * @param ?array{
@@ -463,7 +534,7 @@ class ClientsClient implements ClientsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$id}",
+                    path: "clients/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -496,6 +567,13 @@ class ClientsClient implements ClientsClientInterface
      *
      * For more information, read [Rotate Client Secrets](https://www.auth0.com/docs/get-started/applications/rotate-client-secret).
      *
+     * Example:
+     * ```php
+     * $client->clients->rotateSecret(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the client that will rotate secrets.
      * @param ?array{
      *   baseUrl?: string,
@@ -516,7 +594,7 @@ class ClientsClient implements ClientsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$id}/rotate-secret",
+                    path: "clients/" . RawClient::encodePathParam($id) . "/rotate-secret",
                     method: HttpMethod::POST,
                 ),
                 $options,

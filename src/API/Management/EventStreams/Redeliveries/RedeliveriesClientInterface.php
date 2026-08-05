@@ -8,6 +8,14 @@ use Auth0\SDK\API\Management\Types\CreateEventStreamRedeliveryResponseContent;
 interface RedeliveriesClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->redeliveries->create(
+     *     'id',
+     *     new CreateEventStreamRedeliveryRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param CreateEventStreamRedeliveryRequestContent $request
      * @param ?array{
@@ -23,6 +31,14 @@ interface RedeliveriesClientInterface
     public function create(string $id, CreateEventStreamRedeliveryRequestContent $request = new CreateEventStreamRedeliveryRequestContent(), ?array $options = null): ?CreateEventStreamRedeliveryResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->redeliveries->createById(
+     *     'id',
+     *     'event_id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param string $eventId Unique identifier for the event
      * @param ?array{

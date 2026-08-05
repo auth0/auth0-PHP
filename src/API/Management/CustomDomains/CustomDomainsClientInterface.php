@@ -22,6 +22,18 @@ interface CustomDomainsClientInterface
     /**
      * Retrieve details on [custom domains](https://auth0.com/docs/custom-domains).
      *
+     * Example:
+     * ```php
+     * $client->customDomains->list(
+     *     new ListCustomDomainsRequestParameters([
+     *         'q' => 'q',
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'sort' => 'sort',
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListCustomDomainsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -50,6 +62,16 @@ interface CustomDomainsClientInterface
      *
      * - recommended - for modern usage this includes TLS 1.2 only
      *
+     * Example:
+     * ```php
+     * $client->customDomains->create(
+     *     new CreateCustomDomainRequestContent([
+     *         'domain' => 'domain',
+     *         'type' => CustomDomainProvisioningTypeEnum::Auth0ManagedCerts->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateCustomDomainRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -65,6 +87,11 @@ interface CustomDomainsClientInterface
 
     /**
      * Retrieve the tenant's default domain.
+     *
+     * Example:
+     * ```php
+     * $client->customDomains->getDefault();
+     * ```
      *
      * @param ?array{
      *   baseUrl?: string,
@@ -83,6 +110,15 @@ interface CustomDomainsClientInterface
 
     /**
      * Set the default custom domain for the tenant.
+     *
+     * Example:
+     * ```php
+     * $client->customDomains->setDefault(
+     *     new SetDefaultCustomDomainRequestContent([
+     *         'domain' => 'domain',
+     *     ]),
+     * );
+     * ```
      *
      * @param SetDefaultCustomDomainRequestContent $request
      * @param ?array{
@@ -103,6 +139,13 @@ interface CustomDomainsClientInterface
     /**
      * Retrieve a custom domain configuration and status.
      *
+     * Example:
+     * ```php
+     * $client->customDomains->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the custom domain to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -118,6 +161,13 @@ interface CustomDomainsClientInterface
 
     /**
      * Delete a custom domain and stop serving requests for it.
+     *
+     * Example:
+     * ```php
+     * $client->customDomains->delete(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the custom domain to delete.
      * @param ?array{
@@ -165,6 +215,14 @@ interface CustomDomainsClientInterface
      * - The TLS ciphers and protocols available in each TLS policy follow industry recommendations, and may be updated occasionally.
      * - The `compatible` TLS policy is no longer supported.
      *
+     * Example:
+     * ```php
+     * $client->customDomains->update(
+     *     'id',
+     *     new UpdateCustomDomainRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id The id of the custom domain to update
      * @param UpdateCustomDomainRequestContent $request
      * @param ?array{
@@ -181,6 +239,13 @@ interface CustomDomainsClientInterface
 
     /**
      * Run the test process on a custom domain.
+     *
+     * Example:
+     * ```php
+     * $client->customDomains->test(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the custom domain to test.
      * @param ?array{
@@ -204,6 +269,13 @@ interface CustomDomainsClientInterface
      *
      * [Learn more](https://auth0.com/docs/custom-domains#step-2-verify-ownership) about verifying custom domains that use Auth0 Managed certificates.
      * [Learn more](https://auth0.com/docs/custom-domains/self-managed-certificates#step-2-verify-ownership) about verifying custom domains that use Self Managed certificates.
+     *
+     * Example:
+     * ```php
+     * $client->customDomains->verify(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the custom domain to verify.
      * @param ?array{

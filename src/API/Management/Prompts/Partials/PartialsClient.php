@@ -54,6 +54,13 @@ class PartialsClient implements PartialsClientInterface
     /**
      * Get template partials for a prompt
      *
+     * Example:
+     * ```php
+     * $client->prompts->partials->get(
+     *     PartialGroupsEnum::Login->value,
+     * );
+     * ```
+     *
      * @param value-of<PartialGroupsEnum> $prompt Name of the prompt.
      * @param ?array{
      *   baseUrl?: string,
@@ -74,7 +81,7 @@ class PartialsClient implements PartialsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "prompts/{$prompt}/partials",
+                    path: "prompts/" . RawClient::encodePathParam($prompt) . "/partials",
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -102,6 +109,16 @@ class PartialsClient implements PartialsClientInterface
     /**
      * Set template partials for a prompt
      *
+     * Example:
+     * ```php
+     * $client->prompts->partials->set(
+     *     PartialGroupsEnum::Login->value,
+     *     [
+     *         'key' => "value",
+     *     ],
+     * );
+     * ```
+     *
      * @param value-of<PartialGroupsEnum> $prompt Name of the prompt.
      * @param array<string, mixed> $request
      * @param ?array{
@@ -122,7 +139,7 @@ class PartialsClient implements PartialsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "prompts/{$prompt}/partials",
+                    path: "prompts/" . RawClient::encodePathParam($prompt) . "/partials",
                     method: HttpMethod::PUT,
                     body: JsonSerializer::serializeArray($request, ['string' => 'mixed']),
                 ),

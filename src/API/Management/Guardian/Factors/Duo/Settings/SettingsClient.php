@@ -56,6 +56,11 @@ class SettingsClient implements SettingsClientInterface
     /**
      * Retrieves the DUO account and factor configuration.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->duo->settings->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -102,6 +107,13 @@ class SettingsClient implements SettingsClientInterface
 
     /**
      * Set the DUO account configuration and other properties specific to this factor.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->duo->settings->set(
+     *     new SetGuardianFactorDuoSettingsRequestContent([]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorDuoSettingsRequestContent $request
      * @param ?array{
@@ -150,6 +162,13 @@ class SettingsClient implements SettingsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->guardian->factors->duo->settings->update(
+     *     new UpdateGuardianFactorDuoSettingsRequestContent([]),
+     * );
+     * ```
+     *
      * @param UpdateGuardianFactorDuoSettingsRequestContent $request
      * @param ?array{
      *   baseUrl?: string,

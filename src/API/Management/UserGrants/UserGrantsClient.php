@@ -57,6 +57,20 @@ class UserGrantsClient implements UserGrantsClientInterface
     /**
      * Retrieve the [grants](https://auth0.com/docs/api-auth/which-oauth-flow-to-use) associated with your account.
      *
+     * Example:
+     * ```php
+     * $client->userGrants->list(
+     *     new ListUserGrantsRequestParameters([
+     *         'perPage' => 1,
+     *         'page' => 1,
+     *         'includeTotals' => true,
+     *         'userId' => 'user_id',
+     *         'clientId' => 'client_id',
+     *         'audience' => 'audience',
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListUserGrantsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -88,6 +102,15 @@ class UserGrantsClient implements UserGrantsClientInterface
 
     /**
      * Delete a grant associated with your account.
+     *
+     * Example:
+     * ```php
+     * $client->userGrants->deleteByUserId(
+     *     new DeleteUserGrantByUserIdRequestParameters([
+     *         'userId' => 'user_id',
+     *     ]),
+     * );
+     * ```
      *
      * @param DeleteUserGrantByUserIdRequestParameters $request
      * @param ?array{
@@ -133,6 +156,13 @@ class UserGrantsClient implements UserGrantsClientInterface
     /**
      * Delete a grant associated with your account.
      *
+     * Example:
+     * ```php
+     * $client->userGrants->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the grant to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -152,7 +182,7 @@ class UserGrantsClient implements UserGrantsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "grants/{$id}",
+                    path: "grants/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,

@@ -11,6 +11,19 @@ interface RolesClientInterface
     /**
      * Lists the roles which grant the user a given permission, including roles assigned directly to the user and those inherited through group memberships.
      *
+     * Example:
+     * ```php
+     * $client->users->effectivePermissions->sources->roles->list(
+     *     'id',
+     *     new ListUserEffectivePermissionRoleSourceRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'resourceServerIdentifier' => 'resource_server_identifier',
+     *         'permissionName' => 'permission_name',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to retrieve the permissions for.
      * @param ListUserEffectivePermissionRoleSourceRequestParameters $request
      * @param ?array{

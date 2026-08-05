@@ -54,6 +54,11 @@ class SupplementalSignalsClient implements SupplementalSignalsClientInterface
     /**
      * Get the supplemental signals configuration for a tenant.
      *
+     * Example:
+     * ```php
+     * $client->supplementalSignals->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -100,6 +105,15 @@ class SupplementalSignalsClient implements SupplementalSignalsClientInterface
 
     /**
      * Update the supplemental signals configuration for a tenant.
+     *
+     * Example:
+     * ```php
+     * $client->supplementalSignals->patch(
+     *     new UpdateSupplementalSignalsRequestContent([
+     *         'akamaiEnabled' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param UpdateSupplementalSignalsRequestContent $request
      * @param ?array{

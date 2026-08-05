@@ -18,6 +18,17 @@ interface SelfServiceProfilesClientInterface
     /**
      * Retrieves self-service profiles.
      *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->list(
+     *     new ListSelfServiceProfilesRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListSelfServiceProfilesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -33,6 +44,15 @@ interface SelfServiceProfilesClientInterface
 
     /**
      * Creates a self-service profile.
+     *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->create(
+     *     new CreateSelfServiceProfileRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateSelfServiceProfileRequestContent $request
      * @param ?array{
@@ -50,6 +70,13 @@ interface SelfServiceProfilesClientInterface
     /**
      * Retrieves a self-service profile by Id.
      *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the self-service profile to retrieve
      * @param ?array{
      *   baseUrl?: string,
@@ -66,6 +93,13 @@ interface SelfServiceProfilesClientInterface
     /**
      * Deletes a self-service profile by Id.
      *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the self-service profile to delete
      * @param ?array{
      *   baseUrl?: string,
@@ -80,6 +114,14 @@ interface SelfServiceProfilesClientInterface
 
     /**
      * Updates a self-service profile.
+     *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->update(
+     *     'id',
+     *     new UpdateSelfServiceProfileRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The id of the self-service profile to update
      * @param UpdateSelfServiceProfileRequestContent $request

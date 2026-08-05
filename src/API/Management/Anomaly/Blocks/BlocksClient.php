@@ -50,6 +50,13 @@ class BlocksClient implements BlocksClientInterface
     /**
      * Check if the given IP address is blocked via the <a href="https://auth0.com/docs/configure/attack-protection/suspicious-ip-throttling">Suspicious IP Throttling</a> due to multiple suspicious attempts.
      *
+     * Example:
+     * ```php
+     * $client->anomaly->blocks->checkIp(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id IP address to check.
      * @param ?array{
      *   baseUrl?: string,
@@ -69,7 +76,7 @@ class BlocksClient implements BlocksClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "anomaly/blocks/ips/{$id}",
+                    path: "anomaly/blocks/ips/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -91,6 +98,13 @@ class BlocksClient implements BlocksClientInterface
     /**
      * Remove a block imposed by <a href="https://auth0.com/docs/configure/attack-protection/suspicious-ip-throttling">Suspicious IP Throttling</a> for the given IP address.
      *
+     * Example:
+     * ```php
+     * $client->anomaly->blocks->unblockIp(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id IP address to unblock.
      * @param ?array{
      *   baseUrl?: string,
@@ -110,7 +124,7 @@ class BlocksClient implements BlocksClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "anomaly/blocks/ips/{$id}",
+                    path: "anomaly/blocks/ips/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,

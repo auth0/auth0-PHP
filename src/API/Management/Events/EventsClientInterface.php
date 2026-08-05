@@ -11,6 +11,19 @@ interface EventsClientInterface
     /**
      * Subscribe to events via Server-Sent Events (SSE)
      *
+     * Example:
+     * ```php
+     * $client->events->subscribe(
+     *     new SubscribeEventsRequestParameters([
+     *         'from' => 'from',
+     *         'fromTimestamp' => 'from_timestamp',
+     *         'eventType' => [
+     *             EventStreamSubscribeEventsEventTypeEnum::ConnectionCreated->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param SubscribeEventsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,

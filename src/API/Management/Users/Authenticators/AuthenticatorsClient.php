@@ -50,6 +50,13 @@ class AuthenticatorsClient implements AuthenticatorsClientInterface
     /**
      * Remove all authenticators registered to a given user ID, such as OTP, email, phone, and push-notification. This action cannot be undone. For more information, review [Manage Authentication Methods with Management API](https://auth0.com/docs/secure/multi-factor-authentication/manage-mfa-auth0-apis/manage-authentication-methods-with-management-api).
      *
+     * Example:
+     * ```php
+     * $client->users->authenticators->deleteAll(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the user to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -69,7 +76,7 @@ class AuthenticatorsClient implements AuthenticatorsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/authenticators",
+                    path: "users/" . RawClient::encodePathParam($id) . "/authenticators",
                     method: HttpMethod::DELETE,
                 ),
                 $options,

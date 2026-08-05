@@ -13,6 +13,17 @@ interface RolesClientInterface
     /**
      * Lists the [roles](https://auth0.com/docs/manage-users/access-control/rbac) assigned to a group.
      *
+     * Example:
+     * ```php
+     * $client->groups->roles->list(
+     *     'id',
+     *     new ListGroupRolesRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param ListGroupRolesRequestParameters $request
      * @param ?array{
@@ -30,6 +41,18 @@ interface RolesClientInterface
     /**
      * Assign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) to a specified group.
      *
+     * Example:
+     * ```php
+     * $client->groups->roles->create(
+     *     'id',
+     *     new CreateGroupRolesRequestParameters([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param CreateGroupRolesRequestParameters $request
      * @param ?array{
@@ -45,6 +68,18 @@ interface RolesClientInterface
 
     /**
      * Unassign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) from a specified group.
+     *
+     * Example:
+     * ```php
+     * $client->groups->roles->delete(
+     *     'id',
+     *     new DeleteGroupRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id Unique identifier for the group (service-generated).
      * @param DeleteGroupRolesRequestContent $request

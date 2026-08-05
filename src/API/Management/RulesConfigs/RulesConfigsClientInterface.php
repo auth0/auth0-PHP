@@ -13,6 +13,11 @@ interface RulesConfigsClientInterface
      *
      *     Note: For security, config variable values cannot be retrieved outside rule execution.
      *
+     * Example:
+     * ```php
+     * $client->rulesConfigs->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -27,6 +32,16 @@ interface RulesConfigsClientInterface
 
     /**
      * Sets a rules config variable.
+     *
+     * Example:
+     * ```php
+     * $client->rulesConfigs->set(
+     *     'key',
+     *     new SetRulesConfigRequestContent([
+     *         'value' => 'value',
+     *     ]),
+     * );
+     * ```
      *
      * @param string $key Key of the rules config variable to set (max length: 127 characters).
      * @param SetRulesConfigRequestContent $request
@@ -44,6 +59,13 @@ interface RulesConfigsClientInterface
 
     /**
      * Delete a rules config variable identified by its key.
+     *
+     * Example:
+     * ```php
+     * $client->rulesConfigs->delete(
+     *     'key',
+     * );
+     * ```
      *
      * @param string $key Key of the rules config variable to delete.
      * @param ?array{

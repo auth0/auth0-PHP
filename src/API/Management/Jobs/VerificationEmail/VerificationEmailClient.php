@@ -55,6 +55,15 @@ class VerificationEmailClient implements VerificationEmailClientInterface
      *
      * Note: You must have the `Status` toggle enabled for the verification email template for the email to be sent.
      *
+     * Example:
+     * ```php
+     * $client->jobs->verificationEmail->create(
+     *     new CreateVerificationEmailRequestContent([
+     *         'userId' => 'user_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateVerificationEmailRequestContent $request
      * @param ?array{
      *   baseUrl?: string,

@@ -60,6 +60,21 @@ class InvitationsClient implements InvitationsClientInterface
     /**
      * Retrieve a detailed list of invitations sent to users for a specific Organization. The list includes details such as inviter and invitee information, invitation URLs, and dates of creation and expiration. To learn more about Organization invitations, review [Invite Organization Members](https://auth0.com/docs/manage-users/organizations/configure-organizations/invite-members).
      *
+     * Example:
+     * ```php
+     * $client->organizations->invitations->list(
+     *     'id',
+     *     new ListOrganizationInvitationsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'sort' => 'sort',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ListOrganizationInvitationsRequestParameters $request
      * @param ?array{
@@ -93,6 +108,22 @@ class InvitationsClient implements InvitationsClientInterface
     /**
      * Create a user invitation for a specific Organization. Upon creation, the listed user receives an email inviting them to join the Organization. To learn more about Organization invitations, review [Invite Organization Members](https://auth0.com/docs/manage-users/organizations/configure-organizations/invite-members).
      *
+     * Example:
+     * ```php
+     * $client->organizations->invitations->create(
+     *     'id',
+     *     new CreateOrganizationInvitationRequestContent([
+     *         'inviter' => new OrganizationInvitationInviter([
+     *             'name' => 'name',
+     *         ]),
+     *         'invitee' => new OrganizationInvitationInvitee([
+     *             'email' => 'email',
+     *         ]),
+     *         'clientId' => 'client_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param CreateOrganizationInvitationRequestContent $request
      * @param ?array{
@@ -114,7 +145,7 @@ class InvitationsClient implements InvitationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/invitations",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/invitations",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -141,6 +172,18 @@ class InvitationsClient implements InvitationsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->invitations->get(
+     *     'id',
+     *     'invitation_id',
+     *     new GetOrganizationInvitationRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $invitationId The id of the user invitation.
      * @param GetOrganizationInvitationRequestParameters $request
@@ -170,7 +213,7 @@ class InvitationsClient implements InvitationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/invitations/{$invitationId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/invitations/" . RawClient::encodePathParam($invitationId),
                     method: HttpMethod::GET,
                     query: $query,
                 ),
@@ -197,6 +240,14 @@ class InvitationsClient implements InvitationsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->invitations->delete(
+     *     'id',
+     *     'invitation_id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $invitationId The id of the user invitation.
      * @param ?array{
@@ -217,7 +268,7 @@ class InvitationsClient implements InvitationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/invitations/{$invitationId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/invitations/" . RawClient::encodePathParam($invitationId),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -279,7 +330,7 @@ class InvitationsClient implements InvitationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/invitations",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/invitations",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

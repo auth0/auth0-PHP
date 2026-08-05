@@ -141,6 +141,11 @@ class LogStreamsClient implements LogStreamsClientInterface
      * }]
      * ```
      *
+     * Example:
+     * ```php
+     * $client->logStreams->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -393,6 +398,18 @@ class LogStreamsClient implements LogStreamsClientInterface
      * }
      * ```
      *
+     * Example:
+     * ```php
+     * $client->logStreams->create(
+     *     new CreateLogStreamHttpRequestBody([
+     *         'type' => LogStreamHttpEnum::Http->value,
+     *         'sink' => new LogStreamHttpSink([
+     *             'httpEndpoint' => 'httpEndpoint',
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param (
      *    CreateLogStreamHttpRequestBody
      *   |CreateLogStreamEventBridgeRequestBody
@@ -611,6 +628,13 @@ class LogStreamsClient implements LogStreamsClientInterface
      * 2. `paused` - Stream is currently user disabled and will not attempt log delivery.
      * 3. `suspended` - Stream is currently disabled because of errors and will not attempt log delivery.
      *
+     * Example:
+     * ```php
+     * $client->logStreams->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the log stream to get
      * @param ?array{
      *   baseUrl?: string,
@@ -640,7 +664,7 @@ class LogStreamsClient implements LogStreamsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "log-streams/{$id}",
+                    path: "log-streams/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -668,6 +692,13 @@ class LogStreamsClient implements LogStreamsClientInterface
     /**
      * Delete a log stream.
      *
+     * Example:
+     * ```php
+     * $client->logStreams->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the log stream to delete
      * @param ?array{
      *   baseUrl?: string,
@@ -687,7 +718,7 @@ class LogStreamsClient implements LogStreamsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "log-streams/{$id}",
+                    path: "log-streams/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -782,6 +813,14 @@ class LogStreamsClient implements LogStreamsClientInterface
      * }
      * ```
      *
+     * Example:
+     * ```php
+     * $client->logStreams->update(
+     *     'id',
+     *     new UpdateLogStreamRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id The id of the log stream to get
      * @param UpdateLogStreamRequestContent $request
      * @param ?array{
@@ -812,7 +851,7 @@ class LogStreamsClient implements LogStreamsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "log-streams/{$id}",
+                    path: "log-streams/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

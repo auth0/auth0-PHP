@@ -61,6 +61,18 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
     /**
      * Retrieve details about a specific connection currently enabled for an Organization. Information returned includes details such as connection ID, name, strategy, and whether the connection automatically grants membership upon login.
      *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->list(
+     *     'id',
+     *     new ListOrganizationConnectionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ListOrganizationConnectionsRequestParameters $request
      * @param ?array{
@@ -96,6 +108,16 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
      *
      * [Connections](https://auth0.com/docs/authenticate/identity-providers) represent the relationship between Auth0 and a source of users. Available types of connections include database, enterprise, and social.
      *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->add(
+     *     'id',
+     *     new AddOrganizationConnectionRequestContent([
+     *         'connectionId' => 'connection_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param AddOrganizationConnectionRequestContent $request
      * @param ?array{
@@ -117,7 +139,7 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/enabled_connections",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/enabled_connections",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -146,6 +168,14 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
     /**
      * Retrieve details about a specific connection currently enabled for an Organization. Information returned includes details such as connection ID, name, strategy, and whether the connection automatically grants membership upon login.
      *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->get(
+     *     'id',
+     *     'connectionId',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param ?array{
@@ -167,7 +197,7 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/enabled_connections/{$connectionId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/enabled_connections/" . RawClient::encodePathParam($connectionId),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -197,6 +227,14 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
      *
      * **Note**: This action does not remove the connection from your tenant.
      *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->delete(
+     *     'id',
+     *     'connectionId',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param ?array{
@@ -217,7 +255,7 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/enabled_connections/{$connectionId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/enabled_connections/" . RawClient::encodePathParam($connectionId),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -238,6 +276,15 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
 
     /**
      * Modify the details of a specific connection currently enabled for an Organization.
+     *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->update(
+     *     'id',
+     *     'connectionId',
+     *     new UpdateOrganizationConnectionRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
@@ -261,7 +308,7 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/enabled_connections/{$connectionId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/enabled_connections/" . RawClient::encodePathParam($connectionId),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -321,7 +368,7 @@ class EnabledConnectionsClient implements EnabledConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/enabled_connections",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/enabled_connections",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

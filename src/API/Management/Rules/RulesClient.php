@@ -62,6 +62,20 @@ class RulesClient implements RulesClientInterface
     /**
      * Retrieve a filtered list of [rules](https://auth0.com/docs/rules). Accepts a list of fields to include or exclude.
      *
+     * Example:
+     * ```php
+     * $client->rules->list(
+     *     new ListRulesRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'enabled' => true,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListRulesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -95,6 +109,16 @@ class RulesClient implements RulesClientInterface
      * Create a [new rule](https://auth0.com/docs/rules#create-a-new-rule-using-the-management-api).
      *
      * Note: Changing a rule's stage of execution from the default `login_success` can change the rule's function signature to have user omitted.
+     *
+     * Example:
+     * ```php
+     * $client->rules->create(
+     *     new CreateRuleRequestContent([
+     *         'name' => 'name',
+     *         'script' => 'script',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateRuleRequestContent $request
      * @param ?array{
@@ -145,6 +169,17 @@ class RulesClient implements RulesClientInterface
     /**
      * Retrieve [rule](https://auth0.com/docs/rules) details. Accepts a list of fields to include or exclude in the result.
      *
+     * Example:
+     * ```php
+     * $client->rules->get(
+     *     'id',
+     *     new GetRuleRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the rule to retrieve.
      * @param GetRuleRequestParameters $request
      * @param ?array{
@@ -173,7 +208,7 @@ class RulesClient implements RulesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "rules/{$id}",
+                    path: "rules/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                     query: $query,
                 ),
@@ -202,6 +237,13 @@ class RulesClient implements RulesClientInterface
     /**
      * Delete a rule.
      *
+     * Example:
+     * ```php
+     * $client->rules->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the rule to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -221,7 +263,7 @@ class RulesClient implements RulesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "rules/{$id}",
+                    path: "rules/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -242,6 +284,14 @@ class RulesClient implements RulesClientInterface
 
     /**
      * Update an existing rule.
+     *
+     * Example:
+     * ```php
+     * $client->rules->update(
+     *     'id',
+     *     new UpdateRuleRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the rule to retrieve.
      * @param UpdateRuleRequestContent $request
@@ -264,7 +314,7 @@ class RulesClient implements RulesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "rules/{$id}",
+                    path: "rules/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

@@ -16,6 +16,18 @@ interface EnabledConnectionsClientInterface
     /**
      * Retrieve details about a specific connection currently enabled for an Organization. Information returned includes details such as connection ID, name, strategy, and whether the connection automatically grants membership upon login.
      *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->list(
+     *     'id',
+     *     new ListOrganizationConnectionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ListOrganizationConnectionsRequestParameters $request
      * @param ?array{
@@ -35,6 +47,16 @@ interface EnabledConnectionsClientInterface
      *
      * [Connections](https://auth0.com/docs/authenticate/identity-providers) represent the relationship between Auth0 and a source of users. Available types of connections include database, enterprise, and social.
      *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->add(
+     *     'id',
+     *     new AddOrganizationConnectionRequestContent([
+     *         'connectionId' => 'connection_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param AddOrganizationConnectionRequestContent $request
      * @param ?array{
@@ -51,6 +73,14 @@ interface EnabledConnectionsClientInterface
 
     /**
      * Retrieve details about a specific connection currently enabled for an Organization. Information returned includes details such as connection ID, name, strategy, and whether the connection automatically grants membership upon login.
+     *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->get(
+     *     'id',
+     *     'connectionId',
+     * );
+     * ```
      *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
@@ -71,6 +101,14 @@ interface EnabledConnectionsClientInterface
      *
      * **Note**: This action does not remove the connection from your tenant.
      *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->delete(
+     *     'id',
+     *     'connectionId',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param ?array{
@@ -86,6 +124,15 @@ interface EnabledConnectionsClientInterface
 
     /**
      * Modify the details of a specific connection currently enabled for an Organization.
+     *
+     * Example:
+     * ```php
+     * $client->organizations->enabledConnections->update(
+     *     'id',
+     *     'connectionId',
+     *     new UpdateOrganizationConnectionRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.

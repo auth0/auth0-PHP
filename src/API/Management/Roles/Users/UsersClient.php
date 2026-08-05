@@ -57,6 +57,8 @@ class UsersClient implements UsersClientInterface
     /**
      * Retrieve list of users associated with a specific role. For Dashboard instructions, review [View Users Assigned to Roles](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/roles/view-users-assigned-to-roles).
      *
+     * **Note**: Returns only users with direct role assignments. For groups assigned to this role, use `GET /api/v2/roles/{id}/groups`.
+     *
      * This endpoint supports two types of pagination:
      *
      * - Offset pagination
@@ -72,6 +74,18 @@ class UsersClient implements UsersClientInterface
      * - `take`: The total amount of entries to retrieve when using the from parameter. Defaults to 50.
      *
      * **Note**: The first time you call this endpoint using checkpoint pagination, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no pages are remaining.
+     *
+     * Example:
+     * ```php
+     * $client->roles->users->list(
+     *     'id',
+     *     new ListRoleUsersRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id ID of the role to retrieve a list of users associated with.
      * @param ListRoleUsersRequestParameters $request
@@ -105,6 +119,18 @@ class UsersClient implements UsersClientInterface
      *
      * **Note**: New roles cannot be created through this action.
      *
+     * Example:
+     * ```php
+     * $client->roles->users->assign(
+     *     'id',
+     *     new AssignRoleUsersRequestContent([
+     *         'users' => [
+     *             'users',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the role to assign users to.
      * @param AssignRoleUsersRequestContent $request
      * @param ?array{
@@ -125,7 +151,7 @@ class UsersClient implements UsersClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "roles/{$id}/users",
+                    path: "roles/" . RawClient::encodePathParam($id) . "/users",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -147,6 +173,8 @@ class UsersClient implements UsersClientInterface
 
     /**
      * Retrieve list of users associated with a specific role. For Dashboard instructions, review [View Users Assigned to Roles](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/roles/view-users-assigned-to-roles).
+     *
+     * **Note**: Returns only users with direct role assignments. For groups assigned to this role, use `GET /api/v2/roles/{id}/groups`.
      *
      * This endpoint supports two types of pagination:
      *
@@ -182,6 +210,9 @@ class UsersClient implements UsersClientInterface
     {
         $options = array_merge($this->options, $options ?? []);
         $query = [];
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
+        }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();
         }
@@ -192,7 +223,7 @@ class UsersClient implements UsersClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "roles/{$id}/users",
+                    path: "roles/" . RawClient::encodePathParam($id) . "/users",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

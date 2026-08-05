@@ -17,9 +17,15 @@ class ListSynchronizedGroupsRequestParameters extends JsonSerializableType
     private ?int $take = 50;
 
     /**
+     * @var ?string $q Query in <a target='_new' href ='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>Lucene query string syntax</a>. Only prefix search on "name" or "email" fields are allowed, with a single wildcard suffix. Operators, modifiers, and groupings are not allowed. Terms are treated as case-insensitive. Example query: "name:engineering*".
+     */
+    private ?string $q;
+
+    /**
      * @param array{
      *   from?: ?string,
      *   take?: ?int,
+     *   q?: ?string,
      * } $values
      */
     public function __construct(
@@ -27,6 +33,7 @@ class ListSynchronizedGroupsRequestParameters extends JsonSerializableType
     ) {
         $this->from = $values['from'] ?? null;
         $this->take = $values['take'] ?? null;
+        $this->q = $values['q'] ?? null;
     }
 
     /**
@@ -62,6 +69,24 @@ class ListSynchronizedGroupsRequestParameters extends JsonSerializableType
     {
         $this->take = $value;
         $this->_setField('take');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getQ(): ?string
+    {
+        return $this->q;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setQ(?string $value = null): self
+    {
+        $this->q = $value;
+        $this->_setField('q');
         return $this;
     }
 }

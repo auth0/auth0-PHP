@@ -14,6 +14,11 @@ interface BrandingClientInterface
     /**
      * Retrieve branding settings.
      *
+     * Example:
+     * ```php
+     * $client->branding->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -28,6 +33,13 @@ interface BrandingClientInterface
 
     /**
      * Update branding settings.
+     *
+     * Example:
+     * ```php
+     * $client->branding->update(
+     *     new UpdateBrandingRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateBrandingRequestContent $request
      * @param ?array{

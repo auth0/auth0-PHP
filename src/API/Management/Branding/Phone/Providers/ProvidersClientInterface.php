@@ -17,6 +17,15 @@ interface ProvidersClientInterface
     /**
      * Retrieve a list of [phone providers](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers) details set for a Tenant. A list of fields to include or exclude may also be specified.
      *
+     * Example:
+     * ```php
+     * $client->branding->phone->providers->list(
+     *     new ListBrandingPhoneProvidersRequestParameters([
+     *         'disabled' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListBrandingPhoneProvidersRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -34,6 +43,18 @@ interface ProvidersClientInterface
      * Create a [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers).
      * The `credentials` object requires different properties depending on the phone provider (which is specified using the `name` property).
      *
+     * Example:
+     * ```php
+     * $client->branding->phone->providers->create(
+     *     new CreateBrandingPhoneProviderRequestContent([
+     *         'name' => PhoneProviderNameEnum::Twilio->value,
+     *         'credentials' => new TwilioProviderCredentials([
+     *             'authToken' => 'auth_token',
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateBrandingPhoneProviderRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -49,6 +70,13 @@ interface ProvidersClientInterface
 
     /**
      * Retrieve [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers) details. A list of fields to include or exclude may also be specified.
+     *
+     * Example:
+     * ```php
+     * $client->branding->phone->providers->get(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id
      * @param ?array{
@@ -66,6 +94,13 @@ interface ProvidersClientInterface
     /**
      * Delete the configured phone provider.
      *
+     * Example:
+     * ```php
+     * $client->branding->phone->providers->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id
      * @param ?array{
      *   baseUrl?: string,
@@ -82,6 +117,14 @@ interface ProvidersClientInterface
      * Update a [phone provider](https://auth0.com/docs/customize/phone-messages/configure-phone-messaging-providers).
      * The `credentials` object requires different properties depending on the phone provider (which is specified using the `name` property).
      *
+     * Example:
+     * ```php
+     * $client->branding->phone->providers->update(
+     *     'id',
+     *     new UpdateBrandingPhoneProviderRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id
      * @param UpdateBrandingPhoneProviderRequestContent $request
      * @param ?array{
@@ -97,6 +140,16 @@ interface ProvidersClientInterface
     public function update(string $id, UpdateBrandingPhoneProviderRequestContent $request = new UpdateBrandingPhoneProviderRequestContent(), ?array $options = null): ?UpdateBrandingPhoneProviderResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->phone->providers->test(
+     *     'id',
+     *     new CreatePhoneProviderSendTestRequestContent([
+     *         'to' => 'to',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id
      * @param CreatePhoneProviderSendTestRequestContent $request
      * @param ?array{

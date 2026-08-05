@@ -84,6 +84,14 @@ class IdentitiesClient implements IdentitiesClientInterface
      *
      *   In this case you need to send `provider` and `user_id` in the body. Optionally you can also send the `connection_id` param which is suitable for identifying a particular database connection for the 'auth0' provider.
      *
+     * Example:
+     * ```php
+     * $client->users->identities->link(
+     *     'id',
+     *     new LinkUserIdentityRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id ID of the primary user account to link a second user account to.
      * @param LinkUserIdentityRequestContent $request
      * @param ?array{
@@ -105,7 +113,7 @@ class IdentitiesClient implements IdentitiesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/identities",
+                    path: "users/" . RawClient::encodePathParam($id) . "/identities",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -136,6 +144,15 @@ class IdentitiesClient implements IdentitiesClientInterface
      *
      * Unlinking the secondary account removes it from the identities array of the target user and creates a new standalone profile for the secondary account. To learn more, review [Unlink User Accounts](https://auth0.com/docs/manage-users/user-accounts/user-account-linking/unlink-user-accounts).
      *
+     * Example:
+     * ```php
+     * $client->users->identities->delete(
+     *     'id',
+     *     UserIdentityProviderEnum::Ad->value,
+     *     'user_id',
+     * );
+     * ```
+     *
      * @param string $id ID of the primary user account.
      * @param value-of<UserIdentityProviderEnum> $provider Identity provider name of the secondary linked account (e.g. `google-oauth2`).
      * @param string $userId ID of the secondary linked account (e.g. `123456789081523216417` part after the `|` in `google-oauth2|123456789081523216417`).
@@ -158,7 +175,7 @@ class IdentitiesClient implements IdentitiesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/identities/{$provider}/{$userId}",
+                    path: "users/" . RawClient::encodePathParam($id) . "/identities/" . RawClient::encodePathParam($provider) . "/" . RawClient::encodePathParam($userId),
                     method: HttpMethod::DELETE,
                 ),
                 $options,

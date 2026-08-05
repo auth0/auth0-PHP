@@ -62,6 +62,17 @@ class NetworkAclsClient implements NetworkAclsClientInterface
     /**
      * Get all access control list entries for your client.
      *
+     * Example:
+     * ```php
+     * $client->networkAcls->list(
+     *     new ListNetworkAclsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListNetworkAclsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -93,6 +104,20 @@ class NetworkAclsClient implements NetworkAclsClientInterface
 
     /**
      * Create a new access control list for your client.
+     *
+     * Example:
+     * ```php
+     * $client->networkAcls->create(
+     *     new CreateNetworkAclRequestContent([
+     *         'description' => 'description',
+     *         'active' => true,
+     *         'rule' => new NetworkAclRule([
+     *             'action' => new NetworkAclAction([]),
+     *             'scope' => NetworkAclRuleScopeEnum::Management->value,
+     *         ]),
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateNetworkAclRequestContent $request
      * @param ?array{
@@ -136,6 +161,13 @@ class NetworkAclsClient implements NetworkAclsClientInterface
     /**
      * Get a specific access control list entry for your client.
      *
+     * Example:
+     * ```php
+     * $client->networkAcls->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the access control list to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -156,7 +188,7 @@ class NetworkAclsClient implements NetworkAclsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "network-acls/{$id}",
+                    path: "network-acls/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -184,6 +216,21 @@ class NetworkAclsClient implements NetworkAclsClientInterface
     /**
      * Update existing access control list for your client.
      *
+     * Example:
+     * ```php
+     * $client->networkAcls->set(
+     *     'id',
+     *     new SetNetworkAclRequestContent([
+     *         'description' => 'description',
+     *         'active' => true,
+     *         'rule' => new NetworkAclRule([
+     *             'action' => new NetworkAclAction([]),
+     *             'scope' => NetworkAclRuleScopeEnum::Management->value,
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The id of the ACL to update.
      * @param SetNetworkAclRequestContent $request
      * @param ?array{
@@ -205,7 +252,7 @@ class NetworkAclsClient implements NetworkAclsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "network-acls/{$id}",
+                    path: "network-acls/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PUT,
                     body: $request,
                 ),
@@ -234,6 +281,13 @@ class NetworkAclsClient implements NetworkAclsClientInterface
     /**
      * Delete existing access control list for your client.
      *
+     * Example:
+     * ```php
+     * $client->networkAcls->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the ACL to delete
      * @param ?array{
      *   baseUrl?: string,
@@ -253,7 +307,7 @@ class NetworkAclsClient implements NetworkAclsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "network-acls/{$id}",
+                    path: "network-acls/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -274,6 +328,14 @@ class NetworkAclsClient implements NetworkAclsClientInterface
 
     /**
      * Update existing access control list for your client.
+     *
+     * Example:
+     * ```php
+     * $client->networkAcls->update(
+     *     'id',
+     *     new UpdateNetworkAclRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The id of the ACL to update.
      * @param UpdateNetworkAclRequestContent $request
@@ -296,7 +358,7 @@ class NetworkAclsClient implements NetworkAclsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "network-acls/{$id}",
+                    path: "network-acls/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

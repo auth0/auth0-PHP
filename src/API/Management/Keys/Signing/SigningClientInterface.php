@@ -12,6 +12,11 @@ interface SigningClientInterface
     /**
      * Retrieve details of all the application signing keys associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->keys->signing->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -26,6 +31,11 @@ interface SigningClientInterface
 
     /**
      * Rotate the application signing key of your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->keys->signing->rotate();
+     * ```
      *
      * @param ?array{
      *   baseUrl?: string,
@@ -42,6 +52,13 @@ interface SigningClientInterface
     /**
      * Retrieve details of the application signing key with the given ID.
      *
+     * Example:
+     * ```php
+     * $client->keys->signing->get(
+     *     'kid',
+     * );
+     * ```
+     *
      * @param string $kid Key id of the key to retrieve
      * @param ?array{
      *   baseUrl?: string,
@@ -57,6 +74,13 @@ interface SigningClientInterface
 
     /**
      * Revoke the application signing key with the given ID.
+     *
+     * Example:
+     * ```php
+     * $client->keys->signing->revoke(
+     *     'kid',
+     * );
+     * ```
      *
      * @param string $kid Key id of the key to revoke
      * @param ?array{

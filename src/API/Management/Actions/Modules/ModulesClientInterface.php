@@ -21,6 +21,16 @@ interface ModulesClientInterface
     /**
      * Retrieve a paginated list of all Actions Modules with optional filtering and totals.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->list(
+     *     new GetActionModulesRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param GetActionModulesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -36,6 +46,16 @@ interface ModulesClientInterface
 
     /**
      * Create a new Actions Module for reusable code across actions.
+     *
+     * Example:
+     * ```php
+     * $client->actions->modules->create(
+     *     new CreateActionModuleRequestContent([
+     *         'name' => 'name',
+     *         'code' => 'code',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateActionModuleRequestContent $request
      * @param ?array{
@@ -53,6 +73,13 @@ interface ModulesClientInterface
     /**
      * Retrieve details of a specific Actions Module by its unique identifier.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the action module to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -69,6 +96,13 @@ interface ModulesClientInterface
     /**
      * Permanently delete an Actions Module. This will fail if the module is still in use by any actions.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the Actions Module to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -83,6 +117,14 @@ interface ModulesClientInterface
 
     /**
      * Update properties of an existing Actions Module, such as code, dependencies, or secrets.
+     *
+     * Example:
+     * ```php
+     * $client->actions->modules->update(
+     *     'id',
+     *     new UpdateActionModuleRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The ID of the action module to update.
      * @param UpdateActionModuleRequestContent $request
@@ -101,6 +143,17 @@ interface ModulesClientInterface
     /**
      * Lists all actions that are using a specific Actions Module, showing which deployed action versions reference this Actions Module.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->listActions(
+     *     'id',
+     *     new GetActionModuleActionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The unique ID of the module.
      * @param GetActionModuleActionsRequestParameters $request
      * @param ?array{
@@ -117,6 +170,16 @@ interface ModulesClientInterface
 
     /**
      * Rolls back an Actions Module's draft to a previously created version. This action copies the code, dependencies, and secrets from the specified version into the current draft.
+     *
+     * Example:
+     * ```php
+     * $client->actions->modules->rollback(
+     *     'id',
+     *     new RollbackActionModuleRequestParameters([
+     *         'moduleVersionId' => 'module_version_id',
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The unique ID of the module to roll back.
      * @param RollbackActionModuleRequestParameters $request

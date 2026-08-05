@@ -6,6 +6,7 @@ enum AculContextEnum: string
 {
     case BrandingSettings = "branding.settings";
     case BrandingThemesDefault = "branding.themes.default";
+    case CountryCodes = "country_codes";
     case ClientLogoUri = "client.logo_uri";
     case ClientDescription = "client.description";
     case OrganizationDisplayName = "organization.display_name";

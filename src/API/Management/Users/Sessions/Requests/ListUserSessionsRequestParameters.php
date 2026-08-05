@@ -7,6 +7,11 @@ use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 class ListUserSessionsRequestParameters extends JsonSerializableType
 {
     /**
+     * @var ?bool $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+     */
+    private ?bool $includeTotals = true;
+
+    /**
      * @var ?string $from An optional cursor from which to start the selection (exclusive).
      */
     private ?string $from;
@@ -18,6 +23,7 @@ class ListUserSessionsRequestParameters extends JsonSerializableType
 
     /**
      * @param array{
+     *   includeTotals?: ?bool,
      *   from?: ?string,
      *   take?: ?int,
      * } $values
@@ -25,8 +31,27 @@ class ListUserSessionsRequestParameters extends JsonSerializableType
     public function __construct(
         array $values = [],
     ) {
+        $this->includeTotals = $values['includeTotals'] ?? null;
         $this->from = $values['from'] ?? null;
         $this->take = $values['take'] ?? null;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIncludeTotals(): ?bool
+    {
+        return $this->includeTotals;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIncludeTotals(?bool $value = null): self
+    {
+        $this->includeTotals = $value;
+        $this->_setField('includeTotals');
+        return $this;
     }
 
     /**

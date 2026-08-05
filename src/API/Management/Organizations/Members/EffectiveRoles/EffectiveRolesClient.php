@@ -64,6 +64,18 @@ class EffectiveRolesClient implements EffectiveRolesClientInterface
     /**
      * Lists the roles assigned to an organization member directly or through group membership.
      *
+     * Example:
+     * ```php
+     * $client->organizations->members->effectiveRoles->list(
+     *     'id',
+     *     'user_id',
+     *     new ListOrganizationMemberEffectiveRolesRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $userId ID of the user to list effective roles for.
      * @param ListOrganizationMemberEffectiveRolesRequestParameters $request
@@ -132,7 +144,7 @@ class EffectiveRolesClient implements EffectiveRolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/members/{$userId}/effective-roles",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/members/" . RawClient::encodePathParam($userId) . "/effective-roles",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

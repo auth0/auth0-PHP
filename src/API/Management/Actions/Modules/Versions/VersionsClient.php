@@ -58,6 +58,17 @@ class VersionsClient implements VersionsClientInterface
     /**
      * List all published versions of a specific Actions Module.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->versions->list(
+     *     'id',
+     *     new GetActionModuleVersionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The unique ID of the module.
      * @param GetActionModuleVersionsRequestParameters $request
      * @param ?array{
@@ -91,6 +102,13 @@ class VersionsClient implements VersionsClientInterface
     /**
      * Creates a new immutable version of an Actions Module from the current draft version. This publishes the draft as a new version that can be referenced by actions, while maintaining the existing draft for continued development.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->versions->create(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the action module to create a version for.
      * @param ?array{
      *   baseUrl?: string,
@@ -111,7 +129,7 @@ class VersionsClient implements VersionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/modules/{$id}/versions",
+                    path: "actions/modules/" . RawClient::encodePathParam($id) . "/versions",
                     method: HttpMethod::POST,
                 ),
                 $options,
@@ -139,6 +157,14 @@ class VersionsClient implements VersionsClientInterface
     /**
      * Retrieve the details of a specific, immutable version of an Actions Module.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->versions->get(
+     *     'id',
+     *     'versionId',
+     * );
+     * ```
+     *
      * @param string $id The unique ID of the module.
      * @param string $versionId The unique ID of the module version to retrieve.
      * @param ?array{
@@ -160,7 +186,7 @@ class VersionsClient implements VersionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/modules/{$id}/versions/{$versionId}",
+                    path: "actions/modules/" . RawClient::encodePathParam($id) . "/versions/" . RawClient::encodePathParam($versionId),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -216,7 +242,7 @@ class VersionsClient implements VersionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/modules/{$id}/versions",
+                    path: "actions/modules/" . RawClient::encodePathParam($id) . "/versions",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

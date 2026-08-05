@@ -9,6 +9,11 @@ use Auth0\SDK\API\Management\Types\ClientGrantDefaultForEnum;
 class ListClientGrantsRequestParameters extends JsonSerializableType
 {
     /**
+     * @var ?bool $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+     */
+    private ?bool $includeTotals = true;
+
+    /**
      * @var ?string $from Optional Id from which to start selection.
      */
     private ?string $from;
@@ -45,6 +50,7 @@ class ListClientGrantsRequestParameters extends JsonSerializableType
 
     /**
      * @param array{
+     *   includeTotals?: ?bool,
      *   from?: ?string,
      *   take?: ?int,
      *   audience?: ?string,
@@ -57,6 +63,7 @@ class ListClientGrantsRequestParameters extends JsonSerializableType
     public function __construct(
         array $values = [],
     ) {
+        $this->includeTotals = $values['includeTotals'] ?? null;
         $this->from = $values['from'] ?? null;
         $this->take = $values['take'] ?? null;
         $this->audience = $values['audience'] ?? null;
@@ -64,6 +71,24 @@ class ListClientGrantsRequestParameters extends JsonSerializableType
         $this->allowAnyOrganization = $values['allowAnyOrganization'] ?? null;
         $this->subjectType = $values['subjectType'] ?? null;
         $this->defaultFor = $values['defaultFor'] ?? null;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIncludeTotals(): ?bool
+    {
+        return $this->includeTotals;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIncludeTotals(?bool $value = null): self
+    {
+        $this->includeTotals = $value;
+        $this->_setField('includeTotals');
+        return $this;
     }
 
     /**

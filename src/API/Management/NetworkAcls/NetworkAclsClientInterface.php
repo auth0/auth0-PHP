@@ -17,6 +17,17 @@ interface NetworkAclsClientInterface
     /**
      * Get all access control list entries for your client.
      *
+     * Example:
+     * ```php
+     * $client->networkAcls->list(
+     *     new ListNetworkAclsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListNetworkAclsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -33,6 +44,20 @@ interface NetworkAclsClientInterface
     /**
      * Create a new access control list for your client.
      *
+     * Example:
+     * ```php
+     * $client->networkAcls->create(
+     *     new CreateNetworkAclRequestContent([
+     *         'description' => 'description',
+     *         'active' => true,
+     *         'rule' => new NetworkAclRule([
+     *             'action' => new NetworkAclAction([]),
+     *             'scope' => NetworkAclRuleScopeEnum::Management->value,
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateNetworkAclRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -47,6 +72,13 @@ interface NetworkAclsClientInterface
 
     /**
      * Get a specific access control list entry for your client.
+     *
+     * Example:
+     * ```php
+     * $client->networkAcls->get(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id The id of the access control list to retrieve.
      * @param ?array{
@@ -63,6 +95,21 @@ interface NetworkAclsClientInterface
 
     /**
      * Update existing access control list for your client.
+     *
+     * Example:
+     * ```php
+     * $client->networkAcls->set(
+     *     'id',
+     *     new SetNetworkAclRequestContent([
+     *         'description' => 'description',
+     *         'active' => true,
+     *         'rule' => new NetworkAclRule([
+     *             'action' => new NetworkAclAction([]),
+     *             'scope' => NetworkAclRuleScopeEnum::Management->value,
+     *         ]),
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The id of the ACL to update.
      * @param SetNetworkAclRequestContent $request
@@ -81,6 +128,13 @@ interface NetworkAclsClientInterface
     /**
      * Delete existing access control list for your client.
      *
+     * Example:
+     * ```php
+     * $client->networkAcls->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the ACL to delete
      * @param ?array{
      *   baseUrl?: string,
@@ -95,6 +149,14 @@ interface NetworkAclsClientInterface
 
     /**
      * Update existing access control list for your client.
+     *
+     * Example:
+     * ```php
+     * $client->networkAcls->update(
+     *     'id',
+     *     new UpdateNetworkAclRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The id of the ACL to update.
      * @param UpdateNetworkAclRequestContent $request

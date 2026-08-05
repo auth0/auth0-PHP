@@ -9,6 +9,13 @@ interface SynchronizationsClientInterface
     /**
      * Request an on-demand synchronization of the directory.
      *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->synchronizations->create(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to trigger synchronization for
      * @param ?array{
      *   baseUrl?: string,

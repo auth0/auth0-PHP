@@ -17,6 +17,22 @@ interface ClientGrantsClientInterface
     /**
      * Retrieve a list of [client grants](https://auth0.com/docs/get-started/applications/application-access-to-apis-client-grants), including the scopes associated with the application/API pair.
      *
+     * Example:
+     * ```php
+     * $client->clientGrants->list(
+     *     new ListClientGrantsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'audience' => 'audience',
+     *         'clientId' => 'client_id',
+     *         'allowAnyOrganization' => true,
+     *         'subjectType' => ClientGrantSubjectTypeEnum::Client->value,
+     *         'defaultFor' => ClientGrantDefaultForEnum::ThirdPartyClients->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListClientGrantsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -32,6 +48,15 @@ interface ClientGrantsClientInterface
 
     /**
      * Create a client grant for a machine-to-machine login flow. To learn more, read [Client Credential Flow](https://www.auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow).
+     *
+     * Example:
+     * ```php
+     * $client->clientGrants->create(
+     *     new CreateClientGrantRequestContent([
+     *         'audience' => 'audience',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateClientGrantRequestContent $request
      * @param ?array{
@@ -50,6 +75,13 @@ interface ClientGrantsClientInterface
      * Retrieve a single [client grant](https://auth0.com/docs/get-started/applications/application-access-to-apis-client-grants), including the
      * scopes associated with the application/API pair.
      *
+     * Example:
+     * ```php
+     * $client->clientGrants->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the client grant to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -66,6 +98,13 @@ interface ClientGrantsClientInterface
     /**
      * Delete the [Client Credential Flow](https://www.auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow) from your machine-to-machine application.
      *
+     * Example:
+     * ```php
+     * $client->clientGrants->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the client grant to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -80,6 +119,14 @@ interface ClientGrantsClientInterface
 
     /**
      * Update a client grant.
+     *
+     * Example:
+     * ```php
+     * $client->clientGrants->update(
+     *     'id',
+     *     new UpdateClientGrantRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the client grant to update.
      * @param UpdateClientGrantRequestContent $request

@@ -56,6 +56,17 @@ class ConnectedAccountsClient implements ConnectedAccountsClientInterface
     /**
      * Retrieve all connected accounts associated with the user.
      *
+     * Example:
+     * ```php
+     * $client->users->connectedAccounts->list(
+     *     'id',
+     *     new GetUserConnectedAccountsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to list connected accounts for.
      * @param GetUserConnectedAccountsRequestParameters $request
      * @param ?array{
@@ -114,7 +125,7 @@ class ConnectedAccountsClient implements ConnectedAccountsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/connected-accounts",
+                    path: "users/" . RawClient::encodePathParam($id) . "/connected-accounts",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

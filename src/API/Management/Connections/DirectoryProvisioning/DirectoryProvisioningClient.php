@@ -26,7 +26,9 @@ use Auth0\SDK\API\Management\Types\GetDirectoryProvisioningDefaultMappingRespons
 use Auth0\SDK\API\Management\Connections\DirectoryProvisioning\Requests\ListSynchronizedGroupsRequestParameters;
 use Auth0\SDK\API\Management\Types\SynchronizedGroupPayload;
 use Auth0\SDK\API\Management\Types\ListSynchronizedGroupsResponseContent;
+use Auth0\SDK\API\Management\Connections\DirectoryProvisioning\Requests\AddSynchronizedGroupsRequestContent;
 use Auth0\SDK\API\Management\Connections\DirectoryProvisioning\Requests\ReplaceSynchronizedGroupsRequestContent;
+use Auth0\SDK\API\Management\Connections\DirectoryProvisioning\Requests\DeleteSynchronizedGroupsRequestContent;
 use Auth0\SDK\API\Management\Connections\DirectoryProvisioning\Synchronizations\SynchronizationsClientInterface;
 
 class DirectoryProvisioningClient implements DirectoryProvisioningClientInterface
@@ -74,6 +76,16 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
     /**
      * Retrieve a list of directory provisioning configurations of a tenant.
      *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->list(
+     *     new ListDirectoryProvisioningsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListDirectoryProvisioningsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -103,6 +115,13 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
     /**
      * Retrieve the directory provisioning configuration of a connection.
      *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to retrieve its directory provisioning configuration
      * @param ?array{
      *   baseUrl?: string,
@@ -123,7 +142,7 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/directory-provisioning",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning",
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -151,6 +170,14 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
     /**
      * Create a directory provisioning configuration for a connection.
      *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->create(
+     *     'id',
+     *     new CreateDirectoryProvisioningRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to create its directory provisioning configuration
      * @param ?CreateDirectoryProvisioningRequestContent $request
      * @param ?array{
@@ -172,7 +199,7 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/directory-provisioning",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -201,6 +228,13 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
     /**
      * Delete the directory provisioning configuration of a connection.
      *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to delete its directory provisioning configuration
      * @param ?array{
      *   baseUrl?: string,
@@ -220,7 +254,7 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/directory-provisioning",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning",
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -241,6 +275,14 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
 
     /**
      * Update the directory provisioning configuration of a connection.
+     *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->update(
+     *     'id',
+     *     new UpdateDirectoryProvisioningRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The id of the connection to create its directory provisioning configuration
      * @param ?UpdateDirectoryProvisioningRequestContent $request
@@ -263,7 +305,7 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/directory-provisioning",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning",
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -292,6 +334,13 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
     /**
      * Retrieve the directory provisioning default attribute mapping of a connection.
      *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->getDefaultMapping(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to retrieve its directory provisioning configuration
      * @param ?array{
      *   baseUrl?: string,
@@ -312,7 +361,7 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/directory-provisioning/default-mapping",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning/default-mapping",
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -339,6 +388,18 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
 
     /**
      * Retrieve the configured synchronized groups for a connection directory provisioning configuration.
+     *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->listSynchronizedGroups(
+     *     'id',
+     *     new ListSynchronizedGroupsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'q' => 'q',
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The id of the connection to list synchronized groups for.
      * @param ListSynchronizedGroupsRequestParameters $request
@@ -368,7 +429,78 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
     }
 
     /**
+     * Add synchronized group selections to a directory provisioning configuration.
+     *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->addSynchronizedGroupSelections(
+     *     'id',
+     *     new AddSynchronizedGroupsRequestContent([
+     *         'groups' => [
+     *             new SynchronizedGroupPayload([
+     *                 'id' => 'id',
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
+     * @param string $id The id of the connection to add synchronized groups to
+     * @param AddSynchronizedGroupsRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    public function addSynchronizedGroupSelections(string $id, AddSynchronizedGroupsRequestContent $request, ?array $options = null): void
+    {
+        $options = array_merge($this->options, $options ?? []);
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning/synchronized-groups",
+                    method: HttpMethod::POST,
+                    body: $request,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                return;
+            }
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
      * Create or replace the selected groups for a connection directory provisioning configuration.
+     *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->set(
+     *     'id',
+     *     new ReplaceSynchronizedGroupsRequestContent([
+     *         'groups' => [
+     *             new SynchronizedGroupPayload([
+     *                 'id' => 'id',
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The id of the connection to create or replace synchronized groups for
      * @param ReplaceSynchronizedGroupsRequestContent $request
@@ -390,8 +522,65 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/directory-provisioning/synchronized-groups",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning/synchronized-groups",
                     method: HttpMethod::PUT,
+                    body: $request,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                return;
+            }
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Delete synchronized group selections for a directory provisioning configuration
+     *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->deleteSynchronizedGroupSelections(
+     *     'id',
+     *     new DeleteSynchronizedGroupsRequestContent([
+     *         'groups' => [
+     *             new SynchronizedGroupSelectionId([
+     *                 'id' => 'id',
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
+     * @param string $id The id of the connection to delete synchronized group selections for
+     * @param DeleteSynchronizedGroupsRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    public function deleteSynchronizedGroupSelections(string $id, DeleteSynchronizedGroupsRequestContent $request, ?array $options = null): void
+    {
+        $options = array_merge($this->options, $options ?? []);
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning/synchronized-groups",
+                    method: HttpMethod::DELETE,
                     body: $request,
                 ),
                 $options,
@@ -501,11 +690,14 @@ class DirectoryProvisioningClient implements DirectoryProvisioningClientInterfac
         if ($request->getTake() != null) {
             $query['take'] = $request->getTake();
         }
+        if ($request->getQ() != null) {
+            $query['q'] = $request->getQ();
+        }
         try {
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/directory-provisioning/synchronized-groups",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning/synchronized-groups",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

@@ -51,6 +51,19 @@ class RiskAssessmentsClient implements RiskAssessmentsClientInterface
     /**
      * Clear risk assessment assessors for a specific user
      *
+     * Example:
+     * ```php
+     * $client->users->riskAssessments->clear(
+     *     'id',
+     *     new ClearAssessorsRequestContent([
+     *         'connection' => 'connection',
+     *         'assessors' => [
+     *             AssessorsTypeEnum::NewDevice->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to clear assessors for.
      * @param ClearAssessorsRequestContent $request
      * @param ?array{
@@ -71,7 +84,7 @@ class RiskAssessmentsClient implements RiskAssessmentsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/risk-assessments/clear",
+                    path: "users/" . RawClient::encodePathParam($id) . "/risk-assessments/clear",
                     method: HttpMethod::POST,
                     body: $request,
                 ),

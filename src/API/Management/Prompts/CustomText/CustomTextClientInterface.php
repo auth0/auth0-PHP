@@ -10,6 +10,14 @@ interface CustomTextClientInterface
     /**
      * Retrieve custom text for a specific prompt and language.
      *
+     * Example:
+     * ```php
+     * $client->prompts->customText->get(
+     *     PromptGroupNameEnum::Login->value,
+     *     PromptLanguageEnum::Am->value,
+     * );
+     * ```
+     *
      * @param value-of<PromptGroupNameEnum> $prompt Name of the prompt.
      * @param value-of<PromptLanguageEnum> $language Language to update.
      * @param ?array{
@@ -26,6 +34,17 @@ interface CustomTextClientInterface
 
     /**
      * Set custom text for a specific prompt. Existing texts will be overwritten.
+     *
+     * Example:
+     * ```php
+     * $client->prompts->customText->set(
+     *     PromptGroupNameEnum::Login->value,
+     *     PromptLanguageEnum::Am->value,
+     *     [
+     *         'key' => "value",
+     *     ],
+     * );
+     * ```
      *
      * @param value-of<PromptGroupNameEnum> $prompt Name of the prompt.
      * @param value-of<PromptLanguageEnum> $language Language to update.

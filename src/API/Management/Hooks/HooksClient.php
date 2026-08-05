@@ -70,6 +70,20 @@ class HooksClient implements HooksClientInterface
     /**
      * Retrieve all [hooks](https://auth0.com/docs/hooks). Accepts a list of fields to include or exclude in the result.
      *
+     * Example:
+     * ```php
+     * $client->hooks->list(
+     *     new ListHooksRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'enabled' => true,
+     *         'fields' => 'fields',
+     *         'triggerId' => HookTriggerIdEnum::CredentialsExchange->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListHooksRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -101,6 +115,17 @@ class HooksClient implements HooksClientInterface
 
     /**
      * Create a new hook.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->create(
+     *     new CreateHookRequestContent([
+     *         'name' => 'name',
+     *         'script' => 'script',
+     *         'triggerId' => HookTriggerIdEnum::CredentialsExchange->value,
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateHookRequestContent $request
      * @param ?array{
@@ -151,6 +176,16 @@ class HooksClient implements HooksClientInterface
     /**
      * Retrieve [a hook](https://auth0.com/docs/hooks) by its ID. Accepts a list of fields to include in the result.
      *
+     * Example:
+     * ```php
+     * $client->hooks->get(
+     *     'id',
+     *     new GetHookRequestParameters([
+     *         'fields' => 'fields',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the hook to retrieve.
      * @param GetHookRequestParameters $request
      * @param ?array{
@@ -176,7 +211,7 @@ class HooksClient implements HooksClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "hooks/{$id}",
+                    path: "hooks/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                     query: $query,
                 ),
@@ -205,6 +240,13 @@ class HooksClient implements HooksClientInterface
     /**
      * Delete a hook.
      *
+     * Example:
+     * ```php
+     * $client->hooks->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the hook to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -224,7 +266,7 @@ class HooksClient implements HooksClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "hooks/{$id}",
+                    path: "hooks/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -245,6 +287,14 @@ class HooksClient implements HooksClientInterface
 
     /**
      * Update an existing hook.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->update(
+     *     'id',
+     *     new UpdateHookRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the hook to update.
      * @param UpdateHookRequestContent $request
@@ -267,7 +317,7 @@ class HooksClient implements HooksClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "hooks/{$id}",
+                    path: "hooks/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

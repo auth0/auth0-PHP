@@ -62,6 +62,17 @@ class EncryptionClient implements EncryptionClientInterface
     /**
      * Retrieve details of all the encryption keys associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->list(
+     *     new ListEncryptionKeysRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListEncryptionKeysRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -93,6 +104,15 @@ class EncryptionClient implements EncryptionClientInterface
 
     /**
      * Create the new, pre-activated encryption key, without the key material.
+     *
+     * Example:
+     * ```php
+     * $client->keys->encryption->create(
+     *     new CreateEncryptionKeyRequestContent([
+     *         'type' => CreateEncryptionKeyType::CustomerProvidedRootKey->value,
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateEncryptionKeyRequestContent $request
      * @param ?array{
@@ -143,6 +163,11 @@ class EncryptionClient implements EncryptionClientInterface
     /**
      * Perform rekeying operation on the key hierarchy.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->rekey();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -183,6 +208,13 @@ class EncryptionClient implements EncryptionClientInterface
     /**
      * Retrieve details of the encryption key with the given ID.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->get(
+     *     'kid',
+     * );
+     * ```
+     *
      * @param string $kid Encryption key ID
      * @param ?array{
      *   baseUrl?: string,
@@ -203,7 +235,7 @@ class EncryptionClient implements EncryptionClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "keys/encryption/{$kid}",
+                    path: "keys/encryption/" . RawClient::encodePathParam($kid),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -231,6 +263,16 @@ class EncryptionClient implements EncryptionClientInterface
     /**
      * Import wrapped key material and activate encryption key.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->import(
+     *     'kid',
+     *     new ImportEncryptionKeyRequestContent([
+     *         'wrappedKey' => 'wrapped_key',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $kid Encryption key ID
      * @param ImportEncryptionKeyRequestContent $request
      * @param ?array{
@@ -252,7 +294,7 @@ class EncryptionClient implements EncryptionClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "keys/encryption/{$kid}",
+                    path: "keys/encryption/" . RawClient::encodePathParam($kid),
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -281,6 +323,13 @@ class EncryptionClient implements EncryptionClientInterface
     /**
      * Delete the custom provided encryption key with the given ID and move back to using native encryption key.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->delete(
+     *     'kid',
+     * );
+     * ```
+     *
      * @param string $kid Encryption key ID
      * @param ?array{
      *   baseUrl?: string,
@@ -300,7 +349,7 @@ class EncryptionClient implements EncryptionClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "keys/encryption/{$kid}",
+                    path: "keys/encryption/" . RawClient::encodePathParam($kid),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -322,6 +371,13 @@ class EncryptionClient implements EncryptionClientInterface
     /**
      * Create the public wrapping key to wrap your own encryption key material.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->createPublicWrappingKey(
+     *     'kid',
+     * );
+     * ```
+     *
      * @param string $kid Encryption key ID
      * @param ?array{
      *   baseUrl?: string,
@@ -342,7 +398,7 @@ class EncryptionClient implements EncryptionClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "keys/encryption/{$kid}/wrapping-key",
+                    path: "keys/encryption/" . RawClient::encodePathParam($kid) . "/wrapping-key",
                     method: HttpMethod::POST,
                 ),
                 $options,

@@ -55,6 +55,14 @@ class CustomTextClient implements CustomTextClientInterface
     /**
      * Retrieve custom text for a specific prompt and language.
      *
+     * Example:
+     * ```php
+     * $client->prompts->customText->get(
+     *     PromptGroupNameEnum::Login->value,
+     *     PromptLanguageEnum::Am->value,
+     * );
+     * ```
+     *
      * @param value-of<PromptGroupNameEnum> $prompt Name of the prompt.
      * @param value-of<PromptLanguageEnum> $language Language to update.
      * @param ?array{
@@ -76,7 +84,7 @@ class CustomTextClient implements CustomTextClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "prompts/{$prompt}/custom-text/{$language}",
+                    path: "prompts/" . RawClient::encodePathParam($prompt) . "/custom-text/" . RawClient::encodePathParam($language),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -104,6 +112,17 @@ class CustomTextClient implements CustomTextClientInterface
     /**
      * Set custom text for a specific prompt. Existing texts will be overwritten.
      *
+     * Example:
+     * ```php
+     * $client->prompts->customText->set(
+     *     PromptGroupNameEnum::Login->value,
+     *     PromptLanguageEnum::Am->value,
+     *     [
+     *         'key' => "value",
+     *     ],
+     * );
+     * ```
+     *
      * @param value-of<PromptGroupNameEnum> $prompt Name of the prompt.
      * @param value-of<PromptLanguageEnum> $language Language to update.
      * @param array<string, mixed> $request
@@ -125,7 +144,7 @@ class CustomTextClient implements CustomTextClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "prompts/{$prompt}/custom-text/{$language}",
+                    path: "prompts/" . RawClient::encodePathParam($prompt) . "/custom-text/" . RawClient::encodePathParam($language),
                     method: HttpMethod::PUT,
                     body: JsonSerializer::serializeArray($request, ['string' => 'mixed']),
                 ),

@@ -55,6 +55,16 @@ class SettingsClient implements SettingsClientInterface
     /**
      * Retrieve tenant settings. A list of fields to include or exclude may also be specified.
      *
+     * Example:
+     * ```php
+     * $client->tenants->settings->get(
+     *     new GetTenantSettingsRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param GetTenantSettingsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -110,6 +120,13 @@ class SettingsClient implements SettingsClientInterface
 
     /**
      * Update settings for a tenant.
+     *
+     * Example:
+     * ```php
+     * $client->tenants->settings->update(
+     *     new UpdateTenantSettingsRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateTenantSettingsRequestContent $request
      * @param ?array{

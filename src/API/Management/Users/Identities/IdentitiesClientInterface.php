@@ -40,6 +40,14 @@ interface IdentitiesClientInterface
      *
      *   In this case you need to send `provider` and `user_id` in the body. Optionally you can also send the `connection_id` param which is suitable for identifying a particular database connection for the 'auth0' provider.
      *
+     * Example:
+     * ```php
+     * $client->users->identities->link(
+     *     'id',
+     *     new LinkUserIdentityRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id ID of the primary user account to link a second user account to.
      * @param LinkUserIdentityRequestContent $request
      * @param ?array{
@@ -58,6 +66,15 @@ interface IdentitiesClientInterface
      * Unlink a specific secondary account from a target user. This action requires the ID of both the target user and the secondary account.
      *
      * Unlinking the secondary account removes it from the identities array of the target user and creates a new standalone profile for the secondary account. To learn more, review [Unlink User Accounts](https://auth0.com/docs/manage-users/user-accounts/user-account-linking/unlink-user-accounts).
+     *
+     * Example:
+     * ```php
+     * $client->users->identities->delete(
+     *     'id',
+     *     UserIdentityProviderEnum::Ad->value,
+     *     'user_id',
+     * );
+     * ```
      *
      * @param string $id ID of the primary user account.
      * @param value-of<UserIdentityProviderEnum> $provider Identity provider name of the secondary linked account (e.g. `google-oauth2`).

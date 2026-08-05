@@ -9,6 +9,18 @@ use Auth0\SDK\API\Management\Types\Organization;
 interface OrganizationsClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->clientGrants->organizations->list(
+     *     'id',
+     *     new ListClientGrantOrganizationsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the client grant
      * @param ListClientGrantOrganizationsRequestParameters $request
      * @param ?array{

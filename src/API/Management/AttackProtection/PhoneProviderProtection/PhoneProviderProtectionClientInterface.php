@@ -11,6 +11,11 @@ interface PhoneProviderProtectionClientInterface
     /**
      * Get the phone provider protection configuration for a tenant.
      *
+     * Example:
+     * ```php
+     * $client->attackProtection->phoneProviderProtection->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -25,6 +30,15 @@ interface PhoneProviderProtectionClientInterface
 
     /**
      * Update the phone provider protection configuration for a tenant.
+     *
+     * Example:
+     * ```php
+     * $client->attackProtection->phoneProviderProtection->patch(
+     *     new PatchPhoneProviderProtectionRequestContent([
+     *         'type' => PhoneProviderProtectionBackoffStrategyEnum::Exponential->value,
+     *     ]),
+     * );
+     * ```
      *
      * @param PatchPhoneProviderProtectionRequestContent $request
      * @param ?array{

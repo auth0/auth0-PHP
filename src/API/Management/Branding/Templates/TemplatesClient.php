@@ -54,6 +54,11 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->templates->getUniversalLogin();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -127,6 +132,13 @@ class TemplatesClient implements TemplatesClientInterface
      * </html>
      * ```
      *
+     * Example:
+     * ```php
+     * $client->branding->templates->updateUniversalLogin(
+     *     'string',
+     * );
+     * ```
+     *
      * @param (
      *    string
      *   |UpdateUniversalLoginTemplateRequestContentTemplate
@@ -170,6 +182,11 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->templates->deleteUniversalLogin();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,

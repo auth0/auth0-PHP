@@ -56,6 +56,19 @@ class GroupsClient implements GroupsClientInterface
     /**
      * Lists the groups which grant the org member a given role.
      *
+     * Example:
+     * ```php
+     * $client->organizations->members->effectiveRoles->sources->groups->list(
+     *     'id',
+     *     'user_id',
+     *     new ListOrganizationMemberRoleSourceGroupsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'roleId' => 'role_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $userId ID of the user to list role source groups for.
      * @param ListOrganizationMemberRoleSourceGroupsRequestParameters $request
@@ -117,7 +130,7 @@ class GroupsClient implements GroupsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/members/{$userId}/effective-roles/sources/groups",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/members/" . RawClient::encodePathParam($userId) . "/effective-roles/sources/groups",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

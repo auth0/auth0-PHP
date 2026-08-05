@@ -11,6 +11,11 @@ interface BruteForceProtectionClientInterface
     /**
      * Retrieve details of the Brute-force Protection configuration of your tenant.
      *
+     * Example:
+     * ```php
+     * $client->attackProtection->bruteForceProtection->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -25,6 +30,13 @@ interface BruteForceProtectionClientInterface
 
     /**
      * Update the Brute-force Protection configuration of your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->attackProtection->bruteForceProtection->update(
+     *     new UpdateBruteForceSettingsRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateBruteForceSettingsRequestContent $request
      * @param ?array{

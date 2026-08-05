@@ -8,6 +8,11 @@ use Auth0\SDK\API\Management\Types\ConnectionStrategyEnum;
 class ListConnectionsQueryParameters extends JsonSerializableType
 {
     /**
+     * @var ?bool $includeTotals true if a query summary must be included in the result, false otherwise. Not returned when using checkpoint pagination. Default <code>false</code>.
+     */
+    private ?bool $includeTotals = true;
+
+    /**
      * @var ?string $from Optional Id from which to start selection.
      */
     private ?string $from;
@@ -39,6 +44,7 @@ class ListConnectionsQueryParameters extends JsonSerializableType
 
     /**
      * @param array{
+     *   includeTotals?: ?bool,
      *   from?: ?string,
      *   take?: ?int,
      *   strategy?: ?array<?value-of<ConnectionStrategyEnum>>,
@@ -50,12 +56,31 @@ class ListConnectionsQueryParameters extends JsonSerializableType
     public function __construct(
         array $values = [],
     ) {
+        $this->includeTotals = $values['includeTotals'] ?? null;
         $this->from = $values['from'] ?? null;
         $this->take = $values['take'] ?? null;
         $this->strategy = $values['strategy'] ?? null;
         $this->name = $values['name'] ?? null;
         $this->fields = $values['fields'] ?? null;
         $this->includeFields = $values['includeFields'] ?? null;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIncludeTotals(): ?bool
+    {
+        return $this->includeTotals;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIncludeTotals(?bool $value = null): self
+    {
+        $this->includeTotals = $value;
+        $this->_setField('includeTotals');
+        return $this;
     }
 
     /**

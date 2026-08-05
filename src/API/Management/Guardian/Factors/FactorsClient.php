@@ -88,6 +88,11 @@ class FactorsClient implements FactorsClientInterface
     /**
      * Retrieve details of all <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors">multi-factor authentication factors</a> associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -135,6 +140,16 @@ class FactorsClient implements FactorsClientInterface
     /**
      * Update the status (i.e., enabled or disabled) of a specific multi-factor authentication factor.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->set(
+     *     GuardianFactorNameEnum::PushNotification->value,
+     *     new SetGuardianFactorRequestContent([
+     *         'enabled' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param value-of<GuardianFactorNameEnum> $name Factor name. Can be `sms`, `push-notification`, `email`, `duo` `otp` `webauthn-roaming`, `webauthn-platform`, or `recovery-code`.
      * @param SetGuardianFactorRequestContent $request
      * @param ?array{
@@ -156,7 +171,7 @@ class FactorsClient implements FactorsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "guardian/factors/{$name}",
+                    path: "guardian/factors/" . RawClient::encodePathParam($name),
                     method: HttpMethod::PUT,
                     body: $request,
                 ),

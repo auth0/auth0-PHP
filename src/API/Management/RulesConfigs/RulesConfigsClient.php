@@ -57,6 +57,11 @@ class RulesConfigsClient implements RulesConfigsClientInterface
      *
      *     Note: For security, config variable values cannot be retrieved outside rule execution.
      *
+     * Example:
+     * ```php
+     * $client->rulesConfigs->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -104,6 +109,16 @@ class RulesConfigsClient implements RulesConfigsClientInterface
     /**
      * Sets a rules config variable.
      *
+     * Example:
+     * ```php
+     * $client->rulesConfigs->set(
+     *     'key',
+     *     new SetRulesConfigRequestContent([
+     *         'value' => 'value',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $key Key of the rules config variable to set (max length: 127 characters).
      * @param SetRulesConfigRequestContent $request
      * @param ?array{
@@ -125,7 +140,7 @@ class RulesConfigsClient implements RulesConfigsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "rules-configs/{$key}",
+                    path: "rules-configs/" . RawClient::encodePathParam($key),
                     method: HttpMethod::PUT,
                     body: $request,
                 ),
@@ -154,6 +169,13 @@ class RulesConfigsClient implements RulesConfigsClientInterface
     /**
      * Delete a rules config variable identified by its key.
      *
+     * Example:
+     * ```php
+     * $client->rulesConfigs->delete(
+     *     'key',
+     * );
+     * ```
+     *
      * @param string $key Key of the rules config variable to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -173,7 +195,7 @@ class RulesConfigsClient implements RulesConfigsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "rules-configs/{$key}",
+                    path: "rules-configs/" . RawClient::encodePathParam($key),
                     method: HttpMethod::DELETE,
                 ),
                 $options,

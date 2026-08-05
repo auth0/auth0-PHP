@@ -19,6 +19,16 @@ use Auth0\SDK\API\Management\EventStreams\Redeliveries\RedeliveriesClientInterfa
 interface EventStreamsClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->list(
+     *     new ListEventStreamsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListEventStreamsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -37,6 +47,24 @@ interface EventStreamsClientInterface
     public function list(ListEventStreamsRequestParameters $request = new ListEventStreamsRequestParameters(), ?array $options = null): Pager;
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->create(
+     *     new CreateEventStreamWebHookRequestContent([
+     *         'destination' => new EventStreamWebhookDestination([
+     *             'type' => EventStreamWebhookDestinationTypeEnum::Webhook->value,
+     *             'configuration' => new EventStreamWebhookConfiguration([
+     *                 'webhookEndpoint' => 'webhook_endpoint',
+     *                 'webhookAuthorization' => new EventStreamWebhookBasicAuth([
+     *                     'method' => EventStreamWebhookBasicAuthMethodEnum::Basic->value,
+     *                     'username' => 'username',
+     *                 ]),
+     *             ]),
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param (
      *    CreateEventStreamWebHookRequestContent
      *   |CreateEventStreamEventBridgeRequestContent
@@ -59,6 +87,13 @@ interface EventStreamsClientInterface
     public function create(CreateEventStreamWebHookRequestContent|CreateEventStreamEventBridgeRequestContent|CreateEventStreamActionRequestContent $request, ?array $options = null): EventStreamWebhookResponseContent|EventStreamEventBridgeResponseContent|EventStreamActionResponseContent|null;
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param ?array{
      *   baseUrl?: string,
@@ -77,6 +112,13 @@ interface EventStreamsClientInterface
     public function get(string $id, ?array $options = null): EventStreamWebhookResponseContent|EventStreamEventBridgeResponseContent|EventStreamActionResponseContent|null;
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param ?array{
      *   baseUrl?: string,
@@ -90,6 +132,14 @@ interface EventStreamsClientInterface
     public function delete(string $id, ?array $options = null): void;
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->update(
+     *     'id',
+     *     new UpdateEventStreamRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param UpdateEventStreamRequestContent $request
      * @param ?array{
@@ -109,6 +159,16 @@ interface EventStreamsClientInterface
     public function update(string $id, UpdateEventStreamRequestContent $request = new UpdateEventStreamRequestContent(), ?array $options = null): EventStreamWebhookResponseContent|EventStreamEventBridgeResponseContent|EventStreamActionResponseContent|null;
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->test(
+     *     'id',
+     *     new CreateEventStreamTestEventRequestContent([
+     *         'eventType' => EventStreamTestEventTypeEnum::ConnectionCreated->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param CreateEventStreamTestEventRequestContent $request
      * @param ?array{

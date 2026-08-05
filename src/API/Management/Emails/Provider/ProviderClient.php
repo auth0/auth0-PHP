@@ -57,6 +57,16 @@ class ProviderClient implements ProviderClientInterface
     /**
      * Retrieve details of the [email provider configuration](https://auth0.com/docs/customize/email/smtp-email-providers) in your tenant. A list of fields to include or exclude may also be specified.
      *
+     * Example:
+     * ```php
+     * $client->emails->provider->get(
+     *     new GetEmailProviderRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param GetEmailProviderRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -137,6 +147,18 @@ class ProviderClient implements ProviderClientInterface
      * - For `ses` provider, `settings` may contain `message` object, where you can provide
      *   a name of configuration set in `configuration_set_name` property. Value must be a string.
      *
+     * Example:
+     * ```php
+     * $client->emails->provider->create(
+     *     new CreateEmailProviderRequestContent([
+     *         'name' => EmailProviderNameEnum::Mailgun->value,
+     *         'credentials' => new EmailProviderCredentialsSchemaZero([
+     *             'apiKey' => 'api_key',
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateEmailProviderRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -185,6 +207,11 @@ class ProviderClient implements ProviderClientInterface
 
     /**
      * Delete the email provider.
+     *
+     * Example:
+     * ```php
+     * $client->emails->provider->delete();
+     * ```
      *
      * @param ?array{
      *   baseUrl?: string,
@@ -250,6 +277,13 @@ class ProviderClient implements ProviderClientInterface
      *
      *   For `ses` provider, `settings` may contain `message` object, where you can provide
      *   a name of configuration set in `configuration_set_name` property. Value must be a string.
+     *
+     * Example:
+     * ```php
+     * $client->emails->provider->update(
+     *     new UpdateEmailProviderRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateEmailProviderRequestContent $request
      * @param ?array{

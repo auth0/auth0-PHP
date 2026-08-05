@@ -56,6 +56,23 @@ class ClientGrantsClient implements ClientGrantsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->clientGrants->list(
+     *     'id',
+     *     new ListOrganizationClientGrantsRequestParameters([
+     *         'audience' => 'audience',
+     *         'clientId' => 'client_id',
+     *         'grantIds' => [
+     *             'grant_ids',
+     *         ],
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ListOrganizationClientGrantsRequestParameters $request
      * @param ?array{
@@ -87,6 +104,16 @@ class ClientGrantsClient implements ClientGrantsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->clientGrants->create(
+     *     'id',
+     *     new AssociateOrganizationClientGrantRequestContent([
+     *         'grantId' => 'grant_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param AssociateOrganizationClientGrantRequestContent $request
      * @param ?array{
@@ -108,7 +135,7 @@ class ClientGrantsClient implements ClientGrantsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/client-grants",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/client-grants",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -135,6 +162,14 @@ class ClientGrantsClient implements ClientGrantsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->clientGrants->delete(
+     *     'id',
+     *     'grant_id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $grantId The Client Grant ID to remove from the organization
      * @param ?array{
@@ -155,7 +190,7 @@ class ClientGrantsClient implements ClientGrantsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/client-grants/{$grantId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/client-grants/" . RawClient::encodePathParam($grantId),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -215,7 +250,7 @@ class ClientGrantsClient implements ClientGrantsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/client-grants",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/client-grants",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

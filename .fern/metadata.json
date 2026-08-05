@@ -1,7 +1,7 @@
 {
   "cliVersion": "5.75.6",
   "generatorName": "fernapi/fern-php-sdk",
-  "generatorVersion": "2.10.4",
+  "generatorVersion": "2.18.0",
   "generatorConfig": {
     "clientName": "Management",
     "namespace": "Auth0\\SDK\\API\\Management",
@@ -12,6 +12,7 @@
     "useDefaultRequestParameterValues": true,
     "generateClientInterfaces": true,
     "offsetSemantics": "page-index",
+    "encode-path-params": true,
     "composerJson": {
       "name": "auth0/auth0-php",
       "description": "PHP SDK for Auth0 Authentication and Management APIs.",
@@ -114,10 +115,9 @@
       }
     }
   },
-  "originGitCommit": "e2027b1584b1668f39ed802f114e54458b09bb57",
-  "originGitCommitIsDirty": false,
-  "invokedBy": "ci",
-  "requestedVersion": "9.0.0-beta.4",
-  "ciProvider": "github",
-  "sdkVersion": "9.0.0-beta.4"
+  "originGitCommit": "a126f0dfd2b3fbaad47118355f12354a93d74ab1",
+  "originGitCommitIsDirty": true,
+  "invokedBy": "manual",
+  "requestedVersion": "9.0.0-beta.5",
+  "sdkVersion": "9.0.0-beta.5"
 }

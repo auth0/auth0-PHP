@@ -58,6 +58,17 @@ class RolesClient implements RolesClientInterface
     /**
      * Lists the [roles](https://auth0.com/docs/manage-users/access-control/rbac) assigned to a group.
      *
+     * Example:
+     * ```php
+     * $client->groups->roles->list(
+     *     'id',
+     *     new ListGroupRolesRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param ListGroupRolesRequestParameters $request
      * @param ?array{
@@ -88,6 +99,18 @@ class RolesClient implements RolesClientInterface
     /**
      * Assign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) to a specified group.
      *
+     * Example:
+     * ```php
+     * $client->groups->roles->create(
+     *     'id',
+     *     new CreateGroupRolesRequestParameters([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param CreateGroupRolesRequestParameters $request
      * @param ?array{
@@ -108,7 +131,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "groups/{$id}/roles",
+                    path: "groups/" . RawClient::encodePathParam($id) . "/roles",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -131,6 +154,18 @@ class RolesClient implements RolesClientInterface
     /**
      * Unassign one or more [roles](https://auth0.com/docs/manage-users/access-control/rbac) from a specified group.
      *
+     * Example:
+     * ```php
+     * $client->groups->roles->delete(
+     *     'id',
+     *     new DeleteGroupRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param DeleteGroupRolesRequestContent $request
      * @param ?array{
@@ -151,7 +186,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "groups/{$id}/roles",
+                    path: "groups/" . RawClient::encodePathParam($id) . "/roles",
                     method: HttpMethod::DELETE,
                     body: $request,
                 ),
@@ -202,7 +237,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "groups/{$id}/roles",
+                    path: "groups/" . RawClient::encodePathParam($id) . "/roles",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

@@ -10,6 +10,13 @@ interface ErrorsClientInterface
     /**
      * Retrieve error details of a failed job.
      *
+     * Example:
+     * ```php
+     * $client->jobs->errors->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the job.
      * @param ?array{
      *   baseUrl?: string,

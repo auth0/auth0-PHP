@@ -63,6 +63,16 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
     /**
      * Retrieve a list of User Attribute Profiles. This endpoint supports Checkpoint pagination.
      *
+     * Example:
+     * ```php
+     * $client->userAttributeProfiles->list(
+     *     new ListUserAttributeProfileRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListUserAttributeProfileRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -91,6 +101,23 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
 
     /**
      * Create a User Attribute Profile.
+     *
+     * Example:
+     * ```php
+     * $client->userAttributeProfiles->create(
+     *     new CreateUserAttributeProfileRequestContent([
+     *         'name' => 'name',
+     *         'userAttributes' => [
+     *             'key' => new UserAttributeProfileUserAttributeAdditionalProperties([
+     *                 'description' => 'description',
+     *                 'label' => 'label',
+     *                 'profileRequired' => true,
+     *                 'auth0Mapping' => 'auth0_mapping',
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateUserAttributeProfileRequestContent $request
      * @param ?array{
@@ -141,6 +168,11 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
     /**
      * Retrieve a list of User Attribute Profile Templates.
      *
+     * Example:
+     * ```php
+     * $client->userAttributeProfiles->listTemplates();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -188,6 +220,13 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
     /**
      * Retrieve a User Attribute Profile Template.
      *
+     * Example:
+     * ```php
+     * $client->userAttributeProfiles->getTemplate(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the user-attribute-profile-template to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -208,7 +247,7 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "user-attribute-profiles/templates/{$id}",
+                    path: "user-attribute-profiles/templates/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -236,6 +275,13 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
     /**
      * Retrieve details about a single User Attribute Profile specified by ID.
      *
+     * Example:
+     * ```php
+     * $client->userAttributeProfiles->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the user-attribute-profile to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -256,7 +302,7 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "user-attribute-profiles/{$id}",
+                    path: "user-attribute-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -284,6 +330,13 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
     /**
      * Delete a single User Attribute Profile specified by ID.
      *
+     * Example:
+     * ```php
+     * $client->userAttributeProfiles->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the user-attribute-profile to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -303,7 +356,7 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "user-attribute-profiles/{$id}",
+                    path: "user-attribute-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -324,6 +377,14 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
 
     /**
      * Update the details of a specific User attribute profile, such as name, user_id and user_attributes.
+     *
+     * Example:
+     * ```php
+     * $client->userAttributeProfiles->update(
+     *     'id',
+     *     new UpdateUserAttributeProfileRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the user attribute profile to update.
      * @param UpdateUserAttributeProfileRequestContent $request
@@ -346,7 +407,7 @@ class UserAttributeProfilesClient implements UserAttributeProfilesClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "user-attribute-profiles/{$id}",
+                    path: "user-attribute-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

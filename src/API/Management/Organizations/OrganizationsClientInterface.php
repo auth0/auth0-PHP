@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\Types\GetOrganizationResponseContent;
 use Auth0\SDK\API\Management\Organizations\Requests\UpdateOrganizationRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateOrganizationResponseContent;
 use Auth0\SDK\API\Management\Organizations\ClientGrants\ClientGrantsClientInterface;
+use Auth0\SDK\API\Management\Organizations\Clients\ClientsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Connections\ConnectionsClientInterface;
 use Auth0\SDK\API\Management\Organizations\DiscoveryDomains\DiscoveryDomainsClientInterface;
 use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnectionsClientInterface;
@@ -41,6 +42,19 @@ interface OrganizationsClientInterface
      *
      * **Note**: The first time you call this endpoint using checkpoint pagination, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no pages are remaining.
      *
+     * Example:
+     * ```php
+     * $client->organizations->list(
+     *     new ListOrganizationsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'sort' => 'sort',
+     *         'includeClientAssociationFor' => 'include_client_association_for',
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListOrganizationsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -56,6 +70,15 @@ interface OrganizationsClientInterface
 
     /**
      * Create a new Organization within your tenant.  To learn more about Organization settings, behavior, and configuration options, review [Create Your First Organization](https://auth0.com/docs/manage-users/organizations/create-first-organization).
+     *
+     * Example:
+     * ```php
+     * $client->organizations->create(
+     *     new CreateOrganizationRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateOrganizationRequestContent $request
      * @param ?array{
@@ -73,6 +96,13 @@ interface OrganizationsClientInterface
     /**
      * Retrieve details about a single Organization specified by name.
      *
+     * Example:
+     * ```php
+     * $client->organizations->getByName(
+     *     'name',
+     * );
+     * ```
+     *
      * @param string $name name of the organization to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -88,6 +118,13 @@ interface OrganizationsClientInterface
 
     /**
      * Retrieve details about a single Organization specified by ID.
+     *
+     * Example:
+     * ```php
+     * $client->organizations->get(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the organization to retrieve.
      * @param ?array{
@@ -107,6 +144,13 @@ interface OrganizationsClientInterface
      *
      * **Note**: Members are automatically disassociated from an Organization when it is deleted. However, this action does **not** delete these users from your tenant.
      *
+     * Example:
+     * ```php
+     * $client->organizations->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ?array{
      *   baseUrl?: string,
@@ -121,6 +165,14 @@ interface OrganizationsClientInterface
 
     /**
      * Update the details of a specific [Organization](https://auth0.com/docs/manage-users/organizations/configure-organizations/create-organizations), such as name and display name, branding options, and metadata.
+     *
+     * Example:
+     * ```php
+     * $client->organizations->update(
+     *     'id',
+     *     new UpdateOrganizationRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the organization to update.
      * @param UpdateOrganizationRequestContent $request
@@ -140,6 +192,11 @@ interface OrganizationsClientInterface
      * @return ClientGrantsClientInterface
      */
     public function getClientGrants(): ClientGrantsClientInterface;
+
+    /**
+     * @return ClientsClientInterface
+     */
+    public function getClients(): ClientsClientInterface;
 
     /**
      * @return ConnectionsClientInterface

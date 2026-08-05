@@ -14,6 +14,23 @@ interface GroupsClientInterface
     /**
      * List all groups in your tenant.
      *
+     * Example:
+     * ```php
+     * $client->groups->list(
+     *     new ListGroupsRequestParameters([
+     *         'connectionId' => 'connection_id',
+     *         'name' => 'name',
+     *         'externalId' => 'external_id',
+     *         'search' => 'search',
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListGroupsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -30,6 +47,13 @@ interface GroupsClientInterface
     /**
      * Retrieve a group by its ID.
      *
+     * Example:
+     * ```php
+     * $client->groups->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param ?array{
      *   baseUrl?: string,
@@ -45,6 +69,13 @@ interface GroupsClientInterface
 
     /**
      * Delete a group by its ID.
+     *
+     * Example:
+     * ```php
+     * $client->groups->delete(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id Unique identifier for the group (service-generated).
      * @param ?array{

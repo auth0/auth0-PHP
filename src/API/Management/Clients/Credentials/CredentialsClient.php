@@ -60,6 +60,13 @@ class CredentialsClient implements CredentialsClientInterface
      *
      * **Important**: To enable credentials to be used for a client authentication method, set the `client_authentication_methods` property on the client. To enable credentials to be used for JWT-Secured Authorization requests set the `signed_request_object` property on the client.
      *
+     * Example:
+     * ```php
+     * $client->clients->credentials->list(
+     *     'client_id',
+     * );
+     * ```
+     *
      * @param string $clientId ID of the client.
      * @param ?array{
      *   baseUrl?: string,
@@ -80,7 +87,7 @@ class CredentialsClient implements CredentialsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$clientId}/credentials",
+                    path: "clients/" . RawClient::encodePathParam($clientId) . "/credentials",
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -164,6 +171,16 @@ class CredentialsClient implements CredentialsClientInterface
      * - To enable the credential for Private Key JWT or mTLS authentication methods, set the `client_authentication_methods` property on the client. For more information, read [Configure Private Key JWT Authentication](https://auth0.com/docs/get-started/applications/configure-private-key-jwt) and [Configure mTLS Authentication](https://auth0.com/docs/get-started/applications/configure-mtls)
      * - To enable the credential for JWT-secured Authorization requests, set the `signed_request_object`property on the client. For more information, read [Configure JWT-secured Authorization Requests (JAR)](https://auth0.com/docs/get-started/applications/configure-jar)
      *
+     * Example:
+     * ```php
+     * $client->clients->credentials->create(
+     *     'client_id',
+     *     new PostClientCredentialRequestContent([
+     *         'credentialType' => ClientCredentialTypeEnum::PublicKey->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $clientId ID of the client.
      * @param PostClientCredentialRequestContent $request
      * @param ?array{
@@ -185,7 +202,7 @@ class CredentialsClient implements CredentialsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$clientId}/credentials",
+                    path: "clients/" . RawClient::encodePathParam($clientId) . "/credentials",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -216,6 +233,14 @@ class CredentialsClient implements CredentialsClientInterface
      *
      * **Important**: To enable credentials to be used for a client authentication method, set the `client_authentication_methods` property on the client. To enable credentials to be used for JWT-Secured Authorization requests set the `signed_request_object` property on the client.
      *
+     * Example:
+     * ```php
+     * $client->clients->credentials->get(
+     *     'client_id',
+     *     'credential_id',
+     * );
+     * ```
+     *
      * @param string $clientId ID of the client.
      * @param string $credentialId ID of the credential.
      * @param ?array{
@@ -237,7 +262,7 @@ class CredentialsClient implements CredentialsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$clientId}/credentials/{$credentialId}",
+                    path: "clients/" . RawClient::encodePathParam($clientId) . "/credentials/" . RawClient::encodePathParam($credentialId),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -265,6 +290,14 @@ class CredentialsClient implements CredentialsClientInterface
     /**
      * Delete a client credential you previously created. May be enabled or disabled. For more information, read <a href="https://www.auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow">Client Credential Flow</a>.
      *
+     * Example:
+     * ```php
+     * $client->clients->credentials->delete(
+     *     'client_id',
+     *     'credential_id',
+     * );
+     * ```
+     *
      * @param string $clientId ID of the client.
      * @param string $credentialId ID of the credential to delete.
      * @param ?array{
@@ -285,7 +318,7 @@ class CredentialsClient implements CredentialsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$clientId}/credentials/{$credentialId}",
+                    path: "clients/" . RawClient::encodePathParam($clientId) . "/credentials/" . RawClient::encodePathParam($credentialId),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -306,6 +339,15 @@ class CredentialsClient implements CredentialsClientInterface
 
     /**
      * Change a client credential you previously created. May be enabled or disabled. For more information, read <a href="https://www.auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow">Client Credential Flow</a>.
+     *
+     * Example:
+     * ```php
+     * $client->clients->credentials->update(
+     *     'client_id',
+     *     'credential_id',
+     *     new PatchClientCredentialRequestContent([]),
+     * );
+     * ```
      *
      * @param string $clientId ID of the client.
      * @param string $credentialId ID of the credential.
@@ -329,7 +371,7 @@ class CredentialsClient implements CredentialsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "clients/{$clientId}/credentials/{$credentialId}",
+                    path: "clients/" . RawClient::encodePathParam($clientId) . "/credentials/" . RawClient::encodePathParam($credentialId),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

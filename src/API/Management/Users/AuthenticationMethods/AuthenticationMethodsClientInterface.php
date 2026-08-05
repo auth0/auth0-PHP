@@ -18,6 +18,18 @@ interface AuthenticationMethodsClientInterface
     /**
      * Retrieve detailed list of authentication methods associated with a specified user.
      *
+     * Example:
+     * ```php
+     * $client->users->authenticationMethods->list(
+     *     'id',
+     *     new ListUserAuthenticationMethodsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The ID of the user in question.
      * @param ListUserAuthenticationMethodsRequestParameters $request
      * @param ?array{
@@ -34,6 +46,16 @@ interface AuthenticationMethodsClientInterface
 
     /**
      * Create an authentication method. Authentication methods created via this endpoint will be auto confirmed and should already have verification completed.
+     *
+     * Example:
+     * ```php
+     * $client->users->authenticationMethods->create(
+     *     'id',
+     *     new CreateUserAuthenticationMethodRequestContent([
+     *         'type' => CreatedUserAuthenticationMethodTypeEnum::Phone->value,
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The ID of the user to whom the new authentication method will be assigned.
      * @param CreateUserAuthenticationMethodRequestContent $request
@@ -54,6 +76,18 @@ interface AuthenticationMethodsClientInterface
      *
      *     <b>Note</b>: Authentication methods supplied through this action do not iterate on existing methods. Instead, any methods passed will overwrite the user&#8217s existing settings.
      *
+     * Example:
+     * ```php
+     * $client->users->authenticationMethods->set(
+     *     'id',
+     *     [
+     *         new SetUserAuthenticationMethods([
+     *             'type' => AuthenticationTypeEnum::Phone->value,
+     *         ]),
+     *     ],
+     * );
+     * ```
+     *
      * @param string $id The ID of the user in question.
      * @param array<SetUserAuthenticationMethods> $request
      * @param ?array{
@@ -71,6 +105,13 @@ interface AuthenticationMethodsClientInterface
     /**
      * Remove all authentication methods (i.e., enrolled MFA factors) from the specified user account. This action cannot be undone.
      *
+     * Example:
+     * ```php
+     * $client->users->authenticationMethods->deleteAll(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the user in question.
      * @param ?array{
      *   baseUrl?: string,
@@ -84,6 +125,14 @@ interface AuthenticationMethodsClientInterface
     public function deleteAll(string $id, ?array $options = null): void;
 
     /**
+     * Example:
+     * ```php
+     * $client->users->authenticationMethods->get(
+     *     'id',
+     *     'authentication_method_id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the user in question.
      * @param string $authenticationMethodId The ID of the authentication methods in question.
      * @param ?array{
@@ -101,6 +150,14 @@ interface AuthenticationMethodsClientInterface
     /**
      * Remove the authentication method with the given ID from the specified user. For more information, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/manage-mfa-auth0-apis/manage-authentication-methods-with-management-api">Manage Authentication Methods with Management API</a>.
      *
+     * Example:
+     * ```php
+     * $client->users->authenticationMethods->delete(
+     *     'id',
+     *     'authentication_method_id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the user in question.
      * @param string $authenticationMethodId The ID of the authentication method to delete.
      * @param ?array{
@@ -116,6 +173,15 @@ interface AuthenticationMethodsClientInterface
 
     /**
      * Modify the authentication method with the given ID from the specified user. For more information, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/manage-mfa-auth0-apis/manage-authentication-methods-with-management-api">Manage Authentication Methods with Management API</a>.
+     *
+     * Example:
+     * ```php
+     * $client->users->authenticationMethods->update(
+     *     'id',
+     *     'authentication_method_id',
+     *     new UpdateUserAuthenticationMethodRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The ID of the user in question.
      * @param string $authenticationMethodId The ID of the authentication method to update.

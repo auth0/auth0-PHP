@@ -55,6 +55,15 @@ class CustomTextClient implements CustomTextClientInterface
     /**
      * Retrieves text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
      *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->customText->list(
+     *     'id',
+     *     SelfServiceProfileCustomTextLanguageEnum::En->value,
+     *     SelfServiceProfileCustomTextPageEnum::GetStarted->value,
+     * );
+     * ```
+     *
      * @param string $id The id of the self-service profile.
      * @param value-of<SelfServiceProfileCustomTextLanguageEnum> $language The language of the custom text.
      * @param value-of<SelfServiceProfileCustomTextPageEnum> $page The page where the custom text is shown.
@@ -77,7 +86,7 @@ class CustomTextClient implements CustomTextClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "self-service-profiles/{$id}/custom-text/{$language}/{$page}",
+                    path: "self-service-profiles/" . RawClient::encodePathParam($id) . "/custom-text/" . RawClient::encodePathParam($language) . "/" . RawClient::encodePathParam($page),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -105,6 +114,18 @@ class CustomTextClient implements CustomTextClientInterface
     /**
      * Updates text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
      *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->customText->set(
+     *     'id',
+     *     SelfServiceProfileCustomTextLanguageEnum::En->value,
+     *     SelfServiceProfileCustomTextPageEnum::GetStarted->value,
+     *     [
+     *         'key' => 'value',
+     *     ],
+     * );
+     * ```
+     *
      * @param string $id The id of the self-service profile.
      * @param value-of<SelfServiceProfileCustomTextLanguageEnum> $language The language of the custom text.
      * @param value-of<SelfServiceProfileCustomTextPageEnum> $page The page where the custom text is shown.
@@ -128,7 +149,7 @@ class CustomTextClient implements CustomTextClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "self-service-profiles/{$id}/custom-text/{$language}/{$page}",
+                    path: "self-service-profiles/" . RawClient::encodePathParam($id) . "/custom-text/" . RawClient::encodePathParam($language) . "/" . RawClient::encodePathParam($page),
                     method: HttpMethod::PUT,
                     body: JsonSerializer::serializeArray($request, ['string' => 'string']),
                 ),

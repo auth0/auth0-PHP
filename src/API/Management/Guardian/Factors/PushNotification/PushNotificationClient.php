@@ -69,6 +69,11 @@ class PushNotificationClient implements PushNotificationClientInterface
     /**
      * Retrieve configuration details for the multi-factor authentication APNS provider associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->getApnsProvider();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -115,6 +120,13 @@ class PushNotificationClient implements PushNotificationClientInterface
 
     /**
      * Overwrite all configuration details of the multi-factor authentication APNS provider associated with your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->setApnsProvider(
+     *     new SetGuardianFactorsProviderPushNotificationApnsRequestContent([]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorsProviderPushNotificationApnsRequestContent $request
      * @param ?array{
@@ -165,6 +177,13 @@ class PushNotificationClient implements PushNotificationClientInterface
     /**
      * Modify configuration details of the multi-factor authentication APNS provider associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->updateApnsProvider(
+     *     new UpdateGuardianFactorsProviderPushNotificationApnsRequestContent([]),
+     * );
+     * ```
+     *
      * @param UpdateGuardianFactorsProviderPushNotificationApnsRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -213,6 +232,13 @@ class PushNotificationClient implements PushNotificationClientInterface
 
     /**
      * Overwrite all configuration details of the multi-factor authentication FCM provider associated with your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->setFcmProvider(
+     *     new SetGuardianFactorsProviderPushNotificationFcmRequestContent([]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorsProviderPushNotificationFcmRequestContent $request
      * @param ?array{
@@ -263,6 +289,13 @@ class PushNotificationClient implements PushNotificationClientInterface
     /**
      * Modify configuration details of the multi-factor authentication FCM provider associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->updateFcmProvider(
+     *     new UpdateGuardianFactorsProviderPushNotificationFcmRequestContent([]),
+     * );
+     * ```
+     *
      * @param UpdateGuardianFactorsProviderPushNotificationFcmRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -311,6 +344,13 @@ class PushNotificationClient implements PushNotificationClientInterface
 
     /**
      * Overwrite all configuration details of the multi-factor authentication FCMV1 provider associated with your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->setFcmv1Provider(
+     *     new SetGuardianFactorsProviderPushNotificationFcmv1RequestContent([]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorsProviderPushNotificationFcmv1RequestContent $request
      * @param ?array{
@@ -361,6 +401,13 @@ class PushNotificationClient implements PushNotificationClientInterface
     /**
      * Modify configuration details of the multi-factor authentication FCMV1 provider associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->updateFcmv1Provider(
+     *     new UpdateGuardianFactorsProviderPushNotificationFcmv1RequestContent([]),
+     * );
+     * ```
+     *
      * @param UpdateGuardianFactorsProviderPushNotificationFcmv1RequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -410,6 +457,11 @@ class PushNotificationClient implements PushNotificationClientInterface
     /**
      * Retrieve configuration details for an AWS SNS push notification provider that has been enabled for MFA. To learn more, review [Configure Push Notifications for MFA](https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-push-notifications-for-mfa).
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->getSnsProvider();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -456,6 +508,13 @@ class PushNotificationClient implements PushNotificationClientInterface
 
     /**
      * Configure the [AWS SNS push notification provider configuration](https://auth0.com/docs/multifactor-authentication/developer/sns-configuration) (subscription required).
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->setSnsProvider(
+     *     new SetGuardianFactorsProviderPushNotificationSnsRequestContent([]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorsProviderPushNotificationSnsRequestContent $request
      * @param ?array{
@@ -506,6 +565,13 @@ class PushNotificationClient implements PushNotificationClientInterface
     /**
      * Configure the [AWS SNS push notification provider configuration](https://auth0.com/docs/multifactor-authentication/developer/sns-configuration) (subscription required).
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->updateSnsProvider(
+     *     new UpdateGuardianFactorsProviderPushNotificationSnsRequestContent([]),
+     * );
+     * ```
+     *
      * @param UpdateGuardianFactorsProviderPushNotificationSnsRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -555,6 +621,11 @@ class PushNotificationClient implements PushNotificationClientInterface
     /**
      * Modify the push notification provider configured for your tenant. For more information, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-push-notifications-for-mfa">Configure Push Notifications for MFA</a>.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->getSelectedProvider();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -601,6 +672,15 @@ class PushNotificationClient implements PushNotificationClientInterface
 
     /**
      * Modify the push notification provider configured for your tenant. For more information, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-push-notifications-for-mfa">Configure Push Notifications for MFA</a>.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->pushNotification->setProvider(
+     *     new SetGuardianFactorsProviderPushNotificationRequestContent([
+     *         'provider' => GuardianFactorsProviderPushNotificationProviderDataEnum::Guardian->value,
+     *     ]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorsProviderPushNotificationRequestContent $request
      * @param ?array{

@@ -37,6 +37,11 @@ class ListGroupsRequestParameters extends JsonSerializableType
     private ?bool $includeFields;
 
     /**
+     * @var ?bool $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+     */
+    private ?bool $includeTotals = true;
+
+    /**
      * @var ?string $from Optional Id from which to start selection.
      */
     private ?string $from;
@@ -54,6 +59,7 @@ class ListGroupsRequestParameters extends JsonSerializableType
      *   search?: ?string,
      *   fields?: ?string,
      *   includeFields?: ?bool,
+     *   includeTotals?: ?bool,
      *   from?: ?string,
      *   take?: ?int,
      * } $values
@@ -67,6 +73,7 @@ class ListGroupsRequestParameters extends JsonSerializableType
         $this->search = $values['search'] ?? null;
         $this->fields = $values['fields'] ?? null;
         $this->includeFields = $values['includeFields'] ?? null;
+        $this->includeTotals = $values['includeTotals'] ?? null;
         $this->from = $values['from'] ?? null;
         $this->take = $values['take'] ?? null;
     }
@@ -176,6 +183,24 @@ class ListGroupsRequestParameters extends JsonSerializableType
     {
         $this->includeFields = $value;
         $this->_setField('includeFields');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIncludeTotals(): ?bool
+    {
+        return $this->includeTotals;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIncludeTotals(?bool $value = null): self
+    {
+        $this->includeTotals = $value;
+        $this->_setField('includeTotals');
         return $this;
     }
 

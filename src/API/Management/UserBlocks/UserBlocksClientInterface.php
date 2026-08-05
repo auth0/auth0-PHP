@@ -13,6 +13,16 @@ interface UserBlocksClientInterface
     /**
      * Retrieve details of all [Brute-force Protection](https://auth0.com/docs/secure/attack-protection/brute-force-protection) blocks for a user with the given identifier (username, phone number, or email).
      *
+     * Example:
+     * ```php
+     * $client->userBlocks->listByIdentifier(
+     *     new ListUserBlocksByIdentifierRequestParameters([
+     *         'identifier' => 'identifier',
+     *         'considerBruteForceEnablement' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListUserBlocksByIdentifierRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -31,6 +41,15 @@ interface UserBlocksClientInterface
      *
      * Note: This endpoint does not unblock users that were [blocked by a tenant administrator](https://auth0.com/docs/user-profile#block-and-unblock-a-user).
      *
+     * Example:
+     * ```php
+     * $client->userBlocks->deleteByIdentifier(
+     *     new DeleteUserBlocksByIdentifierRequestParameters([
+     *         'identifier' => 'identifier',
+     *     ]),
+     * );
+     * ```
+     *
      * @param DeleteUserBlocksByIdentifierRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -45,6 +64,16 @@ interface UserBlocksClientInterface
 
     /**
      * Retrieve details of all [Brute-force Protection](https://auth0.com/docs/secure/attack-protection/brute-force-protection) blocks for the user with the given ID.
+     *
+     * Example:
+     * ```php
+     * $client->userBlocks->list(
+     *     'id',
+     *     new ListUserBlocksRequestParameters([
+     *         'considerBruteForceEnablement' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id user_id of the user blocks to retrieve.
      * @param ListUserBlocksRequestParameters $request
@@ -64,6 +93,13 @@ interface UserBlocksClientInterface
      * Remove all [Brute-force Protection](https://auth0.com/docs/secure/attack-protection/brute-force-protection) blocks for the user with the given ID.
      *
      * Note: This endpoint does not unblock users that were [blocked by a tenant administrator](https://auth0.com/docs/user-profile#block-and-unblock-a-user).
+     *
+     * Example:
+     * ```php
+     * $client->userBlocks->delete(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id The user_id of the user to update.
      * @param ?array{

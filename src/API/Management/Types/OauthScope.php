@@ -8,6 +8,10 @@ enum OauthScope: string
     case ReadActions = "read:actions";
     case UpdateActions = "update:actions";
     case DeleteActions = "delete:actions";
+    case CreateAgents = "create:agents";
+    case ReadAgents = "read:agents";
+    case UpdateAgents = "update:agents";
+    case DeleteAgents = "delete:agents";
     case ReadAnomalyBlocks = "read:anomaly_blocks";
     case DeleteAnomalyBlocks = "delete:anomaly_blocks";
     case ReadAttackProtection = "read:attack_protection";
@@ -240,4 +244,9 @@ enum OauthScope: string
     case ReadVdcsTemplates = "read:vdcs_templates";
     case UpdateVdcsTemplates = "update:vdcs_templates";
     case DeleteVdcsTemplates = "delete:vdcs_templates";
+    case CreateOrganizationClients = "create:organization_clients";
+    case ReadOrganizationClients = "read:organization_clients";
+    case UpdateOrganizationClients = "update:organization_clients";
+    case DeleteOrganizationClients = "delete:organization_clients";
+    case CreateNetworkAclKeys = "create:network_acl_keys";
 }

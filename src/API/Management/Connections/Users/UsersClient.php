@@ -51,6 +51,16 @@ class UsersClient implements UsersClientInterface
     /**
      * Deletes a specified connection user by its email (you cannot delete all users from specific connection). Currently, only Database Connections are supported.
      *
+     * Example:
+     * ```php
+     * $client->connections->users->deleteByEmail(
+     *     'id',
+     *     new DeleteConnectionUsersByEmailQueryParameters([
+     *         'email' => 'email',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The id of the connection (currently only database connections are supported)
      * @param DeleteConnectionUsersByEmailQueryParameters $request
      * @param ?array{
@@ -73,7 +83,7 @@ class UsersClient implements UsersClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/users",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/users",
                     method: HttpMethod::DELETE,
                     query: $query,
                 ),

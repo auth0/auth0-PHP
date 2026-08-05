@@ -54,6 +54,11 @@ class BreachedPasswordDetectionClient implements BreachedPasswordDetectionClient
     /**
      * Retrieve details of the Breached Password Detection configuration of your tenant.
      *
+     * Example:
+     * ```php
+     * $client->attackProtection->breachedPasswordDetection->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -100,6 +105,13 @@ class BreachedPasswordDetectionClient implements BreachedPasswordDetectionClient
 
     /**
      * Update details of the Breached Password Detection configuration of your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->attackProtection->breachedPasswordDetection->update(
+     *     new UpdateBreachedPasswordDetectionSettingsRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateBreachedPasswordDetectionSettingsRequestContent $request
      * @param ?array{

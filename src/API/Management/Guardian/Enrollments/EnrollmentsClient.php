@@ -54,6 +54,15 @@ class EnrollmentsClient implements EnrollmentsClientInterface
     /**
      * Create a [multi-factor authentication (MFA) enrollment ticket](https://auth0.com/docs/secure/multi-factor-authentication/auth0-guardian/create-custom-enrollment-tickets), and optionally send an email with the created ticket to a given user. Enrollment tickets can specify which factor users must enroll with or allow existing MFA users to enroll in additional factors.
      *
+     * Example:
+     * ```php
+     * $client->guardian->enrollments->createTicket(
+     *     new CreateGuardianEnrollmentTicketRequestContent([
+     *         'userId' => 'user_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateGuardianEnrollmentTicketRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -103,6 +112,13 @@ class EnrollmentsClient implements EnrollmentsClientInterface
     /**
      * Retrieve details, such as status and type, for a specific multi-factor authentication enrollment registered to a user account.
      *
+     * Example:
+     * ```php
+     * $client->guardian->enrollments->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the enrollment to be retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -123,7 +139,7 @@ class EnrollmentsClient implements EnrollmentsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "guardian/enrollments/{$id}",
+                    path: "guardian/enrollments/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -151,6 +167,13 @@ class EnrollmentsClient implements EnrollmentsClientInterface
     /**
      * Remove a specific multi-factor authentication (MFA) enrollment from a user's account. This allows the user to re-enroll with MFA. For more information, review [Reset User Multi-Factor Authentication and Recovery Codes](https://auth0.com/docs/secure/multi-factor-authentication/reset-user-mfa).
      *
+     * Example:
+     * ```php
+     * $client->guardian->enrollments->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the enrollment to be deleted.
      * @param ?array{
      *   baseUrl?: string,
@@ -170,7 +193,7 @@ class EnrollmentsClient implements EnrollmentsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "guardian/enrollments/{$id}",
+                    path: "guardian/enrollments/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,

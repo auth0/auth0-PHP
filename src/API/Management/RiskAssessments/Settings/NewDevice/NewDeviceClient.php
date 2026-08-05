@@ -54,6 +54,11 @@ class NewDeviceClient implements NewDeviceClientInterface
     /**
      * Gets the risk assessment settings for the new device assessor
      *
+     * Example:
+     * ```php
+     * $client->riskAssessments->settings->newDevice->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -100,6 +105,15 @@ class NewDeviceClient implements NewDeviceClientInterface
 
     /**
      * Updates the risk assessment settings for the new device assessor
+     *
+     * Example:
+     * ```php
+     * $client->riskAssessments->settings->newDevice->update(
+     *     new UpdateRiskAssessmentsSettingsNewDeviceRequestContent([
+     *         'rememberFor' => 1,
+     *     ]),
+     * );
+     * ```
      *
      * @param UpdateRiskAssessmentsSettingsNewDeviceRequestContent $request
      * @param ?array{

@@ -56,6 +56,18 @@ class OrganizationsClient implements OrganizationsClientInterface
     /**
      * Retrieve list of the specified user's current Organization memberships. User must be specified by user ID. For more information, review [Auth0 Organizations](https://auth0.com/docs/manage-users/organizations).
      *
+     * Example:
+     * ```php
+     * $client->users->organizations->list(
+     *     'id',
+     *     new ListUserOrganizationsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to retrieve the organizations for.
      * @param ListUserOrganizationsRequestParameters $request
      * @param ?array{
@@ -120,7 +132,7 @@ class OrganizationsClient implements OrganizationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/organizations",
+                    path: "users/" . RawClient::encodePathParam($id) . "/organizations",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

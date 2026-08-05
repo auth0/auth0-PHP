@@ -38,6 +38,23 @@ interface ConnectionsClientInterface
      *
      * **Note**: The first time you call this endpoint using checkpoint pagination, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no pages are remaining.
      *
+     * Example:
+     * ```php
+     * $client->connections->list(
+     *     new ListConnectionsQueryParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'strategy' => [
+     *             ConnectionStrategyEnum::Ad->value,
+     *         ],
+     *         'name' => 'name',
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListConnectionsQueryParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -56,6 +73,16 @@ interface ConnectionsClientInterface
      *
      * **Note:** If a connection with the same name was recently deleted and had a large number of associated users, the deletion may still be processing. Creating a new connection with that name before the deletion completes may fail or produce unexpected results.
      *
+     * Example:
+     * ```php
+     * $client->connections->create(
+     *     new CreateConnectionRequestContent([
+     *         'name' => 'name',
+     *         'strategy' => ConnectionIdentityProviderEnum::Ad->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateConnectionRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -71,6 +98,17 @@ interface ConnectionsClientInterface
 
     /**
      * Retrieve details for a specified [connection](https://auth0.com/docs/authenticate/identity-providers) along with options that can be used for identity provider configuration.
+     *
+     * Example:
+     * ```php
+     * $client->connections->get(
+     *     'id',
+     *     new GetConnectionRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The id of the connection to retrieve
      * @param GetConnectionRequestParameters $request
@@ -91,6 +129,13 @@ interface ConnectionsClientInterface
      *
      * **Note:** If your connection has a large amount of users associated with it, please be aware that this operation can be long running after the response is returned and may impact concurrent [create connection](https://auth0.com/docs/api/management/v2/connections/post-connections) requests, if they use an identical connection name.
      *
+     * Example:
+     * ```php
+     * $client->connections->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to delete
      * @param ?array{
      *   baseUrl?: string,
@@ -108,6 +153,14 @@ interface ConnectionsClientInterface
      *
      * **Note**: If you use the `options` parameter, the entire `options` object is overridden. To avoid partial data or other issues, ensure all parameters are present when using this option.
      *
+     * Example:
+     * ```php
+     * $client->connections->update(
+     *     'id',
+     *     new UpdateConnectionRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to update
      * @param UpdateConnectionRequestContent $request
      * @param ?array{
@@ -124,6 +177,13 @@ interface ConnectionsClientInterface
 
     /**
      * Retrieves the status of an ad/ldap connection referenced by its `ID`. `200 OK` http status code response is returned  when the connection is online, otherwise a `404` status code is returned along with an error message
+     *
+     * Example:
+     * ```php
+     * $client->connections->checkStatus(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the connection to check
      * @param ?array{

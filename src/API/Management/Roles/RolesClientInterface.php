@@ -21,6 +21,20 @@ interface RolesClientInterface
      *
      * **Note**: The returned list does not include standard roles available for tenant members, such as Admin or Support Access.
      *
+     * Example:
+     * ```php
+     * $client->roles->list(
+     *     new ListRolesRequestParameters([
+     *         'perPage' => 1,
+     *         'page' => 1,
+     *         'includeTotals' => true,
+     *         'nameFilter' => 'name_filter',
+     *         'type' => RoleTypeEnum::Tenant->value,
+     *         'ownerId' => 'owner_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListRolesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -39,6 +53,15 @@ interface RolesClientInterface
      *
      * **Note**: New roles are not associated with any permissions by default. To assign existing permissions to your role, review Associate Permissions with a Role. To create new permissions, review Add API Permissions.
      *
+     * Example:
+     * ```php
+     * $client->roles->create(
+     *     new CreateRoleRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateRoleRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -54,6 +77,13 @@ interface RolesClientInterface
 
     /**
      * Retrieve details about a specific [user role](https://auth0.com/docs/manage-users/access-control/rbac) specified by ID.
+     *
+     * Example:
+     * ```php
+     * $client->roles->get(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the role to retrieve.
      * @param ?array{
@@ -71,6 +101,13 @@ interface RolesClientInterface
     /**
      * Delete a specific [user role](https://auth0.com/docs/manage-users/access-control/rbac) from your tenant. Once deleted, it is removed from any user who was previously assigned that role. This action cannot be undone.
      *
+     * Example:
+     * ```php
+     * $client->roles->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the role to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -85,6 +122,14 @@ interface RolesClientInterface
 
     /**
      * Modify the details of a specific [user role](https://auth0.com/docs/manage-users/access-control/rbac) specified by ID.
+     *
+     * Example:
+     * ```php
+     * $client->roles->update(
+     *     'id',
+     *     new UpdateRoleRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the role to update.
      * @param UpdateRoleRequestContent $request

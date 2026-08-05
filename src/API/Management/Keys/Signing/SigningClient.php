@@ -56,6 +56,11 @@ class SigningClient implements SigningClientInterface
     /**
      * Retrieve details of all the application signing keys associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->keys->signing->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -102,6 +107,11 @@ class SigningClient implements SigningClientInterface
 
     /**
      * Rotate the application signing key of your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->keys->signing->rotate();
+     * ```
      *
      * @param ?array{
      *   baseUrl?: string,
@@ -150,6 +160,13 @@ class SigningClient implements SigningClientInterface
     /**
      * Retrieve details of the application signing key with the given ID.
      *
+     * Example:
+     * ```php
+     * $client->keys->signing->get(
+     *     'kid',
+     * );
+     * ```
+     *
      * @param string $kid Key id of the key to retrieve
      * @param ?array{
      *   baseUrl?: string,
@@ -170,7 +187,7 @@ class SigningClient implements SigningClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "keys/signing/{$kid}",
+                    path: "keys/signing/" . RawClient::encodePathParam($kid),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -198,6 +215,13 @@ class SigningClient implements SigningClientInterface
     /**
      * Revoke the application signing key with the given ID.
      *
+     * Example:
+     * ```php
+     * $client->keys->signing->revoke(
+     *     'kid',
+     * );
+     * ```
+     *
      * @param string $kid Key id of the key to revoke
      * @param ?array{
      *   baseUrl?: string,
@@ -218,7 +242,7 @@ class SigningClient implements SigningClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "keys/signing/{$kid}/revoke",
+                    path: "keys/signing/" . RawClient::encodePathParam($kid) . "/revoke",
                     method: HttpMethod::PUT,
                 ),
                 $options,

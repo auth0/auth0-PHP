@@ -17,6 +17,17 @@ interface EncryptionClientInterface
     /**
      * Retrieve details of all the encryption keys associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->list(
+     *     new ListEncryptionKeysRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListEncryptionKeysRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -32,6 +43,15 @@ interface EncryptionClientInterface
 
     /**
      * Create the new, pre-activated encryption key, without the key material.
+     *
+     * Example:
+     * ```php
+     * $client->keys->encryption->create(
+     *     new CreateEncryptionKeyRequestContent([
+     *         'type' => CreateEncryptionKeyType::CustomerProvidedRootKey->value,
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateEncryptionKeyRequestContent $request
      * @param ?array{
@@ -49,6 +69,11 @@ interface EncryptionClientInterface
     /**
      * Perform rekeying operation on the key hierarchy.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->rekey();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -62,6 +87,13 @@ interface EncryptionClientInterface
 
     /**
      * Retrieve details of the encryption key with the given ID.
+     *
+     * Example:
+     * ```php
+     * $client->keys->encryption->get(
+     *     'kid',
+     * );
+     * ```
      *
      * @param string $kid Encryption key ID
      * @param ?array{
@@ -78,6 +110,16 @@ interface EncryptionClientInterface
 
     /**
      * Import wrapped key material and activate encryption key.
+     *
+     * Example:
+     * ```php
+     * $client->keys->encryption->import(
+     *     'kid',
+     *     new ImportEncryptionKeyRequestContent([
+     *         'wrappedKey' => 'wrapped_key',
+     *     ]),
+     * );
+     * ```
      *
      * @param string $kid Encryption key ID
      * @param ImportEncryptionKeyRequestContent $request
@@ -96,6 +138,13 @@ interface EncryptionClientInterface
     /**
      * Delete the custom provided encryption key with the given ID and move back to using native encryption key.
      *
+     * Example:
+     * ```php
+     * $client->keys->encryption->delete(
+     *     'kid',
+     * );
+     * ```
+     *
      * @param string $kid Encryption key ID
      * @param ?array{
      *   baseUrl?: string,
@@ -110,6 +159,13 @@ interface EncryptionClientInterface
 
     /**
      * Create the public wrapping key to wrap your own encryption key material.
+     *
+     * Example:
+     * ```php
+     * $client->keys->encryption->createPublicWrappingKey(
+     *     'kid',
+     * );
+     * ```
      *
      * @param string $kid Encryption key ID
      * @param ?array{

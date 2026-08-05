@@ -11,6 +11,19 @@ interface MembersClientInterface
     /**
      * List all users that are a member of this group.
      *
+     * Example:
+     * ```php
+     * $client->groups->members->get(
+     *     'id',
+     *     new GetGroupMembersRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param GetGroupMembersRequestParameters $request
      * @param ?array{

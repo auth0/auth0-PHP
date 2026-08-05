@@ -51,6 +51,14 @@ class RedeliveriesClient implements RedeliveriesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->redeliveries->create(
+     *     'id',
+     *     new CreateEventStreamRedeliveryRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param CreateEventStreamRedeliveryRequestContent $request
      * @param ?array{
@@ -72,7 +80,7 @@ class RedeliveriesClient implements RedeliveriesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "event-streams/{$id}/redeliver",
+                    path: "event-streams/" . RawClient::encodePathParam($id) . "/redeliver",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -99,6 +107,14 @@ class RedeliveriesClient implements RedeliveriesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->redeliveries->createById(
+     *     'id',
+     *     'event_id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param string $eventId Unique identifier for the event
      * @param ?array{
@@ -119,7 +135,7 @@ class RedeliveriesClient implements RedeliveriesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "event-streams/{$id}/redeliver/{$eventId}",
+                    path: "event-streams/" . RawClient::encodePathParam($id) . "/redeliver/" . RawClient::encodePathParam($eventId),
                     method: HttpMethod::POST,
                 ),
                 $options,

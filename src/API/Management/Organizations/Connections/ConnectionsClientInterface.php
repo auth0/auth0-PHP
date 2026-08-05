@@ -14,6 +14,19 @@ use Auth0\SDK\API\Management\Types\UpdateOrganizationAllConnectionResponseConten
 interface ConnectionsClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->list(
+     *     'id',
+     *     new ListOrganizationAllConnectionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'isEnabled' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ListOrganizationAllConnectionsRequestParameters $request
      * @param ?array{
@@ -29,6 +42,16 @@ interface ConnectionsClientInterface
     public function list(string $id, ListOrganizationAllConnectionsRequestParameters $request = new ListOrganizationAllConnectionsRequestParameters(), ?array $options = null): Pager;
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->create(
+     *     'id',
+     *     new CreateOrganizationAllConnectionRequestParameters([
+     *         'connectionId' => 'connection_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param CreateOrganizationAllConnectionRequestParameters $request
      * @param ?array{
@@ -44,6 +67,14 @@ interface ConnectionsClientInterface
     public function create(string $id, CreateOrganizationAllConnectionRequestParameters $request, ?array $options = null): ?CreateOrganizationAllConnectionResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->get(
+     *     'id',
+     *     'connection_id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param ?array{
@@ -59,6 +90,14 @@ interface ConnectionsClientInterface
     public function get(string $id, string $connectionId, ?array $options = null): ?GetOrganizationAllConnectionResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->delete(
+     *     'id',
+     *     'connection_id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param ?array{
@@ -73,6 +112,15 @@ interface ConnectionsClientInterface
     public function delete(string $id, string $connectionId, ?array $options = null): void;
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->update(
+     *     'id',
+     *     'connection_id',
+     *     new UpdateOrganizationConnectionRequestParameters([]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param UpdateOrganizationConnectionRequestParameters $request
