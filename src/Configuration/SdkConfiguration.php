@@ -1376,7 +1376,7 @@ final class SdkConfiguration implements ConfigurableContract
     }
 
     /**
-     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string, pushedAuthorizationRequest: bool, backchannelLogoutCache: null}
+     * @return array{strategy: string, domain: null, customDomain: null, clientId: null, redirectUri: null, clientSecret: null, audience: null, organization: null, usePkce: true, scope: string[], responseMode: string, responseType: string, tokenAlgorithm: string, tokenJwksUri: null, tokenMaxAge: null, tokenLeeway: int, tokenCache: null, tokenCacheTtl: int, httpClient: null, httpMaxRetries: int, httpRequestFactory: null, httpResponseFactory: null, httpStreamFactory: null, httpTelemetry: true, sessionStorage: null, sessionStorageId: string, cookieSecret: null, cookieDomain: null, cookieExpires: int, cookiePath: string, cookieSecure: false, cookieSameSite: null, persistUser: true, persistIdToken: true, persistAccessToken: true, persistRefreshToken: true, transientStorage: null, transientStorageId: string, queryUserInfo: false, managementToken: null, managementTokenCache: null, eventListenerProvider: null, clientAssertionSigningKey: null, clientAssertionSigningAlgorithm: string, pushedAuthorizationRequest: bool, backchannelLogoutCache: null, backchannelLogoutExpires: int}
      */
     private function getPropertyDefaults(): array
     {
@@ -1427,6 +1427,7 @@ final class SdkConfiguration implements ConfigurableContract
             'clientAssertionSigningAlgorithm' => Token::ALGO_RS256,
             'pushedAuthorizationRequest' => false,
             'backchannelLogoutCache' => null,
+            'backchannelLogoutExpires' => 2592000,
         ];
     }
 
@@ -1484,6 +1485,7 @@ final class SdkConfiguration implements ConfigurableContract
             'clientAssertionSigningAlgorithm' => is_string(...),
             'pushedAuthorizationRequest' => is_bool(...),
             'backchannelLogoutCache' => static fn ($value): bool => $value instanceof CacheItemPoolInterface || null === $value,
+            'backchannelLogoutExpires' => is_int(...),
         ];
     }
 

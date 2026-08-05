@@ -454,7 +454,8 @@ test('handleBackchannelLogout() stores the cache entry with the configured relat
 
     $backchannel = hash('sha256', implode('|', [$sub, $iss . '/', $sid]));
 
-    $expires = 2592000; // 30 days
+    // Non-default value, so a passing assertion cannot just be the 2592000 default.
+    $expires = 12345;
     $pool = new ArrayAdapter();
 
     $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
@@ -466,14 +467,15 @@ test('handleBackchannelLogout() stores the cache entry with the configured relat
         'backchannelLogoutExpires' => $expires,
     ]));
 
+    $before = time();
     $auth0->handleBackchannelLogout($logoutToken->token);
 
-    // expiresAfter() is relative, so the stored absolute expiry must land ~30 days
-    // out, not ~56 years (regression guard for SEC-16860).
+    // expiresAfter() is relative, so the entry must expire $expires out, not time() + $expires.
+    // getMetadata()['expiry'] is a Symfony ArrayAdapter extension, not PSR-6.
     $expiry = $pool->getItem($backchannel)->getMetadata()['expiry'];
     expect($expiry)->not->toBeNull();
-    expect($expiry - time())->toBeLessThanOrEqual($expires + 5);
-    expect($expiry - time())->toBeGreaterThan($expires - 60);
+    expect($expiry - $before)->toBeGreaterThanOrEqual($expires);
+    expect($expiry - $before)->toBeLessThanOrEqual($expires + 5);
 });
 
 test('decode() uses the configured cache handler', function(
