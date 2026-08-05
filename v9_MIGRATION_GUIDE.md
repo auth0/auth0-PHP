@@ -13,6 +13,7 @@ A guide to migrating the Auth0 PHP SDK from `auth0-PHP` (v8.x) to `auth0-php-sdk
   - [PHP Version](#php-version)
   - [Namespace Changes](#namespace-changes)
   - [Client Initialization](#client-initialization)
+  - [`Auth0::management()` Removed](#auth0management-removed)
   - [Renamed Endpoints](#renamed-endpoints)
   - [Method Name Changes](#method-name-changes)
   - [Request and Response Types](#request-and-response-types)
@@ -253,6 +254,12 @@ $users = $management->users;
 </td>
 </tr>
 </table>
+
+### `Auth0::management()` Removed
+
+The `Auth0::management()` accessor has been removed. It returned the generated `Management` client wired from the `Auth0` instance's configuration, which is no longer compatible with the v9 `Management` constructor.
+
+Use the `ManagementClient` wrapper instead, which handles token management for you. See [ManagementClient Wrapper](#managementclient-wrapper).
 
 ### Renamed Endpoints
 
