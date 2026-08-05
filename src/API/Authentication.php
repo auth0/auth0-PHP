@@ -23,6 +23,19 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
     public const CONST_CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
 
     /**
+     * Authorization parameters callers may not override via $params.
+     *
+     * @internal
+     *
+     * @var string[]
+     */
+    public const RESERVED_AUTHORIZE_PARAMS = [
+        'client_id',
+        'response_type',
+        'response_mode',
+    ];
+
+    /**
      * Instance of Auth0\SDK\API\Utility\HttpClient.
      */
     private ?HttpClient $httpClient = null;
@@ -256,9 +269,13 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             [$state, \Auth0\SDK\Exception\ArgumentException::missing('state')],
         ])->isString();
 
+        // Resolves the default redirect_uri only; $params['redirect_uri'] remains overridable below, so this is not a guard.
         [$redirectUri] = Toolkit::filter([
             [$redirectUri, isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(ConfigurationException::requiresRedirectUri());
+
+        // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
+        $params = self::filterReservedParams($params);
 
         return sprintf(
             '%s/authorize?%s',
@@ -289,6 +306,9 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         [$returnTo] = Toolkit::filter([
             [$returnTo, isset($params['returnTo']) ? (string) $params['returnTo'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(ConfigurationException::requiresRedirectUri());
+
+        // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
+        $params = self::filterReservedParams($params);
 
         return sprintf(
             '%s/v2/logout?%s',
@@ -539,5 +559,23 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             ->addPath(['userinfo'])
             ->withHeader('Authorization', 'Bearer ' . ($accessToken ?? ''))
             ->call();
+    }
+
+    /**
+     * Strip reserved authorization parameters from a caller-supplied $params array.
+     *
+     * @internal
+     *
+     * @param array<int|string, mixed> $params
+     *
+     * @return array<int|string, mixed>
+     */
+    public static function filterReservedParams(array $params): array
+    {
+        foreach (self::RESERVED_AUTHORIZE_PARAMS as $reserved) {
+            unset($params[$reserved]);
+        }
+
+        return $params;
     }
 }

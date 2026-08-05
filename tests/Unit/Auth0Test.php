@@ -170,13 +170,14 @@ test('getLoginLink() returns expected value when supplying parameters', function
             ->toContain('client_id=' . $this->configuration['clientId']);
 });
 
-test('getLoginLink() returns expected value when overriding defaults', function(): void {
+test('getLoginLink() allows overriding scope but ignores reserved params', function(): void {
     $auth0 = new Auth0($this->configuration);
 
     $params = [
         'scope' => uniqid(),
         'response_type' => uniqid(),
         'response_mode' => 'form_post',
+        'client_id' => uniqid(),
     ];
 
     $url = parse_url($auth0->authentication()->getLoginLink(uniqid(), null, $params));
@@ -187,8 +188,10 @@ test('getLoginLink() returns expected value when overriding defaults', function(
         ->path->toEqual('/authorize')
         ->query
             ->toContain('scope=' . $params['scope'])
-            ->toContain('response_type=' . $params['response_type'])
-            ->toContain('response_mode=form_post')
+            ->not->toContain('response_type=' . $params['response_type'])
+            ->not->toContain('response_mode=form_post')
+            ->not->toContain('client_id=' . $params['client_id'])
+            ->toContain('response_type=code')
             ->toContain('redirect_uri=__test_redirect_uri__')
             ->toContain('client_id=' . $this->configuration['clientId']);
 });

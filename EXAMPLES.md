@@ -80,6 +80,9 @@ if (null !== $session && $session->accessTokenExpired) {
 
 ## Authentication API
 
+> [!WARNING]
+> Never pass unsanitized user input into the `$params` argument of `login()`, `getLoginLink()`, or `getLogoutLink()`. Caller-supplied values such as `redirect_uri` are used to build the authorization request, so always source them from trusted, explicit values. The SDK ignores attempts to override `client_id`, `response_type`, and `response_mode` via `$params`.
+
 Use `Auth0->authentication()` to access more advanced Authentication API calls. For example:
 
 ```PHP

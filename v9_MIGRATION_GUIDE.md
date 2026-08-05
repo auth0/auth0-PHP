@@ -33,6 +33,8 @@ A guide to migrating the Auth0 PHP SDK from `auth0-PHP` (v8.x) to `auth0-php-sdk
 
 This major version change does not affect the Authentication API. Any code written for the Authentication API in the v8.x version should work in the v9.x version with minimal changes.
 
+One exception: `client_id`, `response_type`, and `response_mode` can no longer be overridden via the `$params` argument on login and authorization request methods. See [UPGRADE.md](UPGRADE.md#authentication-api-reserved-authorization-parameters) for details.
+
 ### Management API
 
 V9 introduces significant improvements to the Management API SDK by migrating to [Fern](https://github.com/fern-api/fern) as our code generation tool. This provides:
