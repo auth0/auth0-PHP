@@ -1,5 +1,17 @@
 # Change Log
 
+## [9.0.0-beta.6](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.6) (2026-08-05)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.5...9.0.0-beta.6)
+
+**Added**
+
+- feat: add Agents, Organization Clients, and Directory Provisioning sync groups, plus Event Stream deliveries fix [\#848](https://github.com/auth0/auth0-PHP/pull/848) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: correct backchannel logout cache expiry to use relative duration [\#847](https://github.com/auth0/auth0-PHP/pull/847) ([kishore7snehil](https://github.com/kishore7snehil))
+- fix: prevent caller params from overriding security-critical authorization parameters [\#845](https://github.com/auth0/auth0-PHP/pull/845) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [9.0.0-beta.5](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.5) (2026-07-22)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.4...9.0.0-beta.5)
 
