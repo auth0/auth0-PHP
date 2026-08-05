@@ -25,6 +25,8 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
     /**
      * Authorization parameters callers may not override via $params.
      *
+     * @internal
+     *
      * @var string[]
      */
     public const RESERVED_AUTHORIZE_PARAMS = [
@@ -267,6 +269,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             [$state, \Auth0\SDK\Exception\ArgumentException::missing('state')],
         ])->isString();
 
+        // Resolves the default redirect_uri only; $params['redirect_uri'] remains overridable below, so this is not a guard.
         [$redirectUri] = Toolkit::filter([
             [$redirectUri, isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(ConfigurationException::requiresRedirectUri());
@@ -560,6 +563,8 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
 
     /**
      * Strip reserved authorization parameters from a caller-supplied $params array.
+     *
+     * @internal
      *
      * @param array<int|string, mixed> $params
      *
