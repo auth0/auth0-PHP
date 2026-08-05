@@ -272,7 +272,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         ])->array()->first(ConfigurationException::requiresRedirectUri());
 
         // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
-        $params = $this->filterReservedParams($params);
+        $params = self::filterReservedParams($params);
 
         return sprintf(
             '%s/authorize?%s',
@@ -303,6 +303,9 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         [$returnTo] = Toolkit::filter([
             [$returnTo, isset($params['returnTo']) ? (string) $params['returnTo'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(ConfigurationException::requiresRedirectUri());
+
+        // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
+        $params = self::filterReservedParams($params);
 
         return sprintf(
             '%s/v2/logout?%s',
@@ -562,7 +565,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
      *
      * @return array<int|string, mixed>
      */
-    private function filterReservedParams(array $params): array
+    public static function filterReservedParams(array $params): array
     {
         foreach (self::RESERVED_AUTHORIZE_PARAMS as $reserved) {
             unset($params[$reserved]);

@@ -65,10 +65,6 @@ final readonly class PushedAuthorizationRequest implements PushedAuthorizationRe
         /** @var array<int|string, mixed> $filtered */
         $filtered = $parameters;
 
-        foreach (Authentication::RESERVED_AUTHORIZE_PARAMS as $reserved) {
-            unset($filtered[$reserved]);
-        }
-
         $parameters = Toolkit::merge([[
             'audience' => $this->authentication->getConfiguration()->defaultAudience(),
             'organization' => $this->authentication->getConfiguration()->defaultOrganization(),
@@ -76,7 +72,7 @@ final readonly class PushedAuthorizationRequest implements PushedAuthorizationRe
             'response_type' => $this->authentication->getConfiguration()->getResponseType(),
             'redirect_uri' => $this->authentication->getConfiguration()->getRedirectUri(),
             'scope' => $this->authentication->getConfiguration()->formatScope(),
-        ], $filtered]);
+        ], Authentication::filterReservedParams($filtered)]);
 
         $parameters = $this->authentication->addClientAuthentication($parameters);
 

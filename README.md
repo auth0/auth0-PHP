@@ -122,7 +122,7 @@ $auth = new Authentication($config);
 ### Common Operations
 
 > [!WARNING]
-> Never pass unsanitized user input into the `$params` argument of `getLoginLink()`, `login()`, or `getLogoutLink()`. Caller-supplied values such as `redirect_uri` are used to build the authorization request, so always source them from trusted, explicit values.
+> Never pass unsanitized user input into the `$params` argument of `getLoginLink()`, `login()`, or `getLogoutLink()`. Caller-supplied values such as `redirect_uri` are used to build the authorization request, so always source them from trusted, explicit values. The SDK ignores attempts to override `client_id`, `response_type`, and `response_mode` via `$params`.
 
 ```php
 // Get authorization URL for login

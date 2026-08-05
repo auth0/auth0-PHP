@@ -40,12 +40,12 @@ test('create() issues a successful network request', function(): void {
         ),
     );
 
-    $clientId = uniqid();
     $connectionId = uniqid();
     $header = uniqid();
 
+    // client_id is reserved: a caller-supplied value must not override the configured one.
     $parameters = [
-        'client_id' => $clientId,
+        'client_id' => uniqid(),
         'connection' => $connectionId,
     ];
 
@@ -56,7 +56,7 @@ test('create() issues a successful network request', function(): void {
     $authorizationUri = $authentication->pushedAuthorizationRequest()->create($parameters, $headers);
 
     expect($authorizationUri)
-        ->toEqual(sprintf('%s/authorize?client_id=%s&request_uri=%s', $this->configuration->formatDomain(), $clientId, urlencode($mockRequestUri)));
+        ->toEqual(sprintf('%s/authorize?client_id=%s&request_uri=%s', $this->configuration->formatDomain(), $this->configuration->getClientId(), urlencode($mockRequestUri)));
 });
 
 test('create() throws an exception if the API returns something other than a 201 status code', function(): void {
@@ -100,12 +100,15 @@ test('post() issues a successful network request', function(): void {
         ),
     );
 
-    $clientId = uniqid();
     $connectionId = uniqid();
     $header = uniqid();
 
+    // client_id, response_type, and response_mode are reserved: caller-supplied
+    // values must be ignored in favor of the configured/default values.
     $parameters = [
-        'client_id' => $clientId,
+        'client_id' => uniqid(),
+        'response_type' => uniqid(),
+        'response_mode' => 'form_post',
         'connection' => $connectionId,
     ];
 
@@ -136,7 +139,7 @@ test('post() issues a successful network request', function(): void {
         ->toHaveKey('response_mode', 'query')
         ->toHaveKey('response_type', 'code')
         ->toHaveKey('scope', 'openid profile email')
-        ->toHaveKey('client_id', $clientId)
+        ->toHaveKey('client_id', $this->configuration->getClientId())
         ->toHaveKey('client_secret', $this->secret)
         ->toHaveKey('connection', $connectionId);
 });
