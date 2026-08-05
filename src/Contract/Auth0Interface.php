@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Contract;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
+use Auth0\SDK\Contract\API\AuthenticationInterface;
 
 interface Auth0Interface
 {
@@ -223,11 +223,6 @@ interface Auth0Interface
         ?string $returnUri = null,
         ?array $params = null,
     ): string;
-
-    /**
-     * Create, configure, and return an instance of the Management class.
-     */
-    public function management(): ManagementInterface;
 
     /**
      * Updates the SDK's internal state by clearing it's credentials cache, and retrieving the current credentials from the configured session medium. Use this when you directly make changes to the configured session medium to ensure the SDK reflects those changes.

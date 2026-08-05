@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
@@ -96,11 +95,6 @@ it('uses the configured session storage handler', function(): void {
 test('authentication() returns an instance of the Authentication class', function(): void {
     $auth0 = new Auth0($this->configuration);
     expect($auth0->authentication())->toBeInstanceOf(Authentication::class);
-});
-
-test('management() returns an instance of the Management class', function(): void {
-    $auth0 = new Auth0($this->configuration);
-    expect($auth0->management())->toBeInstanceOf(Management::class);
 });
 
 test('configuration() returns the same instance of the SdkConfiguration class that was provided at instantiation', function(): void {
