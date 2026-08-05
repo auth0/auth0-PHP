@@ -135,7 +135,7 @@ interface AuthenticationInterface extends ClientInterface
      *
      * @param string                      $state       A CSRF mitigating value, also useful for restoring the previous state of your app. See https://auth0.com/docs/protocols/state-parameters
      * @param null|string                 $redirectUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
-     * @param null|array<null|int|string> $params      Optional. Additional parameters to include with the request. See @see for details.
+     * @param null|array<null|int|string> $params      Optional. Additional parameters to include with the request. The `client_id`, `response_type`, and `response_mode` keys are controlled by the SDK and cannot be overridden here. See @see for details.
      *
      * @throws ArgumentException      when an invalid `state` is passed
      * @throws ConfigurationException when a Client ID is not configured
@@ -153,7 +153,7 @@ interface AuthenticationInterface extends ClientInterface
      * Builds and returns a logout URL to terminate an SSO session.
      *
      * @param null|string                 $returnTo Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
-     * @param null|array<null|int|string> $params   Optional. Additional parameters to include with the request.
+     * @param null|array<null|int|string> $params   Optional. Additional parameters to include with the request. The `client_id`, `response_type`, and `response_mode` keys are controlled by the SDK and cannot be overridden here.
      *
      * @throws ConfigurationException when a Client ID is not configured
      * @throws ConfigurationException when a $returnUri is not configured

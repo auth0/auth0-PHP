@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Auth0\SDK;
 
-use Auth0\SDK\API\{Authentication, Management};
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Configuration\{SdkConfiguration, SdkState};
-use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
+use Auth0\SDK\Contract\API\AuthenticationInterface;
 use Auth0\SDK\Contract\{Auth0Interface, StoreInterface, TokenInterface};
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Store\SessionStore;
@@ -29,11 +29,6 @@ final class Auth0 implements Auth0Interface
      * Authentication Client.
      */
     private ?Authentication $authentication = null;
-
-    /**
-     * Authentication Client.
-     */
-    private ?Management $management = null;
 
     /**
      * Instance of SdkState, for shared state across classes.
@@ -607,15 +602,6 @@ final class Auth0 implements Auth0Interface
         }
 
         return $this->authentication()->getLogoutLink($returnUri, $params);
-    }
-
-    public function management(): ManagementInterface
-    {
-        if (! $this->management instanceof Management) {
-            $this->management = new Management($this->configuration());
-        }
-
-        return $this->management;
     }
 
     public function refreshState(): self

@@ -13,6 +13,7 @@ A guide to migrating the Auth0 PHP SDK from `auth0-PHP` (v8.x) to `auth0-php-sdk
   - [PHP Version](#php-version)
   - [Namespace Changes](#namespace-changes)
   - [Client Initialization](#client-initialization)
+  - [`Auth0::management()` Removed](#auth0management-removed)
   - [Renamed Endpoints](#renamed-endpoints)
   - [Method Name Changes](#method-name-changes)
   - [Request and Response Types](#request-and-response-types)
@@ -31,6 +32,8 @@ A guide to migrating the Auth0 PHP SDK from `auth0-PHP` (v8.x) to `auth0-php-sdk
 ### Authentication API
 
 This major version change does not affect the Authentication API. Any code written for the Authentication API in the v8.x version should work in the v9.x version with minimal changes.
+
+One exception: `client_id`, `response_type`, and `response_mode` can no longer be overridden via the `$params` argument on login and authorization request methods. See [UPGRADE.md](UPGRADE.md#authentication-api-reserved-authorization-parameters) for details.
 
 ### Management API
 
@@ -253,6 +256,12 @@ $users = $management->users;
 </td>
 </tr>
 </table>
+
+### `Auth0::management()` Removed
+
+The `Auth0::management()` accessor has been removed. It returned the generated `Management` client wired from the `Auth0` instance's configuration, which is no longer compatible with the v9 `Management` constructor.
+
+Use the `ManagementClient` wrapper instead, which handles token management for you. See [ManagementClient Wrapper](#managementclient-wrapper).
 
 ### Renamed Endpoints
 
